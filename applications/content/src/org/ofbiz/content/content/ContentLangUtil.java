@@ -8,7 +8,7 @@ import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
  * method implementations.
  */
 public class ContentLangUtil {
-    
+
     /**
      * SCIPIO: Returns a content wrapper sanitizer for the given language, or
      * the "raw" encoder (no encoding) if null or not recognized.
@@ -21,7 +21,7 @@ public class ContentLangUtil {
      * <p>
      * <string>NOTE:</strong> In Scipio, the ContentWrapper get methods do not
      * return a StringWrapper, so if you request an "html" encoder, usually you
-     * need to use <code>rawString(productContentWrapper.get(xxx, "html"))</code> 
+     * need to use <code>rawString(productContentWrapper.get(xxx, "html"))</code>
      * around the call.
      * <p>
      * Should be used to implement {@link ContentWrapper#get(String, String)}.
@@ -36,7 +36,7 @@ public class ContentLangUtil {
         //    return UtilCodec.getRawEncoder();
         //}
     }
-    
+
     /**
      * SCIPIO: Returns a content early sanitizer for the given language.
      * <p>
@@ -49,7 +49,7 @@ public class ContentLangUtil {
      * <p>
      * All others such as HTML are left as-is. HTML gets automatically escaped
      * by the screen renderer auto-escaping when returned from the {@link ContentWrapper#get(String, String)}
-     * method in a freemarker template or across the data prep boundary (since it no longer returns a StringWrapper) 
+     * method in a freemarker template or across the data prep boundary (since it no longer returns a StringWrapper)
      * during freemarker/screen rendering.
      */
     public static SimpleEncoder getEarlySanitizer(String lang) {

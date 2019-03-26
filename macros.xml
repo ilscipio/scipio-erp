@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <project name="Ant - Macros"
     xmlns:ivy="antlib:org.apache.ivy.ant">
@@ -23,6 +10,94 @@ under the License.
     <!-- SCIPIO: NOTE: Despite the filename, this is used for all types of definitions
         common to both main build.xml, component build.xml, and limited support for
         individual component build.xml invocation in some cases. -->
+
+    <!-- ================================================================== -->
+    <!-- Generic Ant macros (SCIPIO) -->
+    <!-- ================================================================== -->
+
+    <macrodef name="condition-ext" description="Custom emulation of ant condition task for ant-contrib var assignments, with unset support">
+        <attribute name="var" default=""/>
+        <attribute name="property" default=""/>
+        <attribute name="noneValue" default="__NONE__"/><!-- Ant macrodef workaround -->
+        <attribute name="value" default="@{noneValue}"/>
+        <attribute name="unset" default="false"/>
+        <attribute name="else" default="@{noneValue}"/>
+        <attribute name="else-unset" default="false"/>
+        <element name="if-condition" optional="false" implicit="true"/>
+        <sequential>
+            <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
+                <if-condition/>
+                <then>
+                    <if>
+                        <equals arg1="@{unset}" arg2="true"/>
+                        <then>
+                            <if>
+                                <not><equals arg1="@{var}" arg2=""/></not>
+                                <then>
+                                    <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                    <var name="@{var}" unset="true"/>
+                                </then>
+                                <else>
+                                    <var name="@{property}" unset="true"/>
+                                </else>
+                            </if>
+                        </then>
+                        <elseif>
+                            <not><equals arg1="@{value}" arg2="__NONE__"/></not>
+                            <then>
+                                <if>
+                                    <not><equals arg1="@{var}" arg2=""/></not>
+                                    <then>
+                                        <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                        <var name="@{var}" unset="true"/>
+                                        <var name="@{var}" value="@{value}"/>  
+                                    </then>
+                                    <else>
+                                        <var name="@{property}" unset="true"/>
+                                        <property name="@{property}" value="@{value}"/>  
+                                    </else>
+                                </if>
+                            </then>
+                        </elseif>
+                    </if>
+                </then>
+                <else>
+                    <if>
+                        <equals arg1="@{else-unset}" arg2="true"/>
+                        <then>
+                            <if>
+                                <not><equals arg1="@{var}" arg2=""/></not>
+                                <then>
+                                    <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                    <var name="@{var}" unset="true"/>
+                                </then>
+                                <else>
+                                    <var name="@{property}" unset="true"/>
+                                </else>
+                            </if>
+                        </then>
+                        <elseif>
+                            <not><equals arg1="@{else}" arg2="__NONE__"/></not>
+                            <then>
+                                <if>
+                                    <not><equals arg1="@{var}" arg2=""/></not>
+                                    <then>
+                                        <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                        <var name="@{var}" unset="true"/>
+                                        <var name="@{var}" value="@{else}"/>  
+                                    </then>
+                                    <else>
+                                        <var name="@{property}" unset="true"/>
+                                        <property name="@{property}" value="@{else}"/>  
+                                    </else>
+                                </if>
+                            </then>
+                        </elseif>
+                    </if>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
 
     <!-- ================================================================== -->
     <!-- Requirements  -->
@@ -50,11 +125,11 @@ If you are running from command line, an ant jar is provided with Scipio (framew
 using a system ant installation is not recommended, as such configurations may not be tested.
 
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
-* Linux:    ./ant [target]
-* Windows:  ant [target] (ant.bat)</fail>
+* Linux, Mac, Cygwin, Windows Git Bash:    ./ant [target]
+* Windows (no Bash, through ant.bat):      ant [target]</fail>
 
                     <condition property="antlib.check.ok">
-                        <contains substring="framework/base/lib/ant/" string="${ant.core.lib}"/>
+                        <contains substring="framework${file.separator}base${file.separator}lib${file.separator}ant${file.separator}" string="${ant.core.lib}"/>
                     </condition>
                     <if>
                         <not><isset property="antlib.check.ok"/></not>
@@ -68,8 +143,8 @@ From command line, Scipio build should be invoked using the provided ant launch 
 You are running: ${ant.version} (${ant.core.lib})
 
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
-* Linux:    ./ant [target]
-* Windows:  ant [target] (ant.bat)
+* Linux, Mac, Cygwin, Windows Git Bash:    ./ant [target]
+* Windows (no Bash, through ant.bat):      ant [target]
 (Developers can eliminate this message for IDEs by setting the antlib.check.ok property to true)</echo>
                         </then>
                     </if>
@@ -129,7 +204,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
 
     <!-- groovy (SCIPIO: NOTE: 2018-03-20: see groovy-init for taskdef) -->
     <path id="groovy.class.path">
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-*.jar"/>
     </path>
 
     <!-- rhino -->
@@ -144,21 +219,38 @@ From command line, Scipio build should be invoked using the provided ant launch 
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant/" includes="ant-apache-bsf-*.jar"/>
         <!-- scripting (previously under base/lib/scripting) -->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="antlr-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="asm-*.jar"/>
+        <!-- SCIPIO: 2018-07-06: junit should not need this
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext" includes="asm-*.jar"/>-->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="bsf-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="bsh-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="jython-*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-*.jar"/>
+        <!-- SCIPIO: removed
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="jython-*.jar"/>-->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="hamcrest-*.jar"/><!-- SCIPIO: 2018-03-27: hamcrest-core dep for junit -->
     </path>
 
     <!-- cobertura -->
     <path id="cobertura.class.path">
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="cobertura-*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/cobertura" includes="*.jar"/>
+        <!-- SCIPIO: 2018-07-06: for now, included under ant-opt/cobertura (what else would use asm?)
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext" includes="asm-*.jar"/>-->
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="junit-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="log4j-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="asm-*.jar"/>
+        <!-- SCIPIO: version compability problems
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="slf4j-api-*.jar"/>-->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
+    </path>
+    
+    <!-- jacoco -->
+    <path id="jacoco.class.path">
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/jacoco" includes="*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="junit-*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="log4j-*.jar"/>
+    </path>
+    
+    <path id="jacoco.agent.class.path">
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/jacoco" includes="*agent*.jar"/>
     </path>
 
     <!-- ================================================================== -->
@@ -509,7 +601,7 @@ Unexpectedly received empty list of builds to iterate."/>
             Currently (2017-01-18), Scipio supports this same directory-focused automatic
             dependency resolution for both build-time and load-time resolution; see the description
             for the "depends-on" xml element in the following file for the load-time mechanism:
-              component://framework/base/dtd/ofbiz-component.xsd
+              component://base/dtd/ofbiz-component.xsd
         FIXME?: get-component-build-deps must currently be defined in macros.xml due to theme patterns... -->
     <macrodef name="read-component-build-deps">
         <!--

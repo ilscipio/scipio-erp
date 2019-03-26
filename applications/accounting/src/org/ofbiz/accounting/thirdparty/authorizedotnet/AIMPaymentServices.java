@@ -51,6 +51,7 @@ public class AIMPaymentServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
+    public final static String resourceError = "AccountingErrorUiLabels"; // SCIPIO: 2018-09-26: added missing
 
     // The list of refund failure response codes that would cause the ccRefund service
     // to attempt to void the refund's associated authorization transaction.  This list
@@ -93,7 +94,8 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -111,12 +113,12 @@ public class AIMPaymentServices {
             creditCard = delegator.getRelatedOne("CreditCard",orderPaymentPreference, false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentUnableToGetCCInfo", locale));
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
         context.put("creditCard", creditCard);
@@ -132,13 +134,13 @@ public class AIMPaymentServices {
         // PRIOR_AUTH_CAPTURE is the right one to use, since we already have an authorization from the authTransaction.
         // CAPTURE_ONLY is a "force" transaction to be used if there is no prior authorization
         props.put("transType", "PRIOR_AUTH_CAPTURE");
-        //props.put("transType","CAPTURE_ONLY");
         props.put("cardtype", creditCard.get("cardType"));
         buildCaptureTransaction(context,props,request);
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -159,12 +161,12 @@ public class AIMPaymentServices {
             creditCard = delegator.getRelatedOne("CreditCard", orderPaymentPreference, false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentUnableToGetCCInfo", locale));
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
         context.put("creditCard",creditCard);
@@ -183,12 +185,13 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
         results.putAll(processRefundTransResult(request, reply));
-        boolean refundResult = ((Boolean)results.get("refundResult")).booleanValue();
+        boolean refundResult = (Boolean) results.get("refundResult");
         String refundFlag = (String)results.get("refundFlag");
         // Since the refund failed, we are going to void the previous authorization against
         // which ccRefunds attempted to issue the refund.  This happens because Authorize.NET requires
@@ -229,8 +232,8 @@ public class AIMPaymentServices {
                 } else {
                     // TODO: Modify the code to (a) do a void of the whole transaction, and (b)
                     // create a new auth-capture of the difference.
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                            "AccountingAuthorizeNetCannotPerformVoidTransaction", 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                            "AccountingAuthorizeNetCannotPerformVoidTransaction",
                             UtilMisc.toMap("authAmount", authAmount, "refundAmount", refundAmount), locale));
                 }
             }
@@ -244,7 +247,7 @@ public class AIMPaymentServices {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
         Map<String, Object> reply = voidTransaction(authTransaction, context, delegator);
@@ -271,16 +274,18 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         return processCard(request, props, locale);
     }
 
     public static Map<String, Object> ccCredit(DispatchContext ctx, Map<String, Object> context) {
+        Locale locale = (Locale) context.get("locale");
         Map<String, Object> results = new HashMap<String, Object>();
         results.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-        results.put(ModelService.ERROR_MESSAGE, "Authorize.net ccCredit unsupported with version 3.1");
+        results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "AccountingAuthorizeNetccCreditUnsupported", locale));
         return results;
     }
 
@@ -300,7 +305,8 @@ public class AIMPaymentServices {
         Map<String, Object> validateResults = validateRequest(context, props, request);
         String respMsg = (String)validateResults.get(ModelService.RESPONSE_MESSAGE);
         if (ModelService.RESPOND_ERROR.equals(respMsg)) {
-            results.put(ModelService.ERROR_MESSAGE, "Validation Failed - invalid values");
+            // SCIPIO: 2018-09-26: fixed resource
+            results.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resourceError, "AccountingValidationFailedInvalidValues", locale));
             return results;
         }
         Map<String, Object> reply = processCard(request, props, locale);
@@ -317,7 +323,7 @@ public class AIMPaymentServices {
         Map<String, Object> result = new HashMap<String, Object>();
         String url = props.getProperty("url");
         if (UtilValidate.isEmpty(url)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingAuthorizeNetTransactionUrlNotFound", locale));
         }
         if (isTestMode()) {
@@ -325,18 +331,18 @@ public class AIMPaymentServices {
             Debug.logInfo("TEST Authorize.net request string " + request.toString(),module);
             Debug.logInfo("TEST Authorize.net properties string " + props.toString(),module);
         }
-        
+
         // card present has a different layout from standard AIM; this determines how to parse the response
         int apiType = UtilValidate.isEmpty(props.get("cpMarketType")) ? AuthorizeResponse.AIM_RESPONSE : AuthorizeResponse.CP_RESPONSE;
-        
+
         try {
             HttpClient httpClient = new HttpClient(url, request);
             String certificateAlias = props.getProperty("certificateAlias");
             httpClient.setClientCertificateAlias(certificateAlias);
             String httpResponse = httpClient.post();
             Debug.logInfo("transaction response: " + httpResponse,module);
-            AuthorizeResponse ar = new AuthorizeResponse(httpResponse, apiType);            
-            if (ar.isApproved()) {            
+            AuthorizeResponse ar = new AuthorizeResponse(httpResponse, apiType);
+            if (ar.isApproved()) {
                 result.put("authResult", Boolean.TRUE);
             } else {
                 result.put("authResult", Boolean.FALSE);
@@ -384,7 +390,7 @@ public class AIMPaymentServices {
         String login = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "userId", configStr, "payment.authorizedotnet.login");
         String password = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "pwd", configStr, "payment.authorizedotnet.password");
         String transDescription = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "transDescription", configStr, "payment.authorizedotnet.transdescription");
-        String duplicateWindow = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "duplicateWindow", configStr, "payment.authorizedotnet.duplicateWindow");        
+        String duplicateWindow = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "duplicateWindow", configStr, "payment.authorizedotnet.duplicateWindow");
         if (UtilValidate.isEmpty(ver)) {
             ver = "3.0";
         }
@@ -395,7 +401,7 @@ public class AIMPaymentServices {
             Debug.logInfo("The password property in " + configStr + " is not configured.", module);
         }
         if ("3.1".equals(ver)) {
-            if (tranKey == null || tranKey.length() <= 0) {
+            if (UtilValidate.isEmpty(tranKey)) {
                 Debug.logInfo("Trankey property required for version 3.1 reverting to 3.0",module);
                 ver = "3.0";
             }
@@ -403,7 +409,7 @@ public class AIMPaymentServices {
         if (UtilValidate.isNotEmpty(cpMarketType) && UtilValidate.isEmpty(cpVersion)) {
             cpVersion = "1.0";
         }
-        
+
         Properties props = new Properties();
         props.put("url", url);
         props.put("certificateAlias", certificateAlias);
@@ -444,49 +450,49 @@ public class AIMPaymentServices {
             // only send password if no tran key
             AIMRequest.put("x_Password",props.getProperty("password"));
         }
-        
+
         // api version (non Card Present)
         String apiVersion = props.getProperty("ver");
         if (UtilValidate.isNotEmpty(apiVersion)) {
             AIMRequest.put("x_Version", props.getProperty("ver"));
         }
-        
+
         // CP version
         String cpVersion = props.getProperty("cpver");
         if (UtilValidate.isNotEmpty(cpVersion)) {
             AIMRequest.put("x_cpversion", cpVersion);
         }
 
-        // Check duplicateWindow time frame. If same transaction happens in the predefined time frame then return error. 
+        // Check duplicateWindow time frame. If same transaction happens in the predefined time frame then return error.
         String duplicateWindow = props.getProperty("duplicateWindow");
         if (UtilValidate.isNotEmpty(duplicateWindow)) {
             AIMRequest.put("x_duplicate_window", props.getProperty("duplicateWindow"));
         }
-        
+
         // CP market type
         String cpMarketType = props.getProperty("cpMarketType");
         if (UtilValidate.isNotEmpty(cpMarketType)) {
             AIMRequest.put("x_market_type", cpMarketType);
-            
+
             // CP test mode
             if ("true".equalsIgnoreCase(props.getProperty("testReq"))) {
-                AIMRequest.put("x_test_request", props.getProperty("testReq"));                
+                AIMRequest.put("x_test_request", props.getProperty("testReq"));
             }
         }
-        
+
         // CP device typ
         String cpDeviceType = props.getProperty("cpDeviceType");
         if (UtilValidate.isNotEmpty(cpDeviceType)) {
             AIMRequest.put("x_device_type", cpDeviceType);
-        }                      
+        }
     }
 
     private static void buildGatewayResponeConfig(Map<String, Object> params, Properties props, Map<String, Object> AIMRequest) {
         if (AIMRequest.get("x_market_type") != null) {
             // card present transaction
-            AIMRequest.put("x_response_format", "true".equalsIgnoreCase(props.getProperty("delimited")) ? "1" : "0");            
+            AIMRequest.put("x_response_format", "true".equalsIgnoreCase(props.getProperty("delimited")) ? "1" : "0");
         } else {
-            AIMRequest.put("x_Delim_Data", props.getProperty("delimited"));            
+            AIMRequest.put("x_Delim_Data", props.getProperty("delimited"));
         }
         AIMRequest.put("x_Delim_Char", props.getProperty("delimiter"));
     }
@@ -514,7 +520,7 @@ public class AIMPaymentServices {
                             AIMRequest.put("x_Zip", UtilFormatOut.checkNull(address.getString("postalCode")));
                             AIMRequest.put("x_Country", UtilFormatOut.checkNull(address.getString("countryGeoId")));
                         }
-                    }                    
+                    }
                 } else {
                     Debug.logWarning("Payment preference " + opp + " is not a credit card", module);
                 }
@@ -551,7 +557,7 @@ public class AIMPaymentServices {
         String orderId = UtilFormatOut.checkNull((String)params.get("orderId"));
         if (UtilValidate.isEmpty(orderId)) {
             GenericValue orderPaymentPreference = (GenericValue) params.get("orderPaymentPreference");
-            if (UtilValidate.isNotEmpty(orderPaymentPreference)) {
+            if (orderPaymentPreference != null) {
                 orderId = (String) orderPaymentPreference.get("orderId");
             }
         }
@@ -567,7 +573,7 @@ public class AIMPaymentServices {
         String expDate = UtilFormatOut.checkNull(cc.getString("expireDate"));
         String cardSecurityCode = (String) params.get("cardSecurityCode");
         AIMRequest.put("x_Amount", amount);
-        AIMRequest.put("x_Currency_Code", currency);        
+        AIMRequest.put("x_Currency_Code", currency);
         AIMRequest.put("x_Method", props.getProperty("method"));
         AIMRequest.put("x_Type", props.getProperty("transType"));
         AIMRequest.put("x_Card_Num", number);
@@ -645,10 +651,10 @@ public class AIMPaymentServices {
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean authResult = (Boolean) reply.get("authResult");
-            results.put("authResult", new Boolean(authResult.booleanValue()));
+            results.put("authResult", authResult);
             results.put("authFlag", ar.getReasonCode());
             results.put("authMessage", ar.getReasonText());
-            if (authResult.booleanValue()) { //passed
+            if (authResult) { //passed
                 results.put("authCode", ar.getAuthorizationCode());
                 results.put("authRefNum", ar.getTransactionId());
                 results.put("cvCode", ar.getCvResult());
@@ -676,11 +682,11 @@ public class AIMPaymentServices {
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean captureResult = (Boolean) reply.get("authResult");
-            results.put("captureResult", new Boolean(captureResult.booleanValue()));
+            results.put("captureResult", captureResult);
             results.put("captureFlag", ar.getReasonCode());
             results.put("captureMessage", ar.getReasonText());
             results.put("captureRefNum", ar.getTransactionId());
-            if (captureResult.booleanValue()) { //passed
+            if (captureResult) { //passed
                 results.put("captureCode", ar.getAuthorizationCode());
                 if (BigDecimal.ZERO.compareTo(ar.getAmount()) == 0) {
                     results.put("captureAmount", getXAmount(request));
@@ -702,11 +708,11 @@ public class AIMPaymentServices {
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean captureResult = (Boolean) reply.get("authResult");
-            results.put("refundResult", new Boolean(captureResult.booleanValue()));
+            results.put("refundResult", captureResult);
             results.put("refundFlag", ar.getReasonCode());
             results.put("refundMessage", ar.getReasonText());
             results.put("refundRefNum", ar.getTransactionId());
-            if (captureResult.booleanValue()) { //passed
+            if (captureResult) { //passed
                 results.put("refundCode", ar.getAuthorizationCode());
                 if (BigDecimal.ZERO.compareTo(ar.getAmount()) == 0) {
                     results.put("refundAmount", getXAmount(request));
@@ -729,11 +735,11 @@ public class AIMPaymentServices {
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean captureResult = (Boolean) reply.get("authResult");
-            results.put("releaseResult", new Boolean(captureResult.booleanValue()));
+            results.put("releaseResult", captureResult);
             results.put("releaseFlag", ar.getReasonCode());
             results.put("releaseMessage", ar.getReasonText());
             results.put("releaseRefNum", ar.getTransactionId());
-            if (captureResult.booleanValue()) { //passed
+            if (captureResult) { //passed
                 results.put("releaseCode", ar.getAuthorizationCode());
                 if (BigDecimal.ZERO.compareTo(ar.getAmount()) == 0) {
                     results.put("releaseAmount", getXAmount(request));
@@ -755,14 +761,14 @@ public class AIMPaymentServices {
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
         Boolean authResult = (Boolean) reply.get("authResult");
-        results.put("authResult", new Boolean(authResult.booleanValue()));
+        results.put("authResult", authResult);
         results.put("authFlag", ar.getReasonCode());
         results.put("authMessage", ar.getReasonText());
-        results.put("captureResult", new Boolean(authResult.booleanValue()));
+        results.put("captureResult", authResult);
         results.put("captureFlag", ar.getReasonCode());
         results.put("captureMessage", ar.getReasonText());
         results.put("captureRefNum", ar.getTransactionId());
-        if (authResult.booleanValue()) { //passed
+        if (authResult) { //passed
             results.put("authCode", ar.getAuthorizationCode());
             results.put("authRefNum", ar.getTransactionId());
             results.put("cvCode", ar.getCvResult());
@@ -792,7 +798,7 @@ public class AIMPaymentServices {
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
                 GenericValue payflowPro = EntityQuery.use(delegator).from("PaymentGatewayAuthorizeNet").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
-                if (UtilValidate.isNotEmpty(payflowPro)) {
+                if (payflowPro != null) {
                     Object payflowProField = payflowPro.get(paymentGatewayConfigParameterName);
                     if (payflowProField != null) {
                         returnValue = payflowProField.toString().trim();
@@ -809,17 +815,17 @@ public class AIMPaymentServices {
         }
         return returnValue;
     }
-    
+
     private static String getCardType(String cardType) {
         if (("CCT_VISA".equalsIgnoreCase(cardType))) return "V";
         if (("CCT_MASTERCARD".equalsIgnoreCase(cardType))) return "M";
         if ((("CCT_AMERICANEXPRESS".equalsIgnoreCase(cardType)) || ("CCT_AMEX".equalsIgnoreCase(cardType)))) return "A";
         if (("CCT_DISCOVER".equalsIgnoreCase(cardType))) return "D";
         if (("CCT_JCB".equalsIgnoreCase(cardType))) return "J";
-        if ((("CCT_DINERSCLUB".equalsIgnoreCase(cardType)))) return "C";        
+        if ((("CCT_DINERSCLUB".equalsIgnoreCase(cardType)))) return "C";
         return "";
     }
-    
+
     private static BigDecimal getXAmount(Map<String, Object> request) {
         BigDecimal amt = BigDecimal.ZERO;
         if (request.get("x_Amount") != null) {

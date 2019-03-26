@@ -1,31 +1,18 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@menu type="button">
 <#if curProductFeatureCategory??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
+  <@menuitem type="link" href=makePageUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${rawString(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+  <@menuitem type="link" href=makePageUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${raw(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
-  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text=uiLabelMap.ProductReturnToEditProductFeatures class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+  <@menuitem type="link" href=makePageUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makePageUrl("EditProductFeatures?productId=${productId}") text=uiLabelMap.ProductReturnToEditProductFeatures class="+${styles.action_nav!} ${styles.action_cancel!}"/>
 </#if>
 </@menu>
 
@@ -36,14 +23,14 @@ under the License.
 <#-- SCIPIO: NOTE: productFeatureGroupId was not in stock; has been added by us. 
     NOTE: we added a productFeaturesPaginated flag because pagination only partly implemented by stock depending on search options (productFeatures list only paginated if productFeatureGroupId is not set) -->
 <#assign paramStr = addParamsToStr("", {"productFeatureCategoryId": productFeatureCategoryId!"", "productFeatureApplTypeId": selectedFeatureApplTypeId!"", "productId": productId!"", "productFeatureGroupId": productFeatureGroupId!""}, "&amp;", false)>
-<@paginate mode="content" url=makeOfbizUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>
-<form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
+<@paginate mode="content" url=makePageUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>
+<form method="post" action="<@pageUrl>ApplyFeaturesToProduct</@pageUrl>" name="selectAllForm">
   <@fields type="default-manual-widgetonly">
     <input type="hidden" name="_useRowSubmit" value="Y" />
     <input type="hidden" name="_checkGlobalScope" value="Y" />
     <input type="hidden" name="productId" value="${productId}" />
   
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonId}</@th>
@@ -63,13 +50,13 @@ under the License.
       <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
         <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
             <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-            <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
+            <@td><a href="<@pageUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@pageUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
             <@td>${productFeature.description!}</@td>
             <@td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></@td>
             <@td>
               <select name="productFeatureApplTypeId_o_${rowCount}" size="1">
                 <#list productFeatureApplTypes as productFeatureApplType>
-                  <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)>selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
+                  <option value="${productFeatureApplType.productFeatureApplTypeId}"<#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)> selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
                 </#list>
               </select>
             </@td>

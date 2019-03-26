@@ -22,7 +22,7 @@ import org.ofbiz.entity.util.*
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRunHelper
 
-if (security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+if (security.hasEntityPermission("MANUFACTURING", "_VIEW", request)) {
     context.hasPermission = Boolean.TRUE;
 } else {
     context.hasPermission = Boolean.FALSE;

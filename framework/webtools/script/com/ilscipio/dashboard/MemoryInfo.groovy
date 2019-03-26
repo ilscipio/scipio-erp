@@ -3,10 +3,12 @@ import org.ofbiz.base.util.UtilFormatOut
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.cache.UtilCache
 import org.ofbiz.common.uom.UomWorker
+import org.apache.commons.math3.util.Precision;
 
-context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
+context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", request);
 
 final module = "MemoryInfo.groovy"
+final displayMbScale = 2; // SCIPIO
 
 Debug.logInfo("Begin fetching memory info", module);
 
@@ -29,8 +31,6 @@ names.each { cacheName ->
     cache.maxInMemory = UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
     cache.expireTime = UtilFormatOut.formatQuantity(utilCache.getExpireTime());
     cache.useSoftReference = utilCache.getUseSoftReference().toString();
-    cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
-    cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
     cache.cacheMemory = utilCache.getSizeInBytes();
     totalCacheMemory += cache.cacheMemory;
     cacheList.add(cache);
@@ -52,13 +52,13 @@ totalMemoryMB = ((rt.totalMemory() / 1024) / 1024);
 context.totalMemoryMB = totalMemoryMB;
 
 freeMemoryMB = ((rt.freeMemory() / 1024) / 1024);
-memoryInfo.put("Free Memory", UtilFormatOut.formatQuantity(freeMemoryMB));
+memoryInfo.put("Free Memory", Precision.round(freeMemoryMB, displayMbScale)); // SCIPIO: invalid for @chartdata, don't pass string: UtilFormatOut.formatQuantity(freeMemoryMB)
 
 cachedMemoryMB = ((totalCacheMemory / 1024) / 1024);
-memoryInfo.put("Cache Memory", UtilFormatOut.formatQuantity(cachedMemoryMB));
+memoryInfo.put("Cache Memory", Precision.round(cachedMemoryMB, displayMbScale)); // SCIPIO: invalid for @chartdata, don't pass string: UtilFormatOut.formatQuantity(cachedMemoryMB)
 
 usedMemoryMB = ((((rt.totalMemory() - rt.freeMemory()) - totalCacheMemory)  / 1024) / 1024);
-memoryInfo.put("Used Memory without cache", UtilFormatOut.formatQuantity(usedMemoryMB));
+memoryInfo.put("Used Memory without cache", Precision.round(usedMemoryMB, displayMbScale)); // SCIPIO: invalid for @chartdata, don't pass string: UtilFormatOut.formatQuantity(usedMemoryMB)
 
 context.memoryInfo = memoryInfo;
 

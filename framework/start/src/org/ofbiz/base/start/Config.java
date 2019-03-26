@@ -18,16 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.base.start;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -43,6 +33,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class Config {
 
@@ -183,7 +184,7 @@ public class Config {
         instrumenterFile = getProp(props, "ofbiz.instrumenterFile", null);
 
         // loader classes
-        List loadersTmp = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> loadersTmp = new ArrayList<Map<String, String>>();
         int currentPosition = 1;
         Map<String, String> loader = null;
         while (true) {
@@ -293,10 +294,10 @@ public class Config {
         collectClasspathEntries(new File(home, "framework"), classPath, libraryPath);
         collectClasspathEntries(new File(home, "applications"), classPath, libraryPath);
         collectClasspathEntries(new File(home, "specialpurpose"), classPath, libraryPath);
-        
+
         // SCIPIO: 2016-06-30: Also load from addons folder (supersedes specialpurpose but acts more or less like hot-deploy)
         collectClasspathEntries(new File(home, "addons"), classPath, libraryPath);
-        
+
         collectClasspathEntries(new File(home, "hot-deploy"), classPath, libraryPath);
         System.setProperty("java.library.path", libraryPath.toString());
         classPath.instrument(this.instrumenterFile, this.instrumenterClassName);

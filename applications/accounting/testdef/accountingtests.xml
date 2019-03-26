@@ -31,9 +31,10 @@
         <junit-test-suite class-name="org.ofbiz.accounting.test.FinAccountTests"/>
     </test-case>
 
+    <!--  SCIPIO: TODO: REVIEW
     <test-case case-name="auto-accounting-transaction-tests-sales">
         <simple-method-test location="component://accounting/script/org/ofbiz/accounting/test/AutoAcctgTransTestsSales.xml"/>
-    </test-case>
+    </test-case>-->
     <test-case case-name="auto-accounting-transaction-tests-purchase">
         <simple-method-test location="component://accounting/script/org/ofbiz/accounting/test/AutoAcctgTransTestsPurchase.xml"/>
     </test-case>

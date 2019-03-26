@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#include "common.ftl">
@@ -48,7 +35,7 @@ under the License.
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
             <#if topLine.text??>
-              <li>${topLine.text}<a href="${rawString(topLine.url!)}${rawString(externalKeyParam)}">${topLine.urlText!}</a></li>
+              <li>${topLine.text}<a href="${raw(topLine.url!)}${raw(externalKeyParam)}">${topLine.urlText!}</a></li>
             <#elseif topLine.dropDownList??>
               <li><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
             <#else>
@@ -59,15 +46,15 @@ under the License.
           <li>${userLogin.userLoginId}</li>
         </#if>
         -->
-        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
-        <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
+        <li><a href="<@pageUrl>ListLocales</@pageUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>
+        <li><a href="<@pageUrl>ListVisualThemes</@pageUrl>">${uiLabelMap.CommonVisualThemes}</a></li>
     </#if>
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
         <#include "component://common/webcommon/includes/helplink.ftl" />
     </#if>
     <#if userLogin??>
         <li class="divider"></li>
-        <li class="active"><a href="<@ofbizUrl>logout?t=${.now?long}</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
+        <li class="active"><a href="<@pageUrl>logout?t=${.now?long}</@pageUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
 </#macro>
 
@@ -82,7 +69,7 @@ under the License.
           <#assign selected = true>
         </#if>
         <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-        <#assign thisURL = rawString(servletPath)>
+        <#assign thisURL = raw(servletPath)>
         <#if thisApp != "/">
           <#if servletPath?has_content>
             <#assign thisURL = thisURL + "main">
@@ -93,8 +80,8 @@ under the License.
         <#if layoutSettings.suppressTab?? && display.name == layoutSettings.suppressTab>
           <#-- do not display this component-->
         <#else>
-            <li <#if selected> class="active"</#if>>
-                <a href="${thisURL}${rawString(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
+            <li<#if selected> class="active"</#if>>
+                <a href="${thisURL}${raw(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             </li>
             <#assign appCount = appCount + 1>
         </#if>
@@ -110,7 +97,7 @@ under the License.
           <#assign selected = true>
         </#if>
           <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-          <#assign thisURL = rawString(servletPath)>
+          <#assign thisURL = raw(servletPath)>
           <#if thisApp != "/">
             <#if servletPath?has_content>
               <#assign thisURL = thisURL + "main">
@@ -118,8 +105,8 @@ under the License.
               <#assign thisURL = thisApp>
             </#if>
           </#if>
-          <li <#if selected> class="active"</#if>>      
-            <a href="${thisURL}${rawString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
+          <li<#if selected> class="active"</#if>>      
+            <a href="${thisURL}${raw(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             <#assign appCount = appCount + 1>
           </li>
     </#list>
@@ -175,11 +162,11 @@ so for now we have to split the screens in half and rely on the menu widget rend
     </#if>
     <#if headerImageUrl??>
         <#if organizationLogoLinkURL?has_content>
-            <#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(organizationLogoLinkURL)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
-            <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(headerImageUrl)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
+            <#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(organizationLogoLinkURL)}</@contentUrl>"/><#if hasLink></a></#if>
+            <#else><#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(headerImageUrl)}</@contentUrl>"/><#if hasLink></a></#if>
         </#if>
         <#else>
-        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/></a>
+        <a href="<@pageUrl>${logoLinkURL!""}</@pageUrl>"><img alt="${layoutSettings.companyName}" src="<@contentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@contentUrl>"/></a>
     </#if>
 </#macro>
 
@@ -193,29 +180,29 @@ so for now we have to split the screens in half and rely on the menu widget rend
       <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
     </#if>
     <#if shortcutIcon?has_content>
-      <link rel="shortcut icon" href="<@ofbizContentUrl>${rawString(shortcutIcon)}</@ofbizContentUrl>" />
+      <link rel="shortcut icon" href="<@contentUrl>${raw(shortcutIcon)}</@contentUrl>" />
     </#if>
     
     <#if layoutSettings.styleSheets?has_content>
         <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     
@@ -225,7 +212,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -236,7 +223,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_PRIO_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -247,7 +234,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -256,7 +243,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -269,7 +256,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
     <#if layoutSettings.WEB_ANALYTICS?has_content>
       <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
-          ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
+          ${raw(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>
@@ -291,8 +278,8 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
-          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li>
         </ul>
     </aside>
     
@@ -334,14 +321,14 @@ so for now we have to split the screens in half and rely on the menu widget rend
           </#if>
           <#-- UserLogin -->
           <li class="has-dropdown not-click">
-            <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
+            <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@pageUrl>${checkLoginUrl}</@pageUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
             <ul class="dropdown">       
                 <@generalMenu />
             </ul>
           </li>
           <li class="divider"></li>
-          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>      
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li>      
         </ul>
         
         <#if userLogin?has_content>

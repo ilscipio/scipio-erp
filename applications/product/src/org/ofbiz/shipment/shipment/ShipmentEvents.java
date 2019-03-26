@@ -34,16 +34,30 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
+
+import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider;
 
 /**
- * ShippingEvents - Events used for processing shipping fees
+ * ShipmentEvents - Events used for processing shipping fees
  */
 public class ShipmentEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static String viewShipmentPackageRouteSegLabelImage(HttpServletRequest request, HttpServletResponse response) {
+    /**
+     * SCIPIO: Provides safe (usually session-scoped) access to the {@link #viewShipmentPackageRouteSegLabelImageOpenAccess} event 
+     * using a token.
+     * Added 2018-10-17.
+     */
+    private static final AccessTokenProvider<Object> viewShipmentAccessProvider = AccessTokenProvider
+            .newWeakAccessTokenProvider(AccessTokenProvider.NoopEventHandler.getInstance());
 
+    public static String viewShipmentPackageRouteSegLabelImage(HttpServletRequest request, HttpServletResponse response) {
+        return viewShipmentPackageRouteSegLabelImageImpl(request, response); // SCIPIO: 2018-10-17: now delegated
+    }
+
+    private static String viewShipmentPackageRouteSegLabelImageImpl(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         String shipmentId = request.getParameter("shipmentId");
@@ -89,6 +103,23 @@ public class ShipmentEvents {
         return "success";
     }
 
+    public static String viewShipmentPackageRouteSegLabelImageUnsafe(HttpServletRequest request, HttpServletResponse response) {
+        // SCIPIO: 2018-10-17: security: require access token for this request
+        String accessToken = request.getParameter("accessToken");
+        if (accessToken == null || viewShipmentAccessProvider.get(accessToken) == null) {
+            request.setAttribute("_ERROR_MESSAGE_", "viewShipmentPackageRouteSegLabelImage was accessed without an accessToken; access denied");
+            return "error";
+        }
+        return viewShipmentPackageRouteSegLabelImageImpl(request, response);
+    }
+    
+    /**
+     * SCIPIO: Returns an access token that can be passed as accessToken parameter to {@link #viewShipmentPackageRouteSegLabelImageUnsafe}.
+     */
+    public static String getShipmentViewRequestAccessTokenString(HttpServletRequest request) {
+        return viewShipmentAccessProvider.getRequestToken(request, "_SCP_REQSHIPVIEWTOKEN_", new Object()).toString();
+    }
+
     public static String checkForceShipmentReceived(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
@@ -99,7 +130,13 @@ public class ShipmentEvents {
             try {
                 Map<String, Object> inputMap = UtilMisc.<String, Object>toMap("shipmentId", shipmentId, "statusId", "PURCH_SHIP_RECEIVED");
                 inputMap.put("userLogin", userLogin);
-                dispatcher.runSync("updateShipment", inputMap);
+                Map<String, Object> resultMap = dispatcher.runSync("updateShipment", inputMap);
+                if (ServiceUtil.isError(resultMap)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             } catch (GenericServiceException gse) {
                 String errMsg = "Error updating shipment [" + shipmentId + "]: " + gse.toString();
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);

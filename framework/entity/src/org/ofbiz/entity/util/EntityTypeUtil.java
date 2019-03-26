@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -32,9 +31,11 @@ import org.ofbiz.entity.GenericValue;
  * Makes it easier to deal with entities that follow the
  * extensibility pattern and that can be of various types as identified in the database.
  */
-public class EntityTypeUtil {
+public final class EntityTypeUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private EntityTypeUtil() {}
 
     public static boolean isType(Collection<GenericValue> thisCollection, String typeRelation, GenericValue targetType) {
         for (GenericValue value: thisCollection) {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Human Resources Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- PerfRatingType services -->
+    <service name="createPerfRatingType" default-entity-name="PerfRatingType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a PerfRatingType record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updatePerfRatingType" default-entity-name="PerfRatingType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a PerfRatingType record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deletePerfRatingType" default-entity-name="PerfRatingType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a PerfRatingType record</description>
+        <auto-attributes mode="IN" include="pk"/>
+    </service>
+
+    <!-- PerfReviewItemType services -->
+    <service name="createPerfReviewItemType" default-entity-name="PerfReviewItemType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a PerfReviewItemType record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updatePerfReviewItemType" default-entity-name="PerfReviewItemType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a PerfReviewItemType record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deletePerfReviewItemType" default-entity-name="PerfReviewItemType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a PerfReviewItemType record</description>
+        <auto-attributes mode="IN" include="pk"/>
+    </service>
+
+</services>

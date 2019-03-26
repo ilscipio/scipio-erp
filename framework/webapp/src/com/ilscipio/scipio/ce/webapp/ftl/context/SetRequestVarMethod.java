@@ -35,7 +35,7 @@ import freemarker.template.TemplateScalarModel;
  * with fallback to globals.
  * <p>
  * Values set by this transform should only be read using {@link GetRequestVarMethod}.
- * 
+ *
  * @see com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil#setRequestVar
  */
 public class SetRequestVarMethod implements TemplateMethodModelEx {
@@ -45,9 +45,8 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 2 || args.size() > 3) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2-3)");
         }
@@ -56,7 +55,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
         TemplateModel valueModel = (TemplateModel) args.get(1);
-        
+
         Boolean unwrap = null;
         if (args.size() >= 3) {
             TemplateModel modeModel = (TemplateModel) args.get(2);

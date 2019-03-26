@@ -19,10 +19,10 @@
 
 <entity-engine-xml>
     <!-- survey -->
-    <Survey surveyId="1100" description="Account Activation" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" lastUpdatedStamp="2003-12-05 16:49:33.835" lastUpdatedTxStamp="2003-12-05 16:49:33.835"/>
-    <SurveyQuestionCategory surveyQuestionCategoryId="1100" description="Account Activation Questions" lastUpdatedStamp="2003-12-04 21:40:23.207" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
-    <SurveyQuestion surveyQuestionId="1100" surveyQuestionCategoryId="1100" surveyQuestionTypeId="TEXT_LONG" description="activationSerialNumber" question="Activation Serial Number:" lastUpdatedStamp="2003-12-04 21:40:23.216" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
-    <SurveyQuestionAppl surveyId="1100" surveyQuestionId="1100" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
+    <Survey surveyId="1100" description="Account Activation" isAnonymous="Y" allowMultiple="Y" allowUpdate="N"/>
+    <SurveyQuestionCategory surveyQuestionCategoryId="1100" description="Account Activation Questions"/>
+    <SurveyQuestion surveyQuestionId="1100" surveyQuestionCategoryId="1100" surveyQuestionTypeId="TEXT_LONG" description="activationSerialNumber" question="Activation Serial Number:"/>
+    <SurveyQuestionAppl surveyId="1100" surveyQuestionId="1100" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1"/>
 
     <!-- settings -->
     <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
@@ -89,7 +89,7 @@
 
     <!-- survey appl -->
     <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
-    <ProductStoreSurveyAppl productStoreSurveyId="1100" productStoreId="ScipioShop" surveyApplTypeId="CART_ADD" surveyId="1100" productId="FA-001" fromDate="2003-11-24 16:00:02.467" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl" lastUpdatedStamp="2003-12-04 21:40:23.27" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1100" productStoreId="ScipioShop" surveyApplTypeId="CART_ADD" surveyId="1100" productId="FA-001" fromDate="2003-11-24 16:00:02.467" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     -->
     
     <!-- fulfillment service -->

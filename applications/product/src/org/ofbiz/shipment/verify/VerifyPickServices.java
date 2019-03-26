@@ -25,15 +25,16 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * VerifyPickServices.
+ * <p>
+ * SCIPIO: 2018-11-28: All composed operations are now synchronized.
+ */
 public class VerifyPickServices {
-
-    private static BigDecimal ZERO = BigDecimal.ZERO;
 
     public static Map<String, Object> verifySingleItem(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
@@ -58,6 +59,7 @@ public class VerifyPickServices {
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
+        // SCIPIO: TODO: REVIEW: clearly something missing here
 //        String selectedMap = null;
 //        if (UtilValidate.isNotEmpty(context.get("selectedMap"))) {
 //            selectedMap = (String) context.get("selectedMap");
@@ -86,7 +88,7 @@ public class VerifyPickServices {
 //                String quantityStr = quantityMap.get(rowKey);
                 if (UtilValidate.isNotEmpty(quantityStr)) {
                     BigDecimal quantity = new BigDecimal(quantityStr);
-                    if (quantity.compareTo(ZERO) > 0) {
+                    if (quantity.compareTo(BigDecimal.ZERO) > 0) {
                         try {
                             pickSession.createRow(orderId, orderItemSeqId, shipGroupSeqId, productId, originGeoId, quantity, locale);
                         } catch (Exception ex) {
@@ -105,11 +107,13 @@ public class VerifyPickServices {
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
         try {
+            synchronized (pickSession) { // SCIPIO
             shipmentId = pickSession.complete(orderId, locale);
             Map<String, Object> shipment = new HashMap<String, Object>();
             shipment.put("shipmentId", shipmentId);
             pickSession.clearAllRows();
             return shipment;
+            }
         } catch (GeneralException ex) {
             return ServiceUtil.returnError(ex.getMessage(), ex.getMessageList());
         }

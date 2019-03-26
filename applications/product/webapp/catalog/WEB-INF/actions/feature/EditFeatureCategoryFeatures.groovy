@@ -25,7 +25,7 @@ import org.ofbiz.entity.transaction.*
 
 module = "EditFeatureCategoryFeatures.groovy";
 
-context.hasPermission = security.hasEntityPermission("CATALOG", "_VIEW", session);
+context.hasPermission = security.hasEntityPermission("CATALOG", "_VIEW", request);
 
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 

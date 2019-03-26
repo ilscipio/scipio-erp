@@ -12,21 +12,21 @@ public final class PartyUtil {
 
     private PartyUtil() {
     }
-    
-    
+
+
     /**
      * SCIPIO: Return a person's full name. Defaults to partyId if empty.
-     * 
+     *
      * @param delegator
      * @param partyId
      * @return
      * @throws GenericEntityException
      */
-    public static String getPersonFullName(Delegator delegator, 
+    public static String getPersonFullName(Delegator delegator,
             String partyId) throws GenericEntityException {
-        
+
         GenericValue user = delegator.findOne("Person", true,UtilMisc.toMap("partyId", partyId));
-        
+
         if (UtilValidate.isNotEmpty(user)) {
             return user.getString("firstName")+" "+user.getString("lastName");
         }
@@ -34,6 +34,6 @@ public final class PartyUtil {
             return partyId;
         }
     }
-    
-    
+
+
 }

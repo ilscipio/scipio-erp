@@ -51,9 +51,9 @@ public class TreeFactory extends WidgetFactory {
     public static TreeFactory getTreeFactory() { // SCIPIO: new
         return treeFactory;
     }
-    
+
     /**
-     * Gets widget from location or exception. 
+     * Gets widget from location or exception.
      * <p>
      * SCIPIO: now delegating.
      */
@@ -65,7 +65,7 @@ public class TreeFactory extends WidgetFactory {
         }
         return modelTree;
     }
-    
+
     /**
      * SCIPIO: Gets widget from location or null if name not within the location.
      */
@@ -73,21 +73,20 @@ public class TreeFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelTree> modelTreeMap = treeLocationCache.get(resourceName);
         if (modelTreeMap == null) {
+            // SCIPIO: refactored
             synchronized (TreeFactory.class) {
                 modelTreeMap = treeLocationCache.get(resourceName);
                 if (modelTreeMap == null) {
-                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                    if (loader == null) {
-                        loader = TreeFactory.class.getClassLoader();
+                    URL treeFileUrl = FlexibleLocation.resolveLocation(resourceName);
+                    if (treeFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve tree file location [" + resourceName + "]");
                     }
-
-                    URL treeFileUrl = null;
-                    treeFileUrl = FlexibleLocation.resolveLocation(resourceName); //, loader);
                     Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
-                    // SCIPIO: New: Save original location as user data in Document
-                    if (treeFileDoc != null) {
-                        WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName); 
+                    if (treeFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read tree file at location [" + resourceName + "]");
                     }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName);
                     modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
                     treeLocationCache.put(resourceName, modelTreeMap);
                 }
@@ -95,11 +94,16 @@ public class TreeFactory extends WidgetFactory {
         }
 
         ModelTree modelTree = modelTreeMap.get(treeName);
+        // SCIPIO: now done in non-*OrNull method
+        //if (modelTree == null) {
+        //    throw new IllegalArgumentException("Could not find tree with name [" + treeName + "] in class resource ["
+        //            + resourceName + "]");
+        //}
         return modelTree;
     }
 
     public static Map<String, ModelTree> readTreeDocument(Document treeFileDoc, Delegator delegator, LocalDispatcher dispatcher, String treeLocation) {
-        Map<String, ModelTree> modelTreeMap = new HashMap<String, ModelTree>();
+        Map<String, ModelTree> modelTreeMap = new HashMap<>();
         if (treeFileDoc != null) {
             // read document and construct ModelTree for each tree element
             Element rootElement = treeFileDoc.getDocumentElement();
@@ -112,10 +116,10 @@ public class TreeFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelTree getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelTree getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getTreeFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+            return getTreeFromLocation(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator(), dctx.getDispatcher());
         } catch (SAXException e) {
             throw new IOException(e);
@@ -125,10 +129,10 @@ public class TreeFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelTree getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelTree getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getTreeFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+            return getTreeFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator(), dctx.getDispatcher());
         } catch (SAXException e) {
             throw new IOException(e);

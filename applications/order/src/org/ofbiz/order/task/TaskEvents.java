@@ -18,12 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.order.task;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -31,14 +31,14 @@ import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.ConfigXMLReader.Event;
-import org.ofbiz.webapp.event.EventHandler;
-import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.ConfigXMLReader.Event;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.event.EventHandler;
+import org.ofbiz.webapp.event.EventHandlerException;
 
 /**
  * Order Processing Task Events
@@ -73,8 +73,10 @@ public class TaskEvents {
             Map<String, ? extends Object> context = UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId, "roleTypeId", roleTypeId,
                     "fromDate", fromDate, "result", parameterMap, "userLogin", userLogin);
             result = dispatcher.runSync("wfCompleteAssignment", context);
-            if (result.containsKey(ModelService.RESPOND_ERROR)) {
-                request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
                 return "error";
             }
         } catch (GenericServiceException e) {
@@ -87,7 +89,7 @@ public class TaskEvents {
 
     /** Accept role assignment event */
     public static String acceptRoleAssignment(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         Locale locale = UtilHttp.getLocale(request);
 
@@ -107,7 +109,7 @@ public class TaskEvents {
 
     /** Delegate and accept assignment event */
     public static String delegateAndAcceptAssignment(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         Locale locale = UtilHttp.getLocale(request);
 
@@ -134,6 +136,12 @@ public class TaskEvents {
         Map<String, Object> result = null;
         try {
             result = dispatcher.runSync("addOrderRole", context);
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return false;
+            }
             Debug.logInfo("Added user to order role " + result, module);
         } catch (GenericServiceException gse) {
             request.setAttribute("_ERROR_MESSAGE_", gse.getMessage());

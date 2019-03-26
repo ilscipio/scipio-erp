@@ -1,50 +1,37 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeMode" value="removeEmptyShipGroups"/>
   </form>
 
   <@section>
         <#list 1..shoppingCart.getShipGroupSize() as currIndex>
           <#assign shipGroupIndex = currIndex - 1>
-          <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)}, false)! />
-          <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawLabel('OrderDropShipped')} - ${rawString(supplier.groupName!supplier.partyId)}</#if></#assign>
+          <#assign supplier = delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)!}, false)! />
+          <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawLabel('OrderDropShipped')} - ${raw(supplier.groupName!supplier.partyId)}</#if></#assign>
           <@section title=sectionTitle>
             <@row>
               <@cell>
-                <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
+                <form method="post" action="<@pageUrl>assignItemToShipGroups</@pageUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
                   <input type="hidden" name="_useRowSubmit" value="N" />
-                <@table type="data-list"> <#-- orig: class="basic-table" -->
+                <@table type="data-list">
                   <@thead>
                     <@tr>
-                      <@th>
+                      <@th width="40%">
                         ${uiLabelMap.ProductProduct}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.CommonQuantity}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.ProductMoveQuantity}
                       </@th>
-                      <@th>
+                      <@th width="20%">
                         ${uiLabelMap.OrderShipGroupTo}
                       </@th>
                     </@tr>

@@ -69,10 +69,9 @@ public class URLConnector {
 
         if (connection != null) {
             return connection;
-        } else {
-            timedOut = true;
-            throw new IOException("Connection timed out");
         }
+        timedOut = true;
+        throw new IOException("Connection timed out");
     }
 
     // trusted certs only
@@ -81,11 +80,11 @@ public class URLConnector {
     }
 
     public static URLConnection openConnection(URL url, int timeout) throws IOException {
-        return openConnection(url, timeout, null, SSLUtil.HOSTCERT_NORMAL_CHECK);
+        return openConnection(url, timeout, null, SSLUtil.getHostCertNormalCheck());
     }
 
     public static URLConnection openConnection(URL url, String clientCertAlias) throws IOException {
-        return openConnection(url, 30000, clientCertAlias, SSLUtil.HOSTCERT_NORMAL_CHECK);
+        return openConnection(url, 30000, clientCertAlias, SSLUtil.getHostCertNormalCheck());
     }
 
     public static URLConnection openConnection(URL url, int timeout, String clientCertAlias, int hostCertLevel) throws IOException {
@@ -99,11 +98,11 @@ public class URLConnector {
     }
 
     public static URLConnection openUntrustedConnection(URL url, int timeout) throws IOException {
-        return openConnection(url, timeout, null, SSLUtil.HOSTCERT_NORMAL_CHECK);
+        return openConnection(url, timeout, null, SSLUtil.getHostCertNormalCheck());
     }
 
     public static URLConnection openUntrustedConnection(URL url, String clientCertAlias) throws IOException {
-        return openConnection(url, 30000, clientCertAlias, SSLUtil.HOSTCERT_NORMAL_CHECK);
+        return openConnection(url, 30000, clientCertAlias, SSLUtil.getHostCertNormalCheck());
     }
 
     public static URLConnection openUntrustedConnection(URL url, int timeout, String clientCertAlias, int hostCertLevel) throws IOException {
@@ -126,9 +125,7 @@ public class URLConnector {
                         if (hv != null) {
                             scon.setHostnameVerifier(hv);
                         }
-                    } catch (GeneralSecurityException e) {
-                        Debug.logError(e, module);
-                    } catch (GenericConfigException e) {
+                    } catch (GeneralSecurityException | GenericConfigException e) {
                         Debug.logError(e, module);
                     }
                 }

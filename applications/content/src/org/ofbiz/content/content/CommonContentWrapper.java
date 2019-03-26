@@ -19,7 +19,7 @@ import org.ofbiz.service.ServiceContainer;
  * <p>
  * This implements Serializable as general workaround for some cases, although such cases should be avoided.
  * <p>
- * NEW: This is now thread-safe (despite the local-worker pattern), as a workaround for cases where 
+ * NEW: This is now thread-safe (despite the local-worker pattern), as a workaround for cases where
  * instances may end up in session attributes.
  * HOWEVER, client code should AVOID exposing this to thread-unsafe situations, because in the
  * future, this could be changed...
@@ -30,7 +30,7 @@ import org.ofbiz.service.ServiceContainer;
 public abstract class CommonContentWrapper implements ContentWrapper, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private transient Delegator delegator;
     private final String delegatorName;
     private transient LocalDispatcher dispatcher;
@@ -43,7 +43,7 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
      * for the get calls that have no override for this.
      */
     private final boolean useCache;
-    
+
     protected CommonContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
             String mimeTypeId, boolean useCache) {
         this.dispatcher = dispatcher;
@@ -55,12 +55,12 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         this.mimeTypeId = mimeTypeId;
         this.useCache = useCache;
     }
-    
+
     protected CommonContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
             String mimeTypeId) {
         this(dispatcher, entityValue, locale, mimeTypeId, true);
     }
-    
+
     protected CommonContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.dispatcherName = this.dispatcher.getName();
@@ -71,7 +71,7 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         this.mimeTypeId = getDefaultMimeTypeId(this.delegator);
         this.useCache = useCache;
     }
-    
+
     protected CommonContentWrapper(GenericValue entityValue, HttpServletRequest request) {
         this(entityValue, request, true);
     }
@@ -101,7 +101,7 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
             return DelegatorFactory.getDelegator("default");
         }
     }
-    
+
     // REMOVED to support thread-safety
 //    /**
 //     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
@@ -118,18 +118,18 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
      */
     public String get(String contentTypeId, boolean useCache, String contentLang) {
         if (entityValue == null) return null;
-        return getImpl(contentTypeId, useCache, contentLang); 
+        return getImpl(contentTypeId, useCache, contentLang);
     }
-    
+
     /**
      * SCIPIO: Content lookup by content type ID (available options depend on sub-class) with
      * explicit useCache (for individual call), using "raw"/no encoding.
      */
     public String get(String contentTypeId, boolean useCache) {
         if (entityValue == null) return null;
-        return getImpl(contentTypeId, useCache, "raw"); 
+        return getImpl(contentTypeId, useCache, "raw");
     }
-    
+
     @Override
     public String get(String contentTypeId, String contentLang) {
         if (entityValue == null) return null;
@@ -141,12 +141,12 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         if (entityValue == null) return null;
         return getImpl(contentTypeId, this.useCache, "raw");
     }
-    
+
     /**
      * SCIPIO: Content lookup by content type ID (available options depend on sub-class) implementation.
      */
     protected abstract String getImpl(String contentTypeId, boolean useCache, String contentLang);
-    
+
     public Delegator getDelegator() {
         Delegator delegator = this.delegator;
         if (delegator == null) { // handles serializable
@@ -155,11 +155,11 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         }
         return delegator;
     }
-    
+
     public GenericValue getEntityValue() {
         return entityValue;
     }
-    
+
     public LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = this.dispatcher;
         if (dispatcher == null) {
@@ -168,20 +168,20 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         }
         return dispatcher;
     }
-    
+
     public Locale getLocale() {
         return locale;
     }
-    
+
     public String getMimeTypeId() {
         return mimeTypeId;
     }
-    
+
     // pointless - pass at construction
 //    public String getDefaultMimeTypeId() {
 //        return getDefaultMimeTypeId(getDelegator());
 //    }
-    
+
     /**
      * Gets default mimeTypeId for content wrappers.
      * FIXME: unhardcode, stuck with old ofbiz code... always returns text/html
@@ -189,7 +189,7 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
     public static String getDefaultMimeTypeId(Delegator delegator) {
         return "text/html";
     }
-    
+
     /**
      * Returns the default isUseCache on the instance, though individual calls may override.
      * For new instances that didn't specify explicit, this is always true.

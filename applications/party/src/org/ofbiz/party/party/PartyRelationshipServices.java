@@ -33,7 +33,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -57,7 +56,7 @@ public class PartyRelationshipServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createPartyRelationshipType(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -65,8 +64,9 @@ public class PartyRelationshipServices {
 
         ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
         GenericValue partyRelationshipType = delegator.makeValue("PartyRelationshipType", UtilMisc.toMap("partyRelationshipTypeId", context.get("partyRelationshipTypeId")));
 
@@ -79,12 +79,12 @@ public class PartyRelationshipServices {
 
         try {
             if ((EntityQuery.use(delegator).from(partyRelationshipType.getEntityName()).where(partyRelationshipType.getPrimaryKey()).queryOne()) != null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "PartyRelationshipTypeAlreadyExists", locale));
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "PartyRelationshipTypeReadFailure",
                     UtilMisc.toMap("errorString", e.getMessage()),    locale));
         }
@@ -93,7 +93,7 @@ public class PartyRelationshipServices {
             partyRelationshipType.create();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "PartyRelationshipTypeWriteFailure",
                     UtilMisc.toMap("errorString", e.getMessage()),    locale));
         }
@@ -109,7 +109,7 @@ public class PartyRelationshipServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createUpdatePartyRelationshipAndRoles(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -146,22 +146,25 @@ public class PartyRelationshipServices {
                         .where(sideChecked, partyId, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "partyRelationshipTypeId", partyRelationshipTypeId)
                         .filterByDate()
                         .queryFirst();
-                if (UtilValidate.isNotEmpty(oldPartyRelationShip)) {
+                if (oldPartyRelationShip != null) {
                         oldPartyRelationShip.setFields(UtilMisc.toMap("thruDate", UtilDateTime.nowTimestamp())); // Current becomes inactive
                         oldPartyRelationShip.store();
                 }
                 try {
-                    dispatcher.runSync("createPartyRelationship", context); // Create new one
+                    Map<String, Object> resultMap = dispatcher.runSync("createPartyRelationship", context); // Create new one
+                    if (ServiceUtil.isError(resultMap)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap));
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e.getMessage(), module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "partyrelationshipservices.could_not_create_party_role_write",
                             UtilMisc.toMap("errorString", e.getMessage()), locale));
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "partyrelationshipservices.could_not_create_party_role_write",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }

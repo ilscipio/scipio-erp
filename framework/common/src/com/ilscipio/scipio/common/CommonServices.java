@@ -27,7 +27,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
@@ -45,7 +44,7 @@ public class CommonServices {
 
     /**
      * Reload visual theme definitions of specified theme or all themes if not specified.
-     * 
+     *
      * @param dctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -67,15 +66,15 @@ public class CommonServices {
                 servCtx.put("messages", messages);
                 Map<String, Object> servResult = dispatcher.runSync("entityImport", servCtx);
                 if (ServiceUtil.isError(servResult)) {
-                    return ServiceUtil.returnError("Could not import common visual theme type data from " + filename + ": " + 
-                            ServiceUtil.getErrorMessage(servResult)); 
+                    return ServiceUtil.returnError("Could not import common visual theme type data from " + filename + ": " +
+                            ServiceUtil.getErrorMessage(servResult));
                 }
             }
-            
+
             delegator.clearCacheLine("EnumerationType"); // FIXME: overly broad, but it's probably okay
             delegator.clearCacheLine("Enumeration");
             delegator.clearCacheLine("VisualThemeSet");
-            
+
             List<String> visualThemeIds = new ArrayList<>();
             if (singleVisualThemeId != null) {
                 GenericValue visualTheme = delegator.findOne("VisualTheme", false, UtilMisc.toMap("visualThemeId", singleVisualThemeId));
@@ -94,15 +93,15 @@ public class CommonServices {
                     }
                 }
             }
-            
+
             if (!visualThemeIds.isEmpty()) {
                 int numReloaded = 0;
                 for(String visualThemeId : visualThemeIds) {
-            
-                    List<GenericValue> themeFileValues = delegator.findByAnd("VisualThemeResource", 
+
+                    List<GenericValue> themeFileValues = delegator.findByAnd("VisualThemeResource",
                             UtilMisc.toMap("visualThemeId", visualThemeId, "resourceTypeEnumId", "VT_THEME_DATA_RES"),
                             UtilMisc.toList("sequenceId"), false);
-                    
+
                     List<String> themeFileLocations = new ArrayList<>();
                     if (themeFileValues != null) {
                         for(GenericValue themeFileValue : themeFileValues) {
@@ -112,12 +111,12 @@ public class CommonServices {
                             }
                         }
                     }
-                    
+
                     if (UtilValidate.isNotEmpty(themeFileLocations)) {
                         delegator.removeByAnd("VisualThemeResource", UtilMisc.toMap("visualThemeId", visualThemeId));
                         // Don't do this line because technically violates foreign keys on other tables; not really needed anyway
                         //delegator.removeByAnd("VisualTheme", UtilMisc.toMap("visualThemeId", visualThemeId));
-                        
+
                         for(String themeFileLocation : themeFileLocations) {
                             List<String> messages = new ArrayList<>();
                             Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
@@ -126,25 +125,25 @@ public class CommonServices {
                             servCtx.put("messages", messages);
                             Map<String, Object> servResult = dispatcher.runSync("entityImport", servCtx);
                             if (ServiceUtil.isError(servResult)) {
-                                return ServiceUtil.returnError("Could not load visual theme " + visualThemeId + 
-                                        " resource data " + themeFileLocations + ": " + 
-                                        ServiceUtil.getErrorMessage(servResult)); 
+                                return ServiceUtil.returnError("Could not load visual theme " + visualThemeId +
+                                        " resource data " + themeFileLocations + ": " +
+                                        ServiceUtil.getErrorMessage(servResult));
                             }
                         }
                         numReloaded++;
                     }
                     else {
-                        Debug.logWarning("Visual theme " + visualThemeId + 
+                        Debug.logWarning("Visual theme " + visualThemeId +
                                 " has no data files to reload from (VT_THEME_DATA_RES resource); skipping; " +
                                 "consider updating the theme to specify VT_THEME_DATA_RES resources and " +
                                 "performing an initial re-seed", visualThemeId);
                     }
                 }
-                
+
                 delegator.clearCacheLine("VisualThemeSet");
                 delegator.clearCacheLine("VisualThemeResource");
                 delegator.clearCacheLine("VisualTheme");
-                
+
                 final String msg = "Reloaded " + numReloaded + "/" + visualThemeIds.size() + " visual theme(s)";
                 if (numReloaded >= visualThemeIds.size()) {
                     return ServiceUtil.returnSuccess(msg);
@@ -163,10 +162,10 @@ public class CommonServices {
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
     }
-    
+
     /**
      * A service used to capture file changes on the system. Automatically implements file listeners for all components recursively.
-     * 
+     *
      * @param dctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -179,7 +178,7 @@ public class CommonServices {
             for (ComponentConfig config : allComponents) {
                 String name = "component-"+config.getComponentName();
                 String location = config.getRootLocation();
-                FileListener.startFileListener(name,location); 
+                FileListener.startFileListener(name,location);
             }
             return ServiceUtil.returnSuccess("File event registered.");
         }
@@ -189,11 +188,11 @@ public class CommonServices {
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
     }
-    
-    
+
+
     /**
      * An empty service used to capture file changes on the system.
-     * 
+     *
      * @param dctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -210,37 +209,36 @@ public class CommonServices {
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
     }
-    
-    
+
+
     /**
      * Clears the system cache for location
-     * 
+     *
      * @param dctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> clearFileCaches(DispatchContext dctx, Map<String, ?> context) {
         try {
-            if(UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"), true)){
+            if (UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"), true)){
                 String cacheName = (String) context.get("cacheName");
-                String fileType = (String) context.get("fileType");
-                String fileLocation = (String) context.get("fileLocation");
-                UtilCache.clearCache(cacheName);            
+                //String fileType = (String) context.get("fileType");
+                //String fileLocation = (String) context.get("fileLocation");
+                UtilCache.clearCache(cacheName);
                 return ServiceUtil.returnSuccess("Cache cleared for "+cacheName);
-            }else{
+            } else {
                 return ServiceUtil.returnSuccess("Cache-Lock set. Cache not cleared");
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             final String errorMsg = "Exception triggering File Event";
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
     }
-    
+
     /**
-     * Render Partial Screen 
-     * 
+     * Render Partial Screen
+     *
      * @param dctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -249,11 +247,11 @@ public class CommonServices {
         Map<String, Object> responseMap = ServiceUtil.returnSuccess();
         try {
             Map<String, Object> serviceContext = UtilMisc.makeMapWritable(rServiceContext);
-            LocalDispatcher dispatcher = dctx.getDispatcher();
+            //LocalDispatcher dispatcher = dctx.getDispatcher();
             String webSiteId = (String) serviceContext.remove("webSiteId");
             String resource = (String) serviceContext.remove("resource");
             String screenName = (String) serviceContext.remove("screenName");
-            
+
             Locale locale = (Locale) serviceContext.get("locale");
             Map<String, Object> bodyParameters = UtilGenerics.checkMap(serviceContext.remove("bodyParameters"));
             if (bodyParameters == null) {
@@ -268,12 +266,12 @@ public class CommonServices {
             if (partyId == null) {
                 partyId = (String) bodyParameters.get("partyId");
             }
-            String orderId = (String) bodyParameters.get("orderId");
-            String custRequestId = (String) bodyParameters.get("custRequestId");
-            
+            //String orderId = (String) bodyParameters.get("orderId");
+            //String custRequestId = (String) bodyParameters.get("custRequestId");
+
             bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
-            NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
-            String contentType = (String) serviceContext.remove("contentType");
+            NotificationServices.checkSetWebSiteFields(dctx.getDelegator(), webSiteId, bodyParameters);
+            //String contentType = (String) serviceContext.remove("contentType");
 
             StringWriter bodyWriter = new StringWriter();
 
@@ -294,10 +292,10 @@ public class CommonServices {
                     screens = ScreenRenderer.makeWithEnvAwareFetching(bodyWriter, context, screenStringRenderer);
                     screens.getContext().put("screens", screens);
                 }
-                
+
                 // render the screen
-                ModelScreen modelScreen = null;
-                ScreenStringRenderer renderer = screens.getScreenStringRenderer();
+                //ModelScreen modelScreen = null;
+                //ScreenStringRenderer renderer = screens.getScreenStringRenderer();
                 screens.populateContextForService(dctx, bodyParameters);
                 screenContext.putAll(bodyParameters);
 
@@ -322,13 +320,12 @@ public class CommonServices {
                 Debug.logError(e, "Error rendering screen: " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             final String errorMsg = "Exception triggering File Event";
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
-        
+
         return responseMap;
     }
 

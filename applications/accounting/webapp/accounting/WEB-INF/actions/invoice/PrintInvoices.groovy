@@ -32,7 +32,7 @@ invoiceIds.each { invoiceId ->
     BigDecimal conversionRate = new BigDecimal("1");
     ZERO = BigDecimal.ZERO;
     decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    rounding = UtilNumber.getRoundingMode("invoice.rounding");
     
     if (invoice) {
         if (currency && !invoice.getString("currencyUomId").equals(currency)) {

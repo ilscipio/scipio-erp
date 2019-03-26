@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ManufacturingCompletionDate">
+        <value xml:lang="de">Fertigstellungs-Datum</value>
         <value xml:lang="en">Completion Date</value>
         <value xml:lang="es">Fecha de Términación</value>
         <value xml:lang="fr">Date d'achèvement</value>
@@ -32,6 +33,7 @@
         <value xml:lang="zh-TW">完成日期</value>
     </property>
     <property key="ManufacturingComponentsOfShipmentPlan">
+        <value xml:lang="de">Versandplan-Inhalte</value>
         <value xml:lang="en">Components of Shipment Plan</value>
         <value xml:lang="es">Componentes del Plan de Envío</value>
         <value xml:lang="fr">Composants du plan d'expédition</value>
@@ -44,6 +46,7 @@
         <value xml:lang="zh-TW">運輸計劃的組成</value>
     </property>
     <property key="ManufacturingCustomLength">
+        <value xml:lang="de">Eigene Länge</value>
         <value xml:lang="en">Custom Length</value>
         <value xml:lang="es">Longitud a medida</value>
         <value xml:lang="fr">Longueur sur commande</value>
@@ -56,6 +59,7 @@
         <value xml:lang="zh-TW">客製長度</value>
     </property>
     <property key="ManufacturingDestination">
+        <value xml:lang="de">Ziel</value>
         <value xml:lang="en">Destination</value>
         <value xml:lang="es">Destino</value>
         <value xml:lang="fr">Destination</value>
@@ -68,6 +72,7 @@
         <value xml:lang="zh-TW">目的地</value>
     </property>
     <property key="ManufacturingEstimatedShipDate">
+        <value xml:lang="de">Fertigstellungs-Datum</value>
         <value xml:lang="en">Completion Date</value>
         <value xml:lang="es">Fecha de Términación</value>
         <value xml:lang="fr">Date d'expédition estimée</value>
@@ -80,6 +85,7 @@
         <value xml:lang="zh-TW">完成日期</value>
     </property>
     <property key="ManufacturingHardware">
+        <value xml:lang="de">Hardware</value>
         <value xml:lang="en">Hardware</value>
         <value xml:lang="es">Hardware</value>
         <value xml:lang="fr">Matériel informatique</value>
@@ -92,6 +98,7 @@
         <value xml:lang="zh-TW">硬體</value>
     </property>
     <property key="ManufacturingLabelNumber">
+        <value xml:lang="de">Label Nummer</value>
         <value xml:lang="en">Label number</value>
         <value xml:lang="es">Nº de Etiqueta</value>
         <value xml:lang="fr">Numéro d'étiquette</value>
@@ -104,6 +111,7 @@
         <value xml:lang="zh-TW">標簽號</value>
     </property>
     <property key="ManufacturingModel">
+        <value xml:lang="de">Modell</value>
         <value xml:lang="en">Model</value>
         <value xml:lang="es">Modelo</value>
         <value xml:lang="fr">Modèle</value>
@@ -116,6 +124,7 @@
         <value xml:lang="zh-TW">模型</value>
     </property>
     <property key="ManufacturingNeedQuantity">
+        <value xml:lang="de">Benötigte Menge</value>
         <value xml:lang="en">Need Quantity</value>
         <value xml:lang="es">Cantidad necesaria</value>
         <value xml:lang="fr">Quantité nécessaire</value>
@@ -128,6 +137,7 @@
         <value xml:lang="zh-TW">需要數量</value>
     </property>
     <property key="ManufacturingOnHandQuantity">
+        <value xml:lang="de">Verfügbare Menge</value>
         <value xml:lang="en">On Hand Quantity</value>
         <value xml:lang="es">Cantidad disponible (QOH)</value>
         <value xml:lang="fr">Quantité disponible</value>
@@ -140,6 +150,7 @@
         <value xml:lang="zh-TW">現有數量</value>
     </property>
     <property key="ManufacturingOperationCodeAndDescription">
+        <value xml:lang="de">Operationscode und Beschreibung</value>
         <value xml:lang="en">Operation Code And Description</value>
         <value xml:lang="es">Código de operación y descripción</value>
         <value xml:lang="fr">Code et description d'opération</value>
@@ -152,6 +163,7 @@
         <value xml:lang="zh-TW">操作代碼和描述</value>
     </property>
     <property key="ManufacturingOperationRunForShipment">
+        <value xml:lang="de">Operation Für den Versand ausführen</value>
         <value xml:lang="en">Operation Run For Shipment</value>
         <value xml:lang="es">Operación de Producción para el Envío</value>
         <value xml:lang="fr">Cadence d'opération pour expédition</value>
@@ -164,6 +176,7 @@
         <value xml:lang="zh-TW">運輸操作執行</value>
     </property>
     <property key="ManufacturingPackage">
+        <value xml:lang="de">Paket</value>
         <value xml:lang="en">Package</value>
         <value xml:lang="es">Paquete</value>
         <value xml:lang="fr">Paquet</value>
@@ -176,6 +189,7 @@
         <value xml:lang="zh-TW">包裝</value>
     </property>
     <property key="ManufacturingPanelNumber">
+        <value xml:lang="de">Panel-Nummer</value>
         <value xml:lang="en">Panel number</value>
         <value xml:lang="es">Número de panneau</value>
         <value xml:lang="fr">Nombre d'invité</value>
@@ -188,6 +202,7 @@
         <value xml:lang="zh-TW">面板號</value>
     </property>
     <property key="ManufacturingPickingDate">
+        <value xml:lang="de">Komissionierungs- Datum</value>
         <value xml:lang="en">Picking date</value>
         <value xml:lang="es">Fecha de Recogida</value>
         <value xml:lang="fr">Date de prélèvement</value>
@@ -200,6 +215,7 @@
         <value xml:lang="zh-TW">揀貨日期</value>
     </property>
     <property key="ManufacturingPickingListFx">
+        <value xml:lang="de">Komissionierung für Veröffentlichung</value>
         <value xml:lang="en">Picking for release</value>
         <value xml:lang="es">Recogida para liberación</value>
         <value xml:lang="fr">Prélèvement pour approbation</value>
@@ -212,6 +228,7 @@
         <value xml:lang="zh-TW">揀貨用於發行</value>
     </property>
     <property key="ManufacturingPickingPeriod">
+        <value xml:lang="de">Komissionierungs-Periode</value>
         <value xml:lang="en">Picking period</value>
         <value xml:lang="es">Periodo de recogida</value>
         <value xml:lang="fr">Période de prélèvement</value>
@@ -224,6 +241,7 @@
         <value xml:lang="zh-TW">揀貨階段</value>
     </property>
     <property key="ManufacturingPlan">
+        <value xml:lang="de">Produktions- Plan</value>
         <value xml:lang="en">Manufacturing Plan</value>
         <value xml:lang="es">Plan de producción</value>
         <value xml:lang="fr">Plan de fabrication</value>
@@ -236,6 +254,7 @@
         <value xml:lang="zh-TW">製造計劃</value>
     </property>
     <property key="ManufacturingPrintoutDate">
+        <value xml:lang="de">Druck Datum</value>
         <value xml:lang="en">Printout Date</value>
         <value xml:lang="es">Fecha de Impresión</value>
         <value xml:lang="fr">Date de sortie sur imprimante</value>
@@ -248,6 +267,7 @@
         <value xml:lang="zh-TW">列印輸出日期</value>
     </property>
     <property key="ManufacturingProductBrandName">
+        <value xml:lang="de">Losung Nr.</value>
         <value xml:lang="en">Draw no</value>
         <value xml:lang="es">Marca</value>
         <value xml:lang="fr">N° de dessin</value>
@@ -260,6 +280,7 @@
         <value xml:lang="zh-TW">設計編號</value>
     </property>
     <property key="ManufacturingProductionRunComponentsByFeature">
+        <value xml:lang="de">Produktionsauftrag nach Komponenten mit Feature</value>
         <value xml:lang="en">Production Runs Componentes By Feature</value>
         <value xml:lang="it">Componenti ordini di produzione per caratteristica</value>
         <value xml:lang="ja">機能別生産実行コンポーネント</value>
@@ -268,6 +289,7 @@
         <value xml:lang="zh-TW">按特色的生產運行元件</value>
     </property>
     <property key="ManufacturingProductionRunInfoAndOrder">
+        <value xml:lang="de">Produktions- Information mit Bestellinformationen</value>
         <value xml:lang="en">Production Runs Info And Order</value>
         <value xml:lang="it">Ordini di produzione ifnroper caratteristica</value>
         <value xml:lang="ja">生産実行情報および注文</value>
@@ -276,6 +298,7 @@
         <value xml:lang="zh-TW">生產運行資訊和訂單</value>
     </property>
     <property key="ManufacturingProductionRuns">
+        <value xml:lang="de">Produktionsläufe</value>
         <value xml:lang="en">Production Runs</value>
         <value xml:lang="es">Orden de Producción</value>
         <value xml:lang="fr">Cadences de production</value>
@@ -288,6 +311,7 @@
         <value xml:lang="zh-TW">生產運行</value>
     </property>
     <property key="ManufacturingProductsComponents">
+        <value xml:lang="de">Produktionskomponenten</value>
         <value xml:lang="en">Products Components</value>
         <value xml:lang="es">Componentes de productos</value>
         <value xml:lang="fr">Composants de production</value>
@@ -300,6 +324,7 @@
         <value xml:lang="zh-TW">產品元件</value>
     </property>
     <property key="ManufacturingProductsStacks">
+        <value xml:lang="de">Produkt-Stapel</value>
         <value xml:lang="en">Products Stacks</value>
         <value xml:lang="it">Pila prodotti</value>
         <value xml:lang="ja">製品スタック</value>
@@ -308,6 +333,7 @@
         <value xml:lang="zh-TW">產品堆疊</value>
     </property>
     <property key="ManufacturingQtyM2">
+        <value xml:lang="de">Quadratmeter</value>
         <value xml:lang="en">Square meters</value>
         <value xml:lang="es">Metros cuadrados</value>
         <value xml:lang="fr">Mètres carrés</value>
@@ -320,6 +346,7 @@
         <value xml:lang="zh-TW">平方米</value>
     </property>
     <property key="ManufacturingReference">
+        <value xml:lang="de">Referenz</value>
         <value xml:lang="en">Reference</value>
         <value xml:lang="es">Referencia</value>
         <value xml:lang="fr">Référence</value>
@@ -332,6 +359,7 @@
         <value xml:lang="zh-TW">參考</value>
     </property>
     <property key="ManufacturingReleased">
+        <value xml:lang="de">Freigegeben</value>
         <value xml:lang="en">Released</value>
         <value xml:lang="es">Publicado</value>
         <value xml:lang="fr">Approbation</value>
@@ -344,6 +372,7 @@
         <value xml:lang="zh-TW">已發行</value>
     </property>
     <property key="ManufacturingReleasedNote">
+        <value xml:lang="de">Freigegeben/Notiz</value>
         <value xml:lang="en">Released/Note</value>
         <value xml:lang="es">Publicado/Nota</value>
         <value xml:lang="fr">Note d'approbation</value>
@@ -356,6 +385,7 @@
         <value xml:lang="zh-TW">已發行/注意</value>
     </property>
     <property key="ManufacturingRequester">
+        <value xml:lang="de">Anforderer</value>
         <value xml:lang="en">Requester</value>
         <value xml:lang="es">Solicitante</value>
         <value xml:lang="fr">Demandeur</value>
@@ -368,6 +398,7 @@
         <value xml:lang="zh-TW">請求方</value>
     </property>
     <property key="ManufacturingShipTo">
+        <value xml:lang="de">Versandt nach</value>
         <value xml:lang="en">Ship To</value>
         <value xml:lang="es">Enviar a</value>
         <value xml:lang="fr">Expédié à</value>
@@ -380,7 +411,8 @@
         <value xml:lang="zh-TW">運輸至</value>
     </property>
     <property key="ManufacturingShipmentId">
-        <value xml:lang="en">Shipment Id</value>
+        <value xml:lang="de">Shipment ID</value>
+        <value xml:lang="en">Shipment ID</value>
         <value xml:lang="es">Código de Envío</value>
         <value xml:lang="fr">Réf. d'expédition</value>
         <value xml:lang="it">Numero Spedizione</value>
@@ -392,6 +424,7 @@
         <value xml:lang="zh-TW">運輸識別</value>
     </property>
     <property key="ManufacturingShopOrder">
+        <value xml:lang="de">Bestellnr.</value>
         <value xml:lang="en">Shop Order</value>
         <value xml:lang="es">Orden de trabajo</value>
         <value xml:lang="fr">Ordre de magasin</value>
@@ -404,6 +437,7 @@
         <value xml:lang="zh-TW">商店訂單</value>
     </property>
     <property key="ManufacturingTaskRunTime">
+        <value xml:lang="de">Task Laufzeit</value>
         <value xml:lang="en">Task Run Time</value>
         <value xml:lang="es">Tiempo de ejecución</value>
         <value xml:lang="fr">Temps d'exécution de tâche</value>
@@ -416,6 +450,7 @@
         <value xml:lang="zh-TW">任務執行時間</value>
     </property>
     <property key="ManufacturingTaskSetupTime">
+        <value xml:lang="de">Task Einrichtungszeit</value>
         <value xml:lang="en">Task Setup Time</value>
         <value xml:lang="es">Tiempo de preparación</value>
         <value xml:lang="fr">Temps d'installation de tâche</value>
@@ -428,6 +463,7 @@
         <value xml:lang="zh-TW">任務安裝時間</value>
     </property>
     <property key="ManufacturingWorkCenter">
+        <value xml:lang="de">Produktionsstätte</value>
         <value xml:lang="en">Work Center</value>
         <value xml:lang="es">Centro de trabajo</value>
         <value xml:lang="fr">Centre de travail</value>

@@ -19,6 +19,7 @@
 
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.order.shoppingcart.*;
 
 if (userLogin) {
     party = userLogin.getRelatedOne("Party", false);
@@ -72,5 +73,16 @@ if (userLogin) {
         faxPartyContactMech = EntityUtil.getFirst(shipToFaxNumber.getRelated("PartyContactMech", null, null, false));
         context.shipToFaxNumber = shipToFaxNumber;
         context.shipToFaxExtension = faxPartyContactMech.extension;
+    }
+    
+    CartUpdate cartUpdate = CartUpdate.updateSection(request);
+    try { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
+        cart.setAllShippingContactMechId(context.shipToContactMechId); // SCIPIO
+
+        cart = cartUpdate.commit(cart); // SCIPIO
+    } finally {
+        cartUpdate.close();
     }
 }

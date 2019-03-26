@@ -54,7 +54,7 @@ under the License.
   <!-- ================== FORMS ==================== -->
     <xs:element name="forms">
         <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded"><!-- SCIPIO: Allow none (minOccurs="0") -->
                 <xs:element ref="form"/>
                 <xs:element ref="grid"/>
             </xs:choice>
@@ -119,6 +119,14 @@ under the License.
             <xs:attribute name="style" type="xs:string" />
             <xs:attribute name="focus-field-name" type="xs:string" />
             <xs:attribute name="title" type="xs:string" />
+            <xs:attribute name="empty-form-data-message" type="xs:string" default="${uiLabelMap.CommonNoRecordFound}">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: 2018-09-04: Not currently supported in Scipio and may not work properly;
+                        please use the "use-alternate-text-when" attribute and/or the "useAlternateTextWhen"
+                        expressions in widget.properties instead, which are more versatile. 
+                        This attribute is present for forward-compatibility only. Merged 2018-09-04.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="tooltip" type="xs:string" />
             <xs:attribute name="list-name" type="xs:string">
                 <xs:annotation>
@@ -200,7 +208,10 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="override-list-size">
                 <xs:annotation>
-                    <xs:documentation>The total number of rows in the original list (used for pagination). If not specified, the size of the list will be used. Accepts ${} notation.</xs:documentation>
+                    <xs:documentation>The total number of rows in the original list (used for pagination). 
+                                      If not specified, the size of the list will be used. Accepts ${} notation.
+                                      You may use any value, true makes sense, when using performFindList, but one value must be passed. 
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="paginate-first-label">
@@ -231,7 +242,7 @@ under the License.
             <xs:attribute type="xs:string" name="item-index-separator" default="_o_" />
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
-            <xs:attribute name="separate-columns"><!-- default="true" ; old/stock default: default="false" -->
+            <xs:attribute name="separate-columns" type="xs:boolean"><!-- default="true" ; old/stock default: default="false" -->
                 <xs:annotation>
                     <xs:documentation>Determines if the editable fields of a list/multi form should group
                         together or now (false to group, true to keep separate).
@@ -244,14 +255,8 @@ under the License.
                             handle long menus better, and the separated fields are easier to read.
                     </xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="group-columns"><!-- default="true" -->
+            <xs:attribute name="group-columns" type="xs:boolean"><!-- default="true" -->
                 <xs:annotation>
                     <xs:documentation>Determines if the form should support grouping fields.
                         SCIPIO: NOTE: This is a STOCK attribute. It is a top-level
@@ -262,12 +267,6 @@ under the License.
                         WARN: Nearly all stock and Scipio-modified forms are built and tested using true for this attribute.
                             It is safer to change the separate-columns attribute value instead.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:integer" name="view-size">
                 <xs:annotation>
@@ -275,38 +274,10 @@ under the License.
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="row-count" />
-            <xs:attribute name="use-row-submit"><!-- default="false" -->
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="skip-start" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="skip-end" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="hide-header" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-row-submit" type="xs:boolean"/><!-- default="false" -->
+            <xs:attribute name="skip-start" type="xs:boolean" default="false"/>
+            <xs:attribute name="skip-end" type="xs:boolean" default="false"/>
+            <xs:attribute name="hide-header" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="odd-row-style">
                 <xs:annotation>
                     <xs:documentation>The odd-row-style specifies the style to use in the table content odd rows.</xs:documentation>
@@ -327,16 +298,11 @@ under the License.
                     <xs:documentation>The default-table-style specifies the style to use in the table.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="client-autocomplete-fields" default="true">
+            <xs:attribute name="client-autocomplete-fields"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <!--
                 not sure this is such a good idea <xs:attribute type="xs:string" name="hidden-values-map-name"> <xs:annotation> <xs:documentation>A map that contains hidden field name/value pairs. The reason for this is to eliminate the need to code custom forms so that auxiliary, passthru data can
@@ -344,19 +310,19 @@ under the License.
             -->
             <xs:attribute type="xs:string" name="hide-header-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implicit default is 'false', unless hide-header is true, but explicit 'false' overrides hide-header. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="hide-table-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, do not print table header. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="use-alternate-text-when">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not bsh-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
+                    <xs:documentation>SCIPIO: For list forms, if this condition evaluates to true, show an alternate text. Mainly useful for setting a no-result-text message when form has no results. This is a context-expanded EL expression (not groovy-only) that should evaluate to true or false. Implied default is 'false'. See widget.properties for renderer-specific defaults.
                         The following context booleans are useful for this condition and always present: formHasList, formHasResult, formHasDisplayResult.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -380,16 +346,10 @@ under the License.
                     <xs:documentation>SCIPIO: Default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="default-combine-action-fields" default="true">
+            <xs:attribute name="default-combine-action-fields" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If true, uses combine-previous on groups of adjacent action-button-like field (submit, reset, hyperlink with no title) so they render together</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
@@ -428,6 +388,11 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">
+        <xs:annotation>
+            <xs:documentation>
+                a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="actions" />
@@ -441,33 +406,6 @@ under the License.
                 <xs:element minOccurs="0" ref="sort-order" />
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required" />
-            <xs:attribute name="type">
-                <xs:annotation>
-                    <xs:documentation>The form type is always required unless you are extending another form.</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="single">
-                            <xs:annotation>
-                                <xs:documentation>a single form is a simple single form with values from a single set of values</xs:documentation>
-                            </xs:annotation>
-                        </xs:enumeration>
-                        <xs:enumeration value="list">
-                            <xs:annotation>
-                                <xs:documentation>a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element</xs:documentation>
-                            </xs:annotation>
-                        </xs:enumeration>
-                        <xs:enumeration value="multi">
-                            <xs:annotation>
-                                <xs:documentation>a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service
-                                    event handler that will call one service for each list element</xs:documentation>
-                            </xs:annotation>
-                        </xs:enumeration>
-                        <xs:enumeration value="upload">
-                        </xs:enumeration>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
             <xs:attribute name="target" type="xs:string" />
             <xs:attribute name="target-window" type="xs:string" />
             <xs:attribute name="target-type" default="intra-app">
@@ -484,6 +422,14 @@ under the License.
             <xs:attribute name="style" type="xs:string" />
             <xs:attribute name="focus-field-name" type="xs:string" />
             <xs:attribute name="title" type="xs:string" />
+            <xs:attribute name="empty-form-data-message" type="xs:string" default="${uiLabelMap.CommonNoRecordFound}">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: NOTE: 2018-09-04: Not currently supported in Scipio and may not work properly;
+                        please use the "use-alternate-text-when" attribute and/or the "useAlternateTextWhen"
+                        expressions in widget.properties instead, which are more versatile. 
+                        This attribute is present for forward-compatibility only. Merged 2018-09-04.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="tooltip" type="xs:string" />
             <xs:attribute name="list-name" type="xs:string">
                 <xs:annotation>
@@ -596,60 +542,19 @@ under the License.
             <xs:attribute type="xs:string" name="item-index-separator" default="_o_" />
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
-            <xs:attribute name="separate-columns" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="group-columns" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="separate-columns" type="xs:boolean"
+                          default="false"/>
+            <xs:attribute name="group-columns" type="xs:boolean" default="true"/>
             <xs:attribute type="xs:integer" name="view-size">
                 <xs:annotation>
                     <xs:documentation>The number of items to display per page</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="row-count" />
-            <xs:attribute name="use-row-submit" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="skip-start" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="skip-end" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="hide-header" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-row-submit" type="xs:boolean" default="false"/>
+            <xs:attribute name="skip-start" type="xs:boolean" default="false"/>
+            <xs:attribute name="skip-end" type="xs:boolean" default="false"/>
+            <xs:attribute name="hide-header" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="odd-row-style">
                 <xs:annotation>
                     <xs:documentation>The odd-row-style specifies the style to use in the table content odd rows.</xs:documentation>
@@ -670,16 +575,11 @@ under the License.
                     <xs:documentation>The default-table-style specifies the style to use in the table.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="client-autocomplete-fields" default="true">
+            <xs:attribute name="client-autocomplete-fields"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <!--
                 not sure this is such a good idea <xs:attribute type="xs:string" name="hidden-values-map-name"> <xs:annotation> <xs:documentation>A map that contains hidden field name/value pairs. The reason for this is to eliminate the need to code custom forms so that auxiliary, passthru data can
@@ -954,7 +854,12 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="title">
                 <xs:annotation>
-                    <xs:documentation>The name of this field that will be shown to the user; can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.</xs:documentation>
+                    <xs:documentation>
+                        The name of this field that will be shown to the user. 
+                        It can use the ${} and foo.bar (dot) syntax to insert values from the context for parameterization or internationalization.
+                        
+                        Be sure a "FormFieldTitle_" labels does not already exist, else it will be overriden.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="header-link">
@@ -1012,16 +917,10 @@ under the License.
                     <xs:documentation>SCIPIO: Position span for this field. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="combine-previous">
+            <xs:attribute name="combine-previous" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If true, the field body will be combined with the previous field</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="red-when" default="by-name">
                 <xs:annotation>
@@ -1046,19 +945,24 @@ under the License.
             </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="encode-output" default="true">
+            <xs:attribute name="ignore-when" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        This attribute is defined to enable ignoring a field on a form of type list or multi,
+                        which is not possible using use-when attribute. Like use-when it should be written using java syntax.
+                        The condition should be evaluated in the form context without looking for data coming from list that feeds the form.
+                        SCIPIO: WARNING: 2018-09-04: This feature is currently not guaranteed to work in all cases due
+                        to form widget renderer complexity (TODO: REVIEW).
+                        </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="encode-output" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>
                         This is for textual output only. If true data shown in fields will be encoded so that it does not interfere with markup of the target output.
                         For example, if output is HTML then data presented will be HTML encoded so that all HTML-specific characters are escaped.
             </xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:string" name="event">
                 <xs:annotation>
@@ -1071,22 +975,8 @@ under the License.
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="id-name" />
-            <xs:attribute name="separate-column" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="required-field">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="separate-column" type="xs:boolean" default="false"/>
+            <xs:attribute name="required-field" type="xs:boolean"/>
             <xs:attribute type="xs:string" name="required-field-style">
                 <xs:annotation>
                     <xs:documentation>The name of a style (like a CSS class) to apply to the title of this field if required.
@@ -1096,14 +986,7 @@ under the License.
                 </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="sort-field" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="sort-field" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="sort-field-style">
                 <xs:annotation>
                     <xs:documentation>The name of a style (like a CSS class) to apply to the sort field link.
@@ -1139,6 +1022,26 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="tabindex">
+                <xs:annotation>
+                    <xs:documentation>
+                        The HTML tabindex specifies the tab order of an element (when the "tab" button is used for navigating).
+                        To exclude an element from the tab order, set the value of tabindex to 0
+                        In that case the element is skipped when the user tabs around the form.
+                        SCIPIO: NOTE: 2018-09-04: This may not be supported (by themes, yet). Merged 2018-09-04.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="condition-group">
+                <xs:annotation>
+                    <xs:documentation>
+                        The condition-group regroup search criterias together.
+                        Each group member will be gathered with AND operator
+                        Every defined groups will be joined each other with OR operator
+                        Any ungrouped condition will be added with AND operator
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: A json-/freemarker-like object (map) of per-field extra attributes passed to the underlying theme implementation (template macros).</xs:documentation>
@@ -1155,14 +1058,8 @@ under the License.
                 <xs:element ref="list-options" />
                 <xs:element ref="option" />
             </xs:choice>
-            <xs:attribute name="all-checked">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="all-checked" type="xs:boolean"/>
+            <xs:attribute name="disabled" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="no-current-selected-key">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: The key to mark as selected when there is no current entry value, or
@@ -1198,7 +1095,7 @@ under the License.
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="use-hidden" default="">
+            <xs:attribute type="xs:boolean" name="use-hidden">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: (boolean) If true, checkbox alt-key will be submitted when the check field is off using hidden inputs.
                         Requires dynamic script (javascript).
@@ -1206,13 +1103,6 @@ under the License.
                         NOTE: to prevent submitting empty value, 
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="" />
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -1321,16 +1211,10 @@ under the License.
             <xs:sequence>
                 <xs:element ref="in-place-editor" minOccurs="0" maxOccurs="1" />
             </xs:sequence>
-            <xs:attribute name="also-hidden" default="true">
+            <xs:attribute name="also-hidden" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If set to true, an hidden form field is also rendered, with the name of the field and its content.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:string" name="description">
                 <xs:annotation>
@@ -1389,7 +1273,10 @@ under the License.
     </xs:element>
     <xs:element name="display-entity" substitutionGroup="AllFields">
         <xs:annotation>
-            <xs:documentation>This is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description.</xs:documentation>
+            <xs:documentation>
+                This is just like display but looks up a description using the Entity Engine; 
+                note that if also-hidden is true then it uses the key as the value, not the shown description.
+            </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
@@ -1400,27 +1287,17 @@ under the License.
             <xs:attribute type="xs:string" name="description" default="${description}" />
             <xs:attribute type="xs:integer" name="size">
                 <xs:annotation>
-                    <xs:documentation>Specifies the size of the field (as a number of characters), when the text to display exceed the given size it is truncated and add the complete text as a hint</xs:documentation>
+                    <xs:documentation>
+                        Specifies the size of the field (as a number of characters), 
+                        when the text to display exceed the given size it is truncated and add the complete text as a hint
+                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="cache" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="also-hidden" default="true">
+            <xs:attribute name="cache" type="xs:boolean" default="true"/>
+            <xs:attribute name="also-hidden" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If set to true, an hidden form field is also rendered, with the name of the field and its content.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -1435,22 +1312,8 @@ under the License.
                 </xs:choice>
                 <xs:element minOccurs="0" ref="sub-hyperlink" />
             </xs:sequence>
-            <xs:attribute name="allow-empty" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="allow-multiple" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="allow-empty" type="xs:boolean" default="false"/>
+            <xs:attribute name="allow-multiple" type="xs:boolean" default="false"/>
             <xs:attribute name="current" default="first-in-list">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -1503,16 +1366,11 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="size" default="25" />
             <xs:attribute type="xs:positiveInteger" name="maxlength" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -1529,34 +1387,10 @@ under the License.
                         <xs:documentation>Specifies the string to display, can use the ${} syntax to insert context values; if empty the value of the field will be printed for a default.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <!-- SCIPIO: these definitions are now in widget-common.xsd under "link" element instead
-                <xs:attribute name="request-confirmation" default="false">
-                    <xs:annotation>
-                        <xs:documentation>If true then the user is presented with a dialog box, if confirmation-message is empty, use default</xs:documentation>
-                    </xs:annotation>
-                    <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                            <xs:enumeration value="true" />
-                            <xs:enumeration value="false" />
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-                <xs:attribute name="confirmation-message" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>The message displayed in confirmation box</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                -->
-                <xs:attribute name="also-hidden" default="true">
+                <xs:attribute name="also-hidden" type="xs:boolean" default="true">
                     <xs:annotation>
                         <xs:documentation>If set to true, an hidden form field is also rendered, with the name of the field and its content.</xs:documentation>
                     </xs:annotation>
-                    <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                            <xs:enumeration value="true" />
-                            <xs:enumeration value="false" />
-                        </xs:restriction>
-                    </xs:simpleType>
                 </xs:attribute>
                 <!-- These attributes have been replaced by the image element -->
                 <xs:attribute type="xs:string" name="alternate">
@@ -1631,32 +1465,25 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>
                         Tells the browser whether or not to try and autocomplete with values previously entered. 
                         Default to true.
                     </xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="read-only" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
+            <xs:attribute name="read-only" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Makes the input field related to this lookup read-only (no edits allowed)</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
             <xs:attribute name="presentation" default="layer">
                 <xs:annotation>
                     <xs:documentation>
                         Shows the lookup as moveable and resizable layer or popup window. 
+                        if set to none only autocompletion is active (no lookup form would be call)
                         Default to layer.
                     </xs:documentation>
                 </xs:annotation>
@@ -1664,6 +1491,7 @@ under the License.
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="layer" />
                         <xs:enumeration value="window" />
+                        <xs:enumeration value="none" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
@@ -1692,27 +1520,16 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="fade-background" default="true">
+            <xs:attribute name="fade-background" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If true the window background will be faded, default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="initially-collapsed" default="false">
+            <xs:attribute name="initially-collapsed" type="xs:boolean"
+                          default="false">
                 <xs:annotation>
                     <xs:documentation>If true the search screenlet is collapsed intially, default to false.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="show-description" type="xs:boolean">
                 <xs:annotation>
@@ -1724,6 +1541,30 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="include-menu" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-form" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-grid" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include-screen" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required" />
+            <xs:attribute type="xs:string" name="location" use="required" />
+        </xs:complexType>
+    </xs:element>
     <xs:element name="password" substitutionGroup="AllFields">
         <xs:complexType>
             <xs:sequence>
@@ -1732,16 +1573,11 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="size" default="25" />
             <xs:attribute type="xs:positiveInteger" name="maxlength" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -1777,16 +1613,11 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="size" default="25" />
             <xs:attribute type="xs:positiveInteger" name="maxlength" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="default-option-from" default="greaterThanEqualTo">
                 <xs:simpleType>
@@ -1828,16 +1659,11 @@ under the License.
                         instead.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="request-confirmation" default="false">
+            <xs:attribute name="request-confirmation"
+                          type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>If true then the user is presented with a dialog box, if confirmation-message is empty, use default</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="confirmation-message" type="xs:string">
                 <xs:annotation>
@@ -1854,28 +1680,21 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="size" default="25" />
             <xs:attribute type="xs:positiveInteger" name="maxlength" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="disabled" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="disabled" type="xs:boolean" default="false"/>
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="mask" type="xs:string">
                 <xs:annotation>
                     <xs:documentation>Defines a customized input mask. Use 9 for numeric, a for alpha and * for alphanumeric character.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="read-only" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Makes this text field read-only (no edits allowed)</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="placeholder" type="xs:string">
@@ -1889,33 +1708,18 @@ under the License.
         <xs:complexType>
             <xs:attribute type="xs:positiveInteger" name="cols" default="60" />
             <xs:attribute type="xs:positiveInteger" name="rows" default="3" />
-            <xs:attribute type="xs:positiveInteger" name="maxlength">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Textarea maxlength</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attribute type="xs:positiveInteger" name="maxlength"/>
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="read-only" default="false">
+            <xs:attribute name="read-only" type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>Makes this textarea read-only (no edits allowed)</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="visual-editor-enable" default="false">
+            <xs:attribute name="visual-editor-enable"
+                          type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>This will enable the html editor on this text area from www.unverse.net (more info there), only one textarea can be used on one page</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute type="xs:string" name="visual-editor-buttons">
                 <xs:annotation>
@@ -1933,14 +1737,7 @@ under the License.
             <xs:attribute type="xs:positiveInteger" name="size" default="25" />
             <xs:attribute type="xs:positiveInteger" name="maxlength" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="ignore-case" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="ignore-case" type="xs:boolean" default="true"/>
             <xs:attribute name="default-option" default="contains">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -1956,16 +1753,11 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="client-autocomplete-field" default="true">
+            <xs:attribute name="client-autocomplete-field"
+                          type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>Tells the browser whether or not to try and autocomplete with values previously entered. Default to true.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="hide-options" default="false">
                 <xs:simpleType>
@@ -2002,42 +1794,14 @@ under the License.
     <!-- ================== FIELD SUB-ELEMENTS ==================== -->
     <xs:element name="auto-complete">
         <xs:complexType>
-            <xs:attribute name="auto-select" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="auto-select" type="xs:boolean" default="false"/>
             <xs:attribute name="frequency" type="xs:double" default="0.4" />
             <xs:attribute name="min-chars" type="xs:positiveInteger" default="1" />
             <xs:attribute name="choices" type="xs:positiveInteger" default="10" />
-            <xs:attribute name="partial-search" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="partial-search" type="xs:boolean" default="true"/>
             <xs:attribute name="partial-chars" type="xs:positiveInteger" default="1" />
-            <xs:attribute name="ignore-case" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="full-search" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="ignore-case" type="xs:boolean" default="true"/>
+            <xs:attribute name="full-search" type="xs:boolean" default="true"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="entity-constraint">
@@ -2061,22 +1825,8 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="env-name" />
             <xs:attribute type="xs:string" name="value" />
-            <xs:attribute name="ignore-if-null" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="ignore-if-empty" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="ignore-if-null" type="xs:boolean" default="false"/>
+            <xs:attribute name="ignore-if-empty" type="xs:boolean" default="false"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="entity-options">
@@ -2094,19 +1844,13 @@ under the License.
                     <xs:documentation>The name of the field in the looked up entity that will be used for the key value; if empty defaults to the entry-name of the field this is in.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="description" use="required">
+            <xs:attribute type="xs:string" name="description" default="${description}">
                 <xs:annotation>
-                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation>
+                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.
+                        SCIPIO: NOTE: 2018-09-04: The default was changed to "${description}" (instead of required). Merged 2018-09-04.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="cache" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="cache" type="xs:boolean" default="true"/>
             <xs:attribute name="filter-by-date" default="by-name">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -2160,14 +1904,7 @@ under the License.
             <xs:attribute name="highlight-color" type="xs:string" />
             <xs:attribute name="highlight-end-color" type="xs:string" />
             <xs:attribute name="hover-class-name" type="xs:string" />
-            <xs:attribute name="html-response" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="false" />
-                        <xs:enumeration value="true" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="html-response" type="xs:boolean" default="false"/>
             <xs:attribute name="loading-class-name" type="xs:string" />
             <xs:attribute name="loading-text" type="xs:string" />
             <xs:attribute name="ok-control">
@@ -2183,25 +1920,12 @@ under the License.
             <xs:attribute name="param-name" type="xs:string" />
             <xs:attribute name="saving-class-name" type="xs:string" />
             <xs:attribute name="saving-text" type="xs:string" />
-            <xs:attribute name="submit-on-blur">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="false" />
-                        <xs:enumeration value="true" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="submit-on-blur" type="xs:boolean"/>
             <xs:attribute name="text-after-controls" type="xs:string" />
             <xs:attribute name="text-before-controls" type="xs:string" />
             <xs:attribute name="text-between-controls" type="xs:string" />
-            <xs:attribute name="update-after-request-call" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="false" />
-                        <xs:enumeration value="true" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="update-after-request-call"
+                          type="xs:boolean" default="true"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="list-options">
@@ -2241,9 +1965,10 @@ under the License.
                         NOTE: If this resolves to a non-empty value, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="description">
+            <xs:attribute type="xs:string" name="description" default="${description}">
                 <xs:annotation>
-                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.</xs:documentation>
+                    <xs:documentation>Will be presented to the user with field values substituted using the ${} syntax.
+                        SCIPIO: NOTE: 2018-09-04: The default was changed to "${description}". Merged 2018-09-04.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -2281,9 +2006,8 @@ under the License.
                     </xs:annotation>
                 </xs:attribute>
                 <!-- SCIPIO: NOTE: This is now already defined on the base link.
-                    Note that this version supports Bsh conditions.
-                <xs:attribute type="xs:string" name="use-when" />
-                -->
+                    Note that this version supports Groovy conditions (without ${}).
+                <xs:attribute type="xs:string" name="use-when" />-->
                 <xs:attribute name="target-type" default="intra-app">
                     <xs:annotation>
                         <xs:documentation>Deprecated - use the url-mode attribute.</xs:documentation>
@@ -2336,21 +2060,14 @@ under the License.
             </xs:attribute>
             <!-- this is deprecated and should not be used; use result-map-list-name instead: <xs:attribute type="xs:string" name="result-map-list-iterator-name"/> -->
             <xs:attribute type="xs:string" name="result-map-list" />
-            <xs:attribute name="ignore-error" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="ignore-error" type="xs:boolean" default="false"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="call-parent-actions" substitutionGroup="AllActions" />
     <xs:element name="entity-and" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="field-map" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map" /><!-- SCIPIO: 2018-12-05: Support no filter, find all (minOccurs="0") -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by" />
                 <xs:choice minOccurs="0">
@@ -2360,14 +2077,7 @@ under the License.
                 </xs:choice>
             </xs:sequence>
             <xs:attribute type="xs:string" name="entity-name" use="required" />
-            <xs:attribute name="use-cache" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
             <xs:attribute name="filter-by-date" default="false">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -2406,14 +2116,7 @@ under the License.
                 </xs:choice>
             </xs:sequence>
             <xs:attribute type="xs:string" name="entity-name" use="required" />
-            <xs:attribute name="use-cache" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
             <xs:attribute name="filter-by-date" default="false">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -2423,14 +2126,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="distinct" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="distinct" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="delegator-name" />
             <xs:attribute type="xs:string" name="list" />
             <xs:attribute name="result-set-type" default="scroll">

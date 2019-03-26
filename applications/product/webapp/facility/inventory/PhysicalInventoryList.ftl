@@ -1,8 +1,8 @@
 <#if physicalInventory?has_content>
     <@section menuContent=menuContent title=uiLabelMap.ProductPhysicalInventoryList>
-        <form action="<@ofbizUrl>createPhysicalVariances?facilityId=${parameters.facilityId}&productId=${parameters.productId}&internalName=${parameters.internalName}</@ofbizUrl>" method="post" name="ListPhysicalInventory">          
+        <form action="<@pageUrl>createPhysicalVariances?facilityId=${parameters.facilityId}&productId=${parameters.productId}&internalName=${parameters.internalName}</@pageUrl>" method="post" name="ListPhysicalInventory">          
             <input type="hidden" name="_useRowSubmit" value="Y" />                       
-            <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
@@ -31,9 +31,9 @@
                             <input type="hidden" value="${productInventory.productATP}" name="productATP_o_${productInventory_index}">
                             <input type="hidden" value="${productInventory.productQOH}" name="productQOH_o_${productInventory_index}">                                                     
                             <input type="hidden" name="_rowSubmit_o_${productInventory_index}" value="N"/>
-                            <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${parameters.facilityId}&inventoryItemId=${productInventory.inventoryItemId}</@ofbizUrl>">${productInventory.inventoryItemId}</a>
+                            <a href="<@pageUrl>EditFacilityInventoryItems?facilityId=${parameters.facilityId}&inventoryItemId=${productInventory.inventoryItemId}</@pageUrl>">${productInventory.inventoryItemId}</a>
                         </@td>
-                        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productInventory.productId}</@ofbizInterWebappUrl>">${productInventory.productId!}</a></@td>
+                        <@td><a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productInventory.productId}</@serverUrl>">${productInventory.productId!}</a></@td>
                         <@td>${productInventory.internalName!}</@td>
                         <@td>${productInventory.availableToPromiseTotal!}</@td>
                         <@td>${productInventory.quantityOnHandTotal!}</@td>

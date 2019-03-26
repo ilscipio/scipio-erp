@@ -57,7 +57,11 @@ public class GiftCertificateServices {
     public static final int CARD_NUMBER_LENGTH = 14;
     public static final int PIN_NUMBER_LENGTH = 6;
 
-    public static BigDecimal ZERO = BigDecimal.ZERO;
+    /**
+     * @deprecated SCIPIO: 2018-09-26: Only here for backward-compat; use BigDecimal.ZERO instead.
+     */
+    @Deprecated
+    public static final BigDecimal ZERO = BigDecimal.ZERO;
 
     // Base Gift Certificate Services
     public static Map<String, Object> createGiftCertificate(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -113,8 +117,22 @@ public class GiftCertificateServices {
                 acctCtx.put("finAccountCode", pinNumber);
                 acctCtx.put("userLogin", userLogin);
                 acctResult = dispatcher.runSync("createFinAccount", acctCtx);
+                if (ServiceUtil.isError(acctResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(acctResult));
+                }
+
             } else {
-                acctResult = dispatcher.runSync("createFinAccountForStore", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId, "userLogin", userLogin));
+                Map<String, Object> createAccountCtx = new HashMap<>();
+                createAccountCtx.put("ownerPartyId", partyId);
+                createAccountCtx.put("finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId);
+                createAccountCtx.put("productStoreId", productStoreId);
+                createAccountCtx.put("currencyUomId", currencyUom); // SCIPIO: Fixed duplication
+                createAccountCtx.put("finAccountName", accountName + " for party ["+partyId+"]"); // SCIPIO: Fixed space
+                createAccountCtx.put("userLogin", userLogin);
+                acctResult = dispatcher.runSync("createFinAccountForStore", createAccountCtx);
+                if (ServiceUtil.isError(acctResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(acctResult));
+                }
                 if (acctResult.get("finAccountId") != null) {
                     finAccountId = cardNumber = (String) acctResult.get("finAccountId");
                 }
@@ -123,25 +141,16 @@ public class GiftCertificateServices {
                 }
             }
 
-            if (ServiceUtil.isError(acctResult)) {
-                String error = ServiceUtil.getErrorMessage(acctResult);
-                return ServiceUtil.returnError(error);
-            }
-
             // create the initial (deposit) transaction
             // do something tricky here: run as the "system" user
             // that can actually create a financial account transaction
             GenericValue permUserLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
-            refNum = createTransaction(delegator, dispatcher, permUserLogin, initialAmount, productStoreId, 
+            refNum = createTransaction(delegator, dispatcher, permUserLogin, initialAmount, productStoreId,
                     partyId, currencyUom, deposit, finAccountId, locale);
 
-        } catch (GenericEntityException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCreationError", locale));
-        } catch (GenericServiceException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCreationError", locale));
         } catch (GeneralException e) {
             Debug.logError(e, module);
@@ -187,9 +196,16 @@ public class GiftCertificateServices {
             GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("addFundsToGiftCertificate: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (!validatePin(delegator, cardNumber, pinNumber)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "AccountingGiftCerticateNumberPinNotValid", locale));
                 }
                 finAccountId = cardNumber;
@@ -200,14 +216,16 @@ public class GiftCertificateServices {
                 }
             }
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountSetting", 
-                    UtilMisc.toMap("productStoreId", productStoreId, 
+            // SCIPIO: Added logError
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                    UtilMisc.toMap("productStoreId", productStoreId,
                             "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
         }
 
         if (finAccountId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", ""), locale));
         }
 
@@ -215,19 +233,19 @@ public class GiftCertificateServices {
             try {
                 finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", finAccountId).queryOne();
             } catch (GenericEntityException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", finAccountId), locale));
             }
         }
 
         // get the previous balance
-        BigDecimal previousBalance = ZERO;
+        BigDecimal previousBalance = BigDecimal.ZERO;
         if (finAccount.get("availableBalance") != null) {
             previousBalance = finAccount.getBigDecimal("availableBalance");
         }
 
         // create the transaction
-        BigDecimal balance = ZERO;
+        BigDecimal balance = BigDecimal.ZERO;
         String refNum = null;
         try {
             refNum = GiftCertificateServices.createTransaction(delegator, dispatcher, userLogin, amount, productStoreId, partyId,
@@ -272,7 +290,7 @@ public class GiftCertificateServices {
 
         // validate the amount
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountMustBePositive", locale));
         }
 
@@ -281,14 +299,23 @@ public class GiftCertificateServices {
             GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("redeemGiftCertificate: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
             if ("Y".equals(giftCertSettings.getString("requirePinCode")) && !validatePin(delegator, cardNumber, pinNumber)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberPinNotValid", locale));
             }
-        } catch (GenericEntityException ex) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountSetting", 
-                    UtilMisc.toMap("productStoreId", productStoreId, 
+        } catch (GenericEntityException e) {
+            // SCIPIO: Added logError
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                    UtilMisc.toMap("productStoreId", productStoreId,
                             "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
         }
         Debug.logInfo("Attempting to redeem GC for " + amount, module);
@@ -297,7 +324,7 @@ public class GiftCertificateServices {
         try {
             finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
         }
 
@@ -343,7 +370,7 @@ public class GiftCertificateServices {
 
         // validate the pin
         if (!validatePin(delegator, cardNumber, pinNumber)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberPinNotValid", locale));
         }
 
@@ -351,12 +378,11 @@ public class GiftCertificateServices {
         try {
             finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
         }
 
         // TODO: get the real currency from context
-        //String currencyUom = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
         // get the balance
         BigDecimal balance = finAccount.get("availableBalance") == null ? BigDecimal.ZERO : finAccount.getBigDecimal("availableBalance");
 
@@ -386,7 +412,7 @@ public class GiftCertificateServices {
             authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountCannotCapture", locale));
         }
 
@@ -398,22 +424,22 @@ public class GiftCertificateServices {
             // make sure authorization has not expired
             Timestamp authExpiration = finAccountAuth.getTimestamp("thruDate");
             if ((authExpiration != null) && (authExpiration.before(UtilDateTime.nowTimestamp()))) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingFinAccountAuthorizationExpired", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingFinAccountAuthorizationExpired",
                         UtilMisc.toMap("paymentGatewayResponseId", authTransaction.getString("paymentGatewayResponseId"),
                                 "authExpiration", authExpiration), locale));
             }
             // make sure the fin account itself has not expired
             if ((giftCard.getTimestamp("thruDate") != null) && (giftCard.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingGiftCerticateNumberExpired", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingGiftCerticateNumberExpired",
                         UtilMisc.toMap("thruDate", giftCard.getTimestamp("thruDate")), locale));
             }
 
             // obtain the order information
             OrderReadHelper orh = new OrderReadHelper(delegator, orderPaymentPreference.getString("orderId"));
 
-            Map<String, Object> redeemCtx = new HashMap<String, Object>();
+            Map<String, Object> redeemCtx = new HashMap<>();
             redeemCtx.put("userLogin", userLogin);
             redeemCtx.put("productStoreId", orh.getProductStoreId());
             redeemCtx.put("cardNumber", giftCard.get("finAccountId"));
@@ -428,14 +454,14 @@ public class GiftCertificateServices {
             Map<String, Object> redeemResult = null;
             redeemResult = dispatcher.runSync("redeemGiftCertificate", redeemCtx);
             if (ServiceUtil.isError(redeemResult)) {
-                return redeemResult;
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(redeemResult));
             }
 
             // now release the authorization should this use the gift card release service?
-            Map<String, Object> releaseResult = dispatcher.runSync("expireFinAccountAuth", 
+            Map<String, Object> releaseResult = dispatcher.runSync("expireFinAccountAuth",
                     UtilMisc.<String, Object>toMap("userLogin", userLogin, "finAccountAuthId", finAccountAuthId));
             if (ServiceUtil.isError(releaseResult)) {
-                return releaseResult;
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(releaseResult));
             }
 
             String authRefNum = authTransaction.getString("referenceNum");
@@ -451,13 +477,9 @@ public class GiftCertificateServices {
 
             return result;
 
-        } catch (GenericEntityException ex) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotProcess", 
-                    UtilMisc.toMap("errorString", ex.getMessage()), locale));
-        } catch (GenericServiceException ex) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotProcess", 
+        } catch (GenericEntityException | GenericServiceException ex) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotProcess",
                     UtilMisc.toMap("errorString", ex.getMessage()), locale));
         }
 }
@@ -489,7 +511,7 @@ public class GiftCertificateServices {
                     .cache().queryOne();
             GenericValue finAccount = null;
             String finAccountId = null;
-            if (UtilValidate.isNotEmpty(giftCertSettings)) {
+            if (giftCertSettings != null) { // SCIPIO: Fixed empty check, should be null check
                 if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                     if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
                         finAccountId = giftCard.getString("cardNumber");
@@ -498,28 +520,30 @@ public class GiftCertificateServices {
                 } else {
                         finAccount = FinAccountHelper.getFinAccountFromCode(giftCard.getString("cardNumber"), delegator);
                         if (finAccount == null) {
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                                    "AccountingGiftCerticateNumberNotFound", 
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                                    "AccountingGiftCerticateNumberNotFound",
                                     UtilMisc.toMap("finAccountId", ""), locale));
                         }
                         finAccountId = finAccount.getString("finAccountId");
                 }
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingFinAccountSetting", 
-                        UtilMisc.toMap("productStoreId", productStoreId, 
+                // SCIPIO: Added logError
+                Debug.logError("giftCertificateAuthorize: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
                                 "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
             }
 
             if (finAccountId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberPinNotValid", locale));
             }
 
             // check for expiration date
             if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingGiftCerticateNumberExpired", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingGiftCerticateNumberExpired",
                         UtilMisc.toMap("thruDate", finAccount.getTimestamp("thruDate")), locale));
             }
 
@@ -538,12 +562,12 @@ public class GiftCertificateServices {
                 if (giftCertSettings.getLong("authValidDays") != null) {
                     thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp(), giftCertSettings.getLong("authValidDays"));
                 }
-                Map<String, Object> tmpResult = dispatcher.runSync("createFinAccountAuth", 
-                        UtilMisc.<String, Object>toMap("finAccountId", finAccountId, 
+                Map<String, Object> tmpResult = dispatcher.runSync("createFinAccountAuth",
+                        UtilMisc.<String, Object>toMap("finAccountId", finAccountId,
                                 "amount", amount, "currencyUomId", currency,
                                 "thruDate", thruDate, "userLogin", userLogin));
                 if (ServiceUtil.isError(tmpResult)) {
-                    return tmpResult;
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
                 } else {
                     refNum = (String) tmpResult.get("finAccountAuthId");
                     processResult = Boolean.TRUE;
@@ -563,15 +587,10 @@ public class GiftCertificateServices {
             result.put("authRefNum", refNum);
 
             return result;
-        } catch (GenericEntityException ex) {
+        } catch (GenericEntityException | GenericServiceException ex) {
             Debug.logError(ex, "Cannot authorize gift certificate", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotAuthorize", 
-                    UtilMisc.toMap("errorString", ex.getMessage()), locale));
-        } catch (GenericServiceException ex) {
-            Debug.logError(ex, "Cannot authorize gift certificate", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingGiftCerticateNumberCannotAuthorize", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotAuthorize",
                     UtilMisc.toMap("errorString", ex.getMessage()), locale));
         }
     }
@@ -591,28 +610,26 @@ public class GiftCertificateServices {
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
         Locale locale = (Locale) context.get("locale");
 
-        String err = UtilProperties.getMessage(resourceError, 
+        String err = UtilProperties.getMessage(resourceError,
                 "AccountingGiftCerticateNumberCannotBeExpired", locale);
         try {
             // expire the related financial authorization transaction
             GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
             if (authTransaction == null) {
-                return ServiceUtil.returnError(err + UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(err + UtilProperties.getMessage(resourceError,
                         "AccountingFinAccountCannotFindAuthorization", locale));
             }
-            Map<String, Object> input = UtilMisc.<String, Object>toMap("userLogin", userLogin, 
+            Map<String, Object> input = UtilMisc.<String, Object>toMap("userLogin", userLogin,
                     "finAccountAuthId", authTransaction.get("referenceNum"));
             Map<String, Object> serviceResults = dispatcher.runSync("expireFinAccountAuth", input);
+            if (ServiceUtil.isError(serviceResults)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults));
+            }
 
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("releaseRefNum", authTransaction.getString("referenceNum"));
             result.put("releaseAmount", authTransaction.getBigDecimal("amount"));
             result.put("releaseResult", Boolean.TRUE);
-
-            // if there's an error, don't release
-            if (ServiceUtil.isError(serviceResults)) {
-                return ServiceUtil.returnError(err + ServiceUtil.getErrorMessage(serviceResults));
-            }
 
             return result;
         } catch (GenericServiceException e) {
@@ -621,11 +638,11 @@ public class GiftCertificateServices {
         }
     }
 
-    private static Map<String, Object> giftCertificateRestore(DispatchContext dctx, GenericValue userLogin, GenericValue paymentPref, 
+    private static Map<String, Object> giftCertificateRestore(DispatchContext dctx, GenericValue userLogin, GenericValue paymentPref,
             BigDecimal amount, String currency, String resultPrefix, Locale locale) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
-        
+
         // get the orderId for tracking
         String orderId = paymentPref.getString("orderId");
         OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
@@ -644,12 +661,12 @@ public class GiftCertificateServices {
             giftCard = paymentPref.getRelatedOne("GiftCard", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get GiftCard from OrderPaymentPreference", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotLocateItFromOrderPaymentPreference", locale));
         }
 
         if (giftCard == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotRelease", locale));
         }
 
@@ -658,11 +675,10 @@ public class GiftCertificateServices {
             currency = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
         }
 
-        Map<String, Object> refundCtx = new HashMap<String, Object>();
+        Map<String, Object> refundCtx = new HashMap<>();
         refundCtx.put("productStoreId", productStoreId);
         refundCtx.put("currency", currency);
         refundCtx.put("partyId", partyId);
-        //reloadCtx.put("orderId", orderId);
         refundCtx.put("cardNumber", giftCard.get("cardNumber"));
         refundCtx.put("pinNumber", giftCard.get("pinNumber"));
         refundCtx.put("amount", amount);
@@ -673,7 +689,7 @@ public class GiftCertificateServices {
             restoreGcResult = dispatcher.runSync("addFundsToGiftCertificate", refundCtx);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberRefundCallError", locale));
         }
         if (ServiceUtil.isError(restoreGcResult)) {
@@ -710,7 +726,7 @@ public class GiftCertificateServices {
             orderHeader = orderItem.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get OrderHeader from OrderItem",module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "OrderCannotGetOrderHeader", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -731,7 +747,7 @@ public class GiftCertificateServices {
             productStoreId = orh.getProductStoreId();
         }
         if (productStoreId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotProcess",
                     UtilMisc.toMap("orderId", orderId), locale));
         }
@@ -755,7 +771,7 @@ public class GiftCertificateServices {
             Debug.logError(e, "Unable to get Product from OrderItem", module);
         }
         if (product == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotFulfill", locale));
         }
 
@@ -765,17 +781,35 @@ public class GiftCertificateServices {
             giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("giftCertificatePurchase: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get Product Store FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingFinAccountSetting", 
-                    UtilMisc.toMap("productStoreId", productStoreId, 
-                            "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale) + ": " + e.getMessage());
+            // SCIPIO: Fixed message
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                    UtilMisc.toMap("productStoreId", productStoreId,
+                            "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale)); // SCIPIO: Do not print exception:  + ": " + e.getMessage()
         }
 
         // survey information
         String surveyId = giftCertSettings.getString("purchaseSurveyId");
 
+        if (UtilValidate.isEmpty(surveyId)) { // SCIPIO: Explicit check
+            Debug.logError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", Debug.getLogLocale())
+                    + "; cause: the ProductStoreFinActSetting [productStoreId=" + productStoreId
+                    + ", finAccountTypeId=" + FinAccountHelper.giftCertFinAccountTypeId
+                    + "] does not specify a purchaseSurveyId", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
+        }
+        
         // get the survey response
         GenericValue surveyResponse = null;
         try {
@@ -786,12 +820,12 @@ public class GiftCertificateServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             // SCIPIO: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
         if (surveyResponse == null) {
             // SCIPIO: This was wrong message: "AccountingGiftCerticateNumberCannotFulfill"
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
 
@@ -801,12 +835,12 @@ public class GiftCertificateServices {
             responseAnswers = surveyResponse.getRelated("SurveyResponseAnswer", null, null, false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> answerMap = new LinkedHashMap<>(); // SCIPIO: LinkedHashMap to preserve answer iteration order
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -814,7 +848,7 @@ public class GiftCertificateServices {
                     question = answer.getRelatedOne("SurveyQuestion", false);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
                 }
                 if (question != null) {
@@ -839,12 +873,10 @@ public class GiftCertificateServices {
         int qtyLoop = quantity.intValue();
         for (int i = 0; i < qtyLoop; i++) {
             // create a gift certificate
-            Map<String, Object> createGcCtx = new HashMap<String, Object>();
-            //createGcCtx.put("paymentConfig", paymentConfig);
+            Map<String, Object> createGcCtx = new HashMap<>();
             createGcCtx.put("productStoreId", productStoreId);
             createGcCtx.put("currency", currency);
             createGcCtx.put("partyId", partyId);
-            //createGcCtx.put("orderId", orderId);
             createGcCtx.put("initialAmount", amount);
             createGcCtx.put("userLogin", userLogin);
 
@@ -853,17 +885,17 @@ public class GiftCertificateServices {
                 createGcResult = dispatcher.runSync("createGiftCertificate", createGcCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberCreationError", locale) + e.getMessage());
             }
             if (ServiceUtil.isError(createGcResult)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "AccountingGiftCerticateNumberCreationError", locale) 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingGiftCerticateNumberCreationError", locale)
                         + ServiceUtil.getErrorMessage(createGcResult));
             }
 
             // create the fulfillment record
-            Map<String, Object> gcFulFill = new HashMap<String, Object>();
+            Map<String, Object> gcFulFill = new HashMap<>();
             gcFulFill.put("typeEnumId", "GC_ACTIVATE");
             gcFulFill.put("partyId", partyId);
             gcFulFill.put("orderId", orderId);
@@ -879,7 +911,7 @@ public class GiftCertificateServices {
                 dispatcher.runAsync("createGcFulFillmentRecord", gcFulFill, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberCannotStoreFulfillmentInfo",
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
@@ -902,6 +934,11 @@ public class GiftCertificateServices {
             } else {
                 answerMap.put("locale", locale);
 
+                // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+                answerMap.put("productStoreId", productStoreId);
+                answerMap.put("orderId", orderId);
+                answerMap.put("currencyUomId", currency);
+
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
                 if (copyMe) {
@@ -911,7 +948,7 @@ public class GiftCertificateServices {
                         bcc = orderEmails;
                     }
                 }
-                Map<String, Object> emailCtx = new HashMap<String, Object>();
+                Map<String, Object> emailCtx = new HashMap<>();
                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                 if (UtilValidate.isEmpty(bodyScreenLocation)) {
                     bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -925,16 +962,36 @@ public class GiftCertificateServices {
                 emailCtx.put("sendBcc", bcc);
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
-                
+
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    emailCtx.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("giftCertificatePurchase: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
+
                 // send off the email async so we will retry on failed attempts
                 // SC 20060405: Changed to runSync because runAsync kept getting an error:
                 // Problem serializing service attributes (Cannot serialize object of class java.util.PropertyResourceBundle)
+                // SCIPIO: 2019-03-08: Changed back to runAsync because an error in sendMailFromScreen ([CON] or other)
+                // causes ofbGcPurchase/giftCertificatePurchase to be re-run, which causes a new gift certificate to be generated at every email retry.
                 try {
-                    dispatcher.runSync("sendMailFromScreen", emailCtx);
+                    //Map<String, Object> serviceResults = dispatcher.runSync("sendMailFromScreen", emailCtx);
+                    //if (ServiceUtil.isError(serviceResults)) {
+                    //    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults));
+                    //}
+                    dispatcher.runAsync("sendMailFromScreen", emailCtx);
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "Problem sending mail", module);
+                    // SCIPIO: 2019-03-08: Improved error message
+                    Debug.logError(e, "Problem sending gift certificate purchase information email [cardNumber="
+                            + PaymentWorker.applyGeneralNumberMask((String) createGcResult.get("cardNumber"), delegator)
+                            + ", initialAmount=" + createGcResult.get("initialAmount") + "]", module); 
                     // this is fatal; we will rollback and try again later
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "AccountingGiftCerticateNumberCannotSendEmailNotice",
                             UtilMisc.toMap("errorString", e.toString()), locale));
                 }
@@ -961,7 +1018,7 @@ public class GiftCertificateServices {
             orderHeader = orderItem.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get OrderHeader from OrderItem",module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "OrderCannotGetOrderHeader", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -982,7 +1039,7 @@ public class GiftCertificateServices {
             productStoreId = orh.getProductStoreId();
         }
         if (productStoreId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "AccountingGiftCerticateNumberCannotReload", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -993,7 +1050,7 @@ public class GiftCertificateServices {
             paymentConfig = paymentSetting.getString("paymentPropertiesPath");
         }
         if (paymentConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "AccountingGiftCerticateNumberCannotGetPaymentConfiguration", locale));
         }
 
@@ -1020,7 +1077,7 @@ public class GiftCertificateServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             // SCIPIO: confusing error message: "AccountingGiftCerticateNumberCannotReload"
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "AccountingGiftCerticateNumberCannotReloadFromSurveyAnswers", locale));
         }
 
@@ -1030,12 +1087,12 @@ public class GiftCertificateServices {
             responseAnswers = surveyResponse.getRelated("SurveyResponseAnswer", null, null, false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "AccountingGiftCerticateNumberCannotReloadFromSurveyAnswers", locale));
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> answerMap = new LinkedHashMap<>(); // SCIPIO: LinkedHashMap to preserve answer iteration order
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -1043,7 +1100,7 @@ public class GiftCertificateServices {
                     question = answer.getRelatedOne("SurveyQuestion", false);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                             "AccountingGiftCerticateNumberCannotReloadFromSurveyAnswers", locale));
                 }
                 if (question != null) {
@@ -1060,11 +1117,10 @@ public class GiftCertificateServices {
         String pinNumber = (String) answerMap.get(pinNumberKey);
 
         // reload the gift card
-        Map<String, Object> reloadCtx = new HashMap<String, Object>();
+        Map<String, Object> reloadCtx = new HashMap<>();
         reloadCtx.put("productStoreId", productStoreId);
         reloadCtx.put("currency", currency);
         reloadCtx.put("partyId", partyId);
-        //reloadCtx.put("orderId", orderId);
         reloadCtx.put("cardNumber", cardNumber);
         reloadCtx.put("pinNumber", pinNumber);
         reloadCtx.put("amount", amount);
@@ -1083,7 +1139,7 @@ public class GiftCertificateServices {
         }
 
         // create the fulfillment record
-        Map<String, Object> gcFulFill = new HashMap<String, Object>();
+        Map<String, Object> gcFulFill = new HashMap<>();
         gcFulFill.put("typeEnumId", "GC_RELOAD");
         gcFulFill.put("userLogin", userLogin);
         gcFulFill.put("partyId", partyId);
@@ -1101,7 +1157,7 @@ public class GiftCertificateServices {
             dispatcher.runAsync("createGcFulFillmentRecord", gcFulFill, true);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotStoreFulfillmentInfo",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -1112,7 +1168,7 @@ public class GiftCertificateServices {
 
             // process the return
             try {
-                Map<String, Object> refundCtx = UtilMisc.toMap("orderItem", orderItem, 
+                Map<String, Object> refundCtx = UtilMisc.toMap("orderItem", orderItem,
                         "partyId", partyId, "userLogin", userLogin);
                 dispatcher.runAsync("refundGcPurchase", refundCtx, null, true, 300, true);
             } catch (GenericServiceException e) {
@@ -1127,6 +1183,11 @@ public class GiftCertificateServices {
         answerMap.put("responseCode", reloadGcResult.get("responseCode"));
         answerMap.put("previousAmount", reloadGcResult.get("previousBalance"));
         answerMap.put("amount", reloadGcResult.get("amount"));
+        // SCIPIO: Pass card number as both "cardNumber" (used by purchase email) AND
+        // as explicit "giftCardNumber" (used by original reload email); the second is important
+        // because the field name is otherwise dynamically configured in payment.properties (see above)
+        answerMap.put("cardNumber", cardNumber);
+        answerMap.put("giftCardNumber", cardNumber);
 
         // get the email setting for this email type
         GenericValue productStoreEmail = null;
@@ -1141,7 +1202,12 @@ public class GiftCertificateServices {
         } else {
             answerMap.put("locale", locale);
 
-            Map<String, Object> emailCtx = new HashMap<String, Object>();
+            // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+            answerMap.put("productStoreId", productStoreId);
+            answerMap.put("orderId", orderId);
+            answerMap.put("currencyUomId", currency);
+
+            Map<String, Object> emailCtx = new HashMap<>();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
                 bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1156,13 +1222,24 @@ public class GiftCertificateServices {
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
 
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                emailCtx.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("giftCertificateReload: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
+
             // send off the email async so we will retry on failed attempts
             try {
                 dispatcher.runAsync("sendMailFromScreen", emailCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem sending mail", module);
                 // this is fatal; we will rollback and try again later
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberCannotSendEmailNotice",
                         UtilMisc.toMap("errorString", e.toString()), locale));
             }
@@ -1196,7 +1273,7 @@ public class GiftCertificateServices {
             delegator.create(gcFulFill);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCerticateNumberCannotStoreFulfillmentInfo",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
@@ -1221,11 +1298,14 @@ public class GiftCertificateServices {
 
         Map<String, Object> returnableInfo = null;
         try {
-            returnableInfo = dispatcher.runSync("getReturnableQuantity", UtilMisc.toMap("orderItem", orderItem, 
+            returnableInfo = dispatcher.runSync("getReturnableQuantity", UtilMisc.toMap("orderItem", orderItem,
                     "userLogin", userLogin));
+            if (ServiceUtil.isError(returnableInfo)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(returnableInfo));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                     "OrderErrorUnableToGetReturnItemInformation", locale));
         }
 
@@ -1235,7 +1315,7 @@ public class GiftCertificateServices {
             Debug.logInfo("Returnable INFO : " + returnableQuantity + " @ " + returnablePrice + " :: " + orderItem, module);
 
             // create the return header
-            Map<String, Object> returnHeaderInfo = new HashMap<String, Object>();
+            Map<String, Object> returnHeaderInfo = new HashMap<>();
             returnHeaderInfo.put("fromPartyId", partyId);
             returnHeaderInfo.put("userLogin", userLogin);
             Map<String, Object> returnHeaderResp = null;
@@ -1243,29 +1323,23 @@ public class GiftCertificateServices {
                 returnHeaderResp = dispatcher.runSync("createReturnHeader", returnHeaderInfo);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorUnableToCreateReturnHeader", locale));
             }
 
-            if (returnHeaderResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(returnHeaderResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
+            if (ServiceUtil.isError(returnHeaderResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(returnHeaderResp));
             }
 
-            String returnId = null;
-            if (returnHeaderResp != null) {
-                returnId = (String) returnHeaderResp.get("returnId");
-            }
+            String returnId = (String) returnHeaderResp.get("returnId");
 
-            if (returnId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+            if (UtilValidate.isEmpty(returnId)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorCreateReturnHeaderWithoutId", locale));
             }
 
             // create the return item
-            Map<String, Object> returnItemInfo = new HashMap<String, Object>();
+            Map<String, Object> returnItemInfo = new HashMap<>();
             returnItemInfo.put("returnId", returnId);
             returnItemInfo.put("returnReasonId", "RTN_DIG_FILL_FAIL");
             returnItemInfo.put("returnTypeId", "RTN_REFUND");
@@ -1281,26 +1355,21 @@ public class GiftCertificateServices {
                 returnItemResp = dispatcher.runSync("createReturnItem", returnItemInfo);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorUnableToCreateReturnItem", locale));
             }
 
-            if (returnItemResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(returnItemResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
+            if (ServiceUtil.isError(returnItemResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(returnItemResp));
             }
 
-            String returnItemSeqId = null;
-            if (returnItemResp != null) {
-                returnItemSeqId = (String) returnItemResp.get("returnItemSeqId");
-            }
+            String returnItemSeqId = (String) returnItemResp.get("returnItemSeqId");
 
             if (returnItemSeqId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorCreateReturnItemWithoutId", locale));
-            } else {
+            }
+            if (Debug.verboseOn()) {
                 Debug.logVerbose("Created return item : " + returnId + " / " + returnItemSeqId, module);
             }
 
@@ -1310,12 +1379,12 @@ public class GiftCertificateServices {
                 admin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorUnableToUpdateReturnHeaderStatusWithoutUserLogin", locale));
             }
 
             // update the status to received so it can process
-            Map<String, Object> updateReturnInfo = new HashMap<String, Object>();
+            Map<String, Object> updateReturnInfo = new HashMap<>();
             updateReturnInfo.put("returnId", returnId);
             updateReturnInfo.put("statusId", "RETURN_RECEIVED");
             updateReturnInfo.put("currentStatusId", "RETURN_REQUESTED");
@@ -1325,15 +1394,12 @@ public class GiftCertificateServices {
                 updateReturnResp = dispatcher.runSync("updateReturnHeader", updateReturnInfo);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrderError,
                         "OrderErrorUnableToUpdateReturnHeaderStatus", locale));
             }
 
-            if (updateReturnResp != null) {
-                String errorMessage = ServiceUtil.getErrorMessage(updateReturnResp);
-                if (errorMessage != null) {
-                    return ServiceUtil.returnError(errorMessage);
-                }
+            if (ServiceUtil.isError(updateReturnResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateReturnResp));
             }
         }
 
@@ -1350,18 +1416,21 @@ public class GiftCertificateServices {
         }
         if (finAccount != null) {
             String dbPin = finAccount.getString("finAccountCode");
-            Debug.logInfo("GC Pin Validation: [Sent: " + pinNumber + "] [Actual: " + dbPin + "]", module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("GC Pin Validation: [Sent: " + pinNumber + "] [Actual: " + dbPin + "]", module);
+            }
             if (dbPin != null && dbPin.equals(pinNumber)) {
                 return true;
             }
-        } else {
+        }
+        if (Debug.infoOn()) {
             Debug.logInfo("GC FinAccount record not found (" + cardNumber + ")", module);
         }
         return false;
     }
 
-    private static String createTransaction(Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
-            BigDecimal amount, String productStoreId, String partyId, String currencyUom, String txType, 
+    private static String createTransaction(Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
+            BigDecimal amount, String productStoreId, String partyId, String currencyUom, String txType,
             String finAccountId, Locale locale) throws GeneralException {
         final String coParty = getPayToPartyId(delegator, productStoreId);
         final String paymentMethodType = "GIFT_CERTIFICATE";
@@ -1382,19 +1451,16 @@ public class GiftCertificateServices {
             partyIdFrom = coParty;
             partyIdTo = partyId;
         } else {
-            throw new GeneralException(UtilProperties.getMessage(resourceError, 
+            throw new GeneralException(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountCannotCreateTransaction", locale));
         }
 
         // create the payment for the transaction
         Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
         paymentCtx.put("paymentMethodTypeId", paymentMethodType);
-        //paymentCtx.put("paymentMethodId", "");
-        //paymentCtx.put("paymentGatewayResponseId", "");
         paymentCtx.put("partyIdTo", partyIdTo);
         paymentCtx.put("partyIdFrom", partyIdFrom);
         paymentCtx.put("statusId", "PMNT_RECEIVED");
-        //paymentCtx.put("paymentPreferenceId", "");
         paymentCtx.put("currencyUomId", currencyUom);
         paymentCtx.put("amount", amount);
         paymentCtx.put("userLogin", userLogin);
@@ -1412,9 +1478,9 @@ public class GiftCertificateServices {
         }
         if (ServiceUtil.isError(payResult)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(payResult));
-        } else {
-            paymentId = (String) payResult.get("paymentId");
         }
+
+        paymentId = (String) payResult.get("paymentId");
 
         // create the initial transaction
         Map<String, Object> transCtx = UtilMisc.<String, Object>toMap("finAccountTransTypeId", txType);
@@ -1475,10 +1541,7 @@ public class GiftCertificateServices {
 
     private static boolean checkNumberInDatabase(Delegator delegator, String number) throws GenericEntityException {
         GenericValue finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", number).queryOne();
-        if (finAccount == null) {
-            return true;
-        }
-        return false;
+        return finAccount == null;
     }
 
     private static boolean checkCardNumber(String number) {

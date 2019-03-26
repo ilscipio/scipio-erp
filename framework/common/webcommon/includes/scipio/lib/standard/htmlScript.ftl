@@ -183,7 +183,7 @@ DEV NOTE: Other options: layoutSettings? any way is messy...
                     
 Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
 dynamic using controller request defs and can't predict URL patterns unless rewrite
-@ofbizUrl in JS.  
+@pageUrl in JS.  
          
   * Parameters *
     url                     = Controller request uri
@@ -210,7 +210,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
+          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(raw(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -235,7 +235,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makeOfbizUrl(rawString(uri)), 'js')}";
+      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(raw(uri)), 'js')}";
       </#list>
 
     </@script>

@@ -27,8 +27,6 @@
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
             <string value="dataResourceName"/>
         </call-class-method>
-    
-        <log level="always" message="UPLOADING REQUEST CONTENT" />
 
         <!-- Check input parameters -->
         <if>
@@ -47,19 +45,17 @@
         <check-errors/>
         <!-- Create new content form upload file / set content from Existing content -->
         <if-empty field="formInput.formInput.contentId">
-            <log level="always" message="CONTENT_ID EMPTY" />
-            <log level="always" message="UPLOADMIMETYPE ====> ${formInput.uploadMimeType}" />
-            <log level="always" message="MIMETYPEID     ====> ${formInput.formInput.mimeTypeId}" />
                 <if>
                     <condition>
                         <or>
                             <!-- Compaire MimeType between upload file and selected MimeType -->
                             <if-compare-field field="formInput.uploadMimeType" operator="equals" to-field="formInput.formInput.mimeTypeId"/>
-                            <!-- <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value="application/octet-stream"/> -->
+                            <!-- SCIPIO: this was removed by us (TODO: REVIEW)
+                            <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value="application/octet-stream"/> -->
                             <if-compare field="formInput.formInput.mimeTypeId" operator="equals"  value=""/>
                         </or>
                     </condition>
-                    <then>                        
+                    <then>
                         <!-- Create new content from upload file -->
                         <set-service-fields service-name="createContentFromUploadedFile"
                             map="formInput.formInput" to-map="inMap"/>
@@ -82,7 +78,7 @@
                 <set field="context.contentId" from-field="formInput.formInput.contentId"/>
             </else>
         </if-empty>
-        
+
         <!-- create ContentAssoc-->
         <set-service-fields service-name="createContentAssoc" map="formInput.formInput" to-map="contentMap"/>
         <if-not-empty field="formInput.formInput.contentIdFrom">
@@ -96,10 +92,10 @@
                 <field-map field-name="contentIdTo" from-field="contentMap.contentIdTo"/>
             </entity-and>
             <if-empty field="contentAssonList">
-                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>           
+                <call-service service-name="createContentAssoc" in-map-name="contentMap"/>
             </if-empty>
         </if-not-empty>
-        
+
         <set field="context.custRequestId" from-field="formInput.formInput.custRequestId"/>
         <call-map-processor in-map-name="context" out-map-name="custRequestContext">
             <simple-map-processor name="newCustRequestContent">
@@ -115,7 +111,6 @@
             </simple-map-processor>
         </call-map-processor>
 
-        <log level="always" message="CREATING CUST REQUEST CONTENT" />
         <!-- Create CustRequestContent -->
         <call-service service-name="createCustRequestContent" in-map-name="custRequestContext">
             <result-to-field result-name="contentId" field="contentId"/>

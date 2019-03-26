@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.testtools.OFBizTestCase;
@@ -32,7 +31,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
 public class InventoryItemTransferTest extends OFBizTestCase {
 
     protected GenericValue userLogin = null;
-    protected static String inventoryTransferId = null;
+    static String inventoryTransferId = null;
     protected BigDecimal transferQty = BigDecimal.ONE;
 
     public InventoryItemTransferTest(String name) {
@@ -50,7 +49,7 @@ public class InventoryItemTransferTest extends OFBizTestCase {
 
     public void testCreateInventoryItemsTransfer() throws Exception {
         // create
-        Map<String, Object> ctx = new HashMap<String, Object>();
+        Map<String, Object> ctx = new HashMap<>();
         String inventoryItemId = "9005";
         ctx.put("inventoryItemId", inventoryItemId);
         ctx.put("statusId", "IXF_REQUESTED");
@@ -60,17 +59,25 @@ public class InventoryItemTransferTest extends OFBizTestCase {
         ctx.put("xferQty", transferQty);
         ctx.put("userLogin", userLogin);
         Map<String, Object> resp = dispatcher.runSync("createInventoryTransfer", ctx);
-        inventoryTransferId = (String) resp.get("inventoryTransferId");
+        setInventoryTransferId((String) resp.get("inventoryTransferId"));
         assertNotNull(inventoryTransferId);
 
         // transfer
-        ctx = new HashMap<String, Object>();
-        ctx.put("inventoryTransferId", inventoryTransferId);
+        ctx = new HashMap<>();
+        ctx.put("inventoryTransferId", getInventoryTransferId());
         ctx.put("inventoryItemId", inventoryItemId);
         ctx.put("statusId", "IXF_COMPLETE");
         ctx.put("userLogin", userLogin);
         resp = dispatcher.runSync("updateInventoryTransfer", ctx);
         String respMsg = (String) resp.get("responseMessage");
         assertNotSame("error", respMsg);
+    }
+
+    public static String getInventoryTransferId() {
+        return inventoryTransferId;
+    }
+
+    public static void setInventoryTransferId(String inventoryTransferId) {
+        InventoryItemTransferTest.inventoryTransferId = inventoryTransferId;
     }
 }

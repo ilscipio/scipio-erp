@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if product??>
@@ -26,7 +13,7 @@ under the License.
   </@row>
   <@row>
     <@cell class="+name">
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME")!}</a>
+      <a href="<@pageUrl>product?product_id=${product.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME")!}</a>
     </@cell>
   </@row>
   <@row>
@@ -59,7 +46,7 @@ under the License.
       <span class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
-      <a href="<@ofbizUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
+      <a href="<@pageUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
     <#else>
       <@field type="input" size="5" name="quantity_${product.productId}" value="" />
     </#if>

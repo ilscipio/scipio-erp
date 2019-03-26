@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
-public class DemoDataPerson implements DemoDataObject {
+public class DemoDataPerson implements AbstractDataObject {
 
     private String title;
     private String firstName;

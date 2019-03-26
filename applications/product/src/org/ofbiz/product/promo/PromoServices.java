@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -107,7 +108,7 @@ public class PromoServices {
                 }
             }
             try {
-                Map<String, Object> newContext = dctx.makeValidContext("createProductPromoCode", "IN", context);
+                Map<String, Object> newContext = dctx.makeValidContext("createProductPromoCode", ModelService.IN_PARAM, context);
                 newContext.put("productPromoCodeId", newPromoCodeId);
                 createProductPromoCodeMap = dispatcher.runSync("createProductPromoCode", newContext);
             } catch (GenericServiceException err) {
@@ -130,7 +131,7 @@ public class PromoServices {
         Locale locale = (Locale) context.get("locale");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = new LinkedList<EntityCondition>();
+        List<EntityCondition> condList = new LinkedList<>();
         if (UtilValidate.isEmpty(productStoreId)) {
             condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
         }
@@ -138,18 +139,16 @@ public class PromoServices {
         condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.NOT_EQUAL, null));
         condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, nowTimestamp));
 
-        try {
-            EntityListIterator eli = EntityQuery.use(delegator).from("ProductStorePromoAndAppl").where(condList).queryIterator();
+        try (EntityListIterator eli = EntityQuery.use(delegator).from("ProductStorePromoAndAppl").where(condList).queryIterator()) {
             GenericValue productStorePromoAndAppl = null;
             while ((productStorePromoAndAppl = eli.next()) != null) {
                 GenericValue productStorePromo = delegator.makeValue("ProductStorePromoAppl");
                 productStorePromo.setAllFields(productStorePromoAndAppl, true, null, null);
                 productStorePromo.remove();
             }
-            eli.close();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error removing expired ProductStorePromo records: " + e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeCannotBeRemoved", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
@@ -163,7 +162,7 @@ public class PromoServices {
         // check the uploaded file
         ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
         if (fileBytes == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportUploadedFileNotValid", locale));
         }
 
@@ -183,7 +182,7 @@ public class PromoServices {
 
         // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(file));
-        List<Object> errors = new LinkedList<Object>();
+        List<Object> errors = new LinkedList<>();
         int lines = 0;
         String line;
 
@@ -192,9 +191,9 @@ public class PromoServices {
             while ((line = reader.readLine()) != null) {
                 // check to see if we should ignore this line
                 if (line.length() > 0 && !line.startsWith("#")) {
-                    if (line.length() > 0 && line.length() <= 20) {
+                    if (line.length() <= 20) {
                         // valid promo code
-                        Map<String, Object> inContext = new HashMap<String, Object>();
+                        Map<String, Object> inContext = new HashMap<>();
                         inContext.putAll(invokeCtx);
                         inContext.put("productPromoCodeId", line);
                         Map<String, Object> result = dispatcher.runSync("createProductPromoCode", inContext);
@@ -208,10 +207,7 @@ public class PromoServices {
                     ++lines;
                 }
             }
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (IOException | GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } finally {
@@ -226,7 +222,7 @@ public class PromoServices {
         if (errors.size() > 0) {
             return ServiceUtil.returnError(errors);
         } else if (lines == 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportEmptyFile", locale));
         }
 
@@ -246,10 +242,10 @@ public class PromoServices {
         }
 
         byte[] wrapper = bytebufferwrapper.array();
-       
+
       // read the bytes into a reader
-        BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper)));
-        List<Object> errors = new LinkedList<Object>();
+        BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper, UtilIO.getUtf8())));
+        List<Object> errors = new LinkedList<>();
         int lines = 0;
         String line;
 
@@ -271,10 +267,7 @@ public class PromoServices {
                     ++lines;
                 }
             }
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (IOException | GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } finally {
@@ -289,7 +282,7 @@ public class PromoServices {
         if (errors.size() > 0) {
             return ServiceUtil.returnError(errors);
         } else if (lines == 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPromoCodeImportEmptyFile", locale));
         }
 

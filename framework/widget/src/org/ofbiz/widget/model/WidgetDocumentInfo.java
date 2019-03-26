@@ -8,19 +8,19 @@ import org.w3c.dom.Element;
  * reference during model building.
  */
 public class WidgetDocumentInfo {
-    
+
     public static final String DOCUMENT_USER_DATA_KEY = "widgetDocInfo";
-    
+
     private String resourceLocation = null; // original resource location in component:// format
 
     public static WidgetDocumentInfo retrieve(Document document) {
         return (WidgetDocumentInfo) document.getUserData(DOCUMENT_USER_DATA_KEY);
     }
-    
+
     public static WidgetDocumentInfo retrieve(Element element) {
         return retrieve(element.getOwnerDocument());
     }
-    
+
     public static WidgetDocumentInfo retrieveAlways(Document document) {
         WidgetDocumentInfo docInfo = retrieve(document);
         if (docInfo == null) {
@@ -29,11 +29,11 @@ public class WidgetDocumentInfo {
         }
         return docInfo;
     }
-    
+
     public static WidgetDocumentInfo retrieveAlways(Element element) {
         return retrieveAlways(element.getOwnerDocument());
     }
-    
+
     public String getResourceLocation() {
         return resourceLocation;
     }
@@ -49,7 +49,7 @@ public class WidgetDocumentInfo {
         }
         return null;
     }
-    
+
     /**
      * Makes description for an element, including tag name, location, and column/line,
      * for log/error messages.

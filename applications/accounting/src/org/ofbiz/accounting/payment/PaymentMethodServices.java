@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.payment;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -62,7 +64,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> deletePaymentMethod(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -78,13 +80,13 @@ public class PaymentMethodServices {
             paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingPaymentMethodCannotBeDeleted",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
         if (paymentMethod == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingPaymentMethodCannotBeDeleted",
                     UtilMisc.toMap("errorString", ""), locale));
         }
@@ -92,7 +94,7 @@ public class PaymentMethodServices {
         // <b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PAY_INFO_DELETE permission
         if (paymentMethod.get("partyId") == null || !paymentMethod.getString("partyId").equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission("PAY_INFO", "_DELETE", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_DELETE", userLogin)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingPaymentMethodNoPermissionToDelete", locale));
             }
         }
@@ -102,8 +104,8 @@ public class PaymentMethodServices {
             paymentMethod.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingPaymentMethodCannotBeDeletedWriteFailure", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingPaymentMethodCannotBeDeletedWriteFailure",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
@@ -112,7 +114,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> makeExpireDate(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         String expMonth = (String) context.get("expMonth");
         String expYear = (String) context.get("expYear");
 
@@ -133,7 +135,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -143,10 +145,12 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
         // do some more complicated/critical validation...
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
 
         // first remove all spaces from the credit card number
         context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
@@ -167,7 +171,7 @@ public class PaymentMethodServices {
             return ServiceUtil.returnError(messages);
         }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -206,17 +210,19 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
             // set the contactMechId on the credit card
             newCc.set("contactMechId", context.get("contactMechId"));
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            // SCIPIO: 2017-10-10: refactored 
+            // SCIPIO: 2017-10-10: refactored
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
-        if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
+        if (newPartyContactMechPurpose != null) {
+            toBeStored.add(newPartyContactMechPurpose);
+        }
 
         try {
             delegator.storeAll(toBeStored);
@@ -239,7 +245,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -249,9 +255,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -265,37 +273,51 @@ public class PaymentMethodServices {
             paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingCreditCardUpdateReadFailure", locale) + e.getMessage());
         }
 
         if (creditCard == null || paymentMethod == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingCreditCardUpdateWithPaymentMethodId", locale) + paymentMethodId);
         }
         if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_UPDATE", userLogin)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingCreditCardUpdateWithoutPermission", UtilMisc.toMap("partyId", partyId, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingCreditCardUpdateWithoutPermission", UtilMisc.toMap("partyId", partyId,
                             "paymentMethodId", paymentMethodId), locale));
         }
 
         // do some more complicated/critical validation...
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
 
         // first remove all spaces from the credit card number
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        /* SCIPIO: This test was too strict; prevented the UI from deciding masking behavior
+         * and needlessly accepted mask characters in different positions as numbers
         if (updatedCardNumber.startsWith("*")) {
             // get the masked card number from the db
             String origCardNumber = creditCard.getString("cardNumber");
-            String origMaskedNumber = "";
             int cardLength = origCardNumber.length() - 4;
+
+            // use builder for better performance
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cardLength; i++) {
-                origMaskedNumber = origMaskedNumber + "*";
+                builder.append("*");
             }
-            origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
+            String origMaskedNumber = builder.append(origCardNumber.substring(cardLength)).toString();
 
             // compare the two masked numbers
             if (updatedCardNumber.equals(origMaskedNumber)) {
+                updatedCardNumber = origCardNumber;
+            }
+        }
+        */
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && updatedCardNumber.indexOf(maskChar) >= 0) {
+            // get the masked card number from the db
+            String origCardNumber = creditCard.getString("cardNumber");
+            // compare the two masked numbers
+            if (StringUtil.matchesMaskedAny(origCardNumber, updatedCardNumber, maskChar)) {
                 updatedCardNumber = origCardNumber;
             }
         }
@@ -327,7 +349,7 @@ public class PaymentMethodServices {
         try {
             newPmId = delegator.getNextSeqId("PaymentMethod");
         } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingCreditCardUpdateIdGenerationFailure", locale));
 
         }
@@ -353,7 +375,7 @@ public class PaymentMethodServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
             // set the contactMechId on the credit card
             newCc.set("contactMechId", contactMechId);
         }
@@ -366,18 +388,19 @@ public class PaymentMethodServices {
             isModified = true;
         }
 
-        if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
+        if (UtilValidate.isNotEmpty(contactMechId) && !"_NEW_".equals(contactMechId)) {
 
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            // SCIPIO: 2017-10-10: refactored 
+            // SCIPIO: 2017-10-10: refactored
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
-            // Debug.logInfo("yes, is modified", module);
-            if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
+            if (newPartyContactMechPurpose != null) {
+                toBeStored.add(newPartyContactMechPurpose);
+            }
 
             // set thru date on old paymentMethod
             paymentMethod.set("thruDate", now);
@@ -387,15 +410,15 @@ public class PaymentMethodServices {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingCreditCardUpdateWriteFailure", locale) + e.getMessage());
             }
         } else {
             result.put("paymentMethodId", paymentMethodId);
             result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            if (contactMechId == null || !contactMechId.equals("_NEW_")) {
-                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, 
+            if (contactMechId == null || !"_NEW_".equals(contactMechId)) {
+                result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource,
                         "AccountingNoChangesMadeNotUpdatingCreditCard", locale));
             }
 
@@ -435,7 +458,7 @@ public class PaymentMethodServices {
 
         // expire the payment method
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> expireCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin, 
+        Map<String, Object> expireCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin,
                 "paymentMethodId", paymentMethodId);
         Map<String, Object> expireResp;
         try {
@@ -452,7 +475,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> createGiftCard(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -462,10 +485,18 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        // SCIPIO: 2019-03-12: Deny any modified masked numbers (causes issues for verifyGiftCard and other places)
+        String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && cardNumber.indexOf(maskChar) >= 0) {
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingCardNumberIncorrect", locale));
+        }
+
+        List<GenericValue> toBeStored = new ArrayList<>(); // SCIPIO: Switched to ArrayList
         GenericValue newPm = delegator.makeValue("PaymentMethod");
         toBeStored.add(newPm);
         GenericValue newGc = delegator.makeValue("GiftCard");
@@ -476,7 +507,7 @@ public class PaymentMethodServices {
             try {
                 newPmId = delegator.getNextSeqId("PaymentMethod");
             } catch (IllegalArgumentException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCardCannotBeCreated", locale));
             }
         }
@@ -486,7 +517,7 @@ public class PaymentMethodServices {
         newPm.set("thruDate", context.get("thruDate"));
         newPm.set("description",context.get("description"));
 
-        newGc.set("cardNumber", context.get("cardNumber"));
+        newGc.set("cardNumber", cardNumber); // SCIPIO: Use number with trimmed spaces: context.get("cardNumber")
         newGc.set("pinNumber", context.get("pinNumber"));
         newGc.set("expireDate", context.get("expireDate"));
 
@@ -498,7 +529,7 @@ public class PaymentMethodServices {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCardCannotBeCreatedWriteFailure",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -509,7 +540,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> updateGiftCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -519,10 +550,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -536,25 +568,26 @@ public class PaymentMethodServices {
             paymentMethod = EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCardCannotBeUpdated",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
         if (giftCard == null || paymentMethod == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCardCannotBeUpdated",
                     UtilMisc.toMap("errorString", paymentMethodId), locale));
         }
         if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_UPDATE", userLogin)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCardPartyNotAuthorized",
                     UtilMisc.toMap("partyId", partyId, "paymentMethodId", paymentMethodId), locale));
         }
 
-
         // card number (masked)
         String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        /* SCIPIO: This test was too strict; prevented the UI from deciding masking behavior
+         * and needlessly accepted mask characters in different positions as numbers
         if (cardNumber.startsWith("*")) {
             // get the masked card number from the db
             String origCardNumber = giftCard.getString("cardNumber");
@@ -574,6 +607,19 @@ public class PaymentMethodServices {
                 cardNumber = origCardNumber;
             }
         }
+        */
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && cardNumber.indexOf(maskChar) >= 0) {
+            // get the masked card number from the db
+            String origCardNumber = giftCard.getString("cardNumber");
+            // compare the two masked numbers
+            if (StringUtil.matchesMaskedAny(origCardNumber, cardNumber, maskChar)) {
+                cardNumber = origCardNumber;
+            } else {
+                // SCIPIO: 2019-03-12: Deny any modified masked numbers (causes issues for verifyGiftCard and other places)
+                return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingCardNumberIncorrect", locale));
+            }
+        }
         context.put("cardNumber", cardNumber);
 
         newPm = GenericValue.create(paymentMethod);
@@ -585,7 +631,7 @@ public class PaymentMethodServices {
         try {
             newPmId = delegator.getNextSeqId("PaymentMethod");
         } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingGiftCardCannotBeCreated", locale));
         }
 
@@ -615,7 +661,7 @@ public class PaymentMethodServices {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCardCannotBeUpdated",
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
@@ -623,7 +669,7 @@ public class PaymentMethodServices {
             result.put("paymentMethodId", paymentMethodId);
             result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, 
+            result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource,
                     "AccountingNoChangesMadeNotUpdatingGiftCard", locale));
 
             return result;
@@ -634,6 +680,126 @@ public class PaymentMethodServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
+    
+    /**
+     * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+     * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}).
+     */
+    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context, boolean ignoreMasked) {
+        final String resource_error = "OrderErrorUiLabels";
+        Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        List<String> errorMessages = new ArrayList<>();
+        String errMsg = null;
+
+        String gcNum = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        String gcPin = (String) context.get("pinNumber");
+        String productStoreId = (String) context.get("productStoreId");
+
+        boolean maskedNum = false;
+        if (ignoreMasked) {
+            Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+            maskedNum = (maskChar != null && gcNum != null && gcNum.indexOf(maskChar) >= 0);
+        }
+        
+        if (UtilValidate.isEmpty(gcNum)) {
+            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.enter_gift_card_number", locale);
+            errorMessages.add(errMsg);
+        }
+        if (isPinRequiredForGC(delegator, productStoreId)) {
+            //  if a PIN is required, make sure the PIN is valid
+            if (UtilValidate.isEmpty(gcPin)) {
+                errMsg = UtilProperties.getMessage(resource_error,"checkhelper.enter_gift_card_pin_number", locale);
+                errorMessages.add(errMsg);
+            }
+        }
+        // See if we should validate gift card code against FinAccount's accountCode
+        if (isValidateGCFinAccount(delegator, productStoreId)) {
+            try {
+                // No PIN required - validate gift card number against account code
+                // SCIPIO: Don't bother if masked card number (see createGiftCard/updateGiftCard)
+                // SCIPIO: TODO: REVIEW: technically we should probably use paymentMethodId to lookup GiftCard the same way updateGiftCard does,
+                // so we can deny any changes to the gift card number; however, in practice, this will precede updateGiftCard or similar
+                // calls, so it doesn't add much exception make the lookup slower...
+                if (!maskedNum && !isPinRequiredForGC(delegator, productStoreId)) { 
+                    GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(gcNum, delegator);
+                    if (finAccount == null) {
+                        errMsg = UtilProperties.getMessage(resource_error,"checkhelper.gift_card_does_not_exist", locale);
+                        errorMessages.add(errMsg);
+                    } else if ((finAccount.getBigDecimal("availableBalance") == null) ||
+                            !((finAccount.getBigDecimal("availableBalance")).compareTo(FinAccountHelper.ZERO) > 0)) {
+                        // if account's available balance (including authorizations) is not greater than zero, then return an error
+                        errMsg = UtilProperties.getMessage(resource_error,"checkhelper.gift_card_has_no_value", locale);
+                        errorMessages.add(errMsg);
+                    }
+                }
+                // TODO: else case when pin is required - we should validate gcNum and gcPin
+            } catch (GenericEntityException ex) {
+                errorMessages.add(ex.getMessage());
+            }
+        }
+
+        // see whether we need to return an error or not
+        return (errorMessages.size() > 0) ? ServiceUtil.returnError(errorMessages) : ServiceUtil.returnSuccess();
+    }
+
+    /**
+     * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+     * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}).
+     */
+    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context) {
+        return verifyGiftCard(dctx, context, false);
+    }
+
+    /**
+    * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+    * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}),
+    * but ignores cardNumber if it is in masked format (************XXXX)
+    */
+    public static Map<String, Object> verifyGiftCardIgnoreMasked(DispatchContext dctx, Map<String, Object> context) {
+        return verifyGiftCard(dctx, context, true);
+    }
+    
+    private static GenericValue getGiftCertSettingFromStore(Delegator delegator, String productStoreId) throws GenericEntityException { // SCIPIO: Copied from ShoppingCart
+        return EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId).cache().queryOne();
+    }
+
+    private static boolean isPinRequiredForGC(Delegator delegator, String productStore) { // SCIPIO: Copied from ShoppingCart
+        try {
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator, productStore);
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
+                    return true;
+                }
+                return false;
+            }
+            Debug.logWarning("No product store gift certificate settings found for store [" + productStore + "]",
+                    module);
+            return true;
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return true;
+        }
+    }
+
+    private static boolean isValidateGCFinAccount(Delegator delegator, String productStore) { // SCIPIO: Copied from ShoppingCart
+        try {
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator, productStore);
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("validateGCFinAcct"))) {
+                    return true;
+                }
+                return false;
+            }
+            Debug.logWarning("No product store gift certificate settings found for store [" + productStore + "]",
+                    module);
+            return false;
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return false;
+        }
+    }
 
     /**
      * Creates EftAccount and PaymentMethod entities according to the parameters passed in the context
@@ -643,7 +809,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -653,9 +819,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE", "ACCOUNTING", "_CREATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -668,7 +836,7 @@ public class PaymentMethodServices {
             try {
                 newPmId = delegator.getNextSeqId("PaymentMethod");
             } catch (IllegalArgumentException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingEftAccountCannotBeCreated", locale));
             }
         }
@@ -698,22 +866,23 @@ public class PaymentMethodServices {
         if (UtilValidate.isNotEmpty(contactMechId) && !contactMechId.equals("_NEW_")) {
             // SCIPIO: Only set this if not _NEW_
             newEa.set("contactMechId", context.get("contactMechId"));
-            
+
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            // SCIPIO: 2017-10-10: refactored 
+            // SCIPIO: 2017-10-10: refactored
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
-        if (newPartyContactMechPurpose != null)
+        if (newPartyContactMechPurpose != null) {
             toBeStored.add(newPartyContactMechPurpose);
+        }
 
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingEftAccountCannotBeCreatedWriteFailure",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
@@ -731,7 +900,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -741,9 +910,11 @@ public class PaymentMethodServices {
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE", "ACCOUNTING", "_UPDATE");
 
-        if (result.size() > 0) return result;
+        if (result.size() > 0) {
+            return result;
+        }
 
-        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+        List<GenericValue> toBeStored = new LinkedList<>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -758,18 +929,18 @@ public class PaymentMethodServices {
                 EntityQuery.use(delegator).from("PaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingEftAccountCannotBeUpdatedReadFailure",
                     UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
         if (eftAccount == null || paymentMethod == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingEftAccountCannotBeUpdated",
                     UtilMisc.toMap("errorString", paymentMethodId), locale));
         }
         if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_UPDATE", userLogin)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingEftAccountCannotBeUpdated",
                     UtilMisc.toMap("partyId", partyId, "paymentMethodId", paymentMethodId), locale));
         }
@@ -783,7 +954,7 @@ public class PaymentMethodServices {
         try {
             newPmId = delegator.getNextSeqId("PaymentMethod");
         } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingEftAccountCannotBeCreated", locale));
         }
 
@@ -812,15 +983,16 @@ public class PaymentMethodServices {
         if (UtilValidate.isNotEmpty(contactMechId)) {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
-            
-            // SCIPIO: 2017-10-10: refactored 
+
+            // SCIPIO: 2017-10-10: refactored
             newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
             // Debug.logInfo("yes, is modified", module);
-            if (newPartyContactMechPurpose != null)
+            if (newPartyContactMechPurpose != null) {
                 toBeStored.add(newPartyContactMechPurpose);
+            }
 
             // set thru date on old paymentMethod
             paymentMethod.set("thruDate", now);
@@ -830,7 +1002,7 @@ public class PaymentMethodServices {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingEftAccountCannotBeUpdated",
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
@@ -849,16 +1021,16 @@ public class PaymentMethodServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-    
+
     /**
-     * SCIPIO: If a PartyContactMechPurpose for given party/contactMechId/purpose does not already exist, 
+     * SCIPIO: If a PartyContactMechPurpose for given party/contactMechId/purpose does not already exist,
      * makes and returns a non-committed GenericValue for one.
      * <p>
      * Code factored out from 4 updateXxx methods above.
      * <p>
      * 2017-10-10: PARTIAL FIX: This method has been PARTIALLY fixed (where noted below) to prevent creation of duplicate
      * PartyContactMechPurpose records in the case where no PartyContactMech exists (TODO: REVIEW: even this
-     * fix is less than ideal, but trying to avoid any large changes until further review). 
+     * fix is less than ideal, but trying to avoid any large changes until further review).
      * However this does NOT resolve the following issues...
      * <p>
      * FIXME?: REVIEW: SKETCHY BEHAVIOR: This method (from the original ofbiz code, 2017-10-10) actually
@@ -870,7 +1042,7 @@ public class PaymentMethodServices {
      * <p>
      * This is not trivial to address because existing code may have been relying on this behavior to guarantee
      * BILLING_ADDRESS is added to the contactMechId through the SECA. So we cannot simply prevent creation
-     * if no PartyContactMech record exists or risk breaking code, even though having standalone 
+     * if no PartyContactMech record exists or risk breaking code, even though having standalone
      * PartyContactMechPurpose seems wrong.
      * Is unclear whether the "old" contactMechId could be used instead (technically it could work, but
      * modifying the old's purposes might be considered wrong).
@@ -903,11 +1075,11 @@ public class PaymentMethodServices {
                 Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
             }
-            
+
             if (tempVal == null) {
                 // no value found, create a new one
                 return delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId,
                                 "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }

@@ -22,7 +22,7 @@ package org.ofbiz.widget;
  *  A service that registers screen widget classes with the screen widget factory.
  *  Applications implement this interface to add their widget implementations
  *  to the OFBiz framework.<p>Implementations must have their class names
- *  in the <code>META-INF/service/org.ofbiz.widget.WidgetLoader</code> file.</p> 
+ *  in the <code>META-INF/service/org.ofbiz.widget.WidgetLoader</code> file.</p>
  */
 public interface WidgetLoader {
 

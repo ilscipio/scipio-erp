@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <ofbiz-component name="workeffort"
@@ -28,6 +15,7 @@ under the License.
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_old.xml"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_view.xml"/>
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
+    
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WorkEffortTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WorkEffortPortletData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WorkEffortSecurityPermissionSeedData.xml"/>
@@ -36,6 +24,7 @@ under the License.
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_timesheet.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_upgrade.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_workeffort.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="group" loader="main" location="servicedef/service_groups.xml"/>
 

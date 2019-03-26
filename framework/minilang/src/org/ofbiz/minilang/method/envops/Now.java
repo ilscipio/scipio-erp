@@ -36,8 +36,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;now&gt;, &lt;now-date-to-env&gt;, and &lt;now-timestamp&gt; elements.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cnow%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class Now extends MethodOperation {
 
@@ -66,8 +66,10 @@ public final class Now extends MethodOperation {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
             String tagName = element.getTagName();
-            if ("now-date-to-env".equals(tagName) || "now-timestamp".equals(tagName)) {
-                MiniLangValidate.handleError("Deprecated - use <now>", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                if ("now-date-to-env".equals(tagName) || "now-timestamp".equals(tagName)) {
+                    MiniLangValidate.handleError("Deprecated - use <now>", simpleMethod, element);
+                }
             }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "type");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");

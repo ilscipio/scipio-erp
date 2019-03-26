@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if productPromoId?? && productPromo??>
                 <@alert type="info">${uiLabelMap.ProductPromoStoreAddInstructions}</@alert>
 
                 <@section title=uiLabelMap.ProductAddStorePromo>
-                    <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
+                    <form method="post" action="<@pageUrl>promo_createProductStorePromoAppl</@pageUrl>" name="addProductPromoToCatalog">
                       <@fields type="default-compact">
                         <@row>
                             <@cell columns=4>
@@ -44,7 +31,7 @@ under the License.
                 </@section>
                 <@section title=uiLabelMap.PageTitleEditProductPromoStores>
                   <@fields type="default-manual-widgetonly">
-                    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true>
                          <@thead>
                             <@tr class="header-row">
                                 <@th>${uiLabelMap.ProductStoreNameId}</@th>
@@ -59,7 +46,7 @@ under the License.
                             <#assign line = line + 1>
                             <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                             <@tr valign="middle">
-                                <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!(productStore.productStoreId)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
+                                <@td><a href="<@serverUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@serverUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!(productStore.productStoreId)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
                                 <#assign hasntStarted = false>
                                 <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                                 <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
@@ -68,7 +55,7 @@ under the License.
 
                                     <#assign hasExpired = false>
                                     <#if (productStorePromoAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                                    <form method="post" action="<@ofbizUrl>promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                                    <form method="post" action="<@pageUrl>promo_updateProductStorePromoAppl</@pageUrl>" name="lineForm${line}">
                                         <@row>
                                         <@cell columns=8>
                                             <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
@@ -85,7 +72,7 @@ under the License.
                                     </form>
                                 </@td>
                                 <@td align="center">
-                                   <form method="post" action="<@ofbizUrl>promo_deleteProductStorePromoAppl</@ofbizUrl>">
+                                   <form method="post" action="<@pageUrl>promo_deleteProductStorePromoAppl</@pageUrl>">
                                        <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
                                        <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                                        <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />

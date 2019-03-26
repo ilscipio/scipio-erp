@@ -1,4 +1,4 @@
-<#include "pagescommon.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)=Y
@@ -11,7 +11,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 
 <#-- Javascript functions -->
 <@script>
-    var editorBaseUrl = '<@ofbizUrl escapeAs='js'>editPage</@ofbizUrl>';
+    var editorBaseUrl = '<@pageUrl escapeAs='js'>editPage</@pageUrl>';
     
     function cmsAddPartialPathSuffix(path) {
         if (path) {
@@ -43,12 +43,13 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     }
     
     function makeCmsEditPageUrl($node) {
+        <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
         var path = $node.data["path"]; //$node.a_attr.href
         var editorUrl = editorBaseUrl + '?' + $.param({
             webSiteId: $node.data["websiteid"],
             path: path
-        });
-        return editorUrl;
+        });-->
+        return editorBaseUrl + '?' + $.param({pageId: $node.data["pageId"] || ""});
     }
     
     <#-- Function to update the action menu. Will generate new menu items based on selected option -->
@@ -229,7 +230,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             <@cell columns=3>
                 <@section title=uiLabelMap.CmsMenu id="action_offset">
                         <ul class="side-nav" id="action_menu">
-                            <@menuitem type="link" href=makeOfbizUrl('editPage') text=uiLabelMap.CommonCreate/>
+                            <@menuitem type="link" href=makePageUrl('editPage') text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
                 

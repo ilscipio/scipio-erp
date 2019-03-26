@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +36,10 @@ import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 
 public final class UtilIO {
-    public static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = Charset.forName("UTF-8"); // SCIPIO: 2018-08-30: keeping public for backward-compat
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private UtilIO () {}
     /** Copy an InputStream to an OutputStream, optionally closing either
      *  the input or the output.
      *
@@ -52,10 +54,18 @@ public final class UtilIO {
             try {
                 IOUtils.copy(in, out);
             } finally {
-                if (closeIn) IOUtils.closeQuietly(in);
+                // SCIPIO: deprecated
+                //if (closeIn) IOUtils.closeQuietly(in);
+                if (closeIn) {
+                    closeQuietly(in);
+                }
             }
         } finally {
-            if (closeOut) IOUtils.closeQuietly(out);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(in);
+            if (closeIn) {
+                closeQuietly(in);
+            }
         }
     }
 
@@ -73,10 +83,18 @@ public final class UtilIO {
             try {
                 IOUtils.copy(reader, writer);
             } finally {
-                if (closeIn) IOUtils.closeQuietly(reader);
+                // SCIPIO: deprecated
+                //if (closeIn) IOUtils.closeQuietly(reader);
+                if (closeIn) {
+                    closeQuietly(reader);
+                }
             }
         } finally {
-            if (closeOut) IOUtils.closeQuietly(writer);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(reader);
+            if (closeIn) {
+                closeQuietly(reader);
+            }
         }
     }
 
@@ -96,7 +114,11 @@ public final class UtilIO {
                 out.append(buffer);
             }
         } finally {
-            if (closeIn) IOUtils.closeQuietly(reader);
+            // SCIPIO: deprecated
+            //if (closeIn) IOUtils.closeQuietly(reader);
+            if (closeIn) {
+                closeQuietly(reader);
+            }
         }
     }
 
@@ -107,7 +129,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes) throws IOException {
+    public static final String readString(byte[] bytes) {
         return readString(bytes, 0, bytes.length, UTF8);
     }
 
@@ -121,7 +143,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes, int offset, int length) throws IOException {
+    public static final String readString(byte[] bytes, int offset, int length) {
         return readString(bytes, offset, length, UTF8);
     }
 
@@ -134,7 +156,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes, String charset) throws IOException {
+    public static final String readString(byte[] bytes, String charset) {
         return readString(bytes, 0, bytes.length, Charset.forName(charset));
     }
 
@@ -150,7 +172,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes, int offset, int length, String charset) throws IOException {
+    public static final String readString(byte[] bytes, int offset, int length, String charset) {
         return readString(bytes, 0, bytes.length, Charset.forName(charset));
     }
 
@@ -162,7 +184,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes, Charset charset) throws IOException {
+    public static final String readString(byte[] bytes, Charset charset) {
         return readString(bytes, 0, bytes.length, charset);
     }
 
@@ -178,7 +200,7 @@ public final class UtilIO {
      * @return the converted string, with platform line endings converted
      * to \n
      */
-    public static final String readString(byte[] bytes, int offset, int length, Charset charset) throws IOException {
+    public static final String readString(byte[] bytes, int offset, int length, Charset charset) {
         ByteBuffer buf = ByteBuffer.allocate(length);
         buf.put(bytes, offset, length);
         buf.flip();
@@ -247,7 +269,7 @@ public final class UtilIO {
 
     private static StringBuilder filterLineEndings(StringBuilder sb) {
         String nl = System.getProperty("line.separator");
-        if (!nl.equals("\n")) {
+        if (!"\n".equals(nl)) {
             int r = 0;
             while (r < sb.length()) {
                 int i = sb.indexOf(nl, r);
@@ -298,21 +320,40 @@ public final class UtilIO {
      * @param out where to write the converted bytes to
      * @param charset the charset to use to convert the raw bytes
      * @param value the value to write
+     * @throws IOException
      */
     public static void writeString(OutputStream out, Charset charset, String value) throws IOException {
-        Writer writer = new OutputStreamWriter(out, charset);
-        String nl = System.getProperty("line.separator");
-        int r = 0;
-        while (r < value.length()) {
-            int i = value.indexOf("\n", r);
-            if (i == -1) {
-                break;
+        try (Writer writer = new OutputStreamWriter(out, charset)) {
+            String nl = System.getProperty("line.separator");
+            int r = 0;
+            while (r < value.length()) {
+                int i = value.indexOf("\n", r);
+                if (i == -1) {
+                    break;
+                }
+                writer.write(value.substring(r, i));
+                writer.write(nl);
+                r = i + 1;
             }
-            writer.write(value.substring(r, i));
-            writer.write(nl);
-            r = i + 1;
+            writer.write(value.substring(r));
         }
-        writer.write(value.substring(r));
-        writer.close();
+    }
+
+    public static Charset getUtf8() {
+        return UTF8;
+    }
+
+    /**
+     * SCIPIO: added because {@link org.apache.commons.io.IOUtils#closeQuietly(Closeable)}
+     * is not deprecated.
+     */
+    private static void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (final IOException ioe) {
+            // ignore
+        }
     }
 }

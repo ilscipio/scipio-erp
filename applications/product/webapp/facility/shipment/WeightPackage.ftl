@@ -1,29 +1,16 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
   <#if !(showWarningForm)>
-    <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${rawString((facility.facilityId)!)}]">
+    <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${raw((facility.facilityId)!)}]">
         <#if invoiceIds?has_content>
           <div>
-            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-            ${uiLabelMap.CommonView} <a href="<@ofbizUrl>ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
+            ${uiLabelMap.CommonView} <a href="<@pageUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
+            ${uiLabelMap.CommonView} <a href="<@pageUrl>ShipmentBarCode.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
           </div>
           <#if invoiceIds?? && invoiceIds?has_content>
             <div>
@@ -31,8 +18,8 @@ under the License.
               <@menu type="button">
                 <#list invoiceIds as invoiceId>
                   <@menuitem type="generic">
-                    ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                    (<a href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                    ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                   </@menuitem>
                 </#list>
               </@menu>
@@ -41,7 +28,7 @@ under the License.
         </#if>
         <#if shipmentPackageRouteSegList?? && shipmentPackageRouteSegList?has_content>
           <#list shipmentPackageRouteSegList as shipmentPackageRouteSeg>
-            <form name="viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage</@ofbizUrl>">
+            <form name="viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}" method="post" action="<@pageUrl>viewShipmentPackageRouteSegLabelImage</@pageUrl>">
               <input type="hidden" name="shipmentId" value="${(shipmentPackageRouteSeg.shipmentId)!}"/>
               <input type="hidden" name="shipmentPackageSeqId" value="${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}"/>
               <input type="hidden" name="shipmentRouteSegmentId" value="${(shipmentPackageRouteSeg.shipmentRouteSegmentId)!}"/>
@@ -57,7 +44,7 @@ under the License.
      
         <#if !(orderId?has_content)>
           <@section>
-          <form name="selectOrderForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
+          <form name="selectOrderForm" method="post" action="<@pageUrl>WeightPackageOnly</@pageUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
               <@field type="generic" label=uiLabelMap.ProductOrderId>
                   <@field type="input" inline=true name="orderId" size="20" maxlength="20" value=primaryOrderId!""/>
@@ -65,7 +52,7 @@ under the License.
                   <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
               </@field>
               <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('PackOrder')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
+                  <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makePageUrl('PackOrder')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
                   <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
               </@field>
           </form>
@@ -73,11 +60,11 @@ under the License.
          
           <#-- select picklist bin form -->
           <@section>
-          <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>WeightPackageOnly</@ofbizUrl>">
+          <form name="selectPicklistBinForm" method="post" action="<@pageUrl>WeightPackageOnly</@pageUrl>">
             <input type="hidden" name="facilityId" value="${(facility.facilityId)!}" />
               <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
               <@field type="submitarea">
-                  <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('PackOrder')}';document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
+                  <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makePageUrl('PackOrder')}';document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
                   <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
               </@field>
           </form>
@@ -87,7 +74,7 @@ under the License.
           <#if !(shipmentPackages?has_content)>
             <@section>
             <#if packedLines?has_content>
-              <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+              <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">
                 <@thead>
                 <@tr>
                   <@th>
@@ -106,7 +93,7 @@ under the License.
                 <@tbody>
                 <#list packedLines as packedLine>
                   <#-- SCIPIO: FIXME: form in table (invalid html) -->
-                  <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
+                  <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@pageUrl>updatePackedLine</@pageUrl>">
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
                     <input type="hidden" name="weightPackageSeqId" value="${packedLine.getWeightPackageSeqId()}"/>
@@ -137,14 +124,14 @@ under the License.
                         </select>
                       </@td>
                       <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
-                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@pageUrl>deletePackedLine</@pageUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                     </@tr>
                   </form>
                 </#list>
                 </@tbody>
               </@table>
               <@field type="submit" submitType="link" href="javascript:document.completePackageForm.submit()" class="+${styles.link_run_sys!} ${styles.action_complete!}" text=uiLabelMap.ProductComplete />
-              <form name="completePackageForm" method="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
+              <form name="completePackageForm" method="post" action="<@pageUrl>completePackage</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -157,7 +144,7 @@ under the License.
               </form>
             </#if>
             <#if (orderedQuantity > packedLines.size())>
-              <form name="weightPackageForm" method="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
+              <form name="weightPackageForm" method="post" action="<@pageUrl>setPackageInfo</@pageUrl>">
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
                 <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -166,7 +153,7 @@ under the License.
                   <hr/>
                 </#if>
             <#-- SCIPIO: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">
                 <@tr>
                   <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
@@ -201,7 +188,7 @@ under the License.
             </@section>
           <#else>
             <@section>
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}">  <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}"> 
              <@thead>
              <@tr>
                 <@th>
@@ -216,7 +203,7 @@ under the License.
               </@tr>
              </@thead>
              <@tbody>
-              <form name="completePackForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
+              <form name="completePackForm" method="post" action="<@pageUrl>shipNow</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -252,13 +239,13 @@ under the License.
   <#else>
     <@section title=uiLabelMap.WebtoolsWarningLogLevel>
         <@alert type="warning">${uiLabelMap.FacilityWarningMessageThereIsMuchDifferenceInShippingCharges}&nbsp;[${uiLabelMap.FacilityEstimatedShippingCharges} = <@ofbizCurrency amount=(estimatedShippingCost!) isoCode=(shipment.currencyUomId!)/>, ${uiLabelMap.FacilityActualShippingCharges} = <@ofbizCurrency amount=(newEstimatedShippingCost!) isoCode=(shipment.currencyUomId!)/>]</@alert>
-        <form name="shipNowForm" method="post" action="<@ofbizUrl>shipNow</@ofbizUrl>">
+        <form name="shipNowForm" method="post" action="<@pageUrl>shipNow</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
           <input type="hidden" name="shipmentId" value="${(shipment.shipmentId)!}"/>
         </form>
-        <form name="holdShipmentForm" method="post" action="<@ofbizUrl>HoldShipment</@ofbizUrl>">
+        <form name="holdShipmentForm" method="post" action="<@pageUrl>HoldShipment</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>

@@ -14,9 +14,9 @@ import org.ofbiz.base.util.Debug;
  * TODO: currently under-exploited.
  */
 public class WebsiteSeoConfig {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     // WARN: special sync behavior
     private static Map<String, WebsiteSeoConfig> websiteSeoConfigs;
 
@@ -25,23 +25,23 @@ public class WebsiteSeoConfig {
                 + "\nNOTE: websites in this registry are not automatically SEO URL-producing; see SeoConfig.xml", module);
         websiteSeoConfigs = Collections.emptyMap();
     }
-    
+
     private final String webSiteId;
     private final boolean seoEnabled;
-    
+
     private WebsiteSeoConfig(String webSiteId, boolean seoEnabled) {
         this.webSiteId = webSiteId;
         this.seoEnabled = seoEnabled;
     }
-    
+
     public static WebsiteSeoConfig makeConfig(ServletContext context, boolean seoEnabled) {
         return new WebsiteSeoConfig(getWebSiteId(context), seoEnabled);
     }
-    
+
     public static WebsiteSeoConfig makeConfig(String webSiteId, boolean seoEnabled) {
         return new WebsiteSeoConfig(webSiteId, seoEnabled);
     }
-    
+
     /**
      * Registers website into the global SEO website registry.
      */
@@ -51,16 +51,16 @@ public class WebsiteSeoConfig {
         newConfigs.put(config.getWebSiteId(), config);
         websiteSeoConfigs = Collections.unmodifiableMap(newConfigs);
     }
-    
+
     public static WebsiteSeoConfig getRegisteredConfig(String webSiteId) {
         return websiteSeoConfigs.get(webSiteId);
     }
-    
+
     public static boolean isSeoEnabled(String webSiteId) {
         WebsiteSeoConfig config = getRegisteredConfig(webSiteId);
         return (config != null) && config.isSeoEnabled();
     }
-    
+
     public String getWebSiteId() {
         return webSiteId;
     }
@@ -68,7 +68,7 @@ public class WebsiteSeoConfig {
     public boolean isSeoEnabled() {
         return seoEnabled;
     }
-    
+
     public static String getWebSiteId(ServletContext context) {
         return context.getInitParameter("webSiteId");
     }

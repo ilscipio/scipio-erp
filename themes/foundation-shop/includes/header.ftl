@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "common.ftl">
 
@@ -43,7 +30,7 @@ under the License.
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
             <#if topLine.text??>
-              <li>${topLine.text}<a href="${rawString(topLine.url!)}${rawString(externalKeyParam)}">${topLine.urlText!}</a></li>
+              <li>${topLine.text}<a href="${raw(topLine.url!)}${raw(externalKeyParam)}">${topLine.urlText!}</a></li>
             <#elseif topLine.dropDownList??>
               <li><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
             <#else>
@@ -54,21 +41,20 @@ under the License.
           <li>${userLogin.userLoginId}</li>
         </#if>
         -->
-        <li><a href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.CommonOrders}</a></li><#--uiLabelMap.EcommerceOrderHistory-->
+        <li><a href="<@pageUrl>orderhistory</@pageUrl>">${uiLabelMap.CommonOrders}</a></li><#--uiLabelMap.EcommerceOrderHistory-->
         <#-- TODO: Ofbiz/ecommerce supports more (above are bare essentials only):
-        <li><a href="<@ofbizUrl>messagelist</@ofbizUrl>">${uiLabelMap.CommonMessages}</a></li>
-        <li><a href="<@ofbizUrl>ListQuotes</@ofbizUrl>">${uiLabelMap.OrderOrderQuotes}</a></li>
-        <li><a href="<@ofbizUrl>ListRequests</@ofbizUrl>">${uiLabelMap.OrderRequests}</a></li>
-        <li><a href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a></li>
-        -->
-        <li><a href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a></li>
+        <li><a href="<@pageUrl>messagelist</@pageUrl>">${uiLabelMap.CommonMessages}</a></li>-->
+        <li><a href="<@pageUrl>ListQuotes</@pageUrl>">${uiLabelMap.OrderOrderQuotes}</a></li>
+        <li><a href="<@pageUrl>ListRequests</@pageUrl>">${uiLabelMap.OrderRequests}</a></li>
+        <#-- <li><a href="<@pageUrl>editShoppingList</@pageUrl>">${uiLabelMap.EcommerceShoppingLists}</a></li>-->
+        <li><a href="<@pageUrl>viewprofile</@pageUrl>">${uiLabelMap.CommonProfile}</a></li>
 
-        <#-- not implemented for shop, belongs to profile settings: <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>-->
-        <#-- not implemented for shop: <li><a href="<@ofbizUrl>ListVisualThemes</@ofbizUrl>">${uiLabelMap.CommonVisualThemes}</a></li>-->
+        <#-- not implemented for shop, belongs to profile settings: <li><a href="<@pageUrl>ListLocales</@pageUrl>">${uiLabelMap.CommonLanguageTitle}</a></li>-->
+        <#-- not implemented for shop: <li><a href="<@pageUrl>ListVisualThemes</@pageUrl>">${uiLabelMap.CommonVisualThemes}</a></li>-->
     <#else>
         <#-- language select for anon users 
             MOVED to icon
-        <li><a href="<@ofbizUrl>ListLocales</@ofbizUrl>">${uiLabelMap.CommonLanguageTitle}</a></li> -->
+        <li><a href="<@pageUrl>ListLocales</@pageUrl>">${uiLabelMap.CommonLanguageTitle}</a></li> -->
     </#if>
     <#--
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
@@ -79,7 +65,7 @@ under the License.
     </#if>
     <#-- Now show this even for anon, unless it's anon without a party -->
     <#if userIsKnown>
-        <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
+        <li class="active"><a href="<@pageUrl>logout</@pageUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
 </#macro>
 
@@ -93,11 +79,11 @@ under the License.
     </#if>
     <#if headerImageUrl??>
         <#if organizationLogoLinkURL?has_content>
-            <#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(organizationLogoLinkURL)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
-            <#else><#if hasLink><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${rawString(headerImageUrl)}</@ofbizContentUrl>"/><#if hasLink></a></#if>
+            <#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(organizationLogoLinkURL)}</@contentUrl>"/><#if hasLink></a></#if>
+            <#else><#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(headerImageUrl)}</@contentUrl>"/><#if hasLink></a></#if>
         </#if>
         <#else>
-        <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/></a>
+        <a href="<@pageUrl>${logoLinkURL!""}</@pageUrl>"><img alt="${layoutSettings.companyName}" src="<@contentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@contentUrl>"/></a>
     </#if>
 </#macro>
 
@@ -111,29 +97,29 @@ under the License.
       <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
     </#if>
     <#if shortcutIcon?has_content>
-      <link rel="shortcut icon" href="<@ofbizContentUrl>${rawString(shortcutIcon)}</@ofbizContentUrl>" />
+      <link rel="shortcut icon" href="<@contentUrl>${raw(shortcutIcon)}</@contentUrl>" />
     </#if>
     
     <#if layoutSettings.styleSheets?has_content>
         <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${rawString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     
@@ -143,7 +129,7 @@ under the License.
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -154,7 +140,7 @@ under the License.
         <#list layoutSettings.VT_PRIO_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -165,7 +151,7 @@ under the License.
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -174,7 +160,7 @@ under the License.
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -187,7 +173,7 @@ under the License.
     <#if layoutSettings.WEB_ANALYTICS?has_content>
       <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
-          ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
+          ${raw(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>
@@ -205,22 +191,22 @@ under the License.
      ================================
 -->
 <#-- Facebook Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","facebook.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "facebook.enabled")!>
     <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
     <@fbInit scope="public_profile,email"/>
 </#if>
 <#-- Google Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","google.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "google.enabled")!>
     <#include "component://auth-google/webapp/google/google-common.ftl"/>
     <@googleInit/>
 </#if>
 <#-- Twitter Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","twitter.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "twitter.enabled")!>
     <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
     <@twitterInit/>
 </#if>
 <#-- LinkedIn Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","linkedin.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "linkedin.enabled")!>
     <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
     <@linkedinInit/>
 </#if>
@@ -260,7 +246,7 @@ under the License.
           </li>
       <#else>
         <li>
-            <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
+            <a href="<@pageUrl>${checkLoginUrl}</@pageUrl>">${uiLabelMap.CommonLogin}</a>
         </li>
       </#if>
       
@@ -318,12 +304,12 @@ under the License.
           <li class="divider"></li>
           <@render resource="component://shop/widget/CartScreens.xml#microcart" ctxVars={"microCartMenuItem":true}/>
           <#--
-          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makeOfbizUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li> 
+          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li> 
           <#-- language select
           <li>
             <div id="lang-select">
-              <a href="<@ofbizUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@pageUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@pageUrl>">
                 <i class="${styles.icon} ${styles.icon_prefix}flag"></i>
               </a>
             </div>

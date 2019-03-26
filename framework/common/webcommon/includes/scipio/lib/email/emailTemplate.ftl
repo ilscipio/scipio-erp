@@ -2,7 +2,7 @@
 * 
 * Master Email template include, standard Scipio markup
 *
-*   See component://common/webcommon/includes/scipio/lib/standard/htmlTemplate for details.
+*   See component://common/webcommon/includes/scipio/lib/standard/htmlTemplate.ftl for details.
 *
 -->
 

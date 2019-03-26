@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <service-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,6 +13,8 @@ under the License.
         <authorization service-name="userLogin"/>
 
         <!-- Job poller configuration. Many of these attributes are set to the job poller defaults, but they are included here for convenience. -->
+        <!-- About max-threads: 5 has been chosen when most processors had 4 cores
+             see https://stackoverflow.com/questions/13834692/threads-configuration-based-on-no-of-cpu-cores for more -->
         <thread-pool send-to-pool="pool"
                      purge-job-days="4"
                      failed-retry-min="3"
@@ -46,11 +35,11 @@ under the License.
         <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
         <engine name="script" class="org.ofbiz.service.engine.ScriptEngine"/>
         <!-- Engines that can be replaced by the generic script engine -->
-        <engine name="bsh" class="org.ofbiz.service.engine.BeanShellEngine"/>
+        <engine name="bsh" class="org.ofbiz.service.engine.BeanShellEngine"/><!-- SCIPIO: 2018-09-19: WARN: Deprecated, should not be used anymore -->
         <engine name="groovy" class="org.ofbiz.service.engine.GroovyEngine"/>
-        <engine name="jacl" class="org.ofbiz.service.engine.BSFEngine"/>
+        <engine name="jacl" class="org.ofbiz.service.engine.BSFEngine"/><!-- SCIPIO: 2018-08: WARN: Unsupported, may be removed in future -->
         <engine name="javascript" class="org.ofbiz.service.engine.ScriptEngine"/>
-        <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/>
+        <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/><!-- SCIPIO: 2018-08: WARN: Unsupported, may be removed in future -->
         <!--  -->
         <engine name="route" class="org.ofbiz.service.engine.RouteEngine"/>
         <engine name="http" class="org.ofbiz.service.engine.HttpEngine"/>
@@ -71,10 +60,10 @@ under the License.
         <service-location name="main-soap" location="http://localhost:8080/admin/control/SOAPService"/>
         
         <service-location name="entity-sync-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
-        <service-location name="entity-sync-http" location="http://localhost:8080/admin/control/httpService"/>
+        <service-location name="entity-sync-http" location="https://localhost:8443/admin/control/httpService"/>
 
         <service-location name="rita-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
-        <service-location name="eedcc-test" location="http://localhost:8080/admin/control/httpService"/>
+        <service-location name="eedcc-test" location="https://localhost:8443/admin/control/httpService"/>
 
         <!-- default notification group for all services loaded with 'main' loader
              - uncomment this to enable error notification for all services

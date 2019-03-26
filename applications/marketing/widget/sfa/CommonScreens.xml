@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -418,6 +405,7 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
+                                <!-- 
                                 <section>
                                     <condition>
                                         <if-true field="showOld" />
@@ -437,35 +425,43 @@ under the License.
                                             </link>
                                         </container>
                                     </fail-widgets>
-                                </section>
+                                </section>-->
                                 <section>
-                                    <condition>
-                                        <not><if-empty field="accountDescription"/></not>
-                                    </condition>
+                                    <!--<condition>
+                                         <not><if-empty field="accountDescription"/></not>
+                                    </condition>-->
                                     <widgets>
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Subscriptions" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                
                                                 <!-- SCIPIO: moved this to left, used to be in right, out of place -->
                                                 <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 
                                                 <!-- SCIPIO: moved these to left, used to be in "profile-bottom" -->
-                                                <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <!-- SCIPIO: NOTE: these are very long when they show, so they pretty much have to stay on the right - see viewprofile?roleTypeId=ACCOUNT&partyId=Company -->
                                                 <include-screen name="FinAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                 <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
+                                                <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                         
                                             </container>
                                         </container>
-                                    </widgets>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                        </container>
+                                    </widgets> 
                                 </section>
+                                <!-- 
                                 <section>
                                     <condition>
                                         <and>
@@ -515,7 +511,6 @@ under the License.
                                                     </actions>
                                                     <widgets>
                                                         <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                         <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                                     </widgets>
                                                 </section>
@@ -544,7 +539,7 @@ under the License.
                                             </container>
                                         </container>
                                     </widgets>
-                                </section>
+                                </section>-->
                             </widgets>
                             <fail-widgets>
                                 <container>

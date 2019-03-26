@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="EntitySQLProcessor">
+    <screen name="EntitySQLProcessor" transaction-timeout="7200" transaction-timeout-param="true"><!-- SCIPIO: Added timeout -->
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntitySQLProcessor"/>
@@ -30,7 +17,8 @@ under the License.
                 <set field="sqlCommand" from-field="parameters.sqlCommand"/>
                 <set field="selGroup" from-field="parameters.group"/>
                 <set field="rowLimit" from-field="parameters.rowLimit" type="Integer"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started -> added to screen element instead
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntitySQLProcessor.groovy"/>
             </actions>
@@ -50,7 +38,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="entityExportAll"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
                 <set field="results" from-field="parameters.results"/>
             </actions>
             <widgets>
@@ -71,19 +60,50 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="programExport"/>
+                <!-- SCIPIO: conditions -->
+                <property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled"/>
+                <set field="tmplTestEnabled" from-field="tmplTestEnabled" type="Boolean"/>
+                <condition-to-field field="hasTmplTestPerm" type="Boolean">
+                    <and>
+                        <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                        <if-true field="tmplTestEnabled"/>
+                    </and>
+                </condition-to-field>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/ProgramExport.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                         <screenlet>
-                            <include-form name="ProgramExport" location="component://webtools/widget/MiscForms.xml"/>
-                        </screenlet>
-                        <screenlet>
-                            <platform-specific>
-                                <html><html-template location="component://webtools/webapp/webtools/entity/ProgramExport.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-true field="tmplTestEnabled"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-warning">${uiLabelMap.CommonFunctionIsDisabled}</label>
+                                    </widgets>
+                                </section>
+                                <screenlet>
+                                    <include-form name="ProgramExport" location="component://webtools/widget/MiscForms.xml"/>
+                                </screenlet>
+                                <screenlet>
+                                    <platform-specific>
+                                        <html><html-template location="component://webtools/webapp/webtools/entity/ProgramExport.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -94,7 +114,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportDir"/>
                 <set field="activeSubMenuItem" value="entityImportDir"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
             </actions>
@@ -116,7 +137,8 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImport"/>
                 <set field="activeSubMenuItem" value="entityImport"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
             </actions>
@@ -138,14 +160,21 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportReaders"/>
                 <set field="activeSubMenuItem" value="entityImportReaders"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
+                
+                <!-- SCIPIO -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.config.model.EntityConfig;
+                    context.allReaderNames = EntityConfig.getInstance().getEntityDataReaderNames() as List;
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.WebtoolsImportToDataSource}">
+                        <screenlet><!-- title="${uiLabelMap.WebtoolsImportToDataSource}" -->
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/entity/EntityImportReaders.ftl"/></html>
                             </platform-specific>
@@ -191,21 +220,40 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonEntityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="menu-bar">
-                                <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/><!-- SCIPIO: links merged into a sub tab bar -->
-                            </decorator-section>
-                            <decorator-section name="search-options">
-                                <platform-specific>
-                                    <html><html-template location="component://webtools/webapp/webtools/entity/FindGeneric.ftl"/></html>
-                                </platform-specific>
-                            </decorator-section>
-                            <decorator-section name="search-results">
-                                <platform-specific>
-                                    <html><html-template location="component://webtools/webapp/webtools/entity/ListGeneric.ftl"/></html>
-                                </platform-specific>
-                            </decorator-section>
-                        </decorator-screen>
+                        <section><!-- SCIPIO: check entity exists -->
+                            <condition>
+                                <not><if-empty field="modelEntity"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <!-- SCIPIO: links merged into a sub tab bar -->
+                                        <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/><!-- SCIPIO: links merged into a sub tab bar -->
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <platform-specific>
+                                            <html><html-template location="component://webtools/webapp/webtools/entity/FindGeneric.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <platform-specific>
+                                            <html><html-template location="component://webtools/webapp/webtools/entity/ListGeneric.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/>
+                                <!--<section>
+                                    <condition>
+                                        <not><if-empty field="entityName"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-error">${uiLabelMap.WebtoolsEntityNotFoundSpecified}.</label>
+                                    </widgets>
+                                </section>-->
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -425,9 +473,9 @@ under the License.
                 <set field="entityFrom" from-field="parameters.entityFrom" type="Timestamp"/>
                 <set field="entityThru" from-field="parameters.entityThru" type="Timestamp"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/XmlDsDump.groovy"/>
-                <entity-and list="exportList" entity-name="EntityExport" >
+                <entity-condition entity-name="EntityExport" list="exportList">
                     <order-by field-name="-createdStamp"/>
-                </entity-and>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
@@ -464,6 +512,7 @@ under the License.
     <screen name="EntityUtilityServices">
         <section>
             <actions>
+                <property-map resource="SolrUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsEntityUtilityServices"/>
                 <set field="activeSubMenuItem" value="EntityUtilityServices"/>                
             </actions>

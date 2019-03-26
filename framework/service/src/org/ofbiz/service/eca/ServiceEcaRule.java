@@ -19,7 +19,6 @@
 package org.ofbiz.service.eca;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,14 +39,14 @@ public final class ServiceEcaRule implements java.io.Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected final String serviceName;
-    protected final String eventName;
-    protected final boolean runOnFailure;
-    protected final boolean runOnError;
-    protected final List<ServiceEcaCondition> conditions = new ArrayList<ServiceEcaCondition>();
-    protected final List<Object> actionsAndSets = new ArrayList<Object>();
-    protected boolean enabled = true;
-    protected final String definitionLocation;
+    public final String serviceName;
+    public final String eventName;
+    public final boolean runOnFailure;
+    public final boolean runOnError;
+    public final List<ServiceEcaCondition> conditions = new ArrayList<ServiceEcaCondition>();
+    public final List<Object> actionsAndSets = new ArrayList<Object>();
+    public final boolean enabled; // SCIPIO: 2018-09-06: made final for thread-safety
+    public final String definitionLocation;
 
     public ServiceEcaRule(Element eca, String definitionLocation) {
         this.definitionLocation = definitionLocation;
@@ -55,6 +54,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
         this.eventName = eca.getAttribute("event");
         this.runOnFailure = "true".equals(eca.getAttribute("run-on-failure"));
         this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
+        this.enabled = !"false".equals(eca.getAttribute("enabled"));
 
         for (Element element: UtilXml.childElementList(eca, "condition")) {
             conditions.add(new ServiceEcaCondition(element, true, false));
@@ -81,6 +81,10 @@ public final class ServiceEcaRule implements java.io.Serializable {
             }
         }
 
+        // SCIPIO
+        ((ArrayList<ServiceEcaCondition>) conditions).trimToSize();
+        ((ArrayList<Object>) actionsAndSets).trimToSize();
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
         }
@@ -103,7 +107,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
     }
 
     public List<ServiceEcaAction> getEcaActionList() {
-        List<ServiceEcaAction> actionList = new LinkedList<ServiceEcaAction>();
+        List<ServiceEcaAction> actionList = new ArrayList<>(this.actionsAndSets.size()); // SCIPIO: switched to ArrayList
         for (Object actionOrSet: this.actionsAndSets) {
             if (actionOrSet instanceof ServiceEcaAction) {
                 actionList.add((ServiceEcaAction) actionOrSet);
@@ -113,8 +117,8 @@ public final class ServiceEcaRule implements java.io.Serializable {
     }
 
     public List<ServiceEcaCondition> getEcaConditionList() {
-        List<ServiceEcaCondition> condList = new LinkedList<ServiceEcaCondition>();
-        condList.addAll(this.conditions);
+        List<ServiceEcaCondition> condList = new ArrayList<>(this.conditions); // SCIPIO: switched to ArrayList
+        //condList.addAll(this.conditions);
         return condList;
     }
 
@@ -168,12 +172,31 @@ public final class ServiceEcaRule implements java.io.Serializable {
         }
     }
 
+    /* SCIPIO: 2018-09-06: REMOVED for thread safety (NOTE: this was only lately merged from upstream, so no harm done)
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+    */
 
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((actionsAndSets == null) ? 0 : actionsAndSets.hashCode());
+        result = prime * result + ((conditions == null) ? 0 : conditions.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + ((definitionLocation == null) ? 0 : definitionLocation.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + (enabled ? 1231 : 1237);
+        result = prime * result + ((eventName == null) ? 0 : eventName.hashCode());
+        result = prime * result + (runOnError ? 1231 : 1237);
+        result = prime * result + (runOnFailure ? 1231 : 1237);
+        result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
+        return result;
     }
 
     @Override
@@ -197,9 +220,6 @@ public final class ServiceEcaRule implements java.io.Serializable {
                 return false;
             }
             if (this.runOnError != other.runOnError) {
-                return false;
-            }
-            if (this.enabled != other.enabled) {
                 return false;
             }
 

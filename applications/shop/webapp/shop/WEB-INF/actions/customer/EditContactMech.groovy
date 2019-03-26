@@ -34,7 +34,7 @@ ContactMechWorker.getContactMechAndRelated(request, userLogin?.partyId, target);
 context.putAll(target);
 
 
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && !context.partyContactMech && context.contactMech) {
+if (!security.hasEntityPermission("PARTYMGR", "_VIEW", request) && !context.partyContactMech && context.contactMech) {
     context.canNotView = true;
 } else {
     context.canNotView = false;

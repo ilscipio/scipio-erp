@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.lang.ThreadSafe;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.w3c.dom.Document;
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 @ThreadSafe
 @SuppressWarnings("serial")
 public final class ModelField extends ModelChild {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public enum EncryptMethod {
         FALSE {
@@ -61,7 +61,7 @@ public final class ModelField extends ModelChild {
 
     /**
      * Returns a new <code>ModelField</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this field is a member of.
      * @param name The field name.
      * @param type The field type.
@@ -73,7 +73,7 @@ public final class ModelField extends ModelChild {
 
     /**
      * Returns a new <code>ModelField</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this field is a member of.
      * @param description The field description.
      * @param name The field name.
@@ -125,7 +125,7 @@ public final class ModelField extends ModelChild {
 
     /**
      * Returns a new <code>ModelField</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this field is a member of.
      * @param fieldElement The <code>&lt;field&gt;</code> element containing the values for this field.
      * @param isPk <code>true</code> if this field is part of the primary key.
@@ -147,11 +147,7 @@ public final class ModelField extends ModelChild {
         if (isPk) {
             isNotNull = true;
         }
-        EncryptMethod encrypt = EncryptMethod.valueOf(fieldElement.getAttribute("encrypt").toUpperCase());
-        if (encrypt == null) {
-            Debug.logWarning("invalid encrypt value: %s", module, fieldElement.getAttribute("encrypt"));
-            encrypt = EncryptMethod.FALSE;
-        }
+        EncryptMethod encrypt = EncryptMethod.valueOf(fieldElement.getAttribute("encrypt").toUpperCase(Locale.getDefault()));
         boolean enableAuditLog = "true".equals(fieldElement.getAttribute("enable-audit-log"));
         List<String>validators = Collections.emptyList();
         List<? extends Element> elementList = UtilXml.childElementList(fieldElement, "validate");
@@ -167,7 +163,7 @@ public final class ModelField extends ModelChild {
 
     /**
      * Returns a new <code>ModelField</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this field is a member of.
      * @param ccInfo The <code>ColumnCheckInfo</code> containing the values for this field.
      * @param modelFieldTypeReader
@@ -177,7 +173,7 @@ public final class ModelField extends ModelChild {
         String name = ModelUtil.dbNameToVarName(colName);
         String type = ModelUtil.induceFieldType(ccInfo.typeName, ccInfo.columnSize, ccInfo.decimalDigits, modelFieldTypeReader);
         boolean isPk = ccInfo.isPk;
-        boolean isNotNull = "NO".equals(ccInfo.isNullable.toUpperCase());
+        boolean isNotNull = "NO".equals(ccInfo.isNullable.toUpperCase(Locale.getDefault()));
         String description = "";
         String colValue = "";
         String fieldSet = "";
@@ -303,7 +299,7 @@ public final class ModelField extends ModelChild {
         }
         root.setAttribute("type", this.getType());
         if (this.getEncryptMethod().isEncrypted()) {
-            root.setAttribute("encrypt", this.getEncryptMethod().toString().toLowerCase());
+            root.setAttribute("encrypt", this.getEncryptMethod().toString().toLowerCase(Locale.getDefault()));
         }
         if (this.getIsNotNull()) {
             root.setAttribute("not-null", "true");

@@ -18,13 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import java.lang.reflect.Array;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
 import org.ofbiz.base.lang.Factory;
@@ -73,37 +75,59 @@ public final class UtilObject {
 
     /** Serialize an object to a byte array */
     public static byte[] getBytes(Object obj) {
-        byte[] data = null;
         try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                try {
-                    oos.writeObject(obj);
-                    data = bos.toByteArray();
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                } finally {
-                    oos.flush();
-                    oos.close();
-                }
-            } catch (IOException e) {
-                // I don't know how to force an error during flush or
-                // close of ObjectOutputStream; since OOS is wrapping
-                // BAOS, and BAOS does not throw IOException during
-                // write, I don't think this can happen.
-                Debug.logError(e, module);
-            } finally {
-                bos.close();
-            }
+            return getBytesOrEx(obj); // SCIPIO: 2019-03-08: Refactored, delegated
         } catch (IOException e) {
-            // How could this ever happen?  BAOS.close() is listed as
-            // throwing the exception, but I don't understand why this
-            // is.
             Debug.logError(e, module);
         }
+        return null;
+    }
 
+    /** SCIPIO: Serialize an object to a byte array, or exception. Refactored 2019-03-08 from {@link #getBytes(Object)}. */
+    public static byte[] getBytesOrEx(Object obj) throws IOException {
+        byte[] data = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        IOException currentEx = null;
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            try {
+                oos.writeObject(obj);
+                data = bos.toByteArray();
+            } catch (IOException e) {
+                currentEx = e;
+            } finally {
+                try {
+                    oos.flush();
+                } catch(IOException e) {
+                    currentEx = handleSecondaryException("Error flushing ObjectOutputStream", e, currentEx);
+                }
+                try {
+                    oos.close();
+                } catch(IOException e) {
+                    currentEx = handleSecondaryException("Error closing ObjectOutputStream", e, currentEx);
+                }
+            }
+        } finally {
+            try {
+                bos.close();
+            } catch(IOException e) {
+                currentEx = handleSecondaryException("Error closing ByteArrayOutputStream", e, currentEx);
+            }
+        }
+        if (currentEx != null) {
+            throw currentEx;
+        }
         return data;
+    }
+
+    private static <E extends Exception> E handleSecondaryException(String msg, E ex, E currentEx) { // SCIPIO
+        if (currentEx == null) {
+            return ex;
+        }
+        if (Debug.verboseOn()) {
+            Debug.logError(msg + ": " + ex.toString(), module);
+        }
+        return currentEx;
     }
 
     /** Returns the size of a serializable object. Non-serializable objects
@@ -131,9 +155,7 @@ public final class UtilObject {
         Object obj = null;
         try {
             obj = getObjectException(bytes);
-        } catch (ClassNotFoundException e) {
-            Debug.logError(e, module);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             Debug.logError(e, module);
         }
         return obj;
@@ -181,7 +203,9 @@ public final class UtilObject {
     }
 
     public static int doHashCode(Object o1) {
-        if (o1 == null) return 0;
+        if (o1 == null) {
+            return 0;
+        }
         if (o1.getClass().isArray()) {
             int length = Array.getLength(o1);
             int result = 0;
@@ -203,5 +227,86 @@ public final class UtilObject {
             }
         }
         throw new ClassNotFoundException(factoryInterface.getClass().getName());
+    }
+
+    /**
+     * SCIPIO: Returns the first non-null value, or null.
+     */
+    @SafeVarargs
+    public static <T> T firstNonNull(T... values) {
+        for(T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the first non-null value, or null.
+     */
+    public static <T> T firstNonNull(Collection<T> values) {
+        for(T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: If the object is null, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNull(T value, T altValue) {
+        return (value == null) ? altValue : value;
+    }
+
+    /**
+     * SCIPIO: If the object is non-null, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNotNull(T value, T altValue) {
+        return (value != null) ? altValue : value;
+    }
+
+    /**
+     * SCIPIO: If the object is equal to the target, returns null; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T nullIfEquals(T value, Object target) {
+        return (value != null) ? (value.equals(target) ? null : value) : null;
+    }
+
+    /**
+     * SCIPIO: If the object is not equal to the target, returns null; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T nullIfNotEquals(T value, Object target) {
+        return (value != null) ? (!value.equals(target) ? null : value) : null;
+    }
+
+    /**
+     * SCIPIO: If the object is equal to the target, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfEquals(T value, Object target, T altValue) {
+        return (value != null) ? (value.equals(target) ? altValue : value) : ((value == altValue) ? altValue : value);
+    }
+
+    /**
+     * SCIPIO: If the object is not equal to the target, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNotEquals(T value, Object target, T altValue) {
+        return (value != null) ? (!value.equals(target) ? altValue : value) : ((value != altValue) ? altValue : value);
     }
 }

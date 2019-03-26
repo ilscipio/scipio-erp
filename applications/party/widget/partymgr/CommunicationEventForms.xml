@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
@@ -342,7 +329,7 @@ under the License.
         </sort-order>
     </form>
 
-    <form name="findCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitAction"
+    <form name="FindCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitAction"
         header-row-style="header-row" default-position-span="1"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="communicationEventId" position="1"><text-find/></field>
@@ -571,7 +558,7 @@ under the License.
            target="deleteCommunicationEvents" header-row-style="header-row-2">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-entryDate"/>
-            <entity-and  list="commEvents" entity-name="CommunicationEventAndRole">
+            <entity-and  entity-name="CommunicationEventAndRole" list="commEvents">
                 <field-map field-name="statusId" value="COM_UNKNOWN_PARTY"/>
                 <order-by field-name="${parameters.sortField}"/>
             </entity-and>

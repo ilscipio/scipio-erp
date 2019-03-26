@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Commonext Component Email Services</description>
+    <vendor>SCIPIO ERP</vendor>
+    <version>1.0</version>
+
+    <service name="sendMailFromScreenExt" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>Send E-Mail From Screen Widget Service (CommonExt version) (SCIPIO)
+            - attempts to auto-determine (autoInferParams) and normalize the webSiteId and productStoreId fields in
+            service context and bodyParameters, using each other as well as orderId.</description>
+        <implements service="sendMailFromScreenStd"/>
+    </service>
+
+    <service name="sendMailFromScreen" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>Send E-Mail From Screen Widget Service (CommonExt override) (SCIPIO)
+            - attempts to auto-determine (autoInferParams) and normalize the webSiteId and productStoreId fields in
+            service context and bodyParameters, using each other as well as orderId.</description>
+        <implements service="sendMailFromScreenExt"/>
+    </service>
+</services>

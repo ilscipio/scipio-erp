@@ -1,3 +1,9 @@
+<#--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#if requestAttributes.solrProduct??>
@@ -40,11 +46,11 @@
     <#assign productTitle = productName/>
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc = makeOfbizContentCtxPrefixUrl(smallImageUrl)>
+        <#assign imgSrc = makeContentCtxPrefixUrl(smallImageUrl)>
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>
-    <#assign imgLink><@ofbizCatalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
+    <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
@@ -62,8 +68,10 @@
             <#else>
                 <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
                     <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
-                <#else>
+                <#elseif price.listPrice??>
                     <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
+                <#else>
+                    -
                 </#if>
                 <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
                     <#assign priceSaved = price.listPrice?double - price.price?double>
@@ -111,7 +119,7 @@
             ${productPrice}
         </@pli>
         <@pli type="button">
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
+            <a href="<@catalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>
     </@pul>   
 

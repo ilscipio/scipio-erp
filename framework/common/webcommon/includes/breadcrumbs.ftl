@@ -1,5 +1,5 @@
 
-<#macro breadcrumbs crumbs=true productContentWrapper="" catContentWrappers={} useTitleFallback="" showMain=true>
+<#macro breadcrumbs crumbs=true productContentWrapper="" catContentWrappers={} useTitleFallback="" showMain=true showLinks=true>
     <#if !useTitleFallback?has_content>
       <#local useTitleFallback = true>
     </#if>
@@ -7,7 +7,7 @@
       <#if showMain>
         <#-- Link to dashboard -->
         <li<@compiledClassAttribStr class=styles.nav_breadcrumb!/>>
-          <a href="<@ofbizUrl>main</@ofbizUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>>${uiLabelMap.CommonMain}</a>
+          <#if showLinks><a href="<@pageUrl>main</@pageUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>></#if>${uiLabelMap.CommonMain}<#if showLinks></a></#if>
         </li>
       </#if>
         
@@ -21,35 +21,35 @@
         </#if>
         <#local previousCategoryId = "">
         <#list crumbs as crumb>
+                <#local rawCrumb = raw(crumb)><#-- SCIPIO -->
                 <#-- SCIPIO: Try content wrappers set by screen first; if not there, lookup ourselves -->
                 <#local catContentWrapper = {}>
-                <#if (catContentWrappers[crumb])??>
-                  <#local catContentWrapper = catContentWrappers[crumb]>
+                <#if (catContentWrappers[rawCrumb])??>
+                  <#local catContentWrapper = catContentWrappers[rawCrumb]>
                 <#else>
-                  <#local crumbProdCategory = delegator.findOne("ProductCategory", {"productCategoryId":crumb}, true)!/>
+                  <#local crumbProdCategory = delegator.findOne("ProductCategory", {"productCategoryId":rawCrumb}, true)!/>
                   <#if crumbProdCategory?has_content>
                     <#local catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(crumbProdCategory, request)!>
                   </#if>
                 </#if>
                 <#local elemClass = styles.nav_breadcrumb!>
-                <#if !crumb_has_next && !productContentWrapper?has_content>
+                <#if !crumb?has_next && !productContentWrapper?has_content>
                   <#local elemClass = addClassArg(elemClass, styles.nav_breadcrumb_active!)>
                 </#if>
-                <li<@compiledClassAttribStr class=elemClass/>>
-                   <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>><#rt>
-                     <#-- WARN: ?string required for ?has_content to work with result from content wrapper! -->
+                <li<@compiledClassAttribStr class=elemClass/>><#rt/>
+                   <#if showLinks><a href="<@catalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>></#if><#t>
                      <#local crumbText = (catContentWrapper.get("CATEGORY_NAME"))!>
                      <#if !crumbText?has_content>
                        <#local crumbText = (catContentWrapper.get("DESCRIPTION"))!>
                        <#if !crumbText?has_content>
-                         <#-- use the ID --><#t>
+                         <#-- use the ID -->
                          <#local crumbText = crumb>
                        </#if>
                      </#if>
                      ${crumbText}<#t>
-                   </a><#lt>
-                </li> 
-            <#local previousCategoryId = crumb />
+                   <#if showLinks></a></#if><#t>
+                </li><#lt/>
+            <#local previousCategoryId = rawCrumb />
         </#list>
     
         <#-- We always assume that the product Detail page is the last in trail -->
@@ -65,7 +65,7 @@
               <li<@compiledClassAttribStr class=elemClass/>>${productText}</li>
             </#if>
         </#if>
-        
+
       <#if useTitleFallback>
         <#-- If there is neither any category or product information available, display the page title -->
         <#if !crumbs?has_content && !productContentWrapper??>
@@ -80,5 +80,7 @@
     </@nav>
 </#macro>
 
-<@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!) useTitleFallback=(useBreadcrumbsTitleFallback!"")/>
-
+<#if (crumbsLibOnly!false) != true><#-- SCIPIO: Set to true to include only the macro -->
+  <@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!)
+    useTitleFallback=(useBreadcrumbsTitleFallback!"") showMain=(crumbsShowMain!true) showLinks=(crumbsShowLinks!true)/>
+</#if>

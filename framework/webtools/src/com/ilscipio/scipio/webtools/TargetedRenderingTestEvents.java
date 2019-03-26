@@ -19,5 +19,5 @@ public abstract class TargetedRenderingTestEvents {
         }
         return "success";
     }
-    
+
 }

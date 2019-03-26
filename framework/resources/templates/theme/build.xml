@@ -12,7 +12,7 @@
     <property name="name" value="@component-name@"/>
 
 
-	<filelist dir="." id="component.build.dependencies">
+    <filelist dir="." id="component.build.dependencies">
         <file name="../base" />
     </filelist>
 

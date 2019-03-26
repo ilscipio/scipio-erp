@@ -38,7 +38,7 @@ public class CmsDataException extends CmsException {
         super(e);
     }
 
-    
+
     /**
      * Thrown when candidate keys clash which are not enforced otherwise in schema.
      */

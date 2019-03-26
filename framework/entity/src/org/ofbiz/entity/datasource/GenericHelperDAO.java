@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.entity.datasource;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,7 +104,7 @@ public class GenericHelperDAO implements GenericHelper {
      */
     public List<GenericValue> findAllByPrimaryKeys(List<GenericPK> primaryKeys) throws GenericEntityException {
         if (primaryKeys == null) return null;
-        List<GenericValue> results = new LinkedList<GenericValue>();
+        List<GenericValue> results = new ArrayList<>(primaryKeys.size()); // SCIPIO: switched to ArrayList
 
         for (GenericPK primaryKey: primaryKeys) {
             GenericValue result = this.findByPrimaryKey(primaryKey);
@@ -132,7 +132,8 @@ public class GenericHelperDAO implements GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
-     *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     *      DONE WITH IT (preferably in a finally block),
+     *      AND DON'T LEAVE IT OPEN TOO LONG BECAUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator findListIteratorByCondition(Delegator delegator, ModelEntity modelEntity, EntityCondition whereEntityCondition,
         EntityCondition havingEntityCondition, Collection<String> fieldsToSelect, List<String> orderBy, EntityFindOptions findOptions)

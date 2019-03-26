@@ -19,7 +19,7 @@
 
 package org.ofbiz.entity.condition;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +64,8 @@ public class EntityFieldValue extends EntityConditionValue {
         this.fieldName = fieldName;
         this.entityAlias = entityAlias;
         if (UtilValidate.isNotEmpty(entityAliasStack)) {
-            this.entityAliasStack = new LinkedList<String>();
-            this.entityAliasStack.addAll(entityAliasStack);
+            this.entityAliasStack = new ArrayList<>(entityAliasStack); // SCIPIO: switched to ArrayList
+            //this.entityAliasStack.addAll(entityAliasStack);
         }
         this.modelViewEntity = modelViewEntity;
         if (UtilValidate.isNotEmpty(this.entityAliasStack) && UtilValidate.isEmpty(this.entityAlias)) {
@@ -93,19 +93,33 @@ public class EntityFieldValue extends EntityConditionValue {
     @Override
     public int hashCode() {
         int hash = fieldName.hashCode();
-        if (this.entityAlias != null) hash |= this.entityAlias.hashCode();
-        if (this.entityAliasStack != null) hash |= this.entityAliasStack.hashCode();
-        if (this.modelViewEntity != null) hash |= this.modelViewEntity.hashCode();
+        if (this.entityAlias != null) {
+            hash |= this.entityAlias.hashCode();
+        }
+        if (this.entityAliasStack != null) {
+            hash |= this.entityAliasStack.hashCode();
+        }
+        if (this.modelViewEntity != null) {
+            hash |= this.modelViewEntity.hashCode();
+        }
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EntityFieldValue)) return false;
+        if (!(obj instanceof EntityFieldValue)) {
+            return false;
+        }
         EntityFieldValue otherValue = (EntityFieldValue) obj;
-        if (!fieldName.equals(otherValue.fieldName)) return false;
-        if (UtilMisc.compare(this.entityAlias, otherValue.entityAlias) != 0) return false;
-        if (UtilMisc.compare(this.entityAliasStack, otherValue.entityAliasStack) != 0) return false;
+        if (!fieldName.equals(otherValue.fieldName)) {
+            return false;
+        }
+        if (UtilMisc.compare(this.entityAlias, otherValue.entityAlias) != 0) {
+            return false;
+        }
+        if (UtilMisc.compare(this.entityAliasStack, otherValue.entityAliasStack) != 0) {
+            return false;
+        }
         return true;
     }
 
@@ -115,9 +129,8 @@ public class EntityFieldValue extends EntityConditionValue {
             if (this.entityAlias != null) {
                 ModelEntity memberModelEntity = modelViewEntity.getMemberModelEntity(entityAlias);
                 return getField(memberModelEntity, fieldName);
-            } else {
-                return getField(modelViewEntity, fieldName);
             }
+            return getField(modelViewEntity, fieldName);
         }
         return getField(modelEntity, fieldName);
     }
@@ -181,9 +194,8 @@ public class EntityFieldValue extends EntityConditionValue {
         }
         if (map instanceof GenericEntity.NULL) {
             return null;
-        } else {
-            return map.get(fieldName);
         }
+        return map.get(fieldName);
     }
 
     @Override

@@ -20,20 +20,23 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-        <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
+        odd-row-style="alternate-row" header-row-style="header-row-2">
         <field name="compName" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
-            <hyperlink target="TestSuiteInfo?compName=${compName}" description="${compName}"></hyperlink>
+            <hyperlink target="ViewComponent?compName=${compName}" description="${compName}"></hyperlink>
         </field>
-        <field name="rootLocation"><display/></field>
+        <field name="rootLocation"><display description="${relRootLoc}"/></field><!-- SCIPIO: Show relative locations -->
         <field name="enabled"><display/></field>
         <field name="webAppName"><display/></field>
-        <field name="contextRoot"><display/></field>
-        <field name="location"><display/></field>
+        <field name="contextRoot" use-when="contextRootLinkUri!=null"><!-- SCIPIO: Show webapp link -->
+            <hyperlink target-type="inter-app" target="${contextRootLinkUri}" description="${contextRoot}" target-window="_blank"/>
+        </field>
+        <field name="contextRoot" use-when="contextRootLinkUri==null"><display/></field>
+        <field name="location"><display description="${relWebLoc}"/></field><!-- SCIPIO: Show relative locations -->
     </form>
 
     <form name="TestSuiteInfo" type="list" separate-columns="true" title="Component List" list-name="suits" target=""
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2">
         <field name="compName"><hidden value="${parameters.compName}"/></field>
         <field name="suiteName"><display/></field>
         <field name="runSuite" use-when="suiteName!=void" widget-style="${styles.link_run_sys} ${styles.action_begin}">

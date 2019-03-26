@@ -1,63 +1,39 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- 
 ToDo: Update menu with Authorize and Capture transaction actions 
 <#if paymentMethodType.paymentMethodTypeId =="CREDIT_CARD" || paymentMethodType.paymentMethodTypeId =="FIN_ACCOUNT">
     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-      <a href="<@ofbizInterWebappUrl>/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingAuthorize}</a>
+      <a href="<@serverUrl>/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingAuthorize}</a>
     </#if>
     <#if orderPaymentPreference.statusId == "PAYMENT_AUTHORIZED">
-      <a href="<@ofbizInterWebappUrl>/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingCapture}</a>
+      <a href="<@serverUrl>/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.AccountingCapture}</a>
     </#if>
 </#if>
 
 
 <#if paymentMethodType.paymentMethodTypeId =="EXT_BILLACT">
     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED" && orderPaymentPreference.statusId != "PAYMENT_RECEIVED">
-        <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+        <a href="<@pageUrl>receivepayment?${raw(paramString)}</@pageUrl>">${uiLabelMap.AccountingReceivePayment}</a>
     </#if>
 </#if>
 -->
 
-<#macro maskSensitiveNumber cardNumber>
-  <#assign cardNumberDisplay = "">
-  <#if cardNumber?has_content>
-    <#assign size = cardNumber?length - 4>
-    <#if (size > 0)>
-      <#list 0 .. size-1 as foo>
-        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-      </#list>
-      <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-    <#else>
-      <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
-    </#if>
-  </#if>
-  ${cardNumberDisplay!}
-</#macro>
+<#-- SCIPIO: MOVED TO: component://accounting/webapp/accounting/common/acctlib.ftl
+<#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
+</#macro>-->
 
 <@section title=uiLabelMap.AccountingPaymentInformation>
    <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
 
   <#if orderTypeId == "PURCHASE_ORDER">
-  <@table type="data-complex"> <#-- orig: class="basic-table" -->
+  <@table type="data-complex">
     <#if orderPaymentPreferences?has_content || invoices?has_content>
       <@thead>
         <@tr>
@@ -73,14 +49,14 @@ ToDo: Update menu with Authorize and Capture transaction actions
            <#assign statusItem = payment.getRelatedOne("StatusItem", false)>
            <#assign partyName = delegator.findOne("PartyNameView", {"partyId" : payment.partyIdTo}, true)>
            <@tr>
-             <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-               <@td scope="row" class="${styles.grid_large!}3"><a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${payment.paymentId}</@ofbizInterWebappUrl>">${payment.paymentId}</a></@td>
+             <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
+               <@td scope="row" class="${styles.grid_large!}3"><a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${payment.paymentId}</@serverUrl>">${payment.paymentId}</a></@td>
              <#else>
                <@td scope="row" class="${styles.grid_large!}3">${payment.paymentId}</@td>
              </#if>
              <@td>${partyName.groupName!}${partyName.lastName!} ${partyName.firstName!} ${partyName.middleName!}
-             <#if security.hasPermission("PARTYMGR_VIEW", session) || security.hasPermission("PARTYMGR_ADMIN", session)>
-               [<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyId!}</@ofbizInterWebappUrl>">${partyId!}</a>]
+             <#if security.hasPermission("PARTYMGR_VIEW", request) || security.hasPermission("PARTYMGR_ADMIN", request)>
+               [<a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${partyId!}</@serverUrl>">${partyId!}</a>]
              <#else>
                [${partyId!}]
              </#if>
@@ -97,8 +73,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
            <@td>&nbsp;</@td>
            <@td>
              <#list invoices as invoice>
-               <div>${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${invoice}</a>
-               (<a target="_BLANK" href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">PDF</a>)</div>
+               <div>${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${raw(externalKeyParam)}</@serverUrl>">${invoice}</a>
+               (<a target="_BLANK" href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${raw(externalKeyParam)}</@serverUrl>">PDF</a>)</div>
              </#list>
            </@td>
            <@td>&nbsp;</@td>
@@ -112,7 +88,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
      </#if>
   </@table>       
   <#else>
-  <@table type="data-complex"> <#-- orig: class="basic-table" -->
+  <@table type="data-complex">
      <#-- order payment status -->
     <#assign orderPaymentStatuses = orderReadHelper.getOrderPaymentStatuses()>
      <#if orderPaymentStatuses?has_content>
@@ -171,13 +147,13 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@td colspan="3">
                         <@row>
                             <@cell columns=6>
-                                ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
+                                ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${raw(externalKeyParam)}</@serverUrl>">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
                             </@cell>
                             <@cell columns=6>
                                 <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                                 <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                
                                     <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                    <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                    <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                       <input type="hidden" name="orderId" value="${orderId}" />
                                       <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                       <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -208,7 +184,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (finAccountType?has_content)>
                                 ${finAccountType.description!finAccountType.finAccountTypeId}&nbsp;
                               </#if>
-                              #${finAccount.finAccountCode!finAccount.finAccountId} (<a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${finAccount.finAccountId}</a>)
+                              #${finAccount.finAccountCode!finAccount.finAccountId} (<a href="<@serverUrl>/accounting/control/EditFinAccount?finAccountId=${finAccount.finAccountId}${raw(externalKeyParam)}</@serverUrl>">${finAccount.finAccountId}</a>)
                               <br />
                               ${finAccount.finAccountName!}
                         </@cell>
@@ -216,7 +192,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                             <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                            
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />
                                     <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                     <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -236,7 +212,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                   (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                   ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
                                   ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
-                                  <a href="<@ofbizInterWebappUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.CommonDetails}</a>
+                                  <a href="<@serverUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${raw(externalKeyParam)}</@serverUrl>">${uiLabelMap.CommonDetails}</a>
                                   <#if gatewayResponse_has_next><hr /></#if>
                                 </#list>
                         </@modal>
@@ -248,7 +224,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                       <@td>${uiLabelMap.AccountingInvoicePayments}</@td>
                       <@td colspan="3">
                             <#list paymentList as paymentMap>
-                                <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                <a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${raw(externalKeyParam)}</@serverUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
                       </@td>
                     </@tr>
@@ -261,11 +237,18 @@ ToDo: Update menu with Authorize and Capture transaction actions
                 </@td>
                 <@td colspan="3">
                     <#if orderPaymentPreference.maxAmount?has_content>
-                        ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
+                        <#if paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
+                            <#assign orderDate = .now?iso>
+                            <#if orderHeader?has_content><#assign orderDate = orderHeader.orderDate/></#if>
+                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderPaymentPreference.maxAmount?default(0.00), currencyUomId,"XBT",dispatcher,true)>
+                            ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=xbtAmount rounding="8" isoCode="XBT"/>
+                        <#else>
+                            ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
+                        </#if>
                       </#if>
                     <@row>
                         <@cell columns=6>
-                            <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE" && paymentMethodType.paymentMethodTypeId != "EXT_PAYPAL" && paymentMethodType.paymentMethodTypeId != "EXT_COD">
+                            <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE" && paymentMethodType.paymentMethodTypeId != "EXT_PAYPAL" && paymentMethodType.paymentMethodTypeId != "EXT_LIGHTNING" && paymentMethodType.paymentMethodTypeId != "EXT_COD">
                               <#if orderPaymentPreference.maxAmount?has_content>
                                  ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                               </#if>
@@ -274,13 +257,25 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <div><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())!}</div>
                             <div>&nbsp;<#if orderPaymentPreference.authRefNum??>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
                             -->
+                        <#elseif paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
+                            <#assign paymentTotal = 0.00 />
+                            <#list paymentList as payment>
+                                <#assign paymentTotal = paymentTotal + payment.amount />
+                            </#list>
+                            <#assign orderDate = .now?iso>
+                            <#if orderHeader?has_content><#assign orderDate = orderHeader.orderDate/></#if>
+                            <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, paymentTotal, currencyUomId,"XBT",dispatcher,true)>
+                            <p>${uiLabelMap.CommonAmount}: <@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p>
+                            <#if paymentTotal &lt; orderPaymentPreference.maxAmount?default(0.00)>
+                                <a href="<@pageUrl>receivepayment?${raw(paramString)}</@pageUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+                            </#if>
                         <#else>
                             <#assign paymentTotal = 0.00 />
                             <#list paymentList as payment>
                                 <#assign paymentTotal = paymentTotal + payment.amount />
                             </#list>
                             <#if paymentTotal &lt; orderPaymentPreference.maxAmount?default(0.00)>
-                                <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+                                <a href="<@pageUrl>receivepayment?${raw(paramString)}</@pageUrl>">${uiLabelMap.AccountingReceivePayment}</a>
                             </#if>
                         </#if>
                         </@cell>
@@ -288,7 +283,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                                 <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                
                                     <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                    <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                    <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                       <input type="hidden" name="orderId" value="${orderId}" />
                                       <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                       <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -303,7 +298,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               <@cell columns=6>${uiLabelMap.AccountingInvoicePayments}</@cell>
                               <@cell columns=6>
                                     <#list paymentList as paymentMap>
-                                        <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                        <a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${raw(externalKeyParam)}</@serverUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                                     </#list>
                               </@cell>
                         </@row>
@@ -337,15 +332,15 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               ${creditCard.lastNameOnCard!(uiLabelMap.CommonNA)}
                               <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                               <br />
-                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                                ${creditCard.cardType}
-                                <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
-                                ${creditCard.expireDate}
-                                &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
-                              <#else>
+                              <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
+                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                                &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
+                              <#else>
+                                ${creditCard.cardType}
+                                <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                                ${creditCard.expireDate}
                               </#if>
+                              &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description", locale)}<#else>${orderPaymentPreference.statusId!}</#if>]
                               <#else>
                               ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>
@@ -356,7 +351,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                 <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                                    <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                   
                                       <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                      <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                      <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                         <input type="hidden" name="orderId" value="${orderId}" />
                                         <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                         <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -380,7 +375,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                     (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
                                     ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
                                     ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
-                                    <a href="<@ofbizInterWebappUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.CommonDetails}</a>
+                                    <a href="<@serverUrl>/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${raw(externalKeyParam)}</@serverUrl>">${uiLabelMap.CommonDetails}</a>
                                     <#if gatewayResponse_has_next><hr /></#if>
                                   </#list>
                         </@modal>
@@ -414,7 +409,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                               
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />
                                     <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                     <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -437,14 +432,14 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     </@cell>
                     <@cell columns=6>
                         <#list paymentList as paymentMap>
-                            <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                            <a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${raw(externalKeyParam)}</@serverUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                         </#list>
                     </@cell>
                 </@row>
               </#if>
             <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
-              <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-              <#if giftCard??>
+              <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)!>
+              <#if giftCard?has_content>
                 <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <@tr>
@@ -457,11 +452,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@row>
                         <@cell columns=6>
                             <#if giftCard?has_content>
-                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
-                              <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
+                              <@acctlib.maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                               <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
@@ -473,7 +468,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
-                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
+                                  <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />
                                     <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
                                     <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
@@ -490,7 +485,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                       <@cell columns=6>${uiLabelMap.AccountingInvoicePayments}</@cell>
                       <@cell columns=6>
                             <#list paymentList as paymentMap>
-                                <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                                <a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${raw(externalKeyParam)}</@serverUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                             </#list>
                       </@cell>
                     </@row>
@@ -521,7 +516,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
               <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.AccountingInvoicePayments}</@td>
               <@td colspan="3">
                 <#list paymentList as paymentMap>
-                    <a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
+                    <a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${paymentMap.paymentId}${raw(externalKeyParam)}</@serverUrl>">${paymentMap.paymentId}</a><#if paymentMap_has_next><br /></#if>
                 </#list>
               </@td>
             </@tr>
@@ -542,8 +537,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
             <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderInvoices}</@td>
             <@td colspan="3">
               <#list invoices as invoice>
-                <div>${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${invoice}</a>
-                (<a target="_BLANK" href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">PDF</a>)</div>
+                <div>${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoice}${raw(externalKeyParam)}</@serverUrl>">${invoice}</a>
+                (<a target="_BLANK" href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoice}${raw(externalKeyParam)}</@serverUrl>">PDF</a>)</div>
               </#list>
             </@td>
           </@tr>
@@ -561,7 +556,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
               </@td>
               <@td colspan="3">
                    <@modal label=uiLabelMap.AccountingNewPayment id="modal_addPaymentMethodToOrder" linkClass="${styles.link_nav!} ${styles.action_add!}">
-                       <form name="addPaymentMethodToOrder" method="post" action="<@ofbizUrl>addPaymentMethodToOrder</@ofbizUrl>">
+                       <form name="addPaymentMethodToOrder" method="post" action="<@pageUrl>addPaymentMethodToOrder</@pageUrl>">
                            <input type="hidden" name="orderId" value="${orderId!}"/>
                              <@row>
                                 <@cell columns=6>
@@ -576,10 +571,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                            <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
-                                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/> ${creditCard.expireDate!}
-                                               <#else>
+                                               <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
+                                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                               <#else>
+                                                 ${creditCard.cardType!} <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
                                                </#if>
                                              </#if>
                                            <#else>

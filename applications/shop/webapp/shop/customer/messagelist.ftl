@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -35,13 +22,13 @@ under the License.
                 <@td>${communicationEvent.subject!""}</@td>
                 <@td>${communicationEvent.entryDate}</@td>
                 <@td align="right">
-                  <form method="post" action="<@ofbizUrl>readmessage</@ofbizUrl>" name="ecomm_read_mess${index}">
+                  <form method="post" action="<@pageUrl>readmessage</@pageUrl>" name="ecomm_read_mess${index}">
                     <input name="communicationEventId" value="${communicationEvent.communicationEventId}" type="hidden"/>
                   </form>
                   <a href="javascript:document.ecomm_read_mess${index}.submit()">${uiLabelMap.EcommerceRead}</a>
                   
                   <#if isSentMessage>
-                  <form method="post" action="<@ofbizUrl>newmessage</@ofbizUrl>" name="ecomm_sent_mess${index}">
+                  <form method="post" action="<@pageUrl>newmessage</@pageUrl>" name="ecomm_sent_mess${index}">
                     <input name="communicationEventId" value="${communicationEvent.communicationEventId}" type="hidden"/>
                   </form>
                   <a href="javascript:document.ecomm_sent_mess${index}.submit()">${uiLabelMap.PartyReply}</a>
@@ -54,23 +41,23 @@ under the License.
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if (parameters.showSent!) == "true">
-              <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
+              <a href="<@pageUrl>messagelist</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
             <#else>
-              <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
+              <a href="<@pageUrl>messagelist?showSent=true</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
         </div>
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if (parameters.showSent!) == "true">
-          <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewReceivedOnly />
+          <@menuitem type="link" href=makePageUrl("messagelist") text=uiLabelMap.EcommerceViewReceivedOnly />
         <#else>
-          <@menuitem type="link" href=makeOfbizUrl("messagelist?showSent=true") text=uiLabelMap.EcommerceViewSent />
+          <@menuitem type="link" href=makePageUrl("messagelist?showSent=true") text=uiLabelMap.EcommerceViewSent />
         </#if>
     </@menu>
 </#macro>
 <@section title=uiLabelMap.CommonMessages menuContent=menuContent menuLayoutTitle="inline-title">
-    <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+    <@table type="data-complex">
       <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
         <@tr><@td>${uiLabelMap.EcommerceNoMessages}.</@td></@tr>
       <#else>

@@ -20,6 +20,7 @@
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
+party = context.party; // SCIPIO: Prevents missing binging var crash in some cases
 if (party) {
     emailAddress = EntityUtil.getFirst(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
     if (emailAddress) {

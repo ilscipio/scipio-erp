@@ -16,25 +16,25 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     private static final long serialVersionUID = -2831896712431295094L;
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private CmsAssetTemplate assetTemplate; // Mutable - set on first get if necessary.
-    
+
     // Constructors
 
     protected CmsAssetTemplateVersion(GenericValue entity) {
         this(entity, null);
     }
-    
+
     CmsAssetTemplateVersion(GenericValue entity, CmsAssetTemplate assetTemplate) {
         super(entity);
         this.assetTemplate = assetTemplate; // Ability to specify assetTemplate here is almost merely an internal optimization
     }
 
-    
+
     /**
      * Creates a new template version with the given fields (see CmsAssetTemplateVersion entity for available fields)
      * for the given asset. If asset template ID is passed in fields, must match given asset template instance's.
-     * 
+     *
      * @param fields
      * @param assetTemplate
      */
@@ -43,7 +43,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         this.assetTemplate = assetTemplate;
         this.setAssetTemplateId(assetTemplate.getId());
     }
-    
+
     protected CmsAssetTemplateVersion(CmsAssetTemplateVersion other, Map<String, Object> copyArgs, CmsAssetTemplate assetTemplate) {
         super(other, copyArgs);
         if (assetTemplate != null) { // if null, we must be keeping the same parent template
@@ -54,7 +54,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
             this.setAssetTemplateId(this.assetTemplate.getId());
         }
     }
-    
+
     private static Map<String, ?> checkAssetTemplateId(Delegator delegator, Map<String, ?> fields, CmsAssetTemplate assetTemplate,
             boolean useCache) {
         String fieldsTmpId = getAssetTemplateId(fields);
@@ -67,26 +67,26 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         }
         return fields;
     }
-    
-    @Override    
+
+    @Override
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
+
     @Override
     public CmsAssetTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException {
         return new CmsAssetTemplateVersion(this, copyArgs, null);
     }
-    
+
     @Override
     public CmsAssetTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException {
         return new CmsAssetTemplateVersion(this, copyArgs, (CmsAssetTemplate) template);
     }
-    
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
      * Essential for thread safety!!!
      */
@@ -95,8 +95,8 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         super.preload(preloadWorker);
         // NOTE: parent handles this.getTemplate()
     }
-    
-    // Getters and operational methods    
+
+    // Getters and operational methods
     public CmsAssetTemplate getAssetTemplate() {
         CmsAssetTemplate assetTemplate = this.assetTemplate;
         if (assetTemplate == null) {
@@ -105,15 +105,15 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         }
         return assetTemplate;
     }
-    
+
     public String getAssetTemplateId() {
         return entity.getString("assetTemplateId");
     }
-    
+
     public static String getAssetTemplateId(Map<String, ?> fields) {
         return (String) fields.get("assetTemplateId");
     }
-    
+
     private void setAssetTemplateId(String assetTemplateId) {
         entity.set("assetTemplateId", assetTemplateId);
     }
@@ -124,7 +124,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         String contentId = getTemplateContentId();
         return super.remove() + removeTemplateBodySourceCommon(delegator, contentId);
     }
-    
+
     // Helpers
 
     @Override
@@ -136,7 +136,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     public CmsAssetTemplate getTemplate() {
         return getAssetTemplate();
     }
-    
+
     @Override
     protected void setTemplate(CmsVersionedComplexTemplate<?, ?> template) {
         if (template == null) {
@@ -148,7 +148,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
             this.assetTemplate = (CmsAssetTemplate) template;
         }
     }
-    
+
     @Override
     protected void setTemplateId(String templateId) {
         setAssetTemplateId(templateId);
@@ -158,14 +158,14 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     public AssetTemplateVersionWorker getWorkerInst() {
         return AssetTemplateVersionWorker.worker;
     }
-    
+
     public static AssetTemplateVersionWorker getWorker() {
         return AssetTemplateVersionWorker.worker;
     }
 
     public static class AssetTemplateVersionWorker extends DataObjectWorker<CmsAssetTemplateVersion> {
         private static final AssetTemplateVersionWorker worker = new AssetTemplateVersionWorker();
-        
+
         protected AssetTemplateVersionWorker() {
             super(CmsAssetTemplateVersion.class);
         }
@@ -180,19 +180,19 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
             return new CmsAssetTemplateVersion(delegator, fields, null);
         }
     }
-    
+
     @Override
     protected AssetTemplateActiveVersionWorker getActiveVersionWorkerInst() {
         return AssetTemplateActiveVersionWorker.activeVersionWorker;
     }
-    
+
     protected static AssetTemplateActiveVersionWorker getActiveVersionWorker() {
         return AssetTemplateActiveVersionWorker.activeVersionWorker;
     }
-    
+
     public static class AssetTemplateActiveVersionWorker extends CmsTemplateVersion.ActiveVersionWorker<CmsAssetTemplate, CmsAssetTemplateVersion> {
         protected static final AssetTemplateActiveVersionWorker activeVersionWorker = new AssetTemplateActiveVersionWorker();
-        
+
         @Override
         protected String getStateEntityName() {
             return "CmsAssetTemplateVersionState";

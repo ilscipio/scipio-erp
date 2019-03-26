@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
@@ -35,7 +22,7 @@ under the License.
     <#assign productCategory = catInfo.productCategory!"">
     <#assign contentCategoryName = catInfo.categoryName!"">
     <#assign contentCategoryDesc = catInfo.description!"">
-    <#assign isOnCurrentCatPath = urlContainsPathPart(rawString(currentCategoryPath!""), productCategoryId)>
+    <#assign isOnCurrentCatPath = urlContainsPathPart(raw(currentCategoryPath!""), productCategoryId)>
     <#assign active = false>
     <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || isOnCurrentCatPath>
       <#assign active = true>
@@ -44,8 +31,8 @@ under the License.
     <#if curCategoryId?has_content && curCategoryId == productCategoryId>
       <#assign activeTarget = true>
     </#if>
-    <#assign categoryUrl><@ofbizCatalogUrl rawParams=true currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
-    <#assign linkText>${rawString(catInfo.displayName!"")} <#if (count?number > 0)>(${count})</#if></#assign>
+    <#assign categoryUrl><@catalogUrl rawParams=true currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
+    <#assign linkText>${raw(catInfo.displayName!"")} <#if (count?number > 0)>(${count})</#if></#assign>
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active activeTarget=activeTarget>
       <#if isMultiLevel>
@@ -85,8 +72,8 @@ under the License.
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
                 <@categoryList catInfo=catInfo productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Scipio: WARN: Side deep category " + item.catId + 
-                    " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
+                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + raw(item.catId!) + 
+                    " not child of base category " + raw(baseCategoryId!"") + "; discarding", "sidedeepcategory.ftl")!>
               </#if>
           </#list>
         <#elseif topLevelList?has_content><#-- SCIPIO: Fallback for empty categories / catalogs -->

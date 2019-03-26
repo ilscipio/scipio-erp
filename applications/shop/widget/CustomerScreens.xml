@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -321,7 +308,6 @@ under the License.
         </section>
     </screen>
 
-    <!-- SCIPIO: TODO: screen requires re-implement + re-test -->
     <screen name="customersurvey">
         <section>
             <actions>
@@ -387,17 +373,17 @@ under the License.
                     <condition-expr field-name="partyIdTo" operator="equals" from-field="userLogin.partyId"/>
                     <order-by field-name="-entryDate"/>
                 </entity-condition>
-            </actions>
-            <widgets>
-                <section>
+                <if><!-- SCIPIO: rewrote condition -->
                     <condition><if-compare field="parameters.showSent" operator="equals" value="true"/></condition>
-                    <actions>
+                    <then>
                         <entity-condition entity-name="CommunicationEvent" list="sentCommunicationEvents">
                             <condition-expr field-name="partyIdFrom" operator="equals" from-field="userLogin.partyId"/>
                             <order-by field-name="-entryDate"/>
                         </entity-condition>
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagelist.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -854,6 +840,20 @@ under the License.
                 <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
                 <set field="activeMainMenuItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
+                
+                <!-- SCIPIO: If logged-in, get the current user email -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    userLogin = context.userLogin;
+                    if (userLogin?.partyId) {
+                        try {
+                            servRes = runService("getPartyEmail", [partyId:userLogin.partyId, userLogin:userLogin]);
+                            context.partyEmailAddress = servRes.emailAddress;
+                        } catch(Exception e) {
+                            Debug.logError(e, "AnonContactusScreen.groovy");
+                        }
+                    }
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -892,8 +892,8 @@ under the License.
         <section>
             <actions>
                 <service service-name="optOutOfListFromCommEvent" result-map="optOutResult"/>                
-                <entity-one value-field="contactList" entity-name="ContactList">
-                    <field-map from-field="optOutResult.contactListId" field-name="contactListId"/>                    
+                <entity-one entity-name="ContactList" value-field="contactList">
+                    <field-map field-name="contactListId" from-field="optOutResult.contactListId"/>                    
                 </entity-one>
                 <set field="contactListId" from-field="contactList.contactListId"/>
                 <set field="screenName" from-field="contactList.optOutScreen" default-value="component://shop/widget/CustomerScreens.xml#DefaultOptOutScreen"/>

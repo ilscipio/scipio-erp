@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,7 +11,9 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
     <!-- 2016: new common cms client controller -->
     <include location="component://cms/webcommon/WEB-INF/cms-client-controller.xml"/>
-    
+    <!-- Additional hooks (payment options, etc.) -->
+    <include location="component://*/webapp/hooks/shop-controller-post.xml" optional="true" order="post-local"/>
+
     <description>SCIPIO Shop Controller Configuration File</description>
 
     <!-- Events run from here for the first hit in a visit -->
@@ -61,51 +50,58 @@ under the License.
         <event name="clearGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="clearGuestShoppingListCookies"/>
     </after-login>
 
+    <after-logout>
+        <!-- SCIPIO: Ensures the cart never carries over -->
+        <event name="cleanCartAfterLogout" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="cleanCartAfterLogout"/>
+    </after-logout>
+
+    <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->
+
     <!-- General Request Mappings -->
     <request-map uri="main">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="main" save-current-view="true"/>
     </request-map>
     <request-map uri="policies">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="policies"/>
     </request-map>
     <request-map uri="license">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="license"/>
     </request-map>
 
     <!-- Session Setting Requests -->
     <!-- SCIPIO: need a language select screen for anon users -->
     <request-map uri="ListLocales">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="ListLocales" save-last-view="true"/>
     </request-map>
  
     <request-map uri="setSessionLocale">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect" value="fromSetSessionLocale"/>        
+        <response name="success" type="request-redirect" value="fromSetSessionLocale" save-request="messages"/><!-- SCIPIO: only transfer error messages -->      
         <response name="error" type="view" value="main"/>
     </request-map>
     
     <!-- SCIPIO: for profile. NOTE: fromSetSessionLocale event doesn't do anything useful, so can just redirect to profile (simpler) -->
     <request-map uri="setSessionLocaleProfile">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect-noparam" value="viewprofile"/>        
+        <response name="success" type="request-redirect-noparam" value="viewprofile" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
     <request-map uri="setSessionCurrencyUom">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionCurrencyUom"/>
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="setSessionProductStore">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.product.ProductStoreCartAwareEvents" invoke="setSessionProductStore"/>
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
@@ -120,97 +116,97 @@ under the License.
 
     <!-- ShoppingList Requests -->
     <request-map uri="editShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <response name="success" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="createEmptyShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="createShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="createShoppingListFromOrder">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="makeShoppingListFromOrder"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="updateShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="updateShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addItemToShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="createShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addBulkToShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addListToCart">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="updateShoppingListItem">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="updateShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="removeFromShoppingList">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="service" invoke="removeShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="replaceShoppingListItem">
-        <security auth="true" https="false"/>
+        <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="replaceShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addpromocode">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addProductPromoCode"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="additem">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view-last" value="showcart" save-last-view="true"/>
-        <response name="survey" type="view" value="survey"/>
+        <response name="survey" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Do not save view so additem's success view-last can work through additemsurvey -->
         <response name="product" type="view" value="product"/>
-        <response name="viewcart" type="request-redirect" value="showcart"/>
+        <response name="viewcart" type="request-redirect" value="showcart" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <!-- SCIPIO: If there's an error, currently in most case we want to go back to the previous (product page)...
         <response name="error" type="view" value="showcart"/>-->
         <response name="error" type="view-last" value="showcart"/>
     </request-map>
 
     <request-map uri="additemsurvey">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
         <response name="success" type="request" value="additem"/>
-        <response name="error" type="view" value="main"/>
+        <response name="error" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Switched to additem: value="main" -->
     </request-map>
 
     <request-map uri="addordertocart">
@@ -221,59 +217,59 @@ under the License.
     </request-map>
 
     <request-map uri="addtocartbulk">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
         <response name="success" type="view" value="quickadd"/>
         <response name="error" type="view" value="quickadd"/>
     </request-map>
     <request-map uri="addCategoryDefaults">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addseperator">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="showcart">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="showcart"/>
     </request-map>
     <request-map uri="modifycart">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
     <request-map uri="emptycart">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
     <request-map uri="UpdateCart">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="UpdateCart"/>
     </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="showAllPromotions">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="showAllPromotions"/>
     </request-map>
     <request-map uri="showPromotionDetails">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="showPromotionDetails"/>
     </request-map>
     <request-map uri="removePromotion">
@@ -750,7 +746,7 @@ under the License.
         <security https="true" auth="false" />
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="request" value="processordervalidatepayment"/>
-        <response name="error" type="request-redirect-noparam" value="showcart" />
+        <response name="error" type="request-redirect-noparam" value="showcart" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
     </request-map>
     <!-- SCIPIO: add extra check to validate payment methods before order is sent for creation, in case user managed to bypass -->
     <request-map uri="processordervalidatepayment">
@@ -823,7 +819,7 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="worldPayNotify">
-        <security https="false"/>
+        <security https="true"/>
         <event type="java" path="org.ofbiz.accounting.thirdparty.worldpay.WorldPayEvents" invoke="worldPayNotify"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
@@ -836,7 +832,7 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="payPalNotify">
-        <security https="false"/>
+        <security https="true"/>
         <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
         <response name="success" type="none"/>
         <response name="error" type="none"/>
@@ -854,7 +850,7 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="idealNotify">
-        <security https="false"/>
+        <security https="true"/>
         <event type="java" path="org.ofbiz.accounting.thirdparty.ideal.IdealEvents" invoke="idealNotify"/>
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="checkoutreview"/>
@@ -886,82 +882,85 @@ under the License.
     </request-map>
     <request-map uri="payPalCheckoutUpdate">
         <description>Handles callbacks from PayPal's Express Checkout Instant Update API</description>
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/>
         <event type="java" path="org.ofbiz.order.thirdparty.paypal.ExpressCheckoutEvents" invoke="expressCheckoutUpdate"/>
         <response name="success" type="none"/>
     </request-map>
 
     <request-map uri="quickadd">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="quickadd"/>
     </request-map>
     <request-map uri="category">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="category" save-current-view="true"/>
     </request-map>
     <request-map uri="product">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="product" save-current-view="true"/>
     </request-map>
+    <!-- SCIPIO: screen detailImage removed
     <request-map uri="detailImage">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="detailImage"/>
-    </request-map>
+    </request-map>-->
     <request-map uri="crosssell">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="product"/>
     </request-map>
     <request-map uri="upsell">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="product"/>
     </request-map>
 
     <request-map uri="clearLastViewed">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="clearAllLastViewed"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="lastviewedproducts">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="lastviewedproducts"/>
     </request-map>
 
     <request-map uri="reviewProduct">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="productReview"/>
     </request-map>
     <request-map uri="createProductReview">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="createProductReview"/>
         <response name="success" type="view-last" value="product"/>
         <response name="error" type="view" value="productReview"/>
     </request-map>
 
     <request-map uri="advancedsearch">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="keywordsearch">
-        <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>
+        <security https="true" auth="false"/>
+        <!-- SCIPIO: 2018-10-18: use custom event to generate better links
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>-->
+        <event type="java" path="com.ilscipio.scipio.shop.product.ProductEvents" invoke="checkDoKeywordOverride"/>
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
     </request-map>
     <request-map uri="clearSearchOptionsHistoryList">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="clearSearchOptionsHistoryList"/>
         <response name="success" type="view" value="advancedsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="setCurrentSearchFromHistory">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
         <response name="success" type="view" value="advancedsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="setCurrentSearchFromHistoryAndSearch">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
         <response name="success" type="request" value="keywordsearch"/>
         <response name="error" type="view" value="advancedsearch"/>
@@ -1041,7 +1040,7 @@ under the License.
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="processTargetPage"/>
         <!-- SCIPIO: This special response value syntax works thanks to a Scipio enhancement to Ofbiz request handler -->
-        <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}"/>
+        <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="forward" type="request" value="${requestAttributes.targetPage}"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
@@ -1183,8 +1182,13 @@ under the License.
     </request-map>
     <request-map uri="createGiftCard">
         <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
-        <event type="service" invoke="createGiftCard"/>
+        <!-- SCIPIO: Ensure productStoreId and validate card beforehand
+        <event type="service" invoke="createGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            ctx = EventUtil.getServiceEventParamMap(request, "createVerifyGiftCard");
+            ctx.productStoreId = org.ofbiz.product.store.ProductStoreWorker.getProductStoreId(request);
+            return EventUtil.runServiceAsEvent(request, response, "createVerifyGiftCard", ctx);
+        ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
@@ -1192,8 +1196,13 @@ under the License.
     </request-map>
     <request-map uri="updateGiftCard">
         <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
-        <event type="service" invoke="updateGiftCard"/>
+        <!-- SCIPIO: Ensure productStoreId and validate card beforehand
+        <event type="service" invoke="updateGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            ctx = EventUtil.getServiceEventParamMap(request, "updateVerifyGiftCard");
+            ctx.productStoreId = org.ofbiz.product.store.ProductStoreWorker.getProductStoreId(request);
+            return EventUtil.runServiceAsEvent(request, response, "updateVerifyGiftCard", ctx);
+        ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
@@ -1260,11 +1269,11 @@ under the License.
 
 
     <request-map uri="tellafriend">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="tellafriend"/>
     </request-map>
     <request-map uri="emailFriend">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="tellAFriend"/>
         <response name="success" type="view" value="tellafriend"/>
         <response name="error" type="view" value="tellafriend"/>
@@ -1274,9 +1283,16 @@ under the License.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="giftcardbalance"/>
     </request-map>
-    <request-map uri="querygcbalance">
+    <request-map uri="querygcbalance" method="post"><!-- SCIPIO: Security: Restricted to POST -->
         <security https="true" auth="false"/>
-        <event type="service" invoke="balanceInquireGiftCard"/>
+        <!-- SCIPIO: Security: Server-side code must set the paymentConfig
+        <event type="service" invoke="balanceInquireGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "balanceInquireGiftCard");
+            ctx.paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true) ?: "payment.properties";
+            return EventUtil.runServiceAsEvent(request, response, "balanceInquireGiftCard", ctx);
+        ]]></script></event>
         <response name="success" type="view" value="giftcardbalance"/>
         <response name="error" type="view" value="giftcardbalance"/>
     </request-map>
@@ -1285,9 +1301,16 @@ under the License.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="giftcardlink"/>
     </request-map>
-    <request-map uri="linkgiftcard">
+    <request-map uri="linkgiftcard" method="post"><!-- SCIPIO: Security: Restricted to POST -->
         <security https="true" auth="false"/>
-        <event type="service" invoke="linkPhysicalGiftCard"/>
+        <!-- SCIPIO: Security: Server-side code must set the paymentConfig
+        <event type="service" invoke="linkPhysicalGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "linkPhysicalGiftCard");
+            ctx.paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true) ?: "payment.properties";
+            return EventUtil.runServiceAsEvent(request, response, "linkPhysicalGiftCard", ctx);
+        ]]></script></event>
         <response name="success" type="view" value="giftcardlink"/>
         <response name="error" type="view" value="giftcardlink"/>
     </request-map>
@@ -1335,6 +1358,25 @@ under the License.
         <response name="error" type="view" value="digitalproductedit"/>
     </request-map>
 
+    <!-- ======================= Survey Requests ======================= -->
+
+    <request-map uri="takesurvey">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="profilesurvey"/>
+    </request-map>
+    <request-map uri="profilesurvey">
+        <security https="true" auth="true"/>
+        <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
+        <response name="success" type="view" value="profilesurvey"/>
+        <response name="error" type="view" value="profilesurvey"/>
+    </request-map>
+    <request-map uri="minipoll">
+        <security https="true" auth="false"/><!-- SCIPIO: Restrict to https="true" -->
+        <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
     <!-- ======================= Communication Event Based Messaging ======================= -->
 
     <request-map uri="messagelist">
@@ -1375,7 +1417,7 @@ under the License.
     <request-map uri="submitAnonContact">
         <security https="true" auth="false"/>
         <event type="simple" invoke="createAnonContact" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect" value="main" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="request" value="AnonContactus"/>
     </request-map>
 
@@ -1491,17 +1533,27 @@ under the License.
         <response name="success" type="view" value="billsetting"/>
     </request-map>
     <request-map uri="ListRequests">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListRequests"/>
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="ListRequests" save-last-view="true"/>
     </request-map>
     <request-map uri="ViewRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewRequest"/>
     </request-map>
+    <request-map uri="NewCustRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewRequest"/>
+    </request-map>
+    <request-map uri="createCustRequest">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequest"/>
+        <response name="success" type="view" value="ListRequests"/>
+        <response name="error" type="view" value="ListRequests"/>
+    </request-map>
     <request-map uri="createCustRequestFromCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequestFromCart"/>
-        <response name="success" type="request" value="showcart"/>
+        <response name="success" type="view-last" />
         <response name="error" type="request" value="showcart"/>
     </request-map>
     <request-map uri="createQuoteFromCart">
@@ -1536,10 +1588,12 @@ under the License.
 
     <!-- ================ SimpleContent Requests ================= -->
 
+    <!-- SCIPIO: TODO: REVIEW: not such view anymore
     <request-map uri="ViewSimpleContent">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/>
         <response name="success" type="view" value="ViewSimpleContent"/>
     </request-map>
+    -->
 
     <!-- ============== One Page Checkout Requests ============== -->
     <request-map uri="onePageCheckout">
@@ -1563,7 +1617,7 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
-    <request-map uri="getAssociatedStateList">
+    <request-map uri="getAssociatedStateList" track-serverhit="false"><!-- SCIPIO: 2018-08-28: don't track for now, concurrent ServerHits on some pages (TODO: REVIEW) -->
         <security https="true" auth="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>
@@ -1616,7 +1670,7 @@ under the License.
     </request-map>
 
     <request-map uri="getShoppingCartItemIndex">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="service" invoke="getShoppingCartItemIndex"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
@@ -1697,6 +1751,7 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
+    <!-- SCIPIO: NOTE: This request can/should probably be avoided; see updatePostalAddressAndPurposes for details -->
     <request-map uri="updatePartyPostalAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateContactMechAndPurposes"/>
@@ -1719,27 +1774,29 @@ under the License.
     </request-map>
 
    <request-map uri="getConfigDetailsEvent">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="getConfigDetailsEvent"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    <!--  Old request that calls the services written in Minilang -->
+    <!-- SCIPIO: Not supported
+    
+    <!- -  Old request that calls the services written in Minilang - ->
     <request-map uri="cartToGoogleCheckout">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/>
         <event type="service" invoke="transmitRequest"/>
         <response type="view" name="success" value="cartToGoogleCheckout"/>
     </request-map>
     
-    <!-- New request that prepare data in the Java code -->
-   <request-map uri="googleCheckout">
-        <security auth="false" https="false" />
+    <!- - New request that prepare data in the Java code - ->
+    <request-map uri="googleCheckout">
+        <security auth="false" https="true" />
         <event type="service" invoke="sendGoogleCheckoutRequest" />
         <response type="view" name="success" value="redirectToGoogleCheckout" />
     </request-map>    
     
-    <!-- This will be used in production instance to provide secure communication -->
+    <!- - This will be used in production instance to provide secure communication - ->
     <request-map uri="secureGoogleCheckoutNotification">
         <security auth="false" https="true"/>
         <event type="java" path="org.ofbiz.googlecheckout.GoogleCheckoutResponseEvents" invoke="checkNotification"/>
@@ -1747,44 +1804,45 @@ under the License.
         <response name="error" type="none"/>
     </request-map>
 
-    <!--  This request can be used for server that don't have SSL certificate installed or sandbox instance that handles google response on unsecure port-->
+    <!- -  This request can be used for server that don't have SSL certificate installed or sandbox instance that handles google response on unsecure port- ->
     <request-map uri="unSecureGoogleCheckoutNotification">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/>
         <event type="java" path="org.ofbiz.googlecheckout.GoogleCheckoutResponseEvents" invoke="checkNotification"/>
         <response name="success" type="none"/>
         <response name="error" type="none"/>
     </request-map>
     
     <request-map uri="returnBackFromGoogle">
-        <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!- - SCIPIO: Make sure still have a cart: invoke="clearCart" - ->
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
+    -->
     
     <!-- Product Comparison Requests -->
     <request-map uri="addToCompare">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="addProductToComparisonList"/>
         <response name="success" type="view-last" value="main"/>
     </request-map>
     <request-map uri="removeFromCompare">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeProductFromComparisonList"/>
         <response name="success" type="view-last"/>
     </request-map>
     <request-map uri="clearCompareList">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="clearProductComparisonList"/>
         <response name="success" type="view-last"/>
     </request-map>
     <request-map uri="compareProducts">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="compareProducts" save-last-view="true"/>
     </request-map>
     
     <request-map uri="ProductUomDropDownOnly">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/>
         <response name="success" type="view" value="ProductUomDropDownOnly" save-current-view="false" />
     </request-map>
     
@@ -1796,7 +1854,7 @@ under the License.
     </request-map>
 
     <request-map uri="productCategoryList">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
         <request-map uri="productCategoryListSecure">
@@ -1804,7 +1862,7 @@ under the License.
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
     <request-map uri="categoryAjaxFired">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
     <request-map uri="categoryAjaxFiredSecure">
@@ -1812,18 +1870,20 @@ under the License.
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
     <request-map uri="fromSetSessionLocale">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="fromSetSessionLocale"/>
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="stream">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveObjectData"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
      <request-map uri="showShoppingList">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="showShoppingList" save-current-view="true"/>
     </request-map>
         <request-map uri="showShoppingListSecure">
@@ -1831,7 +1891,7 @@ under the License.
         <response name="success" type="view" value="showShoppingList" save-current-view="true"/>
     </request-map>
     <request-map uri="showShoppingListAjaxFired">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="showShoppingList" save-current-view="true"/>
     </request-map>
     <request-map uri="showShoppingListAjaxFiredSecure">
@@ -1869,7 +1929,7 @@ under the License.
     <view-map name="quickadd" type="screen" page="component://shop/widget/CatalogScreens.xml#quickadd"/>
     <view-map name="category" type="screen" page="component://shop/widget/CatalogScreens.xml#category"/>
     <view-map name="product" type="screen" page="component://shop/widget/CatalogScreens.xml#product"/>
-    <view-map name="detailImage" type="screen" page="component://shop/widget/CatalogScreens.xml#detailImage"/>
+    <!--<view-map name="detailImage" type="screen" page="component://shop/widget/CatalogScreens.xml#detailImage"/> - SCIPIO: removed -->
     <view-map name="lastviewedproducts" type="screen" page="component://shop/widget/CatalogScreens.xml#lastviewedproducts"/>
     <view-map name="productReview" type="screen" page="component://shop/widget/CatalogScreens.xml#productreview"/>
 
@@ -1937,7 +1997,9 @@ under the License.
     <view-map name="messagelist" type="screen" page="component://shop/widget/CustomerScreens.xml#messagelist"/>
     <view-map name="messagedetail" type="screen" page="component://shop/widget/CustomerScreens.xml#messagedetail"/>
     <view-map name="messagecreate" type="screen" page="component://shop/widget/CustomerScreens.xml#messagecreate"/>
-    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#ManageAddress"/>
+    <!-- SCIPIO: 2018-11-01: no dedicated address page, use viewprofile instead
+    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#ManageAddress"/>-->
+    <view-map name="ManageAddress" type="screen" page="component://shop/widget/CustomerScreens.xml#viewprofile"/>
     <view-map name="EditProfile" type="screen" page="component://shop/widget/CustomerScreens.xml#EditProfile"/>
 
     <!-- Quote Views -->
@@ -1946,6 +2008,7 @@ under the License.
     <!-- Request Views -->
     <view-map name="ListRequests" type="screen" page="component://shop/widget/CustRequestScreens.xml#ListRequests"/>
     <view-map name="ViewRequest" type="screen" page="component://shop/widget/CustRequestScreens.xml#ViewRequest"/>
+    <view-map name="NewRequest" type="screen" page="component://shop/widget/CustRequestScreens.xml#NewRequest"/>
 
     <!-- PDFs -->
     <view-map name="OrderPDF" type="screenfop" page="component://shop/widget/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
@@ -1954,7 +2017,7 @@ under the License.
     <!-- One Page Checkout -->
     <view-map name="OnePageCheckout" type="screen" page="component://shop/widget/OrderScreens.xml#OnePageCheckout"/>
     <!-- Google Checkout View Mapping -->
-    <!-- SCIPIO: No longer exists
+    <!-- SCIPIO: Not supported
     <view-map name="cartToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
     <view-map name="redirectToGoogleCheckout" type="screen" page="component://googlecheckout/widget/GoogleCheckoutScreens.xml#redirect"/>
     -->

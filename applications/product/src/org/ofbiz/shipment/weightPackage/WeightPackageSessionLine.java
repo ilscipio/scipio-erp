@@ -24,11 +24,16 @@ import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * WeightPackageSessionLine.
+ * <p>
+ * SCIPIO: WARNING: 2018-11-28: Do not modify this instance directly; must go through synchronized
+ * {@link WeightPackageSession} methods!
+ */
 @SuppressWarnings("serial")
 public class WeightPackageSessionLine implements java.io.Serializable {
 

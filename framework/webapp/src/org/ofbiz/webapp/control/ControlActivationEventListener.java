@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
 
 /**
  * HttpSessionListener that gathers and tracks various information and statistics
@@ -31,27 +30,34 @@ import org.ofbiz.base.util.UtilProperties;
 public class ControlActivationEventListener implements HttpSessionActivationListener {
     // Debug module name
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var for this
+    // SCIPIO: New static var for sessionId show in log
 
     public ControlActivationEventListener() {}
 
     public void sessionWillPassivate(HttpSessionEvent event) {
         ControlEventListener.countPassivateSession();
-        Debug.logInfo("Passivating session: " + showSessionId(event.getSession()), module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Passivating session:" + showSessionId(event.getSession()), module);
+        }
     }
 
     public void sessionDidActivate(HttpSessionEvent event) {
         ControlEventListener.countActivateSession();
-        Debug.logInfo("Activating session: " + showSessionId(event.getSession()), module);
-    }
-    
-    public static String showSessionId(HttpSession session) {
-        if (showSessionIdInLog) {
-            return " sessionId=" + session.getId(); 
+        if (Debug.infoOn()) {
+            Debug.logInfo("Activating session:" + showSessionId(event.getSession()), module);
         }
-        // SCIPIO: needlessly verbose
-        //return " hidden sessionId by default.";
-        return " sessionId=[hidden]";
     }
-    
+
+    public static String showSessionId(HttpSession session) {
+        // SCIPIO: simplified
+        return " sessionId=" + getSessionIdForLog(session);
+    }
+
+    /**
+     * SCIPIO: Returns the session ID itself, for log display, without space and prefix; 
+     * if no session, returns "[none]"; if hidden, returns "[hidden]".
+     */
+    public static String getSessionIdForLog(HttpSession session) {
+        return RequestHandler.getSessionIdForLog(session);
+    }
 }

@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -47,7 +34,7 @@ under the License.
   ========================================================= -->
     <entity entity-name="Testing"
         package-name="org.ofbiz.entity.test"
-        title="Testing Entity">
+        title="Testing">
         <field name="testingId" type="id-ne"/>
         <field name="testingTypeId" type="id-ne"/>
         <field name="testingName" type="name" enable-audit-log="true"/>
@@ -74,7 +61,7 @@ under the License.
     Used for testing views with pks.
     This simulates the Party->PartyGroup and Party->Person entity relationships.
   ========================================================= -->
-    <entity entity-name="TestingSubtype" package-name="org.ofbiz.entity.test" title="Testing Subtype Entity">
+    <entity entity-name="TestingSubtype" package-name="org.ofbiz.entity.test" title="Testing Subtype">
         <field name="testingTypeId" type="id-ne" />
         <field name="subtypeDescription" type="description" />
         <prim-key field="testingTypeId" />
@@ -91,6 +78,26 @@ under the License.
             <key-map field-name="testingTypeId" />
         </view-link>
     </view-entity>
+    <!-- =========================================================
+      Used for testing EntityStatus concept on entity-auto
+    ========================================================= -->
+    <entity entity-name="TestingStatus"
+            package-name="org.ofbiz.entity.test"
+            title="Entity for testing EntityStatus concept">
+        <description>An entity for testing EntityStatus concept</description>
+        <field name="testingStatusId" type="id-ne"/>
+        <field name="testingId" type="id-ne" />
+        <field name="statusId" type="id-ne"/>
+        <field name="statusDate" type="date-time"/>
+        <field name="changeByUserLoginId" type="id-vlong"/>
+        <prim-key field="testingStatusId"/>
+        <relation type="one" fk-name="TEST_STA_STSITM" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="TEST_STA_USRLGN" title="ChangeBy" rel-entity-name="UserLogin">
+           <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
   <!-- =========================================================
      An entity for testing the BLOB data type
    ========================================================== -->
@@ -162,10 +169,12 @@ under the License.
     <entity entity-name="TestingNodeMember"
             package-name="org.ofbiz.entity.test"
             title="Testing Node Member">
-      <field name="testingNodeId" type="id-ne"></field>
-      <field name="testingId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
+      <field name="testingNodeId" type="id-ne"/>
+      <field name="testingId" type="id-ne"/>
+      <field name="fromDate" type="date-time"/>
+      <field name="thruDate" type="date-time"/>
+      <field name="extendFromDate" type="date-time"/><!--use to test filterDate -->
+      <field name="extendThruDate" type="date-time"/><!--use to test filterDate -->
       <prim-key field="testingNodeId"/>
       <prim-key field="testingId"/>
       <prim-key field="fromDate"/>
@@ -207,7 +216,7 @@ under the License.
     ========================================================= -->
     <entity entity-name="TestingCrypto"
         package-name="org.ofbiz.entity.test"
-        title="Testing Crypto Entity">
+        title="Testing Crypto">
         <field name="testingCryptoId" type="id-ne"/>
         <field name="testingCryptoTypeId" type="id-ne"/>
         <field name="unencryptedValue" type="description"/>
@@ -233,7 +242,7 @@ under the License.
     </view-entity>
     <entity entity-name="TestingRemoveAll"
         package-name="org.ofbiz.entity.test"
-        title="Testing Entity">
+        title="Testing">
         <field name="testingRemoveAllId" type="id-ne"/>
         <field name="description" type="description"/>
         <prim-key field="testingRemoveAllId"/>

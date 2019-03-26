@@ -18,14 +18,15 @@
  */
 package org.ofbiz.webapp.event;
 
-import org.ofbiz.base.lang.JSON;
-import org.ofbiz.base.util.UtilGenerics;
-
-import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
-/** An implementation of <code>RequestBodyMapHandler</code> that can extract a <code>Map<String, Object></code> from the JSON data in the request body */
+import javax.servlet.ServletRequest;
+
+import org.ofbiz.base.lang.JSON;
+import org.ofbiz.base.util.UtilGenerics;
+
+/** An implementation of <code>RequestBodyMapHandler</code> that can extract a <code>Map&lt;String, Object&gt;</code> from the JSON data in the request body */
 public class JSONRequestBodyMapHandler implements RequestBodyMapHandler {
 
     public Map<String, Object> extractMapFromRequestBody(ServletRequest request) throws IOException {

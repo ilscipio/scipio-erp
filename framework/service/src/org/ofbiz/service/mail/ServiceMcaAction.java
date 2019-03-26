@@ -47,24 +47,25 @@ public class ServiceMcaAction implements java.io.Serializable {
         this.serviceMode = action.getAttribute("mode");
         this.runAsUser = action.getAttribute("run-as-user");
         // support the old, inconsistent attribute name
-        if (UtilValidate.isEmail(this.runAsUser)) this.runAsUser = action.getAttribute("runAsUser");
+        if (UtilValidate.isEmail(this.runAsUser)) {
+            this.runAsUser = action.getAttribute("runAsUser");
+        }
         this.persist = "true".equals(action.getAttribute("persist"));
     }
 
     public boolean runAction(LocalDispatcher dispatcher, MimeMessageWrapper messageWrapper, GenericValue userLogin) throws GenericServiceException {
-        Map<String, Object> serviceContext = new HashMap<String, Object>();
+        Map<String, Object> serviceContext = new HashMap<>();
         serviceContext.putAll(UtilMisc.toMap("messageWrapper", messageWrapper, "userLogin", userLogin));
         serviceContext.put("userLogin", ServiceUtil.getUserLogin(dispatcher.getDispatchContext(), serviceContext, runAsUser));
 
-        if (serviceMode.equals("sync")) {
+        if ("sync".equals(serviceMode)) {
             Map<String, Object> result = dispatcher.runSync(serviceName, serviceContext);
             if (ServiceUtil.isError(result)) {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 return false;
-            } else {
-                return true;
             }
-        } else if (serviceMode.equals("async")) {
+            return true;
+        } else if ("async".equals(serviceMode)) {
             dispatcher.runAsync(serviceName, serviceContext, persist);
             return true;
         } else {

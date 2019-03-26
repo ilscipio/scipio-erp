@@ -37,9 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.ofbiz.base.concurrent.ExecutionPool;
-import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.Observable;
 import org.ofbiz.base.util.Observer;
 import org.ofbiz.base.util.UtilDateTime;
@@ -52,8 +50,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.config.model.EntityConfig;
@@ -62,11 +58,9 @@ import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.testtools.EntityTestCase;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntitySaxReader;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.SequenceUtil;
 
 public class EntityTestSuite extends EntityTestCase {
@@ -101,7 +95,7 @@ public class EntityTestSuite extends EntityTestCase {
         modelField = modelEntity.getField("newDesc");
         assertNull("TestingType.newDesc field model is null", modelField);
     }
-    
+
     /*
      * Tests storing values with the delegator's .create, .makeValue, and .storeAll methods
      */
@@ -112,7 +106,7 @@ public class EntityTestSuite extends EntityTestCase {
         assertFalse("Observable has not changed", createdValue.hasChanged());
 
         // This sequence creates the GenericValue entities first, puts them in a List, then calls the delegator to store them all
-        List<GenericValue> newValues = new LinkedList<GenericValue>();
+        List<GenericValue> newValues = new LinkedList<>();
 
         newValues.add(delegator.makeValue("TestingType", "testingTypeId", "TEST-MAKE-2", "description", "Testing Type #Make-2"));
         newValues.add(delegator.makeValue("TestingType", "testingTypeId", "TEST-MAKE-3", "description", "Testing Type #Make-3"));
@@ -208,8 +202,15 @@ public class EntityTestSuite extends EntityTestCase {
         } catch (UnsupportedOperationException e) {
         }
         // Test entity value update operation updates the cache
+        // Since the cache uses equals() and hashCode() methods, we test those as well
+        int hashCode = testValue.hashCode();
+        GenericValue originalValue = testValue;
         testValue = (GenericValue) testValue.clone();
+        assertTrue("Cloned GenericValue equals original GenericValue", originalValue.equals(testValue));
+        assertTrue("Cloned GenericValue has the same hash code", hashCode == testValue.hashCode());
         testValue.put("description", "New Testing Type #Cache-1");
+        assertFalse("Modified GenericValue does not equal original GenericValue", originalValue.equals(testValue));
+        assertTrue("Modified GenericValue has a different hash code", hashCode != testValue.hashCode());
         testValue.store();
         testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-CACHE-1").cache(true).queryOne();
         assertEquals("Retrieved from cache value has the correct description", "New Testing Type #Cache-1", testValue.getString("description"));
@@ -220,7 +221,7 @@ public class EntityTestSuite extends EntityTestCase {
         int qtyChanged = delegator.storeByCondition("TestingType", UtilMisc.toMap("description", "New Testing Type #Cache-0"), storeByCondition);
         assertEquals("Delegator.storeByCondition updated one value", 1, qtyChanged);
         testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-CACHE-1").cache(true).queryFirst();
-        
+
         assertEquals("Retrieved from cache value has the correct description", "New Testing Type #Cache-0", testValue.getString("description"));
         // Test removeByCondition updates the cache
         qtyChanged = delegator.removeByCondition("TestingType", storeByCondition);
@@ -376,7 +377,7 @@ public class EntityTestSuite extends EntityTestCase {
                                                    .where(EntityCondition.makeCondition("primaryParentNodeId", EntityOperator.NOT_EQUAL, GenericEntity.NULL_FIELD))
                                                    .queryList();
 
-        List<GenericValue> newValues = new LinkedList<GenericValue>();
+        List<GenericValue> newValues = new LinkedList<>();
         Timestamp now = UtilDateTime.nowTimestamp();
 
         for (GenericValue node: nodeLevel1) {
@@ -387,7 +388,7 @@ public class EntityTestSuite extends EntityTestCase {
             testing.put("testingName", "leaf-#" + node.getString("testingNodeId"));
             testing.put("description", "level1 leaf");
             testing.put("comments", "No-comments");
-            testing.put("testingSize", Long.valueOf(10));
+            testing.put("testingSize", 10L);
             testing.put("testingDate", now);
 
             newValues.add(testing);
@@ -415,7 +416,7 @@ public class EntityTestSuite extends EntityTestCase {
         delegator.create("TestingType", "testingTypeId", typeId, "description", typeDescription);
         int i = 0;
         Timestamp now = UtilDateTime.nowTimestamp();
-        
+
         for (GenericValue node: EntityQuery.use(delegator)
                                            .from("TestingNode")
                                            .where(EntityCondition.makeCondition("description", EntityOperator.LIKE, descriptionPrefix + "%"))
@@ -458,7 +459,7 @@ public class EntityTestSuite extends EntityTestCase {
             for (Map.Entry<String, Object> entry: fields.entrySet()) {
                 String field = entry.getKey();
                 Object value = entry.getValue();
-                Debug.logInfo(field.toString() + " = " + ((value == null) ? "[null]" : value), module);
+                Debug.logInfo(field + " = " + ((value == null) ? "[null]" : value), module);
             }
         }
         long testingcount = EntityQuery.use(delegator).from("Testing").where("testingTypeId", "TEST-COUNT-VIEW").queryCount();
@@ -474,7 +475,7 @@ public class EntityTestSuite extends EntityTestCase {
                                                             .from("Testing")
                                                             .where(EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-DISTINCT-%"))
                                                             .queryList();
-        
+
         assertEquals("No existing Testing entities for distinct", 0, testingDistinctList.size());
         delegator.removeByCondition("TestingType", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-DISTINCT-%"));
         GenericValue testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-DISTINCT-1").cache(true).queryOne();
@@ -483,15 +484,15 @@ public class EntityTestSuite extends EntityTestCase {
         testValue = EntityQuery.use(delegator).from("TestingType").where("testingTypeId", "TEST-DISTINCT-1").cache(true).queryOne();
         assertNotNull("Found newly created type value", testValue);
 
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-1", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(10), "comments", "No-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-2", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(10), "comments", "Some-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-3", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(9), "comments", "No-comments");
-        delegator.create("Testing", "testingId", "TEST-DISTINCT-4", "testingTypeId", "TEST-DISTINCT-1", "testingSize", Long.valueOf(11), "comments", "Some-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-1", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 10L, "comments", "No-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-2", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 10L, "comments", "Some-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-3", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 9L, "comments", "No-comments");
+        delegator.create("Testing", "testingId", "TEST-DISTINCT-4", "testingTypeId", "TEST-DISTINCT-1", "testingSize", 11L, "comments", "Some-comments");
 
         List<GenericValue> testingSize10 = EntityQuery.use(delegator)
                                                       .select("testingSize", "comments")
                                                       .from("Testing")
-                                                      .where("testingSize", Long.valueOf(10), "comments", "No-comments")
+                                                      .where("testingSize", 10L, "comments", "No-comments")
                                                       .distinct()
                                                       .cache()
                                                       .queryList();
@@ -585,7 +586,7 @@ public class EntityTestSuite extends EntityTestCase {
                                                .where(EntityCondition.makeCondition("testingId", EntityOperator.LIKE, "rnmat:%"))
                                                .queryList();
 
-        ArrayList<GenericValue> testings = new ArrayList<GenericValue>();
+        List<GenericValue> testings = new ArrayList<>();
 
         for (GenericValue nodeMember: values) {
             testings.add(nodeMember.getRelatedOne("Testing", false));
@@ -688,7 +689,7 @@ public class EntityTestSuite extends EntityTestCase {
      */
     public void testCreateManyAndStoreAtOnce() throws Exception {
         try {
-            List<GenericValue> newValues = new LinkedList<GenericValue>();
+            List<GenericValue> newValues = new LinkedList<>();
             for (int i = 0; i < TEST_COUNT; i++) {
                 newValues.add(delegator.makeValue("Testing", "testingId", getTestId("T1-", i)));
             }
@@ -738,7 +739,7 @@ public class EntityTestSuite extends EntityTestCase {
      */
     public void testEntityListIterator() throws Exception {
         try {
-            List<GenericValue> newValues = new LinkedList<GenericValue>();
+            List<GenericValue> newValues = new LinkedList<>();
             for (int i = 0; i < TEST_COUNT; i++) {
                 newValues.add(delegator.makeValue("Testing", "testingId", getTestId("T3-", i)));
             }
@@ -943,8 +944,8 @@ public class EntityTestSuite extends EntityTestCase {
         strBufTemp.append(iNum);
         return strBufTemp.toString();
     }
-    
-    
+
+
     /*
      * This test will verify that the LIMIT and OFFSET options can work properly.
      * Commented out because it makes the framework dependent on the content component
@@ -952,7 +953,7 @@ public class EntityTestSuite extends EntityTestCase {
     /*public void testLimitOffsetOptions() throws Exception {
         String entityName = "Content";
         Datasource datasourceInfo = EntityConfig.getDatasource(delegator.getEntityHelper(entityName).getHelperName());
-        if (UtilValidate.isEmpty(datasourceInfo.offsetStyle) || datasourceInfo.offsetStyle.equals("none")) {
+        if (UtilValidate.isEmpty(datasourceInfo.offsetStyle) || "none".equals(datasourceInfo.offsetStyle)) {
             Debug.logInfo("The offset-stype configured in datasource is " + datasourceInfo.offsetStyle +  ", this test is skipped.", module);
             return;
         } else {
@@ -998,7 +999,7 @@ public class EntityTestSuite extends EntityTestCase {
             long end = UtilDateTime.nowTimestamp().getTime();
             long time1 = end - start;
             Debug.logInfo("Time consumed WITH limit and offset option (ms): " + time1, module);
-            
+
             start = UtilDateTime.nowTimestamp().getTime();
             for (int page = 1; page <= pages; page++) {
                 Debug.logInfo("Page " + page + ":", module);
@@ -1037,7 +1038,7 @@ public class EntityTestSuite extends EntityTestCase {
     }*/
 
     /*
-     * Tests EntitySaxReader, verification loading data with tag create, create-update, create-replace, delete 
+     * Tests EntitySaxReader, verification loading data with tag create, create-update, create-replace, delete
      */
     public void testEntitySaxReaderCreation() throws Exception {
         String xmlContentLoad =
@@ -1148,7 +1149,7 @@ public class EntityTestSuite extends EntityTestCase {
     }
 
     public void testEntitySaxReaderDelete() throws Exception {
-        String xmlContentLoad = 
+        String xmlContentLoad =
                         "<delete>" +
                         "    <Testing testingId=\"T1\"/>" +
                         "    <Testing testingId=\"T2\"/>" +
@@ -1192,13 +1193,13 @@ public class EntityTestSuite extends EntityTestCase {
                                                   "seqName", "seqId");
         UUID id = UUID.randomUUID();
         final String sequenceName = "BogusSequence" + id.toString();
-        final ConcurrentMap<Long, Long> seqIds = new ConcurrentHashMap<Long, Long>();
+        final ConcurrentMap<Long, Long> seqIds = new ConcurrentHashMap<>();
         final AtomicBoolean duplicateFound = new AtomicBoolean(false);
         final AtomicBoolean nullSeqIdReturned = new AtomicBoolean(false);
 
-        List<Future<Void>> futures = new ArrayList<Future<Void>>();
-        Callable getSeqIdTask = new Callable() {
-                    public Callable<Void> call() throws Exception {
+        List<Future<Void>> futures = new ArrayList<>();
+        Callable<Void> getSeqIdTask = new Callable<Void>() {
+                    public Void call() throws Exception {
                         Long seqId = sequencer.getNextSeqId(sequenceName, 1, null);
                         if (seqId == null) {
                             nullSeqIdReturned.set(true);
@@ -1211,15 +1212,15 @@ public class EntityTestSuite extends EntityTestCase {
                         return null;
                     }
                 };
-        Callable refreshTask = new Callable() {
-                            public Callable<Void> call() throws Exception {
+        Callable<Void> refreshTask = new Callable<Void>() {
+                            public Void call() throws Exception {
                                 sequencer.forceBankRefresh(sequenceName, 1);
                                 return null;
                             }
                         };
         double probabilityOfRefresh = 0.1;
         for (int i = 1; i <= 1000; i++) {
-            Callable randomTask = Math.random() < probabilityOfRefresh ? refreshTask : getSeqIdTask;
+            Callable<Void> randomTask = Math.random() < probabilityOfRefresh ? refreshTask : getSeqIdTask;
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(randomTask));
         }
         long startTime = System.currentTimeMillis();
@@ -1252,14 +1253,15 @@ public class EntityTestSuite extends EntityTestCase {
         try {
             transactionStarted = TransactionUtil.begin();
             for (int i = 1; i <= numberOfQueries; i++) {
-                List rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
+                List<GenericValue> rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
                 totalNumberOfRows = totalNumberOfRows + rows.size();
             }
             TransactionUtil.commit(transactionStarted);
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(transactionStarted, "", e);
-            } catch (Exception e2) {}
+            } catch (GenericTransactionException e2) {
+            }
             noErrors = false;
         }
         long endTime = System.currentTimeMillis();
@@ -1272,11 +1274,11 @@ public class EntityTestSuite extends EntityTestCase {
         try {
             for (int i = 1; i <= numberOfQueries; i++) {
                 transactionStarted = TransactionUtil.begin();
-                List rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
+                List<GenericValue> rows = EntityQuery.use(delegator).from("SequenceValueItem").queryList();
                 totalNumberOfRows = totalNumberOfRows + rows.size();
                 TransactionUtil.commit(transactionStarted);
             }
-        } catch (Exception e) {
+        } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(transactionStarted, "", e);
             } catch (Exception e2) {}
@@ -1289,28 +1291,8 @@ public class EntityTestSuite extends EntityTestCase {
         assertTrue("One big transaction was not faster than several small ones", totalTimeOneTransaction < totalTimeSeveralSmallTransactions);
     }
 
-/*
-    public void testConverters() throws Exception {
-        // Must use the default delegator because the deserialized GenericValue can't
-        // find the randomized one.
-        Delegator localDelegator = DelegatorFactory.getDelegator("default");
-        TransactionUtil.begin();
-        localDelegator.create("TestingType", "testingTypeId", "TEST-UPDATE-1", "description", "Testing Type #Update-1");
-        GenericValue testValue = localDelegator.create("Testing", "testingId", "JSON_TEST", "testingTypeId", "TEST-UPDATE-1",
-                "description", "Testing JSON Converters", "testingSize", (long) 123, "testingDate",
-                new Timestamp(System.currentTimeMillis()));
-        assertNotNull("Created GenericValue not null", testValue);
-        JSON json = (JSON) ObjectType.simpleTypeConvert(testValue, "org.ofbiz.base.lang.JSON", null, null);
-        assertNotNull("JSON instance not null", json);
-        GenericValue convertedValue = (GenericValue) ObjectType.simpleTypeConvert(json, "org.ofbiz.entity.GenericValue", null,
-                null);
-        assertNotNull("GenericValue converted from JSON not null", convertedValue);
-        assertEquals("GenericValue converted from JSON equals original value", testValue, convertedValue);
-        TransactionUtil.rollback();
-    }
-*/
-
     private final class TestObserver implements Observer {
+        @SuppressWarnings("unused")
         private Observable observable;
         private Object arg;
 

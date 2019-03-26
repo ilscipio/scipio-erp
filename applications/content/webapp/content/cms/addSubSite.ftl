@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
 function submit_add() {
@@ -27,7 +14,7 @@ function win_cancel() {
 </@script>
 
 <@section>
-<form name="addSubSite" method="post" action="<@ofbizUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">
+<form name="addSubSite" method="post" action="<@pageUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@pageUrl>">
   <@field type="input" label="Site Name:" size="20" name="contentName"/>
   <@field type="input" label="Site Description:" size="40" name="description"/>
   <@field type="select" label="Posted Msg Default Status:" name="statusId">

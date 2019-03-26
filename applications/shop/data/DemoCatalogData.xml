@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
@@ -196,9 +183,9 @@ under the License.
         linkInfo="SEARCH_CATEGORY_ID1=CLOTH-100&amp;SEARCH_SUB_CATEGORIES1=Y&amp;SEARCH_FEAT1=7100&amp;sortOrder=SortKeywordRelevancy&amp;sortAscending=N"/>
     <ProductCategoryLink productCategoryId="MUSIC-101" linkSeqId="02" fromDate="2001-05-13 12:00:00.0"
         titleText="Go To Google" detailText="If you cannot find the music you're looking for here, try it on Google."
-        imageUrl="http://www.google.com/intl/en_ALL/images/logo.gif"
+        imageUrl="https://www.google.com/intl/en_ALL/images/logo.gif"
         sequenceNum="01" linkTypeEnumId="PCLT_ABS_URL"
-        linkInfo="http://www.google.com/"/>
+        linkInfo="https://www.google.com/"/>
     <ProductCategoryLink productCategoryId="MEDIA-100" linkSeqId="03" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="03" linkTypeEnumId="PCLT_CAT_ID" linkInfo="MUSIC-101"/>
             
@@ -207,10 +194,10 @@ under the License.
     <!-- SCIPIO: NOTE: These are not exhaustive; other products exist in the specialized data files.
         See also DemoCatalogGenericProductData.xml for generic templated products. -->
  
-    <Product productId="PH-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 5" internalName="iPhone 5" description="The popular iPhone 5" longDescription="This iPhone is very small and supports all the latest applications." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="PH-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 6" internalName="iPhone 6" description="The popular iPhone 6" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="PH-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 7" internalName="iPhone 7" description="The latest iPhone 7" longDescription="This is the lastest, cutting-edge iPhone." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <Product productId="PH-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone Business" internalName="iPhone Business" description="iPhone Large Business Model" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
+    <Product productId="PH-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 5" internalName="iPhone 5" description="The popular iPhone 5" longDescription="This iPhone is very small and supports all the latest applications." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" weight="0.34" weightUomId="WT_lb" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="PH-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 6" internalName="iPhone 6" description="The popular iPhone 6" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" weight="0.36" weightUomId="WT_lb" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="PH-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone 7" internalName="iPhone 7" description="The latest iPhone 7" longDescription="This is the lastest, cutting-edge iPhone." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" weight="0.38" weightUomId="WT_lb" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <Product productId="PH-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="EL-PHN-101" productName="iPhone Business" internalName="iPhone Business" description="iPhone Large Business Model" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" weight="0.40" weightUomId="WT_lb" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
         <longDescription><![CDATA[This is a larger, business-oriented version of the popular iPhone.<br/><br/>It is recommended for those with advanced business requirements.]]></longDescription>
     </Product>
 
@@ -307,6 +294,8 @@ under the License.
     <!-- test Digital Download product -->
     <!-- SCIPIO: Test with two files, to clarify the associations and test -->
     <Product productId="MP3-1000" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="MU-DL-101" productName="U2 - Greatest Hits (MP3 Download)" internalName="U2 - Greatest Hits (MP3 Download)" description="A compilation of U2's greatest hits from every era." longDescription="A compilation of U2's greatest hits from every era, in downloadable MP3 format." taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MP3-1000" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="9.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MP3-1000" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="12.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <DataResource dataResourceId="MP3-1000-01" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 01" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 01.mp3"/>
     <DataResource dataResourceId="MP3-1000-02" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 02" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 02.mp3"/>
     <DataResource dataResourceId="MP3-1000-03" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="audio/mpeg" dataResourceName="Digital MP3 Album - Track 03" objectInfo="framework/images/webapp/images/products/shop/digitalgood/music/Demo Artist - Demo Song 03.mp3"/>

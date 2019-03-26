@@ -1,38 +1,25 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if intervalDates?has_content>
-    <#assign intervalDateTitle = rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateBegin'])) + 
+    <#assign intervalDateTitle = raw(UtilDateTime.toDateString(intervalDates['dateBegin'])) + 
         " to " + 
-        rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateEnd']))>
+        raw(UtilDateTime.toDateString(intervalDates['dateEnd']))>
 <#elseif fromDate?has_content>
-    <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(fromDate)>
+    <#assign intervalDateTitle = UtilDateTime.toDateString(fromDate)>
 </#if>
 
-<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${rawString(intervalDateTitle!)}">
+<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${raw(intervalDateTitle!)}">
       <#assign listSize = state.getSize()>
       <#-- FIXME: Do we need this? -->
       <#--if (listSize > 10)>
-        <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}</@ofbizInterWebappUrl>">${uiLabelMap.CommonMore}</a>
+        <a href="<@serverUrl>/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}</@serverUrl>">${uiLabelMap.CommonMore}</a>
       </#if-->
 
     <#if orderHeaderList?has_content>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
         <@thead>
         <@tr class="header-row">
           <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
@@ -48,12 +35,12 @@ under the License.
           <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
           <#assign billToParty = orh.getBillToParty()!>
           <#if billToParty?has_content>
-            <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+            <#assign billToPartyNameResult = runService("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
             <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
           <@tr>
-            <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderHeader.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
+            <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderHeader.orderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
             <@td>${billTo!}</@td>
             <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
             <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
@@ -61,7 +48,7 @@ under the License.
               <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
               <#list trackingCodes as trackingCode>
                 <#if trackingCode?has_content>
-                  <a href="<@ofbizInterWebappUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${trackingCode.trackingCodeId}</a><br />
+                  <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${trackingCode.trackingCodeId}</a><br />
                 </#if>
               </#list>
             </@td>

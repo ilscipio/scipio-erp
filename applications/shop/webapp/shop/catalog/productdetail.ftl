@@ -1,13 +1,15 @@
-
+<#--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#-- variable setup -->
 <#assign price = priceMap! />
 <#-- end variable setup -->
 
-
 <@script>
-
     var featureCount = 0; <#-- NOTE: This is overridden further below -->
     var featureIdList = [];
     var variantProductInfoMap = {};
@@ -27,14 +29,14 @@
              The following script takes into account that there may be a diverse selection of configuration options.
              Each option is validated against the tree (the following select boxes invalidated) and reactivated, once the options
              have been updated according to the variantTree. -->
-        function updateVariants(type, variantId, index){
-            if(variantId){
+        function updateVariants(type, variantId, index) {
+            if (variantId) {
                 <#-- This cannot be relied on; now using a variable
                 var selectNum = $('[id^=FT_]').length; // get number of select boxes -->
                 var selectNum = featureCount;
                 
                 currentNode.splice(index); // reset the node information & remove anything beyond the current selection
-                for(i = currentNode.length+1; i <= selectNum; i++){
+                for(i = currentNode.length+1; i <= selectNum; i++) {
                     var featureId = featureIdList[i];
                     $('#FT_'+featureId).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
                 }
@@ -47,7 +49,7 @@
                     dataObject = dataObject[node]; // traverse down the tree, based on our path
                 });
                 
-                if((index+1) >= selectNum){
+                if ((index + 1) >= selectNum) {
                     var productId;
                     if (typeof dataObject === 'string' || dataObject instanceof String) {
                         productId = dataObject;
@@ -63,7 +65,7 @@
                         
                         $('#add_product_id').val(productId);
                     }
-                }else{
+                } else {
                     $('#add_product_id').val('NULL'); <#-- make sure to reset the add_product_id! otherwise issues when starting over -->
                     var nextIndex = index+1;
                     var options = [];
@@ -79,12 +81,16 @@
                         SCIPIO: TODO?: Currently can't do this here, at least not by productId...
                             so if we changed any box, just reset the price to the original virtual for now...
                     setVariantPrice(productId); -->
-                    setVariantPriceSpec(baseCurrentPrice);
+                    setVariantPriceSpec(baseCurrentPriceFmtd);
 
-                    <#-- check for amount box
-                    <#-- SCIPIO: For now we'll only set this at the last step, because don't have a tangible product ID until then
-                    toggleAmt(checkAmtReq(productId)); -->
-                    toggleAmt('N');
+                    <#-- check for amount box -->
+                    <#-- SCIPIO: If productId is null (usually it is here), try to use a heuristic to determine if need to show amount box -->
+                    if (productId) {
+                        toggleAmt(checkAmtReq(productId));
+                    } else {
+                        <#--console.log("dataObject: " + JSON.stringify(dataObject));-->
+                        toggleAmt(checkAmtReqFromVariants(dataObject));
+                    }
                 }
             } else {
                 setVariantPriceSpec("${escapeVal(uiLabelMap.OrderChooseVariations, 'js')}...");
@@ -94,12 +100,13 @@
     </#if>
 
     function setVariantPrice(productId) {
-        console.log("setting variant price for productId: " + productId);       
+        console.log("Setting variant price for productId: " + productId);       
         var productInfo = variantProductInfoMap[productId];
         if (productInfo) {
             var price = productInfo.priceFormatted;
-            if (price == null)
+            if (price == null) {
                 price = productInfo.price;
+            }
             if (price != null) {
                 setVariantPriceSpec(price);
             }
@@ -107,10 +114,9 @@
     }
     
     function setVariantPriceSpec(price) {
-        <#-- SCIPIO: TODO -->
-        $("#product-price strong").text(price);
+        $("#product-price-value").text(price);
     }    
-  
+
     function checkAmtReq(productId) {
         if (productId === baseProductInfo.productId) {
             var requireAmount = baseProductInfo.requireAmount;
@@ -124,11 +130,44 @@
                 if (requireAmount) {
                     return requireAmount;
                 }
+            } else {
+                console.log("Product info not found for productId: " + productId);<#-- SCIPIO: Should not happen -->
             }
         }
         return 'N'; <#-- SCIPIO: hide it by default -->
     }
-    
+
+    <#-- SCIPIO: Gathers all the child feature/variant products and returns true only if all of them have requireAmount="Y"
+        TODO: Optimize: This could be pre-calculated in groovy and output as a map -->
+    function checkAmtReqFromVariants(vTreeNode) {
+        var requireAmount = null;
+        if ($.type(vTreeNode) === 'string') {
+            var productInfo = variantProductInfoMap[vTreeNode];
+            if (productInfo) {
+                requireAmount = productInfo.requireAmount;
+            } else {
+                console.log("Product info not found for productId: " + productId);<#-- SCIPIO: Should not happen -->
+            }
+        } else if ($.type(vTreeNode) === 'object') {
+            $.each(vTreeNode, function(k, v) {
+                requireAmount = checkAmtReqFromVariants(v);
+                if (requireAmount !== 'Y') {
+                    requireAmount = 'N';
+                    return false;
+                }
+            });
+        } else if ($.type(vTreeNode) === 'array') {
+            $.each(vTreeNode, function(i, e) {
+                requireAmount = checkAmtReqFromVariants(e);
+                if (requireAmount !== 'Y') {
+                    requireAmount = 'N';
+                    return false;
+                }
+            });
+        }
+        return requireAmount ? requireAmount : 'N';
+    }
+
     <#-- SCIPIO: Handles final addItem submit -->
     function addItem() {
         var productId = jQuery('#add_product_id').val();
@@ -144,7 +183,7 @@
             FIXME?: OPTIONAL_FEATURE would require additional checks. -->
         <#--<#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>-->
         if (featureCount > 0) {
-            for(var i=0; i < featureIdList.length; i++) {
+            for(var i = 0; i < featureIdList.length; i++) {
                 var id = featureIdList[i];
                 var val = jQuery('#FT_' + id).val();
                 if (!val) {
@@ -173,7 +212,7 @@
              except it's not friendly to have this check in additem submit... isVirtual method is gone...
              server _should_ do this check anyway...
         if (isVirtual(addProductId)) {
-            document.location = '<@ofbizUrl>product?category_id=${escapeVal(categoryId!, 'js')}&amp;product_id=</@ofbizUrl>' + addProductId;
+            document.location = '<@pageUrl>product?category_id=${escapeVal(categoryId!, 'js')}&amp;product_id=</@pageUrl>' + addProductId;
             return;
         }
         -->
@@ -211,13 +250,10 @@
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
             jQuery("#add_amount_container").show();
-        }
-
-        if (toggle == 'N') {
+        } else {
             jQuery("#add_amount_container").hide();
         }
     }
-
 </@script>
 
 <div id="productdetail">
@@ -283,13 +319,16 @@
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
+                <#assign currentPriceFmtd><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></#assign>
                 <#if ((product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
-                    <span id="product-price"><strong>${uiLabelMap.OrderChooseVariations}...</strong></span>
+                    <span id="product-price"><strong id="product-price-value">${currentPriceFmtd}</strong>
+                    </br>${uiLabelMap.OrderChooseVariations}...</span>
                 <#elseif currentPrice?has_content>
-                    <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
+                    <span id="product-price"><strong id="product-price-value">${currentPriceFmtd}</strong></span>
                 </#if>
                     <@script>
                         var baseCurrentPrice = "${currentPrice}";
+                        var baseCurrentPriceFmtd = "${escapeVal(currentPriceFmtd, 'js')}";
                     </@script>
                 </p>
                 
@@ -321,7 +360,7 @@
             
             <div id="product-add-cart">
               <#-- onePageCheckout-->
-              <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
+              <form method="post" action="<@pageUrl>additem</@pageUrl>" name="addform">
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"raw") />                    
                     <#assign inStock = true />
@@ -486,7 +525,7 @@
             <#-- SCIPIO: Shopping list functionality - disabled for now
             <div id="product-shopping-list">
                 <#if userHasAccount>
-                    <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+                    <form name="addToShoppingList" method="post" action="<@pageUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>">
                         <fieldset>
                             <input type="hidden" name="productId" value="${product.productId}" />
                             <input type="hidden" name="product_id" value="${product.productId}" />
@@ -512,7 +551,7 @@
                         </fieldset>
                     </form>
                 <#else>                
-                    ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/ShowCart</@ofbizUrl>">${uiLabelMap.CommonBeLogged}</a>
+                    ${uiLabelMap.OrderYouMust} <a href="<@pageUrl>checkLogin/ShowCart</@pageUrl>">${uiLabelMap.CommonBeLogged}</a>
                     ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
                 </#if>
             </div>
@@ -526,7 +565,7 @@
 
 <#-- SCIPIO: show tell a friend details only in shop application     
 <div id="product-tell-a-friend">
-    <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
+    <a href="javascript:popUpSmall('<@pageUrl>tellafriend?productId=${product.productId}</@pageUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
 </div>
 -->   
      
@@ -578,7 +617,7 @@
                         </#if>
 
                         <div class="product-virtual-swatch-item">
-                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" width="60" height="60" alt="" /></a>                        
+                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@contentUrl ctxPrefix=true>${imageUrl}</@contentUrl>" width="60" height="60" alt="" /></a>                        
                            <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
                            <div class="clear"></div>
                         </div>
@@ -601,10 +640,10 @@
   <#if unavailableVariants??>
     <ul>
       <#list unavailableVariants as prod>
-        <#assign features = prod.getRelated("ProductFeatureAppl")/>
+        <#assign features = prod.getRelated("ProductFeatureAppl", null, null, false)/>
         <li>
           <#list features as feature>
-            <em>${feature.getRelatedOne("ProductFeature").description}</em><#if feature_has_next>, </#if>
+            <em>${feature.getRelatedOne("ProductFeature", false).description}</em><#if feature_has_next>, </#if>
           </#list>
           <span>${uiLabelMap.ProductItemOutOfStock}</span>
         </li>
@@ -616,7 +655,7 @@
 <@section>
   <#-- Product Reviews -->
   <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!"","productReviews":productReviews!,"numRatings":numRatings!,"averageRating":averageRating!} />
-  <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
+  <#-- <a href="<@pageUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
 </@section>
 
 </div>

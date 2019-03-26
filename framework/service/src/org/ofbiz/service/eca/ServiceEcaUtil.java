@@ -18,15 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import org.ofbiz.base.component.ComponentConfig;
@@ -46,25 +46,50 @@ import org.w3c.dom.Element;
 /**
  * ServiceEcaUtil
  */
-public class ServiceEcaUtil {
+public final class ServiceEcaUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // using a cache is dangerous here because if someone clears it the ECAs won't run: public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
-    public static Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new ConcurrentHashMap<String, Map<String, List<ServiceEcaRule>>>();
+    // SCIPIO: use immutable volatile cache instead, plus dedicated lock object (required since ecaCache will change)
+    //private static Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new ConcurrentHashMap<String, Map<String, List<ServiceEcaRule>>>();
+    private static volatile Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = Collections.emptyMap();
+    private static final Object ecaCacheLock = new Object();
+
+    private ServiceEcaUtil() {}
+
+    // SCIPIO: NOTE: 2018-09-06: STOCK OFBIZ BUGFIX:
+    // The write methods reloadConfig(), interior readConfig(), and public addEcaDefinitions
+    // MUST write-lock on a common lock;
+    // a race could previously occur between threads from different ofbiz containers (parallel to catalina) where
+    // two threads managed to pass the "if (UtilValidate.isNotEmpty(ecaCache)) {" check in readConfig at the same time,
+    // which happened easily because reading all the SECA definitions from all XML files is slow with many components.
+    // IN ADDITION, instead of populating and clearing a single instance, we now re-create and copy the cache
+    // so that readers get an atomic view and can't read a partial view of the ECAs while they're loading.
 
     public static void reloadConfig() {
-        ecaCache.clear();
-        readConfig();
+        synchronized(ecaCacheLock) { // SCIPIO: write-lock
+            //ecaCache.clear();
+            //readConfig();
+            reloadConfigInternal();
+        }
     }
 
     public static void readConfig() {
         // Only proceed if the cache hasn't already been populated, caller should be using reloadConfig() in that situation
-        if (UtilValidate.isNotEmpty(ecaCache)) {
+        if (!ecaCache.isEmpty()) { // SCIPIO: changed from UtilValidate.isNotEmpty
             return;
         }
+        synchronized(ecaCacheLock) { // SCIPIO: write-lock
+            if (!ecaCache.isEmpty()) {
+                return;
+            }
+            reloadConfigInternal();
+        }
+    }
 
-        List<Future<List<ServiceEcaRule>>> futures = new LinkedList<Future<List<ServiceEcaRule>>>();
+    private static void reloadConfigInternal() { // SCIPIO: refactored for write-lock
+        List<Future<List<ServiceEcaRule>>> futures = new ArrayList<>(); // SCIPIO: switched to ArrayList
         List<ServiceEcas> serviceEcasList = null;
         try {
             serviceEcasList = ServiceConfigUtil.getServiceEngine().getServiceEcas();
@@ -74,7 +99,7 @@ public class ServiceEcaUtil {
             throw new RuntimeException(e.getMessage());
         }
         for (ServiceEcas serviceEcas : serviceEcasList) {
-            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceEcas.getLoader(), serviceEcas.getLocation());
+            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.getServiceEngineXmlFileName(), serviceEcas.getLoader(), serviceEcas.getLocation());
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(handler)));
         }
 
@@ -83,12 +108,14 @@ public class ServiceEcaUtil {
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(componentResourceInfo.createResourceHandler())));
         }
 
+        Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new HashMap<>(); // SCIPIO: new cache, for consistent view for reads
         for (List<ServiceEcaRule> handlerRules: ExecutionPool.getAllFutures(futures)) {
-            mergeEcaDefinitions(handlerRules);
+            mergeEcaDefinitions(handlerRules, ecaCache);
         }
+        ServiceEcaUtil.ecaCache = ecaCache; // SCIPIO: Wrapper not necessary as long as HashMap not modified after assign to volatile: Collections.unmodifiableMap(ecaCache);
     }
 
-    protected static Callable<List<ServiceEcaRule>> createEcaLoaderCallable(final ResourceHandler handler) {
+    private static Callable<List<ServiceEcaRule>> createEcaLoaderCallable(final ResourceHandler handler) {
         return new Callable<List<ServiceEcaRule>>() {
             public List<ServiceEcaRule> call() throws Exception {
                 return getEcaDefinitions(handler);
@@ -97,12 +124,16 @@ public class ServiceEcaUtil {
     }
 
     public static void addEcaDefinitions(ResourceHandler handler) {
-        List<ServiceEcaRule> handlerRules = getEcaDefinitions(handler);
-        mergeEcaDefinitions(handlerRules);
+        synchronized(ecaCacheLock) { // SCIPIO: write-lock, because this method is public
+            List<ServiceEcaRule> handlerRules = getEcaDefinitions(handler);
+            Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new HashMap<>(ServiceEcaUtil.ecaCache); // SCIPIO: clone whole cache, for consistent view for reads
+            mergeEcaDefinitions(handlerRules, ecaCache);
+            ServiceEcaUtil.ecaCache = ecaCache; // SCIPIO: Wrapper not necessary as long as HashMap not modified after assign to volatile: Collections.unmodifiableMap(ecaCache);
+        }
     }
 
     private static List<ServiceEcaRule> getEcaDefinitions(ResourceHandler handler) {
-        List<ServiceEcaRule> handlerRules = new LinkedList<ServiceEcaRule>();
+        List<ServiceEcaRule> handlerRules = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Element rootElement = null;
         try {
             rootElement = handler.getDocument().getDocumentElement();
@@ -126,7 +157,8 @@ public class ServiceEcaUtil {
         return handlerRules;
     }
 
-    private static void mergeEcaDefinitions(List<ServiceEcaRule> handlerRules) {
+    // SCIPIO: modified to take a ecaCache as parameter
+    private static void mergeEcaDefinitions(List<ServiceEcaRule> handlerRules, Map<String, Map<String, List<ServiceEcaRule>>> ecaCache) {
         for (ServiceEcaRule rule: handlerRules) {
             String serviceName = rule.getServiceName();
             String eventName = rule.getEventName();
@@ -135,14 +167,32 @@ public class ServiceEcaUtil {
 
             if (eventMap == null) {
                 eventMap = new HashMap<String, List<ServiceEcaRule>>();
-                rules = new LinkedList<ServiceEcaRule>();
+                rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 ecaCache.put(serviceName, eventMap);
                 eventMap.put(eventName, rules);
             } else {
                 rules = eventMap.get(eventName);
                 if (rules == null) {
-                    rules = new LinkedList<ServiceEcaRule>();
+                    rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                     eventMap.put(eventName, rules);
+                }
+            }
+            //remove the old rule if found and keep the recent one
+            //This will prevent duplicate rule execution along with enabled/disabled seca workflow
+            // SCIPIO: 2018-09-04: Reworked to give better log information
+            //if (rules.remove(rule)) {
+            //    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName + "] ", module);
+            //}
+            int ruleIndex = rules.indexOf(rule);
+            if (ruleIndex >= 0) {
+                ServiceEcaRule prevRule = rules.get(ruleIndex);
+                rules.remove(prevRule);
+                if (prevRule.getDefinitionLocation() != null && prevRule.getDefinitionLocation().equals(rule.getDefinitionLocation())) {
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName
+                            + "] both from definition [" + prevRule.getDefinitionLocation() + "]", module);
+                } else {
+                    Debug.logWarning("Duplicate Service ECA [" + serviceName + "] on [" + eventName
+                            + "] from definition [" + prevRule.getDefinitionLocation() + "] and overriding definition [" + rule.getDefinitionLocation() + "]", module);
                 }
             }
             rules.add(rule);
@@ -150,7 +200,9 @@ public class ServiceEcaUtil {
     }
 
     public static Map<String, List<ServiceEcaRule>> getServiceEventMap(String serviceName) {
-        if (ServiceEcaUtil.ecaCache == null) ServiceEcaUtil.readConfig();
+        // SCIPIO: 2018-09-06: the cache is never null
+        //if (ServiceEcaUtil.ecaCache == null) ServiceEcaUtil.readConfig();
+        ServiceEcaUtil.readConfig();
         return ServiceEcaUtil.ecaCache.get(serviceName);
     }
 
@@ -160,7 +212,7 @@ public class ServiceEcaUtil {
             if (event != null) {
                 return eventMap.get(event);
             } else {
-                List<ServiceEcaRule> rules = new LinkedList<ServiceEcaRule>();
+                List<ServiceEcaRule> rules = new ArrayList<>(); // SCIPIO: switched to ArrayList
                 for (Collection<ServiceEcaRule> col: eventMap.values()) {
                     rules.addAll(col);
                 }

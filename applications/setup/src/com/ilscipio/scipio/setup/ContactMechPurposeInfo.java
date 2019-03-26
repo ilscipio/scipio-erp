@@ -16,6 +16,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -28,56 +29,50 @@ import org.ofbiz.service.LocalDispatcher;
  */
 abstract class ContactMechPurposeInfo {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    //private final List<GenericValue> contactMechAndPurposeList;
+
     protected final Map<String, Set<String>> contactMechPurposes;
     protected final Map<String, Set<String>> purposeContactMechs;
     protected final String logPrefix;
 
     protected ContactMechPurposeInfo(Map<String, Set<String>> contactMechPurposes, Map<String, Set<String>> purposeContactMechs, String logPrefix) {
-        //this.contactMechAndPurposeList = contactMechAndPurposeList;
         this.contactMechPurposes = contactMechPurposes;
         this.purposeContactMechs = purposeContactMechs;
         this.logPrefix = logPrefix != null ? logPrefix : "";
     }
-    
-//    public List<GenericValue> getContactMechAndPurposeList() {
-//        return contactMechAndPurposeList;
-//    }
-    
+
     public Map<String, Set<String>> getContactMechPurposes() {
         return contactMechPurposes;
     }
-    
+
     public Map<String, Set<String>> getPurposeContactMechs() {
         return purposeContactMechs;
     }
-    
+
     protected abstract String getOwnerLogPrefix();
-    
+
     public Set<String> getContactMechPurposes(String contactMechId) {
         Set<String> purposes = contactMechPurposes.get(contactMechId);
-        return purposes != null ? purposes : Collections.<String>emptySet();
+        return (purposes != null) ? purposes : Collections.<String>emptySet();
     }
-    
+
     public Set<String> getPurposeContactMechs(String purpose) {
         Set<String> contactMechIds = purposeContactMechs.get(purpose);
-        return contactMechIds != null ? contactMechIds : Collections.<String>emptySet();
+        return (contactMechIds != null) ? contactMechIds : Collections.<String>emptySet();
     }
-    
-    protected static void populateIdMaps(List<? extends Map<String, Object>> contactMechAndPurposeList, String contactMechIdField, String purposeTypeIdField, 
+
+    protected static void populateIdMaps(List<? extends Map<String, Object>> contactMechAndPurposeList, String contactMechIdField, String purposeTypeIdField,
             Map<String, Set<String>> contactMechPurposes, Map<String, Set<String>> purposeContactMechs) {
         for(Map<String, Object> contactMechAndPurpose : contactMechAndPurposeList) {
             String contactMechId = (String) contactMechAndPurpose.get(contactMechIdField);
             String purpose = (String) contactMechAndPurpose.get(purposeTypeIdField);
-            
+
             Set<String> purposes = contactMechPurposes.get(contactMechId);
             if (purposes == null) {
                 purposes = new LinkedHashSet<>();
                 contactMechPurposes.put(contactMechId, purposes);
             }
             purposes.add(purpose);
-            
+
             Set<String> contactMechIds = purposeContactMechs.get(purpose);
             if (contactMechIds == null) {
                 contactMechIds = new LinkedHashSet<>();
@@ -86,29 +81,27 @@ abstract class ContactMechPurposeInfo {
             contactMechIds.add(contactMechId);
         }
     }
-    
+
     public void resultsToMap(Map<String, Object> map) {
-        //map.put("ownerId", ownerId); // not for us
-        //map.put("contactMechAndPurposeList", contactMechAndPurposeList);
         map.put("contactMechPurposes", contactMechPurposes);
         map.put("purposeContactMechs", purposeContactMechs);
     }
-    
+
     /*
-     * ******************************************* 
+     * *******************************************
      * Purpose queries
      * *******************************************
      */
-    
+
     public String getContactMechIdForPurpose(String purpose) {
         Set<String> contactMechIds = purposeContactMechs.get(purpose);
         if (contactMechIds != null && contactMechIds.size() > 0) {
             String id = contactMechIds.iterator().next();
             if (contactMechIds.size() >= 2) {
-                Debug.logWarning(getOwnerLogPrefix() + " has multiple active contact mechs for purpose '" + purpose 
+                Debug.logWarning(getOwnerLogPrefix() + " has multiple active contact mechs for purpose '" + purpose
                         + "'; using first only (contactMechId '" + id + "')", module);
             } else {
-                Debug.logInfo(getOwnerLogPrefix() + ": contactMechId '" + id + "' found matching purpose '" + purpose 
+                Debug.logInfo(getOwnerLogPrefix() + ": contactMechId '" + id + "' found matching purpose '" + purpose
                         + "'", module);
             }
             return id;
@@ -117,16 +110,14 @@ abstract class ContactMechPurposeInfo {
         }
         return null;
     }
-    
+
     public GenericValue getContactMechForPurpose(Delegator delegator, String purpose, boolean useCache) throws GenericEntityException {
         String contactMechId = getContactMechIdForPurpose(purpose);
         return getContactMechById(delegator, contactMechId, useCache);
     }
 
-    
-
-    
     /**
+     * getClosestContactMechIdForPurposes.
      * BEST-EFFORT! Returns closest match only. May be incomplete.
      */
     public String getClosestContactMechIdForPurposes(Set<String> purposes) {
@@ -135,9 +126,9 @@ abstract class ContactMechPurposeInfo {
         if (contactMechIds != null && contactMechIds.size() > 0) {
             String id = contactMechIds.iterator().next();
             if (contactMechIds.size() >= 2) {
-                Debug.logWarning(getOwnerLogPrefix() + " has multiple active candidate contact mechs for purposes " + purposes 
+                Debug.logWarning(getOwnerLogPrefix() + " has multiple active candidate contact mechs for purposes " + purposes
                         + " (contactMechIds: " + contactMechIds + "); using first only (contactMechId '" + id + "')", module);
-            } 
+            }
             int count = matchCounts.get(id);
             if (count >= purposes.size()) {
                 Debug.logInfo(getOwnerLogPrefix() + ": contactMechId '" + id + "' found matching purposes " + purposes, module);
@@ -150,30 +141,30 @@ abstract class ContactMechPurposeInfo {
         }
         return null;
     }
-    
+
     public GenericValue getClosestContactMechForPurposes(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
         String contactMechId = getClosestContactMechIdForPurposes(purposes);
         return getContactMechById(delegator, contactMechId, useCache);
     }
-    
+
     private GenericValue getContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isNotEmpty(contactMechId)) {
-            return delegator.findOne("ContactMech", 
+            return delegator.findOne("ContactMech",
                     UtilMisc.toMap("contactMechId", contactMechId), useCache);
         }
         return null;
     }
-    
+
     Map<String, Integer> getContactMechIdMatchCountsForPurposes(Set<String> purposes) {
         return makeValueCountMap(purposeContactMechs, purposes);
     }
-    
+
     /*
-     * ******************************************* 
+     * *******************************************
      * Count queries (purpose matching)
      * *******************************************
      */
-    
+
     /**
      * Makes a map of the number of the number of occurrences for each value
      * in found in the sets of the map, considered only the passed keys.
@@ -194,7 +185,7 @@ abstract class ContactMechPurposeInfo {
         }
         return counts;
     }
-    
+
     /**
      * Arranges values in a map by their counts.
      */
@@ -218,52 +209,59 @@ abstract class ContactMechPurposeInfo {
      */
     static Set<String> getClosestValuesByCount(Map<String, Integer> counts, int targetCount) {
         Map<Integer, Set<String>> countMechs = makeCountValueMap(counts);
-        if (countMechs.isEmpty()) return Collections.emptySet();
+        if (countMechs.isEmpty()) {
+            return Collections.emptySet();
+        }
         List<Integer> highToLowCounts = new ArrayList<>(countMechs.keySet());
         Collections.sort(highToLowCounts, Collections.reverseOrder());
-        
+
         ListIterator<Integer> it = highToLowCounts.listIterator();
         int count = it.next();
         while(it.hasNext() && (count = it.next()) >= targetCount) {
             ;
         }
-        if (count >= targetCount) return countMechs.get(count);
-        else {
+        if (count >= targetCount) {
+            return countMechs.get(count);
+        } else {
             it.previous(); // discard to go back one
-            if (it.hasPrevious()) return countMechs.get(it.previous());
-            else return countMechs.get(count);
+            if (it.hasPrevious()) {
+                return countMechs.get(it.previous());
+            } else {
+                return countMechs.get(count);
+            }
         }
     }
-    
+
     /*
-     * ******************************************* 
+     * *******************************************
      * Entity-specific
      * *******************************************
      */
-    
+
     public static class PartyContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String partyId;
-        protected final List<GenericValue> partyContactMechPurposeList;
-        
+        protected final List<GenericValue> partyContactMechPurposeList; // PartyContactMechAndPurpose
+
         protected PartyContactMechPurposeInfo(String partyId, Map<String, Set<String>> contactMechPurposes,
                 Map<String, Set<String>> purposeContactMechs, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
             super(contactMechPurposes, purposeContactMechs, logPrefix);
             this.partyId = partyId;
             this.partyContactMechPurposeList = partyContactMechPurposeList;
         }
-        
+
         public static PartyContactMechPurposeInfo forParty(Delegator delegator, LocalDispatcher dispatcher, String partyId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<GenericValue> partyContactMechPurposeList = EntityQuery.use(delegator).from("PartyContactMechPurpose")
-                    .where("partyId", partyId).filterByDate().cache(useCache).queryList();
+            // 2018-10-30: We must filter by BOTH dates, because sometimes PartyContactMechPurpose is not unset properly
+            List<GenericValue> partyContactMechPurposeList = EntityQuery.use(delegator).from("PartyContactMechAndPurpose")
+                    .where("partyId", partyId).filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").cache(useCache).queryList();
             return fromPartyContactMechPurposeList(partyId, partyContactMechPurposeList, logPrefix);
         }
-        
-        public static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
+
+        protected static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
             populateIdMaps(partyContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
             return new PartyContactMechPurposeInfo(partyId,
-                    Collections.unmodifiableMap(contactMechPurposes), 
+                    Collections.unmodifiableMap(contactMechPurposes),
                     Collections.unmodifiableMap(purposeContactMechs),
                     Collections.unmodifiableList(partyContactMechPurposeList),
                     logPrefix);
@@ -279,7 +277,7 @@ abstract class ContactMechPurposeInfo {
             String contactMechId = getContactMechIdForPurpose(purpose);
             return getPartyContactMechById(delegator, contactMechId, useCache);
         }
-        
+
         public Map<String, GenericValue> getPartyContactMechForPurposeMap(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
             Map<String, GenericValue> map = new HashMap<>();
             for(String purpose : purposes) {
@@ -290,7 +288,7 @@ abstract class ContactMechPurposeInfo {
             }
             return map;
         }
-        
+
         public GenericValue getClosestPartyContactMechForPurposes(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
             String contactMechId = getClosestContactMechIdForPurposes(purposes);
             return getPartyContactMechById(delegator, contactMechId, useCache);
@@ -298,15 +296,18 @@ abstract class ContactMechPurposeInfo {
 
         private GenericValue getPartyContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<GenericValue> pcmList = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("contactMechId", contactMechId, "partyId", partyId).filterByDate()
-                        .orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                //List<GenericValue> pcmList = EntityQuery.use(delegator).from("PartyContactMech")
+                //        .where("contactMechId", contactMechId, "partyId", partyId).filterByDate()
+                //        .orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                List<GenericValue> pcmList = EntityUtil.filterByAnd(this.partyContactMechPurposeList, UtilMisc.toMap("contactMechId", contactMechId, "partyId", partyId));
+                pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
-                    GenericValue result = pcmList.get(0);
-                    if (pcmList.size() > 2) {
-                        Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '" 
-                            + contactMechId + "' and partyId '" + partyId + "'; using first only (fromDate '" + result.get("fromDate") + ")'", module);
-                    }
+                    GenericValue result = pcmList.get(0).extractViewMember("PartyContactMech");
+                    // This check might not work since I switched to PartyContactMechAndPurpose 
+                    //if (pcmList.size() > 2) {
+                    //    Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '"
+                    //        + contactMechId + "' and partyId '" + partyId + "'; using first only (fromDate '" + result.get("fromDate") + ")'", module);
+                    //}
                     return result;
                 }
             }
@@ -317,48 +318,47 @@ abstract class ContactMechPurposeInfo {
         protected String getOwnerLogPrefix() {
             return logPrefix + "party '" + partyId + "'";
         }
-        
     }
-    
+
     public static class FacilityContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String facilityId;
-        protected final List<GenericValue> facilityContactMechPurposeList;
-        
+        protected final List<GenericValue> facilityContactMechPurposeList; // FacilityContactMechAndPurpose
+
         protected FacilityContactMechPurposeInfo(String facilityId, Map<String, Set<String>> contactMechPurposes,
                 Map<String, Set<String>> purposeContactMechs, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
             super(contactMechPurposes, purposeContactMechs, logPrefix);
             this.facilityId = facilityId;
             this.facilityContactMechPurposeList = facilityContactMechPurposeList;
         }
-        
+
         public static FacilityContactMechPurposeInfo forFacility(Delegator delegator, LocalDispatcher dispatcher, String facilityId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<GenericValue> facilityContactMechPurposeList = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
-                    .where("facilityId", facilityId).filterByDate().cache(useCache).queryList();
+            List<GenericValue> facilityContactMechPurposeList = EntityQuery.use(delegator).from("FacilityContactMechAndPurpose")
+                    .where("facilityId", facilityId).filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").cache(useCache).queryList();
             return fromFacilityContactMechPurposeList(facilityId, facilityContactMechPurposeList, logPrefix);
         }
-        
-        public static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
+
+        protected static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
             populateIdMaps(facilityContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
             return new FacilityContactMechPurposeInfo(facilityId,
-                    Collections.unmodifiableMap(contactMechPurposes), 
+                    Collections.unmodifiableMap(contactMechPurposes),
                     Collections.unmodifiableMap(purposeContactMechs),
                     Collections.unmodifiableList(facilityContactMechPurposeList),
                     logPrefix);
         }
-        
+
         @Override
         public void resultsToMap(Map<String, Object> map) {
             super.resultsToMap(map);
             map.put("facilityContactMechPurposeList", facilityContactMechPurposeList);
         }
-        
+
         public GenericValue getFacilityContactMechForPurpose(Delegator delegator, String purpose, boolean useCache) throws GenericEntityException {
             String contactMechId = getContactMechIdForPurpose(purpose);
             return getFacilityContactMechById(delegator, contactMechId, useCache);
         }
-        
+
         public Map<String, GenericValue> getFacilityContactMechForPurposeMap(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
             Map<String, GenericValue> map = new HashMap<>();
             for(String purpose : purposes) {
@@ -369,22 +369,25 @@ abstract class ContactMechPurposeInfo {
             }
             return map;
         }
-        
+
         public GenericValue getClosestFacilityContactMechForPurposes(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
             String contactMechId = getClosestContactMechIdForPurposes(purposes);
             return getFacilityContactMechById(delegator, contactMechId, useCache);
         }
-        
+
         private GenericValue getFacilityContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<GenericValue> pcmList = EntityQuery.use(delegator).from("FacilityContactMech")
-                        .where("contactMechId", contactMechId, "facilityId", facilityId).filterByDate().orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                //List<GenericValue> pcmList = EntityQuery.use(delegator).from("FacilityContactMech")
+                //        .where("contactMechId", contactMechId, "facilityId", facilityId).filterByDate().orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
+                List<GenericValue> pcmList = EntityUtil.filterByAnd(this.facilityContactMechPurposeList, UtilMisc.toMap("contactMechId", contactMechId, "facilityId", facilityId));
+                pcmList = EntityUtil.orderBy(pcmList, SetupDataUtil.getDefaultContactOrderBy("contactFromDate"));
                 if (pcmList.size() > 0) {
-                    GenericValue result = pcmList.get(0);
-                    if (pcmList.size() > 2) {
-                        Debug.logWarning("Setup: Multiple active FacilityContactMech records found for contactMechId '" 
-                            + contactMechId + "' and facility '" + facilityId + "'; using first only (fromDate: " + result.get("fromDate") + ")", module);
-                    }
+                    GenericValue result = pcmList.get(0).extractViewMember("FacilityContactMech");
+                    // This check might not work since I switched to FacilityContactMechAndPurpose 
+                    //if (pcmList.size() > 2) {
+                    //    Debug.logWarning("Setup: Multiple active FacilityContactMech records found for contactMechId '"
+                    //        + contactMechId + "' and facility '" + facilityId + "'; using first only (fromDate: " + result.get("fromDate") + ")", module);
+                    //}
                     return result;
                 }
             }
@@ -396,5 +399,4 @@ abstract class ContactMechPurposeInfo {
             return logPrefix + "facility '" + facilityId + "'";
         }
     }
-    
 }

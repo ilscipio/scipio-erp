@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -36,7 +23,7 @@ function aroundSubmitOrder(invocation) {
     var formToSubmit = document.setPaymentInformation;
     var paymentMethodTypeOption = document.setPaymentInformation.paymentMethodTypeOptionList.options[document.setPaymentInformation.paymentMethodTypeOptionList.selectedIndex].value;
     if(paymentMethodTypeOption == "none"){
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonAddGiftCardToCart</@pageUrl>";
     }
 
     jQuery.ajax({
@@ -60,7 +47,7 @@ function aroundSubmitOrder(invocation) {
 function getGCInfo() {
     if (document.setPaymentInformation.addGiftCard.checked) {
       jQuery.ajax({
-          url: "<@ofbizUrl>quickAnonGcInfo</@ofbizUrl>",
+          url: "<@pageUrl>quickAnonGcInfo</@pageUrl>",
           type: "POST",
           success: function(data) {
               document.getElementById("giftCardSection").innerHTML = data;
@@ -79,7 +66,7 @@ function getPaymentInformation() {
       if(paymentMethodTypeOption == "CREDIT_CARD"){
 
         jQuery.ajax({
-            url: "<@ofbizUrl>quickAnonCcInfo</@ofbizUrl>",
+            url: "<@pageUrl>quickAnonCcInfo</@pageUrl>",
             type: "POST",
             success: function(data) {
                 document.getElementById("paymentInfoSection").innerHTML = data;
@@ -87,11 +74,11 @@ function getPaymentInformation() {
         });
 
         document.setPaymentInformation.paymentMethodTypeId.value = "CREDIT_CARD";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterCreditCard</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterCreditCard</@pageUrl>";
       } else if (paymentMethodTypeOption == "EFT_ACCOUNT"){
 
        jQuery.ajax({
-            url: "<@ofbizUrl>quickAnonEftInfo</@ofbizUrl>",
+            url: "<@pageUrl>quickAnonEftInfo</@pageUrl>",
             type: "POST",
             success: function(data) {
                 document.getElementById("paymentInfoSection").innerHTML = data;
@@ -99,11 +86,11 @@ function getPaymentInformation() {
         });
 
         document.setPaymentInformation.paymentMethodTypeId.value = "EFT_ACCOUNT";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterEftAccount</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterEftAccount</@pageUrl>";
       } else if (paymentMethodTypeOption == "EXT_OFFLINE"){
         document.setPaymentInformation.paymentMethodTypeId.value = "EXT_OFFLINE";
         document.getElementById("paymentInfoSection").innerHTML = "";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterExtOffline</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterExtOffline</@pageUrl>";
       } else {
         document.setPaymentInformation.paymentMethodTypeId.value = "none";
         document.getElementById("paymentInfoSection").innerHTML = "";
@@ -112,7 +99,7 @@ function getPaymentInformation() {
 }
 </@script>
 <@section title=uiLabelMap.AccountingPaymentInformation>
-    <form id="setPaymentInformation" method="post" action="<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>" name="setPaymentInformation">
+    <form id="setPaymentInformation" method="post" action="<@pageUrl>quickAnonAddGiftCardToCart</@pageUrl>" name="setPaymentInformation">
 
       <#if (requestParameters.singleUsePayment!"N") == "Y">
         <input type="hidden" name="singleUsePayment" value="Y"/>
@@ -122,8 +109,9 @@ function getPaymentInformation() {
       <input type="hidden" name="partyId" value="${partyId!}"/>
       <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodTypeId!}"/>
       <input type="hidden" name="createNew" value="Y"/>
-      <#if session.getAttribute("billingContactMechId")??>
-        <input type="hidden" name="contactMechId" value="${session.getAttribute("billingContactMechId")!}"/>
+      <#assign billingContactMechId = sessionAttributes.billingContactMechId!><#-- SCIPIO: Access session only once -->
+      <#if billingContactMechId?has_content>
+        <input type="hidden" name="contactMechId" value="${billingContactMechId}"/>
       </#if>
 
       <div class="errorMessage" id="noPaymentMethodSelectedError"></div>

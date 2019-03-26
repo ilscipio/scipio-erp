@@ -17,11 +17,14 @@
  * under the License.
  */
 
- // this script is used to get the company's logo header information for orders, invoices, and returns.  It can either take order, invoice, returnHeader from
- // parameters or use orderId, invoiceId, or returnId to look them up.
- // if none of these parameters are available then fromPartyId is used or "ORGANIZATION_PARTY" from general.properties as fallback
+/**
+ * SCIPIO: Duplicated from component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy.
+ * <p>
+ * this script is used to get the company's logo header information for orders, invoices, and returns.
+ * It can either take order, invoice, returnHeader from parameters or use orderId, invoiceId, or returnId to look them up.
+ * if none of these parameters are available then fromPartyId is used or "ORGANIZATION_PARTY" from general.properties as fallback
+ */
 
- /**SCIPIO: Duplicate from CompanyHeader.groovy */
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
@@ -45,9 +48,9 @@ if (!orderHeader && orderId) {
     orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
     try {
         if (parameters.facilityId) {
-            response.setHeader("Content-Disposition","attachment; filename=\"PickSheet" + orderId + ".pdf" + "\";");
+            UtilHttp.setContentDisposition(response, "PickSheet" + orderId + ".pdf");
         } else {
-            response.setHeader("Content-Disposition","attachment; filename=\"" + orderId + ".pdf" + "\";");
+            UtilHttp.setContentDisposition(response, orderId + ".pdf");
         }
     } catch (MissingPropertyException e) {
         // This hack for OFBIZ-6792 to avoid "groovy.lang.MissingPropertyException: No such property: response for class: CompanyHeader" when response does not exist (in sendOrderConfirmation service)
@@ -60,7 +63,7 @@ if (!orderHeader && orderId) {
 if (!invoice && invoiceId)    {
     invoice = from("Invoice").where("invoiceId", invoiceId).queryOne();
     try {
-        response.setHeader("Content-Disposition","attachment; filename=\"" + invoiceId + ".pdf" + "\";");
+        UtilHttp.setContentDisposition(response, invoiceId + ".pdf");
     } catch (MissingPropertyException e) {
         // This hack for OFBIZ-6792 to avoid "groovy.lang.MissingPropertyException: No such property: response for class: CompanyHeader" when response does not exist (in sendOrderConfirmation service)
     }
@@ -80,7 +83,7 @@ def partyId = null;
 
 // get the logo partyId from order or invoice - note that it is better to do comparisons this way in case the there are null values
 if (orderHeader) {
-    orh = new OrderReadHelper(orderHeader);
+    orh = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
     // for sales order, the logo party is the "BILL_FROM_VENDOR" of the order.  If that's not available, we'll use the OrderHeader's ProductStore's payToPartyId
     if ("SALES_ORDER".equals(orderHeader.orderTypeId)) {
         if (orh.getBillFromParty()) {

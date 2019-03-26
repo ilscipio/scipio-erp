@@ -18,10 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.order.test;
 
+import java.util.Locale;
+
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.service.testtools.OFBizTestCase;
 import org.ofbiz.order.finaccount.FinAccountHelper;
+import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class FinAccountTest extends OFBizTestCase {
     public FinAccountTest(String name) {
@@ -44,10 +46,10 @@ public class FinAccountTest extends OFBizTestCase {
         account = FinAccountHelper.getFinAccountFromCode(finAccountCode, delegator);
         assertNotNull(account);
         assertEquals(finAccountCode, account.get("finAccountCode"));
-        account = FinAccountHelper.getFinAccountFromCode(finAccountCode.toUpperCase(), delegator);
+        account = FinAccountHelper.getFinAccountFromCode(finAccountCode.toUpperCase(Locale.getDefault()), delegator);
         assertNotNull(account);
         assertEquals(finAccountCode, account.get("finAccountCode"));
-        account = FinAccountHelper.getFinAccountFromCode(finAccountCode.toLowerCase(), delegator);
+        account = FinAccountHelper.getFinAccountFromCode(finAccountCode.toLowerCase(Locale.getDefault()), delegator);
         assertNotNull(account);
         assertEquals(finAccountCode, account.get("finAccountCode"));
 

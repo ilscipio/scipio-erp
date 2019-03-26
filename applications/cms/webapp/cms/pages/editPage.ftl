@@ -1,4 +1,4 @@
-<#include "pagescommon.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#assign debugMode = false>
 
@@ -6,7 +6,6 @@
   <#assign content = {}>
 </#if>
 <#assign pathPlaceholder = "/myUrl">
-
 <#-- NOTE: don't use container=false anymore, use @fields type="default-compact" -->
 <#macro pageAttrField fieldObj value="" id="" namePrefix="" expandLangVisible=true>
     <#if fieldObj.type?has_content>
@@ -21,13 +20,13 @@
           <#local maxLength = ""/>
         </#if>
         <#local labelDetail = ""/>
-        <#local tooltip = rawString(fieldObj.help!"")/>
+        <#local tooltip = raw(fieldObj.help!"")/>
         <#local defaultExpandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].getDefaultExpandLang()!>
         <#local expandLang = fieldObj.expandLang!defaultExpandLang>
         <#if expandLang?has_content && expandLang != "NONE">
           <#local expandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].fromStringSafe(expandLang?string)!><#-- make sure we have the enum not just the string -->
           <#if expandLang?has_content>
-            <#local supportedLangStr = "${rawString(uiLabelMap.CmsSupportedLang)}: ${rawString(expandLang.getDescriptionWithExample(locale)!)}"/>
+            <#local supportedLangStr = "${raw(uiLabelMap.CmsSupportedLang)}: ${raw(expandLang.getDescriptionWithExample(locale)!)}"/>
             <#if expandLangVisible>
               <#local labelDetail = supportedLangStr>
             <#else>
@@ -35,7 +34,7 @@
             </#if>
           <#else>
             <#-- ERROR: invalid db value; always report -->
-            <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("Cms: Error: Attribute '" + (fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPageFtl")>
+            <#local dummy = Debug.logError("Cms: @pageAttrField: Error: Attribute '" + raw(fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPage.ftl")!>
           </#if>
         </#if>
         <#if fieldObj.targetType?has_content>
@@ -51,7 +50,7 @@
             instead just put a tooltip on the label, using hackish method -->
           <#if tooltip?has_content>
             <#local fieldLabelWithTooltip><a href="javascript:void(0);" class="${styles.tooltip!}" title="${tooltip}">${fieldLabel}</a></#local>
-            <#local fieldLabel = wrapAsRaw({'raw':rawString(fieldLabel), 'htmlmarkup':fieldLabelWithTooltip})>
+            <#local fieldLabel = wrapAsRaw({'raw':raw(fieldLabel), 'htmlmarkup':fieldLabelWithTooltip})>
           </#if>
           <#local tooltip = false>
         </#if>
@@ -110,12 +109,14 @@
 <#-- The Content -->
 <#-- EDIT PAGE -->
 <#if template?has_content || meta?has_content>
-  <#if webSiteId?has_content><#-- 2016-11-30: currently this depends highly on website, can't omit -->
+  <#if webSiteId?has_content><#-- NOTE: webSiteId must be both -->
   
     <#-- DEV NOTE: The path must be escaped using escapeVal(path, 'url') when passed as parameter -->
   
-    <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>
-    <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId=${pageId!}")>
+    <#assign editPageByIdUrl = makePageUrl("editPage?pageId="+escapeVal(pageId!, 'url'))>
+    <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
+    <#assign editPageUrl = makePageUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>-->
+    <#assign editPageUrl = editPageByIdUrl>
 
     <#-- NOTES: Preview & Live links:
         * the preview links must use the *Expanded variable, otherwise will break in future
@@ -123,13 +124,13 @@
           * cmsAccessToken should also be passed to live link - whether works without depends on website
         * see CmsGetPage.groovy for the secure and extLoginKey logic
         * preview and live support explicit access token param:
-            rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!)
+            raw(webSiteConfig.accessTokenParamName)+"="+raw(accessToken!)
           but for preview mode can be inlined into the preview mode toggle param (done like that below, to lower URL length)
       -->
-    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
-        "uri":(rawString(pagePrimaryPathExpanded!)+"?"+rawString(webSiteConfig.previewModeParamName)+"="+rawString(accessToken!)+"&cmsPageVersionId="+rawString(versionId!""))})/>
-    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
-        "uri":(rawString(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!),"")))})/>
+    <#assign previewUrl = makeServerUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
+        "uri":(raw(pagePrimaryPathExpanded!)+"?"+raw(webSiteConfig.previewModeParamName)+"="+raw(accessToken!)+"&cmsPageVersionId="+raw(versionId!""))})/>
+    <#assign liveUrl = makeServerUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
+        "uri":(raw(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+raw(webSiteConfig.accessTokenParamName)+"="+raw(accessToken!),"")))})/>
     
     <#-- Javascript functions -->
     <@script>
@@ -141,7 +142,7 @@
             var pageId = $("#pageId").val();
             $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>activatePageVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>activatePageVersion</@pageUrl>",
                   data: {pageId:pageId,versionId:versionId},
                   cache:false,
                   async:true,
@@ -166,7 +167,7 @@
             } else {
                 return $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>addPageVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>addPageVersion</@pageUrl>",
                   data: getFormData(),
                   cache:false,
                   async:true,
@@ -305,20 +306,20 @@
                 plugins: {
                     // Add imagur parameters to upload plugin
                     scipio_media: {
-                        serverPath: '<@ofbizUrl escapeAs='js'>getMediaFiles</@ofbizUrl>',
-                        mediaUrl: '<@ofbizContentUrl escapeAs='js'>/cms/media</@ofbizContentUrl>'
+                        serverPath: '<@pageUrl escapeAs='js'>getMediaFiles</@pageUrl>',
+                        mediaUrl: '<@contentUrl escapeAs='js'>/cms/media</@contentUrl>'
                     },
                     scipio_links: {
-                        getPagesServerPath: '<@ofbizUrl escapeAs='js'>getPages</@ofbizUrl>',
-                        getWebSitesServerPath: '<@ofbizUrl escapeAs='js'>getCmsWebSites</@ofbizUrl>',
+                        getPagesServerPath: '<@pageUrl escapeAs='js'>getPages</@pageUrl>',
+                        getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
                         <#-- WARN: currentWebSiteId may become problem in future; see js source -->
                         currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
                     },
                     scipio_assets: {
-                        getAssetTypesServerPath: '<@ofbizUrl escapeAs='js'>getAssetTypes</@ofbizUrl>',
-                        getAssetsServerPath: '<@ofbizUrl escapeAs='js'>getAssets</@ofbizUrl>',
-                        getAssetAttributesServerPath: '<@ofbizUrl escapeAs='js'>getAssetAttributes</@ofbizUrl>',
-                        getWebSitesServerPath: '<@ofbizUrl escapeAs='js'>getCmsWebSites</@ofbizUrl>',
+                        getAssetTypesServerPath: '<@pageUrl escapeAs='js'>getAssetTypes</@pageUrl>',
+                        getAssetsServerPath: '<@pageUrl escapeAs='js'>getAssets</@pageUrl>',
+                        getAssetAttributesServerPath: '<@pageUrl escapeAs='js'>getAssetAttributes</@pageUrl>',
+                        getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
                         <#-- WARN: currentWebSiteId may become problem in future; see js source -->
                         currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
                     }
@@ -335,7 +336,7 @@
         
         function updatePageInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updatePageInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@pageUrl escapeAs='js'>updatePageInfo</@pageUrl>", 'settingsForm', 
                 function(eventMsgs) {
                     <#-- use the pageId URL to prevent issues with path change.
                         still need to pass a website. if primary website was changed, use the new one,
@@ -351,10 +352,10 @@
         }
         
         function deletePage() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deletePage</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deletePage</@pageUrl>", 
                 { pageId : "${pageId!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>pages</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>pages</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -370,7 +371,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
+            <@menuitem type="link" href=makePageUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
             <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
                  <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
                  <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -398,7 +399,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage")>
+                        <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToPage") webSiteId=((meta.webSiteId)!)>
                             <input type="hidden" name="pageId" value="${pageId!}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -408,6 +409,7 @@
             <#-- NOTE: void(0) MUST be at the end to prevent browser failure -->
             <@menuitem type="link" href="javascript:addPageVersion($('form#editorForm'),false); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:activateVersion($('#versionId').val()); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsPublish/>
+            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
             <#if previewUrl?has_content && webSiteAllowPreview>
               <@menuitem type="link" href=previewUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsPreview/>
             <#else>
@@ -425,7 +427,6 @@
                 <@menuitem type="link" disabled=true class="+${styles.action_run_sys!} ${styles.action_show!}" text=previewLabel/>
               </#if>
             </#if>
-            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsSaveAndPublish/>
             <#if liveUrl?has_content>
               <@menuitem type="link" href=liveUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsViewLive/>
             <#else>
@@ -441,7 +442,7 @@
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-page"><#-- FIXME: get these classes on <body> instead... -->
             <@row>
                 <@cell columns=12>
-                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@ofbizInterWebappUrl uri=rawString(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
+                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@serverUrl uri=raw(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
                 </@cell>
             </@row>
             <@row>
@@ -461,7 +462,7 @@
                                     <@section title=((asset.assoc.displayName)!asset.name!"") containerClass="+editorAttribGroup editorAsset" containerAttribs={"scipio-id":asset.importName}>
                                         <#list asset.attributes as attribute>
                                             <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                            <@pageAttrField namePrefix=(asset.importName+"_") fieldObj=attribute value=(content[rawString(asset.importName!)][rawString(attribute.name!)])!/>
+                                            <@pageAttrField namePrefix=(asset.importName+"_") fieldObj=attribute value=(content[raw(asset.importName!)][raw(attribute.name!)])!/>
                                         </#list>
                                     </@section>
                                     <#assign isFirstAsset = false>
@@ -475,7 +476,7 @@
                                 <#list template.attributes as attribute>
                                   <#if (attribute.type!) == "LONG_TEXT">
                                     <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                    <@pageAttrField fieldObj=attribute value=content[rawString(attribute.name!)]!/>
+                                    <@pageAttrField fieldObj=attribute value=content[raw(attribute.name!)]!/>
                                   </#if>                          
                                 </#list>
                               </@section>
@@ -509,12 +510,13 @@
                                         <#assign rowSelected = (versionId == (version.id!""))>
                                         <#-- FIXME?: remove the alt and style using selected only? -->
                                         <@tr alt=rowSelected selected=rowSelected>
-                                           <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
+                                           <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
                                            <@td> ${version.createdBy!"Anonymous"}</@td>
-                                           <@td><#if version.date?has_content><a href="<@ofbizUrl escapeAs="html">editPage?versionId=${version.id!}&webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath!, 'url')}</@ofbizUrl>">${rawString(version.date)?datetime}</a></#if></@td>
+                                           <#assign verLinkMkrp><@pageUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@pageUrl></#assign>
+                                           <@td><#if version.date?has_content><a href="${verLinkMkrp}">${raw(version.date)?datetime}</a></#if></@td>
                                            <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
-                                           <@td><a href="<@ofbizUrl escapeAs="html">editPage?versionId=${version.id!}&webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath!, 'url')}</@ofbizUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
-                                           <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>      
+                                           <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
+                                           <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
                                         </@tr>
                                     </#list>
                                 </@tbody>
@@ -538,7 +540,7 @@
                 </@cell>
                 <@cell columns=3>
                     <#if template?has_content>
-                      <@form method="post" id="settingsForm" action=makeOfbizUrl('updatePageInfo')>
+                      <@form method="post" id="settingsForm" action=makePageUrl('updatePageInfo')>
                         <@field type="hidden" name="pageId" value=(pageId!)/>
                         <@section title=uiLabelMap.CommonInformation>
                             <#-- Page Settings -->
@@ -562,16 +564,24 @@
                                
                                  <@field label=uiLabelMap.CommonPath type="input" name="primaryPath" value=(meta.primaryPath!"") required=true/>
                                  <#-- TODO: unhardcode this -->
-                                 <#assign primaryTargetPath = rawString(meta.primaryTargetPath!"")>
+                                 <#assign primaryTargetPath = raw(meta.primaryTargetPath!"")>
 
                                  <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions currentValue=primaryTargetPath label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
-                                 <@field type="select" name="pageTemplateId" label=uiLabelMap.CmsTemplate required=true><#-- duplicate: id="pageTemplateId" -->
+                                 <#if meta.pageTemplateId?has_content>
+                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
+                                     <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
+                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId)/>"><#t><#-- target="_blank" -->
+                                     <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
+                                 <#else>
+                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>
+                                 </#if>
+                                 <@field type="select" name="pageTemplateId" labelContent=pgTmplLabel required=true><#-- duplicate: id="pageTemplateId" -->
                                    <#assign pageTmplFoundInSelect = false>
                                    <#assign pageTmplSelOpts>
                                      <#if availableTemplates?has_content>
                                        <#list availableTemplates as tmpl>
-                                         <#assign pageTmplSelected = (rawString(tmpl.pageTemplateId!"") == rawString(meta.pageTemplateId!""))>
+                                         <#assign pageTmplSelected = (raw(tmpl.pageTemplateId!"") == raw(meta.pageTemplateId!""))>
                                          <#if pageTmplSelected>
                                            <#assign pageTmplFoundInSelect = true>
                                          </#if>
@@ -597,6 +607,8 @@
                                     <@field type="option" value="Y" selected=(indexable?is_boolean && indexable)>Y</@field>
                                     <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
                                  </@field>
+
+                                 <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(meta.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
 
                                  <@menu type="button">
                                     <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
@@ -626,7 +638,7 @@
                                   <#-- 2017-03-17: DO NOT render the LONG_TEXT attributes here - there's no space! -->
                                   <#if (attribute.type!) != "LONG_TEXT">
                                     <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                    <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[rawString(attribute.name!)])!/>
+                                    <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[raw(attribute.name!)])!/>
                                   </#if>                          
                                 </#list>
                               </@fields>
@@ -657,8 +669,8 @@
         <#-- NEW PAGE -->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createPage")>
-                    <@section title=uiLabelMap.CmsCreatePage>
+                <@form method="post" id="editorForm" action=makePageUrl("createPage")>
+                    <@section title=uiLabelMap.CmsNewPage>
                       <@fields type="default-compact">
                          <input type="hidden" name="isCreate" value="Y"/>
                          <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) valueUnsafe=true required=true 
@@ -666,7 +678,7 @@
                          
                          <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder=pathPlaceholder required=true/><#-- TODO: rename to primaryPath -->
 
-                         <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPagePlainNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
+                         <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPageSecureNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
                          <@field type="select" name="pageTemplateId" id="pageTemplateId" label=uiLabelMap.CmsTemplate required=true>
                             <option value="">${uiLabelMap.CmsSelectTemplate}</option>
@@ -692,7 +704,7 @@
                          <@field type="input" name="pageName" value=(parameters.pageName!) id="pageName" label=uiLabelMap.CommonName required=false/>
                          <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
 
-                         <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                         <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                        </@fields>
                     </@section>
                 </@form>

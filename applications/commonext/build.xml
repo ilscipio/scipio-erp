@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+<!-- SCIPIO: Commonext component build (new file) -->
+<project name="OFBiz - Order Component" default="jar" basedir=".">
+    <import file="../../common.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property name="desc" value="Commonext Component"/>
+    <property name="name" value="ofbiz-commonext"/>
+
+    <path id="local.class.path">
+        <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
+        <fileset dir="../../framework/base/lib" includes="*.jar"/>
+        <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/entity/lib" includes="*.jar"/>
+        <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/datafile/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/security/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/service/lib" includes="*.jar"/>
+        <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/webapp/lib" includes="*.jar"/>
+        <fileset dir="../../framework/webapp/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/widget/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../content/build/lib" includes="*.jar"/>
+        <fileset dir="../party/build/lib" includes="*.jar"/>
+        <fileset dir="../product/build/lib" includes="*.jar"/>
+        <fileset dir="../manufacturing/build/lib" includes="*.jar"/>
+        <fileset dir="../marketing/build/lib" includes="*.jar"/>
+        <fileset dir="../order/build/lib" includes="*.jar"/>
+        <fileset dir="../humanres/build/lib" includes="*.jar"/>
+    </path>
+
+    <!-- ================================================================== -->
+    <!-- Compilation of the source files                                                                                                                         -->
+    <!-- ================================================================== -->
+
+    <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
+        <javac18/>
+    </target>
+
+    <target name="jar" depends="classes">
+        <main-jar/>
+        <test-jar/>
+    </target>
+</project>

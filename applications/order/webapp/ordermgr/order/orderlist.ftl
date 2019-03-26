@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@script>
@@ -37,7 +24,7 @@ under the License.
 
 <#-- order list -->
 <@section>
-      <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
+      <form method="post" name="findorder" action="<@pageUrl>orderlist</@pageUrl>">
       <#-- SCIPIO: Use alt/simple checkboxes, currently implied by default-alt1
         FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
             Needs to be sorted out globally... -->
@@ -75,93 +62,94 @@ under the License.
  
 
 <#if hasPermission>
-  <@section title=uiLabelMap.OrderOrderList id="findOrderList">        
-      <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true>
-        <@table type="data-list" autoAltRows=true> <#-- orig: cellspacing="0" -->
-          <@thead>
-          <@tr>
-            <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
-            <@th width="15%">${uiLabelMap.CommonDate}</@th>
-            <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
-            <#--<@th width="10%">${uiLabelMap.OrderOrderType}</@th>-->
-            <#--<@th width="10%">${uiLabelMap.OrderOrderBillFromParty}</@th>-->
-            <@th width="25%">${uiLabelMap.OrderOrderBillToParty}</@th>
-            <@th width="20%">${uiLabelMap.OrderProductStore}</@th>
-            <@th width="8%">${uiLabelMap.CommonAmount}</@th>
-            <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
-                <@th width="10%">${uiLabelMap.CommonStatus}</@th>
-                <@th width="5%">${uiLabelMap.CommonFilter}</@th>
-            <#else>
-                <@th width="15%">${uiLabelMap.CommonStatus}</@th>
-            </#if>
-            <@th width="7%">${uiLabelMap.OrderTrackingCode}</@th>
-          </@tr>
-          </@thead>
-          <#list orderHeaderList as orderHeader>
-            <#assign status = orderHeader.getRelatedOne("StatusItem", true)>
-            <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
-            <#assign billToParty = orh.getBillToParty()!>
-            <#assign billFromParty = orh.getBillFromParty()!>
-            <#if billToParty?has_content>
-                <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
-                <#-- <#assign billTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billToParty, true)!> -->
-            <#else>
-              <#assign billTo = ''/>
-            </#if>
-            <#if billFromParty?has_content>
-              <#assign billFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billFromParty, true)!>
-            <#else>
-              <#assign billFrom = ''/>
-            </#if>
-            <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
-            <@tr>
-              <@td>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a>
-              </@td>
-              <@td><#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if></@td>
-              <#--<@td>${orderHeader.orderName!}</@td>-->
-              <#--<@td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</@td>-->
-              <#--<@td>${billFrom!}</@td>-->
-              <@td>${billTo!}</@td>
-              <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
-              <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
-              <@td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</@td>
-              <@td>
-                <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
-                <#list trackingCodes as trackingCode>
-                    <#if trackingCode?has_content>
-                        <a href="<@ofbizInterWebappUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${trackingCode.trackingCodeId}</a><br />
-                    </#if>
-                </#list>
-              </@td>
-              <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
-              <@td>
-                  <#if filterInventoryProblems.contains(orderHeader.orderId)>
-                    Inv 
+  <@section title=uiLabelMap.OrderOrderList id="findOrderList">
+      <#if !orderHeaderList?has_content>
+            <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg>
+      <#else>
+          <@paginate mode="content" url=makePageUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=orderHeaderList.getTotalOrders() altParam=true><#-- SCIPIO: Replaced: listSize=state.getSize() -->
+            <@table type="data-list" autoAltRows=true>
+              <@thead>
+              <@tr>
+                <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+                <@th width="15%">${uiLabelMap.CommonDate}</@th>
+                <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
+                <#--<@th width="10%">${uiLabelMap.OrderOrderType}</@th>-->
+                <#--<@th width="10%">${uiLabelMap.OrderOrderBillFromParty}</@th>-->
+                <@th width="25%">${uiLabelMap.OrderOrderBillToParty}</@th>
+                <@th width="20%">${uiLabelMap.OrderProductStore}</@th>
+                <@th width="8%">${uiLabelMap.CommonAmount}</@th>
+                <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
+                    <@th width="10%">${uiLabelMap.CommonStatus}</@th>
+                    <@th width="5%">${uiLabelMap.CommonFilter}</@th>
+                <#else>
+                    <@th width="15%">${uiLabelMap.CommonStatus}</@th>
+                </#if>
+                <@th width="7%">${uiLabelMap.OrderTrackingCode}</@th>
+              </@tr>
+              </@thead>
+              <#list orderHeaderList as orderHeader>
+                <#assign status = orderHeader.getRelatedOne("StatusItem", true)>
+                <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
+                <#assign billToParty = orh.getBillToParty()!>
+                <#assign billFromParty = orh.getBillFromParty()!>
+                <#if billToParty?has_content>
+                    <#assign billToPartyNameResult = runService("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                    <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
+                    <#-- <#assign billTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billToParty, true)!> -->
+                <#else>
+                  <#assign billTo = ''/>
+                </#if>
+                <#if billFromParty?has_content>
+                  <#assign billFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billFromParty, true)!>
+                <#else>
+                  <#assign billFrom = ''/>
+                </#if>
+                <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
+                <@tr>
+                  <@td>
+                    <a href="<@pageUrl>orderview?orderId=${orderHeader.orderId}</@pageUrl>">${orderHeader.orderId}</a>
+                  </@td>
+                  <@td><#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if></@td>
+                  <#--<@td>${orderHeader.orderName!}</@td>-->
+                  <#--<@td>${orderHeader.getRelatedOne("OrderType", true).get("description",locale)}</@td>-->
+                  <#--<@td>${billFrom!}</@td>-->
+                  <@td>${billTo!}</@td>
+                  <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
+                  <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
+                  <@td>${orderHeader.getRelatedOne("StatusItem", true).get("description",locale)}</@td>
+                  <@td>
+                    <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
+                    <#list trackingCodes as trackingCode>
+                        <#if trackingCode?has_content>
+                            <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${trackingCode.trackingCodeId}</a><br />
+                        </#if>
+                    </#list>
+                  </@td>
+                  <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
+                  <@td>
+                      <#if filterInventoryProblems.contains(orderHeader.orderId)>
+                        Inv
+                      </#if>
+                      <#if filterAuthProblems.contains(orderHeader.orderId)>
+                        Aut
+                      </#if>
+                      <#if filterPOsOpenPastTheirETA.contains(orderHeader.orderId)>
+                        ETA
+                      </#if>
+                      <#if filterPOsWithRejectedItems.contains(orderHeader.orderId)>
+                        Rej
+                      </#if>
+                      <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
+                        Part
+                      </#if>
+                  </@td>
+                  <#else>
                   </#if>
-                  <#if filterAuthProblems.contains(orderHeader.orderId)>
-                    Aut 
-                  </#if>
-                  <#if filterPOsOpenPastTheirETA.contains(orderHeader.orderId)>
-                    ETA 
-                  </#if>
-                  <#if filterPOsWithRejectedItems.contains(orderHeader.orderId)>
-                    Rej 
-                  </#if>
-                  <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
-                    Part 
-                  </#if>
-              </@td>
-              <#else>
-              </#if>
-            </@tr>
-          </#list>
-          <#if !orderHeaderList?has_content>
-            <@tr type="meta"><@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
-          </#if>
-        </@table>
-      </@paginate>
+                </@tr>
+              </#list>
+            </@table>
+          </@paginate>
+      </#if>
   </@section>
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderViewPermissionError}</@commonMsg>

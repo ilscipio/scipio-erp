@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ofbiz.base.util.UtilValidate;
 
@@ -29,9 +29,9 @@ import org.ofbiz.base.util.UtilValidate;
 @SuppressWarnings("serial")
 public class ServiceValidationException extends GenericServiceException {
 
-    protected List<String> messages = new ArrayList<String>();
-    protected List<String> missingFields = new ArrayList<String>();
-    protected List<String> extraFields = new ArrayList<String>();
+    protected List<String> messages = new ArrayList<>();
+    protected List<String> missingFields = new ArrayList<>();
+    protected List<String> extraFields = new ArrayList<>();
     protected String errorMode = null;
     protected ModelService service = null;
 
@@ -125,9 +125,8 @@ public class ServiceValidationException extends GenericServiceException {
     public String getServiceName() {
         if (service != null) {
             return service.name;
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override

@@ -1,23 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
-<#assign shoppingCart = sessionAttributes.shoppingCart!>
+<#-- SCIPIO: Must use context or accessor
+<#assign shoppingCart = sessionAttributes.shoppingCart!>-->
+<#assign shoppingCart = getShoppingCart()!>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
 <#else>
@@ -27,11 +17,11 @@ under the License.
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>
             <@menu type="button">
-              <@menuitem type="link" href=makeOfbizUrl("view/showcart") text=uiLabelMap.OrderViewCart class="+${styles.action_nav!} ${styles.action_view!}" />
-              <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") text=uiLabelMap.OrderCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("quickcheckout") text=uiLabelMap.OrderCheckoutQuick class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("view/showcart") text=uiLabelMap.OrderViewCart class="+${styles.action_nav!} ${styles.action_view!}" />
+              <@menuitem type="link" href=makePageUrl("checkoutoptions") text=uiLabelMap.OrderCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("quickcheckout") text=uiLabelMap.OrderCheckoutQuick class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("onePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
             </@menu>
           </#macro>
         
@@ -39,7 +29,7 @@ under the License.
             <@cartLinks />
           </#if>
           
-          <@table type="data-complex"> <#-- orig: class="" -->
+          <@table type="data-complex">
             <@thead>
               <@tr>
                 <@th>${uiLabelMap.OrderQty}</@th>
@@ -61,9 +51,9 @@ under the License.
                 <@td>
                   <#if cartLine.getProductId()??>
                       <#if cartLine.getParentProductId()??>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getParentProductId()/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@pageUrl uri="product?product_id="+escapeVal(cartLine.getParentProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       <#else>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getProductId()/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@pageUrl uri="product?product_id="+escapeVal(cartLine.getProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       </#if>
                   <#else>
                     <strong>${cartLine.getItemTypeDescription()!}</strong>

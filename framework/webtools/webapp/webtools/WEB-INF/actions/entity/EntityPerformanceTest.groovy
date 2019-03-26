@@ -27,7 +27,7 @@ import org.ofbiz.base.util.*;
 
 DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######");
 
-if (security.hasPermission("ENTITY_MAINT", session)) {
+if (security.hasPermission("ENTITY_MAINT", request)) {
     performanceList = [];
 
     calls = 1000;
@@ -190,7 +190,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     perfRow.callsPerSecond = decimalFormat.format(callsPerSecond);
     performanceList.add(perfRow);
 
-    utilCache = new UtilCache("test-cache", 0, 0, 0, false, false, "test-cache");
+    utilCache = UtilCache.createOnlyUtilCache("test-cache", 0, 0, 0, false, "test-cache"); // SCIPIO: fixed construction
     utilCache.put("testName", "testValue");
     calls = 1000000;
     startTime = System.currentTimeMillis();

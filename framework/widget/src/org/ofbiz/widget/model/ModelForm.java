@@ -32,12 +32,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.ofbiz.base.util.BshUtil;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -59,15 +57,11 @@ import org.ofbiz.widget.model.ModelFormField.OptionSource;
 import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
-import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Element;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 /**
  * Abstract base class for the &lt;form&gt; and &lt;grid&gt; elements.
- * 
+ *
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -77,36 +71,36 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors. All behavior should be contained in model visitors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      * BE VERY CAREFUL when implementing "extends" - parent form collections
      * must be added to child collections, not replace them. In other words,
      * do not assign parent collection fields to child collection fields.
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String DEFAULT_FORM_RESULT_LIST_NAME = "defaultFormResultList";
     /** Pagination settings and defaults. */
-    public static int DEFAULT_PAGE_SIZE = 10;
-    public static int MAX_PAGE_SIZE = 10000;
-    public static String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
-    public static String DEFAULT_PAG_SIZE_FIELD = "viewSize";
-    public static String DEFAULT_PAG_STYLE = "nav-pager";
-    public static String DEFAULT_PAG_FIRST_STYLE = "nav-first";
-    public static String DEFAULT_PAG_PREV_STYLE = "nav-previous";
-    public static String DEFAULT_PAG_NEXT_STYLE = "nav-next";
-    public static String DEFAULT_PAG_LAST_STYLE = "nav-last";
+    public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final int MAX_PAGE_SIZE = 10000;
+    public static final String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
+    public static final String DEFAULT_PAG_SIZE_FIELD = "viewSize";
+    public static final String DEFAULT_PAG_STYLE = "nav-pager";
+    public static final String DEFAULT_PAG_FIRST_STYLE = "nav-first";
+    public static final String DEFAULT_PAG_PREV_STYLE = "nav-previous";
+    public static final String DEFAULT_PAG_NEXT_STYLE = "nav-next";
+    public static final String DEFAULT_PAG_LAST_STYLE = "nav-last";
     /** Sort field default styles. */
-    public static String DEFAULT_SORT_FIELD_STYLE = "sort-order";
-    public static String DEFAULT_SORT_FIELD_ASC_STYLE = "sort-order-asc";
-    public static String DEFAULT_SORT_FIELD_DESC_STYLE = "sort-order-desc";
+    public static final String DEFAULT_SORT_FIELD_STYLE = "sort-order";
+    public static final String DEFAULT_SORT_FIELD_ASC_STYLE = "sort-order-asc";
+    public static final String DEFAULT_SORT_FIELD_DESC_STYLE = "sort-order-desc";
     private final List<ModelAction> actions;
     private final List<AltRowStyle> altRowStyles;
     private final List<AltTarget> altTargets;
@@ -137,11 +131,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     /** This is a list of FieldGroups in the order they were created.
      * Can also include Banner objects.
      */
-    private final List<FieldGroupBase> fieldGroupList;
+    protected final List<FieldGroupBase> fieldGroupList;
     /** This Map is keyed with the field name and has a FieldGroup for the value.
      * Can also include Banner objects.
      */
-    private final Map<String, FieldGroupBase> fieldGroupMap;
+    protected final Map<String, FieldGroupBase> fieldGroupMap;
     /** This List will contain one copy of each field for each field name in the order
      * they were encountered in the service, entity, or form definition; field definitions
      * with constraints will also be in this list but may appear multiple times for the same
@@ -151,7 +145,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
      * necessary to use the Map. The Map is used when loading the form definition to keep the
      * list clean and implement the override features for field definitions.
      */
-    private final List<ModelFormField> fieldList;
+    protected final List<ModelFormField> fieldList;
     private final String focusFieldName;
     private final String formLocation;
     private final String formTitleAreaStyle;
@@ -195,47 +189,49 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     private final String targetType;
     private final FlexibleStringExpander targetWindowExdr;
     private final String title;
+    private final FlexibleStringExpander emptyFormDataMessage;
     private final String tooltip;
     private final String type;
     private final boolean useRowSubmit;
     /** Keeps track of conditional fields to help ensure that only one is rendered
      */
     private final Set<String> useWhenFields;
-    
+
+    // SCIPIO: new fields
     private final FlexibleStringExpander hideHeaderWhen;
     private final FlexibleStringExpander hideTableWhen;
     private final FlexibleStringExpander useAlternateTextWhen;
     private final FlexibleStringExpander alternateText;
     private final FlexibleStringExpander alternateTextStyle;
-    
+
     private final Integer positions;
     private final Integer defaultPositionSpan;
-    
+
     private final boolean defaultCombineActionFields;
-    
+
     /**
      * SCIPIO: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
     private final AttribsExpression attribsExpr;
-    
-    
+
+
     /**
      * SCIPIO: the <form> get or post method! somehow missing from stock defs.
      */
     private final FlexibleStringExpander method;
-    
+
     // SCIPIO: special select fields for when use-row-submit is true
     // FIXME: currently these are NOT included in the other field lists, but they should be!
     private final ModelFormField rowSubmitHeaderSelectField;
     private final ModelFormField rowSubmitSelectField;
-    
+
     // SCIPIO: new
     private final String submitHiddenFormNamePrefix;
     private final String rowSubmitSelectFieldNamePrefix;
     private final String rowSubmitSelectFieldParamNamePrefix;
     private final List<ModelPageScript> pageScripts;
-    
+
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -252,7 +248,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             }
         } else {
             try {
-                defaultViewSizeInt = Integer.valueOf(viewSize);
+                defaultViewSizeInt = Integer.parseInt(viewSize);
             } catch (NumberFormatException e) {
             }
         }
@@ -286,6 +282,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             title = parentModel.title;
         }
         this.title = title;
+        FlexibleStringExpander emptyFormDataMessage = FlexibleStringExpander.getInstance(formElement.getAttribute("empty-form-data-message"));
+        if (emptyFormDataMessage.isEmpty() && parentModel != null) {
+            emptyFormDataMessage = parentModel.emptyFormDataMessage;
+        }
+        this.emptyFormDataMessage = emptyFormDataMessage;
         String tooltip = formElement.getAttribute("tooltip");
         if (tooltip.isEmpty() && parentModel != null) {
             tooltip = parentModel.tooltip;
@@ -411,7 +412,8 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         } else {
             this.hideHeader = "true".equals(hideHeader);
         }
-        
+
+        // SCIPIO: new fields
         FlexibleStringExpander hideHeaderWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("hide-header-when"));
         if (hideHeaderWhen.isEmpty() && parentModel != null) {
             hideHeaderWhen = parentModel.hideHeaderWhen;
@@ -422,7 +424,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             hideTableWhen = parentModel.hideTableWhen;
         }
         this.hideTableWhen = hideTableWhen;
-        
+
         FlexibleStringExpander useAlternateTextWhen = FlexibleStringExpander.getInstance(formElement.getAttribute("use-alternate-text-when"));
         if (useAlternateTextWhen.isEmpty() && parentModel != null) {
             useAlternateTextWhen = parentModel.useAlternateTextWhen;
@@ -438,7 +440,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             alternateTextStyle = parentModel.alternateTextStyle;
         }
         this.alternateTextStyle = alternateTextStyle;
-        
+
         String positionsStr = formElement.getAttribute("positions");
         Integer positions = null;
         try {
@@ -453,7 +455,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     + "]; using the default of the form renderer", module);
         }
         this.positions = positions;
-        
+
         String defaultPositionSpanStr = formElement.getAttribute("default-position-span");
         int defaultPositionSpan = 0;
         try {
@@ -468,18 +470,18 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     + "]; using the default of the form renderer", module);
         }
         this.defaultPositionSpan = defaultPositionSpan;
-        
+
         String defaultCombineActionFields = formElement.getAttribute("default-combine-action-fields");
         if (defaultCombineActionFields.isEmpty() && parentModel != null) {
             this.defaultCombineActionFields = parentModel.defaultCombineActionFields;
         } else {
             this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
         }
-        
+
         // SCIPIO: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
-        
+
         // SCIPIO: form submit method
         FlexibleStringExpander method = FlexibleStringExpander.getInstance(formElement.getAttribute("method"));
         if (method.isEmpty()) {
@@ -490,7 +492,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             }
         }
         this.method = method;
-        
+
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
             this.clientAutocompleteFields = parentModel.clientAutocompleteFields;
@@ -502,7 +504,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             paginateTarget = parentModel.paginateTarget;
         }
         this.paginateTarget = paginateTarget;
-        ArrayList<AltTarget> altTargets = new ArrayList<AltTarget>();
+        ArrayList<AltTarget> altTargets = new ArrayList<>();
         for (Element altTargetElement : UtilXml.childElementList(formElement, "alt-target")) {
             altTargets.add(new AltTarget(altTargetElement));
         }
@@ -511,7 +513,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         altTargets.trimToSize();
         this.altTargets = Collections.unmodifiableList(altTargets);
-        ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
+        ArrayList<ModelAction> actions = new ArrayList<>();
         if (parentModel != null) {
             actions.addAll(parentModel.actions);
         }
@@ -521,7 +523,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
-        ArrayList<ModelAction> rowActions = new ArrayList<ModelAction>();
+        ArrayList<ModelAction> rowActions = new ArrayList<>();
         if (parentModel != null) {
             rowActions.addAll(parentModel.rowActions);
         }
@@ -531,9 +533,9 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         rowActions.trimToSize();
         this.rowActions = Collections.unmodifiableList(rowActions);
-        ArrayList<UpdateArea> onPaginateUpdateAreas = new ArrayList<UpdateArea>();
-        ArrayList<UpdateArea> onSubmitUpdateAreas = new ArrayList<UpdateArea>();
-        ArrayList<UpdateArea> onSortColumnUpdateAreas = new ArrayList<UpdateArea>();
+        ArrayList<UpdateArea> onPaginateUpdateAreas = new ArrayList<>();
+        ArrayList<UpdateArea> onSubmitUpdateAreas = new ArrayList<>();
+        ArrayList<UpdateArea> onSortColumnUpdateAreas = new ArrayList<>();
         if (parentModel != null) {
             onPaginateUpdateAreas.addAll(parentModel.onPaginateUpdateAreas);
             onSubmitUpdateAreas.addAll(parentModel.onSubmitUpdateAreas);
@@ -580,7 +582,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         this.onSubmitUpdateAreas = Collections.unmodifiableList(onSubmitUpdateAreas);
         onSortColumnUpdateAreas.trimToSize();
         this.onSortColumnUpdateAreas = Collections.unmodifiableList(onSortColumnUpdateAreas);
-        ArrayList<AltRowStyle> altRowStyles = new ArrayList<AltRowStyle>();
+        ArrayList<AltRowStyle> altRowStyles = new ArrayList<>();
         if (parentModel != null) {
             altRowStyles.addAll(parentModel.altRowStyles);
         }
@@ -590,7 +592,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         altRowStyles.trimToSize();
         this.altRowStyles = Collections.unmodifiableList(altRowStyles);
-        
+
         // SCIPIO: 2017-04-21: new page scripts
         ArrayList<ModelPageScript> pageScripts = new ArrayList<>();
         if (parentModel != null) {
@@ -602,13 +604,13 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         altRowStyles.trimToSize();
         this.pageScripts = Collections.unmodifiableList(pageScripts);
-        
-        Set<String> useWhenFields = new HashSet<String>();
+
+        Set<String> useWhenFields = new HashSet<>();
         if (parentModel != null) {
             useWhenFields.addAll(parentModel.useWhenFields);
         }
-        ArrayList<ModelFormFieldBuilder> fieldBuilderList = new ArrayList<ModelFormFieldBuilder>();
-        Map<String, ModelFormFieldBuilder> fieldBuilderMap = new HashMap<String, ModelFormFieldBuilder>();
+        List<ModelFormFieldBuilder> fieldBuilderList = new ArrayList<>();
+        Map<String, ModelFormFieldBuilder> fieldBuilderMap = new HashMap<>();
         if (parentModel != null) {
             // Create this fieldList/Map from clones of parentModel's
             for (ModelFormField parentChildField : parentModel.fieldList) {
@@ -618,15 +620,15 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 fieldBuilderMap.put(builder.getName(), builder);
             }
         }
-        Map<String, FieldGroupBase> fieldGroupMap = new HashMap<String, FieldGroupBase>();
+        Map<String, FieldGroupBase> fieldGroupMap = new HashMap<>();
         if (parentModel != null) {
             fieldGroupMap.putAll(parentModel.fieldGroupMap);
         }
-        ArrayList<FieldGroupBase> fieldGroupList = new ArrayList<FieldGroupBase>();
+        ArrayList<FieldGroupBase> fieldGroupList = new ArrayList<>();
         if (parentModel != null) {
             fieldGroupList.addAll(parentModel.fieldGroupList);
         }
-        ArrayList<String> lastOrderFields = new ArrayList<String>();
+        ArrayList<String> lastOrderFields = new ArrayList<>();
         if (parentModel != null) {
             lastOrderFields.addAll(parentModel.lastOrderFields);
         }
@@ -745,15 +747,15 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         } else {
             this.useRowSubmit = "true".equals(useRowSubmit);
         }
-        FlexibleStringExpander rowCountExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("row-count"));
+        FlexibleStringExpander rowCountExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("row-count")); // SCIPIO
         if (rowCountExdr.isEmpty() && parentModel != null) {
             rowCountExdr = parentModel.rowCountExdr;
         }
         this.rowCountExdr = paginate;
-        ArrayList<ModelFormFieldBuilder> multiSubmitBuilders = new ArrayList<ModelFormFieldBuilder>();
-        ArrayList<AutoFieldsService> autoFieldsServices = new ArrayList<AutoFieldsService>();
-        ArrayList<AutoFieldsEntity> autoFieldsEntities = new ArrayList<AutoFieldsEntity>();
-        ArrayList<SortField> sortOrderFields = new ArrayList<SortField>();
+        List<ModelFormFieldBuilder> multiSubmitBuilders = new ArrayList<>();
+        ArrayList<AutoFieldsService> autoFieldsServices = new ArrayList<>();
+        ArrayList<AutoFieldsEntity> autoFieldsEntities = new ArrayList<>();
+        ArrayList<SortField> sortOrderFields = new ArrayList<>();
         this.defaultFieldGroup = new FieldGroup(null, this, sortOrderFields, fieldGroupMap);
         for (Element autoFieldsServiceElement : UtilXml.childElementList(formElement, "auto-fields-service")) {
             AutoFieldsService autoFieldsService = new AutoFieldsService(autoFieldsServiceElement);
@@ -769,7 +771,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         for (Element fieldElement : UtilXml.childElementList(formElement, "field")) {
             ModelFormFieldBuilder builder = new ModelFormFieldBuilder(fieldElement, this, entityModelReader, dispatchContext);
             FieldInfo fieldInfo = builder.getFieldInfo();
-            if ((thisType.equals("list") || thisType.equals("multi")) && fieldInfo instanceof ModelFormField.SubmitField) {
+            if (("list".equals(thisType) || "multi".equals(thisType)) && fieldInfo instanceof ModelFormField.SubmitField) { // SCIPIO: added "list"
                 multiSubmitBuilders.add(builder);
             } else {
                 addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
@@ -783,22 +785,22 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             // read in sort-field
             for (Element sortFieldElement : UtilXml.childElementList(sortOrderElement)) {
                 String tagName = sortFieldElement.getTagName();
-                if (tagName.equals("sort-field")) {
+                if ("sort-field".equals(tagName)) {
                     String fieldName = sortFieldElement.getAttribute("name");
                     String position = sortFieldElement.getAttribute("position");
-                    String positionSpan = sortFieldElement.getAttribute("position-span");
+                    String positionSpan = sortFieldElement.getAttribute("position-span"); // SCIPIO
                     sortOrderFields.add(new SortField(fieldName, position, positionSpan));
                     fieldGroupMap.put(fieldName, lastFieldGroup);
-                } else if (tagName.equals("last-field")) {
+                } else if ("last-field".equals(tagName)) {
                     String fieldName = sortFieldElement.getAttribute("name");
                     fieldGroupMap.put(fieldName, lastFieldGroup);
                     lastOrderFields.add(fieldName);
-                } else if (tagName.equals("banner")) {
+                } else if ("banner".equals(tagName)) {
                     Banner thisBanner = new Banner(sortFieldElement);
                     fieldGroupList.add(thisBanner);
                     lastFieldGroup = new FieldGroup(null, this, sortOrderFields, fieldGroupMap);
                     fieldGroupList.add(lastFieldGroup);
-                } else if (tagName.equals("field-group")) {
+                } else if ("field-group".equals(tagName)) {
                     FieldGroup thisFieldGroup = new FieldGroup(sortFieldElement, this, sortOrderFields, fieldGroupMap);
                     fieldGroupList.add(thisFieldGroup);
                     lastFieldGroup = new FieldGroup(null, this, sortOrderFields, fieldGroupMap);
@@ -807,7 +809,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             }
         }
         if (sortOrderFields.size() > 0) {
-            ArrayList<ModelFormFieldBuilder> sortedFields = new ArrayList<ModelFormFieldBuilder>();
+            List<ModelFormFieldBuilder> sortedFields = new ArrayList<>();
             for (SortField sortField : sortOrderFields) {
                 String fieldName = sortField.getFieldName();
                 if (UtilValidate.isEmpty(fieldName)) {
@@ -833,7 +835,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             fieldBuilderList = sortedFields;
         }
         if (UtilValidate.isNotEmpty(lastOrderFields)) {
-            List<ModelFormFieldBuilder> lastedFields = new LinkedList<ModelFormFieldBuilder>();
+            List<ModelFormFieldBuilder> lastedFields = new LinkedList<>();
             for (String fieldName : lastOrderFields) {
                 if (UtilValidate.isEmpty(fieldName)) {
                     continue;
@@ -852,12 +854,12 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             //now put all lastedFields at the field list end
             fieldBuilderList.addAll(lastedFields);
         }
-        List<ModelFormField> fieldList = new ArrayList<ModelFormField>(fieldBuilderList.size());
+        List<ModelFormField> fieldList = new ArrayList<>(fieldBuilderList.size());
         for (ModelFormFieldBuilder builder : fieldBuilderList) {
             fieldList.add(builder.build());
         }
         this.fieldList = Collections.unmodifiableList(fieldList);
-        List<ModelFormField> multiSubmitFields = new ArrayList<ModelFormField>(multiSubmitBuilders.size());
+        List<ModelFormField> multiSubmitFields = new ArrayList<>(multiSubmitBuilders.size());
         for (ModelFormFieldBuilder builder : multiSubmitBuilders) {
             multiSubmitFields.add(builder.build());
         }
@@ -879,7 +881,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             focusFieldName = parentModel.focusFieldName;
         }
         this.focusFieldName = focusFieldName;
-        
+
         // SCIPIO: new
         // TODO: Unhardcode everything below
         this.submitHiddenFormNamePrefix = "postSubmitForm";
@@ -892,19 +894,19 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         String rowSubmitSelectFieldName = makeRowSubmitSelectFieldName(this.rowSubmitSelectFieldNamePrefix);
         String rowSubmitSelectFieldParamName = this.rowSubmitSelectFieldParamNamePrefix;
         String rowSubmitSelectFieldTitle = "${uiLabelMap.CommonSelect}";
-        
+
         ModelFormField rowSubmitHeaderSelectField = null;
         ModelFormField rowSubmitSelectField = null;
         if (getUseRowSubmit()) {
             if ("list".equals(getType()) || "multi".equals(getType())) {
                 ModelFormFieldBuilder builder;
                 builder = getHeaderFieldBuilder();
-                builder.setName(rowSubmitSelectFieldName); 
+                builder.setName(rowSubmitSelectFieldName);
                 builder.setFieldName(rowSubmitSelectFieldName);
                 builder.setParameterName(rowSubmitSelectFieldName); // NOTE: SAME as Name, ONLY for header
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitHeaderSelectField = builder.build();
-                
+
                 if ("list".equals(getType())) {
                     builder = getRadioFieldBuilder();
                 } else {
@@ -912,7 +914,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 }
                 builder.setName(rowSubmitSelectFieldName);
                 builder.setFieldName(rowSubmitSelectFieldName);
-                builder.setParameterName(rowSubmitSelectFieldParamName); 
+                builder.setParameterName(rowSubmitSelectFieldParamName);
                 builder.setTitle(rowSubmitSelectFieldTitle);
                 rowSubmitSelectField = builder.build();
             }
@@ -948,7 +950,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             builder.setFieldName(modelField.getName());
             builder.induceFieldInfoFromEntityField(modelEntity, modelField, autoFieldsEntity.defaultFieldType);
             builder.setPosition(autoFieldsEntity.defaultPosition);
-            builder.setPositionSpan(autoFieldsEntity.defaultPositionSpan);
+            builder.setPositionSpan(autoFieldsEntity.defaultPositionSpan); // SCIPIO
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 builder.setMapName(autoFieldsEntity.mapName);
             }
@@ -981,26 +983,24 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     ModelEntity modelEntity;
                     try {
                         modelEntity = entityModelReader.getModelEntity(modelParam.entityName);
-                        if (modelEntity != null) {
-                            ModelField modelField = modelEntity.getField(modelParam.fieldName);
-                            if (modelField != null) {
-                                // okay, populate using the entity field info...
-                                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-                                builder.setModelForm(this);
-                                builder.setName(modelField.getName());
-                                builder.setEntityName(modelEntity.getEntityName());
-                                builder.setFieldName(modelField.getName());
-                                builder.induceFieldInfoFromEntityField(modelEntity, modelField, autoFieldsService.defaultFieldType);
-                                if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
-                                    builder.setMapName(autoFieldsService.mapName);
-                                }
-                                builder.setRequiredField(!modelParam.optional);
-                                // SCIPIO: add extra default attribs
-                                builder.setAttribsExpr(autoFieldsService.attribsExpr);
-                                addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
-                                // continue to skip creating based on service param
-                                continue;
+                        ModelField modelField = modelEntity.getField(modelParam.fieldName);
+                        if (modelField != null) {
+                            // okay, populate using the entity field info...
+                            ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+                            builder.setModelForm(this);
+                            builder.setName(modelField.getName());
+                            builder.setEntityName(modelEntity.getEntityName());
+                            builder.setFieldName(modelField.getName());
+                            builder.induceFieldInfoFromEntityField(modelEntity, modelField, autoFieldsService.defaultFieldType);
+                            if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
+                                builder.setMapName(autoFieldsService.mapName);
                             }
+                            builder.setRequiredField(!modelParam.optional);
+                            // SCIPIO: add extra default attribs
+                            builder.setAttribsExpr(autoFieldsService.attribsExpr);
+                            addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
+                            // continue to skip creating based on service param
+                            continue;
                         }
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
@@ -1015,7 +1015,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 builder.setRequiredField(!modelParam.optional);
                 builder.induceFieldInfoFromServiceParam(modelService, modelParam, autoFieldsService.defaultFieldType);
                 builder.setPosition(autoFieldsService.defaultPosition);
-                builder.setPositionSpan(autoFieldsService.defaultPositionSpan);
+                builder.setPositionSpan(autoFieldsService.defaultPositionSpan); // SCIPIO
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
                     builder.setMapName(autoFieldsService.mapName);
                 }
@@ -1043,20 +1043,19 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 fieldBuilderList.add(builder);
             }
             return;
+        }
+        // not a conditional field, see if a named field exists in Map
+        ModelFormFieldBuilder existingField = fieldBuilderMap.get(builder.getName());
+        if (existingField != null) {
+            // does exist, update the field by doing a merge/override
+            existingField.mergeOverrideModelFormField(builder);
         } else {
-            // not a conditional field, see if a named field exists in Map
-            ModelFormFieldBuilder existingField = fieldBuilderMap.get(builder.getName());
-            if (existingField != null) {
-                // does exist, update the field by doing a merge/override
-                existingField.mergeOverrideModelFormField(builder);
-            } else {
-                // does not exist, add to List and Map
-                fieldBuilderList.add(builder);
-                fieldBuilderMap.put(builder.getName(), builder);
-            }
+            // does not exist, add to List and Map
+            fieldBuilderList.add(builder);
+            fieldBuilderMap.put(builder.getName(), builder);
         }
     }
-    
+
     public List<ModelAction> getActions() {
         return actions;
     }
@@ -1064,7 +1063,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public List<AltRowStyle> getAltRowStyles() {
         return altRowStyles;
     }
-    
+
     /**
      * SCIPIO: Returns page scripts.
      * New 2017-04-21.
@@ -1085,15 +1084,6 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         return autoFieldsServices;
     }
 
-    public Interpreter getBshInterpreter(Map<String, Object> context) throws EvalError {
-        Interpreter bsh = (Interpreter) context.get("bshInterpreter");
-        if (bsh == null) {
-            bsh = BshUtil.makeInterpreter(context);
-            context.put("bshInterpreter", bsh);
-        }
-        return bsh;
-    }
-
     @Override
     public String getBoundaryCommentName() {
         return formLocation + "#" + getName();
@@ -1107,16 +1097,15 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         // use the name if there is no id
         if (UtilValidate.isNotEmpty(this.containerId)) {
             return this.containerId;
-        } else {
-            return this.getName();
         }
+        return this.getName();
     }
 
     @Override
     public String getId() { // SCIPIO: new
         return getContainerId();
     }
-    
+
     public String getContainerStyle() {
         return this.containerStyle;
     }
@@ -1164,7 +1153,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getDefaultTitleAreaStyle() {
         return this.defaultTitleAreaStyle;
     }
-    
+
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
     }
@@ -1220,22 +1209,20 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getHeaderRowStyle() {
         return this.headerRowStyle;
     }
-    
+
     public boolean getHideHeader() {
         return this.hideHeader;
     }
-    
-    public boolean getHideHeader(Map<String, Object> context) {
+
+    public boolean getHideHeader(Map<String, Object> context) { // SCIPIO
         Boolean when = getHideHeaderWhen(context);
         if (when != null) {
             return when;
         }
-        else {
-            return this.hideHeader;
-        }
+        return this.hideHeader;
     }
-    
-    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) {
+
+    static String getWidgetDefDefault(Map<String, Object> context, String propName, boolean expand) { // SCIPIO
         Properties props = UtilProperties.getProperties("widget.properties");
         if (props == null) {
             return "";
@@ -1251,8 +1238,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                     if (val != null) {
                         if (expand) {
                             return FlexibleStringExpander.expandString(val.trim(), context);
-                        }
-                        else {
+                        } else {
                             return val.trim();
                         }
                     }
@@ -1263,20 +1249,18 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         if (val != null) {
             if (expand) {
                 return FlexibleStringExpander.expandString(val.trim(), context);
-            }
-            else {
+            } else {
                 return val.trim();
             }
         }
         return "";
     }
-    
-    static String getWidgetDefDefault(Map<String, Object> context, String propName) {
+
+    static String getWidgetDefDefault(Map<String, Object> context, String propName) { // SCIPIO
         return getWidgetDefDefault(context, propName, true);
     }
-    
-    
-    private Boolean getBooleanExprResult(String val, String name) {
+
+    private Boolean getBooleanExprResult(String val, String name) { // SCIPIO
         if (UtilValidate.isNotEmpty(val)) {
             if ("true".equals(val)) {
                 return true;
@@ -1293,111 +1277,110 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
         return null;
     }
-    
-    public String getHideHeaderWhen() {
+
+    public String getHideHeaderWhen() { // SCIPIO
         return this.hideHeaderWhen.getOriginal();
     }
-    
-    public Boolean getHideHeaderWhen(Map<String, Object> context) {
+
+    public Boolean getHideHeaderWhen(Map<String, Object> context) { // SCIPIO
         String when = this.hideHeaderWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
             when = getWidgetDefDefault(context, "hideHeaderWhen");
         }
         return getBooleanExprResult(when, "hide-header-when");
     }
-    
-    public boolean isHideHeaderWhen(Map<String, Object> context) {
+
+    public boolean isHideHeaderWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getHideHeaderWhen(context);
         if (res != null) {
             return res;
         }
         return false;
     }
-    
-    public String getHideTableWhen() {
+
+    public String getHideTableWhen() { // SCIPIO
         return this.hideTableWhen.getOriginal();
     }
-    
-    public Boolean getHideTableWhen(Map<String, Object> context) {
+
+    public Boolean getHideTableWhen(Map<String, Object> context) { // SCIPIO
         String when = this.hideTableWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
             when = getWidgetDefDefault(context, "hideTableWhen");
         }
         return getBooleanExprResult(when, "hide-table-when");
     }
-    
-    public boolean isHideTableWhen(Map<String, Object> context) {
+
+    public boolean isHideTableWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getHideTableWhen(context);
         if (res != null) {
             return res;
         }
         return false;
     }
-    
-    public String getUseAlternateTextWhen() {
+
+    public String getUseAlternateTextWhen() { // SCIPIO
         return this.useAlternateTextWhen.getOriginal();
     }
-    
-    public Boolean getUseAlternateTextWhen(Map<String, Object> context) {
+
+    public Boolean getUseAlternateTextWhen(Map<String, Object> context) { // SCIPIO
         String when = this.useAlternateTextWhen.expandString(context);
         if (UtilValidate.isEmpty(when)) {
             when = getWidgetDefDefault(context, "useAlternateTextWhen");
         }
         return getBooleanExprResult(when, "use-alternate-text-when");
     }
-    
-    public boolean isUseAlternateTextWhen(Map<String, Object> context) {
+
+    public boolean isUseAlternateTextWhen(Map<String, Object> context) { // SCIPIO
         Boolean res = getUseAlternateTextWhen(context);
         if (res != null) {
             return res;
         }
         return false;
     }
-    
-    public String getAlternateText() {
+
+    public String getAlternateText() { // SCIPIO
         return this.alternateText.getOriginal();
     }
-    
-    public String getAlternateText(Map<String, Object> context) {
+
+    public String getAlternateText(Map<String, Object> context) { // SCIPIO
         String val = this.alternateText.expandString(context);
         if (UtilValidate.isEmpty(val)) {
             val = getWidgetDefDefault(context, "alternateText");
         }
         return val;
     }
-    
-    public String getAlternateTextStyle() {
+
+    public String getAlternateTextStyle() { // SCIPIO
         return this.alternateTextStyle.getOriginal();
     }
-    
-    public String getAlternateTextStyle(Map<String, Object> context) {
+
+    public String getAlternateTextStyle(Map<String, Object> context) { // SCIPIO
         String val = this.alternateTextStyle.expandString(context);
         if (UtilValidate.isEmpty(val)) {
             val = getWidgetDefDefault(context, "alternateTextStyle");
         }
         return val;
     }
-    
-    public Integer getPositions() {
+
+    public Integer getPositions() { // SCIPIO
         return positions;
     }
-    
-    public int getDefaultPositionSpan() {
+
+    public int getDefaultPositionSpan() { // SCIPIO
         if (this.defaultPositionSpan == null)
             return 0;
         return defaultPositionSpan;
     }
-    
-    public boolean getDefaultCombineActionFields() {
+
+    public boolean getDefaultCombineActionFields() { // SCIPIO
         return defaultCombineActionFields;
     }
 
     public String getItemIndexSeparator() {
         if (UtilValidate.isNotEmpty(this.itemIndexSeparator)) {
             return this.itemIndexSeparator;
-        } else {
-            return "_o_";
         }
+        return "_o_";
     }
 
     public List<String> getLastOrderFields() {
@@ -1464,7 +1447,9 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             String size = this.overrideListSize.expandString(context);
             try {
                 size = size.replaceAll("[^0-9.]", "");
-                listSize = Integer.parseInt(size);
+                if (!size.isEmpty()) {
+                    listSize = Integer.parseInt(size);
+                }
             } catch (NumberFormatException e) {
                 Debug.logError(e, "Error getting override list size from value " + size, module);
             }
@@ -1479,10 +1464,9 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public boolean getPaginate(Map<String, Object> context) {
         String paginate = this.paginate.expandString(context);
         if (!paginate.isEmpty()) {
-            return Boolean.valueOf(paginate).booleanValue();
-        } else {
-            return true;
+            return Boolean.valueOf(paginate);
         }
+        return true;
     }
 
     public String getPaginateFirstLabel() {
@@ -1682,14 +1666,16 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getStyleAltRowStyle(Map<String, Object> context) {
         String styles = "";
         try {
-            // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = this.getBshInterpreter(context);
             for (AltRowStyle altRowStyle : this.altRowStyles) {
-                Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(altRowStyle.useWhen));
+                String useWhen = altRowStyle.useWhen.expandString(context); // SCIPIO: added FlexibleStringExpander support
+                // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+                // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+                final boolean useCache = altRowStyle.useWhen.isConstant();
+                Object retVal = GroovyUtil.evalConditionExpr(useWhen, context, useCache);
                 // retVal should be a Boolean, if not something weird is up...
                 if (retVal instanceof Boolean) {
-                    Boolean boolVal = (Boolean) retVal;
-                    if (boolVal.booleanValue()) {
+                    // SCIPIO: Slight refactor here
+                    if ((Boolean) retVal) {
                         styles += altRowStyle.style;
                     }
                 } else {
@@ -1697,8 +1683,8 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                             + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
                 }
             }
-        } catch (EvalError e) {
-            String errmsg = "Error evaluating BeanShell style conditions on form " + getName();
+        } catch (CompilationFailedException e) {
+            String errmsg = "Error evaluating groovy style conditions on form " + getName();
             Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }
@@ -1715,27 +1701,25 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public String getTarget(Map<String, Object> context, String targetType) {
         Map<String, Object> expanderContext = UtilCodec.EncodingMapWrapper.getEncodingMapWrapper(context, WidgetWorker.getEarlyEncoder(context)); // SCIPIO: simplified
         try {
-            // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = this.getBshInterpreter(context);
             for (AltTarget altTarget : this.altTargets) {
-                String useWhen = FlexibleStringExpander.expandString(altTarget.useWhen, context);
-                Object retVal = bsh.eval(StringUtil.convertOperatorSubstitutions(useWhen));
-                boolean condTrue = false;
+                String useWhen = altTarget.useWhen.expandString(context); // SCIPIO: changed for useWhen as FlexibleStringExpander
+             // SCIPIO: 2018-09-19: Now using Groovy as second interpreter
+                // IMPORTANT: Only enable cache if the flexible expression was a constant, otherwise the cache could blow up!
+                final boolean useCache = altTarget.useWhen.isConstant();
+                Object retVal = GroovyUtil.evalConditionExpr(useWhen, context, useCache);
                 // retVal should be a Boolean, if not something weird is up...
                 if (retVal instanceof Boolean) {
-                    Boolean boolVal = (Boolean) retVal;
-                    condTrue = boolVal.booleanValue();
+                    // SCIPIO: Slight refactor here
+                    if (((boolean) retVal) && !"inter-app".equals(targetType)) {
+                        return altTarget.targetExdr.expandString(expanderContext);
+                    }
                 } else {
                     throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: "
                             + retVal.getClass().getName() + " [" + retVal + "] of form " + getName());
                 }
-
-                if (condTrue && !targetType.equals("inter-app")) {
-                    return altTarget.targetExdr.expandString(expanderContext);
-                }
             }
-        } catch (EvalError e) {
-            String errmsg = "Error evaluating BeanShell target conditions on form " + getName();
+        } catch (CompilationFailedException e) {
+            String errmsg = "Error evaluating groovy target conditions on form " + getName();
             Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }
@@ -1756,6 +1740,10 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
 
     public String getTitle() {
         return this.title;
+    }
+
+    public String getEmptyFormDataMessage(Map<String, Object> context) {
+        return this.emptyFormDataMessage.expandString(context);
     }
 
     public String getTooltip() {
@@ -1793,43 +1781,49 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public void runFormActions(Map<String, Object> context) {
         AbstractModelAction.runSubActions(this.actions, context);
     }
-    
+
+    /**
+     * SCIPIO: getAttribsExpr.
+     */
     public AttribsExpression getAttribsExpr() {
         return attribsExpr;
     }
-    
+
+    /**
+     * SCIPIO: getMethod.
+     */
     public String getMethod(Map<String, Object> context) {
         return method.expandString(context);
     }
-    
+
     /**
-     * SCIPIO: new
+     * SCIPIO: getSubmitHiddenFormNamePrefix.
      */
     public String getSubmitHiddenFormNamePrefix() {
         return submitHiddenFormNamePrefix;
     }
-    
+
     /**
-     * SCIPIO: new
+     * SCIPIO: getSubmitHiddenFormName.
      */
     public String getSubmitHiddenFormName(String uniquefix) {
         return getSubmitHiddenFormNamePrefix() + getItemIndexSeparator() + uniquefix;
     }
-    
+
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
     public String getRowSubmitSelectFieldNamePrefix() {
         return rowSubmitSelectFieldNamePrefix;
     }
-    
+
     /**
      * SCIPIO: Returns row-submit special select field name prefix.
      */
     public String getRowSubmitSelectFieldParamNamePrefix() {
         return rowSubmitSelectFieldParamNamePrefix;
     }
-    
+
     private String makeRowSubmitSelectFieldName(String prefix) {
         // FIXME: HARDCODED!
         return prefix + getItemIndexSeparator() + getName();
@@ -1841,9 +1835,9 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public ModelFormField getRowSubmitHeaderSelectField() {
         return rowSubmitHeaderSelectField;
     }
-    
+
     /**
-     * SCIPIO: new
+     * SCIPIO: getHeaderFieldBuilder.
      */
     private ModelFormFieldBuilder getHeaderFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
@@ -1852,57 +1846,56 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         builder.setFieldInfo(displayField);
         return builder;
     }
-    
+
     /**
      * SCIPIO: Gets row-submit field (data rows).
      */
     public ModelFormField getRowSubmitSelectField() {
         return rowSubmitSelectField;
     }
-    
+
     /**
-     * SCIPIO: new
+     * SCIPIO: getRadioFieldBuilder.
      */
     private ModelFormFieldBuilder getRadioFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        List<OptionSource> optionSources = new ArrayList<>();
         optionSources.add(new SingleOption("Y", " ", null));
         ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
         builder.setModelForm(this);
         builder.setFieldInfo(radioField);
-        return builder; 
+        return builder;
     }
-    
+
     /**
-     * SCIPIO: new
+     * SCIPIO: getCheckboxFieldBuilder.
      */
     private ModelFormFieldBuilder getCheckboxFieldBuilder() {
         ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-        List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+        List<OptionSource> optionSources = new ArrayList<>();
         optionSources.add(new SingleOption("Y", " ", null));
-        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+        ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
         builder.setModelForm(this);
         builder.setFieldInfo(checkField);
         return builder;
     }
-    
-    
+
     public static class AltRowStyle implements Serializable {
-        public final String useWhen;
+        public final FlexibleStringExpander useWhen; // SCIPIO: changed to FlexibleStringExpander
         public final String style;
 
         public AltRowStyle(Element altRowStyleElement) {
-            this.useWhen = altRowStyleElement.getAttribute("use-when");
+            this.useWhen = FlexibleStringExpander.getInstance(altRowStyleElement.getAttribute("use-when")); // SCIPIO: changed to FlexibleStringExpander
             this.style = altRowStyleElement.getAttribute("style");
         }
     }
 
     public static class AltTarget implements Serializable {
-        public final String useWhen;
+        public final FlexibleStringExpander useWhen; // SCIPIO: changed to FlexibleStringExpander
         public final FlexibleStringExpander targetExdr;
 
         public AltTarget(Element altTargetElement) {
-            this.useWhen = altTargetElement.getAttribute("use-when");
+            this.useWhen = FlexibleStringExpander.getInstance(altTargetElement.getAttribute("use-when")); // SCIPIO: changed to FlexibleStringExpander
             this.targetExdr = FlexibleStringExpander.getInstance(altTargetElement.getAttribute("target"));
         }
 
@@ -1923,7 +1916,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
-        
+
         /**
          * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
@@ -1938,26 +1931,26 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             int position = 1;
             try {
                 if (UtilValidate.isNotEmpty(positionStr)) {
-                    position = Integer.valueOf(positionStr);
+                    position = Integer.parseInt(positionStr);
                 }
             } catch (Exception e) {
                 Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
-            
+
             String positionSpanStr = element.getAttribute("default-position-span");
             Integer positionSpan = null;
             try {
                 if (UtilValidate.isNotEmpty(positionSpanStr)) {
-                    positionSpan = Integer.valueOf(positionSpanStr);
+                    positionSpan = Integer.parseInt(positionSpanStr);
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 Debug.logError(e, "Could not convert position span attribute of the field element to an integer: [" + positionSpanStr
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
-            
+
             this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
@@ -1968,7 +1961,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
-        
+
         /**
          * SCIPIO: string expression representing a json-like map of extra form attributes.
          * It is stored without wrapping brackets.
@@ -1983,26 +1976,26 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             int position = 1;
             try {
                 if (UtilValidate.isNotEmpty(positionStr)) {
-                    position = Integer.valueOf(positionStr);
+                    position = Integer.parseInt(positionStr);
                 }
             } catch (Exception e) {
                 Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr
                         + "], using the default of the form renderer", module);
             }
             this.defaultPosition = position;
-            
+
             String positionSpanStr = element.getAttribute("default-position-span");
             Integer positionSpan = null;
             try {
                 if (UtilValidate.isNotEmpty(positionSpanStr)) {
-                    positionSpan = Integer.valueOf(positionSpanStr);
+                    positionSpan = Integer.parseInt(positionSpanStr);
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 Debug.logError(e, "Could not convert position span attribute of the field element to an integer: [" + positionSpanStr
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
-            
+
             this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
@@ -2093,8 +2086,8 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
                 }
                 for (Element sortFieldElement : UtilXml.childElementList(sortOrderElement, "sort-field")) {
                     sortOrderFields.add(new SortField(sortFieldElement.getAttribute("name"), sortFieldElement
-                            .getAttribute("position"), sortFieldElement
-                            .getAttribute("position-span")));
+                            .getAttribute("position"),
+                            sortFieldElement.getAttribute("position-span"))); // SCIPIO: position-span
                     fieldGroupMap.put(sortFieldElement.getAttribute("name"), this);
                 }
             } else {
@@ -2172,7 +2165,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     public static class SortField implements Serializable {
         private final String fieldName;
         private final Integer position;
-        private final Integer positionSpan;
+        private final Integer positionSpan; // SCIPIO
 
         public SortField(String name) {
             this(name, null, null);
@@ -2183,18 +2176,20 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             if (UtilValidate.isNotEmpty(position)) {
                 Integer posParam = null;
                 try {
-                    posParam = Integer.valueOf(position);
-                } catch (Exception e) {/* just ignore the exception*/
+                    posParam = Integer.parseInt(position);
+                } catch (IllegalArgumentException e) {
+                    Debug.logInfo("The class SortField caused an exception parsing 'position': " + e.toString(), module); // SCIPIO: e.toString
                 }
                 this.position = posParam;
             } else {
                 this.position = null;
             }
-            if (UtilValidate.isNotEmpty(positionSpan)) {
+            if (UtilValidate.isNotEmpty(positionSpan)) { // SCIPIO
                 Integer posParam = null;
                 try {
-                    posParam = Integer.valueOf(positionSpan);
-                } catch (Exception e) {/* just ignore the exception*/
+                    posParam = Integer.parseInt(positionSpan);
+                } catch (IllegalArgumentException e) {
+                    Debug.logInfo("The class SortField caused an exception parsing 'position-span': " + e.toString(), module);
                 }
                 this.positionSpan = posParam;
             } else {
@@ -2246,7 +2241,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             if (parameterElementList.isEmpty()) {
                 this.parameterList = Collections.emptyList();
             } else {
-                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<CommonWidgetModels.Parameter>(parameterElementList.size());
+                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<>(parameterElementList.size());
                 for (Element parameterElement : parameterElementList) {
                     parameterList.add(new CommonWidgetModels.Parameter(parameterElement));
                 }
@@ -2299,7 +2294,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         }
 
         public Map<String, String> getParameterMap(Map<String, Object> context) {
-            Map<String, String> fullParameterMap = new HashMap<String, String>();
+            Map<String, String> fullParameterMap = new HashMap<>();
             if (autoServiceParameters != null) {
                 fullParameterMap.putAll(autoServiceParameters.getParametersMap(context, defaultServiceName));
             }
@@ -2342,19 +2337,19 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             return parameterList;
         }
     }
-    
+
     @Override
     public String getContainerLocation() { // SCIPIO: new
         return formLocation;
     }
-    
+
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "form";
     }
-    
+
     /**
-     * SCIPIO: Combines an extra style (like selected-style) to a main style 
+     * SCIPIO: Combines an extra style (like selected-style) to a main style
      * string (like widget-style).
      * <p>
      * NOTE: currently, the extra style is always added as an extra, and

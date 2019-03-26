@@ -20,7 +20,6 @@ package org.ofbiz.base.util.codec;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.HtmlEncoder;
 import org.ofbiz.base.util.UtilCodec.OwaspHtmlEncoder;
@@ -37,19 +36,19 @@ public abstract class HtmlSanitizerPolicies {
 
     private HtmlSanitizerPolicies() {}
 
-    /* 
+    /*
      * ***************************************************
      * Generic factories
-     * *************************************************** 
+     * ***************************************************
      */
-    
+
     public static class NoSanitizeHtmlEncoder extends HtmlEncoder {
         @Override
         public String sanitize(String original) {
             return original;
         }
     }
-    
+
     /**
      * Returns a basic HtmlEncoder that does not sanitize!
      */
@@ -59,7 +58,7 @@ public abstract class HtmlSanitizerPolicies {
             return new NoSanitizeHtmlEncoder();
         }
     }
-    
+
     /**
      * Returns a basic HtmlEncoder that does no sanitization, just encoding.
      */
@@ -69,7 +68,7 @@ public abstract class HtmlSanitizerPolicies {
             return new UtilCodec.EscapeHtmlEncoder();
         }
     }
-    
+
     /**
      * Returns a basic HtmlEncoder that does no sanitization, just encoding.
      */
@@ -84,7 +83,7 @@ public abstract class HtmlSanitizerPolicies {
             return encoder;
         }
     }
-    
+
     /**
      * Returns html-perm or html-strict depending on sanitizer.permissive.policy.
      */
@@ -100,12 +99,12 @@ public abstract class HtmlSanitizerPolicies {
         }
     }
 
-    /* 
+    /*
      * ***************************************************
      * OWASP policy factories
-     * *************************************************** 
+     * ***************************************************
      */
-    
+
     public static abstract class OwaspSanitizerFactory implements EncoderFactory {
         @Override
         public SimpleEncoder createEncoder(String name, Map<String, String> config, EncoderSource encoderSource) {

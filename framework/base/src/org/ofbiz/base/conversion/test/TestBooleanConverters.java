@@ -22,12 +22,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.conversion.BooleanConverters;
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.ConverterLoader;
 import org.ofbiz.base.conversion.Converters;
+
+import junit.framework.TestCase;
 
 public class TestBooleanConverters extends TestCase {
 
@@ -49,7 +49,7 @@ public class TestBooleanConverters extends TestCase {
         assertEquals(label + " converted", Boolean.FALSE, converter.convert(falseSource));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <S> void assertToCollection(String label, S source) throws Exception {
         Converter<S, ? extends Collection> toList = (Converter<S, ? extends Collection>) Converters.getConverter(source.getClass(), List.class);
         Collection<S> listResult = toList.convert(source);

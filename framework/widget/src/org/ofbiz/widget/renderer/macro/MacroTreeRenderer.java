@@ -52,18 +52,18 @@ import freemarker.template.TemplateException;
 
 /**
  * Widget Library - Tree Renderer implementation based on Freemarker macros
- * 
+ *
  */
 public class MacroTreeRenderer implements TreeStringRenderer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private Template macroLibrary;
-    
+
     // SCIPIO: new
     private final FtlScriptFormatter ftlFmt = new FtlScriptFormatter();
     private ContextHandler contextHandler = new ContextHandler("tree");
     private final String rendererName;
-    
+
     /**
      * Constructor.
      * <p>
@@ -78,33 +78,33 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         this.macroLibrary = MacroScreenRenderer.getTemplate(name, macroLibraryPath);
         this.rendererName = name; // SCIPIO: new
     }
-    
+
     /**
      * Old tree renderer constructor.
      * <p>
      * SCIPIO: modified to require name.
-     * 
+     *
      * @deprecated environments now stored in WeakHashMap so writer from individual calls used instead.
      */
     @Deprecated
     public MacroTreeRenderer(String name, String macroLibraryPath, Appendable writer) throws TemplateException, IOException {
         this(name, macroLibraryPath);
     }
-    
+
     /**
-     * SCIPIO: Returns macro library path used for this renderer. 
+     * SCIPIO: Returns macro library path used for this renderer.
      */
     public String getMacroLibraryPath() {
         return macroLibrary.getName();
     }
-    
+
     /**
      * SCIPIO: Returns the renderer name (html, xml, etc.).
      */
     public String getRendererName() {
         return rendererName;
     }
-    
+
     private void executeMacro(Appendable writer, String macro) throws IOException {
         try {
             Environment environment = getEnvironment(writer);
@@ -113,23 +113,20 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             Template template = new Template((new java.util.Date()).toString(), templateReader,
                     FreeMarkerWorker.getDefaultOfbizConfig());
             templateReader.close();
-            FreeMarkerWorker.includeTemplate(template, environment);
-        } catch (TemplateException e) {
-            Debug.logError(e, "Error rendering tree thru ftl", module);
-            handleError(writer, e); // SCIPIO
-        } catch (IOException e) {
+            FreeMarkerWorker.includeTemplate(template, environment); // SCIPIO: use FreeMarkerWorker instead of Environment
+        } catch (TemplateException | IOException e) {
             Debug.logError(e, "Error rendering tree thru ftl", module);
             handleError(writer, e); // SCIPIO
         }
     }
- 
+
     /**
      * SCIPIO: makes exception handling decision for executeMacro exceptions.
      */
     private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
         MacroScreenRenderer.handleError(writer, contextHandler.getInitialContext(writer), t);
     }
-    
+
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -140,7 +137,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         }
         return environment;
     }
-    
+
     /**
      * Renders the beginning boundary comment string.
      * @param writer The writer to write to
@@ -159,7 +156,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
-    
+
     /**
      * Renders the ending boundary comment string.
      * @param writer The writer to write to
@@ -178,12 +175,12 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
-    
+
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException {
         contextHandler.registerContext(writer, context);
         String currentNodeTrailPiped = null;
         List<String> currentNodeTrail = UtilGenerics.toList(context.get("currentNodeTrail"));
-        
+
         String style = "";
         if (node.isRootNode()) {
             if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
@@ -193,7 +190,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             //style = "basic-tree";
             style = "basic-tree scp-tree-widget";
         }
- 
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderNodeBegin ");
         sr.append(" style=");
@@ -227,7 +224,6 @@ public class MacroTreeRenderer implements TreeStringRenderer {
                 // Not on the trail
                 if (node.showPeers(depth, context)) {
                     context.put("processChildren", Boolean.FALSE);
-                    //expandCollapseLink.setText("&nbsp;+&nbsp;");
                     // SCIPIO: 2018-05: This character must be url-escaped otherwise newer Tomcat will crash
                     //currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
                     currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "%7C");
@@ -243,7 +239,6 @@ public class MacroTreeRenderer implements TreeStringRenderer {
                 }
             } else {
                 context.put("processChildren", Boolean.TRUE);
-                //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 String lastContentId = currentNodeTrail.remove(currentNodeTrail.size() - 1);
                 // SCIPIO: 2018-05: This character must be url-escaped otherwise newer Tomcat will crash
                 //currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
@@ -278,7 +273,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderNodeEnd ");
         sr.append(" processChildren=");
-        sr.append(Boolean.toString(processChildren.booleanValue()));
+        sr.append(Boolean.toString(processChildren));
         sr.append(" isRootNode=");
         sr.append(Boolean.toString(node.isRootNode()));
         sr.append(" />");
@@ -292,7 +287,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
 
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) throws IOException {
         Boolean processChildren = (Boolean) context.get("processChildren");
-        if (processChildren.booleanValue()) {            
+        if (processChildren) {
             StringWriter sr = new StringWriter();
             sr.append("<@renderLastElement ");
             sr.append("style=");
@@ -303,7 +298,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Label label) throws IOException {
-        String id = label.getId(context); 
+        String id = label.getId(context);
         String style = label.getStyle(context);
         String labelText = label.getText(context);
 
@@ -314,9 +309,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(style));
         sr.append(" labelText=");
-        sr.append(ftlFmt.makeStringLiteral(labelText));        
+        sr.append(ftlFmt.makeStringLiteral(labelText));
         sr.append(" />");
-        executeMacro(writer, sr.toString());        
+        executeMacro(writer, sr.toString());
     }
 
     public void renderLink(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Link link) throws IOException {
@@ -324,19 +319,19 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         StringBuilder linkUrl = new StringBuilder();
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
-        
+
         if (UtilValidate.isNotEmpty(target)) {
             WidgetWorker.buildHyperlinkUrl(linkUrl, target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context),
-                    link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);            
-        }        
-        
+                    link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
+        }
+
         String id = link.getId(context);
         String style = link.getStyle(context);
         String name = link.getName(context);
         String title = link.getTitle(context);
         String targetWindow = link.getTargetWindow(context);
         String linkText = link.getText(context);
-        
+
         String imgStr = "";
         ModelTree.ModelNode.Image img = link.getImage();
         if (img != null) {
@@ -344,7 +339,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             renderImage(sw, context, img);
             imgStr = sw.toString();
         }
-        
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderLink ");
         sr.append("id=");
@@ -356,24 +351,24 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" title=");
         sr.append(ftlFmt.makeStringLiteral(title));
         sr.append(" targetWindow=");
-        sr.append(ftlFmt.makeStringLiteral(targetWindow));  
+        sr.append(ftlFmt.makeStringLiteral(targetWindow));
         sr.append(" linkUrl=");
-        sr.append(ftlFmt.makeStringLiteral(linkUrl.toString()));     
+        sr.append(ftlFmt.makeStringLiteral(linkUrl.toString()));
         sr.append(" linkText=");
-        sr.append(ftlFmt.makeStringLiteral(linkText));           
+        sr.append(ftlFmt.makeStringLiteral(linkText));
         sr.append(" imgStr=");
         sr.append(ftlFmt.makeStringLiteral(imgStr));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
-  
+
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) throws IOException {
         if (image == null) {
-            return ;            
+            return;
         }
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
-        
+
         String urlMode = image.getUrlMode();
         String src = image.getSrc(context);
         String id = image.getId(context);
@@ -382,21 +377,21 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         String hgt = image.getHeight(context);
         String border = image.getBorder(context);
         String alt = ""; //TODO add alt to tree images image.getAlt(context);
- 
+
         Boolean fullPath = null; // SCIPIO: changed from boolean to Boolean
         Boolean secure = null; // SCIPIO: changed from boolean to Boolean
         Boolean encode = false; // SCIPIO: changed from boolean to Boolean
         String urlString = "";
-        
-        if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
+
+        if (urlMode != null && "intra-app".equalsIgnoreCase(urlMode)) {
             if (request != null && response != null) {
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 urlString = rh.makeLink(request, response, src, fullPath, secure, encode);
             } else {
                 urlString = src;
             }
-        } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+        } else  if (urlMode != null && "content".equalsIgnoreCase(urlMode)) {
             if (request != null && response != null) {
                 StringBuilder newURL = new StringBuilder();
                 ContentUrlTag.appendContentPrefix(request, newURL);
@@ -425,15 +420,14 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         sr.append(" urlString=");
         sr.append(ftlFmt.makeStringLiteral(urlString));
         sr.append(" />");
-        executeMacro(writer, sr.toString());        
+        executeMacro(writer, sr.toString());
     }
 
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context) {
         ScreenRenderer screenRenderer = (ScreenRenderer)context.get("screens");
         if (screenRenderer != null) {
             return screenRenderer.getScreenStringRenderer();
-        } 
+        }
         return null;
     }
-    
 }

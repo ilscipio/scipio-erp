@@ -39,8 +39,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    @SuppressWarnings("unchecked")
-    protected Object execPush(List args, boolean setLast) throws TemplateModelException {
+    protected Object execPush(@SuppressWarnings("rawtypes") List args, boolean setLast) throws TemplateModelException {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
@@ -52,12 +51,11 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         ContextFtlUtil.pushRequestStack(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), valueModel, setLast, env);
-        
+
         return new SimpleScalar("");
     }
 
-    @SuppressWarnings("unchecked")
-    protected Object execRead(List args, boolean pop) throws TemplateModelException {
+    protected Object execRead(@SuppressWarnings("rawtypes") List args, boolean pop) throws TemplateModelException {
         if (args == null || args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
@@ -68,13 +66,12 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object res = ContextFtlUtil.readRequestStack(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), pop, env);
- 
+
         ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
         return LangFtlUtil.wrap(res, objectWrapper);
     }
-    
-    @SuppressWarnings("unchecked")
-    protected Object execGetAsList(List args) throws TemplateModelException {
+
+    protected Object execGetAsList(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
@@ -83,9 +80,9 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
         String stackName = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel));
-        
+
         boolean origList = false;
-        
+
         if (args.size() >= 2) {
             TemplateModel listTypeModel = (TemplateModel) args.get(1);
             String listType = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) listTypeModel));
@@ -93,16 +90,15 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
                 origList = true;
             }
         }
-        
+
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         ObjectWrapper objectWrapper = GetRequestVarMethod.getResultObjectWrapper(env);
-        Object res = ContextFtlUtil.getRequestStackAsList(stackName, 
+        Object res = ContextFtlUtil.getRequestStackAsList(stackName,
                 (origList ? null : LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL), env, objectWrapper);
         return LangFtlUtil.wrap(res, objectWrapper);
-    }    
-    
-    @SuppressWarnings("unchecked")
-    protected Object execGetSize(List args) throws TemplateModelException {
+    }
+
+    protected Object execGetSize(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
@@ -111,8 +107,8 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
         String stackName = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel));
-        
+
         return ContextFtlUtil.getRequestStackSize(stackName, CommonFtlUtil.getCurrentEnvironment());
-    }    
-    
+    }
+
 }

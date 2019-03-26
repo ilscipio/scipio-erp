@@ -33,7 +33,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -131,7 +130,11 @@ public class SagePayPaymentServices {
         }
 
         billingInfo.put("orderId", orderId);
-        billingInfo.put("amount", processAmount.toString());
+        if(processAmount != null){
+            billingInfo.put("amount", processAmount.toString());
+        } else {
+            billingInfo.put("amount", "");
+        }
         billingInfo.put("currency", currency);
         billingInfo.put("description", orderId);
         billingInfo.put("cardNumber", cardNumber);
@@ -155,9 +158,9 @@ public class SagePayPaymentServices {
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
-        
+
         if (orderPaymentPreference == null) {
-            response = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayOrderPaymenPreferenceIsNull", UtilMisc.toMap("orderId", orderId, "orderPaymentPreference", orderPaymentPreference), locale));
+            response = ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingSagePayOrderPaymenPreferenceIsNull", UtilMisc.toMap("orderId", orderId, "orderPaymentPreference", null), locale));
         } else {
             response = processCardAuthorisationPayment(dctx, context);
         }
@@ -293,7 +296,6 @@ public class SagePayPaymentServices {
         Debug.logInfo("SagePay - Entered ccRefund", module);
         Debug.logInfo("SagePay ccRefund context : " + context, module);
         Locale locale = (Locale) context.get("locale");
-        Delegator delegator = ctx.getDelegator();
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue captureTransaction = PaymentGatewayServices.getCaptureTransaction(orderPaymentPreference);
         if (captureTransaction == null) {

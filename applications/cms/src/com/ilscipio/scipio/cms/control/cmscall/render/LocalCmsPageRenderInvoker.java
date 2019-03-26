@@ -24,7 +24,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
 public class LocalCmsPageRenderInvoker extends RenderInvoker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public LocalCmsPageRenderInvoker(ServletContext servletCtx) {
         super(servletCtx);
     }
@@ -33,7 +33,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
         // Using only HttpClient-based invoker for now
         return new LocalCmsPageRenderInvoker(servletCtx);
     }
-    
+
     @Override
     public void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,
             CmsPage cmsPage, CmsView view, String webSiteId, CmsCallType renderMode, Writer writer) throws Exception {
@@ -41,7 +41,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
                 webSiteId, renderMode == CmsCallType.OFBIZ_PREVIEW, RendererType.CMS);
         invokeCmsRendering(request, response, servletCtx, cmsPage, cmsPageContext, writer);
     }
-    
+
     public void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,
             CmsPage cmsPage, CmsPageContext cmsPageContext, Writer writer) throws Exception {
         if (cmsPage == null) {
@@ -50,7 +50,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
         if (cmsPageContext == null) {
             throw new CmsException("No CMS page context available for CMS rendering");
         }
-        
+
         Writer origWriter = writer;
         if (CmsUtil.verboseOn()) {
             if (origWriter instanceof StringWriter) {
@@ -59,17 +59,17 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
                 writer = new StringWriter();
             }
         }
-        
+
         String cmsPageVersionId = null;
         if (cmsPageContext.isPreview()) {
             cmsPageVersionId = CmsControlUtil.getPagePreviewVersionId(request);
         }
-        
+
         // 2017-03-23: must set the appropriate error handling mode
         // TODO: REVIEW: security of this is not absolute (context + request), but it is still a relative
         // improvement over Ofbiz
         // TODO?: REVIEW: it's possible this should be in CmsRenderTemplate... or not...
-        RenderExceptionMode exMode = cmsPageContext.isPreview() ? RenderExceptionMode.DEBUG : 
+        RenderExceptionMode exMode = cmsPageContext.isPreview() ? RenderExceptionMode.DEBUG :
             CmsRenderUtil.getLiveExceptionMode(request.getServletContext());
         request.setAttribute(UtilRender.RENDER_EXCEPTION_MODE_VAR, exMode);
         if (cmsPageContext.isPreview()) {
@@ -78,10 +78,10 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
             // on /website and /backendsite
             request.setAttribute("_SCP_LINK_ERROR_LEVEL_", Debug.WARNING);
         }
-        
+
         cmsPage.getRenderer().processAndRender(writer, cmsPageContext, cmsPageVersionId);
         writer.flush();
-        
+
         if (CmsUtil.verboseOn()) {
             StringWriter sw = (StringWriter) writer;
             String outStr = sw.toString();

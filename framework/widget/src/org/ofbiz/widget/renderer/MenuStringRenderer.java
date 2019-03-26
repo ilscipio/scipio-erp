@@ -30,7 +30,7 @@ import org.ofbiz.widget.model.ModelSubMenu;
 /**
  * Widget Library - Form String Renderer interface
  */
-public interface MenuStringRenderer {
+public interface MenuStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
     public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem) throws IOException ;
     public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException ;
     public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException ;
@@ -39,15 +39,14 @@ public interface MenuStringRenderer {
     public void renderFormatSimpleWrapperRows(Appendable writer, Map<String, Object> context, Object menu) throws IOException ;
     public void renderLink(Appendable writer, Map<String, Object> context, ModelMenuItem.MenuLink link) throws IOException ;
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) throws IOException ;
-    
-    /**
-     * SCIPIO: New, render sub menu more officially.
-     */
-    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
-    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
 
     /**
-     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
+     * SCIPIO: Render sub menu open.
      */
-    public String getRendererName();
+    public void renderSubMenuOpen(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
+    /**
+     * SCIPIO: Render sub menu close.
+     */
+    public void renderSubMenuClose(Appendable writer, Map<String, Object> context, ModelSubMenu subMenu) throws IOException ;
+
 }

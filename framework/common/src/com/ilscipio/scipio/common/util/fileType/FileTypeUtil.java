@@ -14,14 +14,14 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
 
 public class FileTypeUtil {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String FILE_SIZE_ATTRIBUTE_NAME = "fileSize";
     // 2017-02-07: not using; not abstracted enough
     //public static final String MAGIC_NUMBER_ATTRIBUTE_NAME = "magicNumber";
     public static final String MEDIA_TYPE_ATTRIBUTE_NAME = "mediaType";
-    
+
     public static int sizeOfFloat(float f) {
         return Float.floatToIntBits(f) / Byte.SIZE;
     }

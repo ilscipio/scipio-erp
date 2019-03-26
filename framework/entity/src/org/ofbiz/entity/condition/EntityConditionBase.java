@@ -32,8 +32,8 @@ import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 
 /**
- * Represents the conditions to be used to constrain a query
- * <br/>An EntityCondition can represent various type of constraints, including:
+ * <p>Represents the conditions to be used to constrain a query.</p>
+ * <p>An EntityCondition can represent various type of constraints, including:</p>
  * <ul>
  *  <li>EntityConditionList: a list of EntityConditions, combined with the operator specified
  *  <li>EntityExpr: for simple expressions or expressions that combine EntityConditions
@@ -58,7 +58,9 @@ public abstract class EntityConditionBase implements Serializable {
     }
 
     protected String getColName(Map<String, String> tableAliases, ModelEntity modelEntity, String fieldName, boolean includeTableNamePrefix, Datasource datasourceInfo) {
-        if (modelEntity == null) return fieldName;
+        if (modelEntity == null) {
+            return fieldName;
+        }
         return getColName(tableAliases, modelEntity, getField(modelEntity, fieldName), fieldName, includeTableNamePrefix, datasourceInfo);
     }
 
@@ -73,7 +75,9 @@ public abstract class EntityConditionBase implements Serializable {
     }
 
     protected String getColName(Map<String, String> tableAliases, ModelEntity modelEntity, ModelField modelField, String fieldName, boolean includeTableNamePrefix, Datasource datasourceInfo) {
-        if (modelEntity == null || modelField == null) return fieldName;
+        if (modelEntity == null || modelField == null) {
+            return fieldName;
+        }
 
         // if this is a view entity and we are configured to alias the views, use the alias here instead of the composite (ie table.column) field name
         if (datasourceInfo != null && datasourceInfo.getAliasViewColumns() && modelEntity instanceof ModelViewEntity) {

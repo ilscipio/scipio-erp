@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.regex.PatternSyntaxException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -49,7 +48,7 @@ public abstract class ModelFormAction implements Serializable {
 
     public static List<ModelAction> readSubActions(ModelForm modelForm, Element parentElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
-        List<ModelAction> actions = new ArrayList<ModelAction>(actionElementList.size());
+        List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : UtilXml.childElementList(parentElement)) {
             if ("service".equals(actionElement.getNodeName())) {
                 actions.add(new Service(modelForm, actionElement));
@@ -74,12 +73,11 @@ public abstract class ModelFormAction implements Serializable {
 
     /**
      * Models the &lt;call-parent-actions&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
-    @SuppressWarnings("serial")
     public static class CallParentActions extends AbstractModelAction {
-        private final ActionsKind kind;;
+        private final ActionsKind kind;
         private final ModelForm modelForm;
 
         public CallParentActions(ModelForm modelForm, Element callParentActionsElement) {
@@ -124,10 +122,9 @@ public abstract class ModelFormAction implements Serializable {
 
     /**
      * Models the &lt;service&gt; element.
-     * 
+     *
      * @see <code>widget-form.xsd</code>
      */
-    @SuppressWarnings("serial")
     public static class Service extends AbstractModelAction {
         private final FlexibleStringExpander autoFieldMapExdr;
         private final Map<FlexibleMapAccessor<Object>, Object> fieldMap;
@@ -141,7 +138,7 @@ public abstract class ModelFormAction implements Serializable {
             this.serviceNameExdr = FlexibleStringExpander.getInstance(serviceElement.getAttribute("service-name"));
             this.resultMapNameAcsr = FlexibleMapAccessor.getInstance(serviceElement.getAttribute("result-map"));
             this.autoFieldMapExdr = FlexibleStringExpander.getInstance(serviceElement.getAttribute("auto-field-map"));
-            FlexibleStringExpander resultMapListNameExdr = FlexibleStringExpander.getInstance("");
+            FlexibleStringExpander resultMapListNameExdr;
             if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list"))
                     && UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-name"))) {
                 if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-iterator"))
@@ -155,15 +152,17 @@ public abstract class ModelFormAction implements Serializable {
                     // this is deprecated, but support it for now anyway
                     resultMapListNameExdr = FlexibleStringExpander.getInstance(serviceElement
                             .getAttribute("result-map-list-iterator"));
-                    if (resultMapListNameExdr.isEmpty())
+                    if (resultMapListNameExdr.isEmpty()) {
                         resultMapListNameExdr = FlexibleStringExpander.getInstance(serviceElement
                                 .getAttribute("result-map-list-iterator-name"));
+                    }
                 }
             } else {
                 resultMapListNameExdr = FlexibleStringExpander.getInstance(serviceElement.getAttribute("result-map-list"));
-                if (resultMapListNameExdr.isEmpty())
+                if (resultMapListNameExdr.isEmpty()) {
                     resultMapListNameExdr = FlexibleStringExpander.getInstance(serviceElement
                             .getAttribute("result-map-list-name"));
+                }
             }
             this.resultMapListNameExdr = resultMapListNameExdr;
             this.fieldMap = EntityFinderUtil.makeFieldMap(serviceElement);
@@ -199,7 +198,7 @@ public abstract class ModelFormAction implements Serializable {
                                 .makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
                     }
                 } else {
-                    serviceContext = new HashMap<String, Object>();
+                    serviceContext = new HashMap<>();
                 }
                 if (this.fieldMap != null) {
                     EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, serviceContext);
@@ -210,22 +209,7 @@ public abstract class ModelFormAction implements Serializable {
                 } else {
                     result = WidgetWorker.getDispatcher(context).runSync(serviceNameExpanded, serviceContext);
                 }
-                if (!this.resultMapNameAcsr.isEmpty()) {
-                    this.resultMapNameAcsr.put(context, result);
-                    String queryString = (String) result.get("queryString");
-                    context.put("queryString", queryString);
-                    context.put("queryStringMap", result.get("queryStringMap"));
-                    if (UtilValidate.isNotEmpty(queryString)) {
-                        try {
-                            String queryStringEncoded = queryString.replaceAll("&", "%26");
-                            context.put("queryStringEncoded", queryStringEncoded);
-                        } catch (PatternSyntaxException e) {
-
-                        }
-                    }
-                } else {
-                    context.putAll(result);
-                }
+                ModelActionUtil.contextPutQueryStringOrAllResult(context, result, this.resultMapNameAcsr);
                 String listName = resultMapListNameExdr.expandString(context);
                 Object listObj = result.get(listName);
                 if (listObj != null) {

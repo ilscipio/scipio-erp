@@ -21,7 +21,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.security.Security;
 
-context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
+context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", request);
 
 // SCIPIO: 2017-12-15: small filter to help find caches (otherwise too painful)
 targetName = context.cacheName != null ? context.cacheName : parameters.cacheName?.toString();
@@ -53,8 +53,6 @@ names.each { cacheName ->
         cache.maxInMemory = UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
         cache.expireTime = UtilFormatOut.formatQuantity(utilCache.getExpireTime());
         cache.useSoftReference = utilCache.getUseSoftReference().toString();
-        cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
-        cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
         cache.cacheMemory = utilCache.getSizeInBytes();
         cache.sizeLimit = UtilFormatOut.formatQuantity(utilCache.getSizeLimit()); // SCIPIO
         totalCacheMemory += cache.cacheMemory;

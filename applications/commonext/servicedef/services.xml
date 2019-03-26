@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -41,22 +28,21 @@ under the License.
     <service name="getSystemInfoNotes" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoNotes">
         <description>Get system notes for the logged on party</description>
-                <!-- view and page fields -->
+        <!-- view and page fields -->
         <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
         
         <attribute name="systemInfoNotes" type="List" mode="OUT" optional="true"/>
     </service>
-    <!-- SCIPIO: Deprecated
     <service name="getLastSystemInfoNote" engine="simple" auth="false"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getLastSystemInfoNote">
         <description>Get last system note for the logged on party</description>
+        <deprecated use-instead="getSystemMessages">SCIPIO: Do not use, new SystemMessages system now exists.</deprecated>
         <attribute name="lastSystemInfoNote1" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote2" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote3" type="GenericValue" mode="OUT" optional="true"/>
     </service> 
-    -->
     <service name="getSystemInfoStatus" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoStatus">
         <description>Get system status for the logged on party</description>
@@ -85,4 +71,19 @@ under the License.
         <description>Get system messages for an authenticated party</description>
         <auto-attributes mode="IN" entity-name="NoteData" include="all" optional="true"/>        
     </service>
+
+    <service name="sendMailFromScreenExt" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailFromScreenStd"/>
+    </service>
+
+    <service name="sendMailFromScreen" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailFromScreenExt"/>
+    </service>
+
 </services>

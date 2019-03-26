@@ -37,8 +37,8 @@ import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.ServiceConfigListener;
+import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceConfig;
 import org.ofbiz.service.config.model.ThreadPool;
 
@@ -49,7 +49,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final AtomicInteger created = new AtomicInteger();
-    private static final ConcurrentHashMap<String, JobManager> jobManagers = new ConcurrentHashMap<String, JobManager>();
+    private static final ConcurrentHashMap<String, JobManager> jobManagers = new ConcurrentHashMap<>();
     private static final ThreadPoolExecutor executor = createThreadPoolExecutor();
     private static final JobPoller instance = new JobPoller();
 
@@ -62,7 +62,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     private static ThreadPoolExecutor createThreadPoolExecutor() {
         try {
-            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.engine).getThreadPool();
+            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.getEngine()).getThreadPool();
             return new ThreadPoolExecutor(threadPool.getMinThreads(), threadPool.getMaxThreads(), threadPool.getTtl(),
                     TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(threadPool.getJobs()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         } catch (GenericConfigException e) {
@@ -74,7 +74,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     private static int pollWaitTime() {
         try {
-            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.engine).getThreadPool();
+            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.getEngine()).getThreadPool();
             return threadPool.getPollDbMillis();
         } catch (GenericConfigException e) {
             Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> values: ", module);
@@ -84,7 +84,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     /**
      * Register a {@link JobManager} with the job poller.
-     * 
+     *
      * @param jm The <code>JobManager</code> to register.
      * @throws IllegalArgumentException if <code>jm</code> is null
      */
@@ -112,7 +112,7 @@ public final class JobPoller implements ServiceConfigListener {
      * Returns a <code>Map</code> containing <code>JobPoller</code> statistics.
      */
     public Map<String, Object> getPoolState() {
-        Map<String, Object> poolState = new HashMap<String, Object>();
+        Map<String, Object> poolState = new HashMap<>();
         poolState.put("keepAliveTimeInSeconds", executor.getKeepAliveTime(TimeUnit.SECONDS));
         poolState.put("numberOfCoreInvokerThreads", executor.getCorePoolSize());
         poolState.put("currentNumberOfInvokerThreads", executor.getPoolSize());
@@ -121,11 +121,11 @@ public final class JobPoller implements ServiceConfigListener {
         poolState.put("greatestNumberOfInvokerThreads", executor.getLargestPoolSize());
         poolState.put("numberOfCompletedTasks", executor.getCompletedTaskCount());
         BlockingQueue<Runnable> queue = executor.getQueue();
-        List<Map<String, Object>> taskList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> taskList = new ArrayList<>();
         Map<String, Object> taskInfo = null;
         for (Runnable task : queue) {
             Job job = (Job) task;
-            taskInfo = new HashMap<String, Object>();
+            taskInfo = new HashMap<>();
             taskInfo.put("id", job.getJobId());
             taskInfo.put("name", job.getJobName());
             String serviceName = "";
@@ -144,7 +144,7 @@ public final class JobPoller implements ServiceConfigListener {
     @Override
     public void onServiceConfigChange(ServiceConfig serviceConfig) {
         if (!executor.isShutdown()) {
-            ThreadPool threadPool = serviceConfig.getServiceEngine(ServiceConfigUtil.engine).getThreadPool();
+            ThreadPool threadPool = serviceConfig.getServiceEngine(ServiceConfigUtil.getEngine()).getThreadPool();
             executor.setCorePoolSize(threadPool.getMinThreads());
             executor.setMaximumPoolSize(threadPool.getMaxThreads());
             executor.setKeepAliveTime(threadPool.getTtl(), TimeUnit.MILLISECONDS);
@@ -218,13 +218,19 @@ public final class JobPoller implements ServiceConfigListener {
                     if (remainingCapacity > 0) {
                         // Build "list of lists"
                         Collection<JobManager> jmCollection = jobManagers.values();
-                        List<Iterator<Job>> pollResults = new ArrayList<Iterator<Job>>();
+                        List<Iterator<Job>> pollResults = new ArrayList<>();
                         for (JobManager jm : jmCollection) {
+                            if (!jm.isAvailable()) {
+                                if (Debug.infoOn()) {
+                                    Debug.logInfo("The job manager is locked.", module);
+                                }
+                                continue;
+                            }
                             jm.reloadCrashedJobs();
                             pollResults.add(jm.poll(remainingCapacity).iterator());
                         }
                         // Create queue candidate list from "list of lists"
-                        List<Job> queueCandidates = new ArrayList<Job>();
+                        List<Job> queueCandidates = new ArrayList<>();
                         boolean addingJobs = true;
                         while (addingJobs) {
                             addingJobs = false;

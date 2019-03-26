@@ -20,10 +20,6 @@
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <!--
-    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
-    <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>-->
     <include location="component://commonext/webapp/ofbizsetup/WEB-INF/controller.xml"/>
     <description>SCIPIO ERP Setup component controller</description>
     
@@ -92,13 +88,14 @@
     <!-- Organization step -->
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
+        <!-- DEV NOTE: This event is also called in the SetupOrganizationMain screen; code must match! -->
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupOrganization" save-home-view="true"/><!-- save-home-view is needed in case EditContactMech is accessed -->
         <response name="error" type="view" value="SetupError"/>
     </request-map>
     <request-map uri="setupCreateOrganization">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createOrganization"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createOrganization"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupOrganization"/>
     </request-map>
@@ -113,7 +110,7 @@
     <request-map uri="setupUser">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
-        <response name="success" type="view" value="SetupUser"/>
+        <response name="success" type="view" value="SetupUser" save-home-view="true"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
     <request-map uri="setupCreateUser">
@@ -185,6 +182,32 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    <!-- Specific request maps for setup accounting tabs -->
+    <request-map uri="setupGlAccountsTab">
+        <security https="true" auth="true" />        
+        <response name="success" type="view" value="SetupGlAccountsTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupFiscalPeriodsTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupFiscalPeriodsTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupAccountingTransactionsTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupAccountingTransactionsTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
+    <request-map uri="setupJournalTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupJournalTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError" />
+    </request-map>
+    <request-map uri="setupTaxAuthTab">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SetupTaxAuthTab" allow-view-save="false"/>
+        <response name="error" type="view" value="SetupAccountingTabError"/>
+    </request-map>
     
         <!-- Time Periods -->
     <request-map uri="setupCreateTimePeriod">
@@ -202,6 +225,37 @@
     <request-map uri="setupDeleteTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+        <!-- AcctgTransType -->
+    <request-map uri="setupCreateAcctgTransType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAcctgTransType"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupCreateAcctgTransEntryType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAcctgTransEntryType"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+        <!-- GlJournal -->
+    <request-map uri="setupCreateGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlJournal"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+       <!-- Tax Auth -->
+    <request-map uri="setupCreateTaxAuth">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createTaxAuthority"/>
+        <!-- <event type="service" invoke="createSetupTaxAuthority"/> -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
@@ -237,7 +291,7 @@
     </request-map>
     <request-map uri="setupCreateFacility">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupFacility"/>
     </request-map>
@@ -361,7 +415,7 @@
     </request-map>
     <request-map uri="setupCreateStore">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSettingAndWebSite"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreAndWebSite"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
@@ -371,26 +425,12 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
-    <!-- merged into store step
-    <request-map uri="setupWebsite">
+    <request-map uri="setProductStoreDefaultWebSite">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
-        <response name="success" type="view" value="SetupWebsite"/>
-        <response name="error" type="view" value="SetupError"/>
+        <event type="service" invoke="setProductStoreDefaultWebSite"/>
+        <response name="success" type="request" value="setupStore"/>
+        <response name="error" type="request" value="setupStore"/>
     </request-map>
-    <request-map uri="setupCreateWebsite">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createWebSite"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="request" value="setupWebsite"/>
-    </request-map>
-    <request-map uri="setupUpdateWebsite">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateWebSite"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="request" value="setupWebsite"/>
-    </request-map>
-    -->
     <request-map uri="setupFinished">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -405,12 +445,11 @@
         <response name="finished" type="view" value="SetupFinished"/>
         
         <response name="organization" type="view" value="SetupOrganization" save-home-view="true"/>
-        <response name="user" type="view" value="SetupUser"/>
+        <response name="user" type="view" value="SetupUser" save-home-view="true"/>
         <response name="accounting" type="view" value="SetupAccounting"/>
         <response name="facility" type="view" value="SetupFacility"/>
         <response name="catalog" type="view" value="SetupCatalog"/>
         <response name="store" type="view" value="SetupStore"/>
-        <response name="website" type="view" value="SetupWebsite"/>
         
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -485,15 +524,15 @@
     <view-map name="initialsetup" type="screen" page="component://setup/widget/SetupScreens.xml#InitialSetup"/>
     <view-map name="showMessage" type="screen" page="component://setup/widget/SetupScreens.xml#nopartyAcctgPreference"/>
     
-    <view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/>
+    <!--<view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/> - SCIPIO: Does not exist -->
     <view-map name="EditFacility" type="screen" page="component://setup/widget/SetupScreens.xml#EditFacility"/>
     
-    <view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/>
+    <!--<view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/> - SCIPIO: Does not exist -->
     <view-map name="EditProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#EditProductStore"/>
 
     <view-map name="EntityExportAll" type="screen" page="component://setup/widget/CommonScreens.xml#EntityExportAll"/>
 
-    <view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/>
+    <!--<view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/> - SCIPIO: Does not exist -->
     <view-map name="EditWebSite" page="component://setup/widget/SetupScreens.xml#EditWebSite" type="screen"/>
     
     <view-map name="firstcustomer" type="screen" page="component://setup/widget/ProfileScreens.xml#FirstCustomer"/>
@@ -501,6 +540,9 @@
     <view-map name="EditCategory" type="screen" page="component://setup/widget/SetupScreens.xml#EditCategory"/>
     <view-map name="EditProduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProduct"/>
     
+    <!-- SCIPIO: Extra Party overrides -->
+    <view-map name="editcontactmech" type="screen" page="component://setup/widget/PartyScreens.xml#editcontactmech"/>
+
     <!-- SCIPIO: new setup step definitions (NOTE: the screens themselves will perform the reuse/includes, as needed) -->
     <view-map name="SetupOrganization" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganization"/>
     <view-map name="SetupUser" type="screen" page="component://setup/widget/SetupScreens.xml#SetupUser"/>
@@ -508,9 +550,19 @@
     <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
     <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
     <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
-    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
+    
+    <view-map name="SetupGlAccountsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditGLAccountTree" />
+    <view-map name="SetupFiscalPeriodsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditFiscalPeriods" />
+    <view-map name="SetupAccountingTransactionsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditAccountingTransactions" />
+    <view-map name="SetupJournalTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditJournals" />
+    <view-map name="SetupTaxAuthTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditTaxAuthorities" />
+    <view-map name="SetupAccountingTabError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccountingTabError" />
+
+    <!-- SCIPIO: Special overrides -->
+    <view-map name="main" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>
+    <view-map name="SetupOrganizationMain" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>
 
     <!-- Lookup request mappings -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>

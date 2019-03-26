@@ -18,7 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.service;
 
-public class ExecutionServiceException extends org.ofbiz.base.util.GeneralException {
+import org.ofbiz.base.util.GeneralException;
+
+@SuppressWarnings("serial")
+public class ExecutionServiceException extends GeneralException {
 
     public ExecutionServiceException() {
         super();

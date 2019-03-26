@@ -36,7 +36,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
@@ -58,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * Product Worker class to reduce code in JSPs.
  */
-public class ProductWorker {
+public final class ProductWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
@@ -79,12 +78,10 @@ public class ProductWorker {
 
             if (chargeShipping == null) {
                 return true;
-            } else {
-                return chargeShipping.booleanValue();
             }
-        } else {
-            throw new IllegalArgumentException(errMsg);
+            return chargeShipping;
         }
+        throw new IllegalArgumentException(errMsg);
     }
 
     public static boolean isBillableToAddress(GenericValue product, GenericValue postalAddress) {
@@ -94,7 +91,7 @@ public class ProductWorker {
         return isAllowedToAddress(product, postalAddress, "PG_SHIP_");
     }
     private static boolean isAllowedToAddress(GenericValue product, GenericValue postalAddress, String productGeoPrefix) {
-        if (UtilValidate.isNotEmpty(product) && UtilValidate.isNotEmpty(postalAddress)) {
+        if (product != null && postalAddress != null) {
             Delegator delegator = product.getDelegator();
             List<GenericValue> productGeos = null;
             try {
@@ -139,7 +136,7 @@ public class ProductWorker {
     public static boolean isSerialized (Delegator delegator, String productId) {
         try {
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
-            if (UtilValidate.isNotEmpty(product)) {
+            if (product != null) {
                 return "SERIALIZED_INV_ITEM".equals(product.getString("inventoryItemTypeId"));
             }
         } catch (GenericEntityException e) {
@@ -155,20 +152,18 @@ public class ProductWorker {
 
             if (taxable == null) {
                 return true;
-            } else {
-                return taxable.booleanValue();
             }
-        } else {
-            throw new IllegalArgumentException(errMsg);
+            return taxable;
         }
+        throw new IllegalArgumentException(errMsg);
     }
 
     public static String getInstanceAggregatedId(Delegator delegator, String instanceProductId) throws GenericEntityException {
         GenericValue instanceProduct = EntityQuery.use(delegator).from("Product").where("productId", instanceProductId).queryOne();
 
-        if (UtilValidate.isNotEmpty(instanceProduct) && EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", instanceProduct.getString("productTypeId"), "parentTypeId", "AGGREGATED")) {
+        if (instanceProduct != null && EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", instanceProduct.getString("productTypeId"), "parentTypeId", "AGGREGATED")) {
             GenericValue productAssoc = EntityUtil.getFirst(EntityUtil.filterByDate(instanceProduct.getRelated("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_CONF"), null, false)));
-            if (UtilValidate.isNotEmpty(productAssoc)) {
+            if (productAssoc != null) {
                 return productAssoc.getString("productId");
             }
         }
@@ -191,7 +186,7 @@ public class ProductWorker {
     public static List<GenericValue> getAggregatedAssocs(Delegator delegator, String  aggregatedProductId) throws GenericEntityException {
         GenericValue aggregatedProduct = EntityQuery.use(delegator).from("Product").where("productId", aggregatedProductId).queryOne();
 
-        if (UtilValidate.isNotEmpty(aggregatedProduct) && ("AGGREGATED".equals(aggregatedProduct.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(aggregatedProduct.getString("productTypeId")))) {
+        if (aggregatedProduct != null && ("AGGREGATED".equals(aggregatedProduct.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(aggregatedProduct.getString("productTypeId")))) {
             List<GenericValue> productAssocs = EntityUtil.filterByDate(aggregatedProduct.getRelated("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_CONF"), null, false));
             return productAssocs;
         }
@@ -210,11 +205,10 @@ public class ProductWorker {
         GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
         if (productAssoc != null) {
             return productAssoc.getString("productId");
-        } else {
-            return null;
         }
+        return null;
     }
-    
+
     /**
      * Get variant product's parent virtual product's id, with caching enabled.
      * SCIPIO: now delegating (2017-12-19).
@@ -231,7 +225,7 @@ public class ProductWorker {
         }
         return null;
     }
-    
+
     public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct) throws GenericEntityException {
         return getVariantVirtualAssocs(variantProduct, true);
     }
@@ -260,12 +254,17 @@ public class ProductWorker {
 
         // check to see if we got enough back...
         if (availableToPromise.compareTo(quantity) >= 0) {
-            if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            }
             return true;
-        } else {
-            if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
-            return false;
         }
+        if (Debug.infoOn()) {
+            Debug.logInfo("Returning false because there is insufficient inventory available in facility with id "
+                    + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity
+                    + ", available quantity is " + availableToPromise, module);
+        }
+        return false;
     }
 
     /**
@@ -301,7 +300,7 @@ public class ProductWorker {
      */
     public static Set<GenericValue> getVariantDistinguishingFeatures(GenericValue variantProduct) throws GenericEntityException {
         if (variantProduct == null) {
-            return new HashSet<GenericValue>();
+            return new HashSet<>();
         }
         if (!"Y".equals(variantProduct.getString("isVariant"))) {
             throw new IllegalArgumentException("Cannot get distinguishing features for a product that is not a variant (ie isVariant!=Y).");
@@ -310,10 +309,9 @@ public class ProductWorker {
         String virtualProductId = getVariantVirtualId(variantProduct);
 
         // find all selectable features on the virtual product that are also standard features on the variant
-        Set<GenericValue> distFeatures = new HashSet<GenericValue>();
+        Set<GenericValue> distFeatures = new HashSet<>();
 
         List<GenericValue> variantDistinguishingFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "DISTINGUISHING_FEAT").cache(true).queryList();
-        // Debug.logInfo("Found variantDistinguishingFeatures: " + variantDistinguishingFeatures, module);
 
         for (GenericValue variantDistinguishingFeature: EntityUtil.filterByDate(variantDistinguishingFeatures)) {
             GenericValue dummyFeature = delegator.makeValue("ProductFeature");
@@ -322,15 +320,13 @@ public class ProductWorker {
         }
 
         List<GenericValue> virtualSelectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", virtualProductId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").cache(true).queryList();
-        // Debug.logInfo("Found virtualSelectableFeatures: " + virtualSelectableFeatures, module);
 
-        Set<String> virtualSelectableFeatureIds = new HashSet<String>();
+        Set<String> virtualSelectableFeatureIds = new HashSet<>();
         for (GenericValue virtualSelectableFeature: EntityUtil.filterByDate(virtualSelectableFeatures)) {
             virtualSelectableFeatureIds.add(virtualSelectableFeature.getString("productFeatureId"));
         }
 
         List<GenericValue> variantStandardFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "STANDARD_FEATURE").cache(true).queryList();
-        // Debug.logInfo("Found variantStandardFeatures: " + variantStandardFeatures, module);
 
         for (GenericValue variantStandardFeature: EntityUtil.filterByDate(variantStandardFeatures)) {
             if (virtualSelectableFeatureIds.contains(variantStandardFeature.get("productFeatureId"))) {
@@ -354,8 +350,6 @@ public class ProductWorker {
                 if ("Y".equals(alternativeOptionProduct.getString("isVariant"))) {
                     Set<GenericValue> distFeatures = getVariantDistinguishingFeatures(alternativeOptionProduct);
                     if (UtilValidate.isNotEmpty(distFeatures)) {
-                        // Debug.logInfo("Found distinguishing features: " + distFeatures, module);
-
                         StringBuilder nameBuf = new StringBuilder();
                         for (GenericValue productFeature: distFeatures) {
                             if (nameBuf.length() > 0) {
@@ -375,12 +369,11 @@ public class ProductWorker {
                 // got to here, default to PRODUCT_NAME
                 // SCIPIO: Do NOT HTML-escape this here
                 String alternativeProductName = ProductContentWrapper.getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "raw");
-                // Debug.logInfo("Using PRODUCT_NAME: " + alternativeProductName, module);
                 return alternativeProductName;
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-        } catch (Exception e) {
+        } catch (Exception e) { // SCIPIO: 2018-10-09: Kept Exception here for now
             Debug.logError(e, module);
         }
         // finally fall back to the ID in square braces
@@ -427,7 +420,7 @@ public class ProductWorker {
             features = EntityUtil.orderBy(features, UtilMisc.toList("description"));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            features = new LinkedList<GenericValue>();
+            features = new LinkedList<>();
         }
         return features;
     }
@@ -442,25 +435,23 @@ public class ProductWorker {
 
         if (product != null) {
             return product.getString("virtualVariantMethodEnum");
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
-     * @deprecated Replaced by getProductFeatures
+     * @deprecated SCIPIO: Replaced by {@link #getProductFeatures}
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      */
+    @Deprecated
     public static List<List<Map<String,String>>> getSelectableProductFeaturesByTypesAndSeq(GenericValue product) {
         if (product == null) {
             return null;
         }
-        List <List<Map<String,String>>> featureTypeFeatures = new LinkedList<List<Map<String,String>>>();
+        List <List<Map<String,String>>> featureTypeFeatures = new LinkedList<>();
         try {
             Delegator delegator = product.getDelegator();
-            //List<GenericValue> features = delegator.findByAnd("ProductFeatureAndAppl", fields, order, true);
-            //List<GenericValue> featuresSorted = EntityUtil.orderBy(features, order);
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
                                                     .from("ProductFeatureAndAppl")
                                                     .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
@@ -468,13 +459,13 @@ public class ProductWorker {
                                                     .cache(true)
                                                     .queryList();
             String oldType = null;
-            List<Map<String,String>> featureList = new LinkedList<Map<String,String>>();
+            List<Map<String,String>> featureList = new LinkedList<>();
             for (GenericValue productFeatureAppl: featuresSorted) {
                 if (oldType == null || !oldType.equals(productFeatureAppl.getString("productFeatureTypeId"))) {
                     // use first entry for type and description
                     if (oldType != null) {
                         featureTypeFeatures.add(featureList);
-                        featureList = new LinkedList<Map<String,String>>();
+                        featureList = new LinkedList<>();
                     }
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureList.add(UtilMisc.<String, String>toMap("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"),
@@ -510,52 +501,52 @@ public class ProductWorker {
         }
         return featureTypeFeatures;
     }
-    
-    
-    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product) {
-        Locale locale = new Locale(UtilProperties.getPropertyValue("start", "ofbiz.locale.default"));
-        return getProductFeatures(product, locale);
+
+
+    public static List<Map<String, Object>> getProductFeatures(GenericValue product) {
+        return getProductFeatures(product, Locale.getDefault());
     }
 
     /**
      * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
-     * @param product
+     * NOTE: 2018-09-06: The return type has been corrected.
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      * */
-    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product, Locale locale) {
+    public static List<Map<String, Object>> getProductFeatures(GenericValue product, Locale locale) {
         if (product == null) {
             return null;
         }
-        List <Map<String,Map<String,Object>>> featureTypeFeatures = new LinkedList<Map<String,Map<String,Object>>>();
+        List<Map<String, Object>> featureTypeFeatures = new ArrayList<>();
         try {
             Delegator delegator = product.getDelegator();
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
-                                                    .from("ProductFeatureAndAppl")
-                                                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
-                                                    .orderBy("productFeatureTypeId", "sequenceNum")
-                                                    .cache(true)
-                                                    .queryList();
-            for (GenericValue productFeatureAppl: featuresSorted) {
-                Map featureType = null;
+                    .from("ProductFeatureAndAppl")
+                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
+                    .orderBy("productFeatureTypeId", "sequenceNum")
+                    .cache(true)
+                    .queryList();
+            for(GenericValue productFeatureAppl: featuresSorted) {
+                Map<String, Object> featureType = null;
                 // Map to previous featureType if exists
-                for(Map ftype : featureTypeFeatures){
+                for(Map<String, Object> ftype : featureTypeFeatures) {
                     String productFeatureTypeId = ftype.get("productFeatureTypeId") != null ? (String) ftype.get("productFeatureTypeId") :"";
                     if(productFeatureTypeId.equals(productFeatureAppl.getString("productFeatureTypeId")))
                     featureType = ftype;
                 }
                 // otherwise create a new featureType
-                if(featureType == null){
-                    featureType = new HashMap<String, Object>();
+                if (featureType == null) {
+                    featureType = new HashMap<>();
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.get("description", locale));
                     featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
-                    featureType.put("features", new LinkedList<Map>());
+                    featureType.put("features", new ArrayList<Map<String, String>>());
                     featureTypeFeatures.add(featureType);
                 }
-                List features = (List) featureType.get("features");
-                
+                @SuppressWarnings("unchecked")
+                List<Map<String, String>> features = (List<Map<String, String>>) featureType.get("features");
+
                 // Add Product features
-                Map<String,String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
+                Map<String, String> featureData = UtilMisc.toMap("productFeatureId", productFeatureAppl.getString("productFeatureId"));
                 if (UtilValidate.isNotEmpty(productFeatureAppl.get("description"))) {
                     featureData.put("description", productFeatureAppl.getString("description"));
                 } else {
@@ -579,8 +570,8 @@ public class ProductWorker {
         }
         return featureTypeFeatures;
     }
-    
-    
+
+
     /**
      * For a given variant product, returns the list of features that would qualify it for
      * selection from the virtual product
@@ -601,7 +592,7 @@ public class ProductWorker {
         List<String> selectableTypes = EntityUtil.getFieldListFromEntityList(selectableFeatures, "productFeatureTypeId", true);
         // The standard features from the variant product
         List<GenericValue> standardFeatures = ProductWorker.getProductFeaturesByApplTypeId(variantProduct, "STANDARD_FEATURE");
-        List<GenericValue> result = new LinkedList<GenericValue>();
+        List<GenericValue> result = new LinkedList<>();
         for (GenericValue standardFeature : standardFeatures) {
             // For each standard variant feature check it is also a virtual selectable feature and
             // if a feature of the same type hasn't already been added to the list
@@ -614,7 +605,7 @@ public class ProductWorker {
     }
 
     public static Map<String, List<GenericValue>> getOptionalProductFeatures(Delegator delegator, String productId) {
-        Map<String, List<GenericValue>> featureMap = new LinkedHashMap<String, List<GenericValue>>();
+        Map<String, List<GenericValue>> featureMap = new LinkedHashMap<>();
 
         List<GenericValue> productFeatureAppls = null;
         try {
@@ -628,7 +619,7 @@ public class ProductWorker {
                 String featureType = appl.getString("productFeatureTypeId");
                 List<GenericValue> features = featureMap.get(featureType);
                 if (features == null) {
-                    features = new LinkedList<GenericValue>();
+                    features = new LinkedList<>();
                 }
                 features.add(appl);
                 featureMap.put(featureType, features);
@@ -665,18 +656,24 @@ public class ProductWorker {
     }
 
     public static List<GenericValue> filterOrderAdjustments(List<GenericValue> adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
-        List<GenericValue> newOrderAdjustmentsList = new LinkedList<GenericValue>();
+        List<GenericValue> newOrderAdjustmentsList = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(adjustments)) {
             for (GenericValue orderAdjustment: adjustments) {
                 boolean includeAdjustment = false;
 
                 if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeTax) includeAdjustment = true;
+                    if (includeTax) {
+                        includeAdjustment = true;
+                    }
                 } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeShipping) includeAdjustment = true;
+                    if (includeShipping) {
+                        includeAdjustment = true;
+                    }
                 } else {
-                    if (includeOther) includeAdjustment = true;
+                    if (includeOther) {
+                        includeAdjustment = true;
+                    }
                 }
 
                 // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
@@ -797,7 +794,7 @@ public class ProductWorker {
         if (product == null) {
             return null;
         }
-        List<GenericValue> categories = new LinkedList<GenericValue>();
+        List<GenericValue> categories = new LinkedList<>();
         try {
             List<GenericValue> categoryMembers = product.getRelated("ProductCategoryMember", null, null, false);
             categoryMembers = EntityUtil.filterByDate(categoryMembers);
@@ -843,7 +840,7 @@ public class ProductWorker {
         }
         return null;
     }
-    
+
     //get parent product
     public static GenericValue getParentProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         // SCIPIO: 2017-09-12: factored out into getParentProductAssoc
@@ -858,12 +855,12 @@ public class ProductWorker {
         }
         return _parentProduct;
     }
-    
+
     public static GenericValue getParentProduct(String productId, Delegator delegator) {
-        // SCIPIO: 2017-09-05: now delegates 
+        // SCIPIO: 2017-09-05: now delegates
         return getParentProduct(productId, delegator, true);
     }
-    
+
     /**
      * SCIPIO: Gets the parent product ID (only).
      */
@@ -922,7 +919,7 @@ public class ProductWorker {
 
         return false;
     }
-    
+
     /**
      * SCIPIO: Checks if isVariant is set on the product (analogous to {@link #isVirtual}).
      * Added 2017-08-17.
@@ -987,25 +984,24 @@ public class ProductWorker {
 
         if (weight == null) {
             return null;
-        } else {
-            // attempt a conversion if necessary
-            if (desiredUomId != null && product.get("weightUomId") != null && !desiredUomId.equals(product.get("weightUomId"))) {
-                Map<String, Object> result = new HashMap<String, Object>();
-                try {
-                    result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", desiredUomId, "originalValue", weight));
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                }
-
-                if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && result.get("convertedValue") != null) {
-                    weight = (BigDecimal) result.get("convertedValue");
-                } else {
-                    Debug.logError("Unsupported conversion from [" + weightUomId + "] to [" + desiredUomId + "]",module);
-                    return null;
-                }
-            }
-            return weight;
         }
+        // attempt a conversion if necessary
+        if (desiredUomId != null && product.get("weightUomId") != null && !desiredUomId.equals(product.get("weightUomId"))) {
+            Map<String, Object> result = new HashMap<>();
+            try {
+                result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", desiredUomId, "originalValue", weight));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+
+            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && result.get("convertedValue") != null) {
+                weight = (BigDecimal) result.get("convertedValue");
+            } else {
+                Debug.logError("Unsupported conversion from [" + weightUomId + "] to [" + desiredUomId + "]", module);
+                return null;
+            }
+        }
+        return weight;
     }
 
 
@@ -1027,7 +1023,9 @@ public class ProductWorker {
             String idToFind, String goodIdentificationTypeId,
             boolean searchProductFirst, boolean searchAllId) throws GenericEntityException {
 
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze goodIdentification: entered id = " + idToFind + ", goodIdentificationTypeId = " + goodIdentificationTypeId, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze goodIdentification: entered id = " + idToFind + ", goodIdentificationTypeId = " + goodIdentificationTypeId, module);
+        }
 
         GenericValue product = null;
         List<GenericValue> productsFound = null;
@@ -1050,11 +1048,16 @@ public class ProductWorker {
             product = EntityQuery.use(delegator).from("Product").where("productId", idToFind).cache().queryOne();
         }
 
-        if (UtilValidate.isNotEmpty(product)) {
-            if (UtilValidate.isNotEmpty(productsFound)) productsFound.add(product);
-            else productsFound = UtilMisc.toList(product);
+        if (product != null) {
+            if (UtilValidate.isNotEmpty(productsFound)) {
+                productsFound.add(product);
+            } else {
+                productsFound = UtilMisc.toList(product);
+            }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("Analyze goodIdentification: found product.productId = " + product + ", and list : " + productsFound, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Analyze goodIdentification: found product.productId = " + product + ", and list : " + productsFound, module);
+        }
         return productsFound;
     }
 
@@ -1065,7 +1068,7 @@ public class ProductWorker {
 
     public static String findProductId(Delegator delegator, String idToFind, String goodIdentificationTypeId) throws GenericEntityException {
         GenericValue product = findProduct(delegator, idToFind, goodIdentificationTypeId);
-        if (UtilValidate.isNotEmpty(product)) {
+        if (product != null) {
             return product.getString("productId");
         } else {
             return null;
@@ -1138,7 +1141,7 @@ public class ProductWorker {
     }
 
     public static Set<String> getRefurbishedProductIdSet(String productId, Delegator delegator) throws GenericEntityException {
-        Set<String> productIdSet = new HashSet<String>();
+        Set<String> productIdSet = new HashSet<>();
 
         // find associated refurb items, we want serial number for main item or any refurb items too
         List<GenericValue> refubProductAssocs = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId, "productAssocTypeId", "PRODUCT_REFURB").filterByDate().queryList();
@@ -1200,7 +1203,6 @@ public class ProductWorker {
                 }
             }
             // find variant
-            // Debug.logInfo("=====try to find variant for product: " + productId + " and features: " + selectedFeatures);
             List<GenericValue> productAssocs = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId, "productAssocTypeId","PRODUCT_VARIANT").filterByDate().queryList();
             boolean productFound = false;
 nextProd:
@@ -1215,8 +1217,6 @@ nextProd:
                 variantProductId = productAssoc.getString("productIdTo");
                 break;
             }
-//          if (productFound)
-//              Debug.logInfo("=====product found:" + productId + " and features: " + selectedFeatures);
 
             /**
              * 1. variant not found so create new variant product and use the virtual product as basis, new one  is a variant type and not a virtual type.
@@ -1256,7 +1256,7 @@ nextProd:
                                 .filterByDate().queryList();
                         if (UtilValidate.isNotEmpty(productFeaturePrices)) {
                             GenericValue productFeaturePrice = productFeaturePrices.get(0);
-                            if (UtilValidate.isNotEmpty(productFeaturePrice)) {
+                            if (productFeaturePrice != null) {
                                 productPrice.put("price", productPrice.getBigDecimal("price").add(productFeaturePrice.getBigDecimal("price")));
                             }
                         }
@@ -1299,13 +1299,13 @@ nextProd:
 
         return variantProductId;
     }
-    
+
     public static boolean isAlternativePacking(Delegator delegator, String productId, String virtualVariantId) {
         boolean isAlternativePacking = false;
         if(productId != null || virtualVariantId != null){
             List<GenericValue> alternativePackingProds = null;
             try {
-                List<EntityCondition> condList = new LinkedList<EntityCondition>();
+                List<EntityCondition> condList = new LinkedList<>();
 
                 if (UtilValidate.isNotEmpty(productId)) {
                     condList.add(EntityCondition.makeCondition("productIdTo", productId));
@@ -1315,15 +1315,22 @@ nextProd:
                 }
                 condList.add(EntityCondition.makeCondition("productAssocTypeId", "ALTERNATIVE_PACKAGE"));
                 alternativePackingProds = EntityQuery.use(delegator).from("ProductAssoc").where(condList).cache(true).queryList();
-                if(UtilValidate.isNotEmpty(alternativePackingProds)) isAlternativePacking = true;
+                if(UtilValidate.isNotEmpty(alternativePackingProds)) {
+                    isAlternativePacking = true;
+                }
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Could not found alternative product: " + e.getMessage(), module);
             }
         }
         return isAlternativePacking;
     }
-    
-    public static String getOriginalProductId(Delegator delegator, String productId){
+
+    /**
+     * Returns the original product ID IF the product is as alternative packing.
+     * <p>
+     * SCIPIO: 2019-02-28: Renamed from {@link #getOriginalProductId(Delegator, String)}.
+     */
+    public static String getAlternativePackingOriginalProductId(Delegator delegator, String productId) {
         boolean isAlternativePacking = isAlternativePacking(delegator, null, productId);
         if (isAlternativePacking) {
             List<GenericValue> productAssocs = null;
@@ -1332,18 +1339,24 @@ nextProd:
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
-            
+
             if (productAssocs != null) {
                 GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
                 return productAssoc.getString("productIdTo");
-            } else {
-                return null;
             }
-        }else{
             return null;
         }
-        
+        return null;
     }
+
+    /**
+     * Returns the original product ID IF the product is as alternative packing.
+     * @deprecated SCIPIO: 2019-02-28: Please use the non-ambiguous {@link #getAlternativePackingOriginalProductId} instead.
+     */
+    public static String getOriginalProductId(Delegator delegator, String productId) {
+        return getAlternativePackingOriginalProductId(delegator, productId);
+    }
+
     /**
      * worker to test if product can be order with a decimal quantity
      * @param delegator : access to DB
@@ -1359,7 +1372,7 @@ nextProd:
         }
         String allowDecimalStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache(true).queryOne().getString("orderDecimalQuantity");
         String allowDecimalProduct = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(true).queryOne().getString("orderDecimalQuantity");
-        
+
         if("N".equals(allowDecimalProduct) || (UtilValidate.isEmpty(allowDecimalProduct) && "N".equals(allowDecimalStore))){
             return Boolean.FALSE;
         }
@@ -1381,19 +1394,19 @@ nextProd:
 
     // Method to filter-out out of stock products
     public static List<GenericValue> filterOutOfStockProducts (List<GenericValue> productsToFilter, LocalDispatcher dispatcher, Delegator delegator) throws GeneralException {
-        ArrayList<GenericValue> productsInStock = new ArrayList<GenericValue>();
+        List<GenericValue> productsInStock = new ArrayList<>();
         if (UtilValidate.isNotEmpty(productsToFilter)) {
             for (GenericValue genericRecord : productsToFilter) {
                 String productId = genericRecord.getString("productId");
                 GenericValue product = null;
                 product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(true).queryOne();
                 Boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
-                
+
                 if ( UtilValidate.isNotEmpty(isMarketingPackage) && isMarketingPackage) {
-                    Map<String, Object> resultOutput = new HashMap<String, Object>();
+                    Map<String, Object> resultOutput = new HashMap<>();
                     resultOutput = dispatcher.runSync("getMktgPackagesAvailable", UtilMisc.toMap("productId" ,productId));
                     Debug.logWarning("Error getting available marketing package.", module);
-                    
+
                     BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
                     if(availableInventory.compareTo(BigDecimal.ZERO) > 0) {
                         productsInStock.add(genericRecord);
@@ -1421,7 +1434,7 @@ nextProd:
     /**
      * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
      * for each specified product store, as a map of productStoreId to inventory counts; can also return
-     * total for all facilities as "_total_" key. 
+     * total for all facilities as "_total_" key.
      * This method calculates for the specific productId only and does NOT honor ProductStore.useVariantStockCalc.
      * <p>
      * Based on {@link #filterOutOfStockProducts}.
@@ -1431,17 +1444,17 @@ nextProd:
     public static Map<String, BigDecimal> getIndividualProductStockPerProductStore(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue product, Collection<GenericValue> productStores, boolean useTotal, Timestamp moment, boolean useCache) throws GeneralException {
         Map<String, BigDecimal> countMap = new HashMap<>();
-        
+
         String productId = product.getString("productId");
         if (!"Product".equals(product.getEntityName())) {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
         }
         boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
-        
+
         List<GenericValue> productFacilities = EntityQuery.use(delegator).from("ProductFacility")
                 .where("productId", productId).cache(useCache).queryList();
         Map<String, GenericValue> productFacilityIdMap = UtilMisc.extractValuesForKeyAsMap(productFacilities, "facilityId", new HashMap<>());
-        
+
         for(GenericValue productStore : productStores) {
             BigDecimal storeInventory = BigDecimal.ZERO;
             String productStoreId = productStore.getString("productStoreId");
@@ -1452,11 +1465,11 @@ nextProd:
                 GenericValue productFacility = productFacilityIdMap.get(facilityId);
                 if (productFacility != null) {
                     if (Boolean.TRUE.equals(isMarketingPackage)) {
-                        Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable", 
+                        Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable",
                                 UtilMisc.toMap("productId", productId, "facilityId", facilityId));
                         if (!ServiceUtil.isSuccess(resultOutput)) {
                             Debug.logWarning("Error getting available marketing package.", module);
-                        } 
+                        }
                         BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
                         if (availableInventory != null) {
                             storeInventory = storeInventory.add(availableInventory);
@@ -1471,19 +1484,19 @@ nextProd:
             }
             countMap.put(productStoreId, storeInventory);
         }
-        
+
         if (useTotal) {
-            BigDecimal totalInventory = getTotalIndividualProductStock(delegator, dispatcher, product, 
+            BigDecimal totalInventory = getTotalIndividualProductStock(delegator, dispatcher, product,
                     moment, useCache, productId, isMarketingPackage, productFacilities);
             countMap.put("_total_", totalInventory);
         }
-        
+
         return countMap;
     }
-    
+
     /**
      * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
-     * for each for all stores/facilities. 
+     * for each for all stores/facilities.
      * This method calculates for the specific productId only and does NOT honor ProductStore.useVariantStockCalc.
      * <p>
      * Based on {@link #filterOutOfStockProducts}.
@@ -1496,19 +1509,19 @@ nextProd:
         boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
         List<GenericValue> productFacilities = EntityQuery.use(delegator).from("ProductFacility")
                 .where("productId", productId).cache(useCache).queryList();
-        return getTotalIndividualProductStock(delegator, dispatcher, product, moment, useCache, 
+        return getTotalIndividualProductStock(delegator, dispatcher, product, moment, useCache,
                 productId, isMarketingPackage, productFacilities);
     }
-    
+
     private static BigDecimal getTotalIndividualProductStock(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue product, Timestamp moment, boolean useCache, String productId, boolean isMarketingPackage, List<GenericValue> productFacilities) throws GeneralException {
         BigDecimal totalInventory = BigDecimal.ZERO;
         if (Boolean.TRUE.equals(isMarketingPackage)) {
-            Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable", 
+            Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable",
                     UtilMisc.toMap("productId", productId));
             if (!ServiceUtil.isSuccess(resultOutput)) {
                 Debug.logWarning("Error getting available marketing package.", module);
-            } 
+            }
             BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
             if (availableInventory != null) {
                 totalInventory = availableInventory;
@@ -1523,17 +1536,17 @@ nextProd:
         }
         return totalInventory;
     }
-    
+
     /**
      * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
      * for each specified product store, as a map of productStoreId to inventory counts; can also return
-     * total for all facilities as "_total_" key. 
+     * total for all facilities as "_total_" key.
      * This method can calculate stock for virtual products from variants and honors ProductStore.useVariantStockCalc.
      * <p>
      * Based on {@link #filterOutOfStockProducts} but with additional support for variant inventory calculation.
      * <p>
      * NOTE: The useVariantStockCalcForTotal is used when useTotal true and determines if the total should use
-     * the variant-based total calc or not - this is ambiguous because useVariantStockCalc is per-product store. 
+     * the variant-based total calc or not - this is ambiguous because useVariantStockCalc is per-product store.
      * <p>
      * Added 2018-06-06.
      */
@@ -1544,7 +1557,7 @@ nextProd:
             // non-virtual product - calculate individual stock
             return getIndividualProductStockPerProductStore(delegator, dispatcher, product, productStores, useTotal, moment, useCache);
         }
-        
+
         // virtual product - for each store, check useVariantStockCalc setting and split them up
         List<GenericValue> variantStockStores = new ArrayList<>();
         List<GenericValue> indivStockStores = new ArrayList<>();
@@ -1556,9 +1569,9 @@ nextProd:
                 indivStockStores.add(productStore);
             }
         }
-        
+
         Map<String, BigDecimal> countMap = new HashMap<>();
-        
+
         BigDecimal totalInventory = BigDecimal.ZERO;
         if (variantStockStores.size() > 0) {
             List<GenericValue> variantProducts = getVariantProductsForStockCalc(delegator, dispatcher, product, moment, useCache);
@@ -1572,7 +1585,7 @@ nextProd:
                         } else {
                             BigDecimal storeInventory = countMap.get(entry.getKey());
                             if (storeInventory == null) storeInventory = BigDecimal.ZERO;
-                            countMap.put(entry.getKey(), storeInventory.add(entry.getValue()));                            
+                            countMap.put(entry.getKey(), storeInventory.add(entry.getValue()));
                         }
                     }
                 }
@@ -1581,11 +1594,11 @@ nextProd:
                     countMap.put(productStore.getString("productStoreId"), BigDecimal.ZERO);
                 }
             }
-        } 
+        }
         if (useTotal && useVariantStockCalcForTotal) {
             countMap.put("_total_", totalInventory);
         }
-        
+
         if (indivStockStores.size() > 0) {
             Map<String, BigDecimal> indivStoreInventories = ProductWorker.getIndividualProductStockPerProductStore(delegator, dispatcher,
                     product, indivStockStores, (useTotal && !useVariantStockCalcForTotal), moment, useCache);
@@ -1596,15 +1609,112 @@ nextProd:
                 countMap.put("_total_", totalInventory);
             }
         }
- 
+
         return countMap;
+    }
+
+    /**
+     * SCIPIO: Returns the virtual products of a variant product, first-level only.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is consulted;
+     * this method is a generalization.
+     * <p>
+     * Added 2018-07-24.
+     */
+    public static List<GenericValue> getVirtualProducts(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Integer maxResults, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
+        int i = 0;
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProducts.add(assoc.getRelatedOne("MainProduct", useCache));
+            i++;
+            if (maxResults != null && i >= maxResults) break;
+        }
+        return variantProducts;
+    }
+
+    /**
+     * SCIPIO: Returns the virtual products of a variant product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is returned
+     * on each level; this method is a generalization.
+     * This method accepts a maxPerLevel to implement this.
+     * <p>
+     * Added 2018-07-24.
+     */
+    public static List<GenericValue> getVirtualProductsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Integer maxPerLevel, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> virtualProducts = new ArrayList<>();
+        int i = 0;
+        for (GenericValue assoc : virtualProductAssocs) {
+            GenericValue virtualProduct = assoc.getRelatedOne("MainProduct", useCache);
+            virtualProducts.add(virtualProduct);
+            if (Boolean.TRUE.equals(virtualProduct.getBoolean("isVariant"))) {
+                List<GenericValue> subVariantProducts = getVirtualProductsDeepDfs(delegator, dispatcher,
+                        virtualProduct, orderBy, maxPerLevel, moment, useCache);
+                virtualProducts.addAll(subVariantProducts);
+            }
+            i++;
+            if (maxPerLevel != null && i >= maxPerLevel) break;
+        }
+        return virtualProducts;
+    }
+
+    /**
+     * SCIPIO: Returns the variant products of a virtual product, first-level only.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * Added 2018-07-24.
+     */
+    public static List<GenericValue> getVariantProducts(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productId", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProducts.add(assoc.getRelatedOne("AssocProduct", useCache));
+        }
+        return variantProducts;
+    }
+
+    /**
+     * SCIPIO: Returns the variant products of a virtual product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * Added 2018-07-24.
+     */
+    public static List<GenericValue> getVariantProductsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productId", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>();
+        for (GenericValue assoc : variantProductAssocs) {
+            GenericValue variantProduct = assoc.getRelatedOne("AssocProduct", useCache);
+            variantProducts.add(variantProduct);
+            if (Boolean.TRUE.equals(variantProduct.getBoolean("isVirtual"))) {
+                List<GenericValue> subVariantProducts = getVariantProductsDeepDfs(delegator, dispatcher,
+                        variantProduct, orderBy, moment, useCache);
+                variantProducts.addAll(subVariantProducts);
+            }
+        }
+        return variantProducts;
     }
 
     /**
      * SCIPIO: Returns the variant products of a virtual product whose stock may be summed when
      * useVariantStockCalc is honored.
      * <p>
-     * Added 2018-06-06. 
+     * Added 2018-06-06.
      */
     public static List<GenericValue> getVariantProductsForStockCalc(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue product, Timestamp moment, boolean useCache) throws GeneralException {
@@ -1632,7 +1742,7 @@ nextProd:
     public static Map<String, List<GenericValue>> getProductContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
             String productId, Collection<String> productContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
         Map<String, List<GenericValue>> fieldMap = new HashMap<>();
-        
+
         List<EntityCondition> typeIdCondList = new ArrayList<>(productContentTypeIdList.size());
         if (productContentTypeIdList != null) {
             for(String productContentTypeId : productContentTypeIdList) {
@@ -1645,8 +1755,8 @@ nextProd:
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-        
-        EntityQuery query = EntityQuery.use(delegator).from("ProductContentAndElectronicText") 
+
+        EntityQuery query = EntityQuery.use(delegator).from("ProductContentAndElectronicText")
                 .where(condList).orderBy("-fromDate").cache(useCache);
         if (filterByDate != null) {
             query = query.filterByDate(filterByDate);
@@ -1661,33 +1771,33 @@ nextProd:
                 continue;
             }
             String contentIdStart = productContent.getString("contentId");
-            
+
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
             condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-            
+
             query = EntityQuery.use(delegator).from("ContentAssocToElectronicText").where(condList).orderBy("-fromDate").cache(useCache);
             if (filterByDate != null) {
                 query = query.filterByDate(filterByDate);
             }
             List<GenericValue> contentAssocList = query.queryList();
-            
+
             List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
             valueList.add(productContent);
             valueList.addAll(contentAssocList);
             fieldMap.put(productContentTypeId, valueList);
         }
-        
+
         return fieldMap;
     }
-    
+
     /**
      * SCIPIO: Returns all rollups for a product that have the given top categories.
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
      * Added 2017-11-09.
      */
-    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Set<String> topCategoryIds, boolean useCache) {
+    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Collection<String> topCategoryIds, boolean useCache) {
         List<GenericValue> prodCatMembers;
         try {
             prodCatMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
@@ -1697,7 +1807,7 @@ nextProd:
             return new ArrayList<>();
         }
         if (prodCatMembers.size() == 0) return new ArrayList<>();
-        
+
         List<List<String>> possibleTrails = null;
         for(GenericValue prodCatMember : prodCatMembers) {
             List<List<String>> trails = CategoryWorker.getCategoryRollupTrails(delegator, prodCatMember.getString("productCategoryId"), topCategoryIds, useCache);
@@ -1705,5 +1815,157 @@ nextProd:
             else possibleTrails.addAll(trails);
         }
         return possibleTrails;
+    }
+
+    /**
+     * SCIPIO: Returns all rollups for a product (any top category).
+     * Added 2019-01.
+     */
+    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, boolean useCache) {
+        return getProductRollupTrails(delegator, productId, null, useCache);
+    }
+
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product association; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getMainProductAssoc(Delegator delegator, String productId, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        if (UtilValidate.isEmpty(productId)) {
+            // Allow empty for convenience
+            //Debug.logWarning("Bad product id", module);
+            return null;
+        }
+        try {
+            List<EntityCondition> productAssocTypeIdCondList = UtilMisc.toList(
+                    EntityCondition.makeCondition("productAssocTypeId", "PRODUCT_VARIANT"),
+                    EntityCondition.makeCondition("productAssocTypeId", "UNIQUE_ITEM"),
+                    EntityCondition.makeCondition("productAssocTypeId", "PRODUCT_CONF"));
+            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("productIdTo", productId),
+                    EntityOperator.AND,
+                    EntityCondition.makeCondition(productAssocTypeIdCondList, EntityOperator.OR));
+            List<GenericValue> virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                    .where(cond)
+                    .orderBy("-fromDate")
+                    .cache(useCache)
+                    .filterByDate()
+                    .queryList();
+            return EntityUtil.getFirst(virtualProductAssocs);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity engine error while getting original product for '" + productId + "'", module);
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getMainProduct(Delegator delegator, String productId, boolean useCache) {
+        GenericValue origProduct = null;
+        try {
+            GenericValue productAssoc = getMainProductAssoc(delegator, productId, useCache);
+            if (productAssoc != null) {
+                origProduct = productAssoc.getRelatedOne("MainProduct", useCache);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity engine error while getting original product for '" + productId + "'", module);
+        }
+        return origProduct;
+    }
+
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getMainProduct(Delegator delegator, String productId) {
+        return getMainProduct(delegator, productId, true);
+    }
+
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static String getMainProductId(Delegator delegator, String productId, boolean useCache) {
+        String origProduct = null;
+        GenericValue productAssoc = getMainProductAssoc(delegator, productId, useCache);
+        if (productAssoc != null) {
+            origProduct = productAssoc.getString("productId");
+        }
+        return origProduct;
+    }
+
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * <p>
+     * Added 2018-08-17.
+     */
+    public static String getMainProductId(Delegator delegator, String productId) {
+        return getMainProductId(delegator, productId, true);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductAssoc(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProductAssoc(String productId, Delegator delegator, boolean useCache) {
+        return getMainProductAssoc(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProduct(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        return getMainProduct(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProduct(Delegator, String)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator) {
+        return getMainProduct(delegator, productId);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductId(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static String getOriginalProductId(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        return getMainProductId(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductId(Delegator, String)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static String getOriginalProductId(String productId, Delegator delegator) {
+        return getMainProductId(delegator, productId);
+    }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product (productTypeId AGGREGATED or AGGREGATED_SERVICE).
+     */
+    public static boolean isConfigProduct(GenericValue product) {
+        return (product != null) && ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId")));
+    }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product configuration (productTypeId AGGREGATED_CONF or AGGREGATEDSERV_CONF).
+     */
+    public static boolean isConfigProductConfig(GenericValue product) {
+        return (product != null) && ("AGGREGATED_CONF".equals(product.get("productTypeId")) || "AGGREGATEDSERV_CONF".equals(product.get("productTypeId")));
+    }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product OR configuration (productTypeId AGGREGATED, AGGREGATED_SERVICE, AGGREGATED_CONF, AGGREGATEDSERV_CONF).
+     */
+    public static boolean isConfigProductOrConfig(GenericValue product) {
+        return isConfigProduct(product) || isConfigProductConfig(product);
     }
 }

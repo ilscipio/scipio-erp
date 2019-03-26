@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <script language="JavaScript" type="text/javascript">
       jQuery(document).ready(function(){
@@ -28,12 +15,12 @@ under the License.
         })
       });
 </script>
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 
 <#-- Purchase Orders -->
 <@section>
 <#if facilityMaps??>
-            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="ship"/>
             <input type="hidden" name="shipToPartyId" id="shipToParty"/>
             <#if (cart.getShipGroupSize() > 1)>
@@ -41,7 +28,7 @@ under the License.
             </#if>
           
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text=uiLabelMap.OrderCreateShipGroup class="+${styles.action_run_session!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("setShipping?createNewShipGroup=Y") text=uiLabelMap.OrderCreateShipGroup class="+${styles.action_run_session!} ${styles.action_add!}" />
         </@menu>         
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -49,7 +36,7 @@ under the License.
     <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
             <@cell columns=6>
-            <@table type="data-complex"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex">
                 <#assign i = 0>
                 <#assign shipGroup = cart.getShipInfo(shipGroupIndex)>
                 <#list facilityMaps as facilityMap>
@@ -84,7 +71,7 @@ under the License.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
-                    <@td><a href="<@ofbizInterWebappUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="<@serverUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
@@ -98,7 +85,7 @@ under the License.
                     </@td>
                     <@td></@td>
                     <@td>
-                        <a href="<@ofbizInterWebappUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
+                        <a href="<@serverUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -114,7 +101,7 @@ under the License.
   <@section title=uiLabelMap.OrderShipToAnotherParty>
     <@row>
       <@cell columns=6>
-        <@table type="data-complex"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex">
         
           <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
           <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -134,7 +121,7 @@ under the License.
                   <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                   <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 </@td>
-              <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+              <@td><a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
             </@tr>
             <#if shippingContactMech_has_next>
               <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -155,7 +142,7 @@ under the License.
 
 <#-- Sales Orders -->
 
-            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="ship"/>
             <input type="hidden" name="shipToPartyId" id="shipToParty"/>
             <#if (cart.getShipGroupSize() > 1)>
@@ -163,8 +150,8 @@ under the License.
             </#if>
             
     <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${rawLabel('CommonNew')} ${rawLabel('OrderShipGroup')}" class="+${styles.action_run_session!} ${styles.action_add!}" />
-        <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("setShipping?createNewShipGroup=Y") text="${rawLabel('CommonNew')} ${rawLabel('OrderShipGroup')}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
     </@menu> 
     
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -176,7 +163,7 @@ under the License.
     <@section title="${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}">
         <@row>
         <@cell columns=6>
-            <@table type="data-complex"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex">
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.PartySupplier}</@td>
                 <@td class="${styles.grid_large!}6">
@@ -234,7 +221,7 @@ under the License.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
                     <@td>
-                      <a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                      <a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     </@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
@@ -262,7 +249,7 @@ under the License.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                       </@td>
-                    <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="3"><hr /></@td></@tr>

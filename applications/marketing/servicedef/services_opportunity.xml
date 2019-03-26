@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -118,5 +105,78 @@ under the License.
         <attribute name="partyId" mode="OUT" type="String" optional="true"/>
     </service>
 
+    <!-- SalesOpportunityCompetitor services -->
+    <service name="createSalesOpportunityCompetitor" default-entity-name="SalesOpportunityCompetitor" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOpportunityCompetitor</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateSalesOpportunityCompetitor" default-entity-name="SalesOpportunityCompetitor" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SalesOpportunityCompetitor</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSalesOpportunityCompetitor" default-entity-name="SalesOpportunityCompetitor" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityCompetitor</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     
+    <service name="deleteSalesOpportunityRole" default-entity-name="SalesOpportunityRole" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SalesOpportunityStage services -->
+    <service name="createSalesOpportunityStage" default-entity-name="SalesOpportunityStage" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOpportunityStage</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateSalesOpportunityStage" default-entity-name="SalesOpportunityStage" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SalesOpportunityStage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSalesOpportunityStage" default-entity-name="SalesOpportunityStage" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityStage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SalesOpportunityTrckCode services -->
+    <service name="createSalesOpportunityTrckCode" default-entity-name="SalesOpportunityTrckCode" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOpportunityTrckCode</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateSalesOpportunityTrckCode" default-entity-name="SalesOpportunityTrckCode" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SalesOpportunityTrckCode</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSalesOpportunityTrckCode" default-entity-name="SalesOpportunityTrckCode" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityTrckCode</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SalesOpportunityWorkEffort services -->
+    <service name="createSalesOpportunityWorkEffort" default-entity-name="SalesOpportunityWorkEffort" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOpportunityWorkEffort</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="deleteSalesOpportunityWorkEffort" default-entity-name="SalesOpportunityWorkEffort" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityWorkEffort</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SalesOpportunityQuote services -->
+    <service name="createSalesOpportunityQuote" default-entity-name="SalesOpportunityQuote" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOpportunityQuote</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="deleteSalesOpportunityQuote" default-entity-name="SalesOpportunityQuote" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOpportunityQuote</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

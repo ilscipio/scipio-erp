@@ -1,24 +1,16 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
+<#-- SCIPIO: WARNING: 2019: This entire page and its macros are duplicated in the shop webapp (FIXME?) -->
+
+<#-- SCIPIO: FIXME: Lots of data labels can't localize (some from groovy) -->
+
+<#-- SCIPIO: TODO: rewrite virtual JS -->
 ${virtualJavaScript!}
-<#assign addedJavaScript = requestAttributes.addedJavaScript?default("N")/>
+<#assign addedJavaScript = requestAttributes.addedJavaScript!"N"/>
 <#if ("N" == addedJavaScript)>
   <#assign dummy = setRequestAttribute("addedJavaScript", "Y")>
   <@script>
@@ -41,7 +33,7 @@ ${virtualJavaScript!}
             return;
         }
         window[fieldName] = window[fieldName].replace(/\&\#47;/g, "/");
-        popUp("<@ofbizUrl>detailImage?detail=" + window[fieldName] + "</@ofbizUrl>", 'detailImage', '400', '550');
+        popUp("<@pageUrl>detailImage?detail=" + window[fieldName] + "</@pageUrl>", 'detailImage', '400', '550');
     }
 
     function setAddProductIdInline(inlineCounter, name) {
@@ -51,22 +43,26 @@ ${virtualJavaScript!}
         if (name == '' || name == 'NULL' || isVirtualInline(inlineCounter, name) == true) {
             //document.configform.quantity.disabled = true;
             var elem = document.getElementById(product_id_display);
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
+            if (elem) {
+                var txt = document.createTextNode('');
+                if(elem.hasChildNodes()) {
+                    elem.replaceChild(txt, elem.firstChild);
+                } else {
+                    elem.appendChild(txt);
+                }
             }
 
             checkOption(inlineCounter);
         } else {
             //document.configform.quantity.disabled = false;
             var elem = document.getElementById(product_id_display);
-            var txt = document.createTextNode(name);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
+            if (elem) {
+                var txt = document.createTextNode(name);
+                if(elem.hasChildNodes()) {
+                    elem.replaceChild(txt, elem.firstChild);
+                } else {
+                    elem.appendChild(txt);
+                }
             }
         }
     }
@@ -82,22 +78,30 @@ ${virtualJavaScript!}
         var variant_price_display = 'variant_price_display' + inlineCounter;
         if (sku == '' || sku == 'NULL' || isVirtualInline(inlineCounter, sku) == true) {
             var elem = document.getElementById(variant_price_display);
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
+            if (elem) {
+                var txt = document.createTextNode('');
+                if(elem.hasChildNodes()) {
+                    elem.replaceChild(txt, elem.firstChild);
+                } else {
+                    elem.appendChild(txt);
+                }
             }
         }
         else {
             var elem = document.getElementById(variant_price_display);
-            var functionName = 'getVariantPrice' + inlineCounter;
-            var price =  window[functionName](sku);
-            var txt = document.createTextNode('+' + price);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
+            if (elem) {
+                var functionName = 'getVariantPrice' + inlineCounter;
+                var price =  window[functionName](sku);
+              <#if (requestAttributes.ipdPlusMinusPriceDisplay!true) == true>
+                var txt = document.createTextNode('+' + price);
+              <#else>
+                var txt = document.createTextNode('' + price);
+              </#if>
+                if(elem.hasChildNodes()) {
+                    elem.replaceChild(txt, elem.firstChild);
+                } else {
+                    elem.appendChild(txt);
+                }
             }
         }
     }
@@ -115,13 +119,13 @@ ${virtualJavaScript!}
     }
 
     function toggleAmtInline(inlineCounter, toggle) {
-        var fieldName = 'add_amount' + inlineCounter;
+        var fieldName = 'add_amount' + inlineCounter + '_container';
         if (toggle == 'Y') {
-            changeObjectVisibility(fieldName, "visible");
+            jQuery(fieldName).show();
         }
 
         if (toggle == 'N') {
-            changeObjectVisibility(fieldName, "hidden");
+            jQuery(fieldName).hide();
         }
     }
 
@@ -255,34 +259,35 @@ ${virtualJavaScript!}
 
 <#assign price = priceMap!/>
 <div id="inlineproductdetail${inlineCounter}">
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
-  <@tr>
-    <@td align="left" valign="top" width="0">
-      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
-      <#if firstLargeImage?has_content>
-        <#assign productLargeImageUrl = firstLargeImage>
-      </#if>
-      <#if productLargeImageUrl?has_content>
-        <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}"/>
-        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl ctxPrefix=true>${productLargeImageUrl}</@ofbizContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
-      </#if>
-    </@td>
-    <@td align="right" valign="top" width="100%">
-    <#--    <@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>  -->
+
+<#macro amountField>
+    <#local fieldStyle = "">
+    <#if (product.requireAmount!"N") != "Y">
+        <#-- SCIPIO: Issues with css
+        <#assign hiddenStyle = styles.hidden!/>-->
+        <#local fieldStyle = "display: none;">
+    </#if>
+    <@field type="input" size="5" name="add_amount${inlineCounter}" id="add_amount${inlineCounter}" containerStyle=fieldStyle value="" label=uiLabelMap.CommonAmount /> <#-- containerClass=("+"+hiddenStyle) -->
+</#macro>
+
+  <@row>
+    <@cell small=9>
+        <#--<@heading>${productContentWrapper.get("PRODUCT_NAME")!}</@heading>-->
         <#assign inStock = true>
         <#if (product.isVirtual!?upper_case) == "Y">
-        <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
+          <#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>
             <#list featureLists as featureList>
-                <#list featureList as feature>
+                <#-- SCIPIO: this part was rewritten... -->
+                <#assign feature = featureList?first>
+                <@field type="select" id="FT${inlineCounter}${feature.productFeatureTypeId}" name="FT${inlineCounter}${feature.productFeatureTypeId}" onChange="javascript:checkRadioButtoninline${inlineCounter}('${inlineCounter}', '${product.productId}');" label=(feature.description!)>
+                  <#list featureList as feature>
                     <#if feature_index == 0>
-                        <div>${feature.description}: <select id="FT${inlineCounter}${feature.productFeatureTypeId}" name="FT${inlineCounter}${feature.productFeatureTypeId}" onchange="javascript:checkRadioButtoninline${inlineCounter}('${inlineCounter}', '${product.productId}');">
-                        <option value="select" selected="selected"> select option </option>
+                        <option value="select" selected="selected">${uiLabelMap.CommonSelectOne}</option>
                     <#else>
-                        <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId/>)</#if></option>
+                        <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price isoCode=feature.currencyUomId/>)</#if></option>
                     </#if>
-                </#list>
-                </select>
-                </div>
+                  </#list>
+                </@field>
             </#list>
               <input type="hidden" name="product_id${inlineCounter}" value="${product.productId}"/>
               <input type="hidden" name="add_product_id${inlineCounter}" value="NULL"/>
@@ -290,22 +295,24 @@ ${virtualJavaScript!}
           <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
            <#if variantTree?? && (variantTree.size() > 0)>
             <#list featureSet as currentType>
-              <div>
-                <select name="FT${inlineCounter}${currentType}" onchange="javascript:getListInline('${inlineCounter}', this.name, (this.selectedIndex-1), 1);">
-                  <option>${featureTypes.get(currentType)}</option>
-                </select>
-              </div>
+              <@field type="select" name="FT${inlineCounter}${currentType}" onChange="javascript:getListInline('${inlineCounter}', this.name, (this.selectedIndex-1), 1);" label=featureTypes.get(currentType)>
+                <option>${featureTypes.get(currentType)}</option>
+              </@field>
             </#list>
             <input type="hidden" name="product_id${inlineCounter}" value="${product.productId}"/>
             <input type="hidden" name="add_product_id${inlineCounter}" value="NULL"/>
-            <div>
-              <b><span id="product_id_display${inlineCounter}"> </span></b>
-              <b><div id="variant_price_display${inlineCounter}"> </div></b>
-            </div>
+            <#-- SCIPIO: Parent can specify another place to put this -->
+          <#if (requestAttributes.ipdIncludePriceDisplay!true) == true>
+            <@field type="display">
+              <#-- SCIPIO: don't show the ID... just weird
+              <span id="product_id_display${inlineCounter}"> </span>-->
+              <div id="variant_price_display${inlineCounter}"> </div>
+            </@field>
+          </#if>
           <#else>
             <input type="hidden" name="product_id${inlineCounter}" value="${product.productId}"/>
             <input type="hidden" name="add_product_id${inlineCounter}" value="NULL"/>
-            <div><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+            <div>${uiLabelMap.ProductItemOutOfStock}.</div>
             <#assign inStock = false>
           </#if>
          </#if>
@@ -316,18 +323,30 @@ ${virtualJavaScript!}
           <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
           <#if isStoreInventoryNotAvailable>
             <#if isStoreInventoryRequired>
-              <div><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+              <div><span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage?has_content>&mdash; ${product.inventoryMessage}</#if></span></div>
               <#assign inStock = false>
             <#else>
-              <div><b>${product.inventoryMessage!}</b></div>
+              <#if product.inventoryMessage?has_content><div>${product.inventoryMessage}</div></#if>
             </#if>
           </#if>
         </#if>
-      </@td></@tr>
-      <@tr><@td COLSPAN="2" align="right">
+    </@cell>
+    <@cell small=3>
+      <#-- SCIPIO: Moved this to after the field stuff, because looks weird when no image -->
+      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
+      <#if firstLargeImage?has_content>
+        <#assign productLargeImageUrl = firstLargeImage>
+      </#if>
+      <#if productLargeImageUrl?string?has_content>
+        <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage!(mainDetailImageUrl!("_NONE_"))}"/>
+        <a href="javascript:popupDetailInline('${inlineCounter}');" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@contentUrl ctxPrefix=true>${productLargeImageUrl!}</@contentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+      </#if>
+    </@cell>
+  </@row>
+  <@row>
+    <@cell>
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-        <p>&nbsp;</p>
           <div class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
@@ -335,21 +354,16 @@ ${virtualJavaScript!}
         <#-- check to see if the product requires inventory check and has inventory -->
         <#elseif (product.virtualVariantMethodEnum!) != "VV_FEATURETREE">
           <#if inStock>
-            <#if product.requireAmount?default("N") == "Y">
-              <#assign hiddenStyle = "visible">
-            <#else>
-              <#assign hiddenStyle = "hidden">
-            </#if>
-            <div id="add_amount${inlineCounter}" class="${hiddenStyle}">
-              <span style="white-space: nowrap;"><b>${uiLabelMap.CommonAmount}:</b></span>&nbsp;
-              <input type="text" size="5" name="add_amount${inlineCounter}" value=""/>
-            </div>
+            <@amountField />
            </#if>
         </#if>
-      </@td></@tr>
+    </@cell>
+  </@row>
 
-      <@tr><@td COLSPAN="2" align="right">
-      <#if variantTree?? && 0 < variantTree.size()>
+  <@row>
+    <@cell>
+      <#-- SCIPIO: TODO: replace virtual jS -->
+      <#if variantTree?? && (0 < variantTree.size())>
         <@script>eval("list"+ "${inlineCounter}" + "${featureOrderFirst}" + "()");</@script>
       </#if>
 
@@ -358,7 +372,7 @@ ${virtualJavaScript!}
         <#assign imageKeys = variantSample.keySet()>
         <#assign imageMap = variantSample>
         <p>&nbsp;</p>
-        <@table type="fields"> <#- orig: class="" -> <#- orig: cellspacing="0" -> <#- orig: cellpadding="0" ->
+        <@table type="fields">
           <@tr>
             <#assign maxIndex = 7>
             <#assign indexer = 0>
@@ -373,7 +387,7 @@ ${virtualJavaScript!}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" alt="" /></a>
+                  <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_select!}"><img src="<@contentUrl ctxPrefix=true>${imageUrl}</@contentUrl>" border="0" width="60" height="60" alt="" /></a>
                   <br />
                   <a href="javascript:getListInline('${inlineCounter}', 'FT${inlineCounter}${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>
@@ -386,7 +400,6 @@ ${virtualJavaScript!}
           </@tr>
         </@table>
       </#if>      -->
-    </@td>
-  </@tr>
-</@table>
+    </@cell>
+  </@row>
 </div>

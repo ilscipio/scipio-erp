@@ -33,6 +33,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -69,8 +70,8 @@ public class QuoteServices {
         }
 
         if (quote == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "OrderOrderQuoteCannotBeFound", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "OrderOrderQuoteCannotBeFound",
                     UtilMisc.toMap("quoteId", quoteId), locale));
         }
 
@@ -81,16 +82,16 @@ public class QuoteServices {
             Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId=" + quote.get("productStoreId") + " and emailType=" + emailType, module);
         }
         if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct, 
-                    "ProductProductStoreEmailSettingsNotValid", 
-                    UtilMisc.toMap("productStoreId", quote.get("productStoreId"), 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct,
+                    "ProductProductStoreEmailSettingsNotValid",
+                    UtilMisc.toMap("productStoreId", quote.get("productStoreId"),
                             "emailType", emailType), locale));
         }
         String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
         if (UtilValidate.isEmpty(bodyScreenLocation)) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct, 
-                    "ProductProductStoreEmailSettingsNotValidBodyScreenLocation", 
-                    UtilMisc.toMap("productStoreId", quote.get("productStoreId"), 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceProduct,
+                    "ProductProductStoreEmailSettingsNotValidBodyScreenLocation",
+                    UtilMisc.toMap("productStoreId", quote.get("productStoreId"),
                             "emailType", emailType), locale));
         }
         sendMap.put("bodyScreenUri", bodyScreenLocation);
@@ -98,7 +99,7 @@ public class QuoteServices {
         sendMap.put("xslfoAttachScreenLocation", xslfoAttachScreenLocation);
 
         if ((sendTo == null) || !UtilValidate.isEmail(sendTo)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct,
                     "ProductProductStoreEmailSettingsNoSendToFound", locale));
         }
 
@@ -122,17 +123,40 @@ public class QuoteServices {
             sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         }
 
+        // SCIPIO: Determine webSiteId for store email
+        String productStoreId = quote.getString("productStoreId");
+        if (productStoreId != null) {
+            // SCIPIO: FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup...
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    null, true);
+            if (webSiteId != null) {
+                sendMap.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("sendQuoteReportMail: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
+        } else {
+            Debug.logWarning("sendQuoteReportMail: Quote '" + quoteId + "' has no productStoreId set; cannot determine WebSite for email", module);
+        }
+
         // send the notification
         Map<String, Object> sendResp = null;
         try {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+            if (ServiceUtil.isError(sendResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(sendResp));
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderServiceExceptionSeeLogs",locale));
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderServiceExceptionSeeLogs",locale));
         }
 
         // check for errors
-        if (sendResp != null && !ServiceUtil.isError(sendResp)) {
+        if (sendResp != null && ServiceUtil.isSuccess(sendResp)) {
             sendResp.put("emailType", emailType);
         }
         return sendResp;
@@ -159,13 +183,10 @@ public class QuoteServices {
         List<GenericValue> quoteWorkEfforts = UtilGenerics.checkList(context.get("quoteWorkEfforts"));
         List<GenericValue> quoteAdjustments = UtilGenerics.checkList(context.get("quoteAdjustments"));
         Locale locale = (Locale) context.get("locale");
-        
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
+
         //TODO create Quote Terms still to be implemented
-        //List<GenericValue> quoteTerms = UtilGenerics.cast(context.get("quoteTerms"));
-        
         //TODO create Quote Term Attributes still to be implemented
-        //List<GenericValue> quoteTermAttributes = UtilGenerics.cast(context.get("quoteTermAttributes"));
-        
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
@@ -184,7 +205,9 @@ public class QuoteServices {
 
             // create Quote
             Map<String, Object> quoteOut = dispatcher.runSync("createQuote", quoteIn);
-
+            if (ServiceUtil.isError(quoteOut)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(quoteOut));
+            }
             if (UtilValidate.isNotEmpty(quoteOut) && UtilValidate.isNotEmpty(quoteOut.get("quoteId"))) {
                 String quoteId = (String)quoteOut.get("quoteId");
                 result.put("quoteId", quoteId);
@@ -196,7 +219,10 @@ public class QuoteServices {
                         Map<String, Object> quoteItemIn = quoteItem.getAllFields();
                         quoteItemIn.put("userLogin", userLogin);
 
-                        dispatcher.runSync("createQuoteItem", quoteItemIn);
+                        serviceResult = dispatcher.runSync("createQuoteItem", quoteItemIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
@@ -207,7 +233,10 @@ public class QuoteServices {
                         Map<String, Object> quoteAttrIn = quoteAttr.getAllFields();
                         quoteAttrIn.put("userLogin", userLogin);
 
-                        dispatcher.runSync("createQuoteAttribute", quoteAttrIn);
+                        serviceResult = dispatcher.runSync("createQuoteAttribute", quoteAttrIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
@@ -218,7 +247,10 @@ public class QuoteServices {
                         Map<String, Object> quoteCoefficientIn = quoteCoefficient.getAllFields();
                         quoteCoefficientIn.put("userLogin", userLogin);
 
-                        dispatcher.runSync("createQuoteCoefficient", quoteCoefficientIn);
+                        serviceResult = dispatcher.runSync("createQuoteCoefficient", quoteCoefficientIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
@@ -228,8 +260,10 @@ public class QuoteServices {
                         quoteRole.set("quoteId", quoteId);
                         Map<String, Object> quoteRoleIn = quoteRole.getAllFields();
                         quoteRoleIn.put("userLogin", userLogin);
-
-                        dispatcher.runSync("createQuoteRole", quoteRoleIn);
+                        serviceResult = dispatcher.runSync("createQuoteRole", quoteRoleIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
@@ -239,8 +273,10 @@ public class QuoteServices {
                         quoteWorkEffort.set("quoteId", quoteId);
                         Map<String, Object> quoteWorkEffortIn = quoteWorkEffort.getAllFields();
                         quoteWorkEffortIn.put("userLogin", userLogin);
-
-                        dispatcher.runSync("createQuoteWorkEffort", quoteWorkEffortIn);
+                        serviceResult = dispatcher.runSync("createQuoteWorkEffort", quoteWorkEffortIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
@@ -250,15 +286,17 @@ public class QuoteServices {
                         quoteAdjustment.set("quoteId", quoteId);
                         Map<String, Object> quoteAdjustmentIn = quoteAdjustment.getAllFields();
                         quoteAdjustmentIn.put("userLogin", userLogin);
-
-                        dispatcher.runSync("createQuoteAdjustment", quoteAdjustmentIn);
+                        serviceResult = dispatcher.runSync("createQuoteAdjustment", quoteAdjustmentIn);
+                        if (ServiceUtil.isError(serviceResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                        }
                     }
                 }
 
                 //TODO create Quote Terms still to be implemented the base service createQuoteTerm
                 //TODO create Quote Term Attributes still to be implemented the base service createQuoteTermAttribute
             } else {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
                         "OrderOrderQuoteCannotBeStored", locale));
             }
         } catch (GenericServiceException e) {

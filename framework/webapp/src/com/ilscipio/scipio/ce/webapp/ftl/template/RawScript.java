@@ -1,12 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Wrapper for strings that get passed to objectAsScript FTL macro to prevent
@@ -17,25 +11,25 @@ import java.util.Set;
  */
 public abstract class RawScript {
 
-    private static Map<String, Set<String>> langParts = Collections.emptyMap();
-    
-    /**
-     * Maps target langs to list of langs that can be used in place of it.
-     */
-    private static final Map<String, Set<String>> substituteLangsMap;
-    static {
-        Map<String, Set<String>> map = new HashMap<>();
-        
-        // Any html-attribute-escaped code can also be used in markup body (but NOT vice-versa!)
-        map.put("htmlmarkup", new HashSet<String>(Arrays.asList(new String[]{ "html" })));
-        
-        substituteLangsMap = map;
-    }
-    
+//    private static Map<String, Set<String>> langParts = Collections.emptyMap();
+
+//    /**
+//     * Maps target langs to list of langs that can be used in place of it.
+//     */
+//    private static final Map<String, Set<String>> substituteLangsMap;
+//    static {
+//        Map<String, Set<String>> map = new HashMap<>();
+//
+//        // Any html-attribute-escaped code can also be used in markup body (but NOT vice-versa!)
+//        map.put("htmlmarkup", new HashSet<String>(Arrays.asList(new String[]{ "html" })));
+//
+//        substituteLangsMap = map;
+//    }
+
     public static RawScript wrap(Object value, String lang) {
         return new SingleLangRawScript(value, lang);
     }
-    
+
     public static RawScript wrap(Map<String, Object> langValueMap) {
         if (langValueMap.size() == 1) { // optimization
             Map.Entry<String, Object> entry = langValueMap.entrySet().iterator().next();
@@ -44,12 +38,12 @@ public abstract class RawScript {
             return new MultiLangRawScript(langValueMap);
         }
     }
-    
+
     @Override
     public abstract String toString(); // NOTE: avoid using this... use resolveScriptForLang...
-    
+
     public abstract Object getValueForLang(String lang);
-    
+
     /**
      * Returns a ScriptLang pair with a script (string) that has yet to receive escaping for the given lang,
      * including the missing lang itself (which may be different from lang).
@@ -68,7 +62,7 @@ public abstract class RawScript {
     public static boolean isRawScript(Object object) {
         return ((object != null) && (object instanceof RawScript));
     }
-    
+
     public static boolean isRawScript(Object object, String lang) {
         if ((object != null) && (object instanceof RawScript)) {
             if (lang == null || lang.isEmpty()) {
@@ -80,7 +74,7 @@ public abstract class RawScript {
             return false;
         }
     }
-    
+
     /**
      * Resolves value/lang or returns null if not RawScript.
      */
@@ -91,7 +85,7 @@ public abstract class RawScript {
             return ((RawScript) object).resolveScriptForLang(targetLang);
         }
     }
-    
+
     /**
      * Resolves value/lang or returns a SingleLangRawScript if not RawScript.
      */
@@ -102,7 +96,7 @@ public abstract class RawScript {
             return ((RawScript) object).resolveScriptForLang(targetLang);
         }
     }
-    
+
     public static Object getValueForLang(Object object, String targetLang) {
         if (object == null || !(object instanceof RawScript)) {
             return null;
@@ -110,11 +104,11 @@ public abstract class RawScript {
             return ((RawScript) object).getValueForLang(targetLang);
         }
     }
-    
+
     public static class SingleLangRawScript extends RawScript {
         private final Object value;
         private final String lang;
-        
+
         public SingleLangRawScript(Object value, String lang) {
             this.value = value;
             this.lang = (lang != null && !lang.isEmpty()) ? lang : null; // && !"none".equals(lang)
@@ -127,7 +121,7 @@ public abstract class RawScript {
         public String getLang() {
             return lang;
         }
-        
+
         @Override
         public String toString() { // NOTE: avoid using this... use resolveScriptForLang...
             return (value != null) ? value.toString() : "";
@@ -170,13 +164,13 @@ public abstract class RawScript {
                 }
             }
         }
-        
+
     }
-    
+
     public static class MultiLangRawScript extends RawScript {
-        
+
         protected final Map<String, Object> langValueMap;
-        
+
         /**
          * WARN: does not create map copy for now (in case LinkedHashMap)
          */
@@ -205,13 +199,13 @@ public abstract class RawScript {
                 return langValueMap.entrySet().iterator().next().getKey();
             }
         }
-        
+
         @Override
         public String toString() { // NOTE: avoid using this... use resolveScriptForLang...
             Object object = getDefaultObject();
             return (object != null) ? object.toString() : "";
         }
-        
+
         @Override
         public Object getValueForLang(String lang) {
             return langValueMap.get(lang);
@@ -229,7 +223,7 @@ public abstract class RawScript {
                 String bestLang = null;
                 Object bestValue = null;
                 String bestTargetLang = null;
-                
+
                 for(Map.Entry<String, Object> entry : langValueMap.entrySet()) {
                     String lang = entry.getKey();
                     if (bestLang == null || (lang.length() > bestLang.length())) { // IMPORTANT: always keep the first if same length.
@@ -240,7 +234,7 @@ public abstract class RawScript {
                         }
                     }
                 }
-                
+
                 // special case: html can substitute for htmlmarkup
                 if (targetLang.contains("htmlmarkup")) {
                     String replTargetLang = targetLang.replaceAll("htmlmarkup", "html");
@@ -268,28 +262,28 @@ public abstract class RawScript {
                 }
             }
         }
-        
+
     }
 
-    private static Set<String> getLangParts(String lang) {
-        // NOTE: this method is a heuristic-like optimization, but it should work out
-        Set<String> parts = langParts.get(lang);
-        if (parts == null) {
-            synchronized(RawScript.class) {
-                parts = langParts.get(lang);
-                if (parts == null) {
-                    Map<String, Set<String>> newLangParts = new HashMap<>(langParts);
-                    
-                    parts = new LinkedHashSet<String>(Arrays.asList(lang.split("-")));
-                    
-                    newLangParts.put(lang, parts);
-                    
-                    // NOTE: the assignment is not synchronized, but the final inner contents of the unmodifiable map should be fine.
-                    langParts = Collections.unmodifiableMap(newLangParts);
-                }
-            }
-        }
-        return parts;
-    }
-    
+//    private static Set<String> getLangParts(String lang) {
+//        // NOTE: this method is a heuristic-like optimization, but it should work out
+//        Set<String> parts = langParts.get(lang);
+//        if (parts == null) {
+//            synchronized(RawScript.class) {
+//                parts = langParts.get(lang);
+//                if (parts == null) {
+//                    Map<String, Set<String>> newLangParts = new HashMap<>(langParts);
+//
+//                    parts = new LinkedHashSet<String>(Arrays.asList(lang.split("-")));
+//
+//                    newLangParts.put(lang, parts);
+//
+//                    // NOTE: the assignment is not synchronized, but the final inner contents of the unmodifiable map should be fine.
+//                    langParts = Collections.unmodifiableMap(newLangParts);
+//                }
+//            }
+//        }
+//        return parts;
+//    }
+
 }

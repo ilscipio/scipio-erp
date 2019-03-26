@@ -27,6 +27,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 
@@ -37,6 +38,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 @SuppressWarnings("serial")
 public class ResourceBundleMapWrapper implements Map<String, Object>, Serializable {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected MapStack<String> rbmwStack;
     protected ResourceBundle initialResourceBundle;
     protected Map<String, Object> context;
@@ -92,6 +94,15 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale())));
     }
 
+    /** Don't pass the locale to make sure it has the same locale as the base. sCPI */
+    public void addBottomResourceBundle(String resource, boolean optional) { // SCIPIO: optional
+        if (this.initialResourceBundle == null) {
+            throw new IllegalArgumentException("Cannot add bottom resource bundle, this wrapper was not properly initialized (there is no base/initial ResourceBundle).");
+        }
+        this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale(), optional)));
+    }
+    
+    
     /** In general we don't want to use this, better to start with the more specific ResourceBundle and add layers of common ones...
      * Puts ResourceBundle on the top of the stack (top meaning will override lower layers on the stack)
      */
@@ -128,8 +139,8 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             try {
                 String str = (String) value;
                 return FlexibleStringExpander.expandString(str, context);
-            } catch (Exception e) {
-                // Potential ClassCastException - do nothing
+            } catch (ClassCastException e) {
+                Debug.logInfo(e.getMessage(), module);
             }
         }
         return value;
@@ -163,7 +174,7 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Collection<Object> values() {
         return this.rbmwStack.values();
     }
-    
+
     /**
      * SCIPIO: Returns the context reference which was passed to this bundle wrapper
      * upon its creation.
@@ -171,14 +182,14 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
     public Map<String, Object> getContext() {
         return context;
     }
-    
+
     /**
      * SCIPIO: Returns the initial locale upon creation.
      */
     public Locale getInitialLocale() {
         return this.initialResourceBundle.getLocale();
     }
-    
+
     /**
      * SCIPIO: Returns the locale considered the main one for this bundle wrapper.
      * <p>
@@ -214,13 +225,13 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             // when the main Map doesn't have a certain value
             if (resourceBundle != null) {
                 Set<String> set = resourceBundle.keySet();
-                topLevelMap = new HashMap<String, Object>(set.size());
+                topLevelMap = new HashMap<>(set.size());
                 for (String key : set) {
                     Object value = resourceBundle.getObject(key);
                     topLevelMap.put(key, value);
                 }
             } else {
-                topLevelMap = new HashMap<String, Object>(1);
+                topLevelMap = new HashMap<>(1);
             }
             topLevelMap.put("_RESOURCE_BUNDLE_", resourceBundle);
             isMapInitialized = true;
@@ -230,13 +241,12 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         /* (non-Javadoc)
          * @see java.util.Map#size()
          */
-        public int size() {            
+        public int size() {
             if(isMapInitialized) {
                 // this is an approximate size, won't include elements from parent bundles
                 return topLevelMap.size() -1;
-            } else {
-                return resourceBundle.keySet().size();                        
             }
+            return resourceBundle.keySet().size();
         }
 
         /* (non-Javadoc)
@@ -245,9 +255,8 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         public boolean isEmpty() {
             if (isMapInitialized) {
                 return topLevelMap.isEmpty();
-            } else {
-                return resourceBundle.keySet().size() == 0;
             }
+            return resourceBundle.keySet().size() == 0;
         }
 
         /* (non-Javadoc)
@@ -260,9 +269,10 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
                 }
             } else {
                 try {
-                    if (this.resourceBundle.getObject((String) arg0) != null) {
-                        return true;
-                    }
+                    //the following will just be executed to check if arg0 is null,
+                    //if so the thrown exception will be caught, if not true will be returned
+                    this.resourceBundle.getObject((String) arg0);
+                    return true;
                 } catch (NullPointerException e) {
                     // happens when arg0 is null
                 } catch (MissingResourceException e) {
@@ -295,14 +305,10 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
                         value = this.resourceBundle.getObject((String) arg0);
                     } catch (MissingResourceException mre) {
                         // do nothing, this will be handled by recognition that the value is still null
+                        //Debug.logError(mre, module); // SCIPIO: 2018-08-30: don't do this, caller may not like
                     }
                 }
             }
-            /* we used to do this here, but now we'll do it in the top-level class since doing it here would prevent searching down the stack
-            if (value == null) {
-                value = arg0;
-            }
-             */
             return value;
         }
 
@@ -362,8 +368,5 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
             return this.resourceBundle;
         }
 
-        /*public String toString() {
-            return this.topLevelMap.toString();
-        }*/
     }
 }

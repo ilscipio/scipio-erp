@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${rawString(shipmentId!)}]">
+<@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${raw(shipmentId!)}]">
   <@fields type="default-manual">
-    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonReturn} ${uiLabelMap.CommonDescription}</@th>
@@ -34,22 +21,22 @@ under the License.
       </@thead>
       <#list items as item>
         <@tr>
-          <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${item.returnId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
-          <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${item.productId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a> ${item.internalName!}</@td>
+          <@td><a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${item.returnId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
+          <@td><a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${item.productId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a> ${item.internalName!}</@td>
           <@td>${item.returnQuantity}</@td>
           <@td>${item.shipmentItemQty}</@td>
           <@td>${item.totalQtyIssued}</@td>
           <@td>
             <#if item.issuedItems?has_content>
               <#list item.issuedItems as issuedItem>
-                <div><a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
+                <div><a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}</@serverUrl>" class="${styles.link_nav_info_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
               </#list>
             </#if>
           </@td>
           <@td>${item.qtyStillNeedToBeIssued}</@td>
           <#if (item.shipmentItemQty > item.totalQtyIssued)>
             <@td>
-                <form name="issueInventoryItemToShipment_${item_index}" action="<@ofbizUrl>issueInventoryItemToShipment</@ofbizUrl>" method="post">
+                <form name="issueInventoryItemToShipment_${item_index}" action="<@pageUrl>issueInventoryItemToShipment</@pageUrl>" method="post">
                   <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                   <input type="hidden" name="shipmentItemSeqId" value="${item.shipmentItemSeqId}"/>
                   <input type="hidden" name="totalIssuedQty" value="${item.totalQtyIssued}"/>

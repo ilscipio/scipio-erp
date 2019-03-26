@@ -16,7 +16,7 @@
             <#assign iTotal = (item.quantity!1 * item.amount!0)/>
             <#assign itemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : item.invoiceItemTypeId!}, true)>
             <@tr>
-                <@td><a href="<@ofbizUrl>invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
+                <@td><a href="<@pageUrl>invoiceOverview?invoiceId=${item.invoiceId}</@pageUrl>">${item.invoiceId!}</a></@td>
                 <@td>${itemType.get("description",locale)!}</@td>
                 <@td>${item.productId!}</@td>
                 <@td>${item.orderId!}</@td>

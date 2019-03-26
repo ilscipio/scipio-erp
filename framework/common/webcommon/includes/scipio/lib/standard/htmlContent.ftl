@@ -163,25 +163,26 @@ Creates a basic wrapper for code blocks.
                     
   * Parameters *
     type                    = (html|java|css|javascript|log, default:html)
+    style                   = Legacy HTML {{{style}}} attribute
     class                   = ((css-class)) Heading element CSS classes
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign code_defaultArgs = {
-  "type":"html", "class":"", "passArgs":{}
+  "type":"html", "class":"", "style":"", "passArgs":{}
 }>
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#local class = addClassArgDefault(class, "")>
-  <@code_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
+  <@code_markup type=type style=style class=class origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
 </#macro>
 
 <#-- @code main markup - theme override -->
-<#macro code_markup type="" class="" origArgs={} passArgs={} catchArgs...>
-  <pre<@compiledClassAttribStr class=class />><code data-language="${escapeVal(type, 'html')}"><#rt>
+<#macro code_markup type="" style="" class="" origArgs={} passArgs={} catchArgs...>
+  <pre<@compiledClassAttribStr class=class />><code data-language="${escapeVal(type, 'html')}" <#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt>
     <#nested><#t>
   </code></pre><#lt>
 </#macro>
@@ -278,6 +279,7 @@ Creates a responsive tables script (script only - no markup).
       
       <@script htmlwrap=htmlwrap>
         $(document).ready(function() {
+            $.fn.dataTable.ext.errMode = 'none';
             $('#${escapeVal(tableId, 'js')}').DataTable(<@objectAsScript lang="js" object=respOpts />);
         } );
       </@script>
@@ -1396,6 +1398,10 @@ Gets chart number of datasets.
 ************
 Chart data entry.
 
+NOTE: {{{value}}} and {{{value2}}} should be passed as numbers, NOT as strings. For backward-compatibility
+reasons, if you pass a string, it will be printed out in javascript without enclosing quotes (it is assumed
+to be a Javascript-valid number), which may not be secure or portable, depending on the data sources!
+
   * Related *
     @chart
 -->
@@ -1558,12 +1564,13 @@ Slider data entry - a single slide.
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
     image                   = Background image URL
+    responsiveMap           = ((map)) Map of options passed directly to responsive image implementation
 
   * Related *
     @slider
 -->
 <#assign slide_defaultArgs = {
-  "title":"", "class":"", "id":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}
+  "title":"", "class":"", "id":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}, "responsiveMap":{}
 }>
 <#macro slide args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.slide_defaultArgs)>
@@ -1590,18 +1597,37 @@ Slider data entry - a single slide.
     <#local id = "slide_${renderSeqNumber!}_${slideIdNum}"/>
   </#if>
   <@slide_markup id=id sliderId=(sliderId!) class=class library=library image=image link=link linkTarget=linkTarget title=title 
-    slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
+    slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) responsiveMap=responsiveMap! origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
 <#-- @slide main markup - theme override -->
-<#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
+<#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" responsiveMap={} origArgs={} passArgs={} catchArgs...>
+    <#local srcset = "">
+    <#local sizes = "">
+    <#if responsiveMap?has_content>
+        <#local responsiveKeys = mapKeys(responsiveMap)>
+        <#if responsiveKeys?contains('srcset')>
+            <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
+            <#list srcsetMap?keys as srcsetEntry>
+                <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + raw(' ' + srcsetEntry + 'w')>
+                <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
+            </#list>
+        </#if>
+        <#if responsiveKeys?contains('sizes')>
+            <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
+            <#list sizesMap?keys as sizesEntry>
+                <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
+            </#list>
+        </#if>
+    </#if>
     <#if library=="owl" || library=="slick">
         <div id="${escapeVal(id, 'html')}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
             <#if image?has_content>
-              <img src="${escapeFullUrl(image, 'html')}"  class="${styles.slide_image!}"/>
+                <img src="${escapeFullUrl(image, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="${styles.slide_image!}"/>
             </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1614,7 +1640,7 @@ Slider data entry - a single slide.
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
               <#if image?has_content>
-                <img src="${escapeFullUrl(image, 'html')}" class="${styles.slide_image!}"/>
+                <img src="${escapeFullUrl(image, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="${styles.slide_image!}"/>
               </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1641,6 +1667,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                               WARN: At current time, do not pass unsanitized input for this parameter; escaping not implemented
                                   If you must use user input in src, do not use this macro for time being (expect escaping to be applied later).
                               FIXME: escaping for style urls
+    responsiveMap           = ((map)) Map of options passed directly to responsive image implementation
     class                   = ((css-class)) CSS classes 
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -1662,7 +1689,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     height                  = (string) container height e.g. "12px" - acts as a max-height  
 -->
 <#assign img_defaultArgs = {
-  "src":"", "id":"","type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}
+  "src":"", "responsiveMap" : {}, "id":"","type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}
 }>
 <#macro img args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.img_defaultArgs)>
@@ -1675,11 +1702,11 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <@img_markup class=class id=id src=src type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
 </#macro>
 
 <#-- @img main markup - theme override -->
-<#macro img_markup class="" id="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
+<#macro img_markup class="" id="" src="" responsiveMap={} type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
     <#local nested><#nested></#local>
     <#switch type>
@@ -1707,8 +1734,28 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
             <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
+                 <#local srcset = "">
+                 <#local sizes = "">
+                 <#if responsiveMap?has_content>
+                    <#local responsiveKeys = mapKeys(responsiveMap)>
+                    <#if responsiveKeys?contains('srcset')>
+                        <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
+                        <#list srcsetMap?keys as srcsetEntry>
+                            <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + raw(' ' + srcsetEntry + 'w')>
+                            <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
+                        </#list>
+                    </#if>
+                    <#if responsiveKeys?contains('sizes')>
+                        <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
+                        <#list sizesMap?keys as sizesEntry>
+                            <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                            <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
+                        </#list>
+                        
+                    </#if>
+                 </#if>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <img src="${escapeFullUrl(src, 'html')}" class="scipio-image" style="${imgStyle}"/>
+                    <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>
@@ -1852,4 +1899,105 @@ Creates a tab element/entry.
     <div <@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}" role="tabpanel">
         <#nested>
     </div>
+</#macro>
+
+<#-- 
+*************
+* QRCode
+************
+Creates a QR Code image link.
+
+  * Usage Examples *  
+    <@qrcode text="" />    
+                                 
+
+  * Parameters *
+    id                      = ID for outermost container
+    class                   = ((css-class)) CSS classes or additional classes for outermost container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    text                    = (string) Text or Target URL (will be url-encoded)
+    logo                    = ((boolean|string), default: false) Render overlaying logo on top of qrcode?
+                              Can be boolean true/false (for default logo) or a file location (component://).
+                              Default logo is configured in {{{framework/common/config/qrcode.properties}}}.
+    export                  = ((string) image|link|url, default: image) Export as image or link
+    width                   = ((integer)) QRCode width
+                              Default configured in {{{framework/common/config/qrcode.properties}}}.
+    height                  = ((integer)) QRCode height
+                              Default configured in {{{framework/common/config/qrcode.properties}}}.
+    ecLevel                 = (L|M|Q|H, default: -from qrcode.properties-) Error correction level
+                              See https://en.wikipedia.org/wiki/QR_code#Error_correction
+    linktext                = ((string)) link text 
+    alt                     = ((string)) alt text (default: "QRCode")
+    targetUri               = ((string), default: qrcode) Target controller request
+    format                  = (png|jpg|bmp, default: -from qrcode.properties-) Image format
+    logoSize                = ((string), default: -not set; use logo natural size-) Logo dimensions in pixels or percent
+                              If specified with "%" sign, (50%, 100%), adjusts relative to image size;
+                              otherwise assumed in pixels.
+                              If only one dimension (no "x"), tries to do the "right thing" using only one of the dimensions;
+                              so 50% is not the same as 50%x50%.
+                              Specific dimension can be targeted alone using "w" (width) and "h" (height).
+                              Specifying a single pixel value (100) with no units, usually means width limit, unless applying to
+                              height instead makes it fit within the qrcode (TODO: REVIEW: recommend avoiding this one for now).
+                              NOTE: This option NEVER changes the aspect ratio of the logo, even if two pixel dimensions given;
+                                  it simply tries to make it best fit within requested square.
+                              Examples:
+                                100% (very useful), 50%, 80x20, 50%x50%, 100
+                                50%w, 50%h, 30w, 30h (explicit dimensions)
+    logoMaxSize             = ((string), default: -none-) Logo max dimensions
+                              Max dimensions for the logo. Supports similar syntax as logoSize.
+                              Examples:
+                                100% (very useful)
+-->
+<#assign qrcode_defaultArgs = {
+   "id":"", "class":"", "text":"", "logo":false, "export":"image", "width":"",
+   "height":"", "ecLevel":"", "format":"", "logoSize":"", "logoMaxSize":"", "linktext":"","alt":"QRCode","targetUri":"","passArgs":{}
+}>
+<#macro qrcode args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.qrcode_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <#if !width?has_content>
+    <#local width = Static["org.ofbiz.common.qrcode.QRCodeServices"].QRCODE_DEFAULT_WIDTH_INT>
+  </#if>
+  <#if !height?has_content>
+    <#local height = Static["org.ofbiz.common.qrcode.QRCodeServices"].QRCODE_DEFAULT_HEIGHT_INT>
+  </#if>
+  <#if !targetUri?has_content>
+    <#local targetUri = "qrcode">
+  </#if>
+  <#if !logo?is_boolean>
+    <#if !logo?has_content>
+    <#-- NOTE: the stock serveQRCodeImage event used true by default, 
+        so for macro we must explicit decide a true/false default here/above -->
+      <#local logo = false>
+    <#else>
+      <#-- Convert the file location to an ID for passing over parameters and register it server-side -->
+      <#local logo = Static["org.ofbiz.common.qrcode.QRCodeLogoRegistry"].getIdForLocation(delegator, logo)>
+    </#if>
+  </#if>
+  <@qrcode_markup id=id class=class text=text export=export logo=logo export=export
+    width=width height=height ecLevel=ecLevel format=format logoSize=logoSize logoMaxSize=logoMaxSize linktext=linktext alt=alt targetUri=targetUri origArgs=origArgs passArgs=passArgs><#nested></@qrcode_markup>
+</#macro>
+
+<#-- @qrcode main markup - theme override -->
+<#macro qrcode_markup id="" class="" text="" export="" logo="" export="" width="" height="" ecLevel="" format="" logoSize="" logoMaxSize="" linktext="" alt="" targetUri="" origArgs={} passArgs={} catchArgs...>
+  <#local qrURL>${targetUri}?message=${escapeVal(text, 'url')}&logo=${logo?string}&width=${width}&height=${height}<#t/>
+    <#if ecLevel?has_content>&ecLevel=${ecLevel}</#if><#if format?has_content>&format=${format}</#if><#if logoSize?has_content>&logoSize=${escapeVal(logoSize, "url")}</#if><#t/>
+    <#if logoMaxSize?has_content>&logoMaxSize=${escapeVal(logoMaxSize, "url")}</#if></#local><#t/>
+  <#switch export>
+    <#case "link">
+      <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+        <a href="<@pageUrl uri=qrURL escapeAs='html'/>" alt="${escapeVal(alt, 'html')}" target="_external"><#if linktext?has_content>${linktext}<#else><#nested></#if></a>
+      </div>
+    <#break>
+    <#case "url">
+      <@pageUrl uri=qrURL escapeAs='html'/><#t/>
+    <#break>
+    <#default>
+      <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+        <img src="<@pageUrl uri=qrURL escapeAs='html'/>" width="${width}" height="${height}" alt="${escapeVal(alt, 'html')}"/>
+      </div>
+  </#switch>
 </#macro>

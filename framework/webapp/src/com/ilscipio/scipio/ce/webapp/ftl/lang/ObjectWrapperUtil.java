@@ -39,7 +39,7 @@ public abstract class ObjectWrapperUtil {
         ObjectWrapperFetcher simpleTypeWrapperFetcher = new TrivialObjectWrapperFetcher(FreeMarkerWorker.getDefaultSimpleTypeWrapper());
         ObjectWrapperFetcher simpleTypeCopyingWrapperFetcher = new TrivialObjectWrapperFetcher(FreeMarkerWorker.getDefaultSimpleTypeCopyingWrapper());
 
-        // TODO: these are not quite correctly implemented (the commented is the tentative implement), 
+        // TODO: these are not quite correctly implemented (the commented is the tentative implement),
         // but we CAN use the default wrapper temporarily
         // to work these because it covers all known rendering cases just fine
         //map.put("raw-simple-adapter", new SimpleMapObjectWrapperFetcher(rawCurrentObjectWrapperFetcher, false, false));
@@ -48,7 +48,7 @@ public abstract class ObjectWrapperUtil {
         map.put("raw-simple-adapter", simpleTypeWrapperFetcher);
         map.put("raw-simple-copy", simpleTypeCopyingWrapperFetcher);
         map.put("raw-simple", simpleTypeWrapperFetcher);
-        
+
         // specific, advanced, non-abstracted
         map.put("complex-default", new TrivialObjectWrapperFetcher(FreeMarkerWorker.getDefaultOfbizWrapper()));
         map.put("complex-default-simplemap", new TrivialObjectWrapperFetcher(FreeMarkerWorker.getDefaultOfbizSimpleMapWrapper()));
@@ -58,37 +58,37 @@ public abstract class ObjectWrapperUtil {
         map.put("basic-adapter", simpleTypeWrapperFetcher);
         map.put("basic-copy", simpleTypeCopyingWrapperFetcher);
         map.put("basic", simpleTypeWrapperFetcher);
-        
+
         objectWrapperFetcherMap = map;
     }
-    
+
     private static final ScipioExtendedObjectWrapper defaultHtmlExtendedWrapper = ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedWrapper(FreeMarkerWorker.version, "html");
     private static final ScipioExtendedObjectWrapper defaultHtmlExtendedSimpleMapWrapper = ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedSimpleMapWrapper(FreeMarkerWorker.version, "html");
 
     public static interface ObjectWrapperFetcher {
         ObjectWrapper getWrapper(Environment env);
     }
-    
+
     public static class TrivialObjectWrapperFetcher implements ObjectWrapperFetcher {
         protected final ObjectWrapper objectWrapper;
 
         public TrivialObjectWrapperFetcher(ObjectWrapper objectWrapper) {
             this.objectWrapper = objectWrapper;
         }
-        
+
         @Override
         public ObjectWrapper getWrapper(Environment env) {
             return objectWrapper;
         }
     }
-    
+
     public static class CurrentObjectWrapperFetcher implements ObjectWrapperFetcher {
         @Override
         public ObjectWrapper getWrapper(Environment env) {
             return env.getObjectWrapper();
         }
     }
-    
+
     public static class RawCurrentObjectWrapperFetcher implements ObjectWrapperFetcher {
         @Override
         public ObjectWrapper getWrapper(Environment env) {
@@ -108,11 +108,11 @@ public abstract class ObjectWrapperUtil {
             }
         }
     }
-    
+
     public static class ExtendedObjectWrapperFetcher implements ObjectWrapperFetcher {
-        
+
         private final boolean simpleMap;
-        
+
         protected ExtendedObjectWrapperFetcher(boolean simpleMap) {
             super();
             this.simpleMap = simpleMap;
@@ -147,9 +147,9 @@ public abstract class ObjectWrapperUtil {
             }
         }
     }
-    
+
     public static class SimpleMapObjectWrapperFetcher implements ObjectWrapperFetcher {
-        
+
         protected final ObjectWrapperFetcher fetcher;
         protected final boolean preserving;
         protected final Boolean copying;
@@ -159,13 +159,13 @@ public abstract class ObjectWrapperUtil {
             this.preserving = preserving;
             this.copying = copying;
         }
-        
+
         protected SimpleMapObjectWrapperFetcher(ObjectWrapper objectWrapper, boolean preserving, Boolean copying) {
             this.fetcher = new TrivialObjectWrapperFetcher(objectWrapper);
             this.preserving = preserving;
             this.copying = copying;
         }
-        
+
         protected SimpleMapObjectWrapperFetcher(boolean preserving, Boolean copying) {
             this.fetcher = new CurrentObjectWrapperFetcher();
             this.preserving = preserving;
@@ -177,7 +177,7 @@ public abstract class ObjectWrapperUtil {
             return SimpleRewrapObjectWrapper.getInstance(env, fetcher.getWrapper(env), preserving, copying);
         }
     }
-    
+
     public static ObjectWrapper getObjectWrapperByName(String wrapper, Environment env) throws TemplateModelException {
         if (wrapper == null || wrapper.isEmpty()) {
             return env.getObjectWrapper();
@@ -190,5 +190,5 @@ public abstract class ObjectWrapperUtil {
             }
         }
     }
-    
+
 }

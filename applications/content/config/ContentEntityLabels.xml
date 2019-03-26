@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -20,51 +19,74 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CharacterSet.description.ISO-8859-1">
+        <value xml:lang="de">ISO-8859-1</value>
         <value xml:lang="en">ISO-8859-1</value>
         <value xml:lang="es">ISO-8859-1 Inglés</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-10">
+        <value xml:lang="de">ISO-8859-10</value>
         <value xml:lang="en">ISO-8859-10</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-2">
+        <value xml:lang="de">ISO-8859-2</value>
         <value xml:lang="en">ISO-8859-2</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-3">
+        <value xml:lang="de">ISO-8859-3</value>
         <value xml:lang="en">ISO-8859-3</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-4">
+        <value xml:lang="de">ISO-8859-4</value>
         <value xml:lang="en">ISO-8859-4</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-5">
+        <value xml:lang="de">ISO-8859-5</value>
         <value xml:lang="en">ISO-8859-5</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-6">
+        <value xml:lang="de">ISO-8859-6</value>
         <value xml:lang="en">ISO-8859-6</value>
         <value xml:lang="es">ISO-8859-6 Latino/árabe</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-7">
+        <value xml:lang="de">ISO-8859-7</value>
         <value xml:lang="en">ISO-8859-7</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-8">
+        <value xml:lang="de">ISO-8859-8</value>
         <value xml:lang="en">ISO-8859-8</value>
         <value xml:lang="es">ISO-8859-8 Latino/Hebreo</value>
     </property>
     <property key="CharacterSet.description.ISO-8859-9">
+        <value xml:lang="de">ISO-8859-9</value>
         <value xml:lang="en">ISO-8859-9</value>
         <value xml:lang="es">ISO-8859-9 ?</value>
     </property>
     <property key="CharacterSet.description.US-ASCII">
+        <value xml:lang="de">US-ASCII</value>
         <value xml:lang="en">US-ASCII</value>
     </property>
     <property key="CharacterSet.description.UTF-16">
+        <value xml:lang="de">UTF-16</value>
         <value xml:lang="en">UTF-16</value>
         <value xml:lang="es">Unicode 16 bit</value>
         <value xml:lang="fr">Unicode 16 bit</value>
     </property>
     <property key="CharacterSet.description.UTF-8">
+        <value xml:lang="de">UTF-8</value>
         <value xml:lang="en">UTF-8</value>
         <value xml:lang="es">Unicode 8 bit</value>
         <value xml:lang="fr">Unicode 8 bit</value>
+    </property>
+    <property key="Content.description.CTNT_MASTER_EXAMPLE">
+        <value xml:lang="de">Beispiel</value>
+        <value xml:lang="en">Example</value>
+        <value xml:lang="fr">Exemple</value>
+    </property>
+    <property key="Content.description.CTNT_MASTER_TURNOVER">
+        <value xml:lang="de">Umsatz (Produkt)</value>
+        <value xml:lang="en">Turnover (product)</value>
+        <value xml:lang="fr">Rotation (des stocks)</value>
     </property>
     <property key="ContentAssocPredicate.description.categorizes">
         <value xml:lang="da">kategorier</value>
@@ -979,6 +1001,7 @@
     </property>
     <property key="ContentPurposeType.description.PROJECT_INFO">
         <value xml:lang="da">Projektinformation</value>
+        <value xml:lang="de">Projektinformation</value>
         <value xml:lang="en">Project Info</value>
         <value xml:lang="it">Informazione progetto</value>
         <value xml:lang="ja">プロジェクト情報</value>
@@ -1115,6 +1138,7 @@
     </property>
     <property key="ContentType.description.BLOG_ROOT">
         <value xml:lang="da">Blog rod</value>
+        <value xml:lang="de">Blog rod</value>
         <value xml:lang="en">Blog Root</value>
         <value xml:lang="it">Blog principal</value>
         <value xml:lang="ja">ブログルート</value>
@@ -1167,6 +1191,7 @@
     </property>
     <property key="ContentType.description.DECORATOR">
         <value xml:lang="da">Dekoratør</value>
+        <value xml:lang="de">Decorator</value>
         <value xml:lang="en">Decorator</value>
         <value xml:lang="it">Decoratore</value>
         <value xml:lang="ja">デコレータ</value>
@@ -1205,6 +1230,7 @@
     </property>
     <property key="ContentType.description.FAQ_ROOT">
         <value xml:lang="da">FAQ rod</value>
+        <value xml:lang="de">FAQ Root</value>
         <value xml:lang="en">FAQ Root</value>
         <value xml:lang="it">FAQ principale</value>
         <value xml:lang="ja">よくある質問(FAQ)ルート</value>
@@ -1243,6 +1269,7 @@
     </property>
     <property key="ContentType.description.MENU_CONTAINER">
         <value xml:lang="da">Menu container</value>
+        <value xml:lang="de">Menü container</value>
         <value xml:lang="en">Menu Container</value>
         <value xml:lang="it">Contenitore menu</value>
         <value xml:lang="ja">メニューコンテナ</value>
@@ -1629,14 +1656,17 @@
         <value xml:lang="zh-TW">軟體</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_JAVA">
+        <value xml:lang="de">Java</value>
         <value xml:lang="en">Java</value>
         <value xml:lang="th">ภาษาจาวา</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_LINUX">
+        <value xml:lang="de">Linux</value>
         <value xml:lang="en">Linux</value>
         <value xml:lang="th">ระบบปฏิบัติการลีนุกซ์</value>
     </property>
     <property key="DataCategory.categoryName.TECH_SOFT_OFBIZ">
+        <value xml:lang="de">Apache OFBiz</value>
         <value xml:lang="en">Apache OFBiz</value>
         <value xml:lang="ja">OFBiz</value>
         <value xml:lang="th">เปิดสำหรับทางธุรกิจ</value>
@@ -1645,6 +1675,7 @@
     </property>
     <property key="DataCategory.categoryName.TEMPLATE">
         <value xml:lang="da">Skabelon</value>
+        <value xml:lang="de">Template</value>
         <value xml:lang="en">Template</value>
         <value xml:lang="it">Template</value>
         <value xml:lang="ja">テンプレート</value>
@@ -1655,6 +1686,7 @@
     </property>
     <property key="DataResourceType.description.AUDIO_OBJECT">
         <value xml:lang="da">Audio</value>
+        <value xml:lang="de">Audio</value>
         <value xml:lang="en">Audio</value>
         <value xml:lang="it">Audio</value>
         <value xml:lang="ja">オーディオ</value>
@@ -1861,6 +1893,7 @@
     </property>
     <property key="DataResourceType.description.VIDEO_OBJECT">
         <value xml:lang="da">Video</value>
+        <value xml:lang="de">Video</value>
         <value xml:lang="en">Video</value>
         <value xml:lang="it">Video</value>
         <value xml:lang="ja">ビデオ</value>
@@ -1870,6 +1903,7 @@
         <value xml:lang="zh-TW">視頻</value>
     </property>
     <property key="DataTemplateType.description.FTL">
+        <value xml:lang="de">FreeMarker</value>
         <value xml:lang="en">FreeMarker</value>
         <value xml:lang="zh-TW">FreeMarker</value>
     </property>
@@ -1902,10 +1936,12 @@
         <value xml:lang="zh-TW">畫面器件</value>
     </property>
     <property key="DataTemplateType.description.WM">
+        <value xml:lang="de">WebMacro</value>
         <value xml:lang="en">WebMacro</value>
         <value xml:lang="th">เว็บ Macro</value>
     </property>
     <property key="DataTemplateType.description.XSLT">
+        <value xml:lang="de">XSLT</value>
         <value xml:lang="en">XSLT</value>
     </property>
     <property key="DocumentType.description.BILL_OF_LADING">
@@ -2082,6 +2118,7 @@
         <value xml:lang="zh-TW">主題事件中牽涉到的人員姓名.</value>
     </property>
     <property key="MimeType.description.application/msword">
+        <value xml:lang="de">Microsoft Word</value>
         <value xml:lang="en">Microsoft Word</value>
         <value xml:lang="zh">微软Word</value>
         <value xml:lang="zh-TW">微軟Word</value>
@@ -2101,6 +2138,7 @@
         <value xml:lang="zh-TW">二進制資料</value>
     </property>
     <property key="MimeType.description.application/pdf">
+        <value xml:lang="de">Adobe Portable Document Format (PDF)</value>
         <value xml:lang="en">Adobe Portable Document Format (PDF)</value>
         <value xml:lang="fr">Format de document portable Adobe (PDF)</value>
         <value xml:lang="it">Formato Adobe Portable Document (PDF)</value>
@@ -2124,17 +2162,20 @@
         <value xml:lang="zh-TW">Postsctipt應用/腳本</value>
     </property>
     <property key="MimeType.description.application/vnd.ms-excel">
+        <value xml:lang="de">Microsoft Excel</value>
         <value xml:lang="en">Microsoft Excel</value>
         <value xml:lang="zh">微软Excel</value>
         <value xml:lang="zh-TW">微軟Excel</value>
     </property>
     <property key="MimeType.description.application/vnd.ms-powerpoint">
+        <value xml:lang="de">Microsoft PowerPoint</value>
         <value xml:lang="en">Microsoft PowerPoint</value>
         <value xml:lang="zh">微软PowerPoint</value>
         <value xml:lang="zh-TW">微軟PowerPoint</value>
     </property>
     <property key="MimeType.description.application/vnd.oasis.opendocument.spreadsheet">
         <value xml:lang="da">OpenOffice OpenDocument regneark</value>
+        <value xml:lang="de">OpenOffice OpenDocument Spreadsheet</value>
         <value xml:lang="en">OpenOffice OpenDocument Spreadsheet</value>
         <value xml:lang="it">Foglio di lavoro OpenOffice OpenDocument</value>
         <value xml:lang="ja">OpenOffice OpenDocument スプレッドシート</value>
@@ -2185,6 +2226,7 @@
     </property>
     <property key="MimeType.description.application/x-shockwave-flash">
         <value xml:lang="da">Shockwave Flash Movie</value>
+        <value xml:lang="de">Shockwave Flash Movie</value>
         <value xml:lang="en">Shockwave Flash Movie</value>
         <value xml:lang="it">Filem Shockwave flash</value>
         <value xml:lang="ja">Shockwave Flash ムービー</value>
@@ -2194,6 +2236,7 @@
     </property>
     <property key="MimeType.description.application/x-tgz">
         <value xml:lang="da">Gzip'et Tar arkiv fil</value>
+        <value xml:lang="de">Gzipped Tar Archiv</value>
         <value xml:lang="en">Gzipped Tar archive file</value>
         <value xml:lang="it">File archivio Gzipped Tar</value>
         <value xml:lang="ja">Gzip Tar アーカイブファイル</value>
@@ -2255,6 +2298,7 @@
     </property>
     <property key="MimeType.description.audio/x-ms-wax">
         <value xml:lang="da">WAX Audio</value>
+        <value xml:lang="de">WAX Audio</value>
         <value xml:lang="en">WAX Audio</value>
         <value xml:lang="it">WAX Audio</value>
         <value xml:lang="ja">WAX オーディオ</value>
@@ -2264,6 +2308,7 @@
     </property>
     <property key="MimeType.description.audio/x-ms-wma">
         <value xml:lang="da">WMA Audio</value>
+        <value xml:lang="de">WMA Audio</value>
         <value xml:lang="en">WMA Audio</value>
         <value xml:lang="it">WMA Audio</value>
         <value xml:lang="ja">WMA オーディオ</value>
@@ -2409,6 +2454,7 @@
     </property>
     <property key="MimeType.description.message/s-http">
         <value xml:lang="da">HTTPS/S-HTTP besked</value>
+        <value xml:lang="de">HTTPS/S-HTTP Message</value>
         <value xml:lang="en">HTTPS/S-HTTP Message</value>
         <value xml:lang="fr">Message HTTPS/S-HTTP</value>
         <value xml:lang="it">Messaggio HTTPS/S-HTTP</value>
@@ -2421,6 +2467,7 @@
         <value xml:lang="zh-TW">HTTPS/S-HTTP訊息</value>
     </property>
     <property key="MimeType.description.model/mesh">
+        <value xml:lang="de">Mesh Model</value>
         <value xml:lang="en">Mesh Model</value>
         <value xml:lang="fr">Modèle de grille</value>
         <value xml:lang="ja">Mesh モデル</value>
@@ -2443,6 +2490,7 @@
         <value xml:lang="zh-TW">虛擬現實模型語言(VRML)模型</value>
     </property>
     <property key="MimeType.description.multipart/alternative">
+        <value xml:lang="de">Mutliple Alternative Multipart</value>
         <value xml:lang="en">Mutliple Alternative Multipart</value>
         <value xml:lang="ja">マルチパートオールタナティブ</value>
         <value xml:lang="th">หลายๆ ทางเลือก</value>
@@ -2450,6 +2498,7 @@
         <value xml:lang="zh-TW">多個二選一多段內容</value>
     </property>
     <property key="MimeType.description.multipart/digest">
+        <value xml:lang="de">Digest of Messages Multipart</value>
         <value xml:lang="en">Digest of Messages Multipart</value>
         <value xml:lang="fr">Sommaire de messages multipart</value>
         <value xml:lang="ja">マルチパートダイジェスト</value>
@@ -2458,6 +2507,7 @@
         <value xml:lang="zh-TW">訊息多段內容的摘要</value>
     </property>
     <property key="MimeType.description.multipart/encrypted">
+        <value xml:lang="de">Encrypted Multipart</value>
         <value xml:lang="en">Encrypted Multipart</value>
         <value xml:lang="fr">Multipart codé</value>
         <value xml:lang="ja">マルチパートエンクリプテッド</value>
@@ -2466,6 +2516,7 @@
         <value xml:lang="zh-TW">加密的多段內容</value>
     </property>
     <property key="MimeType.description.multipart/form-data">
+        <value xml:lang="de">Form Data Multipart</value>
         <value xml:lang="en">Form Data Multipart</value>
         <value xml:lang="fr">Donnée de forme multipart </value>
         <value xml:lang="ja">マルチパートフォームデータ</value>
@@ -2475,6 +2526,7 @@
         <value xml:lang="zh-TW">表單資料多段內容</value>
     </property>
     <property key="MimeType.description.multipart/mixed">
+        <value xml:lang="de">Mixed Type Multipart</value>
         <value xml:lang="en">Mixed Type Multipart</value>
         <value xml:lang="fr">Type multipart varié</value>
         <value xml:lang="it">Mixed Type Multipart</value>
@@ -2484,6 +2536,7 @@
         <value xml:lang="zh-TW">混合類型多段內容</value>
     </property>
     <property key="MimeType.description.multipart/related">
+        <value xml:lang="de">Related Multipart</value>
         <value xml:lang="en">Related Multipart</value>
         <value xml:lang="fr">Multipart apparenté</value>
         <value xml:lang="ja">マルチパートリテーテッド</value>
@@ -2493,6 +2546,7 @@
         <value xml:lang="zh-TW">相關的多段內容</value>
     </property>
     <property key="MimeType.description.multipart/signed">
+        <value xml:lang="de">Signed Multipart</value>
         <value xml:lang="en">Signed Multipart</value>
         <value xml:lang="fr">Multipart signé</value>
         <value xml:lang="ja">マルチパートサインド</value>
@@ -2502,6 +2556,7 @@
     </property>
     <property key="MimeType.description.text/css">
         <value xml:lang="da">CSS Tekst</value>
+        <value xml:lang="de">CSS Text</value>
         <value xml:lang="en">CSS Text</value>
         <value xml:lang="fr">Texte CSS</value>
         <value xml:lang="it">Testo CSS</value>
@@ -2624,6 +2679,7 @@
     </property>
     <property key="MimeType.description.text/x-diff">
         <value xml:lang="da">diff til patchnings filer</value>
+        <value xml:lang="de">diff for patching files</value>
         <value xml:lang="en">diff for patching files</value>
         <value xml:lang="it">diff per files di patch</value>
         <value xml:lang="ja">diff 差分ファイル</value>
@@ -2634,6 +2690,7 @@
     </property>
     <property key="MimeType.description.text/x-vcard">
         <value xml:lang="da">eletronisk visitkort</value>
+        <value xml:lang="de">electronic business card</value>
         <value xml:lang="en">electronic business card</value>
         <value xml:lang="it">carta business elettronica</value>
         <value xml:lang="ja">vCard 電子名刺</value>
@@ -2658,6 +2715,7 @@
     </property>
     <property key="MimeType.description.video/avi">
         <value xml:lang="da">AVI Video</value>
+        <value xml:lang="de">AVI Video</value>
         <value xml:lang="en">AVI Video</value>
         <value xml:lang="it">Video AVI</value>
         <value xml:lang="ja">AVI ビデオ</value>
@@ -2666,6 +2724,7 @@
         <value xml:lang="zh-TW">AVI視頻</value>
     </property>
     <property key="MimeType.description.video/mp4">
+        <value xml:lang="de">MPEG-4 (H.264) Video</value>
         <value xml:lang="en">MPEG-4 (H.264) Video</value>
         <value xml:lang="it">Video MPEG-4 (H.264)</value>
         <value xml:lang="ja">MPEG-4 (H.264) ビデオ</value>
@@ -2674,6 +2733,7 @@
         <value xml:lang="zh-TW">MPEG-4 (H.264)視頻</value>
     </property>
     <property key="MimeType.description.video/mpeg">
+        <value xml:lang="de">MPEG/MPG Video</value>
         <value xml:lang="en">MPEG/MPG Video</value>
         <value xml:lang="fr">Vidéo MPEG/MPG</value>
         <value xml:lang="it">Video MPEG/MPG</value>
@@ -2685,6 +2745,7 @@
         <value xml:lang="zh-TW">MPEG/MPG視頻</value>
     </property>
     <property key="MimeType.description.video/quicktime">
+        <value xml:lang="de">Quicktime Video</value>
         <value xml:lang="en">Quicktime Video</value>
         <value xml:lang="fr">Vidéo Quicktime</value>
         <value xml:lang="it">Video Quicktime</value>
@@ -2696,6 +2757,7 @@
         <value xml:lang="zh-TW">Quicktime視頻</value>
     </property>
     <property key="MimeType.description.video/x-flv">
+        <value xml:lang="de">Flash Streaming Video</value>
         <value xml:lang="en">Flash Streaming Video</value>
         <value xml:lang="it">Video flash in streaming</value>
         <value xml:lang="ja">Flash ストリーミングビデオ</value>
@@ -2705,6 +2767,7 @@
         <value xml:lang="zh-TW">Flash流視頻</value>
     </property>
     <property key="MimeType.description.video/x-ms-asf">
+        <value xml:lang="de">ASF Video</value>
         <value xml:lang="en">ASF Video</value>
         <value xml:lang="it">Video ASF</value>
         <value xml:lang="ja">ASF ビデオ</value>
@@ -2713,6 +2776,7 @@
         <value xml:lang="zh-TW">ASF視頻</value>
     </property>
     <property key="MimeType.description.video/x-ms-wm">
+        <value xml:lang="de">WM Video</value>
         <value xml:lang="en">WM Video</value>
         <value xml:lang="it">Video WM</value>
         <value xml:lang="ja">WM ビデオ</value>
@@ -2721,6 +2785,7 @@
         <value xml:lang="zh-TW">WM視頻</value>
     </property>
     <property key="MimeType.description.video/x-ms-wmv">
+        <value xml:lang="de">WMV Video</value>
         <value xml:lang="en">WMV Video</value>
         <value xml:lang="it">Video WMV</value>
         <value xml:lang="ja">WMV ビデオ</value>
@@ -2729,6 +2794,7 @@
         <value xml:lang="zh-TW">WMV視頻</value>
     </property>
     <property key="MimeType.description.video/x-ms-wmx">
+        <value xml:lang="de">WMX Video</value>
         <value xml:lang="en">WMX Video</value>
         <value xml:lang="it">Video WMX</value>
         <value xml:lang="ja">WMX ビデオ</value>
@@ -2737,6 +2803,7 @@
         <value xml:lang="zh-TW">WMX視頻</value>
     </property>
     <property key="MimeType.description.video/x-ms-wvx">
+        <value xml:lang="de">WVX Video</value>
         <value xml:lang="en">WVX Video</value>
         <value xml:lang="it">Video WVX</value>
         <value xml:lang="ja">WVX ビデオ</value>
@@ -2896,6 +2963,7 @@
     </property>
     <property key="SurveyQuestionType.description.COUNTRY">
         <value xml:lang="da">Land</value>
+        <value xml:lang="de">Land</value>
         <value xml:lang="en">Country</value>
         <value xml:lang="it">Paese</value>
         <value xml:lang="ja">国</value>
@@ -2951,6 +3019,7 @@
     </property>
     <property key="SurveyQuestionType.description.ENUMERATION">
         <value xml:lang="da">Nummerering</value>
+        <value xml:lang="de">Aufzählung</value>
         <value xml:lang="en">Enumeration</value>
         <value xml:lang="fr">Enumération</value>
         <value xml:lang="it">Enumerare</value>
@@ -2962,6 +3031,7 @@
     </property>
     <property key="SurveyQuestionType.description.GEO">
         <value xml:lang="da">Geo liste</value>
+        <value xml:lang="de">Geo Liste</value>
         <value xml:lang="en">Geo List</value>
         <value xml:lang="it">Lista geografia</value>
         <value xml:lang="ja">位置一覧</value>
@@ -3092,6 +3162,7 @@
     </property>
     <property key="SurveyQuestionType.description.STATE_PROVINCE">
         <value xml:lang="da">Stat/provins</value>
+        <value xml:lang="de">Bundesland/Provinz</value>
         <value xml:lang="en">State/Province</value>
         <value xml:lang="it">Stato/Provincia</value>
         <value xml:lang="ja">都道府県//地方</value>
@@ -3146,11 +3217,13 @@
         <value xml:lang="zh-TW">簡短本文 (單行)</value>
     </property>
     <property key="SurveyQuestionType.description.URL">
+        <value xml:lang="de">URL</value>
         <value xml:lang="en">URL</value>
         <value xml:lang="zh">网址</value>
         <value xml:lang="zh-TW">網址</value>
     </property>
     <property key="WebSiteContentType.description.BLOG_ROOT">
+        <value xml:lang="de">Blog Root</value>
         <value xml:lang="en">Blog Root</value>
         <value xml:lang="fr">Racine du blog</value>
         <value xml:lang="ja">ブログルート</value>
@@ -3160,6 +3233,7 @@
         <value xml:lang="zh-TW">部落格根</value>
     </property>
     <property key="WebSiteContentType.description.DEFAULT_PAGE">
+        <value xml:lang="de">Standardseite</value>
         <value xml:lang="en">Default Page</value>
         <value xml:lang="fr">Page par défaut</value>
         <value xml:lang="ja">デフォルトページ</value>
@@ -3169,6 +3243,7 @@
         <value xml:lang="zh-TW">預設頁面</value>
     </property>
     <property key="WebSiteContentType.description.ERROR_ROOT">
+        <value xml:lang="de">Error Root</value>
         <value xml:lang="en">Error Root</value>
         <value xml:lang="fr">Erreur</value>
         <value xml:lang="ja">エラールート</value>
@@ -3178,6 +3253,7 @@
         <value xml:lang="zh-TW">錯誤根</value>
     </property>
     <property key="WebSiteContentType.description.FORUM_ROOT">
+        <value xml:lang="de">Forum Root</value>
         <value xml:lang="en">Forum Root</value>
         <value xml:lang="fr">Racine du forum</value>
         <value xml:lang="ja">フォーラムルート</value>
@@ -3187,6 +3263,7 @@
         <value xml:lang="zh-TW">論壇根</value>
     </property>
     <property key="WebSiteContentType.description.MENU_ROOT">
+        <value xml:lang="de">Menü Root</value>
         <value xml:lang="en">Menu Root</value>
         <value xml:lang="fr">Racine du menu</value>
         <value xml:lang="ja">メニュールート</value>

@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -63,13 +50,13 @@ under the License.
         <description>Update FinAccount.availableBalance based on a new FinAccountAuth; meant to be called as an EECA as it is for data maintenance</description>
         <attribute name="finAccountAuthId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="createFinAccountStatus" default-entity-name="FinAccountStatus" engine="simple"
-        location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountStatus" auth="true">
+    <service name="createFinAccountStatus" default-entity-name="FinAccountStatus" engine="entity-auto" invoke="create" auth="true">
         <description>Create a FinAccountStatus</description>
         <auto-attributes include="all" mode="IN" optional="false">
-            <exclude field-name="statusDate"/>
             <exclude field-name="statusEndDate"/>
+            <exclude field-name="changeByUserLoginId"/>
         </auto-attributes>
+        <override name="statusDate" optional="true" mode="IN"/>
     </service>
 
     <!-- Financial Account Transaction -->
@@ -99,13 +86,13 @@ under the License.
     <service name="updateFinAccountRole" engine="simple" default-entity-name="FinAccountRole"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccountRole">
         <description>Update a Financial Account Role</description>
-        <auto-attributes mode="IN" optional="false" include="pk"/>
-        <auto-attributes mode="IN" optional="true" include="nonpk"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteFinAccountRole" engine="simple" default-entity-name="FinAccountRole"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="deleteFinAccountRole">
-        <description>Remove a Financial Account Role</description>
-        <auto-attributes mode="IN" optional="false" include="pk"/>
+        <description>Delete a Financial Account Role</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="createFinAccountAuth" engine="simple" default-entity-name="FinAccountAuth"
@@ -439,12 +426,12 @@ under the License.
     <!-- Gift Certificate Fulfillment Services -->
     <service name="ofbGcPurchase" engine="java"
             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificatePurchase" auth="true">
-        <description>Automatic CG Purchase Fulfillment Service</description>
+        <description>Automatic Gift Certificate Purchase Fulfillment Service</description><!-- SCIPIO: Fixed description -->
         <implements service="itemFulfillmentInterface"/>
     </service>
     <service name="ofbGcReload" engine="java"
             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateReload" auth="true">
-        <description>Automatic GC Reload Service</description>
+        <description>Automatic Gift Certificate Reload Service</description><!-- SCIPIO: Fixed description -->
         <implements service="itemFulfillmentInterface"/>
     </service>
 
@@ -518,5 +505,101 @@ under the License.
     <service name="autoFinAccountReconciliation" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="autoFinAccountReconciliation" auth="true">
         <description>Auto Reconciled FinAccountTrans entries</description>
+    </service>
+
+    <!-- FinAccountAttribute services -->
+    <service name="createFinAccountAttribute" default-entity-name="FinAccountAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountAttribute</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateFinAccountAttribute" default-entity-name="FinAccountAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountAttribute" default-entity-name="FinAccountAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- FinAccountTransAttribute services -->
+    <service name="createFinAccountTransAttribute" default-entity-name="FinAccountTransAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountTransAttribute</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateFinAccountTransAttribute" default-entity-name="FinAccountTransAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountTransAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountTransAttribute" default-entity-name="FinAccountTransAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountTransAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- FinAccountTransType services -->
+    <service name="createFinAccountTransType" default-entity-name="FinAccountTransType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountTransType record</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateFinAccountTransType" default-entity-name="FinAccountTransType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountTransType record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountTransType" default-entity-name="FinAccountTransType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountTransType record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- FinAccountTransTypeAttr services -->
+    <service name="createFinAccountTransTypeAttr" default-entity-name="FinAccountTransTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountTransTypeAttr</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateFinAccountTransTypeAttr" default-entity-name="FinAccountTransTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountTransType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountTransTypeAttr" default-entity-name="FinAccountTransTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountTransTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- FinAccountType services -->
+    <service name="createFinAccountType" default-entity-name="FinAccountType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateFinAccountType" default-entity-name="FinAccountType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountType" default-entity-name="FinAccountType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- FinAccountTypeAttr services -->
+    <service name="createFinAccountTypeAttr" default-entity-name="FinAccountTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a FinAccountTypeAttr</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateFinAccountTypeAttr" default-entity-name="FinAccountTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a FinAccountTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFinAccountTypeAttr" default-entity-name="FinAccountTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a FinAccountTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

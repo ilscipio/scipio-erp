@@ -17,11 +17,12 @@
  * under the License.
  */
 
-import java.util.*;
-import java.net.*;
-import org.ofbiz.security.*;
-import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityJoinOperator
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.security.*;
 
 findOrganizationPartyId = parameters.findOrganizationPartyId;
 if (findOrganizationPartyId) {
@@ -43,15 +44,29 @@ if (currentPeriodType) {
     context.currentPeriodType = currentPeriodType;
 }
 
+// SCIPIO (11/13/2018): Filtering by company and isClosed = N
+List findMapNotClosed = [];
+if (findOrganizationPartyId)
+    findMapNotClosed.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, findOrganizationPartyId));
+if  (currentCustomTimePeriodId)
+    findMapNotClosed.add(EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS, currentCustomTimePeriodId));
+findMapNotClosed.add(EntityCondition.makeCondition(UtilMisc.toList(
+        EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"), 
+        EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, null)), 
+        EntityJoinOperator.OR));
+customTimePeriods = from("CustomTimePeriod").where(findMapNotClosed).orderBy(["periodTypeId", "periodNum", "fromDate"]).queryList();
+context.customTimePeriods = customTimePeriods;
+
 findMap = [ : ];
 if (findOrganizationPartyId) findMap.organizationPartyId = findOrganizationPartyId;
 if (currentCustomTimePeriodId) findMap.parentPeriodId = currentCustomTimePeriodId;
-
-customTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["periodTypeId", "periodNum", "fromDate"]).queryList();
-context.customTimePeriods = customTimePeriods;
-
-allCustomTimePeriods = from("CustomTimePeriod").orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
+allCustomTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
 context.allCustomTimePeriods = allCustomTimePeriods;
+
+// SCIPIO (11/13/2018): Filtering by company and closed=Y
+findMap.isClosed = "Y";
+allClosedCustomTimePeriods = from("CustomTimePeriod").where(findMap).orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
+context.allClosedCustomTimePeriods = allClosedCustomTimePeriods;
 
 periodTypes = from("PeriodType").orderBy("description").cache(true).queryList();
 context.periodTypes = periodTypes;

@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="createContactMech" short-description="Create Contact Mechanism">
-        <make-value value-field="newValue" entity-name="ContactMech"/>
+        <make-value entity-name="ContactMech" value-field="newValue"/>
         <if-empty field="parameters.contactMechId">
             <sequenced-id sequence-name="ContactMech" field="newValue.contactMechId"/>
             <else>
@@ -36,7 +23,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateContactMech" short-description="Update Contact Mechanism">
-        <!-- NOTE DEJ20101020: commenting these out becuase they make NO sense... the problem is that 
+        <!-- NOTE DEJ20101020: commenting these out becuase they make NO sense... the problem is that
             updatePostalAddress below in this file calls updateContactMech, so it must be allowed...
             This was "fixed" by JLR in rev 1023842, so undoing part of that to get things working again.
         <if-compare field="parameters.contactMechTypeId" operator="equals" value="POSTAL_ADDRESS">
@@ -187,8 +174,19 @@ under the License.
         <find-by-primary-key entity-name="TelecomNumber" map="newValue" value-field="oldValue"/>
         <set-nonpk-fields map="parameters" value-field="newValue"/>
         <set field="context.contactMechTypeId" value="TELECOM_NUMBER"/>
-
-        <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
+    
+        <!-- SCIPIO: 2018-11-02: allow forced update
+        <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">-->
+        <set field="doUpdate" type="Boolean" value="false"/>
+        <if-compare field="parameters.forceNewRecord" operator="equals" type="Boolean" value="true">
+            <set field="doUpdate" type="Boolean" value="true"/>
+            <else>
+                <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
+                    <set field="doUpdate" type="Boolean" value="true"/>
+                </if-compare-field>
+            </else>
+        </if-compare>
+        <if-compare field="doUpdate" operator="equals" type="Boolean" value="true">
             <log level="info" message="Telecom number needs updating"/>
             <call-service service-name="createContactMech" in-map-name="context">
                 <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
@@ -209,7 +207,8 @@ under the License.
                     </else>
                 </if-compare-field>
             </else>
-        </if-compare-field>
+        <!--</if-compare-field>-->
+        </if-compare>
         <field-to-result field="newValue.contactMechId" result-name="contactMechId"/>
         <field-to-result field="parameters.contactMechId" result-name="oldContactMechId"/>
     </simple-method>
@@ -240,14 +239,14 @@ under the License.
    <simple-method method-name="createContactMechLink" short-description="Create a link between two ContactMechs, such as PostalAddress and TelecomNumber or email">
        <!--TODO: need security check of some sort? -->
        <check-errors/>
-       <make-value value-field="newEntity" entity-name="ContactMechLink"/>
+       <make-value entity-name="ContactMechLink" value-field="newEntity"/>
        <set-pk-fields map="parameters" value-field="newEntity"/>
        <create-value value-field="newEntity"/>
    </simple-method>
    <simple-method method-name="deleteContactMechLink" short-description="Delete a link between two ContactMechs">
        <!--TODO: need security check of some sort? -->
        <check-errors/>
-       <make-value value-field="lookupPKMap" entity-name="ContactMechLink"/>
+       <make-value entity-name="ContactMechLink" value-field="lookupPKMap"/>
        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
        <find-by-primary-key entity-name="ContactMechLink" map="lookupPKMap" value-field="contactMechLinkInstance"/>
        <remove-value value-field="contactMechLinkInstance"/>
@@ -255,7 +254,7 @@ under the License.
 
     <!-- contactmech attribute services -->
     <simple-method method-name="createContactMechAttribute" short-description="createContactMechAttribute">
-        <make-value value-field="newEntity" entity-name="ContactMechAttribute"/>
+        <make-value entity-name="ContactMechAttribute" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
@@ -280,11 +279,18 @@ under the License.
         <find-by-primary-key value-field="emailAddressVerification" entity-name="EmailAddressVerification" map="lookupHash"/>
         <set field="bodyParameters.verifyHash" from-field="emailAddressVerification.verifyHash"/>
         <first-from-list entry="storeEmail" list="productStoreEmailSettings"/>
-        <entity-and list="webSites" entity-name="WebSite">
+        <!-- SCIPIO: 2018-11-01: Use better WebSite selection logic
+        <entity-and entity-name="WebSite" list="webSites">
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
-        <first-from-list entry="webSite" list="webSites"/>
+        <first-from-list entry="webSite" list="webSites"/>-->
         <if-not-empty field="storeEmail.bodyScreenLocation">
+            <!-- SCIPIO: Determine webSiteId for store email
+                FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup... -->
+            <script lang="groovy"><![CDATA[
+                context.webSiteId = org.ofbiz.product.store.ProductStoreWorker.getStoreWebSiteIdForEmail(delegator,
+                    context.storeEmail?.productStoreId, null, true);
+            ]]></script>
             <set field="emailParams.sendTo" from-field="parameters.emailAddress"/>
             <set field="emailParams.subject" from-field="storeEmail.subject"/>
             <set field="emailParams.sendFrom" from-field="storeEmail.fromAddress"/>
@@ -294,7 +300,7 @@ under the License.
             <set field="emailParams.bodyParameters" from-field="bodyParameters"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
             <map-to-map to-map="emailParams.bodyParameters" map="bodyParameters"/>
-            <set field="emailParams.webSiteId" from-field="webSite.webSiteId"/>
+            <set field="emailParams.webSiteId" from-field="webSiteId"/><!-- SCIPIO: No need: from-field="webSite.webSiteId" -->
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
     </simple-method>

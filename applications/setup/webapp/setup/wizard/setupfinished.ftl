@@ -6,7 +6,7 @@
       <ul>
         <#list incompleteSteps as stepName>
           <#-- TODO?: link to the steps? (need params) -->
-          <#assign stepTitle = uiLabelMap[rawString((setupStepTitlePropMap[stepName])!"")]>
+          <#assign stepTitle = uiLabelMap[raw((setupStepTitlePropMap[stepName])!"")]>
           <#if ((setupStepDisabledMap[stepName])!true) == false>
             <li><a href="${escapeFullUrl(makeSetupStepUrl(stepName), 'html')}">${stepTitle}</a></li>
           <#else>

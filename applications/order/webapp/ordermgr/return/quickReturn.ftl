@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section> <#--  title=uiLabelMap.OrderReturnItems -->
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
-        <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
+        <form name="selectAllForm" method="post" action="<@pageUrl>makeQuickReturn</@pageUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${partyId!}"/>
@@ -59,7 +46,7 @@ under the License.
                 <@field type="input" size="20" name="paymentMethodId" />
               </#if>
               <#if (party.partyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${raw(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
         </#if>
@@ -69,7 +56,7 @@ under the License.
             <#assign fieldLabel = uiLabelMap["checkhelper.select_shipping_destination"]>
           </#if>
           <@field type="generic" label=fieldLabel>
-            <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list">
               <@tbody>
               <#list shippingContactMechList as shippingContactMech>
                 <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
@@ -87,7 +74,7 @@ under the License.
                       <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                       <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                       <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                      <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
+                      <#--<a href="<@pageUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
                     </@td>
                 </@tr>
               </#list>

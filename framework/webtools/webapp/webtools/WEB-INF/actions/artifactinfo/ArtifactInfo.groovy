@@ -29,7 +29,8 @@ delegatorName = delegator.getDelegatorName()
 if (delegatorName.contains("default#")) {
     delegatorName = "default";
 }
-aif = ArtifactInfoFactory.getArtifactInfoFactory(delegatorName);
+useReloadCache = !UtilMisc.booleanValueVersatile(parameters.reloadArtifacts, false); // SCIPIO: reload flag
+aif = ArtifactInfoFactory.getArtifactInfoFactory(delegatorName, useReloadCache, useReloadCache ? true : false);
 context.aif = aif;
 artifactInfo = null;
 if ("search".equals(parameters.findType)) {
@@ -50,17 +51,33 @@ if ("search".equals(parameters.findType)) {
     }
 }
 
-if (artifactInfo) {
-    artifactInfoMap = [type : artifactInfo.getType(), uniqueId : artifactInfo.getUniqueId(), displayName : artifactInfo.getDisplayName()];
-    // add to the recently viewed list
-    recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
-    if (!recentArtifactInfoList) {
-        recentArtifactInfoList = [];
-        session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
+if (recentArtifactInfoList == null) {
+    synchronized (UtilHttp.getSessionSyncObject(request)) { // SCIPIO: Atomicity
+        recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
+        if (recentArtifactInfoList == null) {
+            recentArtifactInfoList = [];
+            session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+        }
     }
-    if (recentArtifactInfoList && recentArtifactInfoList.get(0).equals(artifactInfoMap)) {
-        // hmmm, I guess do nothing if it's already there
-    } else {
-        recentArtifactInfoList.add(0, artifactInfoMap);
+}
+
+synchronized (recentArtifactInfoList) { // SCIPIO: Thread safety
+    if (artifactInfo) {
+        artifactInfoMap = [type : artifactInfo.getType(), uniqueId : artifactInfo.getUniqueId(), displayName : artifactInfo.getDisplayName()];
+        // add to the recently viewed list
+        if (recentArtifactInfoList && recentArtifactInfoList.get(0).equals(artifactInfoMap)) {
+            // hmmm, I guess do nothing if it's already there
+        } else {
+            // SCIPIO: Remove any existing matching before adding, to keep list from filling with useless duplicates
+            for (def i = recentArtifactInfoList.iterator(); i.hasNext();) {
+                if (Objects.equals(artifactInfoMap, i.next())) {
+                    i.remove();
+                }
+            }
+            recentArtifactInfoList.add(0, artifactInfoMap);
+        }
     }
+    // SCIPIO: Duplicate the list and limit length (previously done in screen)
+    context.recentArtifactInfoList = (recentArtifactInfoList.size() > 20) ? recentArtifactInfoList.subList(0, 20) : new ArrayList(recentArtifactInfoList);
 }

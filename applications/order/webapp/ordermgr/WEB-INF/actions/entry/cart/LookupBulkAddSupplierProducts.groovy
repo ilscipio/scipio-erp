@@ -97,7 +97,7 @@ for (supplierProduct in supplierProducts) {
         // find approved purchase orders
         orderHeaders = from("OrderHeader").where("orderTypeId", "PURCHASE_ORDER", "statusId", "ORDER_APPROVED").orderBy("orderId DESC").queryList();
         orderHeaders.each { orderHeader ->
-            orderReadHelper = new OrderReadHelper(orderHeader);
+            orderReadHelper = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
             orderItems = orderReadHelper.getOrderItems();
             orderItems.each { orderItem ->
                 if (productId.equals(orderItem.productId) && "ITEM_APPROVED".equals(orderItem.statusId)) {

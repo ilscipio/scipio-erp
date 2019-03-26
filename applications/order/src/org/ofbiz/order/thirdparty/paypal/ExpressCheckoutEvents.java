@@ -35,6 +35,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.order.shoppingcart.CartUpdate;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -53,7 +54,9 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         CheckoutType checkoutType = determineCheckoutType(request);
         if (!checkoutType.equals(CheckoutType.NONE)) {
             String serviceName = null;
@@ -75,7 +78,11 @@ public class ExpressCheckoutEvents {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
                 return "error";
+            } else {
+                cartUpdate.commit(cart); // SCIPIO
             }
+        }
+
         }
         return "success";
     }
@@ -91,9 +98,7 @@ public class ExpressCheckoutEvents {
             Debug.logError("No ExpressCheckout token found in cart, you must do a successful setExpressCheckout before redirecting.", module);
             return "error";
         }
-        if (cart != null) {
-            productStoreId = cart.getProductStoreId();
-        }
+        productStoreId = cart.getProductStoreId();
         if (productStoreId != null) {
             GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "EXT_PAYPAL", null, true);
             if (payPalPaymentSetting != null) {
@@ -125,15 +130,27 @@ public class ExpressCheckoutEvents {
 
     public static String expressCheckoutUpdate(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Locale locale = UtilHttp.getLocale(request); // SCIPIO
         CheckoutType checkoutType = determineCheckoutType(request);
         if (checkoutType.equals(CheckoutType.STANDARD)) {
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("request", request);
             inMap.put("response", response);
             try {
-                dispatcher.runSync("payPalCheckoutUpdate", inMap);
+                Map<String, Object> result = dispatcher.runSync("payPalCheckoutUpdate", inMap);
+                if (ServiceUtil.isError(result)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                    // SCIPIO: 2018-10-09: not appropriate for frontend
+                    //request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
+                // SCIPIO: 2018-10-09: added missing message and error return
+                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resourceErr, "AccountingPayPalCommunicationError", locale));
+                return "error";
             }
         }
         return "success";
@@ -143,7 +160,9 @@ public class ExpressCheckoutEvents {
         Locale locale = UtilHttp.getLocale(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         CheckoutType checkoutType = determineCheckoutType(request);
         if (!checkoutType.equals(CheckoutType.NONE)) {
             String serviceName = null;
@@ -164,9 +183,12 @@ public class ExpressCheckoutEvents {
                 Debug.logError(ServiceUtil.getErrorMessage(result), module);
                 request.setAttribute("_EVENT_MESSAGE_", ServiceUtil.getErrorMessage(result));
                 return "error";
+            } else {
+                cartUpdate.commit(cart); // SCIPIO
             }
         }
 
+        }
         return "success";
     }
 
@@ -179,12 +201,15 @@ public class ExpressCheckoutEvents {
             } else if (checkoutType.equals(CheckoutType.STANDARD)) {
                 serviceName = "payPalDoExpressCheckout";
             }
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
             inMap.put("orderPaymentPreference", paymentPref);
             Map<String, Object> result = null;
             try {
                 result = dispatcher.runSync(serviceName, inMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             } catch (GenericServiceException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
@@ -195,8 +220,13 @@ public class ExpressCheckoutEvents {
     }
 
     public static String expressCheckoutCancel(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         cart.removeAttribute("payPalCheckoutToken");
+        
+        cartUpdate.commit(cart);
+        }
         return "success";
     }
 
@@ -207,12 +237,13 @@ public class ExpressCheckoutEvents {
     }
 
     public static CheckoutType determineCheckoutType(Delegator delegator, String productStoreId) {
-        GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "EXT_PAYPAL", null, true);
+        GenericValue payPalPaymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId,
+                "EXT_PAYPAL", null, true);
         if (payPalPaymentSetting != null && payPalPaymentSetting.getString("paymentGatewayConfigId") != null) {
             try {
                 GenericValue paymentGatewayConfig = payPalPaymentSetting.getRelatedOne("PaymentGatewayConfig", false);
-                String paymentGatewayConfigTypeId = paymentGatewayConfig.getString("paymentGatewayConfigTypeId");
                 if (paymentGatewayConfig != null) {
+                    String paymentGatewayConfigTypeId = paymentGatewayConfig.getString("paymentGatewayConfigTypeId");
                     if ("PAYFLOWPRO".equals(paymentGatewayConfigTypeId)) {
                         return CheckoutType.PAYFLOW;
                     } else if ("PAYPAL".equals(paymentGatewayConfigTypeId)) {

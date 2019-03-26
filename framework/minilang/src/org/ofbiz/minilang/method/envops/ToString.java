@@ -31,8 +31,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;to-string&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Ctostring%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class ToString extends MethodOperation {
 
@@ -43,7 +43,9 @@ public final class ToString extends MethodOperation {
     public ToString(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<to-string> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<to-string> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "format", "numeric-padding");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
             MiniLangValidate.constantAttributes(simpleMethod, element, "format", "numeric-padding");
@@ -78,7 +80,7 @@ public final class ToString extends MethodOperation {
                 throw new MiniLangRuntimeException("Exception thrown while converting field to a string: " + e.getMessage(), this);
             }
             if (this.numericPadding != null) {
-                value = StringUtil.padNumberString(value.toString(), this.numericPadding.intValue());
+                value = StringUtil.padNumberString(value.toString(), this.numericPadding);
             }
             fieldFma.put(methodContext.getEnvMap(), value);
         }

@@ -36,20 +36,17 @@ public interface LocalDispatcher {
 
     /**
      * Disables running of Service Engine Condition Actions (SECAs).  Intended to be turned off temporarily.
-     * @throws GenericServiceException
      */
     void disableEcas();
 
     /**
      * Reenables running of Service Engine Condition Actions (SECAs).
-     * @throws GenericServiceException
      */
     void enableEcas();
 
     /**
      * Returns whether Service Engine Condition Actions (SECAs) are disabled or not.
      * @return returns whether Service Engine Condition Actions (SECAs) are disabled or not.
-     * @throws GenericServiceException
      */
     boolean isEcasDisabled();
 
@@ -77,6 +74,38 @@ public interface LocalDispatcher {
      */
     Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
     Map<String, Object> runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
+     * SCIPIO: Run the service synchronously, with optional separate transaction.
+     * Added 2019-01-30.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return runSync(serviceName, context, -1, requireNewTransaction);
+    }
+
+    /**
+     * SCIPIO: Run the service synchronously in a separate transaction.
+     * Added 2019-01-30.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> runSyncNewTrans(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return runSync(serviceName, context, -1, true);
+    }
 
     /**
      * Run the service synchronously and IGNORE the result.
@@ -329,7 +358,7 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException;
-    
+
     /**
      * Gets the JobManager associated with this dispatcher
      * @return JobManager that is associated with this dispatcher
@@ -371,5 +400,45 @@ public interface LocalDispatcher {
      * De-Registers this LocalDispatcher
      */
     void deregister();
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name
+     * SCIPIO: New method: This is the same as <code>getDispatchContext().getModelService(...)</code>. Added 2019-02-05.
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    public default ModelService getModelService(String serviceName) throws GenericServiceException {
+        return getDispatchContext().getModelService(serviceName);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * SCIPIO: New method: This is the same as <code>getDispatchContext().makeValidContext(...)</code>. Added 2019-01-31.
+     * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
+        return getDispatchContext().makeValidContext(serviceName, mode, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * SCIPIO: New method: This is the same as <code>DispatchContext.makeValidContext(...)</code>. Added 2019-01-31.
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
+        // SCIPIO: NOTE: For unknown reasons, this method is static on DispatchContext, but this is not suitable
+        // for LocalDispatcher and even counterproductive.
+        return DispatchContext.makeValidContext(model, mode, context);
+    }
 }
 

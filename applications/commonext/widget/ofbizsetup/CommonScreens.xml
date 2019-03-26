@@ -211,7 +211,8 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="entityExportAll"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
                 <set field="results" from-field="parameters.results"/>
             </actions>
             <widgets>

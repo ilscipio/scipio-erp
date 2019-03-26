@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 <#if (requestParameters?has_content && requestParameters.product_id??) || productId?has_content>
@@ -71,25 +58,25 @@ under the License.
           <#if userLogin?has_content>
               <#--<@heading>${uiLabelMap.ProductReviewThisProduct}<@heading> -->
               
-              <@form id="reviewProduct" method="post" action=makeOfbizUrl("createProductReview")>
+              <@form id="reviewProduct" method="post" action=makePageUrl("createProductReview")>
                 <@fieldset class="inline">
                   <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
                   <input type="hidden" name="productId" value="${productId!requestParameters.product_id!""}" />
                   <input type="hidden" name="categoryId" value="${categoryId!requestParameters.category_id!""}" />
                   
                   <#assign ratingItems = [
-                    {"value":"1.0", "description":"1"}
-                    {"value":"2.0", "description":"2"}
-                    {"value":"3.0", "description":"3"}
-                    {"value":"4.0", "description":"4"}
-                    {"value":"5.0", "description":"5"}
+                    {"value":"1", "description":"1"}
+                    {"value":"2", "description":"2"}
+                    {"value":"3", "description":"3"}
+                    {"value":"4", "description":"4"}
+                    {"value":"5", "description":"5"}
                   ]>
                   <@field type="radio" name="productRating" label=uiLabelMap.EcommerceRating items=ratingItems currentValue="3.0"/>
                   <@field type="checkbox" name="postedAnonymous" label=uiLabelMap.EcommercePostAnonymous value="Y" currentValue="N" defaultValue="N"/>
                   <@field type="textarea" name="productReview" label=uiLabelMap.CommonReview cols="40"/>
             
                     <a href="javascript:document.getElementById('reviewProduct').submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
-                    <#if requestParameters.product_id?has_content><a href="<@ofbizUrl>product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a></#if>
+                    <#if requestParameters.product_id?has_content><a href="<@pageUrl>product?product_id=${requestParameters.product_id}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a></#if>
                     
                 </@fieldset>
               </@form>

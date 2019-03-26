@@ -175,6 +175,7 @@ function initiallyCollapseDelayed() {
  ******************************************************************************/
 var Lookup = function(options) {
     var _newInputBoxId, _lookupId, _inputBox, _lookupContainer, _backgroundCloseClickEvent;
+    var styles = (typeof scipioStyles !== 'undefined') ? (scipioStyles || {}) : {}; // SCIPIO
 
     options = {
         requestUrl : options.requestUrl || "",
@@ -183,8 +184,8 @@ var Lookup = function(options) {
         dialogOptionalTarget : options.dialogOptionalTarget || "",
         lookupId: options.lookupId || GLOBAL_LOOKUP_REF.createNextKey(),
         formName : options.formName || "",
-        width : options.width || "640",
-        height : options.height || "500",
+        width : options.width || styles.field_lookup_width || "640",
+        height : options.height || styles.field_lookup_height || "500",
         position : options.position || "",
         modal : options.modal || "true",
         ajaxUrl : options.ajaxUrl || "",
@@ -333,10 +334,15 @@ var Lookup = function(options) {
             },
 
             error : function(xhr, reason, exception) {
-                if (exception != 'abort') {
-                    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
+                // SCIPIO: Removed: abort detection is wrong here (would be: reason != 'abort', if that were portable; not reliable either),
+                // and there is little need to show error message for this
+                //if (exception != 'abort') {
+                //    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
+                //}
+                //location.reload(true); // SCIPIO: This will not work for any screen loaded after POST
+                if (reason != 'abort' && console && console.error) {
+                    console.error("Field lookup: An error occurred while communicating with the server: reason=" + reason + ", exception=" + exception);
                 }
-                location.reload(true);
             }
         });
     }

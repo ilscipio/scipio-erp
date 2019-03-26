@@ -10,9 +10,9 @@ import java.util.Map;
 public interface RenderTargetExpr extends RenderTargetExprBase {
 
     public interface MultiRenderTargetExpr<T extends RenderTargetExpr> extends Map<String, T>, RenderTargetExprBase {
-        
+
     }
-    
+
     public interface RenderTargetState extends Serializable {
         RenderTargetExprBase getExpr();
     }

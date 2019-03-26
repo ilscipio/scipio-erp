@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <div>
   <#if contactMeches?has_content>
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->      
+    <@table type="data-list">      
       <@thead>
         <@tr>
            <@th>${uiLabelMap.PartyContactType}</@th>
@@ -62,7 +49,7 @@ under the License.
                         <#if contactMechPurposeType?has_content>
                           <#assign popUptitle = contactMechPurposeType.get("description",locale) + uiLabelMap.CommonGeoLocation>
                         </#if>
-                        <br /><a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${facility.ownerPartyId}</@ofbizUrl>', '${popUptitle!?html}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
+                        <br /><a href="javascript:popUp('<@pageUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${facility.ownerPartyId}</@pageUrl>', '${popUptitle!?html}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
                       </#if>
                   <#elseif "TELECOM_NUMBER" == contactMech.contactMechTypeId>
                       <#assign telecomNumber = contactMechMap.telecomNumber!>
@@ -85,13 +72,13 @@ under the License.
                 </@td>
                 <@td class="button-col">
                   &nbsp;
-                  <#if security.hasEntityPermission("FACILITY", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#if security.hasEntityPermission("FACILITY", "_UPDATE", request)>
+                    <a href="<@pageUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                 </@td>
                 <@td>
-                  <#if security.hasEntityPermission("FACILITY", "_DELETE", session)>
-                    <form action="<@ofbizUrl>deleteContactMech/ViewContactMechs</@ofbizUrl>" name="deleteContactForm_${contactMechMap_index}" method="post">
+                  <#if security.hasEntityPermission("FACILITY", "_DELETE", request)>
+                    <form action="<@pageUrl>deleteContactMech/ViewContactMechs</@pageUrl>" name="deleteContactForm_${contactMechMap_index}" method="post">
                       <input type="hidden" name="facilityId" value="${facilityId!}"/>
                       <input type="hidden" name="contactMechId" value="${contactMech.contactMechId!}"/>
                     </form>

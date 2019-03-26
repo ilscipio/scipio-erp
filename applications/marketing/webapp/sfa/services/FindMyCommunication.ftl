@@ -1,5 +1,5 @@
 <@section>
-    <form name="MyCommunicationEvents" action="<@ofbizUrl>MyCommunicationEvents</@ofbizUrl>" method="POST">
+    <form name="MyCommunicationEvents" action="<@pageUrl>MyCommunicationEvents</@pageUrl>" method="POST">
     
         <@field type="lookup" name="partyIdTo" formName="MyCommunicationEvents" id="partyIdTo" fieldFormName="LookupPartyName" label=uiLabelMap.PartyPartyTo />
     

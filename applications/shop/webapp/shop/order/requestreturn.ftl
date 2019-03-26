@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -29,7 +16,7 @@ under the License.
     </@menu>
 </#macro>
 <@section menuContent=menuContent><#--title=uiLabelMap.OrderReturnItems -->
-    <form name="selectAllForm" method="post" action="<@ofbizUrl>requestReturn</@ofbizUrl>">
+    <form name="selectAllForm" method="post" action="<@pageUrl>requestReturn</@pageUrl>">
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
@@ -42,7 +29,7 @@ under the License.
 
       <@table type="fields">
         <@tr>
-          <@td colspan="5"><@heading>${uiLabelMap.OrderReturnItemsFromOrder} <a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading></@td>
+          <@td colspan="5"><@heading>${uiLabelMap.OrderReturnItemsFromOrder} <a href="<@pageUrl>orderstatus?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading></@td>
           <@td align="right">
             <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
             <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
@@ -82,7 +69,7 @@ under the License.
             <#-- end of order item information -->
 
                   <#if orderItem.productId??>
-                    &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderItem.productId}</a>
+                    &nbsp;<a href="<@pageUrl>product?product_id=${orderItem.productId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderItem.productId}</a>
                     <input type="hidden" name="productId_o_${rowCount}" value="${orderItem.productId}"/>
                   </#if>
                   ${orderItem.itemDescription}
@@ -121,7 +108,7 @@ under the License.
           <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
           <@tr>
             <@td colspan="6">
-              <@table type="fields"> <#-- orig: cellspacing="1" cellpadding="2" width="100%" -->
+              <@table type="fields">
                 <#list shippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <@tr>
@@ -137,7 +124,7 @@ under the License.
                         <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                        <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
+                        <a href="<@pageUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
                     </@td>
                   </@tr>
                 </#list>

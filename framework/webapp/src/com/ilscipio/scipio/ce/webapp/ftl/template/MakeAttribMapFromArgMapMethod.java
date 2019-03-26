@@ -44,17 +44,16 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 2 ) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
-        
+
         ObjectWrapper objectWrapper = CommonFtlUtil.getCurrentEnvironment().getObjectWrapper();
 
         TemplateHashModelEx argsMap = (TemplateHashModelEx) args.get(0);
-        
+
         // caller-supplied excludes
         TemplateModel excludesModel = (args.size() >=2) ? (TemplateModel) args.get(1) : null;
         Set<String> excludes;
@@ -63,9 +62,9 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
         } else {
             excludes = new HashSet<>();
         }
-        
+
         SimpleHash res = null;
-        
+
         final Boolean useExclude = Boolean.FALSE;
 
         // put attribs from explicit attribs map first, if any
@@ -91,7 +90,7 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
         } else {
             LangFtlUtil.putAll(res, argsMap, excludes, useExclude, objectWrapper);
         }
-        
+
         return res;
     }
 

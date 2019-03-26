@@ -19,18 +19,19 @@
 
 package org.ofbiz.entityext.eca;
 
-import org.w3c.dom.Element;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.entity.model.ModelUtil;
-
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.model.ModelUtil;
+import org.w3c.dom.Element;
+
 /**
- * ServiceEcaSetField
+ * EntityEcaSetField
  */
-public final class EntityEcaSetField {
+@SuppressWarnings("serial")
+public final class EntityEcaSetField implements java.io.Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -78,7 +79,7 @@ public final class EntityEcaSetField {
             return s.toLowerCase();
         }
         if ("hash-code".equalsIgnoreCase(format)) {
-            return Integer.valueOf(s.hashCode());
+            return s.hashCode();
         }
         if ("long".equalsIgnoreCase(format)) {
             return Long.valueOf(s);

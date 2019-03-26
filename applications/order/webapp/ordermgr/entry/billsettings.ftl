@@ -1,28 +1,18 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
+
 <@script>
 function shipBillAddr() {
     if (document.checkoutsetupform.useShipAddr.checked) {
-        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}&useShipAddr=Y</@ofbizUrl>";
+        window.location = "<@pageUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}&useShipAddr=Y</@pageUrl>";
     } else {
-        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}</@ofbizUrl>";
+        window.location = "<@pageUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}</@pageUrl>";
     }
 }
 
@@ -31,23 +21,23 @@ function makeExpDate() {
 }
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 <@section>
     <@row>
         <@cell columns=6>
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
-           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+           <@menuitem type="link" href=makePageUrl("setBilling?createNew=Y") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
          </@menu>
         
           <#-- initial screen when we have a associated party -->
-          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+          <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
              
               <#if billingAccountList?has_content>
                 <#assign labelContent>${uiLabelMap.FormFieldTitle_billingAccountId}</#assign>
                 <#assign postfixContent></#assign>
-                <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                     <select name="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
@@ -57,28 +47,28 @@ function makeExpDate() {
                           <#else>
                               <#assign accountLimit = 0.00 />
                           </#if> 
-                          <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == (selectedBillingAccountId!"")>selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
+                          <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                         </#list>
                     </select>
-                </@checkoutInvField>
+                </@>
                 <#assign labelContent>${uiLabelMap.OrderBillUpTo}</#assign>
                 <#assign postfixContent></#assign>
-                <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                     <input type="text" size="5" name="billingAccountAmount" value=""/>
-                </@checkoutInvField>
+                </@>
                 
               </#if>
               <#assign labelContent><label for="checkOutPaymentId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" id="checkOutPaymentId_EXT_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if>/>
-              </@checkoutInvField>
+              </@>
              
               <#assign labelContent><label for="checkOutPaymentId_EXT_COD">${uiLabelMap.OrderCOD}</label></#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" id="checkOutPaymentId_EXT_COD" name="checkOutPaymentId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if>/>
-              </@checkoutInvField>
+              </@>
              
               <#if paymentMethodList?has_content>
                 <#list paymentMethodList as paymentMethod>
@@ -91,21 +81,20 @@ function makeExpDate() {
                         </label><br/>
                         <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip=uiLabelMap.OrderCardSecurityCode/>
                     </#assign>
-                    <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
-                    <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                    <#assign postfixContent><a href="<@serverUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
-                    </@checkoutInvField>
+                    </@>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
                     <#assign labelContent><label for="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}">
                           EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label></#assign>
-                    <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
-                    <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+                    <#assign postfixContent><a href="<@serverUrl>/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
-                    </@checkoutInvField>
-                    
+                    </@>
                   </#if>
                 </#list>
               <#else>
@@ -116,24 +105,24 @@ function makeExpDate() {
           <#-- after initial screen; show detailed screens for selected type -->
           <#if paymentMethodType == "CC">
             <#if postalAddress?has_content>
-              <form method="post" action="<@ofbizUrl>updateCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>updateCreditCardAndPostalAddress</@pageUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
             <#elseif requestParameters.useShipAddr??>
-              <form method="post" action="<@ofbizUrl>createCreditCardOrderEntry</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createCreditCardOrderEntry</@pageUrl>" name="checkoutsetupform">
             <#else>
-              <form method="post" action="<@ofbizUrl>createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createCreditCardAndPostalAddress</@pageUrl>" name="checkoutsetupform">
             </#if>
           </#if>
           <#if paymentMethodType == "EFT">
             <#if postalAddress?has_content>
-              <form method="post" action="<@ofbizUrl>updateEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>updateEftAndPostalAddress</@pageUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
             <#elseif requestParameters.useShipAddr??>
-              <form method="post" action="<@ofbizUrl>createEftAccount</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createEftAccount</@pageUrl>" name="checkoutsetupform">
             <#else>
-              <form method="post" action="<@ofbizUrl>createEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createEftAndPostalAddress</@pageUrl>" name="checkoutsetupform">
             </#if>
           </#if>
 
@@ -149,9 +138,9 @@ function makeExpDate() {
             <#if cart.getShippingContactMechId()??>
             <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
             <#assign postfixContent></#assign>
-            <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+            <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                 <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr??>checked="checked"</#if>/>
-            </@checkoutInvField>
+            </@>
 
               <hr />
 
@@ -289,42 +278,42 @@ function makeExpDate() {
               function setCheckoutPaymentId( selectedValue ) {
                   checkoutForm = document.getElementById('checkoutsetupform');
                   if( selectedValue.match('^EXT_.*') ) {
-                      checkoutForm.action = '<@ofbizUrl>finalizeOrder</@ofbizUrl>?checkOutPaymentId=' + selectedValue ;
+                      checkoutForm.action = '<@pageUrl>finalizeOrder</@pageUrl>?checkOutPaymentId=' + selectedValue ;
                   } else {
-                      checkoutForm.action = '<@ofbizUrl>setBilling</@ofbizUrl>?paymentMethodType=' + selectedValue ;
+                      checkoutForm.action = '<@pageUrl>setBilling</@pageUrl>?paymentMethodType=' + selectedValue ;
                   }
               }
           </@script>
 
-          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
+          <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform" id="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
             <input type="hidden" name="createNew" value="${(requestParameters.createNew)!}"/>
             
             <#if "Y" != requestParameters.createNew?default("")>
               <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-              </@checkoutInvField>
+              </@>
               
               <#assign labelContent>${uiLabelMap.OrderCOD}</#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-              </@checkoutInvField>
+              </@>
             </#if>
 
               <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-              </@checkoutInvField>
+              </@>
               
               <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
               <#assign postfixContent></#assign>
-              <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+              <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                   <input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
-              </@checkoutInvField>
+              </@>
           </form>
         </#if>
         </@cell>

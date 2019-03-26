@@ -85,7 +85,7 @@
             </then>
             <else>
                 <add-error>
-                    <fail-property property="HumanResEmplPostitionIdReportingToAndEmplPositionIdManagedByMustBeDiff" resource="HumanResUiLabels"/>
+                    <fail-property resource="HumanResUiLabels" property="HumanResEmplPostitionIdReportingToAndEmplPositionIdManagedByMustBeDiff"/>
                 </add-error>
                 <check-errors/>
             </else>
@@ -110,7 +110,7 @@
             <call-service service-name="createPartyRelationship" in-map-name="partyRelationshipCtx"/>
         </if-not-empty>
         <field-to-result field="partyId"/>
-        
+
         <!-- SCIPIO: 2018-04-10: need another message because "telecom number created" alone appears too strange
             FIXME: try to prevent the telecom number message, failed so far... -->
         <property-to-field resource="PartyUiLabels" property="PartyUserCreated" field="successMessageList[]"/>
@@ -124,12 +124,12 @@
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
         </entity-and>
         <if-not-empty field="emplPositionTypeRates">
-            <first-from-list entry="emplPositionTypeRate" list="emplPositionTypeRates"/>
+            <first-from-list list="emplPositionTypeRates" entry="emplPositionTypeRate"/>
             <now-timestamp field="emplPositionTypeRate.thruDate"/>
             <store-value value-field="emplPositionTypeRate"/>
         </if-not-empty>
 
-        <make-value value-field="newEntity" entity-name="EmplPositionTypeRate"/>
+        <make-value entity-name="EmplPositionTypeRate" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate"><now-timestamp field="newEntity.fromDate"/></if-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -146,15 +146,15 @@
         <now-timestamp field="lookedUpValue.thruDate"/>
         <store-value value-field="lookedUpValue"/>
 
-        <set-service-fields service-name="deleteRateAmount" map="parameters" to-map="delRateAmount"/>
+        <set-service-fields service-name="expireRateAmount" map="parameters" to-map="delRateAmount"/>
         <set field="delRateAmount.fromDate" from-field="parameters.rateAmountFromDate"/>
-        <call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
+        <call-service service-name="expireRateAmount" in-map-name="delRateAmount"/>
     </simple-method>
 
     <simple-method method-name="createEmplLeave" short-description="Create Employee Leave">
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
         <check-errors/>
         <property-to-field resource="HumanResUiLabels" property="HumanResLeaveCreationSuccess" field="successMessage"/>
@@ -172,14 +172,14 @@
         <entity-and entity-name="Employment" list="employments" filter-by-date="true">
             <field-map field-name="partyIdTo" from-field="parameters.partyId"/>
         </entity-and>
-        <first-from-list entry="employment" list="employments"/>
+        <first-from-list list="employments" entry="employment"/>
         <field-to-result field="employment"/>
         <!-- position -->
         <entity-and entity-name="EmplPositionAndFulfillment" list="emplPositionAndFulfillments" filter-by-date="true">
             <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
             <field-map field-name="partyId" from-field="employment.partyIdFrom"/>
         </entity-and>
-        <first-from-list entry="emplPositionAndFulfillment" list="emplPositionAndFulfillments"/>
+        <first-from-list list="emplPositionAndFulfillments" entry="emplPositionAndFulfillment"/>
         <field-to-result field="emplPositionAndFulfillment" result-name="emplPosition"/>
         <!-- position type -->
         <if-not-empty field="emplPositionAndFulfillment">
@@ -194,7 +194,7 @@
             <field-map field-name="emplPositionTypeId" from-field="emplPositionType.emplPositionTypeId"/>
             <field-map field-name="rateCurrencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
         </entity-and>
-        <first-from-list entry="rateAmount" list="rateAmounts"/>
+        <first-from-list list="rateAmounts" entry="rateAmount"/>
         <field-to-result field="rateAmount" result-name="emplPositionRateAmount"/>
     </simple-method>
 
@@ -208,7 +208,8 @@
         <set from-field="trainingRequest.trainingRequestId" field="personTraining.trainingRequestId"/>
         <set field="personTraining.fromDate" from-field="parameters.fromDate"/>
         <set field="personTraining.thruDate" from-field="parameters.thruDate"/>
-        <set field="personTraining.trainingClassTypeId" from-field="parameters.workEffortName"/>
+        <!-- SCIPIO: 2018-09-10: this makes no sense
+        <set field="personTraining.trainingClassTypeId" from-field="parameters.workEffortName"/>-->
         <create-value value-field="personTraining"/>
         <check-errors/>
     </simple-method>
@@ -227,11 +228,31 @@
         <check-errors/>
     </simple-method>
 
+    <simple-method method-name="createSalaryStep" short-description="Create a Salary Step">
+        <make-value entity-name="SalaryStep" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.createdByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <sequenced-id sequence-name="SalaryStep" field="newEntity.salaryStepSeqId"/>
+        <!-- SCIPIO: 2018-09-10: this is wrong
+        <field-to-result field="salaryStepSeqId" result-name="salaryStepSeqId"/>-->
+        <field-to-result field="newEntity.salaryStepSeqId" result-name="salaryStepSeqId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateSalaryStep" short-description="Update Salary Step">
+        <entity-one entity-name="SalaryStep" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set field="lookedUpValue.lastModifiedByUserLogin" from-field="parameters.userLogin.userLoginId"/>
+        <now field="fromDate"/>
+        <set field="lookedUpValue.dateModified" from-field="fromDate"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
 
     <simple-method method-name="createEmploymentApp" short-description="SCIPIO: Create Employment App">
         <call-simple-method method-name="validateEmploymentAppParams" />
         <check-errors />
-        
+
         <make-value entity-name="EmploymentApp" value-field="emplAppValue"/>
         <set-pk-fields map="parameters" value-field="emplAppValue"/>
         <if-empty field="parameters.applicationId">
@@ -241,28 +262,28 @@
 
         <call-simple-method method-name="validateEmploymentApp" />
         <check-errors />
-        
+
         <create-value value-field="emplAppValue"/>
         <check-errors />
         <field-to-result field="emplAppValue.applicationId" result-name="applicationId"/>
     </simple-method>
-    
+
     <simple-method method-name="updateEmploymentApp" short-description="SCIPIO: Update Employment App">
         <field-to-result field="parameters.applicationId" result-name="applicationId"/>
         <call-simple-method method-name="validateEmploymentAppParams" />
         <check-errors />
-        
+
         <entity-one entity-name="EmploymentApp" value-field="emplAppValue"/>
         <!--<set-pk-fields map="parameters" value-field="emplAppValue"/>-->
         <set-nonpk-fields map="parameters" value-field="emplAppValue"/>
-    
+
         <call-simple-method method-name="validateEmploymentApp" />
         <check-errors />
-   
+
         <store-value value-field="emplAppValue"/>
         <check-errors />
     </simple-method>
-    
+
     <simple-method method-name="validateEmploymentAppParams" short-description="SCIPIO: Validate Employment App Params">
         <if-not-empty field="parameters.emplPositionId">
             <entity-one entity-name="EmplPosition" value-field="emplPosValue" auto-field-map="false">
@@ -270,7 +291,7 @@
             </entity-one>
             <!--<check-errors/>-->
             <if-empty field="emplPosValue">
-                <add-error><fail-property property="HumanResErrorInvalidEmplPosition" resource="HumanResErrorUiLabels" /></add-error>
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidEmplPosition"/></add-error>
                 <!--<check-errors/>-->
             </if-empty>
         </if-not-empty>
@@ -280,19 +301,19 @@
             </entity-one>
             <!--<check-errors/>-->
             <if-empty field="jobReqValue">
-                <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
                 <!--<check-errors/>-->
             </if-empty>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="validateEmploymentApp" short-description="SCIPIO: Validate Employment App">
         <!-- check that emplPositionId and/or jobRequisition are set to valid values, and optionally
             if position not specified, transfer it from the job requisition -->
         <if-empty field="emplAppValue.emplPositionId">
             <!-- get it from jobRequisition -->
             <if-empty field="emplAppValue.jobRequisitionId">
-                <add-error><fail-property property="HumanResErrorPositionOrRequisitionMustBeSpecified" resource="HumanResErrorUiLabels" /></add-error>
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorPositionOrRequisitionMustBeSpecified"/></add-error>
                 <check-errors/>
             <else>
                 <entity-one entity-name="JobRequisition" value-field="jobReqValue" auto-field-map="false">
@@ -300,7 +321,7 @@
                 </entity-one>
                 <check-errors/>
                 <if-empty field="jobReqValue">
-                    <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                    <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
                     <check-errors/>
                 <else>
                     <!-- SCIPIO: NOTE: this is a new field in scipio -->
@@ -319,7 +340,7 @@
             </entity-one>
             <check-errors/>
             <if-empty field="emplPosValue">
-                <add-error><fail-property property="HumanResErrorInvalidEmplPosition" resource="HumanResErrorUiLabels" /></add-error>
+                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidEmplPosition"/></add-error>
                 <check-errors/>
             <else>
                 <if-not-empty field="emplAppValue.jobRequisitionId">
@@ -328,19 +349,19 @@
                     </entity-one>
                     <check-errors/>
                     <if-empty field="jobReqValue">
-                        <add-error><fail-property property="HumanResErrorInvalidJobRequisition" resource="HumanResErrorUiLabels" /></add-error>
+                        <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorInvalidJobRequisition"/></add-error>
                         <check-errors/>
                     <else>
                         <if-not-empty field="jobReqValue.emplPositionId">
                             <!-- Verify that the requisition links to the same position as us -->
                             <if-compare-field field="emplAppValue.emplPositionId" operator="not-equals" to-field="jobReqValue.emplPositionId">
-                                <add-error><fail-property property="HumanResErrorAppPositionMustEqualRequisitionPosition" resource="HumanResErrorUiLabels" /></add-error>
+                                <add-error><fail-property resource="HumanResErrorUiLabels" property="HumanResErrorAppPositionMustEqualRequisitionPosition"/></add-error>
                                 <check-errors/>
                             </if-compare-field>
                         <else>
                             <!-- TODO: REVIEW: this case is ambiguous, so don't fail; it is allowed by stock though in most cases you probably
                                 want the job req to link to a position -->
-                            <log level="warning" message="WARNING: Job requisition ${emplAppValue.jobRequisitionId} is not linked to an employee position; 
+                            <log level="warning" message="WARNING: Job requisition ${emplAppValue.jobRequisitionId} is not linked to an employee position;
                                 this is allowed by stock ofbiz, but in most cases you want to a link to a position (emplPositionId)" />
                         </else>
                         </if-not-empty>

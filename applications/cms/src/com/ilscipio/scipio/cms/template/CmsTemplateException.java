@@ -14,7 +14,7 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     private PropertyMessage friendlyMsgLabel;
     private PropertyMessage friendlyMsg;
     private RenderExceptionMode renderExceptionMode = null;
-    
+
     public CmsTemplateException(String msg, Throwable e) {
         super(msg, e);
     }
@@ -42,7 +42,7 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     public CmsTemplateException(PropertyMessage propMsg) {
         super(propMsg);
     }
-    
+
     public static CmsTemplateException getFromExceptionOrCauseDeep(Throwable t) {
         while (t != null) {
             if (t instanceof CmsTemplateException) return (CmsTemplateException) t;
@@ -50,7 +50,7 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
         }
         return null;
     }
-    
+
     public PropertyMessage getFriendlyPropertyMessageLabel() {
         return friendlyMsgLabel;
     }
@@ -58,19 +58,19 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     public void setFriendlyPropertyMessageLabel(PropertyMessage friendlyMsgLabel) {
         this.friendlyMsgLabel = friendlyMsgLabel;
     }
-    
+
     public String getFriendlyMessageLabel() {
         return friendlyMsgLabel != null ? friendlyMsgLabel.getDefPropLocaleMessage() : null;
     }
-    
+
     public String getFriendlyMessageLabel(Locale locale) {
         return friendlyMsgLabel != null ? friendlyMsgLabel.getMessage(locale) : null;
     }
-    
+
     public void setFriendlyMessageLabel(String friendlyMsgLabel) {
         this.friendlyMsgLabel = PropertyMessage.makeFromStatic(friendlyMsgLabel);
     }
-    
+
     public PropertyMessage getFriendlyPropertyMessage() {
         return friendlyMsg;
     }
@@ -78,15 +78,15 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     public void setFriendlyPropertyMessage(PropertyMessage friendlyMsg) {
         this.friendlyMsg = friendlyMsg;
     }
-    
+
     public String getFriendlyMessage() {
         return friendlyMsg != null ? friendlyMsg.getDefPropLocaleMessage() : null;
     }
-    
+
     public String getFriendlyMessage(Locale locale) {
         return friendlyMsg != null ? friendlyMsg.getMessage(locale) : null;
     }
-    
+
     public void setFriendlyMessage(String friendlyMsg) {
         this.friendlyMsg = PropertyMessage.makeFromStatic(friendlyMsg);
     }

@@ -19,6 +19,7 @@
 package org.ofbiz.webapp.ftl;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -30,7 +31,6 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateNumberModel;
 import freemarker.template.TemplateScalarModel;
 
 /**
@@ -43,8 +43,7 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
@@ -71,7 +70,7 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
         // SCIPIO: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
         value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
-        
+
         request.setAttribute(name, value);
         return new SimpleScalar("");
     }

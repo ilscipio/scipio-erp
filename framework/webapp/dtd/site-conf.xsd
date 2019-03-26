@@ -33,6 +33,7 @@ under the License.
                 <xs:element minOccurs="0" ref="postprocessor"/>
                 <xs:element minOccurs="0" ref="after-login"/>
                 <xs:element minOccurs="0" ref="before-logout"/>
+                <xs:element minOccurs="0" ref="after-logout"/><!-- SCIPIO -->
                 <xs:element minOccurs="0" ref="default-request"/>
                 <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
                 <xs:element minOccurs="0" ref="common-settings"/><!-- SCIPIO: 2018-06-13: new -->
@@ -48,7 +49,7 @@ under the License.
 
                 Note that if you define any of the event blocks in this file (the including file) they
                 will override (replace) the one in the included file, effectively emptying it. The event
-                blocks are: firstvisit, preprocessor, postprocessor, after-login, and before-logout.
+                blocks are: firstvisit, preprocessor, postprocessor, after-login, before-logout, after-logout.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -56,7 +57,17 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.include">
-        <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Controller location, in component:// notation.
+                    SCIPIO: 2018-11-08: Now supports wildcard component using:
+                      component://*/somefile.xxx
+                    This includes the named file from each component, following the load order; only makes sense with optional="true".
+                    (NOTE: At current time, only component name can be wildcarded)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="recursive" default="full">
             <xs:annotation>
                 <xs:documentation>
@@ -71,19 +82,13 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="optional" default="false">
+        <xs:attribute type="xs:boolean" name="optional" default="false">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If true, the include will not cause or report as error if resource is missing.
                     Added 2017-05-03.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="order" default="pre-local">
             <xs:annotation>
@@ -139,17 +144,34 @@ under the License.
         <xs:attribute name="type" default="request">
             <xs:annotation>
                 <xs:documentation>
-                    To keep it short, request is for action when view is for rendering
+                    To keep it short, request is for action when view is for rendering.
+
+                    SCIPIO: 2018-11-23: Now supports "request-handler-wrapper" type, which defines a "super" event handler
+                    which runs for all event types (service, java, etc.), and effectively wraps
+                    the regular "request" handlers. The scope parameter may be specified to limit
+                    the triggers for which this super handler will run. The class
+                    must implement org.ofbiz.webapp.event.EventHandlerWrapper.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="request"/>
                     <xs:enumeration value="view"/>
+                    <xs:enumeration value="request-handler-wrapper"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="class" use="required"/>
+        <xs:attribute type="xs:string" name="triggers" default="all">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Currently works ONLY for "request-handler-wrapper": Restricts which event triggers
+                    this handler should apply to. Comma-separated list (no spaces). Possible values:
+                        all, firstvisit, preprocessor, security-auth, request, postprocessor, after-login, before-logout
+                    Added 2018-11-23.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="protect">
         <xs:annotation>
@@ -231,6 +253,20 @@ under the License.
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="after-logout">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Event runs right after logout and only then.
+                Any error will be ignored and will not affect the requests processing flow.
+                Added 2018-12-03.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="default-request">
         <xs:annotation>
             <xs:documentation>
@@ -259,7 +295,7 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.view-as-json">
-        <xs:attribute name="enabled" use="required">
+        <xs:attribute type="xs:boolean" name="enabled" use="required">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, view-as-json will run for any request that receives
@@ -267,12 +303,6 @@ under the License.
                     If set to false, view-as-json will never execute for this webapp.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="json-request-uri" use="required">
             <xs:annotation>
@@ -282,7 +312,7 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="update-session" default="false">
+        <xs:attribute type="xs:boolean" name="update-session" default="false">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, by default, view-as-json renders will still update
@@ -293,26 +323,14 @@ under the License.
                         session writes, but at least prevents updating the view-last/view-home/etc. attributes.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="regular-login" default="false">
+        <xs:attribute type="xs:boolean" name="regular-login" default="false">
             <xs:annotation>
                 <xs:documentation>
                     If set to true, the regular login view will be used when not logged in.
                     If set to false, the special ajaxLogin view will be used when not logged in.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="common-settings">
@@ -330,6 +348,11 @@ under the License.
                             <xs:element minOccurs="0" name="response-settings">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:element name="view-last">
+                                            <xs:complexType>
+                                                <xs:attribute type="xs:string" name="default-view"/>
+                                             </xs:complexType>
+                                        </xs:element>
                                         <xs:element minOccurs="0" ref="allow-view-save-default"/>
                                     </xs:sequence>
                                  </xs:complexType>
@@ -344,20 +367,13 @@ under the License.
     <xs:attributeGroup name="attlist.common-settings">
     </xs:attributeGroup>
     <xs:attributeGroup name="attlist.name-filter">
-        <xs:attribute name="value">
+        <xs:attribute type="xs:boolean" name="value">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: Common name filtering attributes.
                     Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:complexType name="name-filter">
@@ -400,19 +416,13 @@ under the License.
                                         </xs:restriction>
                                     </xs:simpleType>
                                 </xs:attribute>
-                                <xs:attribute name="use-value" use="required">
+                                <xs:attribute type="xs:boolean" name="use-value" use="required">
                                     <xs:annotation>
                                         <xs:documentation>
                                             SCIPIO: If the name matches this filter, sets this value.
                                             Added 2018-06-13. 
                                         </xs:documentation>
-                                    </xs:annotation>
-                                    <xs:simpleType>
-                                        <xs:restriction base="xs:token">
-                                            <xs:enumeration value="true"/>
-                                            <xs:enumeration value="false"/>
-                                        </xs:restriction>
-                                    </xs:simpleType>
+                                    </xs:annotation>          
                                 </xs:attribute>
                             </xs:extension>
                         </xs:complexContent>
@@ -423,7 +433,7 @@ under the License.
          </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.allow-view-save-default">
-        <xs:attribute name="value">
+        <xs:attribute type="xs:boolean" name="value">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: Global default for allow-view-save.
@@ -431,12 +441,6 @@ under the License.
                     Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="request-map">
@@ -464,51 +468,84 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="edit" default="true">
+        <xs:attribute name="method" use="optional"><!-- default="all" -->
             <xs:annotation>
                 <xs:documentation>
-                    Reserved for future use (not used yet).
+                    The HTTP method of this request. This will be the HTTP method used to access the request. Default: all.
+
+                    SCIPIO: NOTE: This attribute does not currently influence request resolution; 
+                    it behaves more like the security checks done for attributes on the security element 
+                    (https, direct-request).
+                    
+                    Added 2018-09-19.
+
+                    Possible values (allows comma-separated; avoid space and uppercase): 
+                       all (default), get, post, head, put, delete, patch, options
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
+            <!--<xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="get"/>
+                    <xs:enumeration value="post"/>
+                    <xs:enumeration value="head"/>
+                    <xs:enumeration value="put"/>
+                    <xs:enumeration value="delete"/>
+                    <xs:enumeration value="patch"/>
+                    <xs:enumeration value="options"/>
+                    <xs:enumeration value="all"/>
                 </xs:restriction>
-            </xs:simpleType>
+            </xs:simpleType>-->
         </xs:attribute>
-        <xs:attribute name="track-visit" default="true">
+        <xs:attribute type="xs:boolean" name="edit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
             <xs:annotation>
                 <xs:documentation>
-                    Allow or not to track first visit (related to firstvisit preprocessor).
+                    Reserved for future use (not used yet). Default: true.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="track-visit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
+            <xs:annotation>
+                <xs:documentation>
+                    Allow or not to track first visit (related to firstvisit preprocessor). Default: true.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="track-serverhit"><!-- default="true" --><!--  SCIPIO: make default implicit -->
+            <xs:annotation>
+                <xs:documentation>
+                    Allow or not to track statistics. Default: true.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="override-mode" default="replace">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Controls how the request-map should override or inherit from any existing request-maps with
+                    the same uri. Default: replace.
+
+                    * replace: Replaces the entire request-map definition and all elements (default/legacy behavior).
+                    * merge: Merges the responses and keeps information not specified from the existing request-map definition.
+                    
+                    NOTE: The override-mode flag itself is not inherited, only the other settings are.
+                    NOTE: 2018-11-07: Currently the security element flags are treated as a single setting by
+                    merge logic, so to inherit security with merge you must omit the security element entirely 
+                    (this may change in future).
+                    Added 2018-11-07.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false">
+                    <xs:enumeration value="replace">
                         <xs:annotation>
                             <xs:documentation>
-                                Don't track as first visit (related to firstvisit preprocessor).
+                                Replaces the entire request-map definition and all elements (default/legacy behavior)
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="track-serverhit" default="true">
-            <xs:annotation>
-                <xs:documentation>
-                    Allow or not to track statistics.
-                </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false">
+                    <xs:enumeration value="merge">
                         <xs:annotation>
                             <xs:documentation>
-                                Don't track in the statistics.
+                                Merges the responses and keeps information not specified from the existing request-map definition.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
@@ -527,48 +564,29 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.security">
-        <xs:attribute name="https" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true">
-                        <xs:annotation>
-                            <xs:documentation>
-                                Redirects to/uses/generates the secured HTTPS protocol if necessary and possible
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:enumeration>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
+        <xs:attribute type="xs:boolean" name="https" default="true"><!-- SCIPIO: 2018-07-09: default is now true -->
+            <xs:annotation>
+                <xs:documentation>
+                    If https=true, redirect to/use/generate the secured HTTPS protocol if necessary and possible.
+                </xs:documentation>
+            </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="auth" default="false">
+        <xs:attribute type="xs:boolean" name="auth" default="false">
             <xs:annotation>
                 <xs:documentation>
                     If auth=true, when you hit the request if you are not logged in you will be forwarded to the login page.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="cert" default="false">
+        <xs:attribute type="xs:boolean" name="cert" default="false">
             <xs:annotation>
                 <xs:documentation>
                     It true, check for HTTPS client (x.509) security.
                     If the request is not secured throws an exception
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="external-view" default="true">
+        <xs:attribute type="xs:boolean" name="external-view" default="true">
             <xs:annotation>
                 <xs:documentation>
                     If false, prevent to pass a view through the url ("chaining" it after the request,
@@ -576,25 +594,13 @@ under the License.
                     Default to true.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="direct-request" default="true">
+        <xs:attribute type="xs:boolean" name="direct-request" default="true">
             <xs:annotation>
                 <xs:documentation>
                     If false the request can only be accessed in a chained request, default to true.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="metric">
@@ -662,6 +668,23 @@ under the License.
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="metric"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="synchronized"/><!-- SCIPIO: 2018-11-19 -->
+                <xs:element minOccurs="0" maxOccurs="1" name="script"><!-- SCIPIO: 2019-02-05 -->
+                    <xs:annotation>
+                        <xs:documentation>Inline script body (SCIPIO), alternative to script location.
+                            NOTE: 2019-02-05: Currently, this is only supported for the "groovy" event type.
+                            Inline groovy events automatically import the following packages:
+                                import org.ofbiz.base.util.*
+                                import org.ofbiz.entity.*
+                                import org.ofbiz.service.*
+                                import org.ofbiz.webapp.event.EventUtil
+                        </xs:documentation>
+                        <!-- TODO?: This currently depends on the "groovy" event handler, but ideally we should also
+                            have a dedicated generalized script handler, e.g.: `<event type="script"><script lang="groovy">...`
+                            instead of only supporting groovy via: `<event type="groovy"><script>...` -->
+                    </xs:annotation>
+                    <xs:complexType mixed="true"/>
+                </xs:element>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.event"/>
         </xs:complexType>
@@ -671,7 +694,7 @@ under the License.
             <xs:annotation>
                 <xs:documentation>
                     There are as much as types (of type request) as available defined and accessible event handlers.
-                    Most used are java, service, service-multi, simple and bsf (or groovy).
+                    Most used are java, service, service-multi, simple and groovy (or bsf).
                     A most comprehensive list can be found in the common-controller.
                 </xs:documentation>
             </xs:annotation>
@@ -705,35 +728,31 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="global-transaction" default="true">
+        <xs:attribute type="xs:boolean" name="global-transaction" default="true">
             <xs:annotation>
                 <xs:documentation>
                     For service-multi, defines if the event should be wrapped in a transaction, default to true
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="transaction" default="">
+      <xs:attribute name="transaction-timeout" type="xs:int" default="0">
+            <xs:annotation>
+                <xs:documentation>
+                    Defines the timeout for the transaction, in seconds.
+                    Defaults to the value set in the TransactionFactory being used (typically 60 seconds).
+                    SCIPIO: FIXME: 2018-08-30: Currently this setting only applies to pure java events.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:boolean" name="transaction">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: General event transaction enable/disable.
                     NOTE: Currently this has NO effect on stock behavior and is here for future use/compatibility.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="abort-transaction" default="">
+        <xs:attribute name="abort-transaction">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If on-error-result and the event returned "error", abort running transaction.
@@ -742,7 +761,6 @@ under the License.
             </xs:annotation>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
                     <xs:enumeration value="on-error-result"/>
                     <xs:enumeration value="on-exception"/>
                     <xs:enumeration value="on-any-error"/>
@@ -750,6 +768,34 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="synchronized">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Synchronizes the event on a Java object from request, session or application attributes.
+                If the object is null, no synchronization occurs - typically you can setup the object using
+                preprocessor events or filter init method.
+                Added 2018-11-19.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        An expression that determines the value to fetch. (${...} brackets may be omitted; implied) 
+                        Supports the following expression types (similar to request responses):
+                        * requestAttributes.xxx
+                        * sessionAttributes.xxx
+                        * applicationAttributes.xxx
+                        e.g.: value="${sessionAttributes.shoppingCart}"
+                        In addition, it is possible to specify groovy in form: value="${groovy:xxx}", however,
+                        this is slow and not recommended (only "request" and "response" objects may be available).
+                        NOTE: There is currently little to no support for real flexible expressions here;
+                        if complex, the object should be determined by a preprocessor event.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="response">
         <xs:annotation>
             <xs:documentation>
@@ -760,6 +806,7 @@ under the License.
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="redirect-attributes"/><!-- SCIPIO: new -->
                 <xs:element minOccurs="0" maxOccurs="1" ref="redirect-parameters"/><!-- SCIPIO: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="redirect-parameter">
                     <xs:annotation>
@@ -792,6 +839,7 @@ under the License.
                     request,
                     request-redirect,
                     request-redirect-noparam,
+                    request-redirect-last,
                     url,
                     cross-redirect
                 </xs:documentation>
@@ -865,6 +913,14 @@ under the License.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="request-redirect-last">
+                        <xs:annotation>
+                            <xs:documentation>
+                                SCIPIO: Redirects to the last GET URL visited. NOTE: This is not necessarily the last view.
+                                Added 2018-12-06.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                     <xs:enumeration value="url">
                         <xs:annotation>
                             <xs:documentation>
@@ -875,7 +931,7 @@ under the License.
                     <xs:enumeration value="cross-redirect">
                         <xs:annotation>
                             <xs:documentation>
-                                Works like URL but you can also pass redirected parameters.
+                                Works like request-redirect for cross applications calls.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
@@ -918,7 +974,7 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="allow-view-save">
+        <xs:attribute type="xs:boolean" name="allow-view-save">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: If set to false, explicitly prevents saving this view (to session), such that it will
@@ -929,55 +985,30 @@ under the License.
                     Added 2018-06-13.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value=""/>
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="save-last-view" default="false">
+        <xs:attribute type="xs:boolean" name="save-last-view" default="false">
             <xs:annotation>
                 <xs:documentation>
                     Saves the last (previous) request's view for future use, generally
                     with the view-last type of response.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="save-current-view" default="false">
+        <xs:attribute type="xs:boolean" name="save-current-view" default="false">
             <xs:annotation>
                 <xs:documentation>
                     Saves the current request's view for future use, generally with
                     the view-last type of response.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="save-home-view" default="false">
+        <xs:attribute type="xs:boolean" name="save-home-view" default="false">
             <xs:annotation>
                 <xs:documentation>
                     Saves the current request's view for future use, generally with
                     the view-home type of response.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="status-code" type="xs:string">
             <xs:annotation>
@@ -990,7 +1021,34 @@ under the License.
                     302 (the Java default) is not recommended for SEO reasons, 301 is preferred.
                 </xs:documentation>
             </xs:annotation>
-        </xs:attribute>        
+        </xs:attribute>
+        <xs:attribute name="save-request">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: For redirects only: whether to save request attributes (from event) to pass over to the next request (via session).
+                    Default: "none" for all EXCEPT (currently, 2018-12-06) "all" by default for "request-redirect" and "request-redirect-noparam".
+                    The attributes can be specified, excluded or added to using the "redirect-attributes" child element.
+                    Added 2018-12-06.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="all"/>
+                    <xs:enumeration value="messages"/>
+                    <xs:enumeration value="none"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="connection-state" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: For redirects only: You can set this to "close" to force a "Connection: close" HTTP header
+                    for performance reasons.
+                    Default: Does not change the header.
+                    Added 2018-12-13.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="redirect-parameter">
         <xs:annotation>
@@ -1087,6 +1145,44 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="redirect-attributes">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Controls which request attributes should apply/not-apply for the save-request feature.
+                Generally, if any "include" request-attributes are specified, it turns this filter into a whitelist,
+                whereas if only "exclude", it behaves as a blacklist. The generally overrides the value of 
+                save-request (which is a convenience feature) except for "messages", where "include"
+                specifies additional attributes to save in addition to the messages.
+                NOTE: If you specify redirect-attributes without specifying save-request="...", it will automatically
+                enable save-request (for the specified attributes, or all minus your excludes).
+                Added 2018-12-06.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="request-attribute">
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                        <xs:attribute name="mode" default="include">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SCIPIO: If this is set to exclude, the parameter is excluded instead of
+                                    included.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="include"/>
+                                    <xs:enumeration value="exclude"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="view-map">
         <xs:annotation>
             <xs:documentation>
@@ -1145,20 +1241,14 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="no-cache" default="false">
+        <xs:attribute type="xs:boolean" name="no-cache" default="false">
             <xs:annotation>
                 <xs:documentation>
                     Send no-cache headers if set to true.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="x-frame-option" default="sameorigin">
+        <xs:attribute name="x-frame-options" default="sameorigin">
             <xs:annotation>
                 <xs:documentation>
                     Provides clickjacking protection by instructing browsers that this page should not be placed within a frame. 
@@ -1175,6 +1265,7 @@ under the License.
                     <xs:enumeration value="deny"/>
                     <xs:enumeration value="sameorigin"/>
                     <xs:enumeration value="allow-from"/>
+                    <xs:enumeration value="none"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

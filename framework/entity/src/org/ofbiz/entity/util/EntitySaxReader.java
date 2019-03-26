@@ -18,11 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.entity.util;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -40,6 +41,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -110,8 +113,8 @@ public class EntitySaxReader extends DefaultHandler {
     private Document documentForTemplate = null;
     private Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
 
-    private Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
-    
+    private EntityFilters entityFilters = new EntityFilters(); // SCIPIO
+
     protected EntitySaxReader() {}
 
     public EntitySaxReader(Delegator delegator, int transactionTimeout) {
@@ -150,7 +153,7 @@ public class EntitySaxReader extends DefaultHandler {
     public void setCheckDataOnly(boolean checkDataOnly) {
         this.checkDataOnly = checkDataOnly;
     }
-    
+
     public void setPlaceholderValues(Map<String,Object> placeholderValues) {
         this.placeholderValues = placeholderValues;
     }
@@ -180,20 +183,202 @@ public class EntitySaxReader extends DefaultHandler {
     }
 
     /**
-     * SCIPIO: Specifies the entity names allowed to be parsed, or null to remove limit.
-     * If violation occurs, an exception is generated.
-     * Added 2017-06-15.
+     * SCIPIO: Entity filters for import.
+     * <p>
+     * Added 2018-09-17 (except for allowEntityNames, which was added 2017-06-15 as "allowedEntityNames", 
+     * that name now deprecated).
      */
-    public void setAllowedEntityNames(Set<String> allowedEntityNames) {
-        this.allowedEntityNames = allowedEntityNames;
+    public static class EntityFilters {
+        private Set<String> allowEntity;
+        private Set<String> disallowEntity;
+        private Set<String> allowEntityWarn;
+        private Set<String> disallowEntityWarn;
+        private Set<String> includeEntity;
+        private Set<String> excludeEntity;
+        private Boolean disallowUnsafeEntityWarn;
+
+        public EntityFilters() {
+        }
+
+        protected EntityFilters(Map<String, ?> map) {
+            setFromMap(map);
+        }
+
+        public static EntityFilters fromMap(Map<String, ?> map) {
+            return new EntityFilters(map);
+        }
+
+        public void setFromMap(Map<String, ?> map) {
+            if (map.containsKey("allowEntity")) {
+                allowEntity = UtilGenerics.checkSet(map.get("allowEntity"));
+            } else if (map.containsKey("allowedEntityNames")) {
+                allowEntity = UtilGenerics.checkSet(map.get("allowedEntityNames")); // SCIPIO: 2017-06-15 (old name)
+            }
+            if (map.containsKey("disallowEntity")) {
+                disallowEntity = UtilGenerics.checkSet(map.get("disallowEntity"));
+            }
+            if (map.containsKey("allowEntityWarn")) {
+                allowEntityWarn = UtilGenerics.checkSet(map.get("allowEntityWarn"));
+            }
+            if (map.containsKey("disallowEntityWarn")) {
+                disallowEntityWarn = UtilGenerics.checkSet(map.get("disallowEntityWarn"));
+            }
+            if (map.containsKey("includeEntity")) {
+                includeEntity = UtilGenerics.checkSet(map.get("includeEntity"));
+            }
+            if (map.containsKey("excludeEntity")) {
+                excludeEntity = UtilGenerics.checkSet(map.get("excludeEntity"));
+            }
+            if (map.containsKey("disallowUnsafeEntityWarn")) {
+                disallowUnsafeEntityWarn = (Boolean) map.get("disallowUnsafeEntityWarn");
+            }
+        }
+
+        public void toMap(Map<String, Object> map) {
+            map.put("allowEntity", allowEntity);
+            map.put("disallowEntity", disallowEntity);
+            map.put("allowEntityWarn", allowEntityWarn);
+            map.put("disallowEntityWarn", disallowEntityWarn);
+            map.put("includeEntity", includeEntity);
+            map.put("excludeEntity", excludeEntity);
+            map.put("disallowUnsafeEntityWarn", disallowUnsafeEntityWarn);
+        }
+
+        /**
+         * Specifies the entity names allowed to be parsed, or null to remove limit, exception on violations.
+         */
+        public void setAllowEntity(Set<String> allowEntity) {
+            this.allowEntity = allowEntity;
+        }
+
+        /**
+         * Returns the entity names allowed to be parsed, exception on violations.
+         */
+        public Set<String> getAllowEntity() {
+            return allowEntity;
+        }
+
+        /**
+         * Specifies the entity names not allowed to be parsed, or null to remove limit, exception on violations.
+         */
+        public void setDisallowEntity(Set<String> disallowEntity) {
+            this.disallowEntity = disallowEntity;
+        }
+
+        /**
+         * Returns the entity names allowed to be parsed, exception on violations.
+         */
+        public Set<String> getDisallowEntity() {
+            return disallowEntity;
+        }
+
+        /**
+         * Sets entity names allowed in parsing, or null to remove limit, violations warned.
+         */
+        public void setAllowEntityWarn(Set<String> allowEntityWarn) {
+            this.allowEntityWarn = allowEntityWarn;
+        }
+
+        /**
+         * Returns entity names allowed in parsing, violations warned.
+         */
+        public Set<String> getAllowEntityWarn() {
+            return allowEntityWarn;
+        }
+
+        /**
+         * Sets entity names disallowed from parsing, violations warned.
+         */
+        public void setDisallowEntityWarn(Set<String> disallowEntityWarn) {
+            this.disallowEntityWarn = disallowEntityWarn;
+        }
+
+        /**
+         * Sets entity names disallowed from parsing, violations warned.
+         */
+        public Set<String> getDisallowEntityWarn() {
+            return disallowEntityWarn;
+        }
+
+        /**
+         * Sets whether to disallow dangerous entity names, violations warned.
+         */
+        public void setDisallowUnsafeEntityWarn(Boolean disallowUnsafeEntityWarn) {
+            this.disallowUnsafeEntityWarn = disallowUnsafeEntityWarn;
+        }
+        
+        /**
+         * Returns whether to disallow dangerous entity names, violations warned.
+         */
+        public Boolean getDisallowDangerousEntitiesWarn() {
+            return disallowUnsafeEntityWarn;
+        }
+        
+        /**
+         * Sets entity names included in parsing, or null to remove limit, violations ignored.
+         */
+        public void setIncludeEntity(Set<String> includeEntity) {
+            this.includeEntity = includeEntity;
+        }
+
+        /**
+         * Returns entity names included in parsing, violations ignored.
+         */
+        public Set<String> getIncludeEntity() {
+            return includeEntity;
+        }
+
+        /**
+         * Sets entity names excluded from parsing, violations ignored.
+         */
+        public void setExcludeEntity(Set<String> excludeEntity) {
+            this.excludeEntity = excludeEntity;
+        }
+
+        /**
+         * Returns entity names excluded from parsing; violations ignored.
+         */
+        public Set<String> getExcludeEntity() {
+            return excludeEntity;
+        }
     }
-    
+
     /**
-     * SCIPIO: Returns the entity names allowed to be parsed.
+     * SCIPIO: Set (replaces all) entity filters.
+     * Added 2018-09-17.
+     */
+    public void setEntityFilters(EntityFilters entityFilters) {
+        this.entityFilters = (entityFilters != null) ? entityFilters : new EntityFilters();
+    }
+
+    /**
+     * SCIPIO: Get entity filters.
+     * Added 2018-09-17.
+     */
+    public EntityFilters getEntityFilters() {
+        return entityFilters;
+    }
+
+    /**
+     * SCIPIO: Specifies the entity names allowed to be parsed, exception on violations.
+     * @deprecated 2018-09-17: Use {@link #getEntityFilters()} and its setters or {@link #setEntityFilters(EntityFilters)}.
+     * <p>
      * Added 2017-06-15.
      */
+    @Deprecated
+    public void setAllowedEntityNames(Set<String> allowedEntityNames) {
+        this.entityFilters.setAllowEntity(allowedEntityNames);
+    }
+
+    /**
+     * SCIPIO: Returns the entity names allowed to be parsed, exception on violations.
+     * @deprecated 2018-09-17: Use {@link #getEntityFilters()}
+     * <p>
+     * Added 2017-06-15.
+     */
+    @Deprecated
     public Set<String> getAllowedEntityNames() {
-        return allowedEntityNames;
+        return this.entityFilters.getAllowEntity();
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -201,7 +386,7 @@ public class EntitySaxReader extends DefaultHandler {
             Debug.logWarning("content was null, doing nothing", module);
             return 0;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
 
         return this.parse(bis, "Internal Content");
     }
@@ -244,16 +429,16 @@ public class EntitySaxReader extends DefaultHandler {
             try {
                 parser.parse(is, this);
                 // make sure all of the values to write got written...
-                if (! valuesToWrite.isEmpty()) {
+                if (!valuesToWrite.isEmpty()) {
                     writeValues(valuesToWrite);
                     valuesToWrite.clear();
                 }
-                if (! valuesToDelete.isEmpty()) {
+                if (!valuesToDelete.isEmpty()) {
                     delegator.removeAll(valuesToDelete);
                     valuesToDelete.clear();
                 }
                 TransactionUtil.commit(beganTransaction);
-            } catch (Exception e) {
+            } catch (GenericEntityException | IOException | IllegalArgumentException | SAXException e) {
                 String errMsg = "An error occurred saving the data, rolling back transaction (" + beganTransaction + ")";
                 Debug.logError(e, errMsg, module);
                 TransactionUtil.rollback(beganTransaction, errMsg, e);
@@ -263,7 +448,7 @@ public class EntitySaxReader extends DefaultHandler {
             throw new SAXException("A transaction error occurred reading data", e);
         }
         Debug.logImportant("Finished " + numberRead + " values from " + docDescription, module);
-        if (Debug.verboseOn()) { 
+        if (Debug.verboseOn()) {
             Debug.logVerbose("  Detail created : " + numberCreated + ", skipped : " + numberSkipped +
                     ", updated : " + numberUpdated + ", replaced : " + numberReplaced +
                     ", deleted : " + numberDeleted, module);
@@ -282,14 +467,14 @@ public class EntitySaxReader extends DefaultHandler {
     private void countValue(boolean skip, boolean exist) {
         if (skip) numberSkipped++;
         else if (Action.DELETE == currentAction) numberDeleted++;
-        else if (Action.CREATE == currentAction || ! exist) numberCreated++;
+        else if (Action.CREATE == currentAction || !exist) numberCreated++;
         else if (Action.CREATE_REPLACE == currentAction) numberReplaced++;
         else numberUpdated++;
     }
 
     // ======== ContentHandler interface implementation ========
 
-    public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
+    public void characters(char[] values, int offset, int count) throws SAXException {
         if (isParseForTemplate) {
             // if null, don't worry about it
             if (this.currentNodeForTemplate != null) {
@@ -314,7 +499,7 @@ public class EntitySaxReader extends DefaultHandler {
         }
     }
 
-    public void endElement(String namespaceURI, String localName, String fullNameString) throws org.xml.sax.SAXException {
+    public void endElement(String namespaceURI, String localName, String fullNameString) throws SAXException {
         if (Debug.verboseOn()) Debug.logVerbose("endElement: localName=" + localName + ", fullName=" + fullNameString + ", numberRead=" + numberRead, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             return;
@@ -332,11 +517,11 @@ public class EntitySaxReader extends DefaultHandler {
                 throw new SAXException("Could not find transform template with resource path: " + templatePath);
             } else {
                 try {
-                    Reader templateReader = new InputStreamReader(templateUrl.openStream());
+                    BufferedReader templateReader = new BufferedReader(new InputStreamReader(templateUrl.openStream(), UtilIO.getUtf8()));
 
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = FreeMarkerWorker.newConfiguration();
-                    config.setObjectWrapper(FreeMarkerWorker.getDefaultOfbizWrapper());
+                    // SCIPIO (2019-18-02): Fixes the errors caused by missing Statics because newConfiguration didn't load them
+                    Configuration config = FreeMarkerWorker.makeConfiguration(FreeMarkerWorker.getDefaultOfbizWrapper());
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
 
                     Template template = new Template("FMImportFilter", templateReader, config);
@@ -356,7 +541,7 @@ public class EntitySaxReader extends DefaultHandler {
                     } catch(Exception e) {
                         Debug.logError(e, "Could not get dispatcher for delegator " + delegator.getDelegatorName(), module);
                     }
-                    
+
                     context.put("doc", nodeModel);
                     template.process(context, outWriter);
                     String s = outWriter.toString();
@@ -367,13 +552,11 @@ public class EntitySaxReader extends DefaultHandler {
                     try {
                         reader.setTransactionTimeout(this.transactionTimeout);
                     } catch (GenericTransactionException e1) {
-                        // couldn't set tx timeout, shouldn't be a big deal
+                        Debug.logWarning("couldn't set tx timeout, hopefully shouldn't be a big deal", module);
                     }
 
                     numberRead += reader.parse(s);
-                } catch (TemplateException e) {
-                    throw new SAXException("Error storing value", e);
-                } catch (IOException e) {
+                } catch (TemplateException | IOException e) {
                     throw new SAXException("Error storing value", e);
                 }
             }
@@ -399,14 +582,14 @@ public class EntitySaxReader extends DefaultHandler {
                         ModelEntity modelEntity = currentValue.getModelEntity();
                         ModelField modelField = modelEntity.getField(currentFieldName.toString());
                         String type = modelField.getType();
-                        if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
-                            byte[] binData = Base64.base64Decode((new String(currentFieldValue)).getBytes());
+                        if (type != null && ("blob".equals(type) || "byte-array".equals(type) || "object".equals(type))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
+                            byte[] binData = Base64.base64Decode((new String(currentFieldValue)).getBytes(UtilIO.getUtf8())); // SCIPIO: 2018-09-13: added UtilIO.getUtf8() (cosmetic, base64 char range only)
                             currentValue.setBytes(currentFieldName.toString(), binData);
                         } else {
                             currentValue.setString(currentFieldName.toString(), new String(currentFieldValue));
                         }
                     } else {
-                        Debug.logWarning("Ignoring invalid field name [" + currentFieldName + "] found for the entity: " + currentValue.getEntityName() + " with value=" + currentFieldValue, module);
+                        Debug.logWarning("Ignoring invalid field name [" + currentFieldName + "] found for the entity: " + currentValue.getEntityName() + " with value=" + new String(currentFieldValue), module); // SCIPIO: fixed char[] to String
                     }
                     currentFieldValue = null;
                 }
@@ -427,7 +610,7 @@ public class EntitySaxReader extends DefaultHandler {
                     boolean exist = true;
                     boolean skip = false;
                     //if verbose on, check if entity exist on database for count each action
-                    //It's necessary to check also for specific action CREATE and DELETE to ensure it's ok
+                    //It's necessary to check also for specific action CREATE and DELETE to ensure it's OK
                     if (Action.CREATE == currentAction || Action.DELETE == currentAction || Debug.verboseOn()) {
                         GenericHelper helper = delegator.getEntityHelper(currentValue.getEntityName());
                         if (currentValue.containsPrimaryKey()) {
@@ -436,9 +619,9 @@ public class EntitySaxReader extends DefaultHandler {
                             } catch (GenericEntityNotFoundException e) {exist = false;}
                         }
                         if (Action.CREATE == currentAction && exist) { skip = true; }
-                        else if (Action.DELETE == currentAction && ! exist) { skip = true; }
+                        else if (Action.DELETE == currentAction && !exist) { skip = true; }
                     }
-                    if (! skip) {
+                    if (!skip) {
                         if (this.useTryInsertMethod && !this.checkDataOnly) {
                             if (Action.CREATE == currentAction) { currentValue.create(); }
                             else if (Action.DELETE == currentAction) {
@@ -493,7 +676,7 @@ public class EntitySaxReader extends DefaultHandler {
         this.locator = locator;
     }
 
-    public void startElement(String namepsaceURI, String localName, String fullNameString, Attributes attributes) throws org.xml.sax.SAXException {
+    public void startElement(String namepsaceURI, String localName, String fullNameString, Attributes attributes) throws SAXException {
         if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullNameString + ", attributes=" + attributes, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             // check the maintain-timestamp flag
@@ -571,15 +754,36 @@ public class EntitySaxReader extends DefaultHandler {
             }
 
             // SCIPIO: 2017-06-15: ensure entity name allowed
-            if (allowedEntityNames != null && !allowedEntityNames.contains(entityName)) {
-                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity name not allowed for this reader: " + entityName));
+            if (entityFilters.allowEntity != null && !entityFilters.allowEntity.contains(entityName)) {
+                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity not allowed for this reader: " + entityName));
             }
-            
+            // SCIPIO: 2018-09-17: new filters
+            if (entityFilters.disallowEntity != null && entityFilters.disallowEntity.contains(entityName)) {
+                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity disallowed for this reader: " + entityName));
+            }
+            // SCIPIO: TODO: Should gather these as result stats somehow...
+            if (entityFilters.allowEntityWarn != null && !entityFilters.allowEntityWarn.contains(entityName)) {
+                Debug.logWarning("Entity not allowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (entityFilters.disallowEntityWarn != null && entityFilters.disallowEntityWarn.contains(entityName)) {
+                Debug.logWarning("Entity disallowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (Boolean.TRUE.equals(entityFilters.disallowUnsafeEntityWarn) && 
+                    EntityUtil.getUnsafeEntitiesForUpdate(delegator).contains(entityName)) {
+                Debug.logWarning("Unsafe entity disallowed for this reader, skipping: " + entityName, module);
+                return;
+            }
+            if (entityFilters.includeEntity != null && !entityFilters.includeEntity.contains(entityName)) {
+                return;
+            }
+            if (entityFilters.excludeEntity != null && entityFilters.excludeEntity.contains(entityName)) {
+                return;
+            }
+
             try {
                 currentValue = delegator.makeValue(entityName);
-                // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set
-                // DEJ 10/16/04 I think they should all be stamped, so commenting this out
-                // JAZ 12/10/04 I think it should be specified when creating the reader
                 if (this.maintainTxStamps) {
                     currentValue.setIsFromEntitySync(true);
                 }
@@ -633,16 +837,16 @@ public class EntitySaxReader extends DefaultHandler {
 
     // ======== ErrorHandler interface implementation ========
 
-    public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void error(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logWarning(exception, "Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
     }
 
-    public void fatalError(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void fatalError(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logError(exception, "Fatal Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
         throw new SAXException("Fatal Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), exception);
     }
 
-    public void warning(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
+    public void warning(org.xml.sax.SAXParseException exception) throws SAXException {
         Debug.logWarning(exception, "Warning reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);
     }
 }

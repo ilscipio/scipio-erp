@@ -37,6 +37,7 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
@@ -52,7 +53,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.stats.VisitHandler;
-import org.ofbiz.entity.util.EntityClassLoader;
 
 import freemarker.ext.servlet.ServletContextHashModel;
 
@@ -80,19 +80,33 @@ public class ControlServlet extends HttpServlet {
             Debug.logInfo("Loading webapp [" + webappName + "], located at " + servletContext.getRealPath("/"), module);
         }
 
-        // configure custom BSF engines
-        configureBsf();
-        // initialize the request handler
-        getRequestHandler();
-        
         // SCIPIO: 2017-11-14: new _CONTROL_MAPPING_ and _CONTROL_SERVPATH_ servlet attributes; setting
         // these here allows them to be available from early filters (instead of hardcoding there).
         String servletMapping = ServletUtil.getBaseServletMapping(config.getServletContext(), config.getServletName());
         String servletPath = "/".equals(servletMapping) ? "" : servletMapping;
-        config.getServletContext().setAttribute("_CONTROL_MAPPING", servletMapping);
+        config.getServletContext().setAttribute("_CONTROL_MAPPING_", servletMapping);
         config.getServletContext().setAttribute("_CONTROL_SERVPATH_", servletPath);
         if (servletPath == null) {
             Debug.logError("Scipio: ERROR: Control servlet with name '" +  config.getServletName() + "' has no servlet mapping! Cannot set _CONTROL_SERVPATH_! Please fix web.xml or app will crash!", module);
+        }
+
+        // configure custom BSF engines
+        try {  
+            configureBsf();
+        } catch(Exception e) { // SCIPIO
+            Debug.logError(e, "init: Error configuring BSF engines for webapp [" + config.getServletContext().getContextPath() + "]", module);
+        }
+        // initialize the request handler
+        // SCIPIO: NOTE: getRequestHandler may throw an exception if bad controller...
+        // We could let the init fail and the servlet container will try again later, but this results
+        // in inconsistent error handling because we can also have an initialized ControlServlet but then
+        // further controller changes break the controller again.
+        // So to minimize strange behavior, we have to prevent exception here and let init finish;
+        // instead it will be doGet, ContextFilter or another filter that will trigger a crash on request.
+        try {
+            getRequestHandler();
+        } catch(Exception e) {
+            Debug.logError(e, "init: Error initializing RequestHandler for webapp [" + config.getServletContext().getContextPath() + "]", module);
         }
     }
 
@@ -157,8 +171,9 @@ public class ControlServlet extends HttpServlet {
             contextPath = "";
         }
         request.setAttribute("_CONTROL_PATH_", contextPath + request.getServletPath());
-        if (Debug.verboseOn())
-            Debug.logVerbose("Control Path: " + request.getAttribute("_CONTROL_PATH_"), module);
+        if (Debug.verboseOn()) {
+             Debug.logVerbose("Control Path: " + request.getAttribute("_CONTROL_PATH_"), module);
+        }
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         // try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
@@ -201,7 +216,7 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute("security", security);
 
         request.setAttribute("_REQUEST_HANDLER_", requestHandler);
-        
+
         ServletContextHashModel ftlServletContext = new ServletContextHashModel(this, FreeMarkerWorker.getDefaultOfbizWrapper());
         request.setAttribute("ftlServletContext", ftlServletContext);
 
@@ -227,6 +242,19 @@ public class ControlServlet extends HttpServlet {
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
             requestHandler.doRequest(request, response, null, userLogin, delegator);
+        } catch (MethodNotAllowedException e) {
+            // SCIPIO: Use error page for this too; users can too easily trigger this
+            //response.setContentType("text/plain");
+            //response.setCharacterEncoding(request.getCharacterEncoding());
+            response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            //response.getWriter().print(e.getMessage());
+            Debug.logError("Error in request handler: " + e.getMessage(), module);
+            // SCIPIO: Here it should be safe to show a friendly message, no real need to fallback to 
+            // generic one in high security, this is safe enough
+            //request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e));
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("WebappUiLabels", 
+                    "RequestMethodNotMatchConfigDesc", UtilHttp.getLocale(request)));
+            errorPage = requestHandler.getDefaultErrorPage(request);
         } catch (RequestHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
             if (throwable instanceof IOException) {
@@ -239,9 +267,9 @@ public class ControlServlet extends HttpServlet {
                 request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
-         } catch (RequestHandlerExceptionAllowExternalRequests e) {
-              errorPage = requestHandler.getDefaultErrorPage(request);
-              Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
+        } catch (RequestHandlerExceptionAllowExternalRequests e) {
+            errorPage = requestHandler.getDefaultErrorPage(request);
+            Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
             request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
@@ -264,7 +292,7 @@ public class ControlServlet extends HttpServlet {
                 if (scpErrorRenderTargetExpr != null) {
                     RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
                 }
-                
+
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
                 Debug.logError("Including errorPage: " + errorPage, module);
 
@@ -299,7 +327,7 @@ public class ControlServlet extends HttpServlet {
                         } catch (Throwable t2) {
                             try {
                                 int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() 
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString()
                                     + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
                                 response.sendError(errorToSend, genericErrorMessage);
                             } catch (Throwable t3) {
@@ -361,7 +389,7 @@ public class ControlServlet extends HttpServlet {
         GenericDelegator.clearUserIdentifierStack();
         GenericDelegator.clearSessionIdentifierStack();
     }
-    
+
     /**
      * @see javax.servlet.Servlet#destroy()
      */
@@ -375,9 +403,6 @@ public class ControlServlet extends HttpServlet {
     }
 
     protected void configureBsf() {
-        String[] bshExtensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.base.util.OfbizBshBsfEngine", bshExtensions);
-
         String[] jsExtensions = {"js"};
         BSFManager.registerScriptingEngine("javascript", "org.ofbiz.base.util.OfbizJsBsfEngine", jsExtensions);
 
@@ -389,52 +414,52 @@ public class ControlServlet extends HttpServlet {
         ServletContext servletContext = this.getServletContext();
         HttpSession session = request.getSession();
 
-        Debug.logVerbose("--- Start Request Headers: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- Start Request Headers: ---", module);
         Enumeration<String> headerNames = UtilGenerics.cast(request.getHeaderNames());
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
         }
-        Debug.logVerbose("--- End Request Headers: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- End Request Headers: ---", module);
 
-        Debug.logVerbose("--- Start Request Parameters: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- Start Request Parameters: ---", module);
         Enumeration<String> paramNames = UtilGenerics.cast(request.getParameterNames());
         while (paramNames.hasMoreElements()) {
             String paramName = paramNames.nextElement();
             Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
         }
-        Debug.logVerbose("--- End Request Parameters: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- End Request Parameters: ---", module);
 
-        Debug.logVerbose("--- Start Request Attributes: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- Start Request Attributes: ---", module);
         Enumeration<String> reqNames = UtilGenerics.cast(request.getAttributeNames());
         while (reqNames != null && reqNames.hasMoreElements()) {
             String attName = reqNames.nextElement();
             Debug.logVerbose(attName + ":" + request.getAttribute(attName), module);
         }
-        Debug.logVerbose("--- End Request Attributes ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- End Request Attributes ---", module);
 
-        Debug.logVerbose("--- Start Session Attributes: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- Start Session Attributes: ---", module);
         Enumeration<String> sesNames = null;
         try {
             sesNames = UtilGenerics.cast(session.getAttributeNames());
         } catch (IllegalStateException e) {
-            Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
         }
         while (sesNames != null && sesNames.hasMoreElements()) {
             String attName = sesNames.nextElement();
             Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
         }
-        Debug.logVerbose("--- End Session Attributes ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- End Session Attributes ---", module);
 
         Enumeration<String> appNames = UtilGenerics.cast(servletContext.getAttributeNames());
-        Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
         while (appNames != null && appNames.hasMoreElements()) {
             String attName = appNames.nextElement();
             Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
         }
-        Debug.logVerbose("--- End ServletContext Attributes ---", module);
+        if (Debug.verboseOn()) Debug.logVerbose("--- End ServletContext Attributes ---", module);
     }
-    
+
     /**
      * SCIPIO: Locates the ControlServlet servlet definition in the given WebXml, or null
      * if does not appear to be present.
@@ -462,7 +487,7 @@ public class ControlServlet extends HttpServlet {
                 } catch(Exception e) {
                     // NOTE: 2018-05-11: this should not be a warning because this is a regular occurrence
                     // for webapps which have servlet classes in libs under WEB-INF/lib
-                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
+                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: "
                     //        + e.getMessage(), module);
                 }
             }

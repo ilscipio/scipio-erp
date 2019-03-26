@@ -20,11 +20,20 @@ package org.ofbiz.webtools.artifactinfo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilURL;
 
 /**
  *
  */
 public abstract class ArtifactInfoBase implements Comparable<ArtifactInfoBase> {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ArtifactInfoFactory aif;
     private String fullName = null;
@@ -59,6 +68,15 @@ public abstract class ArtifactInfoBase implements Comparable<ArtifactInfoBase> {
 
     abstract public URL getLocationURL() throws MalformedURLException;
 
+    public String getRelativeLocation() { // SCIPIO
+        try {
+            return UtilURL.getOfbizHomeRelativeLocation(getLocationURL());
+        } catch (MalformedURLException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+    
     abstract public String getType();
 
     abstract public String getUniqueId();
@@ -74,5 +92,13 @@ public abstract class ArtifactInfoBase implements Comparable<ArtifactInfoBase> {
             this.fullName = this.getDisplayType().concat(":").concat(this.getDisplayName());
         }
         return this.fullName;
+    }
+
+    /**
+     * SCIPIO: Replaces the UtilMisc.addToSortedSetInMap calls throughout these classes, because they
+     * may have issues with thread safety.
+     */
+    protected <K, V> void addToSortedSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
+        UtilMisc.addToSetInMap(element, theMap, setKey, () -> Collections.synchronizedSortedSet(new TreeSet<>()));
     }
 }

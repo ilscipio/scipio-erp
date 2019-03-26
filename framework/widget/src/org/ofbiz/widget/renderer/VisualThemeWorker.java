@@ -32,7 +32,7 @@ public class VisualThemeWorker {
 
     private static final UtilCache<String, String> libLocationExprCache = UtilCache.createUtilCache("renderer.visualtheme.resources.liblocation");
     private static final Map<String, Object> emptyContext = Collections.unmodifiableMap(new HashMap<String, Object>());
-    
+
     /**
      * SCIPIO: Gets visual theme resources from context or if missing, calculates appropriate
      * based on values in context, best-effort, using as generalized logic as possible, saves in context and returns.
@@ -41,7 +41,7 @@ public class VisualThemeWorker {
      */
     public static Map<String, List<String>> getVisualThemeResources(Map<String, Object> context) {
         Map<String, List<String>> themeResources = null;
-        
+
         if (Boolean.TRUE.equals((Boolean) context.get("rendererVisualThemeResourcesChecked"))) {
             themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
         }
@@ -51,7 +51,7 @@ public class VisualThemeWorker {
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Could not load visual theme resources", module);
             }
-    
+
             context.put("rendererVisualThemeResources", themeResources);
             context.put("rendererVisualThemeResourcesChecked", Boolean.TRUE);
         }
@@ -63,7 +63,7 @@ public class VisualThemeWorker {
      * <p>
      * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, HttpServletResponse, Map<String, Object>, Writer)}.
      * Original code only checked for preference of userPreferences.
-     */    
+     */
     public static Map<String, List<String>> loadVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         Map<String, List<String>> themeResources = null;
@@ -73,7 +73,7 @@ public class VisualThemeWorker {
             if (webSite != null) {
                 script = webSite.getString("visualThemeSelectorScript");
             }
-            
+
             if (UtilValidate.isNotEmpty(script)) {
                 themeResources = VisualThemeWorker.loadVisualThemeResourcesFromScript(context, script, webSite);
             }
@@ -97,14 +97,14 @@ public class VisualThemeWorker {
                     script = webSite.getString("visualThemeSelectorScript");
                 }
             }
-            
+
             if (UtilValidate.isNotEmpty(script)) {
                 themeResources = VisualThemeWorker.loadVisualThemeResourcesFromScript(context, script, webSite);
             }
             else {
                 // FIXME? not sure original stock behavior makes sense here because userLoginId ambiguous - may not be end user
                 //themeResources = getVisualThemeResourcesFromUserPrefs(context);
-                themeResources = VisualThemeWorker.getDefaultVisualThemeResources(context);           
+                themeResources = VisualThemeWorker.getDefaultVisualThemeResources(context);
             }
         }
         return themeResources;
@@ -113,16 +113,16 @@ public class VisualThemeWorker {
     /**
      * SCIPIO: Gets resources from user preferences already in context.
      * <p>
-     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, 
+     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest,
      * HttpServletResponse, Map<String, Object>, Writer)}.
-     * @throws GenericServiceException 
+     * @throws GenericServiceException
      */
     public static Map<String, List<String>> getVisualThemeResourcesFromUserPrefs(Map<String, Object> context) throws GenericServiceException {
         Map<String, Object> userPreferences = UtilGenerics.cast(context.get("userPreferences"));
         return VisualThemeWorker.getVisualThemeResourcesFromUserPrefs(context, userPreferences);
     }
 
-    public static Map<String, List<String>> getVisualThemeResourcesFromUserPrefs(Map<String, Object> context, 
+    public static Map<String, List<String>> getVisualThemeResourcesFromUserPrefs(Map<String, Object> context,
             Map<String, Object> userPreferences) throws GenericServiceException {
         if (userPreferences != null) {
             String visualThemeId = (String) userPreferences.get("VISUAL_THEME");
@@ -153,20 +153,20 @@ public class VisualThemeWorker {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error while getting user preferences: ", module);
         }
-        
+
         return getVisualThemeResourcesFromUserPrefs(context, userPreferences);
     }
 
     /**
      * SCIPIO: Invokes a script to choose a visualThemeId and load its resources.
      */
-    public static Map<String, List<String>> loadVisualThemeResourcesFromScript(Map<String, Object> context, 
+    public static Map<String, List<String>> loadVisualThemeResourcesFromScript(Map<String, Object> context,
             String script, GenericValue webSite) throws GenericServiceException {
         Map<String, Object> scriptCtx = new HashMap<String, Object>(context);
         scriptCtx.put("webSite", webSite);
         scriptCtx.remove("visualThemeId");
         ScriptUtil.executeScript(script, null, scriptCtx);
-        
+
         String visualThemeId = (String) scriptCtx.get("visualThemeId");
         if (UtilValidate.isNotEmpty(visualThemeId)) {
             LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
@@ -181,13 +181,13 @@ public class VisualThemeWorker {
         return null;
     }
 
- 
+
     /**
      * SCIPIO: Gets a library location from a library location expression for the given rendering platform.
      * <p>
      * The values returned from this method are cached in a global cache, so they should
      * not be used for arbitrary inputs.
-     * 
+     *
      * @param locationExpr the location expression
      * @param platform the current rendering platform name, e.g. "html", "xml", etc.
      * @return the location or null if not present and no default
@@ -210,8 +210,8 @@ public class VisualThemeWorker {
             return null;
         }
     }
-    
-    public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources, 
+
+    public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources,
             String... resourceNames) {
         if (themeResources == null) {
             return null;
@@ -226,8 +226,8 @@ public class VisualThemeWorker {
             }
         }
         return null;
-    }    
-    
+    }
+
     /**
      * SCIPIO: Gets a library location from a library location expression for the given rendering platform.
      * <p>
@@ -236,11 +236,11 @@ public class VisualThemeWorker {
      * If the location is simple, it is only returned if the platform is "html".
      * The map expression supports an additional "default" key that will be used in case platform
      * matches nothing else.
-     * 
+     *
      * @param locationExpr the location expression
      * @param platform the current rendering platform name, e.g. "html", "xml", etc.
      * @return the location or null if not present and no default
-     */    
+     */
     public static String getMacroLibraryLocation(String locationExpr, String platform, Map<String, Object> context) {
         if (locationExpr == null || locationExpr.isEmpty()) {
             return null;
@@ -259,7 +259,7 @@ public class VisualThemeWorker {
         else {
             expanded = locationExpr;
         }
-        
+
         if (expanded instanceof String) {
             // simple location, meant for html
             if ("html".equals(platform)) {
@@ -277,7 +277,7 @@ public class VisualThemeWorker {
             return null;
         }
     }
-        
+
     public static String getMacroLibraryLocation(Map<String, String> platformLocationMap, String platform) {
         if (platform == null) {
             platform = "";
@@ -296,5 +296,5 @@ public class VisualThemeWorker {
             }
         }
     }
-    
+
 }

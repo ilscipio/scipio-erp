@@ -358,24 +358,24 @@ function getShipOptions() {
             success: function(json) {
                 var serverError = getServerError(json);
                 if (!serverError) {
-                        jQuery('#shippingFormServerError_container').fadeOut('fast');
-                        isShipStepValidate = true;
-                        shipOptions = json.shippingOptions;
-                        var shipMethod = jQuery('#shipMethod');
-                        shipMethod.find("option").remove();
-                        jQuery.each(shipOptions, function(shipOption) {
-                            if (this.productStoreShipMethId){
-                                shipMethod.append(jQuery("<option value = " + this.shippingMethod + ":" + this.productStoreShipMethId + " > " + this.shippingDesc  + " </option>"));
-                            } else {
-                                shipMethod.append(jQuery("<option value = " + this.shippingMethod + " > " + this.shippingDesc  + " </option>"));
-                            }
-                        });
-                        result = true;
-                    } else {
-                        jQuery('#shippingFormServerError').html(serverError);
-                        jQuery('#shippingFormServerError_container').fadeIn('fast');
-                        result = false;
-                    }
+                    jQuery('#shippingFormServerError_container').fadeOut('fast');
+                    isShipStepValidate = true;
+                    shipOptions = json.shippingOptions;
+                    var shipMethod = jQuery('#shipMethod');
+                    shipMethod.find("option").remove();
+                    jQuery.each(shipOptions, function(shipOption) {
+                        if (this.productStoreShipMethId){
+                            shipMethod.append(jQuery("<option value = " + this.shippingMethod + ":" + this.productStoreShipMethId + " > " + this.shippingDesc  + " </option>"));
+                        } else {
+                            shipMethod.append(jQuery("<option value = " + this.shippingMethod + " > " + this.shippingDesc  + " </option>"));
+                        }
+                    });
+                    result = true;
+                } else {
+                    jQuery('#shippingFormServerError').html(serverError);
+                    jQuery('#shippingFormServerError_container').fadeIn('fast');
+                    result = false;
+                }
             },
             error: function(error) {
                 if (error != "") {
@@ -414,7 +414,7 @@ function setShippingOption() {
                 //jQuery('#totalSalesTax').val(json.totalSalesTax);
                 result = true;
             } else {
-                jQuery('#shippingOptionFormServerError').html(error);
+                jQuery('#shippingOptionFormServerError').html(serverError);
                 jQuery('#shippingOptionFormServerError_container').fadeIn('fast');
                 result = false;
             }
@@ -736,7 +736,7 @@ function updateBillingSummary() {
         var billToGeo = jQuery('#billToCity').val()+", "+jQuery('#billToCountryGeoId').val()+" "+jQuery('#billToPostalCode').val();
     }
     else {
-        var billToGeo = jQuery('#billToCity').val()+", "+jQuery('#billToStateProvinceGeoId').val() +" "+jQuery('#billToCountryGeoId')+" "+jQuery('#billToPostalCode').val();
+        var billToGeo = jQuery('#billToCity').val()+", "+jQuery('#billToStateProvinceGeoId').val() +" "+jQuery('#billToCountryGeoId').val()+" "+jQuery('#billToPostalCode').val();
     }
     jQuery('#completedBillToGeo').html(billToGeo);
     jQuery('#paymentMethod').html(jQuery('#paymentMethodTypeId').val());

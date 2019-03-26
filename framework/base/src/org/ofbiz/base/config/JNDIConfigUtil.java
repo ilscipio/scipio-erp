@@ -28,15 +28,15 @@ import org.w3c.dom.Element;
  * JNDIConfigUtil
  *
  */
-public class JNDIConfigUtil {
+public final class JNDIConfigUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String JNDI_CONFIG_XML_FILENAME = "jndiservers.xml";
-    private static final ConcurrentHashMap<String, JndiServerInfo> jndiServerInfos = new ConcurrentHashMap<String, JndiServerInfo>();
+    public static final String JNDI_CONFIG_XML_FILENAME = "jndiservers.xml"; // SCIPIO: 2018-08-30: keeping public for backward-compat
+    private static final ConcurrentHashMap<String, JndiServerInfo> jndiServerInfos = new ConcurrentHashMap<>();
 
     private static Element getXmlRootElement() throws GenericConfigException {
         try {
-            return ResourceLoader.getXmlRootElement(JNDIConfigUtil.JNDI_CONFIG_XML_FILENAME);
+            return ResourceLoader.readXmlRootElement(JNDIConfigUtil.JNDI_CONFIG_XML_FILENAME);
         } catch (GenericConfigException e) {
             throw new GenericConfigException("Could not get JNDI XML root element", e);
         }
@@ -49,7 +49,7 @@ public class JNDIConfigUtil {
             Debug.logError(e, "Error loading JNDI config XML file " + JNDI_CONFIG_XML_FILENAME, module);
         }
     }
-    public static void initialize(Element rootElement) throws GenericConfigException {
+    public static void initialize(Element rootElement) {
         // jndi-server - jndiServerInfos
         for (Element curElement: UtilXml.childElementList(rootElement, "jndi-server")) {
             JndiServerInfo jndiServerInfo = new JndiServerInfo(curElement);

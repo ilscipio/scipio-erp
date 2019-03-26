@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@section>
     <#if parameters.searchLabels??>
@@ -36,7 +23,7 @@ under the License.
         </@cell>
     </@row>
     </#if>
-  <@table type="data-list" autoAltRows=true responsive=true> <#-- orig: class="basic-table" -->
+  <@table type="data-list" autoAltRows=true responsive=true>
    <@thead>
     <@tr class="header-row">
       <#--<@th>${uiLabelMap.WebtoolsLabelManagerRow}</@th>-->
@@ -49,7 +36,7 @@ under the License.
           <#assign showLocale = false>
         </#if>
         <#if showLocale == true>
-          <#assign locale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(localeFound)!/>
+          <#assign locale = UtilMisc.parseLocale(localeFound)!/>
           <#if locale?? && locale?has_content>
             <#assign langAttr = localeFound.toString()?replace("_", "-")>
             <#assign langDir = "ltr">
@@ -77,9 +64,14 @@ under the License.
             </@th>
           </@tr>
       </@tfoot>-->
+      
+      <#-- SCIPIO: support simple wildcard regexp -->
+      <#assign labelKeyRegex = raw(parameters.labelKeyRegex!)>
+      
       <#list labelsList as labelList>
         <#assign label = labels.get(labelList)>
         <#assign labelKey = label.labelKey>
+        <#assign labelKeyRaw = raw(labelKey)><#-- SCIPIO -->
         <#assign totalLabels = totalLabels + 1>
         <#if references??>
           <#assign referenceNum = 0>
@@ -105,14 +97,18 @@ under the License.
         <#if showLabel && parameters.labelKey?? && parameters.labelKey != "" && parameters.labelKey != label.labelKey>
           <#assign showLabel = false>
         </#if>
+        <#if showLabel && labelKeyRegex?has_content && !labelKeyRaw?matches(labelKeyRegex)><#-- SCIPIO -->
+          <#assign showLabel = false>
+        </#if>
         <#if showLabel && parameters.labelFileName?? && parameters.labelFileName != "" && parameters.labelFileName != label.fileName>
           <#assign showLabel = false>
         </#if>
+        <#if showLabel == true>
           <@tr>
             <#--<@td>${rowNumber}</@td>-->
-            <@td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
+            <@td><a href="<@pageUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@pageUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
             <@td>${label.fileName}</@td>
-            <@td><a href="<@ofbizUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></@td>
+            <@td><a href="<@pageUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@pageUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></@td>
             <#list localesFound as localeFound>
               <#assign labelVal = label.getLabelValue(localeFound)!>
               <#assign showLocale = true>
@@ -132,6 +128,7 @@ under the License.
           </@tr>
           <#assign previousKey = labelKey>
           <#assign rowNumber = rowNumber + 1>
+        </#if>
       </#list>
   </@table>
 </@section>  

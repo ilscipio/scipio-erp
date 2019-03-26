@@ -1,18 +1,18 @@
 <@section>
     <#if productCategoryRollupList?has_content>  
          <#list productCategoryRollupList as productCategoryRollup>
-            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromCategory</@ofbizUrl>">                  
+            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@pageUrl>removeProductCategoryFromCategory</@pageUrl>">                  
                   <input name="productCategoryId" type="hidden" value="${productCategoryRollup.productCategoryId}"/>
                   <input name="originalProductCategoryId" type="hidden" value="${originalProductCategoryId}"/>
                   <input name="parentProductCategoryId" type="hidden" value="${productCategoryRollup.parentProductCategoryId}"/>
                   <input name="fromDate" type="hidden" value="${productCategoryRollup.fromDate}"/>
             </form>
         </#list>
-        <form id="UpdateCategoryAssociation" name="UpdateCategoryAssociation" method="post" action="<@ofbizUrl>updateProductCategoryToCategory</@ofbizUrl>">            
+        <form id="UpdateCategoryAssociation" name="UpdateCategoryAssociation" method="post" action="<@pageUrl>updateProductCategoryToCategory</@pageUrl>">            
             <input name="originalProductCategoryId" type="hidden" value="${originalProductCategoryId!}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
           
-            <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
@@ -39,7 +39,7 @@
                                   <input name="parentProductCategoryId_o_${productCategoryRollup_index}" type="hidden" value="${productCategoryRollup.parentProductCategoryId}"/>
                                   <input name="fromDate_o_${productCategoryRollup_index}" type="hidden" value="${productCategoryRollup.fromDate}"/>                                  
                                   <input id="_rowSubmit_o_${productCategoryRollup_index}" name="_rowSubmit_o_${productCategoryRollup_index}" type="hidden" value="N"/>
-                                  <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_name_long}">
+                                  <a href="<@pageUrl>EditCategory?productCategoryId=${productCategory.productCategoryId}</@pageUrl>" class="${styles.link_nav_info_name_long}">
                                       ${((productCategory.categoryName)!)} [${productCategory.productCategoryId}] 
                                   </a>
                             </@td>

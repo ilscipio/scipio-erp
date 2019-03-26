@@ -38,9 +38,11 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilJavaParse;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilPlist;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.artifact.ArtifactInfoContext;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.eca.ServiceEcaRule;
@@ -93,8 +95,10 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
                 return;
             }
 
-            Set<String> allEntityNameSet = simpleMethodToCall.getAllEntityNamesUsed();
-            populateEntitiesFromNameSet(allEntityNameSet);
+            ArtifactInfoContext aic = new ArtifactInfoContext();
+            simpleMethodToCall.gatherArtifactInfo(aic);
+            populateEntitiesFromNameSet(aic.getEntityNames());
+
         } else if ("java".equals(this.modelService.engineName)) {
             String fullClassPathAndFile = UtilJavaParse.findRealPathAndFileForClass(this.modelService.location);
             if (fullClassPathAndFile != null) {
@@ -134,7 +138,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.entitiesUsedByThisService.add(aif.getEntityArtifactInfo(validEntityName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToEntityName, validEntityName);
+            addToSortedSetInMap(this, aif.allServiceInfosReferringToEntityName, validEntityName); // SCIPIO: switched method
         }
     }
 
@@ -153,8 +157,10 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
                 return;
             }
 
-            Set<String> allServiceNameSet = simpleMethodToCall.getAllServiceNamesCalled();
-            populateServicesFromNameSet(allServiceNameSet);
+            ArtifactInfoContext aic = new ArtifactInfoContext();
+            simpleMethodToCall.gatherArtifactInfo(aic);
+            populateServicesFromNameSet(aic.getServiceNames());
+
         } else if ("java".equals(this.modelService.engineName)) {
             String fullClassPathAndFile = UtilJavaParse.findRealPathAndFileForClass(this.modelService.location);
             if (fullClassPathAndFile != null) {
@@ -207,7 +213,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.servicesCalledByThisService.add(aif.getServiceArtifactInfo(serviceName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceName, serviceName);
+            addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceName, serviceName); // SCIPIO: switched method
         }
     }
 
@@ -219,7 +225,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             for (ServiceEcaRule ecaRule: ecaRuleList) {
                 this.serviceEcasTriggeredByThisService.add(aif.getServiceEcaArtifactInfo(ecaRule));
                 // the reverse reference
-                UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceEcaRule, ecaRule);
+                addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceEcaRule, ecaRule); // SCIPIO: switched method
             }
         }
     }
@@ -255,6 +261,10 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         return this.modelService.name;
     }
 
+    public String getLocation() { // SCIPIO
+        return this.modelService.definitionLocation;
+    }
+
     @Override
     public URL getLocationURL() throws MalformedURLException {
         return FlexibleLocation.resolveLocation(this.modelService.definitionLocation, null);
@@ -262,6 +272,19 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
 
     public URL getImplementationLocationURL() throws MalformedURLException {
         return FlexibleLocation.resolveLocation(this.modelService.location, null);
+    }
+
+    public String getImplementationLocation() { // SCIPIO
+        return this.modelService.location;
+    }
+
+    public String getRelativeImplementationLocation() { // SCIPIO
+        try {
+            return UtilURL.getOfbizHomeRelativeLocation(getImplementationLocationURL());
+        } catch (MalformedURLException e) {
+            Debug.logError("getRelativeImplementationLocation: " + e.toString(), module);
+            return null;
+        }
     }
 
     public Set<EntityArtifactInfo> getEntitiesUsedByService() {
@@ -457,7 +480,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         // for classProperties add attribute names AND relationship names to get a nice, complete chart
         // SCIPIO: 2018-03-28: reordered for ArrayList initial capacity
         List<ModelParam> modelParamList = this.modelService.getModelParamList();
-        
+
         List<String> classPropertiesList = new ArrayList<>(modelParamList.size() + callingServiceSet.size()
                 + calledServiceSet.size() + callingServiceEcaSet.size() + calledServiceEcaSet.size()); // SCIPIO: 2018-03-28: ArrayList initial capacity
         topLevelMap.put("classProperties", classPropertiesList);
@@ -568,5 +591,11 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String getRelativeLocation() {
+        // SCIPIO: Optimization
+        return getModelService().getRelativeDefinitionLocation();
     }
 }

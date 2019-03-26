@@ -26,6 +26,8 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.minilang.MiniLangValidate;
 import org.w3c.dom.Element;
 
 /**
@@ -41,7 +43,7 @@ public class ValidateMethod extends SimpleMapOperation {
     public ValidateMethod(Element element, SimpleMapProcess simpleMapProcess) {
         super(element, simpleMapProcess);
         this.methodName = element.getAttribute("method");
-        this.className = element.getAttribute("class");
+        this.className = MiniLangValidate.checkAttribute(element.getAttribute("class"), UtilValidate.class.getName());
     }
 
     @Override
@@ -87,7 +89,7 @@ public class ValidateMethod extends SimpleMapOperation {
             Debug.logError("[ValidateMethod.exec] " + msg, module);
             return;
         }
-        if (!resultBool.booleanValue()) {
+        if (!resultBool) {
             addMessage(messages, loader, locale);
         }
     }

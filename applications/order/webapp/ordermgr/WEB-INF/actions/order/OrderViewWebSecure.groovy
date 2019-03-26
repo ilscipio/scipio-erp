@@ -30,11 +30,11 @@ if (orderHeader) {
     // hasPermission if: has ORDERMGR_VIEW, ORDERMGR_ROLE_VIEW & associated with order, or is associated in the SUPPLIER_AGENT role
     hasPermission = false;
     canViewInternalDetails = false;
-    if (("SALES_ORDER".equals(orderHeader.orderTypeId) && security.hasEntityPermission("ORDERMGR", "_VIEW", session))
-        || ("PURCHASE_ORDER".equals(orderHeader.orderTypeId) && security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", session))) {
+    if (("SALES_ORDER".equals(orderHeader.orderTypeId) && security.hasEntityPermission("ORDERMGR", "_VIEW", request))
+        || ("PURCHASE_ORDER".equals(orderHeader.orderTypeId) && security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", request))) {
         hasPermission = true;
         canViewInternalDetails = true;
-    } else if (security.hasEntityPermission("ORDERMGR_ROLE", "_VIEW", session)) {
+    } else if (security.hasEntityPermission("ORDERMGR_ROLE", "_VIEW", request)) {
         currentUserOrderRoles = orderHeader.getRelated("OrderRole", [partyId : userLogin.partyId], null, false);
         if (currentUserOrderRoles) {
             hasPermission = true;

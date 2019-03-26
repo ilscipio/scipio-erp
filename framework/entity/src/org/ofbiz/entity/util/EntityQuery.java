@@ -22,19 +22,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelEntity;
 
 /**
  * Used to setup various options for and subsequently execute entity queries.
@@ -64,29 +71,29 @@ public class EntityQuery {
     private boolean filterByDate = false;
     private Timestamp filterByDateMoment;
     private List<String> filterByFieldNames = null;
+    private boolean searchPkOnly = false;
+    private Map<String, Object> fieldMap = null;
 
 
 
     /** Construct an EntityQuery object for use against the specified Delegator
-     * @param delegator - The delegator instance to use for the query
-     * @return Returns a new EntityQuery object
+     * @param delegator The delegator instance to use for the query
      */
     public static EntityQuery use(Delegator delegator) {
         return new EntityQuery(delegator);
     }
 
     /** Construct an EntityQuery object for use against the specified Delegator
-     * @param delegator - The delegator instance to use for the query
-     * @return Returns a new EntityQuery object
+     * @param delegator The delegator instance to use for the query
      */
     public EntityQuery(Delegator delegator) {
         this.delegator = delegator;
     }
 
     /** Set the fields to be returned when the query is executed.
-     * 
-     * Note that the select methods are not additive, if a subsequent 
-     * call is made to select then the existing fields for selection 
+     *
+     * Note that the select methods are not additive, if a subsequent
+     * call is made to select then the existing fields for selection
      * will be replaced.
      * @param fieldsToSelect - A Set of Strings containing the field names to be selected
      * @return this EntityQuery object, to enable chaining
@@ -97,11 +104,11 @@ public class EntityQuery {
     }
 
     /** Set the fields to be returned when the query is executed.
-     * 
-     * Note that the select methods are not additive, if a subsequent 
-     * call is made to select then the existing fields for selection 
+     *
+     * Note that the select methods are not additive, if a subsequent
+     * call is made to select then the existing fields for selection
      * will be replaced.
-     * @param fieldsToSelect - Strings containing the field names to be selected
+     * @param fields - Strings containing the field names to be selected
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery select(String...fields) {
@@ -130,7 +137,7 @@ public class EntityQuery {
     }
 
     /** Set the EntityCondition to be used as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param entityCondition - An EntityCondition object to be used as the where clause for this query
      * @return this EntityQuery object, to enable chaining
@@ -141,20 +148,20 @@ public class EntityQuery {
     }
 
     /** Set a Map of field name/values to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param fieldMap - A Map of field names/values to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery where(Map<String, Object> fieldMap) {
-        this.whereEntityCondition = EntityCondition.makeCondition(fieldMap);
+        this.fieldMap = fieldMap;
         return this;
     }
 
     /** Set a series of field name/values to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
-     * @param fieldMap - A series of field names/values to be ANDed together as the where clause for the query
+     * @param fields - A series of field names/values to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery where(Object...fields) {
@@ -163,7 +170,7 @@ public class EntityQuery {
     }
 
     /** Set a series of EntityConditions to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * @param entityCondition - A series of EntityConditions to be ANDed together as the where clause for the query
      * @return this EntityQuery object, to enable chaining
@@ -174,9 +181,9 @@ public class EntityQuery {
     }
 
     /** Set a list of EntityCondition objects to be ANDed together as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
-     * @param fieldMap - A list of EntityCondition objects to be ANDed together as the WHERE clause for the query
+     * @param andConditions - A list of EntityCondition objects to be ANDed together as the WHERE clause for the query
      * @return this EntityQuery object, to enable chaining
      */
     public <T extends EntityCondition> EntityQuery where(List<T> andConditions) {
@@ -185,7 +192,7 @@ public class EntityQuery {
     }
 
     /** Set a list of EntityCondition objects to be combined together with given operator as the WHERE clause for the query
-     * 
+     *
      * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
      * <p>
      * SCIPIO: New, added 2018-05-17.
@@ -199,7 +206,7 @@ public class EntityQuery {
     }
 
     /** Set the EntityCondition to be used as the HAVING clause for the query.
-     * 
+     *
      * NOTE: Each successive call to any of the having(...) methods will replace the currently set condition for the query.
      * @param entityCondition - The EntityCondition object that specifies how to constrain
      *            this query after any groupings are done (if this is a view
@@ -212,7 +219,7 @@ public class EntityQuery {
     }
 
     /** The fields of the named entity to order the resultset by; optionally add a " ASC" for ascending or " DESC" for descending
-     * 
+     *
      * NOTE: Each successive call to any of the orderBy(...) methods will replace the currently set orderBy fields for the query.
      * @param orderBy - The fields of the named entity to order the resultset by
      * @return this EntityQuery object, to enable chaining
@@ -223,9 +230,9 @@ public class EntityQuery {
     }
 
     /** The fields of the named entity to order the resultset by; optionally add a " ASC" for ascending or " DESC" for descending
-     * 
+     *
      * NOTE: Each successive call to any of the orderBy(...) methods will replace the currently set orderBy fields for the query.
-     * @param orderBy - The fields of the named entity to order the resultset by
+     * @param fields - The fields of the named entity to order the resultset by
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery orderBy(String...fields) {
@@ -234,7 +241,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor may move only forward (this is the default behavior)
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorForwardOnly() {
@@ -243,7 +250,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor is scrollable but generally sensitive to changes to the data that underlies the ResultSet.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorScrollSensitive() {
@@ -252,7 +259,7 @@ public class EntityQuery {
     }
 
     /** Indicate that the ResultSet object's cursor is scrollable but generally not sensitive to changes to the data that underlies the ResultSet.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cursorScrollInsensitive() {
@@ -261,7 +268,7 @@ public class EntityQuery {
     }
 
     /** Specifies the fetch size for this query. -1 will fall back to datasource settings.
-     * 
+     *
      * @param fetchSize - The fetch size for this query
      * @return this EntityQuery object, to enable chaining
      */
@@ -271,7 +278,7 @@ public class EntityQuery {
     }
 
     /** Specifies the max number of rows to return, 0 means all rows.
-     * 
+     *
      * @param maxRows - the max number of rows to return
      * @return this EntityQuery object, to enable chaining
      */
@@ -281,7 +288,7 @@ public class EntityQuery {
     }
 
     /** Specifies that the values returned should be filtered to remove duplicate values.
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery distinct() {
@@ -290,7 +297,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values.
-     * 
+     *
      * @param distinct - boolean indicating whether the values returned should be filtered to remove duplicate values
      * @return this EntityQuery object, to enable chaining
      */
@@ -300,7 +307,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether results should be read from the cache (or written to the cache if the results have not yet been cached)
-     * 
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery cache() {
@@ -309,7 +316,7 @@ public class EntityQuery {
     }
 
     /** Specifies whether results should be read from the cache (or written to the cache if the results have not yet been cached)
-     * 
+     *
      * @param useCache - boolean to indicate if the cache should be used or not
      * @return this EntityQuery object, to enable chaining
      */
@@ -319,7 +326,12 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using from/thruDate fields.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate() {
@@ -330,7 +342,12 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -349,7 +366,12 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -359,8 +381,13 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs.
-     * 
-     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
+     * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(String... filterByFieldName) {
@@ -368,9 +395,14 @@ public class EntityQuery {
     }
 
     /** Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
-     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(Timestamp moment, String... filterByFieldName) {
@@ -384,10 +416,34 @@ public class EntityQuery {
     }
 
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the "now" timestamp (current time), with explicit boolean toggle.
+     * Added 2018-10-19.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable) {
+        this.filterByDate = enable;
+        this.filterByDateMoment = null;
+        this.filterByFieldNames = null;
+        return this;
+    }
+
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
@@ -399,34 +455,49 @@ public class EntityQuery {
     }
 
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Date representing the moment in time that the values should be active during
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, Date moment) {
         return this.filterByDate(enable, new java.sql.Timestamp(moment.getTime()));
     }
-    
+
     /** SCIPIO: Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, String... filterByFieldName) {
         return this.filterByDate(enable, (Timestamp) null, filterByFieldName);
     }
-    
+
     /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs,
-     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time),
      * with explicit boolean toggle.
      * Added 2017-11-27.
-     * 
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
      * @param moment - Timestamp representing the moment in time that the values should be active during
      * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
@@ -442,21 +513,21 @@ public class EntityQuery {
         }
         return this;
     }
-    
+
     /** Executes the EntityQuery and returns a list of results
-     * 
+     *
      * @return Returns a List of GenericValues representing the results of the query
      */
     public List<GenericValue> queryList() throws GenericEntityException {
         return query(null);
     }
 
-    /** Executes the EntityQuery and returns an EntityListIterator representing the result of the query. 
-     * 
+    /** Executes the EntityQuery and returns an EntityListIterator representing the result of the query.
+     *
      * NOTE:  THAT THIS MUST BE CLOSED (preferably in a finally block) WHEN YOU
      *        ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT
      *        WILL MAINTAIN A DATABASE CONNECTION.
-     * 
+     *
      * @return Returns an EntityListIterator representing the result of the query
      */
     public EntityListIterator queryIterator() throws GenericEntityException {
@@ -471,7 +542,7 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and returns the first result
-     * 
+     *
      * @return GenericValue representing the first result record from the query
      */
     public GenericValue queryFirst() throws GenericEntityException {
@@ -485,30 +556,25 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and a single result record
-     * 
+     *
      * @return GenericValue representing the only result record from the query
      */
     public GenericValue queryOne() throws GenericEntityException {
+        this.searchPkOnly = true;
         GenericValue result =  EntityUtil.getOnly(queryList());
         return result;
     }
 
     /** Executes the EntityQuery and returns the result count
-     * 
+     *
      * If the query generates more than a single result then an exception is thrown
-     * 
+     *
      * @return GenericValue representing the only result record from the query
      */
     public long queryCount() throws GenericEntityException {
         if (dynamicViewEntity != null) {
-            EntityListIterator iterator = null;
-            try {
-                iterator = queryIterator();
+            try (EntityListIterator iterator = queryIterator()) {
                 return iterator.getResultsSizeAfterPartialList();
-            } finally {
-                if (iterator != null) {
-                    iterator.close();
-                }
             }
         }
         return delegator.findCountByCondition(entityName, makeWhereCondition(false), havingEntityCondition, makeEntityFindOptions());
@@ -525,16 +591,20 @@ public class EntityQuery {
         if (dynamicViewEntity == null) {
             result = delegator.findList(entityName, makeWhereCondition(useCache), fieldsToSelect, orderBy, findOptions, useCache);
         } else {
-            EntityListIterator it = queryIterator();
-            result = it.getCompleteList();
-            it.close();
+            try (EntityListIterator it = queryIterator()) {
+                result = it.getCompleteList();
+            }
         }
         if (filterByDate && useCache) {
-            return EntityUtil.filterByCondition(result, this.makeDateCondition());
+            try {
+                return EntityUtil.filterByCondition(result, this.makeDateCondition());
+            } catch(EntityFieldNotFoundException e) { // SCIPIO
+                //Debug.logError(e, "Query error: " + e.getMessage(), module); // already logged
+            }
         }
         return result;
     }
-    
+
     private EntityFindOptions makeEntityFindOptions() {
         EntityFindOptions findOptions = new EntityFindOptions();
         if (resultSetType != null) {
@@ -553,19 +623,36 @@ public class EntityQuery {
     }
 
     private EntityCondition makeWhereCondition(boolean usingCache) {
+        if (whereEntityCondition == null && fieldMap != null) {
+            if (this.searchPkOnly) {
+                //Resolve if the map contains a sub map parameters, use a containsKeys to avoid error when a GenericValue is given as map
+                @SuppressWarnings("unchecked")
+                Map<String, Object> parameters = fieldMap.containsKey("parameters") ? (Map<String, Object>) fieldMap.get("parameters") : null;
+                GenericPK pk = GenericPK.create(delegator.getModelEntity(entityName));
+                pk.setPKFields(parameters);
+                pk.setPKFields(fieldMap);
+                this.whereEntityCondition = EntityCondition.makeCondition(pk.getPrimaryKey());
+            } else {
+                this.whereEntityCondition = EntityCondition.makeCondition(fieldMap);
+            }
+        }
         // we don't use the useCache field here because not all queries will actually use the cache, e.g. findCountByCondition never uses the cache
         if (filterByDate && !usingCache) {
-            if (whereEntityCondition != null) {
-                return EntityCondition.makeCondition(whereEntityCondition, this.makeDateCondition());
-            } else {
-                return this.makeDateCondition();
+            try {
+                if (whereEntityCondition != null) {
+                    return EntityCondition.makeCondition(whereEntityCondition, this.makeDateCondition());
+                } else {
+                    return this.makeDateCondition();
+                }
+            } catch(EntityFieldNotFoundException e) { // SCIPIO
+                //Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module); // already logged
             }
         }
         return whereEntityCondition;
     }
 
     private EntityCondition makeDateCondition() {
-        List<EntityCondition> conditions = new ArrayList<EntityCondition>();
+        List<EntityCondition> conditions = new ArrayList<>();
         if (UtilValidate.isEmpty(this.filterByFieldNames)) {
             this.filterByDate(filterByDateMoment, "fromDate", "thruDate");
         }
@@ -573,12 +660,192 @@ public class EntityQuery {
         for (int i = 0; i < this.filterByFieldNames.size();) {
             String fromDateFieldName = this.filterByFieldNames.get(i++);
             String thruDateFieldName = this.filterByFieldNames.get(i++);
+
+            try { // SCIPIO
+                checkEntityDateFields(delegator, entityName, fromDateFieldName, thruDateFieldName);
+            } catch(EntityFieldNotFoundException e) {
+                Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                continue;
+            }
+
             if (filterByDateMoment == null) {
                 conditions.add(EntityUtil.getFilterByDateExpr(fromDateFieldName, thruDateFieldName));
             } else {
                 conditions.add(EntityUtil.getFilterByDateExpr(this.filterByDateMoment, fromDateFieldName, thruDateFieldName));
             }
         }
+
+        if (conditions.isEmpty()) { // SCIPIO
+            throw new EntityFieldNotFoundException("No date filters could be produced for entity '"
+                    + entityName + " using field names: " + filterByFieldNames);
+        }
+
         return EntityCondition.makeCondition(conditions);
+    }
+
+    /**
+     * SCIPIO: 2018-09-29: When filterByDate is used on an entity without fromDate/thruDate, we will
+     * log as an error instead of throwing exception and crashing the system.
+     * This is because due to entitymodel changes it's extremely common to accidentally add
+     * a .filterByDate() call, so at least this way this error will not cause significant damage.
+     * Since in 90% of cases the bugfix is simply to remove the call, this is a fairly safe way to
+     * address the issue.
+     */
+    private static void checkEntityDateFields(Delegator delegator, String entityName, String fromDateFieldName, String thruDateFieldName) throws EntityFieldNotFoundException {
+        ModelEntity entityModel = delegator.getModelEntity(entityName);
+        if (entityModel != null) { // If null, let regular call crash itself
+            if (!entityModel.isField(fromDateFieldName)) {
+                throw new EntityFieldNotFoundException("\"" + fromDateFieldName + "\" is not a field of "
+                        + entityName);
+            } else if (!entityModel.isField(thruDateFieldName)) {
+                throw new EntityFieldNotFoundException("\"" + thruDateFieldName + "\" is not a field of "
+                        + entityName);
+            }
+        }
+    }
+
+    public <T> List<T> getFieldList(final String fieldName) throws GenericEntityException {
+        select(fieldName);
+        try (EntityListIterator genericValueEli = queryIterator()) {
+            if (Boolean.TRUE.equals(this.distinct)) {
+                Set<T> distinctSet = new HashSet<T>();
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        distinctSet.add(fieldValue);
+                    }
+                }
+                return new ArrayList<T>(distinctSet);
+            }
+            else {
+                List<T> fieldList = new LinkedList<T>();
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        fieldList.add(fieldValue);
+                    }
+                }
+                return fieldList;
+            }
+        }
+    }
+
+    /**
+     * Query paged list.
+     * @param viewIndex
+     * @param viewSize
+     * @return PagedList object with a subset of data items
+     * @throws GenericEntityException
+     * @see EntityUtil#getPagedList
+     */
+    public PagedList<GenericValue> queryPagedList(int viewIndex, int viewSize) throws GenericEntityException {
+        try (EntityListIterator genericValueEli = queryIterator()) {
+            return EntityUtil.getPagedList(genericValueEli, viewIndex, viewSize);
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns a list of results; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return Returns a List of GenericValues representing the results of the query
+     */
+    public List<GenericValue> queryListSafe() {
+        try {
+            return queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryList: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns an EntityListIterator representing the result of the query; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * NOTE:  THAT THIS MUST BE CLOSED (preferably in a finally block) WHEN YOU
+     *        ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT
+     *        WILL MAINTAIN A DATABASE CONNECTION.
+     *
+     * @return Returns an EntityListIterator representing the result of the query
+     */
+    public EntityListIterator queryIteratorSafe() {
+        try {
+            return queryIterator();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryIterator: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns the first result; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return GenericValue representing the first result record from the query
+     */
+    public GenericValue queryFirstSafe() {
+        try {
+            return queryFirst();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryFirst: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and a single result record; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public GenericValue queryOneSafe() {
+        try {
+            return queryOne();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryOne: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns the result count; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * If the query generates more than a single result then zero is returned.
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public long queryCountSafe() {
+        try {
+            return queryCount();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryCount: " + e.getMessage(), module);
+            return 0;
+        }
+    }
+
+    public <T> List<T> getFieldListSafe(String fieldName) { // SCIPIO
+        try {
+            return getFieldList(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Query paged list; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     * @param viewIndex
+     * @param viewSize
+     * @return PagedList object with a subset of data items
+     * @throws GenericEntityException
+     * @see EntityUtil#getPagedList
+     */
+    public PagedList<GenericValue> queryPagedListSafe(int viewIndex, int viewSize) {
+        try {
+            return queryPagedList(viewIndex, viewSize);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
+            return null;
+        }
     }
 }

@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -57,32 +56,24 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
-        // final StringBuilder buf = new StringBuilder();
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
-        //final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        //final Map templateCtx = new HashMap<String, Object>();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
         final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
         final Map<String, Object> templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-        //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
         final Map<String, Object> savedValuesUp = new HashMap<String, Object>();
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
-        //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(2):" + templateRoot.get("contentId"), module);
         final GenericValue userLogin = FreeMarkerWorker.getWrappedObject("userLogin", env);
         List<Map<String, ? extends Object>> trail = UtilGenerics.checkList(templateRoot.get("globalNodeTrail"));
-        //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
         String contentAssocPredicateId = (String)templateRoot.get("contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateRoot.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? Boolean.TRUE :Boolean.FALSE;
         String thisSubContentId =  (String)templateRoot.get("subContentId");
-        //if (Debug.infoOn()) Debug.logInfo("in Render(0), thisSubContentId ." + thisSubContentId , module);
         final boolean directAssocMode = UtilValidate.isNotEmpty(thisSubContentId) ? true : false;
-        //if (Debug.infoOn()) Debug.logInfo("in Render(0), directAssocMode ." + directAssocMode , module);
         GenericValue val = null;
         try {
             val = ContentWorker.getCurrentContent(delegator, trail, userLogin, templateRoot, nullThruDatesOnly, contentAssocPredicateId);
@@ -96,17 +87,18 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         if (view != null) {
             try {
                 dataResourceId = (String) view.get("drDataResourceId");
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 dataResourceId = (String) view.get("dataResourceId");
             }
             subContentIdSub = (String) view.get("contentId");
         }
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateRoot.get("subDataResourceTypeId");
+
         if (UtilValidate.isEmpty(subDataResourceTypeId) && view != null ) {
             try {
                 subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 // view may be "Content"
             }
             // TODO: If this value is still empty then it is probably necessary to get a value from
@@ -119,9 +111,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         templateRoot.put("dataResourceId", dataResourceId);
         templateRoot.put("subContentId", subContentIdSub);
         templateRoot.put("subDataResourceTypeId", subDataResourceTypeId);
-
-        //final Map savedValues = new HashMap<String, Object>();
-        //FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
         return new Writer(out) {
 
@@ -136,23 +125,17 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
             @Override
             public void close() throws IOException {
-                // List<Map<String, ? extends Object>> globalNodeTrail = UtilGenerics.checkList(templateRoot.get("globalNodeTrail"));
-                // if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     renderSubContent();
                     FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
-                    //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
                 }
             }
 
             public void renderSubContent() throws IOException {
-                // TemplateHashModel dataRoot = env.getDataModel();
-                // Timestamp fromDate = UtilDateTime.nowTimestamp();
                 List<Map<String, ? extends Object>> passedGlobalNodeTrail = UtilGenerics.checkList(templateRoot.get("globalNodeTrail"));
                 String editRequestName = (String)templateRoot.get("editRequestName");
-                //if (Debug.infoOn()) Debug.logInfo("in Render(3), editRequestName ." + editRequestName , module);
                 GenericValue thisView = null;
                 if (view != null) {
                     thisView = view;
@@ -165,8 +148,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                         thisView = (GenericValue)map.get("value");
                     }
                 }
-                //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId:" + templateRoot.get("subContentId"), module);
-                //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId:" + templateRoot.get("contentId"), module);
 
                 String mimeTypeId = (String) templateRoot.get("mimeTypeId");
                 Locale locale = (Locale) templateRoot.get("locale");
@@ -183,7 +164,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     if (contentId != null) {
                         try {
                             ContentWorker.renderContentAsText(dispatcher, delegator, contentId, out, templateRoot, locale, mimeTypeId, null, null, true);
-                            //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, after renderContentAsTextCache:", module);
                         } catch (GeneralException e) {
                             Debug.logError(e, "Error rendering content", module);
                             throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
@@ -194,7 +174,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     closeEditWrap(out, editRequestName);
                 }
 
-                //if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
             }
 
             public void openEditWrap(Writer out, String editStyle) throws IOException {
@@ -203,9 +182,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void closeEditWrap(Writer out, String editRequestName) throws IOException {
-                // if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(1):" + templateRoot.get("contentId"), module);
-                // if (Debug.infoOn()) Debug.logInfo("in Render(0), templateRoot ." + templateRoot , module);
-                // StringBuilder sb = new StringBuilder();
                 String fullRequest = editRequestName;
                 String contentId = null;
                 String contentIdTo = null;
@@ -272,7 +248,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 out.write("<a href=\"");
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
+                out.append(rh.makeLink(request, response, "/" + fullRequest, false, null, true)); // SCIPIO: 2018-07-09: changed secure to null
                 out.write("\">Edit</a>");
                 out.write("</div>");
             }

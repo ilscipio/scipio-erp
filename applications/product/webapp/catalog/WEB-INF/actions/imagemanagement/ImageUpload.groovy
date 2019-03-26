@@ -24,6 +24,8 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.image.ScaleImage;
 import org.ofbiz.entity.condition.*
 
+module = "ImageUpload.groovy";
+
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 // make the image file formats
@@ -108,7 +110,7 @@ if (fileType) {
         context.clientFileName = clientFileName;
         context.filenameToUse = filenameToUse;
 
-        characterEncoding = request.getCharacterEncoding();
+        characterEncoding = "UTF-8"; // SCIPIO: ALWAYS use UTF-8 for filenames, not request encoding: characterEncoding = request.getCharacterEncoding();
         imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
 
         try {
@@ -117,11 +119,11 @@ if (fileType) {
             try {
                 file1.delete();
             } catch (Exception e) {
-                System.out.println("error deleting existing file (not neccessarily a problem)");
+                Debug.logError(e, "error deleting existing file (not neccessarily a problem)", module);
             }
             file.renameTo(file1);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
         }
 
         if (imageUrl && imageUrl.length() > 0) {

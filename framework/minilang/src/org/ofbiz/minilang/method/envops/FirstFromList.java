@@ -31,8 +31,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;first-from-list&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cfirstfromlist%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class FirstFromList extends MethodOperation {
 
@@ -42,7 +42,9 @@ public final class FirstFromList extends MethodOperation {
     public FirstFromList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<first-from-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<first-from-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "entry", "list");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "entry", "list");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "entry", "list");

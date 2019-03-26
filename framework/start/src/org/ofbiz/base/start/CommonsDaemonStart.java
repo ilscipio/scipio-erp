@@ -21,7 +21,7 @@ package org.ofbiz.base.start;
 
 /**
  * Special startup class for Commons Daemon users.
- * 
+ *
  * @see <a href="http://commons.apache.org/proper/commons-daemon/jsvc.html">Commons Daemon</a>
  */
 public final class CommonsDaemonStart {

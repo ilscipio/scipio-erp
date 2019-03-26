@@ -1,20 +1,7 @@
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -45,6 +32,7 @@ under the License.
     <screen name="WebtoolsLayoutDemoActions">
         <actions>
             <set field="debugMode" from-field="parameters.debugMode" type="Boolean" default-value="false" />
+            <set field="allowErrors" from-field="parameters.allowErrors" type="Boolean" default-value="false" />
             <if>
                 <condition><if-true field="parameters.debugMode"/></condition><!-- NOTE: if-true succeeds with either proper Boolean or string of boolean, "true" -->
                 <then>
@@ -263,6 +251,11 @@ under the License.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
+                <set field="clearFieldTest1" value="[This is a test of the clear-field directive]"/>
+                <script lang="groovy">org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (pre-clear-field): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");</script>
+                <clear-field field="clearFieldTest1"/>
+                <script lang="groovy">org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (post-clear-field, should be null): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");</script>
+
                 <set field="commonActionField1" value="This value should get overridden... [ERROR]"/>
                 <set field="commonActionField2" value="This value should get overridden... [ERROR]"/>
                 <set field="nonCommonActionField4" value="This value should keep its original value from WebtoolsLayoutDemoOfbizWidgets. [SUCCESS]"/>
@@ -283,6 +276,139 @@ under the License.
                 ]]></script>
                 <!-- NOTE: in the following, we cannot use the nice groovy collect() method with closure, because syntax doesn't support nested brackets... -->
                 <set field="dummy" value="${groovy: import org.ofbiz.base.util.*; Debug.logInfo('WebSite records in system (cached): ' + UtilMisc.collectMapValuesForKey(from('WebSite').orderBy('webSiteId').cache(true).queryList(), 'webSiteId'), 'InlineDemoAssignScript.groovy'); '';}"/>
+
+                <!-- simple-method test -->
+                <script><![CDATA[groovy:
+                    import org.ofbiz.base.util.*;
+                    final module = "InlineDemoScript.groovy";
+                    Debug.logInfo("--------------------------------------", module);
+                    Debug.logInfo("bsh warnings/compat test", module);
+                    Debug.logInfo("--------------------------------------", module);
+                ]]></script>
+                <script location="component://webtools/script/com/ilscipio/scipio/webtools/MiscSimpleMethods.xml#testBshCompat"/>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "InlineDemoScript.groovy";
+                    Debug.logInfo("Some messages returns from testSimpleMethods1: " + testSmOutVar1 + " " + testSmOutVar2, module);
+                    Debug.logInfo("--------------------------------------", module);
+                ]]></script>
+                
+                
+                <if>
+                    <condition>
+                        <if-component component-name="webtools"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("admin component exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("admin component does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="superFakeComponent"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("superFakeComponent component exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("superFakeComponent component does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
+                
+                <if>
+                    <condition>
+                        <if-entity entity-name="WebSite"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("WebSite entity exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("WebSite entity does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-entity entity-name="SuperFakeEntity"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("SuperFakeEntity entity exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("SuperFakeEntity entity does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="createProductStore"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("createProductStore service exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("createProductStore service does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="superFakeService"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("superFakeService entity exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("superFakeService entity does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
             </actions>
             <widgets>
                 <!-- 
@@ -528,6 +654,19 @@ under the License.
                                         <if-has-permission permission="CATALOG" action="_VIEW"/>
                                     </or>
                                 </condition-to-field>
+                                
+                                <set field="testField5" type="Boolean" value="true"/>
+                                <condition-to-field field="boolRes5" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
+                                <set field="testField5" type="Boolean" value="" set-if-null="true"/>
+                                <condition-to-field field="boolRes6" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
+                                <set field="testField5" type="Boolean" value="false"/>
+                                <condition-to-field field="boolRes7" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField5" operator="not-equals" type="Boolean" value="false"/>
+                                </condition-to-field>
                             </actions>
                             <widgets>
                                 <label text="boolRes1: '${boolRes1}'"/>
@@ -542,6 +681,9 @@ under the License.
                                 <label text="boolRes3 (only-if-field='empty'): '${boolRes3}'"/>
                                 <label text="boolRes4 (only-if-field='empty'): '${boolRes4}'"/>
                                 <label text="commonSideBarMenuEmu.cond: '${commonSideBarMenuEmu.cond}'"/>
+                                <label text="boolRes5 (should be true): '${boolRes5}'"/>
+                                <label text="boolRes6 (should be true): '${boolRes6}'"/>
+                                <label text="boolRes7 (should be false): '${boolRes7}'"/>
                             </widgets>
                         </section>
                     </screenlet>
@@ -835,6 +977,59 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Development" />
                 <set field="activeSubMenuItem" value="TemplateTest"/>
                 <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled"/>
+                <set field="tmplTestEnabled" from-field="tmplTestEnabled" type="Boolean"/>
+                <condition-to-field field="hasTmplTestPerm" type="Boolean">
+                    <and>
+                        <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                        <if-true field="tmplTestEnabled"/>
+                    </and>
+                </condition-to-field>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "TemplateTest.groovy";
+
+                    scriptBody = parameters.scriptBody as String;
+                    templateBody = parameters.templateBody as String;
+
+                    execDefault = (scriptBody == null && templateBody == null);
+                    if (scriptBody == null) {
+                        scriptBody = "import org.ofbiz.base.util.*;\n" +
+                            "import org.ofbiz.entity.condition.*;\n" +
+                            "import org.ofbiz.entity.util.*;\n" +
+                            "\n" +
+                            "final module = \"TemplateTest.groovy\";\n" +
+                            "\n" +
+                            "userParty = from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
+                            "\n" +
+                            "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
+                            "\n" +
+                            "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
+                    }
+                    if (templateBody == null) {
+                        templateBody = "<#assign ftlTestVar1 = testVar1!>" +
+                            "\n" +
+                            "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
+                    }
+
+                    execTemplate = (execDefault || request.getMethod().toLowerCase() == "post") && context.hasTmplTestPerm == true; // security
+                    if (execTemplate && scriptBody) {
+                        try {
+                            GroovyUtil.evalBlock(scriptBody, context, false);
+                        } catch(Exception e) {
+                            Debug.logError(e, "Error evaluating Groovy script", module);
+                            errorMessageList = context.errorMessageList ?: [];
+                            errorMessageList.add("Error evaluating Groovy script: " + e.toString());
+                            context.errorMessageList = errorMessageList;
+                        }
+                    }
+
+                    context.scriptBody = scriptBody;
+                    context.templateBody = templateBody;
+                    context.execDefault = execDefault;
+                    context.execTemplate = execTemplate;
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -848,108 +1043,73 @@ under the License.
                             </condition>
                             <widgets>
                                 <section>
-                                    <actions>
-                                        <script lang="groovy"><![CDATA[
-                                            import org.ofbiz.base.util.*;
-                                            
-                                            scriptBody = parameters.scriptBody as String;
-                                            templateBody = parameters.templateBody as String;
-                                            
-                                            execDefault = (scriptBody == null && templateBody == null);
-                                            if (scriptBody == null) {
-                                                scriptBody = "import org.ofbiz.base.util.*;\n" +
-                                                    "import org.ofbiz.entity.condition.*;\n" +
-                                                    "import org.ofbiz.entity.util.*;\n" +
-                                                    "\n" +
-                                                    "final module = \"TemplateTest.groovy\";\n" +
-                                                    "\n" +
-                                                    "// NOTE: Some screen groovy built-ins are not available from this form (such as the 'from' built-in; must use EntityQuery class here)\n" +
-                                                    "userParty = EntityQuery.use(delegator).from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
-                                                    "\n" +
-                                                    "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
-                                                    "\n" +
-                                                    "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
-                                            }
-                                            if (templateBody == null) {
-                                                templateBody = "<#assign ftlTestVar1 = testVar1>" +
-                                                    "\n" +
-                                                    "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
-                                            }
-                                            
-                                            execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
-                                            if (execTemplate && scriptBody) {
-                                                GroovyUtil.eval(scriptBody, context);
-                                            }
-                                            
-                                            context.scriptBody = scriptBody;
-                                            context.templateBody = templateBody;
-                                            context.execDefault = execDefault;
-                                            context.execTemplate = execTemplate;
-                                        ]]></script>
-                                    </actions>
+                                    <condition>
+                                        <not><if-true field="tmplTestEnabled"/></not>
+                                    </condition>
                                     <widgets>
-                                        <platform-specific><html><html-template><![CDATA[
-                                          <@script>
-                                            $(document).ready(function() {
-                                                CodeMirror.fromTextArea($('textarea#scriptBody')[0], {
-                                                    lineNumbers: true,
-                                                    matchBrackets: true,
-                                                    mode: "groovy",
-                                                    indentUnit: 4,
-                                                    indentWithTabs: ${indentWithTabs?string},
-                                                    foldGutter: true,
-                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
-                                                    }).on('change', function(cMirror){
-                                                        $('textarea#scriptBody')[0].value = cMirror.getValue();
-                                                    }
-                                                );
-                                                CodeMirror.fromTextArea($('textarea#templateBody')[0], {
-                                                    lineNumbers: true,
-                                                    matchBrackets: true,
-                                                    mode: "freemarker",
-                                                    indentUnit: 4,
-                                                    indentWithTabs: ${indentWithTabs?string},
-                                                    foldGutter: true,
-                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
-                                                    }).on('change', function(cMirror){
-                                                        $('textarea#templateBody')[0].value = cMirror.getValue();
-                                                    }
-                                                );
-                                            });
-                                          </@script>
-                                          <@section class="+cms-edit-elem cms-edit-template">
-                                            <@form method="post" id="editorForm" action=makeOfbizUrl("TemplateTest")>
-                                               <@section class="+editorContent">
-                                                  <@fields type="default-compact">
-                                                    <@field label=(rawLabel('CmsScriptBody')+" (Groovy)") type="textarea" class="+editor" 
-                                                        name="scriptBody" id="scriptBody" value=(scriptBody!"") rows=30/>
-                                                    <@field label=(rawLabel('CmsTemplateBody')+" (Freemarker)") type="textarea" class="+editor" 
-                                                        name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
-                                                  </@fields>
-                                                  <style type="text/css">
-                                                    .CodeMirror-hints {font-size:1em;}
-                                                  </style>
-                                               </@section>
-                                               <@field type="submit"/>
-                                            </@form>
-                                          </@section>
-                                           
-                                          <#-- FREEMARKER OUTPUT -->
-                                          <#if execTemplate>
-                                            <@section title=uiLabelMap.CmsOutput>
-                                              <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
-                                              <#assign tmplBodyOut><@tmplBodyCode/></#assign>
-                                              ${tmplBodyOut}
-                                            </@section>
-                                            <@section title=uiLabelMap.CmsRawOutput>
-                                              ${tmplBodyOut?html}
-                                            </@section>
-                                          </#if>
-                                        ]]></html-template></html></platform-specific>
+                                        <label style="common-msg-warning">${uiLabelMap.CommonFunctionIsDisabled}</label>
                                     </widgets>
                                 </section>
+                                <platform-specific><html><html-template><![CDATA[
+                                  <@script>
+                                    $(document).ready(function() {
+                                        CodeMirror.fromTextArea($('textarea#scriptBody')[0], {
+                                            lineNumbers: true,
+                                            matchBrackets: true,
+                                            mode: "groovy",
+                                            indentUnit: 4,
+                                            indentWithTabs: ${indentWithTabs?string},
+                                            foldGutter: true,
+                                            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                            extraKeys: {"Ctrl-Space": "autocomplete"}
+                                            }).on('change', function(cMirror){
+                                                $('textarea#scriptBody')[0].value = cMirror.getValue();
+                                            }
+                                        );
+                                        CodeMirror.fromTextArea($('textarea#templateBody')[0], {
+                                            lineNumbers: true,
+                                            matchBrackets: true,
+                                            mode: "freemarker",
+                                            indentUnit: 4,
+                                            indentWithTabs: ${indentWithTabs?string},
+                                            foldGutter: true,
+                                            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                            extraKeys: {"Ctrl-Space": "autocomplete"}
+                                            }).on('change', function(cMirror){
+                                                $('textarea#templateBody')[0].value = cMirror.getValue();
+                                            }
+                                        );
+                                    });
+                                  </@script>
+                                  <@section class="+cms-edit-elem cms-edit-template">
+                                    <@form method="post" id="editorForm" action=makePageUrl("TemplateTest")>
+                                       <@section class="+editorContent">
+                                          <@fields type="default-compact">
+                                            <@field label=(rawLabel('CmsScriptBody')+" (Groovy)") type="textarea" class="+editor" 
+                                                name="scriptBody" id="scriptBody" value=(scriptBody!"") rows=30/>
+                                            <@field label=(rawLabel('CmsTemplateBody')+" (Freemarker)") type="textarea" class="+editor" 
+                                                name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
+                                          </@fields>
+                                          <style type="text/css">
+                                            .CodeMirror-hints {font-size:1em;}
+                                          </style>
+                                       </@section>
+                                       <@field type="submit"/>
+                                    </@form>
+                                  </@section>
+                                   
+                                  <#-- FREEMARKER OUTPUT -->
+                                  <#if execTemplate>
+                                    <@section title=uiLabelMap.CmsOutput>
+                                      <#assign tmplBodyCode = raw(templateBody!"")?interpret>
+                                      <#assign tmplBodyOut><@tmplBodyCode/></#assign>
+                                      ${tmplBodyOut}
+                                    </@section>
+                                    <@section title=uiLabelMap.CmsRawOutput>
+                                      ${tmplBodyOut?html}
+                                    </@section>
+                                  </#if>
+                                ]]></html-template></html></platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
@@ -961,4 +1121,71 @@ under the License.
         </section>
     </screen>
 
+    <screen name="validateSystemLocations">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    vslResults = null;
+                    if (parameters.vslPaths || parameters.vslClassNames) {
+                        vslResults = dispatcher.runSync("validateSystemLocations", 
+                            [userLogin:context.userLogin, paths: parameters.vslPaths, classNames: parameters.vslClassNames]);
+                    }
+                    context.vslResults = vslResults;
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <form method="post" action="<@pageUrl uri=raw(vslTargetUri)/>">
+                        <@field type="textarea" name="vslPaths" label="Paths" value=(parameters.vslPaths!)/>
+                        <@field type="textarea" name="vslClassNames" label="Class names" value=(parameters.vslClassNames!)/>
+                        <@field type="submit"/>
+                    </form>
+                    <#if vslResults??>
+                      <@section title="Results:">
+                      <#if vslResults.pathResults??>
+                        <@section title="Valid paths:">
+                          <ul>
+                            <#list vslResults.pathResults as vslResult>
+                              <#if vslResult.valid>
+                                <li>${vslResult.value}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                        <@section title="Invalid paths:">
+                          <ul>
+                            <#list vslResults.pathResults as vslResult>
+                              <#if !vslResult.valid>
+                                <li>${vslResult.value}: ${vslResult.errMsg!}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                      </#if>
+                      <#if vslResults.classNameResults??>
+                        <@section title="Valid class names:">
+                          <ul>
+                            <#list vslResults.classNameResults as vslResult>
+                              <#if vslResult.valid>
+                                <li>${vslResult.value}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                        <@section title="Invalid class names:">
+                          <ul>
+                            <#list vslResults.classNameResults as vslResult>
+                              <#if !vslResult.valid>
+                                <li>${vslResult.value}: ${vslResult.errMsg!}</li>
+                              </#if>
+                            </#list>
+                          </ul>
+                        </@section>
+                      </#if>
+                      </@section>
+                    </#if>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

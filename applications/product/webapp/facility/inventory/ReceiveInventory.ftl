@@ -3,7 +3,7 @@
         <@commonMsg type="error">${invalidProductId}</@commonMsg>
     </#if>    
     <@section title=uiLabelMap.ProductReceiveItem>
-        <form name="receiveInventoryItem" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
+        <form name="receiveInventoryItem" method="post" action="<@pageUrl>ReceiveInventory</@pageUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <#-- <input type="hidden" name="initialSelected" value="Y"/> -->
             <@field type="lookup" label=uiLabelMap.ProductPurchaseOrderNumber tooltip=uiLabelMap.ProductLeaveSingleProductReceiving value=(requestParameters.purchaseOrderId!) formName="receiveInventoryItem" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>

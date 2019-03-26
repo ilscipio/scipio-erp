@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
     function quicklookup(func, locationelement, facilityelement, productelement) {
@@ -32,17 +19,17 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") text=uiLabelMap.CommonPrint class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makePageUrl("PickMoveStockSimple?facilityId=${facilityId!}") text=uiLabelMap.CommonPrint class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductStockMovesNeeded menuContent=menuContent>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
-          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name="selectAllForm">
+          <form method="post" action="<@pageUrl>processPhysicalStockMove</@pageUrl>" name="selectAllForm">
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />
               <#assign rowCount = 0>
-              <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+              <@table type="data-list" autoAltRows=true>
                <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductProductId}</@th>
@@ -149,7 +136,7 @@ under the License.
 </@section>      
       
 <@section title=uiLabelMap.ProductQuickStockMove>
-        <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name="quickStockMove">
+        <form method="post" action="<@pageUrl>processQuickStockMove</@pageUrl>" name="quickStockMove">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="lookup" label=uiLabelMap.ProductProduct formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 <@field type="lookup" label=uiLabelMap.ProductFromLocation formName="quickStockMove" name="locationSeqId" id="locationSeqId" fieldFormName="LookupFacilityLocation?facilityId=${facilityId}&amp;locationTypeEnumId=FLT_PICKLOC"/>

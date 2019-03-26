@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,12 +11,40 @@ under the License.
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    <service name="commonEntityImportInterface" engine="interface"><!-- SCIPIO: 2018-09-17 -->
+        <attribute name="allowEntity" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Allow entity names, exception on violations. Replaces "allowedEntityNames". Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: DEPRECATED, use allowEntityNames instead. Added 2017-06-15.</description>
+        </attribute>
+        <attribute name="disallowEntity" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Disallow entity names, exception on violations. Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="allowEntityWarn" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Allow entity names, violations warned. Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="disallowEntityWarn" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Disallow entity names, violations warned. Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="includeEntity" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Include entity names, violations ignored. Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="excludeEntity" type="java.util.Set" mode="IN" optional="true">
+            <description>SCIPIO: Exclude entity names, violations ignored. Added 2018-09-17.</description>
+        </attribute>
+        <attribute name="disallowUnsafeEntityWarn" type="Boolean" mode="IN" optional="true">
+            <description>SCIPIO: Disallow dangerous entity names, violations warned. Default: false. Added 2018-09-17.</description>
+        </attribute>
+    </service>
+
     <!-- Entity Import Services
          Transacitons are turned off for these services because they set transactions and timeouts inside the services with txTimeout parameter -->
     <service name="parseEntityXmlFile" engine="java"
             location="org.ofbiz.webtools.WebToolsServices" invoke="parseEntityXmlFile" auth="true" use-transaction="false">
         <description>Parses an entity xml file or an entity xml text</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <implements service="commonEntityImportInterface"/><!-- SCIPIO: 2018-09-17 -->
         <attribute name="url" type="java.net.URL" mode="IN" optional="true"/>
         <attribute name="xmltext" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="mostlyInserts" type="String" mode="IN" optional="true"/>
@@ -38,7 +53,6 @@ under the License.
         <attribute name="createDummyFks" type="String" mode="IN" optional="true"/>
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
-        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="rowProcessed" type="Long" mode="OUT" optional="false"/>
     </service>
     <service name="entityImport" engine="java"
@@ -46,6 +60,7 @@ under the License.
         <description>Imports an entity xml file or text string</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
         <implements service="uploadFileInterface"/><!-- SCIPIO: 2017-06-15: now supports single file upload -->
+        <implements service="commonEntityImportInterface"/><!-- SCIPIO: 2018-09-17 -->
         <attribute name="filename" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="fmfilename" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="fulltext" type="String" mode="IN" optional="true" allow-html="any"/>
@@ -56,13 +71,13 @@ under the License.
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="txTimeout" type="Integer" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
-        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="messages" type="List" mode="OUT" optional="false"/>
     </service>    
     <service name="entityImportDir" engine="java"
             location="org.ofbiz.webtools.WebToolsServices" invoke="entityImportDir" auth="true" use-transaction="false">
         <description>Imports all entity xml files contained in a directory</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <implements service="commonEntityImportInterface"/><!-- SCIPIO: 2018-09-17 -->
         <attribute name="path" type="String" mode="IN" optional="true"/>
         <attribute name="mostlyInserts" type="String" mode="IN" optional="true"/>
         <attribute name="maintainTimeStamps" type="String" mode="IN" optional="true"/>
@@ -78,6 +93,8 @@ under the License.
         location="org.ofbiz.webtools.WebToolsServices" invoke="entityImportReaders" auth="true" use-transaction="false">
         <description>Imports an entity xml file or text string</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <!-- SCIPIO: TODO: not supported in the implementation easily yet
+        <implements service="commonEntityImportInterface"/>-->
         <attribute name="readers" type="String" mode="IN" optional="true"/>
         <attribute name="overrideDelegator" type="String" mode="IN" optional="true"/>
         <attribute name="overrideGroup" type="String" mode="IN" optional="true"/>
@@ -191,7 +208,6 @@ under the License.
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="exportId" type="String" mode="OUT" optional="false"/>
-        
     </service>
     
     <service name="deleteEntityExport" engine="entity-auto" default-entity-name="EntityExport" invoke="delete" auth="true">
@@ -199,4 +215,15 @@ under the License.
         <attribute name="exportId" mode="IN" type="String" optional="false"/>
     </service>
     
+    <service name="validateSystemLocations" engine="java" location="com.ilscipio.scipio.webtools.WebToolsServices" invoke="validateSystemLocations" 
+        auth="true" use-transaction="false">
+        <description>Tool to verify that a bunch of paths actually exist in the system, to detect problems (SCIPIO)</description>
+        <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <attribute name="pathList" mode="IN" type="List" optional="true"/>
+        <attribute name="paths" mode="IN" type="String" optional="true" allow-html="any"/>
+        <attribute name="classNameList" mode="IN" type="List" optional="true"/>
+        <attribute name="classNames" mode="IN" type="String" optional="true" allow-html="any"/>
+        <attribute name="pathResults" mode="OUT" type="List" optional="true"/>
+        <attribute name="classNameResults" mode="OUT" type="List" optional="true"/>
+    </service>
 </services>

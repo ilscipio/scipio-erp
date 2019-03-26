@@ -62,7 +62,7 @@ public class GenericWebEvent {
         String entityName = request.getParameter("entityName");
         Locale locale = UtilHttp.getLocale(request);
 
-        if (entityName == null || entityName.length() <= 0) {
+        if (UtilValidate.isEmpty(entityName)) {
             String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.entity_name_not_specified", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.", module);
@@ -96,7 +96,7 @@ public class GenericWebEvent {
 
         String updateMode = request.getParameter("UPDATE_MODE");
 
-        if (updateMode == null || updateMode.length() <= 0) {
+        if (UtilValidate.isEmpty(updateMode)) {
             String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.update_mode_not_specified", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName, module);
@@ -104,8 +104,8 @@ public class GenericWebEvent {
         }
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request.getSession()) &&
-            !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request) && // SCIPIO: Now using request; was: request.getSession()
+            !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
                 Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode, "entityName", entity.getEntityName(), "entityPlainTableName", entity.getPlainTableName());
                 String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.not_sufficient_permissions_01", messageMap, locale);
                 errMsg += UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.not_sufficient_permissions_02", messageMap, locale) + ".";
@@ -151,8 +151,8 @@ public class GenericWebEvent {
         }
 
         // if this is a delete, do that before getting all of the non-pk parameters and validating them
-        if (updateMode.equals("DELETE")) {
-            
+        if ("DELETE".equals(updateMode)) {
+
             // SCIPIO: 2017-04-13: NOTE whether a delete attempt was made, and save the previous value
             request.setAttribute("updateGenericDeleteAttempt", Boolean.TRUE);
             try {
@@ -164,7 +164,7 @@ public class GenericWebEvent {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             int removed = 0;
             // Remove associated/dependent entries from other tables here
             // Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
@@ -221,7 +221,7 @@ public class GenericWebEvent {
 
 
         // if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
-        if (updateMode.equals("CREATE")) {
+        if ("CREATE".equals(updateMode)) {
             GenericValue tempEntity = null;
 
             try {
@@ -284,7 +284,7 @@ public class GenericWebEvent {
                     resultBool = Boolean.TRUE;
                 }
 
-                if (!resultBool.booleanValue()) {
+                if (!resultBool) {
                     Field msgField;
                     String message;
 
@@ -309,7 +309,7 @@ public class GenericWebEvent {
             return "error";
         }
 
-        if (updateMode.equals("CREATE")) {
+        if ("CREATE".equals(updateMode)) {
             try {
                 delegator.create(findByEntity.getEntityName(), findByEntity.getAllFields());
             } catch (GenericEntityException e) {
@@ -319,7 +319,7 @@ public class GenericWebEvent {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-        } else if (updateMode.equals("UPDATE")) {
+        } else if ("UPDATE".equals(updateMode)) {
             GenericValue value = delegator.makeValue(findByEntity.getEntityName(), findByEntity.getAllFields());
 
             try {

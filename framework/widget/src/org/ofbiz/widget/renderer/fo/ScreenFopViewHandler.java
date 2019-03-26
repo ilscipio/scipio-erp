@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -87,6 +88,10 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
 
+            // SCIPIO: 2018-10-18: in addition, dump the screens renderer into the request attributes,
+            // for some cases where only request is available
+            request.setAttribute("screens", screens);
+
             // this is the object used to render forms from their definitions
             screens.getContext().put("formStringRenderer", formStringRenderer);
             // SCIPIO: new early encoder
@@ -95,6 +100,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder", delegator));
             screens.getContext().put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
             screens.render(page);
+        // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
+        //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException e) {
         } catch (Exception e) {
             renderError("Problems with the response writer/output stream", e, "[Not Yet Rendered]", request, response);
             return;
@@ -110,7 +117,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
         if (UtilValidate.isEmpty(contentType)) {
             contentType = UtilProperties.getPropertyValue("widget", getName() + ".default.contenttype");
         }
-        
+
         // get encryption related parameters
         FOUserAgent foUserAgent = null;
         String userPassword = request.getParameter("userPassword");
@@ -130,13 +137,13 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
                     // ignore
                 }
             }
-            
+
             boolean encryptMetadata = Boolean.parseBoolean(UtilValidate.isEmpty(request.getParameter("encrypt-metadata")) ? ApacheFopWorker.getEncryptMetadataDefault() : request.getParameter("encrypt-metadata"));
             boolean allowFillInForms = Boolean.parseBoolean(UtilValidate.isEmpty(request.getParameter("allowFillInForms")) ? ApacheFopWorker.getAllowFillInFormsDefault() : request.getParameter("allowFillInForms"));
             boolean allowAccessContent = Boolean.parseBoolean(UtilValidate.isEmpty(request.getParameter("allowAccessContent")) ? ApacheFopWorker.getAllowAccessContentDefault() : request.getParameter("allowAccessContent"));
             boolean allowAssembleDocument = Boolean.parseBoolean(UtilValidate.isEmpty(request.getParameter("allowAssembleDocument")) ? ApacheFopWorker.getAllowAssembleDocumentDefault() : request.getParameter("allowAssembleDocument"));
             boolean allowPrintHq = Boolean.parseBoolean(UtilValidate.isEmpty(request.getParameter("allowPrintHq")) ? ApacheFopWorker.getAllowPrintHqDefault() : request.getParameter("allowPrintHq"));
-            
+
             FopFactory fopFactory = ApacheFopWorker.getFactoryInstance();
             foUserAgent = fopFactory.newFOUserAgent();
             PDFEncryptionParams pdfEncryptionParams = new PDFEncryptionParams(userPassword, ownerPassword, allowPrint, allowCopyContent, allowEditContent, allowEditAnnotations, encryptMetadata);
@@ -145,14 +152,18 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             pdfEncryptionParams.setAllowAssembleDocument(allowAssembleDocument);
             pdfEncryptionParams.setAllowPrintHq(allowPrintHq);
             pdfEncryptionParams.setEncryptionLengthInBits(encryptionLength);
-            foUserAgent.getRendererOptions().put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
+            // SCIPIO: needless warning
+            //foUserAgent.getRendererOptions().put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> rendererOptions = foUserAgent.getRendererOptions();
+            rendererOptions.put(PDFEncryptionOption.ENCRYPTION_PARAMS, pdfEncryptionParams);
         }
-        
+
         Reader reader = new StringReader(screenOutString);
         StreamSource src = new StreamSource(reader);
-        ByteArrayOutputStream out = new ByteArrayOutputStream(); 
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         /* Debug area, uncomment this to view the xml file generate before analyse by fop
-        try { 
+        try {
                 java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/temp.xsl.fo"));
                 fw.write(screenOutString);
                 fw.close();
@@ -194,6 +205,8 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             response.setContentType("text/html");
             response.getWriter().write(writer.toString());
             writer.close();
+        // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
+        //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException x) {
         } catch (Exception x) {
             Debug.logError("Multiple errors rendering FOP", module);
             throw new ViewHandlerException("Multiple errors rendering FOP", x);

@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
@@ -41,7 +40,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
@@ -79,7 +77,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
             String mimeTypeId) {
         super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
+
     @Override
     protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
         return getWorkEffortContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, contentLang);
@@ -233,7 +231,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
                         CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
             }
         }
-        
+
         try {
             if (useCache) {
                 String cachedValue = workEffortContentCache.get(cacheKey);
@@ -301,7 +299,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, workEffortContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
             return;
         }
-        
+
         // check for workeffort field
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
         ModelEntity workEffortModel = delegator.getModelEntity("WorkEffort");
@@ -323,7 +321,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
         // SCIPIO: delegating
         return getWorkEffortContentTextList(workEffort, workEffortContentTypeId, locale, mimeTypeId, delegator, dispatcher, true);
     }
-    
+
     public static List<String> getWorkEffortContentTextList(GenericValue workEffort, String workEffortContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean cache) throws GeneralException, IOException {
         List<GenericValue> partyContentList = EntityQuery.use(delegator).from("WorkEffortContent")
                 .where("workEffortId", workEffort.getString("partyId"), "workEffortContentTypeId", workEffortContentTypeId)
@@ -373,7 +371,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
         }
         return workEffortContent;
     }
-    
+
     // SCIPIO: backward-compat
     public static GenericValue getFirstWorkEffortContentByType(String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Delegator delegator) {
         return getFirstWorkEffortContentByType(workEffortId, workEffort, workEffortContentTypeId, delegator, true);

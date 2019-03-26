@@ -24,7 +24,7 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
 public final class ReferenceCleaner {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final class CleanerThread extends Thread {
         private boolean keepRunning = true;
@@ -63,7 +63,7 @@ public final class ReferenceCleaner {
     private ReferenceCleaner() {
     }
 
-    private static final ReferenceQueue<Object> QUEUE = new ReferenceQueue<Object>();
+    private static final ReferenceQueue<Object> QUEUE = new ReferenceQueue<>();
 
     public interface Removable {
         void remove() throws Exception;

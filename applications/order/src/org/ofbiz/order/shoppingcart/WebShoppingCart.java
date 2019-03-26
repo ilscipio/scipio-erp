@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -35,9 +36,26 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * Extension of {@link org.ofbiz.order.shoppingcart.ShoppingCart ShoppingCart}
  * class which provides web presentation layer specific functionality
  * related specifically to user session information.
+ * <p>
+ * SCIPIO: IMPORTANT: 2018-11-22: Any event or code which modifies the main shopping cart stored in session ("shoppingCart") 
+ * must now wrap its update code in a {@link CartUpdate#updateSection} or {@link CartSync#synchronizedSection} section.
+ * The main instance currently stored in session/request attribute is now considered immutable and can only be updated using
+ * an update section (which creates a modifiable copy that may be committed to replace the main session cart instance).
+ *
+ * @see CartUpdate
+ * @see CartSync
  */
 @SuppressWarnings("serial")
 public class WebShoppingCart extends ShoppingCart {
+
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    /**
+     * Full constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         // for purchase orders, bill to customer partyId must be set - otherwise, no way to know who we're purchasing for.  supplierPartyId is furnished
         // by order manager for PO entry.
@@ -52,8 +70,20 @@ public class WebShoppingCart extends ShoppingCart {
         this.userLogin = (GenericValue) session.getAttribute("userLogin");
         this.autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
         this.orderPartyId = (String) session.getAttribute("orderPartyId");
+
+        // SCIPIO: Determine if allow ship estimates (WARN: do not determine this from request params; server-side info only!)
+        Boolean allowMissingShipEstimates = UtilMisc.booleanValue(request.getServletContext().getAttribute("orderAllowMissingShipEstimates"));
+        if (allowMissingShipEstimates != null) {
+            this.setAllowMissingShipEstimates(allowMissingShipEstimates);
+        }
     }
 
+    /**
+     * Common constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
     public WebShoppingCart(HttpServletRequest request) {
         this(request, UtilHttp.getLocale(request), UtilHttp.getCurrencyUom(request));
     }
@@ -61,5 +91,17 @@ public class WebShoppingCart extends ShoppingCart {
     /** Creates a new cloned ShoppingCart Object. */
     public WebShoppingCart(ShoppingCart cart) {
         super(cart);
+    }
+
+    /** SCIPIO: Creates a new cloned ShoppingCart Object, exact copy. */
+    public WebShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        super(cart, exactCopy);
+    }
+
+    /** SCIPIO: Performs an exact, deep copy of the cart.
+     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
+    @Override
+    public WebShoppingCart exactCopy() {
+        return new WebShoppingCart(this, true);
     }
 }

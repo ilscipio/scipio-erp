@@ -1,30 +1,17 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section title=uiLabelMap.PageTitleReturnHeader>
         <#if returnHeader??>
-            <form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
+            <form name="returnhead" method="post" action="<@pageUrl>updateReturn</@pageUrl>">
             <input type="hidden" name="returnId" value="${returnHeader.returnId}" />
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
             <input type="hidden" name="currentStatusId" value="${returnHeader.statusId!}" />
         <#else>
-            <form name="returnhead" method="post" action="<@ofbizUrl>createReturn</@ofbizUrl>">
+            <form name="returnhead" method="post" action="<@pageUrl>createReturn</@pageUrl>">
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
         </#if>
 
@@ -61,7 +48,7 @@ under the License.
             </#if>
             <option value="">${uiLabelMap.FacilityNoFacility}</option>
             <#list facilityList as facility>
-              <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected="selected"</#if>>${facility.facilityName!facility.facilityId}</option>
+              <option value="${facility.facilityId}"<#if (facilityList?size == 1)> selected="selected"</#if>>${facility.facilityName!facility.facilityId}</option>
             </#list>
           </@field>
         <#if billingAccountList?has_content>
@@ -104,7 +91,7 @@ under the License.
                 <@field type="input" size="20" name="paymentMethodId" value=((returnHeader.paymentMethodId)!)/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${raw(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
           <@field type="select" label=uiLabelMap.OrderReturnNeedsAutoReceive name="needsInventoryReceive">

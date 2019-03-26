@@ -19,7 +19,6 @@
 package org.ofbiz.service.calendar;
 
 import java.util.ArrayList;
-import com.ibm.icu.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,10 +27,11 @@ import java.util.List;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.service.calendar.TemporalExpression;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+
+import com.ibm.icu.util.Calendar;
 
 /**
  * Recurrence Info Object
@@ -50,16 +50,18 @@ public class RecurrenceInfo {
     /** Creates new RecurrenceInfo */
     public RecurrenceInfo(GenericValue info) throws RecurrenceInfoException {
         this.info = info;
-        if (!info.getEntityName().equals("RecurrenceInfo"))
+        if (!"RecurrenceInfo".equals(info.getEntityName())) {
             throw new RecurrenceInfoException("Invalid RecurrenceInfo Value object.");
+        }
         init();
     }
 
     /** Initializes the rules for this RecurrenceInfo object. */
     public void init() throws RecurrenceInfoException {
 
-        if (info.get("startDateTime") == null)
+        if (info.get("startDateTime") == null) {
             throw new RecurrenceInfoException("Recurrence startDateTime cannot be null.");
+        }
 
         // Get start date
         long startTime = info.getTimestamp("startDateTime").getTime();
@@ -75,7 +77,7 @@ public class RecurrenceInfo {
 
         // Get the recurrence rules objects
         try {
-            rRulesList = new ArrayList<RecurrenceRule>();
+            rRulesList = new ArrayList<>();
             for (GenericValue value: info.getRelated("RecurrenceRule", null, null, false)) {
                 rRulesList.add(new RecurrenceRule(value));
             }
@@ -87,7 +89,7 @@ public class RecurrenceInfo {
 
         // Get the exception rules objects
         try {
-            eRulesList = new ArrayList<RecurrenceRule>();
+            eRulesList = new ArrayList<>();
             for (GenericValue value: info.getRelated("ExceptionRecurrenceRule", null, null, false)) {
                 eRulesList.add(new RecurrenceRule(value));
             }
@@ -114,7 +116,7 @@ public class RecurrenceInfo {
 
     /** Returns the startDate Date object. */
     public Date getStartDate() {
-        return this.startDate;
+        return (Date) this.startDate.clone();
     }
 
     /** Returns the long value of the startDate. */
@@ -144,8 +146,9 @@ public class RecurrenceInfo {
 
     /** Returns the current count of this recurrence. */
     public long getCurrentCount() {
-        if (info.get("recurrenceCount") != null)
-            return info.getLong("recurrenceCount").longValue();
+        if (info.get("recurrenceCount") != null) {
+            return info.getLong("recurrenceCount");
+        }
         return 0;
     }
 
@@ -164,19 +167,18 @@ public class RecurrenceInfo {
 
     /** Removes the recurrence from persistant store. */
     public void remove() throws RecurrenceInfoException {
-        List<RecurrenceRule> rulesList = new ArrayList<RecurrenceRule>();
+        List<RecurrenceRule> rulesList = new ArrayList<>();
 
         rulesList.addAll(rRulesList);
         rulesList.addAll(eRulesList);
 
         try {
-            for (RecurrenceRule rule: rulesList)
+            for (RecurrenceRule rule: rulesList) {
                 rule.remove();
+            }
             info.remove();
-        } catch (RecurrenceRuleException rre) {
-            throw new RecurrenceInfoException(rre.getMessage(), rre);
-        } catch (GenericEntityException gee) {
-            throw new RecurrenceInfoException(gee.getMessage(), gee);
+        } catch (RecurrenceRuleException | GenericEntityException e) {
+            throw new RecurrenceInfoException(e.getMessage(), e);
         }
     }
 
@@ -262,7 +264,9 @@ public class RecurrenceInfo {
 
     private long getNextTime(RecurrenceRule rule, long fromTime) {
         long nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
-        if (Debug.verboseOn()) Debug.logVerbose("Next Time Before Date Check: " + nextTime, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Next Time Before Date Check: " + nextTime, module);
+        }
         return checkDateList(rDateList, nextTime, fromTime);
     }
 
@@ -271,10 +275,11 @@ public class RecurrenceInfo {
 
         if (UtilValidate.isNotEmpty(dateList)) {
             for (Date thisDate: dateList) {
-                if (nextTime > 0 && thisDate.getTime() < nextTime && thisDate.getTime() > fromTime)
+                if (nextTime > 0 && thisDate.getTime() < nextTime && thisDate.getTime() > fromTime) {
                     nextTime = thisDate.getTime();
-                else if (nextTime == 0 && thisDate.getTime() > fromTime)
+                } else if (nextTime == 0 && thisDate.getTime() > fromTime) {
                     nextTime = thisDate.getTime();
+                }
             }
         }
         return nextTime;
@@ -286,8 +291,9 @@ public class RecurrenceInfo {
         while (exceptRulesIterator.hasNext()) {
             RecurrenceRule except = exceptRulesIterator.next();
 
-            if (except.isValid(getStartTime(), time) || eDateList.contains(new Date(time)))
+            if (except.isValid(getStartTime(), time) || eDateList.contains(new Date(time))) {
                 return false;
+            }
         }
         return true;
     }
@@ -319,10 +325,8 @@ public class RecurrenceInfo {
             RecurrenceInfo newInfo = new RecurrenceInfo(value);
 
             return newInfo;
-        } catch (RecurrenceRuleException re) {
-            throw new RecurrenceInfoException(re.getMessage(), re);
-        } catch (GenericEntityException ee) {
-            throw new RecurrenceInfoException(ee.getMessage(), ee);
+        } catch (RecurrenceRuleException | GenericEntityException e) {
+            throw new RecurrenceInfoException(e.getMessage(), e);
         } catch (RecurrenceInfoException rie) {
             throw rie;
         }

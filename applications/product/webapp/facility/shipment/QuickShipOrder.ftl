@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
 // function called from ShipmentScaleApplet when a weight is read
@@ -23,16 +10,16 @@ function setWeight(weight) {
 }
 </@script>
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}") text=uiLabelMap.ProductNextShipment class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
+    <@menuitem type="link" href=makePageUrl("quickShipOrder?facilityId=${facilityId}") text=uiLabelMap.ProductNextShipment class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
     <#if shipment?has_content>
-      <@menuitem type="link" href=makeOfbizUrl("EditShipment?shipmentId=${shipmentId}") text=uiLabelMap.ProductEditShipment class="+${styles.action_nav!} ${styles.action_update!}"/>
+      <@menuitem type="link" href=makePageUrl("EditShipment?shipmentId=${shipmentId}") text=uiLabelMap.ProductEditShipment class="+${styles.action_nav!} ${styles.action_update!}"/>
     </#if>
   </@menu>
 </#macro>
-<@section title="${rawLabel('ProductQuickShipOrderFrom')} ${rawString(facility.facilityName!)} [${rawLabel('CommonId')}:${rawString(facilityId!)}]">
+<@section title="${rawLabel('ProductQuickShipOrderFrom')} ${raw(facility.facilityName!)} [${rawLabel('CommonId')}:${raw(facilityId!)}]">
 
   <#if shipment??>
     <#if 1 < shipmentPackages.size()>
@@ -49,7 +36,7 @@ function setWeight(weight) {
             <#-- multiple routes -->
             <@alert type="info">${uiLabelMap.ProductMoreRouteSegmentFound}.</@alert>
           <#elseif !requestParameters.shipmentRouteSegmentId?? || requestAttributes._ERROR_MESSAGE_??>
-            <form name="routeForm" method="post" action="<@ofbizUrl>setQuickRouteInfo</@ofbizUrl>">
+            <form name="routeForm" method="post" action="<@pageUrl>setQuickRouteInfo</@pageUrl>">
             <@fields type="default-manual">
               <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))!>
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson", false))!>
@@ -91,7 +78,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y") class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductReWeighPackage />
+                <@field type="submit" submitType="link" href=makePageUrl("quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y") class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductReWeighPackage />
               </@cell>
             </@row>
             <@row>
@@ -99,7 +86,7 @@ function setWeight(weight) {
                 &nbsp;
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.routeForm.submit();" />
+                <@field type="submit" submitType="image" src=makeContentUrl("/images/spacer.gif") onClick="javascript:document.routeForm.submit();" />
               </@cell>
             </@row>
             </@fields>
@@ -111,19 +98,19 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductShippingLabel}</a><br />
-              <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
+              <a href="<@pageUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductShippingLabel}</a><br />
+              <a href="<@pageUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
             </center>
           </#if>
           </@section>
         <#else>
           <@section>
-          <form name="weightForm" method="post" action="<@ofbizUrl>setQuickPackageWeight</@ofbizUrl>">
+          <form name="weightForm" method="post" action="<@pageUrl>setQuickPackageWeight</@pageUrl>">
             <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom", false)!>
             <input type="hidden" name="facilityId" value="${facilityId!}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-              <@field type="generic" label="${rawLabel('ProductPackage')} ${rawString(shipmentPackage.shipmentPackageSeqId)} ${rawLabel('ProductWeight')}">
+              <@field type="generic" label="${rawLabel('ProductPackage')} ${raw(shipmentPackage.shipmentPackageSeqId)} ${rawLabel('ProductWeight')}">
                   <@field type="input" name="weight" />
                   <@field type="select" name="weightUomId">
                     <#if weightUom?has_content>
@@ -136,7 +123,7 @@ function setWeight(weight) {
                   </@field>
               </@field>
               <@field type="submitarea">
-                  <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.weightForm.submit();"/>
+                  <@field type="submit" submitType="image" src=makeContentUrl("/images/spacer.gif") onClick="javascript:document.weightForm.submit();"/>
                   <@field type="submit" submitType="link" href="javascript:document.weightForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductSetWeight />
               </@field>
           </form>
@@ -164,13 +151,13 @@ function setWeight(weight) {
     </#if>
   <#else>
     <@section>
-    <form name="selectOrderForm" method="post" action="<@ofbizUrl>createQuickShipment</@ofbizUrl>">
+    <form name="selectOrderForm" method="post" action="<@pageUrl>createQuickShipment</@pageUrl>">
       <input type="hidden" name="facilityId" value="${facilityId!}" />
       <input type="hidden" name="originFacilityId" value="${facilityId!}" />
       <input type="hidden" name="setPackedOnly" value="Y" />
         <@field type="input" label=uiLabelMap.ProductOrderNumber name="orderId" size="20" maxlength="20" value=(requestParameters.orderId!) />
         <@field type="submitarea">
-            <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
+            <@field type="submit" submitType="image" src=makeContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
             <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductShipOrder />
         </@field>
     </form>

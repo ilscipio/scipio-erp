@@ -16,11 +16,11 @@ import java.util.Map;
 public abstract class StdTemplateFtlUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected StdTemplateFtlUtil() {
     }
-    
-    
+
+
     /**
      * Heuristically calculates container grid size factors from lists of parent container sizes.
      * <p>
@@ -37,5 +37,5 @@ public abstract class StdTemplateFtlUtil {
         res.put("small", 1F);
         return res; */
     }
-    
+
 }

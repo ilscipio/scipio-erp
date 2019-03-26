@@ -29,6 +29,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.webapp.stats.VisitHandler;
 
 /**
@@ -40,11 +41,18 @@ public class CartEventListener implements HttpSessionListener {
 
     public CartEventListener() {}
 
+    @Override
     public void sessionCreated(HttpSessionEvent event) {
-        //for this one do nothing when the session is created...
-        //HttpSession session = event.getSession();
+        HttpSession session = event.getSession();
+
+        // SCIPIO: Dedicated lock for main "shoppingCart" session attribute
+        CartSync.createSetLockObject(session);
+
+        // SCIPIO: Dedicated lock for product search (NOTE: tiny performance enhancement only, not really needed anymore)
+        ProductSearchSession.createSetSyncObject(session);
     }
 
+    @Override
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
@@ -75,11 +83,12 @@ public class CartEventListener implements HttpSessionListener {
 
             Debug.logInfo("Saving abandoned cart", module);
             int seqId = 1;
+
             for (ShoppingCartItem cartItem : cart) {
                 GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine");
 
                 cartAbandonedLine.set("visitId", visit.get("visitId"));
-                cartAbandonedLine.set("cartAbandonedLineSeqId", (Integer.valueOf(seqId)).toString());
+                cartAbandonedLine.set("cartAbandonedLineSeqId", Integer.toString(seqId));
                 cartAbandonedLine.set("productId", cartItem.getProductId());
                 cartAbandonedLine.set("prodCatalogId", cartItem.getProdCatalogId());
                 cartAbandonedLine.set("quantity", cartItem.getQuantity());

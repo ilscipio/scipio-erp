@@ -30,7 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.widget.artifact.ArtifactInfoContext;
 import org.ofbiz.widget.artifact.ArtifactInfoGatherer;
@@ -100,7 +99,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.servicesUsedInThisScreen.add(aif.getServiceArtifactInfo(serviceName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allScreenInfosReferringToServiceName, serviceName);
+            addToSortedSetInMap(this, aif.allScreenInfosReferringToServiceName, serviceName); // SCIPIO: switched method
         }
     }
 
@@ -119,7 +118,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.entitiesUsedInThisScreen.add(aif.getEntityArtifactInfo(entityName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allScreenInfosReferringToEntityName, entityName);
+            addToSortedSetInMap(this, aif.allScreenInfosReferringToEntityName, entityName); // SCIPIO: switched method
         }
     }
 
@@ -139,7 +138,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.formsIncludedInThisScreen.add(aif.getFormWidgetArtifactInfo(formName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allScreenInfosReferringToForm, formName);
+            addToSortedSetInMap(this, aif.allScreenInfosReferringToForm, formName); // SCIPIO: switched method
         }
     }
 
@@ -156,7 +155,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
                 // the forward reference
                 this.requestsLinkedToInScreen.add(aif.getControllerRequestArtifactInfo(UtilURL.fromUrlString(controllerXmlUrl), requestUri));
                 // the reverse reference
-                UtilMisc.addToSortedSetInMap(this, aif.allScreenInfosReferringToRequest, requestUniqueId);
+                addToSortedSetInMap(this, aif.allScreenInfosReferringToRequest, requestUniqueId); // SCIPIO: switched method
             }
         }
     }

@@ -1,5 +1,5 @@
 <@section>
-    <form name="FindMarketingCampaign" action="<@ofbizUrl>FindMarketingCampaign</@ofbizUrl>" method="POST">
+    <form name="FindMarketingCampaign" action="<@pageUrl>FindMarketingCampaign</@pageUrl>" method="POST">
        <@field type="input" name="marketingCampaignId" label=uiLabelMap.MarketingCampaignId />
        <@field type="input" name="campaignName" label=uiLabelMap.MarketingCampaignName />
        <@field type="input" name="parentCampaignId" label=uiLabelMap.MarketingParentCampaignId />

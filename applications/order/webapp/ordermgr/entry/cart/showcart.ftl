@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@script>
@@ -57,7 +44,7 @@ under the License.
         <#if parameters.availabalityList?has_content>
         <@row>
           <@cell>
-          <@table type="data-list" autoAltRows=false> <#-- orig: class="" -->
+          <@table type="data-list" autoAltRows=false>
             <@thead>
               <@tr>
                   <@th>${uiLabelMap.Facility}</@th>
@@ -85,13 +72,13 @@ under the License.
         <@cell>
           <#-- SCIPIO: NOTE (2016-02-03): default-alt1 automatically expresses alternate checkbox style. see styles hash. -->
           <@fields type="default-alt1">
-            <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
+            <form name="qohAtpForm" method="post" action="<@pageUrl>${target}</@pageUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <input type="hidden" name="productId"/>
                 <input type="hidden" id="ownerPartyId" name="ownerPartyId" value="${shoppingCart.getBillToCustomerPartyId()!}" />
             </form>
               
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
+            <form method="post" action="<@pageUrl>additem</@pageUrl>" name="quickaddform">
                 <#if orderType=="PURCHASE_ORDER">
                   <#if supplierPartyId?has_content><#-- SCIPIO: use supplier not partyId: partId?has_content -->                                               
                     <#assign fieldFormName="LookupSupplierProduct?partyId=${supplierPartyId}">
@@ -127,7 +114,7 @@ under the License.
             </form>
 
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform">
+            <form method="post" action="<@pageUrl>additem</@pageUrl>" name="bulkworkaddform">
                 <@field type="select" label=uiLabelMap.OrderOrderItemType name="add_item_type">
                   <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
                 </@field>

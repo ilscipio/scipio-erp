@@ -27,9 +27,10 @@ import org.ofbiz.widget.model.ModelFormField;
 /**
  * Widget Library - Form/Grid renderer.
  */
-public interface FormStringRenderer {
+public interface FormStringRenderer extends StringRenderer { // SCIPIO: StringRenderer
     public void renderDisplayField(Appendable writer, Map<String, Object> context, ModelFormField.DisplayField displayField) throws IOException;
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, ModelFormField.HyperlinkField hyperlinkField) throws IOException;
+    public void renderMenuField(Appendable writer, Map<String, Object> context, ModelFormField.MenuField menuField) throws IOException;
 
     public void renderTextField(Appendable writer, Map<String, Object> context, ModelFormField.TextField textField) throws IOException;
     public void renderTextareaField(Appendable writer, Map<String, Object> context, ModelFormField.TextareaField textareaField) throws IOException;
@@ -52,25 +53,35 @@ public interface FormStringRenderer {
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
-    
+
     // SCIPIO: new
     public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     // SCIPIO: 2017-04-21: new
     public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
-    
+
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     public void renderFormatHeaderRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    /**
+     * renderFormatHeaderOpen.
+     * SCIPIO: NOTE: 2018-09-04: Newly-added from upstream, not used at this time (TODO: REVIEW).
+     */
+    public void renderFormatHeaderOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    /**
+     * renderFormatHeaderOpen.
+     * SCIPIO: NOTE: 2018-09-04: Newly-added from upstream, not used at this time (TODO: REVIEW).
+     */
+    public void renderFormatHeaderClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) throws IOException;
     public void renderFormatHeaderRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) throws IOException;
 
     public void renderFormatHeaderRowFormCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellTitleSeparator(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) throws IOException;
-    
+
     // SCIPIO: Table footer
     public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
@@ -106,14 +117,15 @@ public interface FormStringRenderer {
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ModelFormField.ContainerField containerField) throws IOException;
     public void renderFieldGroupOpen(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException;
     public void renderFieldGroupClose(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException;
-    
+    /**
+     * renderEmptyFormDataMessage.
+     * SCIPIO: NOTE: 2018-09-04: Newly-added from upstream, this may not necessarily be used yet at this time (TODO: REVIEW);
+     * there is a good chance this is not needed in Scipio, as similar but more versatile mechanism was already added (see widget.properties).
+     */
+    public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+
     /**
      * SCIPIO: handles no-result case for list forms, so a text or other may be displayed instead of empty table.
      */
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException;
-    
-    /**
-     * SCIPIO: Returns required renderer name ("html", "xml", etc.).
-     */
-    public String getRendererName();
 }

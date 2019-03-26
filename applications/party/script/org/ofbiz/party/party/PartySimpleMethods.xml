@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="updateAVSOverride" short-description="Create/Update The AVS Override String">
-        <make-value value-field="lookupPKMap" entity-name="PartyIcsAvsOverride"/>
+        <make-value entity-name="PartyIcsAvsOverride" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="PartyIcsAvsOverride" map="lookupPKMap" value-field="lookedUpValue"/>
         <if-not-empty field="lookedUpValue.partyId">
@@ -35,7 +22,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="deleteAVSOverride" short-description="Delete The AVS Override String">
-        <make-value value-field="lookupPKMap" entity-name="PartyIcsAvsOverride"/>
+        <make-value entity-name="PartyIcsAvsOverride" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="PartyIcsAvsOverride" map="lookupPKMap" value-field="lookedUpValue"/>
         <if-not-empty field="lookedUpValue.partyId">
@@ -77,9 +64,12 @@ under the License.
             </else>
         </if-not-empty>
         <if-not-empty field="lookupPKMap.partyId">
-            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="true"/>
+            <!-- SCIPIO: Despite lower performance, we must disable cache lookup because in some circumstance the
+                entity cache causes unexpected issues; furthermore it may cause needless errors in distributed systems
+            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="true"/>-->
+            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="false"/>
             <if-empty field="lookedUpValue">
-                <make-value value-field="partyRole" entity-name="PartyRole" map="lookupPKMap"/>
+                <make-value entity-name="PartyRole" value-field="partyRole" map="lookupPKMap"/>
                 <create-value value-field="partyRole"/>
             </if-empty>
         </if-not-empty>
@@ -236,7 +226,7 @@ under the License.
     <simple-method method-name="deleteBillingAccount" short-description="delete billing account">
         <now-timestamp field="nowTimestamp"/>
         <set field="parameters.thruDate" from-field="nowTimestamp"/>
-        <set-service-fields service-name="updateBillingAccount" to-map="deleteBillingAccountCtx" map="parameters"/>
+        <set-service-fields service-name="updateBillingAccount" map="parameters" to-map="deleteBillingAccountCtx"/>
         <call-service service-name="updateBillingAccount" in-map-name="deleteBillingAccountCtx"/>
     </simple-method>
 </simple-methods>

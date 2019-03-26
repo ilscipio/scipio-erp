@@ -59,7 +59,7 @@
                                     <widgets>
                                         <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                         <screenlet>
-                                            <include-form name="NewOrganization" location="component://setup/widget/SetupForms.xml"/>
+                                            <include-form name="NewOrganization" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                         </screenlet>
                                     </widgets>
                                 </section>
@@ -435,6 +435,59 @@
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: A version of SetupOrganization that also runs the events from the "setupOrganization" URI.
+        This is used as a fallback so it can fully replace the "main" view on its own. -->
+    <screen name="SetupOrganizationMain">
+        <section>
+            <actions>
+                <!-- Run the event code -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "SetupOrganizationMain.groovy";
+                    errorMsg = null;
+                    try {
+                        request.setAttribute("scpSetEffSetupStep", "organization");
+                        result = com.ilscipio.scipio.setup.SetupEvents.setEffectiveSetupStep(request, response);
+                        if ("error".equals(result)) {
+                            errorMsg = request.getAttribute("_ERROR_MESSAGE_");
+                            request.removeAttribute("_ERROR_MESSAGE_");
+                        }
+                    } catch(Exception e) {
+                        Debug.logError(e, "Error setting effective setup step", module);
+                        errorMsg = e.toString();
+                    }
+                    if (errorMsg) {
+                        errorMsg = UtilProperties.getMessage("ScipioSetupErrorUiLabels", "SetupError",
+                            context.locale) + ": " + errorMsg;
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(errorMsg)
+                    }
+                    context.setStepSuccess = !errorMsg;
+                ]]></script>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-true field="setStepSuccess"/>
+                    </condition>
+                    <widgets>
+                        <include-screen name="SetupOrganization"/>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <label style="common-msg-error" text="${uiLabelMap.CommonErrorOccurredContactSupport}"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
     <screen name="SelectOrganization">
         <section>
             <actions>
@@ -456,6 +509,8 @@
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="storeData" from-field="setupStepStates.store.stepData"/><!-- result from StepDataUtil.java -->
+
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
                 <set field="isCreateForm" type="Boolean" value="${context.userParty == null}"/>
@@ -558,18 +613,13 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>
                 
-                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
-                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
-                
-                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
-                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>
-                
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
                 <set field="target" value="setupUpdateGlAccount" />
                 <set field="submitFormId" value="setupAccounting-preferences-form"/>
                 
                 <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -588,7 +638,7 @@
                                         <not><if-empty field="topGlAccountId"/></not>
                                     </condition> -->
                                     <widgets> 
-                                    	<screenlet>                                            
+                                        <screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
                                             </platform-specific>
@@ -623,42 +673,39 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
             </actions>
             <widgets>
-				<screenlet>
-					<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
-				</screenlet>		          
-            </widgets>           
+                <screenlet>
+                    <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
+                </screenlet>
+            </widgets>
         </section>
     </screen>
     <screen name="EditGLAccountTree">
         <section>
             <actions>
-                <script location="component://accounting/script/com/ilscipio/scipio/accounting/ledger/tree/GetAccountsList.groovy"/>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>                
+                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
             </actions>
-            <widgets>            
-            	<section>
-            		 <condition>
-		                <and>
-		                    <not><if-empty field="topGlAccountId"/></not>
-		                    <not><if-empty field="treeMenuData"/></not>
-		                </and>
-		            </condition>
-		            <widgets>
-						<screenlet>
-                            <platform-specific>
-                                    <html><html-template location="component://accounting/webapp/accounting/ledger/tree/accountsTree.ftl"/></html>
-                            </platform-specific>						  
-                        </screenlet>
-					</widgets>						
-            	</section>
-            </widgets>           
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="topGlAccountId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>                      
+                    <screenlet>
+                        <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
+                    </screenlet>
+                    </widgets>
+                </section>                                                                       
+            </widgets>
         </section>
     </screen>
     <screen name="SetupGlAccountForms">
         <section>
-            <actions>
-            </actions>
             <widgets>
-                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
                 <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -666,53 +713,69 @@
     <screen name="EditFiscalPeriods">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>   
+                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>            
             </actions>
             <widgets>
-            	<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
             </widgets>           
         </section>
     </screen>
     <screen name="SetupTimePeriodForms">
-        <section>
-            <actions>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>
+        <section>            
+            <widgets>                
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>                    
             </widgets>
         </section>
     </screen>
     <screen name="EditJournals">
         <section>
             <actions>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
+               <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>                     
             </widgets>           
         </section>
     </screen>
     <screen name="EditAccountingTransactions">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>
-                <!-- <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and> -->
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>                
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
-            </widgets>           
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>                
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTaxAuthorities">
+        <section>
+            <actions>
+                <include-screen-actions name="CommonSetupAccountingTabsAction" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditTaxAuthorities.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditTaxAuthorities.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupAccountingTabError">
+        <section>
+            <actions>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupAccountingTabsDecorator" location="component://setup/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/SetupAccountingTabError.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
         </section>
     </screen>
     
@@ -763,6 +826,7 @@
                 <set field="setupStep" value="catalog"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="catalogData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="storeData" from-field="setupStepStates.store.stepData"/>
 
                 <!-- not appropriate
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
@@ -829,7 +893,7 @@
                             <html>
                                 <html-template><![CDATA[
                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id=newCatalogFormId>
+                                  <@form method="get" action=makePageUrl("setupCatalog") id=newCatalogFormId>
                                     <@defaultWizardFormFields exclude=["prodCatalogId"]/>
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>
@@ -837,7 +901,7 @@
                                 <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
                                     <#if !isCreateForm>
-                                      <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                      <@menuitem type="link" href=raw(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
                                 -->
@@ -845,20 +909,18 @@
                             </html>
                         </platform-specific>
                     </decorator-section>
-                    <!-- redundant
                     <decorator-section name="extra-body">
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                    <include-screen name="ListCatalogs"/>
-                                </screenlet>
+                                <platform-specific>
+                                    <html><html-template location="component://setup/webapp/setup/catalog/CatalogExtraLinks.ftl"/></html>
+                                </platform-specific>
                             </widgets>
                         </section>
                     </decorator-section>
-                    -->
                 </decorator-screen>
             </widgets>
         </section>
@@ -989,60 +1051,7 @@
             </widgets>
         </section>
     </screen>
-    
-    <!-- merging into store page
-    <screen name="SetupWebsite">
-        <section>
-            <actions>
-                <set field="setupStep" value="website"/>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!- - result from StepDataUtil.java - ->
 
-                <!- - turns out we can skip this and instead get everything from the worker
-                <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                - ->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
-                
-                <set field="isCreateForm" type="Boolean" value="${context.webSite == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
-                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
-                <set field="submitFormId" value="EditWebsite"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_CREATE"/>
-                            </condition>
-                            <widgets>
-                                <screenlet>
-                                    <!- -<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>- ->
-                                    <!- -<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>- ->
-                                    <platform-specific>
-                                        <html><html-template location="component://setup/webapp/setup/website/EditWebsite.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <section>
-                                    <actions>
-                                        <set field="resourceDescription" value=""/>
-                                    </actions>
-                                    <widgets>
-                                        <label style="common-msg-error-perm">${uiLabelMap.ContentSecurityCreatePermission}</label>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    -->
-    
     <screen name="SetupFinished">
         <section>
             <actions>

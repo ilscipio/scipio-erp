@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
 function call_fieldlookup3(view_name) {
@@ -55,7 +42,7 @@ function call_fieldlookup3(view_name) {
 <#-- ============================================================= -->
 
 <@section title="WebSitePublishPoint">
-  <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>">
+  <form name="userform" method="post" action="<@pageUrl>UserPermissions</@pageUrl>">
      <input type="hidden" name="partyId" value="${partyId!}"/>
      <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
      <@field type="input" name="webSitePublishPoint" size="20" value=(webSitePublishPoint!) />
@@ -64,9 +51,9 @@ function call_fieldlookup3(view_name) {
 </@section>
 
 <@section>
-  <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+  <form name="siteRoleForm" method="post" action="<@pageUrl>updateSiteRoles</@pageUrl>">
   <@fields type="default-manual">
-      <@table type="data-list" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" --> <#-- orig: width="100%" -->
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}">
         <@tr>
             <@td>${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>
@@ -80,7 +67,7 @@ function call_fieldlookup3(view_name) {
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
               <@td align="center">
-                <@field type="checkbox" inline=true name="${rawString(cappedSiteRole)}_o_${rowCount}" value="Y" checked=(map[cappedSiteRole]?has_content && map[cappedSiteRole] == "Y")/>
+                <@field type="checkbox" inline=true name="${raw(cappedSiteRole)}_o_${rowCount}" value="Y" checked=(map[cappedSiteRole]?has_content && map[cappedSiteRole] == "Y")/>
                 <input type="hidden" name="contentId_o_${rowCount}" value="${webSitePublishPoint}"/>
                 <input type="hidden" name="partyId_o_${rowCount}" value="${map.partyId}"/>
               </@td>

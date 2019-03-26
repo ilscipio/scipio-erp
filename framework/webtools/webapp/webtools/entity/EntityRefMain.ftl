@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#assign docLangAttr = locale.toString()?replace("_", "-")>
 <#assign langDir = "ltr">
@@ -54,7 +41,7 @@ under the License.
         <#list packagesList as package>
             <hr /><div id="${package.packageName}" class="packagetext">${package.packageName}</div><hr />
             <#list package.entitiesList as entity>
-                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" width="95%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="1" -->
+                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" width="95%">
                     <@tr class='entityheader'>
                         <@td colspan="5">
                             <div id="${entity.entityName}" class="titletext">
@@ -63,10 +50,10 @@ under the License.
                             </div>
                             <div>${entity.title}&nbsp;
                                 <#if !forstatic>
-                                    <a target="main" href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">[${uiLabelMap.WebtoolsViewData}]</a>
+                                    <a target="main" href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">[${uiLabelMap.WebtoolsViewData}]</a>
                                 </#if>
                                 <#if !forstatic>
-                                    <a target="main" href="<@ofbizUrl>ArtifactInfo?name=${entity.entityName}&amp;type=entity</@ofbizUrl>">[${uiLabelMap.WebtoolsArtifactInfo}]</a>
+                                    <a target="main" href="<@pageUrl>ArtifactInfo?name=${entity.entityName}&amp;type=entity</@pageUrl>">[${uiLabelMap.WebtoolsArtifactInfo}]</a>
                                 </#if>
                             </div>
                             <#if entity.description?has_content &&

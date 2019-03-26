@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#--
@@ -35,7 +22,7 @@ by hand from a real template using a ruler.
 
     <fo:page-sequence master-reference="checks">
         <fo:flow flow-name="xsl-region-body">
-            <#if !security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", session)>
+            <#if !security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", request)>
                 <fo:block padding="20pt">${uiLabelMap.AccountingPrintChecksPermissionError}</fo:block>
             <#else>
                 <#if payments.size() == 0>
@@ -66,8 +53,8 @@ by hand from a real template using a ruler.
                                                 <fo:table-row>
                                                     <fo:table-cell padding-before="0.8cm">
                                                         <fo:block margin-left="3.0cm">
-                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
-                                                            ${toPartyNameResult.fullName?default("Name Not Found")}
+                                                            <#assign toPartyNameResult = runService("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
+                                                            ${toPartyNameResult.fullName!uiLabelMap.OrderPartyNameNotFound}
                                                         </fo:block>
                                                     </fo:table-cell>
                                                     <fo:table-cell padding-before="0.8cm">
@@ -76,7 +63,7 @@ by hand from a real template using a ruler.
                                                 </fo:table-row>
                                                 <fo:table-row>
                                                     <fo:table-cell number-columns-spanned="2">
-                                                        <#assign amount = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(payment.getDouble("amount"), "%dollars-and-hundredths", locale).toUpperCase()>
+                                                        <#assign amount = UtilNumber.formatRuleBasedAmount(payment.getDouble("amount"), "%dollars-and-hundredths", locale).toUpperCase()>
                                                         <fo:block padding-before="0.4cm" margin-left="1.3cm">${amount}<#list 1..(100-amount.length()) as x>*</#list></fo:block>
                                                     </fo:table-cell>
                                                 </fo:table-row>
@@ -106,8 +93,8 @@ by hand from a real template using a ruler.
                                                 <fo:table-row>
                                                     <fo:table-cell padding="3pt" number-columns-spanned="3" text-align="center">
                                                         <fo:block text-align="center">
-                                                            <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
-                                                            ${toPartyNameResult.fullName?default("Name Not Found")}
+                                                            <#assign toPartyNameResult = runService("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
+                                                            ${toPartyNameResult.fullName!uiLabelMap.OrderPartyNameNotFound}
                                                         </fo:block>
                                                     </fo:table-cell>
                                                     <fo:table-cell padding="3pt" number-columns-spanned="4" text-align="center">

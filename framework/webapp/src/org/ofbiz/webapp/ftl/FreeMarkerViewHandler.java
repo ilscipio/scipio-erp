@@ -79,7 +79,7 @@ public class FreeMarkerViewHandler extends AbstractViewHandler {
     }
 
     public static void prepOfbizRoot(Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) {
-        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         HttpSession session = request.getSession();
 
         // add in the OFBiz objects

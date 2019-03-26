@@ -18,7 +18,7 @@ public class FtlDocException extends Exception {
         super(message, cause);
     }
 
-    
+
     public static class ParseException extends FtlDocException {
 
         public ParseException() {

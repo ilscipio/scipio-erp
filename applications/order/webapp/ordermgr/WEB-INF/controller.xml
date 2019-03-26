@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -32,21 +19,31 @@ under the License.
     <!-- event handlers -->
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
+    <!-- SCIPIO: Cart synchronization service event handler wrapper: automatically wraps in a safe CartUpdate section
+        any service marked with the "shoppingCart.update" property, when called directly as an event (added 2018-11-26) -->
+    <handler name="shoppingCartSync" type="request-handler-wrapper" class="org.ofbiz.order.shoppingcart.CartSyncEventHandlerWrapper"/>
+
     <!-- Events to run on every request before security (chains exempt) -->
-    <!--
     <preprocessor>
+        <!-- SCIPIO: Some preparations for ShoppingCart for orderentry -->
+        <event name="prepareCartForRequest" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="prepareCartForRequest"/>
     </preprocessor>
-    -->
+
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <!--
     <postprocessor>
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+    
+    <after-logout>
+        <!-- SCIPIO: Ensures the cart never carries over -->
+        <event name="cleanCartAfterLogout" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="cleanCartAfterLogout"/>
+    </after-logout>
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>
     </request-map>
 
@@ -202,14 +199,14 @@ under the License.
     <request-map uri="cancelOrderItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelOrderItem"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
+        <response name="error" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
     </request-map>
     <request-map uri="cancelSelectedOrderItems">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.order.OrderEvents" invoke="cancelSelectedOrderItems"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
+        <response name="error" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
     </request-map>
     <request-map uri="createOrderAdjustment">
         <security https="true" auth="true"/>
@@ -378,7 +375,7 @@ under the License.
     <request-map uri="updateOrderItems">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateOrderItems"/>
-        <response name="success" type="view" value="orderview"/>
+        <response name="success" type="view" value="editorderitems"/><!-- SCIPIO: was: orderview -->
         <response name="error" type="view" value="editorderitems"/>
     </request-map>
     <request-map uri="appendItemToOrder">
@@ -473,7 +470,9 @@ under the License.
     <request-map uri="setOrderCurrencyAgreementShipDates">
         <description>Handles setting the currency, agreement and shipment dates of an order.</description>
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>
+        <!-- SCIPIO: Need event dedicated to orderentry for security reasons
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>-->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDatesForOrderEntry"/>
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="request" value="orderagreements"/>
     </request-map>
@@ -506,8 +505,9 @@ under the License.
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="request" value="orderentry"/>
-        <response name="survey" type="view" value="survey"/>
+        <response name="survey" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Do not save view so additem's success view-last can work through additemsurvey -->
         <response name="product" type="view" value="product"/>
+        <response name="viewcart" type="request-redirect" value="orderentry" save-request="messages"/><!-- SCIPIO -->
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="additemsurvey">
@@ -515,6 +515,8 @@ under the License.
         <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
         <response name="success" type="request" value="additem"/>
         <response name="error" type="request" value="orderentry"/>
+        <!-- SCIPIO: FIXME: this is desirable but currently entry/survey.ftl will not work with this:
+        <response name="error" type="view" value="survey" allow-view-save="false"/>-->
     </request-map>
     <request-map uri="addRequirementsToCart">
         <security https="true" auth="true"/>
@@ -662,6 +664,7 @@ under the License.
     </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
@@ -709,7 +712,7 @@ under the License.
     </request-map>
 
     <request-map uri="addCategoryDefaults">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https and auth -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
@@ -1352,6 +1355,12 @@ under the License.
         <response name="success" type="view" value="RequestRoles"/>
         <response name="error" type="view" value="RequestRoles"/>
     </request-map>
+    <request-map uri="expireCustRequestParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expireCustRequestParty"/>
+        <response name="success" type="view" value="RequestRoles"/>
+        <response name="error" type="view" value="RequestRoles"/>
+    </request-map>
 
     <request-map uri="requestitems"><security https="true" auth="true"/><response name="success" type="view" value="RequestItems"/></request-map>
     <request-map uri="EditRequestItem"><security https="true" auth="true"/><response name="success" type="view" value="EditRequestItem"/></request-map>
@@ -1718,12 +1727,6 @@ under the License.
         <response name="success" type="request" value="updateShipGroupShipInfo"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
-    <request-map uri="getAssociatedStateList">
-        <security https="true" auth="false"/>
-        <event type="service" invoke="getAssociatedStateList"/>
-        <response name="success" type="request" value="json"/>
-        <response name="error" type="request" value="json"/>
-    </request-map>
 
     <!-- UPS carrier requests -->
     <request-map uri="upsEmailReturnLabelOrder">
@@ -1747,7 +1750,7 @@ under the License.
     </request-map>
 
     <request-map uri="crosssell">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https and auth true -->
         <response name="success" type="view" value="product"/>
     </request-map>
 
@@ -1912,12 +1915,14 @@ under the License.
         <response name="error" type="view" value="orderview"/>
     </request-map>
     
+    <!-- SCIPIO: Not in use
     <request-map uri="deleteCustomerTaxAuthInfo">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyTaxAuthInfo"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
+    -->
 
     <!--
         These are just examples of reports developed using JasperReport and not really
@@ -1991,7 +1996,7 @@ under the License.
     <view-map name="EditShipAddress" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#EditShipAddress"/>
     <view-map name="SetItemShipGroups" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#SetItemShipGroups"/>
     <view-map name="optionsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OptionSettings"/>
-    <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#BillSettings"/>
+    <view-map name="billsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#checkoutpayment"/>
     <view-map name="confirm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ConfirmOrder"/>
     <view-map name="ordercomplete" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
     <view-map name="orderTerm" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#OrderTerms"/>

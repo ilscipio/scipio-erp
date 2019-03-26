@@ -31,8 +31,6 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.UtilMisc;
-
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.ClasspathInfo;
 import org.ofbiz.base.util.Debug;
@@ -103,7 +101,8 @@ public class LabelManagerFactory {
         }
     }
 
-    public void findMatchingLabels(String component, String fileName, String key, String locale) throws MalformedURLException, SAXException, ParserConfigurationException, IOException, GeneralException {
+    public void findMatchingLabels(String component, String fileName, String key, String locale)
+            throws MalformedURLException, SAXException, ParserConfigurationException, IOException, GeneralException {
         if (UtilValidate.isEmpty(component) && UtilValidate.isEmpty(fileName) && UtilValidate.isEmpty(key) && UtilValidate.isEmpty(locale)) {
             // Important! Don't allow unparameterized queries - doing so will result in loading the entire project into memory
             return;
@@ -205,7 +204,7 @@ public class LabelManagerFactory {
                         label = new LabelInfo(key, keyComment, fileName, localeName, localeValue, localeComment);
                         labels.put(key + keySeparator + fileName, label);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Debug.logError(e, module);
                     }
                 } else {
                     label.setLabelKeyComment(keyComment);

@@ -13,7 +13,7 @@
         </@thead>
         <#list invoiceApplications as iApp>
             <@tr>
-                <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${iApp.paymentId!}</@ofbizUrl>">${iApp.paymentId!}</a></@td>
+                <@td><a href="<@pageUrl>paymentOverview?paymentId=${iApp.paymentId!}</@pageUrl>">${iApp.paymentId!}</a></@td>
                 <#--<@td>${iApp.invoiceItemSeqId!}</@td>-->
                 <@td>${iApp.productId!}</@td>
                 <@td>${iApp.description!}</@td>

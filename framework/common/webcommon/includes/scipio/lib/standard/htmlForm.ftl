@@ -451,7 +451,7 @@ A visible fieldset, including the HTML element.
   <#local origArgs = args>
 
   <#if id?has_content>
-    <#local containerId = rawString(id) + "_container">
+    <#local containerId = raw(id) + "_container">
   <#else>
     <#local containerId = "">
   </#if>

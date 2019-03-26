@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,6 +57,7 @@ import org.w3c.dom.Element;
  * An object that models the <code>&lt;entity&gt;</code> element.
  *
  */
+@SuppressWarnings("serial")
 public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -90,34 +90,114 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     /** Synchronization object used to control access to the ModelField collection objects.
      * A single lock is used for all ModelField collections so collection updates are atomic. */
-    private final Object fieldsLock = new Object();
+    // SCIPIO: 2018-09-07: fixed: using new Object() is invalid because Object is not Serializable
+    //private final Object fieldsLock = new Object();
+    private final Object fieldsLock = new Serializable() {};
 
-    /** Model fields in the order they were defined. This list duplicates the values in fieldsMap, but
-     *  we must keep the list in its original sequence for SQL DISTINCT operations to work properly. */
-    private final List<ModelField> fieldsList = new ArrayList<ModelField>();
+    /**
+     * SCIPIO: Nested class to encapsulate related fields information, to ensure
+     * atomicity and especially remove need for synchronized blocks on ModelEntity getters.
+     * <p>
+     * This is used to modify ModelEntity with a <code>fields</code> member.
+     * <p>
+     * <strong>WARNING:</strong> All members of this class are READ-ONLY and
+     * must NEVER be edited in-place! Every change requires collection copies AND new instance!
+     * <p>
+     * The old stock field collection members directly on ModelEntity were edited in-place
+     * even if marked final! This is no longer acceptable. Such design forced the getters
+     * to have detrimental synchronized blocks (now removed). Only the setters, addField,
+     * removeField and addExtendEntity now still need synchronized blocks.
+     * <p>
+     * Added 2018-09-29.
+     */
+    private static class Fields implements Serializable {
+        /**
+         * Read-only empty instance.
+         */
+        protected static final Fields EMPTY = new Fields();
 
-    private final Map<String, ModelField> fieldsMap = new HashMap<String, ModelField>();
+        /** Model fields in the order they were defined. This list duplicates the values in fieldsMap, but
+         *  we must keep the list in its original sequence for SQL DISTINCT operations to work properly. */
+        private final ArrayList<ModelField> fieldsList;
 
-    /** A List of the Field objects for the Entity, one for each Primary Key */
-    private final ArrayList<ModelField> pks = new ArrayList<ModelField>();
+        private final Map<String, ModelField> fieldsMap;
 
-    /** A List of the Field objects for the Entity, one for each NON Primary Key */
-    private final ArrayList<ModelField> nopks = new ArrayList<ModelField>();
+        private final ArrayList<String> pkFieldNames;
+
+        /** A List of the Field objects for the Entity, one for each Primary Key */
+        private final ArrayList<ModelField> pks;
+
+        /** A List of the Field objects for the Entity, one for each NON Primary Key */
+        private final ArrayList<ModelField> nopks;
+
+        protected Fields(ArrayList<ModelField> fieldsList, Map<String, ModelField> fieldsMap, ArrayList<String> pkFieldNames,
+                ArrayList<ModelField> pks, ArrayList<ModelField> nopks) {
+            this.fieldsList = fieldsList;
+            this.fieldsMap = fieldsMap;
+            this.pkFieldNames = pkFieldNames;
+            this.pks = pks;
+            this.nopks = nopks;
+        }
+
+        /**
+         * Modifies the given collections to be atomic and creates a new read-only instance from them.
+         * <p>
+         * WARN: Do not pass the collections from existing instance to this without making copy first.
+         */
+        public static Fields optimizeAndCreate(ArrayList<ModelField> fieldsList, Map<String, ModelField> fieldsMap, ArrayList<String> pkFieldNames,
+                ArrayList<ModelField> pks, ArrayList<ModelField> nopks) {
+            fieldsList.trimToSize();
+            pkFieldNames.trimToSize();
+            pks.trimToSize();
+            nopks.trimToSize();
+            return new Fields(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+        }
+
+        private Fields() {
+            fieldsList = new ArrayList<>();
+            fieldsMap = new HashMap<>();
+            pks = new ArrayList<>();
+            pkFieldNames = new ArrayList<>();
+            nopks = new ArrayList<>();
+        }
+    }
+
+    /**
+     * SCIPIO: Entity fields information (atomic).
+     * <p>
+     * TODO: REVIEW: Do we really need this volatile? Post-initialization it probably
+     * doesn't do much due to the volatile already on the ModelReader entityCache.
+     * However, to be safe and to ensure no issues during initialization, am leaving
+     * volatile for time being.
+     * <p>
+     * Added 2018-09-29.
+     */
+    private volatile Fields fields;
 
     /** relations defining relationships between this entity and other entities */
-    protected CopyOnWriteArrayList<ModelRelation> relations = new CopyOnWriteArrayList<ModelRelation>();
+    protected CopyOnWriteArrayList<ModelRelation> relations = new CopyOnWriteArrayList<>();
 
     /** indexes on fields/columns in this entity */
-    private CopyOnWriteArrayList<ModelIndex> indexes = new CopyOnWriteArrayList<ModelIndex>();
+    private CopyOnWriteArrayList<ModelIndex> indexes = new CopyOnWriteArrayList<>();
 
     /** The reference of the dependentOn entity model */
     protected ModelEntity specializationOfModelEntity = null;
 
     /** The list of entities that are specialization of on this entity */
-    protected Map<String, ModelEntity> specializedEntities = new HashMap<String, ModelEntity>();
+    protected Map<String, ModelEntity> specializedEntities = new HashMap<>();
 
-    /** map of ModelViewEntities that references this model */
-    private final Set<String> viewEntities = new HashSet<String>();
+    /**
+     * map of ModelViewEntities that references this model
+     * <p>
+     * SCIPIO: 2018-09-29: <strong>WARNING:</strong> This variable is now READ-ONLY;
+     * copies are made on modifications. This removes the need for synchronized blocks
+     * on the getters. Same as {@link #fields}.
+     * <p>
+     * TODO: REVIEW: Could potentially remove volatile and use unmodifiableSet(HashSet) alone.
+     * See discussion above.
+     */
+    //private final Set<String> viewEntities = new HashSet<>(); // SCIPIO: now read-only
+    private volatile Set<String> viewEntities = Collections.emptySet();
 
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
@@ -143,32 +223,43 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public ModelEntity() {
         this.modelReader = null;
         this.modelInfo = ModelInfo.DEFAULT;
+        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
     }
 
     protected ModelEntity(ModelReader reader) {
         this.modelReader = reader;
         this.modelInfo = ModelInfo.DEFAULT;
+        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
     }
 
     protected ModelEntity(ModelReader reader, ModelInfo modelInfo) {
         this.modelReader = reader;
         this.modelInfo = modelInfo;
+        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
     }
 
     /** XML Constructor */
     protected ModelEntity(ModelReader reader, Element entityElement, ModelInfo modelInfo) {
         this.modelReader = reader;
         this.modelInfo = ModelInfo.createFromAttributes(modelInfo, entityElement);
+        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
     }
 
     /** XML Constructor */
     public ModelEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo modelInfo) {
         this.modelReader = reader;
         this.modelInfo = ModelInfo.createFromAttributes(modelInfo, entityElement);
+
+        // SCIPIO: 2018-09-29: Create local instances of fields collections
+        ArrayList<ModelField> fieldsList = new ArrayList<>();
+        Map<String, ModelField> fieldsMap = new HashMap<>();
+        ArrayList<ModelField> pks = new ArrayList<>();
+        ArrayList<String> pkFieldNames = new ArrayList<>();
+        ArrayList<ModelField> nopks = new ArrayList<>();
+
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before general/basic info");
         this.populateBasicInfo(entityElement);
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");
-        List<String> pkFieldNames = new ArrayList<String>();
         for (Element pkElement: UtilXml.childElementList(entityElement, "prim-key")) {
             pkFieldNames.add(pkElement.getAttribute("field").intern());
         }
@@ -177,16 +268,22 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             String fieldName = UtilXml.checkEmpty(fieldElement.getAttribute("name")).intern();
             boolean isPk = pkFieldNames.contains(fieldName);
             ModelField field = ModelField.create(this, fieldElement, isPk);
-            internalAddField(field, pkFieldNames);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //internalAddField(field, pkFieldNames);
+            internalAddField(field, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
         }
         // if applicable automatically add the STAMP_FIELD and STAMP_TX_FIELD fields
         if ((this.doLock || !this.noAutoStamp) && !fieldsMap.containsKey(STAMP_FIELD)) {
             ModelField newField = ModelField.create(this, "", STAMP_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
-            internalAddField(newField, pkFieldNames);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //internalAddField(newField, pkFieldNames);
+            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
         }
         if (!this.noAutoStamp && !fieldsMap.containsKey(STAMP_TX_FIELD)) {
             ModelField newField = ModelField.create(this, "", STAMP_TX_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
-            internalAddField(newField, pkFieldNames);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //internalAddField(newField, pkFieldNames);
+            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
             Field indexField = new Field(STAMP_TX_FIELD, null);
@@ -196,11 +293,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         // if applicable automatically add the CREATE_STAMP_FIELD and CREATE_STAMP_TX_FIELD fields
         if ((this.doLock || !this.noAutoStamp) && !fieldsMap.containsKey(CREATE_STAMP_FIELD)) {
             ModelField newField = ModelField.create(this, "", CREATE_STAMP_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
-            internalAddField(newField, pkFieldNames);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //internalAddField(newField, pkFieldNames);
+            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
         }
         if (!this.noAutoStamp && !fieldsMap.containsKey(CREATE_STAMP_TX_FIELD)) {
             ModelField newField = ModelField.create(this, "", CREATE_STAMP_TX_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
-            internalAddField(newField, pkFieldNames);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //internalAddField(newField, pkFieldNames);
+            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXCRTS", 18);
             Field indexField = new Field(CREATE_STAMP_TX_FIELD, null);
@@ -216,9 +317,14 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 pks.add(pkField);
             }
         }
+        pkFieldNames.trimToSize();
         pks.trimToSize();
         nopks.trimToSize();
         reader.incrementFieldCount(fieldsMap.size());
+
+        // SCIPIO: Update member with copies for change atomicity
+        this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
         this.populateIndexes(entityElement);
@@ -230,16 +336,29 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.modelReader = null;
         this.modelInfo = ModelInfo.DEFAULT;
         this.tableName = tableName;
-        int dotIndex = this.tableName.indexOf(".");
+        int dotIndex = this.tableName.indexOf('.');
         if (dotIndex >= 0) {
             this.tableName = this.tableName.substring(dotIndex + 1);
         }
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
+
+        // SCIPIO: 2018-09-29: Create local instances of fields collections
+        ArrayList<ModelField> fieldsList = new ArrayList<>();
+        Map<String, ModelField> fieldsMap = new HashMap<>();
+        ArrayList<ModelField> pks = new ArrayList<>();
+        ArrayList<String> pkFieldNames = new ArrayList<>();
+        ArrayList<ModelField> nopks = new ArrayList<>();
+
         for (Map.Entry<String, DatabaseUtil.ColumnCheckInfo> columnEntry : colMap.entrySet()) {
             DatabaseUtil.ColumnCheckInfo ccInfo = columnEntry.getValue();
             ModelField newField = ModelField.create(this, ccInfo, modelFieldTypeReader);
-            addField(newField);
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            //addField(newField);
+            addField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
         }
+
+        // SCIPIO: Update member with copies for change atomicity
+        this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
     }
 
     protected void populateBasicInfo(Element entityElement) {
@@ -263,6 +382,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
     }
 
+    /* SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
     private void internalAddField(ModelField newField, List<String> pkFieldNames) {
         if (!newField.getIsPk()) {
             this.nopks.add(newField);
@@ -270,26 +390,36 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.fieldsList.add(newField);
         this.fieldsMap.put(newField.getName(), newField);
     }
+    */
+
+    private static void internalAddField(ModelField newField, List<ModelField> fieldsList,
+            Map<String, ModelField> fieldsMap, List<ModelField> pks, List<String> pkFieldNames, List<ModelField> nopks) {
+        if (!newField.getIsPk()) {
+            nopks.add(newField);
+        }
+        fieldsList.add(newField);
+        fieldsMap.put(newField.getName(), newField);
+    }
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
-        List<ModelRelation> tempList = new ArrayList<ModelRelation>(this.relations);
+        List<ModelRelation> tempList = new ArrayList<>(this.relations);
         for (Element relationElement: UtilXml.childElementList(entityElement, "relation")) {
             ModelRelation relation = reader.createRelation(this, relationElement);
             if (relation != null) {
                 tempList.add(relation);
             }
         }
-        this.relations = new CopyOnWriteArrayList<ModelRelation>(tempList);
+        this.relations = new CopyOnWriteArrayList<>(tempList);
     }
 
 
     protected void populateIndexes(Element entityElement) {
-        List<ModelIndex> tempList = new ArrayList<ModelIndex>(this.indexes);
+        List<ModelIndex> tempList = new ArrayList<>(this.indexes);
         for (Element indexElement: UtilXml.childElementList(entityElement, "index")) {
             ModelIndex index = ModelIndex.create(this, indexElement);
             tempList.add(index);
         }
-        this.indexes = new CopyOnWriteArrayList<ModelIndex>(tempList);
+        this.indexes = new CopyOnWriteArrayList<>(tempList);
     }
 
     public boolean containsAllPkFieldNames(Set<String> fieldNames) {
@@ -303,24 +433,32 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return true;
     }
 
-
+    /**
+     * addExtendEntity.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public void addExtendEntity(ModelReader reader, Element extendEntityElement) {
         if (extendEntityElement.hasAttribute("enable-lock")) {
             this.doLock = UtilXml.checkBoolean(extendEntityElement.getAttribute("enable-lock"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("no-auto-stamp")) {
             this.noAutoStamp = UtilXml.checkBoolean(extendEntityElement.getAttribute("no-auto-stamp"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("auto-clear-cache")) {
             this.autoClearCache = UtilXml.checkBoolean(extendEntityElement.getAttribute("auto-clear-cache"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("never-cache")) {
             this.neverCache = UtilXml.checkBoolean(extendEntityElement.getAttribute("never-cache"), false);
         }
-        
+
         if (extendEntityElement.hasAttribute("sequence-bank-size")) {
             String sequenceBankSizeStr = UtilXml.checkEmpty(extendEntityElement.getAttribute("sequence-bank-size"));
             if (UtilValidate.isNotEmpty(sequenceBankSizeStr)) {
@@ -331,52 +469,68 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 }
             }
         }
-        
-        for (Element fieldElement : UtilXml.childElementList(extendEntityElement, "field")) {
-            ModelField newField = ModelField.create(this, fieldElement, false);
-            ModelField existingField = this.getField(newField.getName());
-            if (existingField != null) {
-                // override the existing field's attributes
-                // TODO: only overrides of type, colName, description and enable-audit-log are currently supported
-                String type = existingField.getType();
-                if (!newField.getType().isEmpty()) {
-                    type = newField.getType();
-                }
-                String colName = existingField.getColName();
-                if (!newField.getColName().isEmpty()) {
-                    colName = newField.getColName();
-                }
-                String description = existingField.getDescription();
-                if (!newField.getDescription().isEmpty()) {
-                    description = newField.getDescription();
-                }
-                boolean enableAuditLog = existingField.getEnableAuditLog();
-                if (UtilValidate.isNotEmpty(fieldElement.getAttribute("enable-audit-log"))) {
-                    enableAuditLog = "true".equals(fieldElement.getAttribute("enable-audit-log"));
-                }
-                newField = ModelField.create(this, description, existingField.getName(), type, colName, existingField.getColValue(), existingField.getFieldSet(),
-                        existingField.getIsNotNull(), existingField.getIsPk(), existingField.getEncryptMethod(), existingField.getIsAutoCreatedInternal(),
-                        enableAuditLog, existingField.getValidators());
-            }
-            // add to the entity as a new field
-            synchronized (fieldsLock) {
+
+        // SCIPIO: 2018-09-29: Moved synchronized block outside the loop (was stock logic bug)
+        // add to the entity as a new field
+        synchronized (fieldsLock) {
+            // SCIPIO: Create copies for change atomicity
+            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
+            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
+            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
+            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
+            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
+
+            for (Element fieldElement : UtilXml.childElementList(extendEntityElement, "field")) {
+                ModelField newField = ModelField.create(this, fieldElement, false);
+                ModelField existingField = this.getField(newField.getName());
                 if (existingField != null) {
-                    this.fieldsList.remove(existingField);
+                    // override the existing field's attributes
+                    // TODO: only overrides of type, colName, description and enable-audit-log are currently supported
+                    String type = existingField.getType();
+                    if (!newField.getType().isEmpty()) {
+                        type = newField.getType();
+                    }
+                    String colName = existingField.getColName();
+                    if (!newField.getColName().isEmpty()) {
+                        colName = newField.getColName();
+                    }
+                    String description = existingField.getDescription();
+                    if (!newField.getDescription().isEmpty()) {
+                        description = newField.getDescription();
+                    }
+                    boolean enableAuditLog = existingField.getEnableAuditLog();
+                    if (UtilValidate.isNotEmpty(fieldElement.getAttribute("enable-audit-log"))) {
+                        enableAuditLog = "true".equals(fieldElement.getAttribute("enable-audit-log"));
+                    }
+                    newField = ModelField.create(this, description, existingField.getName(), type, colName, existingField.getColValue(), existingField.getFieldSet(),
+                            existingField.getIsNotNull(), existingField.getIsPk(), existingField.getEncryptMethod(), existingField.getIsAutoCreatedInternal(),
+                            enableAuditLog, existingField.getValidators());
                 }
-                this.fieldsList.add(newField);
-                this.fieldsMap.put(newField.getName(), newField);
+                //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Moved synchronized block outside the loop (was stock logic bug)
+                if (existingField != null) {
+                    fieldsList.remove(existingField);
+                }
+                fieldsList.add(newField);
+                fieldsMap.put(newField.getName(), newField);
                 if (!newField.getIsPk()) {
                     if (existingField != null) {
-                        this.nopks.remove(existingField);
+                        nopks.remove(existingField);
                     }
-                    this.nopks.add(newField);
+                    nopks.add(newField);
                 } else {
                     if (existingField != null) {
-                        this.pks.remove(existingField);
+                        pks.remove(existingField);
                     }
-                    this.pks.add(newField);
+                    pks.add(newField);
+                    if (!pkFieldNames.contains(newField.getName())) {
+                        pkFieldNames.add(newField.getName());
+                    }
                 }
+                //}
             }
+
+            // SCIPIO: Update member with copies for change atomicity
+            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
         }
         this.modelInfo = ModelInfo.createFromAttributes(this.modelInfo, extendEntityElement);
         this.populateRelated(reader, extendEntityElement);
@@ -452,20 +606,20 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public void setNeverCache(boolean neverCache) {
         this.neverCache = neverCache;
     }
-    
+
     /**
      * An indicator to specific if this entity should ignore automatic DB checks.
      * This should be set when the entity is mapped to a database view to prevent
-     * warnings and attempts to modify the schema.     
+     * warnings and attempts to modify the schema.
      */
     public boolean getNeverCheck() {
         return neverCheck;
     }
-    
+
     public void setNeverCheck(boolean neverCheck) {
         this.neverCheck = neverCheck;
     }
-        
+
     public boolean getAutoClearCache() {
         return this.autoClearCache;
     }
@@ -517,9 +671,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public boolean isField(String fieldName) {
         if (fieldName == null) return false;
-        synchronized (fieldsLock) {
-            return fieldsMap.containsKey(fieldName);
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return fields.fieldsMap.containsKey(fieldName); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public boolean areFields(Collection<String> fieldNames) {
@@ -531,19 +685,23 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public int getPksSize() {
-        synchronized (fieldsLock) {
-            return this.pks.size();
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return this.fields.pks.size(); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public ModelField getOnlyPk() {
-        synchronized (fieldsLock) {
-            if (this.pks.size() == 1) {
-                return this.pks.get(0);
-            } else {
-                throw new IllegalArgumentException("Error in getOnlyPk, the [" + this.getEntityName() + "] entity has more than one pk!");
-            }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        // SCIPIO: 2018-09-29: Use local var to avoid potential sync issues from consecutive instance reads
+        //if (this.pks.size() == 1) {
+        //    return this.pks.get(0);
+        List<ModelField> pks = this.fields.pks; // SCIPIO: 2018-09-29: fields member
+        if (pks.size() == 1) {
+            return pks.get(0);
+        } else {
+            throw new IllegalArgumentException("Error in getOnlyPk, the [" + this.getEntityName() + "] entity has more than one pk!");
         }
+        //}
     }
 
     public Iterator<ModelField> getPksIterator() {
@@ -551,9 +709,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public List<ModelField> getPkFields() {
-        synchronized (fieldsLock) {
-            return new ArrayList<ModelField>(this.pks);
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return new ArrayList<>(this.fields.pks); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public List<ModelField> getPkFieldsUnmodifiable() {
@@ -570,9 +728,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public int getNopksSize() {
-        synchronized (fieldsLock) {
-            return this.nopks.size();
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return this.fields.nopks.size(); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public Iterator<ModelField> getNopksIterator() {
@@ -580,29 +738,31 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public List<ModelField> getNopksCopy() {
-        synchronized (fieldsLock) {
-            return new ArrayList<ModelField>(this.nopks);
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return new ArrayList<>(this.fields.nopks); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public int getFieldsSize() {
-        synchronized (fieldsLock) {
-            return this.fieldsList.size();
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return this.fields.fieldsList.size(); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public Iterator<ModelField> getFieldsIterator() {
-        synchronized (fieldsLock) {
-            List<ModelField> newList = new ArrayList<ModelField>(this.fieldsList);
-            return newList.iterator();
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        List<ModelField> newList = new ArrayList<>(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
+        return newList.iterator();
+        //}
     }
 
     public List<ModelField> getFieldsUnmodifiable() {
-        synchronized (fieldsLock) {
-            List<ModelField> newList = new ArrayList<ModelField>(this.fieldsList);
-            return Collections.unmodifiableList(newList);
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        // SCIPIO: 2018-10-02: Extra ArrayList copy is useless
+        //List<ModelField> newList = new ArrayList<>(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
+        //return Collections.unmodifiableList(newList);
+        return Collections.unmodifiableList(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     /** The col-name of the Field, the alias of the field if this is on a view-entity */
@@ -614,52 +774,117 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public ModelField getField(String fieldName) {
         if (fieldName == null) return null;
-        synchronized (fieldsLock) {
-            return fieldsMap.get(fieldName);
-        }
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return fields.fieldsMap.get(fieldName); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
+    /**
+     * addField.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public void addField(ModelField field) {
         if (field == null)
             return;
         synchronized (fieldsLock) {
-            this.fieldsList.add(field);
-            fieldsMap.put(field.getName(), field);
-            if (field.getIsPk()) {
-                pks.add(field);
-            } else {
-                nopks.add(field);
-            }
+            // SCIPIO: Create copies for change atomicity
+            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
+            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
+            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
+            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
+            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
+
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            addField(field, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+
+            // SCIPIO: Update member with copies for change atomicity
+            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
         }
     }
 
+    private static void addField(ModelField field, List<ModelField> fieldsList, Map<String, ModelField> fieldsMap,
+            ArrayList<ModelField> pks, ArrayList<String> pkFieldNames, ArrayList<ModelField> nopks) { // SCIPIO: 2018-09-29
+        // SCIPIO: 2018-09-29: Code moved here from addField(ModelField) ("this." removed)
+        fieldsList.add(field);
+        fieldsMap.put(field.getName(), field);
+        if (field.getIsPk()) {
+            pks.add(field);
+            if (!pkFieldNames.contains(field.getName())) {
+                pkFieldNames.add(field.getName());
+            }
+        } else {
+            nopks.add(field);
+        }
+    }
+
+    /**
+     * removeField.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-09-29: DO NOT CALL THIS METHOD FROM CLIENT CODE
+     * OR CLIENT FRAMEWORK PATCHES!
+     * This stock method should never have existed as a public method and if called prior
+     * to entity engine loading will causing unpredictable results!
+     * This method may be removed entirely in Scipio soon.
+     */
     public ModelField removeField(String fieldName) {
         if (fieldName == null)
             return null;
         synchronized (fieldsLock) {
-            ModelField field = fieldsMap.remove(fieldName);
-            if (field != null) {
-                this.fieldsList.remove(field);
-                if (field.getIsPk()) {
-                    pks.remove(field);
-                } else {
-                    nopks.remove(field);
-                }
-            }
+            // SCIPIO: Create copies for change atomicity
+            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
+            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
+            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
+            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
+            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
+
+            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
+            ModelField field = removeField(fieldName, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+
+            // SCIPIO: Update member with copies for change atomicity
+            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+
             return field;
         }
     }
 
-    public List<String> getAllFieldNames() {
-        synchronized (fieldsLock) {
-            List<String> newList = new ArrayList<String>(fieldsMap.size());
-            newList.addAll(this.fieldsMap.keySet());
-            return newList;
+    private static ModelField removeField(String fieldName, List<ModelField> fieldsList, Map<String, ModelField> fieldsMap,
+            ArrayList<ModelField> pks, ArrayList<String> pkFieldNames, ArrayList<ModelField> nopks) { // SCIPIO: 2018-09-29
+        // SCIPIO: 2018-09-29: Code moved here from removeField(String) ("this." removed)
+        ModelField field = fieldsMap.remove(fieldName);
+        if (field != null) {
+            fieldsList.remove(field);
+            if (field.getIsPk()) {
+                pks.remove(field);
+                pkFieldNames.remove(field.getName());
+            } else {
+                nopks.remove(field);
+            }
         }
+        return field;
+    }
+
+    public List<String> getAllFieldNames() {
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        // SCIPIO: 2018-10-02: keySet() loses the field order defined in entitymodel.xml, so go through list
+        //return new ArrayList<>(this.fields.fieldsMap.keySet()); // SCIPIO: 2018-09-29: fields member
+        // TODO?: May want to make a pre-built this.fields.allFieldNames later if gets used more at runtime
+        List<String> allFieldNames = new ArrayList<>(this.fields.fieldsList.size());
+        for(ModelField field : this.fields.fieldsList) {
+            allFieldNames.add(field.getName());
+        }
+        return allFieldNames;
+        //}
     }
 
     public List<String> getPkFieldNames() {
-        return getFieldNamesFromFieldVector(getPkFields());
+        //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return new ArrayList<>(fields.pkFieldNames); // SCIPIO: 2018-09-29: fields member
+        //}
     }
 
     public List<String> getNoPkFieldNames() {
@@ -667,7 +892,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     private List<String> getFieldNamesFromFieldVector(List<ModelField> modelFields) {
-        List<String> nameList = new ArrayList<String>(modelFields.size());
+        List<String> nameList = new ArrayList<>(modelFields.size());
         for (ModelField field: modelFields) {
             nameList.add(field.getName());
         }
@@ -678,7 +903,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
      * @return field names list, managed by entity-engine
      */
     public List<String> getAutomaticFieldNames() {
-        List<String> nameList = new LinkedList<String>();
+        List<String> nameList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         if (! this.noAutoStamp) {
             nameList.add(STAMP_FIELD);
             nameList.add(STAMP_TX_FIELD);
@@ -713,7 +938,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public List<ModelRelation> getRelationsList(boolean includeOne, boolean includeOneNoFk, boolean includeMany) {
-        List<ModelRelation> relationsList = new LinkedList<ModelRelation>();
+        List<ModelRelation> relationsList = new ArrayList<>(this.getRelationsSize()); // SCIPIO: switched to ArrayList
         Iterator<ModelRelation> allIter = this.getRelationsIterator();
         while (allIter.hasNext()) {
             ModelRelation modelRelation = allIter.next();
@@ -781,20 +1006,28 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public int getViewEntitiesSize() {
-        synchronized (viewEntities) {
-            return this.viewEntities.size();
-        }
+        //synchronized (viewEntities) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        return this.viewEntities.size();
+        //}
     }
 
     public Iterator<String> getViewConvertorsIterator() {
-        synchronized (viewEntities) {
-            return new HashSet<String>(this.viewEntities).iterator();
-        }
+        //synchronized (viewEntities) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
+        // SCIPIO: 2018-09-29: Don't need to copy anymore (using unmodifiableSet)
+        //return new HashSet<>(this.viewEntities).iterator();
+        return this.viewEntities.iterator();
+        //}
     }
 
     public void addViewEntity(ModelViewEntity view) {
-        synchronized (viewEntities) {
-            this.viewEntities.add(view.getEntityName());
+        // SCIPIO: 2018-09-29: Switched to fields lock for this
+        //synchronized (viewEntities) {
+        synchronized (fieldsLock) {
+            // SCIPIO: 2018-09-29: Now read-only; make copy
+            //this.viewEntities.add(view.getEntityName());
+            Set<String> viewEntities = new HashSet<>(this.viewEntities);
+            viewEntities.add(view.getEntityName());
+            this.viewEntities = Collections.unmodifiableSet(viewEntities);
         }
     }
 
@@ -805,8 +1038,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public boolean removeViewEntity(String viewEntityName) {
-        synchronized (viewEntities) {
-            return this.viewEntities.remove(viewEntityName);
+        // SCIPIO: 2018-09-29: Switched to fields lock for this
+        //synchronized (viewEntities) {
+        synchronized (fieldsLock) {
+            // SCIPIO: 2018-09-29: Now read-only; make copy
+            //return this.viewEntities.remove(viewEntityName);
+            Set<String> viewEntities = new HashSet<>(this.viewEntities);
+            boolean removeResult = viewEntities.remove(viewEntityName);
+            this.viewEntities = Collections.unmodifiableSet(viewEntities);
+            return removeResult;
         }
     }
 
@@ -1454,7 +1694,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         if (this.getNeverCache()) {
             root.setAttribute("never-cache", "true");
         }
-        
+
         if (this.getNeverCheck()) {
             root.setAttribute("never-check", "true");
         }
@@ -1490,7 +1730,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
         // append field elements
         Iterator<ModelField> fieldIter = this.getFieldsIterator();
-        while (fieldIter != null && fieldIter.hasNext()) {
+        while (fieldIter.hasNext()) {
             ModelField field = fieldIter.next();
             if (!field.getIsAutoCreatedInternal()) {
                 root.appendChild(field.toXmlElement(document));
@@ -1508,14 +1748,14 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
         // append relation elements
         Iterator<ModelRelation> relIter = this.getRelationsIterator();
-        while (relIter != null && relIter.hasNext()) {
+        while (relIter.hasNext()) {
             ModelRelation rel = relIter.next();
             root.appendChild(rel.toXmlElement(document));
         }
 
         // append index elements
         Iterator<ModelIndex> idxIter = this.getIndexesIterator();
-        while (idxIter != null && idxIter.hasNext()) {
+        while (idxIter.hasNext()) {
             ModelIndex idx = idxIter.next();
             root.appendChild(idx.toXmlElement(document));
 
@@ -1553,16 +1793,19 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         final boolean useRelationshipNames = false;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
 
-        Map<String, Object> topLevelMap = new HashMap<String, Object>();
+        Map<String, Object> topLevelMap = new HashMap<>();
 
         topLevelMap.put("name", this.getEntityName());
         topLevelMap.put("externalName", this.getTableName(helperName));
         topLevelMap.put("className", "EOGenericRecord");
 
+        // SCIPIO: 2018-09-29: Use local var to avoid potential sync issues from consecutive instance reads
+        List<ModelField> fieldsList = this.fields.fieldsList;
+
         // for classProperties add field names AND relationship names to get a nice, complete chart
-        List<String> classPropertiesList = new LinkedList<String>();
+        List<String> classPropertiesList = new ArrayList<>(fieldsList.size() + this.relations.size()); // SCIPIO: switched to ArrayList
         topLevelMap.put("classProperties", classPropertiesList);
-        for (ModelField field: this.fieldsList) {
+        for (ModelField field: fieldsList) {
             if (field.getIsAutoCreatedInternal()) continue;
             if (field.getIsPk()) {
                 classPropertiesList.add(field.getName() + "*");
@@ -1578,14 +1821,14 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
 
         // attributes
-        List<Map<String, Object>> attributesList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> attributesList = new ArrayList<>(fieldsList.size()); // SCIPIO: switched to ArrayList
         topLevelMap.put("attributes", attributesList);
-        for (ModelField field: this.fieldsList) {
+        for (ModelField field: fieldsList) {
             if (field.getIsAutoCreatedInternal()) continue;
 
             ModelFieldType fieldType = modelFieldTypeReader.getModelFieldType(field.getType());
 
-            Map<String, Object> attributeMap = new HashMap<String, Object>();
+            Map<String, Object> attributeMap = new HashMap<>();
             attributesList.add(attributeMap);
 
             if (field.getIsPk()) {
@@ -1597,15 +1840,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             attributeMap.put("valueClassName", fieldType.getJavaType());
 
             String sqlType = fieldType.getSqlType();
-            if (sqlType.indexOf("(") >= 0) {
-                attributeMap.put("externalType", sqlType.substring(0, sqlType.indexOf("(")));
+            if (sqlType.indexOf('(') >= 0) {
+                attributeMap.put("externalType", sqlType.substring(0, sqlType.indexOf('(')));
                 // since there is a field length set that
-                String widthStr = sqlType.substring(sqlType.indexOf("(") + 1, sqlType.indexOf(")"));
+                String widthStr = sqlType.substring(sqlType.indexOf('(') + 1, sqlType.indexOf(')'));
                 // if there is a comma split by it for width,precision
-                if (widthStr.indexOf(",") >= 0) {
-                    attributeMap.put("width", widthStr.substring(0, widthStr.indexOf(",")));
+                if (widthStr.indexOf(',') >= 0) {
+                    attributeMap.put("width", widthStr.substring(0, widthStr.indexOf(',')));
                     // since there is a field precision set that
-                    attributeMap.put("precision", widthStr.substring(widthStr.indexOf(",") + 1));
+                    attributeMap.put("precision", widthStr.substring(widthStr.indexOf(',') + 1));
                 } else {
                     attributeMap.put("width", widthStr);
                 }
@@ -1615,19 +1858,19 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
 
         // primaryKeyAttributes
-        List<String> primaryKeyAttributesList = new LinkedList<String>();
+        List<String> primaryKeyAttributesList = new ArrayList<>(getPksSize()); // SCIPIO: switched to ArrayList
         topLevelMap.put("primaryKeyAttributes", primaryKeyAttributesList);
         for (ModelField pkField : getPkFields()) {
             primaryKeyAttributesList.add(pkField.getName());
         }
 
         // relationships
-        List<Map<String, Object>> relationshipsMapList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> relationshipsMapList = new ArrayList<>(this.relations.size()); // SCIPIO: switched to ArrayList
         for (ModelRelation relationship: this.relations) {
             if (entityNameIncludeSet.contains(relationship.getRelEntityName())) {
                 ModelEntity relEntity = entityModelReader.getModelEntity(relationship.getRelEntityName());
 
-                Map<String, Object> relationshipMap = new HashMap<String, Object>();
+                Map<String, Object> relationshipMap = new HashMap<>();
                 relationshipsMapList.add(relationshipMap);
 
                 if (useRelationshipNames || relationship.isAutoRelation()) {
@@ -1646,10 +1889,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 relationshipMap.put("joinSemantic", "EOInnerJoin");
 
 
-                List<Map<String, Object>> joinsMapList = new LinkedList<Map<String, Object>>();
+                List<Map<String, Object>> joinsMapList = new ArrayList<>(relationship.getKeyMaps().size()); // SCIPIO: switched to ArrayList
                 relationshipMap.put("joins", joinsMapList);
                 for (ModelKeyMap keyMap: relationship.getKeyMaps()) {
-                    Map<String, Object> joinsMap = new HashMap<String, Object>();
+                    Map<String, Object> joinsMap = new HashMap<>();
                     joinsMapList.add(joinsMap);
 
                     ModelField thisField = this.getField(keyMap.getFieldName());

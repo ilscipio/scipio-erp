@@ -12,6 +12,7 @@
 
 **************************************************************************
 ```
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat)](http://makeapullrequest.com) [![Maintainability](https://api.codeclimate.com/v1/badges/0193ee026d92287b5db0/maintainability)](https://codeclimate.com/github/ilscipio/scipio-erp/maintainability) [![Discourse topics](https://img.shields.io/discourse/https/forum.scipioerp.com/topics.svg)](https://forum.scipioerp.com) [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://www.scipioerp.com/community/developer/installation-configuration/)
 
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/06/slider_desk_900.jpg)
@@ -23,8 +24,8 @@
 * [Community](https://forum.scipioerp.com/)
 
 ## What is Scipio ERP
-Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
-Tomcat application server. We provide standard applications, functions (services) 
+Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in
+Tomcat application server. We provide standard applications, functions (services)
 and a well thought-out datamodel, so that you can create modern web applications.
 
 Our templating toolkit simplifies the creation of modern UIs and is compatible with most
@@ -34,7 +35,7 @@ modern HTML frameworks.
 
 ### TL;DR
 * Simplifies the creation of business or ECommerce applications
-* Highly modular, extendable and customizable 
+* Highly modular, extendable and customizable
 * Bundles a long list of working applications
 * Supports most modern HTML frameworks
 * Supports Caching & Clustering
@@ -46,9 +47,10 @@ modern HTML frameworks.
   * Asset Maintenance
   * Catalog Management
   * Content Management
-  * Customer Relationship Management
+  * Customer Relationship Management (CRM)
   * Ecommerce
   * Human Resource Management
+  * Manufacturing Management
   * Order Management
   * User Management
   * Warehouse Management
@@ -85,16 +87,16 @@ In order to install SCIPIO ERP, the following prerequisites must be installed:
   * Download and Install
 
 ### Download
-The standard way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
-provides you with the latest version of the 1.14.x line with latest important updates:
+The standard way to get SCIPIO ERP to is to checkout the 2.x branch, which
+provides you with the latest version of the 2.x.x line with latest important updates:
 
 1. Open your command line and run:
   * git clone https://github.com/ilscipio/scipio-erp.git
   * cd scipio-erp
-  * git checkout scipioce-1.14
+  * git checkout 2.x
 
-You may also use the master branch (simply omit step c.), the main development branch, 
-for access to latest features and changes, but it is subject to compatibility-breaking 
+You may also use the master branch (simply omit step c.), the main development branch,
+for access to latest features and changes, but it is subject to compatibility-breaking
 changes without notice (unless you have a supported client project, in which case we
 will assist). For some projects, master may be the recommended branch to use.
 
@@ -122,7 +124,7 @@ In order to install, the following steps must be taken:
 
 ### Updates
 1. Retrieve latest code updates from git:
-a. git checkout scipioce-1.14
+a. git checkout 2.x
 b. git pull
 
 2. Reload visual themes:
@@ -151,7 +153,7 @@ or for brief help and command list, type:
 We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional SCIPIO ERP instance with some demo data already loaded, you can create a container with the following command:
 
   docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
-  
+
 
 ## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:
@@ -169,16 +171,6 @@ For more details about OFBiz please visit the OFBiz Documentation page:
 
   http://ofbiz.apache.org/documentation.html
 
-In this page you will find links to useful guides such as:
-* "Demo and Test Setup Guide"
-* "Basic Production Setup Guide"
-* "A Beginners Development Guide"
-
-If you would like to get in touch with the OFBiz community of users and
-developers, the following page will help to get started:
-
-  http://ofbiz.apache.org/community.html
-  
 ## License
 The source code that makes up The SCIPIO ERP Community Edition
 (hereinafter referred to as "SCIPIO ERP") and the majority of the

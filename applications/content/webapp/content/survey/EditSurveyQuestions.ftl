@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${rawString(surveyId)}">
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${raw(surveyId)}">
+      <@table type="data-list" autoAltRows=true>
         <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.CommonId}</@th>
@@ -50,7 +37,7 @@ under the License.
           </#if>
           
             <@tr>
-            <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
+            <form method="post" action="<@pageUrl>updateSurveyQuestionAppl</@pageUrl>">
               <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
               <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
@@ -111,10 +98,10 @@ under the License.
               <@td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></@td>
               <@td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></@td>
               <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/></@td>
-              <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
+              <@td><a href="<@pageUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
               </form>
               <@td>
-                <form id="removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}" action="<@ofbizUrl>removeSurveyQuestionAppl</@ofbizUrl>" method="post">
+                <form id="removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}" action="<@pageUrl>removeSurveyQuestionAppl</@pageUrl>" method="post">
                   <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
                   <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
                   <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
@@ -128,9 +115,9 @@ under the License.
 </@section>
 <#-- apply question from category -->
 <#if surveyQuestionCategory?has_content>
-    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
+    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${raw(surveyQuestionCategory.description!)} [${raw(surveyQuestionCategory.surveyQuestionCategoryId)}]">
         <a name="appl">
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>
@@ -149,12 +136,12 @@ under the License.
             </@thead>
           <#list categoryQuestions as question>
             <#assign questionType = question.getRelatedOne("SurveyQuestionType", false)>
-            <form method="post" action="<@ofbizUrl>createSurveyQuestionAppl</@ofbizUrl>">
+            <form method="post" action="<@pageUrl>createSurveyQuestionAppl</@pageUrl>">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}" />
               <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}" />
               <@tr>
-                <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.link_nav_info_id!}">${question.surveyQuestionId}</a></@td>
+                <@td><a href="<@pageUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@pageUrl>" class="${styles.link_nav_info_id!}">${question.surveyQuestionId}</a></@td>
                 <@td>${question.description!}</@td>
                 <@td>${questionType.get("description",locale)}</@td>
                 <@td>${question.question!}</@td>
@@ -192,7 +179,7 @@ under the License.
     </@section>
 </#if>
 <@section title=uiLabelMap.ContentSurveyApplyQuestionFromCategory>
-      <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
+      <form method="post" action="<@pageUrl>EditSurveyQuestions</@pageUrl>">
         <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
         <select name="surveyQuestionCategoryId">
           <#list questionCategories as category>
@@ -210,7 +197,7 @@ under the License.
     <#assign sectionTitle = uiLabelMap.ContentSurveyCreateQuestionCategory/>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>  
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   <#else>
@@ -218,7 +205,7 @@ under the License.
       <#assign sectionTitle>${rawLabel('CommonEdit')} ${rawLabel('ContentSurveyQuestion')}</#assign>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>  
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')}" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     <#else>
@@ -232,7 +219,7 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         ${menuContent}
-        <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y") text="${rawLabel('CommonNew')} ${rawLabel('ContentSurveyQuestion')} ${rawLabel('ContentSurveryCategory')}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </@menu>
     </#macro>
   </#if>
@@ -245,8 +232,8 @@ under the License.
 </@section>
 
 <#if (surveyQuestion?has_content && (surveyQuestion.surveyQuestionTypeId!"") == "OPTION")>
-  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${rawString(surveyQuestion.surveyQuestionId!)}">
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${raw(surveyQuestion.surveyQuestionId!)}">
+    <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row">
         <@th>${uiLabelMap.CommonDescription}</@th>
@@ -259,9 +246,9 @@ under the License.
         <@tr>
           <@td>${option.description!}</@td>
           <@td>${option.sequenceNum!}</@td>
-          <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a></@td>
+          <@td><a href="<@pageUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a></@td>
           <@td>
-            <form id="deleteSurveyQuestionOption_${option_index}" action="<@ofbizUrl>deleteSurveyQuestionOption</@ofbizUrl>" method="post">
+            <form id="deleteSurveyQuestionOption_${option_index}" action="<@pageUrl>deleteSurveyQuestionOption</@pageUrl>" method="post">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${option.surveyQuestionId}" />
               <input type="hidden" name="surveyOptionSeqId" value="${option.surveyOptionSeqId}" />
@@ -283,11 +270,11 @@ under the License.
       <#assign sectionTitle = uiLabelMap.ContentSurveyEditQuestionOption/>
       <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-          <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${rawLabel('CommonNew')} ${rawLabel('ContentSurveyOption')}]" class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${rawLabel('CommonNew')} ${rawLabel('ContentSurveyOption')}]" class="+${styles.action_nav!} ${styles.action_add!}" />
         </@menu>
       </#macro>
     </#if>
   <@section title=sectionTitle menuContent=menuContent>
-    ${createSurveyOptionWrapper.renderFormString()}
+    ${createSurveyOptionWrapper.renderFormString(context)}<#-- SCIPIO: 2018-09-08: fixed missing (context) here (instead of ()) -->
   </@section>
 </#if>

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,22 +30,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -96,7 +91,7 @@ public class CategoryContentWrapper extends CommonContentWrapper {
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -117,7 +112,7 @@ public class CategoryContentWrapper extends CommonContentWrapper {
      */
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
-        
+
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String cacheKey = (useCache) ? prodCatContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productCategory.get("productCategoryId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
@@ -169,8 +164,8 @@ public class CategoryContentWrapper extends CommonContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
-        // SCIPIO: 2017-11-25: REMOVED multi-ProductCategoryContent loop: 
-        // none of the other content wrappers loop over multiple 
+        // SCIPIO: 2017-11-25: REMOVED multi-ProductCategoryContent loop:
+        // none of the other content wrappers loop over multiple
         // ProductCategoryContent records. either all content wrappers must assume there
         // is only one active or they should all loop...
         // IN ADDITION, below there was a fallback on UtilProperties.getFallbackLocale() which
@@ -206,7 +201,7 @@ public class CategoryContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, categoryContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
             return;
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
         ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
         if (categoryModel.isField(candidateFieldName)) {
@@ -222,7 +217,7 @@ public class CategoryContentWrapper extends CommonContentWrapper {
             }
         }
     }
-    
+
     /**
      * SCIPIO: Gets the entity field value corresponding to the given prodCategoryContentTypeId.
      * DO NOT USE FROM TEMPLATES - NOT CACHED - intended for code that must replicate ProductContentWrapper behavior.
@@ -237,7 +232,7 @@ public class CategoryContentWrapper extends CommonContentWrapper {
         if (delegator == null) {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
         ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
         if (categoryModel.isField(candidateFieldName)) {

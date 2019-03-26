@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -28,6 +15,8 @@ under the License.
         <set field="create_allow_password" value="true"/>
         <set field="parameters.roleTypeId" value="CUSTOMER"/>
         <call-simple-method method-name="createUser"/>
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="CustomerCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     <simple-method method-name="createProspect" short-description="Create Prospect" login-required="false">
         <set field="require_email" value="true"/>
@@ -41,6 +30,8 @@ under the License.
         <now-timestamp field="nowStamp"/>
         <set field="parameters.roleTypeId" value="PROSPECT"/>
         <call-simple-method method-name="createUser"/>
+        <property-to-field field="newProspectMessage" resource="PartyUiLabels" property="NewProspect"/>
+        <set field="_event_message_" value="${newProspectMessage}" />
     </simple-method>
 
     <simple-method method-name="createEmployee" short-description="Create Employee" login-required="false">
@@ -66,7 +57,7 @@ under the License.
         <if-compare field="create_allow_password" operator="not-equals" value="true">
             <set field="parameters.PASSWORD" from-field="default_user_password"/>
             <set field="parameters.CONFIRM_PASSWORD" from-field="default_user_password"/>
-            <set field="parameters.PASSWORD_HINT" value="No hint set, accout not yet enabled"/>
+            <set field="parameters.PASSWORD_HINT" value="No hint set, account not yet enabled"/>
         </if-compare>
 
         <!-- if username and/or password should be lowercased, do that now -->
@@ -80,39 +71,9 @@ under the License.
 
         <!-- Create the UserLogin Record -->
         <if-not-empty field="parameters.USERNAME">
-            <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
-                <simple-map-processor name="newUserLogin">
-                    <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></not-empty></process>
-                    <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
-                    <process field="CONFIRM_PASSWORD">
-                        <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
-                        <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
-                        <copy to-field="currentPasswordVerify"/>
-                    </process>
-                    <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
-                </simple-map-processor>
-            </call-map-processor>
-            <if-not-empty field="userLoginContext.userLoginId">
-                <set field="userLoginExistsMap.userLoginId"  from-field="userLoginContext.userLoginId"/>
-                <find-by-primary-key entity-name="UserLogin" map="userLoginExistsMap" value-field="existingUserLogin"/>
-                <if-not-empty field="existingUserLogin">
-                    <property-to-field field="tempErrorMessage" property="PartyUserNameInUse" resource="PartyUiLabels"/>
-                    <field-to-list field="tempErrorMessage" list="error_list"/>
-                </if-not-empty>
-            </if-not-empty>
-
-            <make-value entity-name="UserLogin" value-field="newUserLogin"/>
-            <set field="newUserLogin.userLoginId" from-field="userLoginContext.userLoginId"/>
-            <set field="newUserLogin.currentPassword" from-field="userLoginContext.currentPassword"/>
-            <set field="newUserLogin.passwordHint" from-field="userLoginContext.passwordHint"/>
-
-            <!-- Check the password, etc for validity -->
-            <call-bsh><![CDATA[
-                String password = (String) userLoginContext.get("currentPassword");
-                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
-                String passwordHint = (String) userLoginContext.get("passwordHint");
-                org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-            ]]></call-bsh>
+            <!-- SCIPIO: 2018-10-26: Code refactored into separate method -->
+            <call-simple-method method-name="makeNewUserLogin"/>
+            <check-errors/>
         <else>
             <if-compare field="require_login" operator="equals" value="true">
                 <add-error><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></add-error>
@@ -124,6 +85,7 @@ under the License.
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
             <simple-map-processor name="newPerson">
+                <process field="USER_PARTY_ID"><copy to-field="partyId"/></process>
                 <process field="USER_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
                 <process field="USER_MIDDLE_NAME"><copy to-field="middleName"/></process>
                 <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
@@ -310,30 +272,9 @@ under the License.
         <set field="emailContext.partyId" from-field="tempMap.partyId"/>
 
         <if-not-empty field="newUserLogin">
-            <!-- If password encryption is enabled, encrpyt it now -->
-            <set field="delegator" from-field="parameters.delegator" type="Object"/>
-            <call-bsh><![CDATA[
-                boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
-                if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
-            ]]></call-bsh>
-
-            <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
-            <set field="newUserLogin.partyId" from-field="tempMap.partyId"/>
-            <create-value value-field="newUserLogin"/>
-            <set-current-user-login value-field="newUserLogin"/>
-            
-            <!-- On successful user creation, create password history record if configured -->
-            <call-class-method method-name="getPropertyValue" class-name="org.ofbiz.base.util.UtilProperties" ret-field="autoPasswordChangeEnabled">
-                <string value="security"/>
-                <string value="user.auto.change.password.enable"/>
-            </call-class-method>
-            <if-compare-field field="autoPasswordChangeEnabled" operator="equals" to-field="true">
-                <call-class-method method-name="createUserLoginPasswordHistory" class-name="org.ofbiz.common.login.LoginServices">
-                    <field field="delegator" type="org.ofbiz.entity.Delegator"/>
-                    <string value="${newUserLogin.userLoginId}"/>
-                    <string value="${newUserLogin.currentPassword}"/>
-                </call-class-method>
-            </if-compare-field>
+            <!-- SCIPIO: 2018-10-26: Code refactored into separate method -->
+            <call-simple-method method-name="storeNewUserLogin"/>
+            <check-errors/>
         </if-not-empty>
 
         <create-value value-field="partyDataSource"/>
@@ -347,12 +288,24 @@ under the License.
                     <result-to-field result-name="contactMechId" field="addressPurposeContext.contactMechId"/>
                 </call-service>
                 <set field="addressPurposeContext.partyId" from-field="tempMap.partyId"/>
-                <!-- create the shipping location -->
-                <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
-                <!-- also consider this address the general correspondence address -->
-                <set field="addressPurposeContext.contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
-                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                <if-not-empty field="parameters.USER_ADDR_PURPOSE">
+                    <!-- SCIPIO: 2018-10-30: Caller should be able to specify purpose types (otherwise, stock case below) -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                    ]]></script>
+                    <iterate list="purposeTypeIdList" entry="purposeTypeId">
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" from-field="purposeTypeId"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                    </iterate>
+                    <else>
+                        <!-- create the shipping location -->
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                        <!-- also consider this address the general correspondence address -->
+                        <set field="addressPurposeContext.contactMechPurposeTypeId" value="GENERAL_LOCATION"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+                    </else>
+                </if-not-empty>
             </else>
         </if-compare>
 
@@ -411,14 +364,14 @@ under the License.
         <!-- Associated to Product Store -->
         <!-- SCIPIO: A user may not be associated to a store. (ie: organization owner) -->
         <if-not-empty field="parameters.PRODUCT_STORE_ID">
-	        <entity-one entity-name="UserLogin" value-field="userLogin">
-	            <field-map field-name="userLoginId" value="system"/>
-	        </entity-one>
-	        <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
-	        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
-	        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
-	        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
-	        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+            <entity-one entity-name="UserLogin" value-field="userLogin">
+                <field-map field-name="userLoginId" value="system"/>
+            </entity-one>
+            <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
+            <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
+            <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
+            <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
+            <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
         </if-not-empty>
 
         <!--send New User Email Notification-->
@@ -426,6 +379,77 @@ under the License.
         <set field="emailContext.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
         <set-service-fields service-name="sendCreatePartyEmailNotification" map="emailContext" to-map="serviceInMap"/>
         <call-service-asynch service-name="sendCreatePartyEmailNotification" in-map-name="serviceInMap"/>
+    </simple-method>
+
+    <!-- SCIPIO: 2018-10-26: Refactored from createUser -->
+    <simple-method method-name="makeNewUserLogin">
+        <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
+            <simple-map-processor name="newUserLogin">
+                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></not-empty></process>
+                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
+                <process field="CONFIRM_PASSWORD">
+                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
+                    <!-- This is checked below in the checkNewPassword method in the block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
+                    <copy to-field="currentPasswordVerify"/>
+                </process>
+                <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <if-not-empty field="userLoginContext.userLoginId">
+            <set field="userLoginExistsMap.userLoginId"  from-field="userLoginContext.userLoginId"/>
+            <find-by-primary-key entity-name="UserLogin" map="userLoginExistsMap" value-field="existingUserLogin"/>
+            <if-not-empty field="existingUserLogin">
+                <property-to-field field="tempErrorMessage" property="PartyUserNameInUse" resource="PartyUiLabels"/>
+                <field-to-list field="tempErrorMessage" list="error_list"/>
+            </if-not-empty>
+        </if-not-empty>
+
+        <make-value entity-name="UserLogin" value-field="newUserLogin"/>
+        <set field="newUserLogin.userLoginId" from-field="userLoginContext.userLoginId"/>
+        <set field="newUserLogin.currentPassword" from-field="userLoginContext.currentPassword"/>
+        <set field="newUserLogin.passwordHint" from-field="userLoginContext.passwordHint"/>
+
+        <!-- Check the password, etc for validity -->
+        <script lang="groovy"><![CDATA[
+            String password = (String) userLoginContext.get("currentPassword")
+            String confirmPassword = (String) userLoginContext.get("currentPasswordVerify")
+            String passwordHint = (String) userLoginContext.get("passwordHint")
+            org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale)
+        ]]></script>
+    </simple-method>
+    
+    <!-- SCIPIO: 2018-10-26: Refactored from createUser 
+        NOTE: This expects the partyId to be in the field: tempMap.partyId -->
+    <simple-method method-name="storeNewUserLogin">
+        <!-- If password encryption is enabled, encrypt it now -->
+        <set field="delegator" from-field="parameters.delegator" type="Object"/>
+        <script lang="groovy"><![CDATA[
+            boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator))
+            if (useEncryption) {
+                String hashType = org.ofbiz.common.login.LoginServices.getHashType()
+                newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword"))) 
+            }
+        ]]></script>
+
+        <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
+        <set field="newUserLogin.partyId" from-field="tempMap.partyId"/>
+        <create-value value-field="newUserLogin"/>
+        <if-compare field="snulSkipSetCurrent" operator="not-equals" type="Boolean" value="true"><!-- SCIPIO: Added flag -->
+            <set-current-user-login value-field="newUserLogin"/>
+        </if-compare>
+
+        <!-- On successful user creation, create password history record if configured -->
+        <call-class-method method-name="getPropertyValue" class-name="org.ofbiz.base.util.UtilProperties" ret-field="autoPasswordChangeEnabled">
+            <string value="security"/>
+            <string value="user.auto.change.password.enable"/>
+        </call-class-method>
+        <if-compare-field field="autoPasswordChangeEnabled" operator="equals" to-field="true">
+            <call-class-method method-name="createUserLoginPasswordHistory" class-name="org.ofbiz.common.login.LoginServices">
+                <field field="delegator" type="org.ofbiz.entity.Delegator"/>
+                <string value="${newUserLogin.userLoginId}"/>
+                <string value="${newUserLogin.currentPassword}"/>
+            </call-class-method>
+        </if-compare-field>
     </simple-method>
 
 </simple-methods>

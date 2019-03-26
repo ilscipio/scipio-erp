@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-  <@table type="data-complex"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+  <@table type="data-complex">
     <#assign questions = surveyWrapper.getSurveyQuestionAndAppls()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
 
@@ -100,7 +87,7 @@ under the License.
                     <#elseif question.surveyQuestionTypeId == "CONTENT">
                        <#if answer.contentId?has_content>
                          <#assign content = answer.getRelatedOne("Content", false)>
-                         <a href="<@ofbizUrl>img?imgId=${content.dataResourceId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
+                         <a href="<@pageUrl>img?imgId=${content.dataResourceId}</@pageUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
                        </#if>
                     </#if>
                   </#list>

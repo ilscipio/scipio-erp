@@ -1,20 +1,7 @@
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -51,14 +38,14 @@ under the License.
                                   and when possible on the portions of documentation most benefitting from interaction and dynamic
                                   rendering, or yet those requiring manual examination of source files.</p>
                                   
-                                <p>NOTE: This page is a compilation in progress. For a more comprehensive introduction and documentation, including architectural overview, please visit the 
+                                <p>NOTE: For a more comprehensive introduction and documentation, including architectural overview, please visit the 
                                   <a href="http://www.scipioerp.com/community/developer/" target="_blank">Scipio ERP website 
                                     at http://www.scipioerp.com/community/developer/</a></p>
                                 
                               <@section title=getLabel('ContentContents', 'ContentUiLabels')>
                                 <ol>
                                   <li>
-                                    <@heading><a href="<@ofbizWebappUrl uri=tmplApiMasterWebappUri escapeAs='html'/>">
+                                    <@heading><a href="<@appUrl uri=tmplApiMasterWebappUri escapeAs='html'/>">
                                       ${getLabel('WebtoolsTemplateApiDocsTitle')}</a></@heading> - current, automatically generated from your local instance source files.
                                     <br/><small>Alternatively, the Scipio website provides a periodically updated version at 
                                         <a href="http://www.scipioerp.com/community/developer/freemarker-macros/" target="_blank">http://www.scipioerp.com/community/developer/freemarker-macros/</a>.</small>  
@@ -101,7 +88,7 @@ under the License.
                 <set field="fdtwArgs.targetLibPath" value="${groovy: request.getAttribute('scipioTmplApiTargetLibPath')}"/><!-- set by templateApiDocPage.jsp -->
                 <set field="fdtwArgs.targetLibName" value=""/>
                 <set field="fdtwArgs.reloadDataModel" type="Boolean" from-field="parameters.reloadDataModel" />
-                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
+                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateAdmin.groovy"/>
                 
                 <set field="title" value="${docLibTitleMap[targetLibName]}"/>
                 <set field="subtitle" value="${docContext.pageTitle}"/>
@@ -130,12 +117,10 @@ under the License.
                                 <!-- dumps the docContext we made into main context but with special freemarker object wrapping (do this as late as possible) -->
                                 <set field="fdtwArgs" type="NewMap"/>
                                 <set field="fdtwArgs.doPrepFtlCtx" type="Boolean" value="true"/>
-                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
+                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateAdmin.groovy"/>
                             </actions>
                             <widgets>
-                                <!--<screenlet>-->
-                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateOfbiz.ftl"/></html></platform-specific>
-                                <!--/<screenlet>-->
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateAdmin.ftl"/></html></platform-specific>
                             </widgets>
                         </section>
                     </decorator-section>

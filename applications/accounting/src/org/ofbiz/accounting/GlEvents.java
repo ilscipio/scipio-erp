@@ -28,7 +28,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -55,7 +54,7 @@ public static String createReconcileAccount(HttpServletRequest request, HttpServ
     // The number of multi form rows is retrieved
     int rowCount = UtilHttp.getMultiFormRowCount(ctx);
     for (int i = 0; i < rowCount; i++) {  //for calculating amount per glAccountId
-        String suffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+        String suffix = UtilHttp.getMultiRowDelimiter() + i;
         isSelected = (ctx.containsKey("_rowSubmit" + suffix) && "Y".equalsIgnoreCase((String)ctx.get("_rowSubmit" + suffix)));
         if (!isSelected) {
             continue;
@@ -66,7 +65,7 @@ public static String createReconcileAccount(HttpServletRequest request, HttpServ
         glAccountId = (String) ctx.get("glAccountId" + suffix);
         try {
             GenericValue acctgTransEntry = EntityQuery.use(delegator).from("AcctgTransEntry").where("acctgTransId", acctgTransId, "acctgTransEntrySeqId", acctgTransEntrySeqId).queryOne();
-            if (UtilValidate.isNotEmpty(acctgTransEntry)) {
+            if (acctgTransEntry != null) {
                 //calculate amount for each AcctgTransEntry according to glAccountId based on debit and credit
                 debitCreditFlag = acctgTransEntry.getString("debitCreditFlag");
                 if ("D".equalsIgnoreCase(debitCreditFlag)) {
@@ -95,7 +94,7 @@ public static String createReconcileAccount(HttpServletRequest request, HttpServ
     String glReconciliationId = (String) glReconResult.get("glReconciliationId");
     String reconciledAmount;
     for (int i = 0; i < rowCount; i++) {
-        String suffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+        String suffix = UtilHttp.getMultiRowDelimiter() + i;
         isSelected = (ctx.containsKey("_rowSubmit" + suffix) && "Y".equalsIgnoreCase((String)ctx.get("_rowSubmit" + suffix)));
         if (!isSelected) {
             continue;
@@ -104,7 +103,7 @@ public static String createReconcileAccount(HttpServletRequest request, HttpServ
         acctgTransEntrySeqId = (String) ctx.get("acctgTransEntrySeqId" + suffix);
         try {
             GenericValue acctgTransEntry = EntityQuery.use(delegator).from("AcctgTransEntry").where("acctgTransId", acctgTransId, "acctgTransEntrySeqId", acctgTransEntrySeqId).queryOne();
-            if (UtilValidate.isNotEmpty(acctgTransEntry)) {
+            if (acctgTransEntry != null ) {
                 reconciledAmount = acctgTransEntry.getString("amount");
                 acctgTransId = acctgTransEntry.getString("acctgTransId");
                 acctgTransEntrySeqId = acctgTransEntry.getString("acctgTransEntrySeqId");

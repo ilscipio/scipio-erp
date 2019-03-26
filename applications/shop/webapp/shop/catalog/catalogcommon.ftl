@@ -24,7 +24,7 @@
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>
     <#if productLargeImageUrl?has_content>
-        <#assign largeImage = makeOfbizContentCtxPrefixUrl(productLargeImageUrl)/>
+        <#assign largeImage = makeContentCtxPrefixUrl(productLargeImageUrl)/>
     <#else>
         <#assign largeImage = "https://placehold.it/800x300">
     </#if>
@@ -35,19 +35,19 @@
       <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage1)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage1)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
             </#if>
             <#if productAdditionalImage2?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage2)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage2)/>
                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage3?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage3)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage3)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage4?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage4)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage4)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>
@@ -79,31 +79,31 @@
         </p>
     </#if>
     <#if (product.quantityIncluded?? && product.quantityIncluded != 0) || product.quantityUomId?has_content>
-        <#assign quantityUom = product.getRelatedOneCache("QuantityUom")! />
+        <#assign quantityUom = product.getRelatedOne("QuantityUom", true)! />
         <p id="product-specs-quantity-included">
             ${uiLabelMap.CommonQuantity}: ${product.quantityIncluded!} ${((quantityUom.abbreviation)?default(product.quantityUomId))!}
         </p>
     </#if>
     <#if (product.weight?? && product.weight != 0) || product.weightUomId?has_content>
-        <#assign weightUom = product.getRelatedOneCache("WeightUom")! />
+        <#assign weightUom = product.getRelatedOne("WeightUom", true)! />
         <p id="product-specs-weight">
             ${uiLabelMap.CommonWeight}: ${product.weight!} ${((weightUom.abbreviation)?default(product.weightUomId))!}
         </p>
     </#if>
     <#if (product.productHeight?? && product.productHeight != 0) || product.heightUomId?has_content>
-        <#assign heightUom = product.getRelatedOneCache("HeightUom")! />
+        <#assign heightUom = product.getRelatedOne("HeightUom", true)! />
         <p id="product-specs-height">
             ${uiLabelMap.CommonHeight}: ${product.productHeight!} ${((heightUom.abbreviation)?default(product.heightUomId))!}
         </p>
     </#if>
     <#if (product.productWidth?? && product.productWidth != 0) || product.widthUomId?has_content>
-        <#assign widthUom = product.getRelatedOneCache("WidthUom")! />
+        <#assign widthUom = product.getRelatedOne("WidthUom", true)! />
         <p id="product-specs-width">
             ${uiLabelMap.CommonWidth}: ${product.productWidth!} ${((widthUom.abbreviation)?default(product.widthUomId))!}
         </p>
     </#if>
     <#if (product.productDepth?? && product.productDepth != 0) || product.depthUomId?has_content>
-        <#assign depthUom = product.getRelatedOneCache("DepthUom")! />
+        <#assign depthUom = product.getRelatedOne("DepthUom", true)! />
         <p id="product-specs-depth">
             ${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}
         </p>
@@ -113,7 +113,7 @@
     </#if>
     <#if disFeatureList?? && (0 < disFeatureList.size())>                
         <#list disFeatureList as currentFeature>
-            <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
+            <#assign disFeatureType = currentFeature.getRelatedOne("ProductFeatureType", true) />
             <p>
                 <#if disFeatureType.description??>${disFeatureType.get("description", locale)}<#else>${currentFeature.productFeatureTypeId}</#if>:&nbsp;${currentFeature.description}
             </p>
@@ -139,7 +139,7 @@
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
+        <#assign assocTitle>${raw(beforeName)}<#if showName == "Y">${raw(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${raw(afterName)}</#assign>
         <@section title=assocTitle>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>
@@ -150,7 +150,7 @@
                             <#assign assocProductId = productAssoc.productId />
                         </#if>
                         <#--
-                          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+                          <a href="<@pageUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@pageUrl>" class="${styles.link_nav_info_id!}">
                             ${assocProductId}
                           </a>
                         <#if productAssoc.reason?has_content>
@@ -214,14 +214,18 @@
 </#macro>
 
 <#-- Makes options for insert within <@field type="select">. Used by keywordsearch & advancedsearch. WARN: uses context fields. -->
-<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false extraArgs...>
+<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false type="kws" extraArgs...>
     <#if !showAdv?is_boolean>
       <#local showAdv = showAdvFields!showAdvDef><#-- CONTEXT field -->
     </#if>
-    <#local sortOrder = rawString(sortOrder)>
+    <#local sortOrder = raw(sortOrder)>
     <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
         is not used in all sorting methods and it takes space -->
+  <#if type == "kws">
     <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductKeywordRelevancy}<#else>${uiLabelMap.ProductRelevance}</#if></option>
+  <#else><#-- type == "cat" -->
+    <option value=""<#if !sortOrder?has_content || sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>>--</option>
+  </#if>
     <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
   <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
     <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>

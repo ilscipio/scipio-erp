@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -44,28 +31,28 @@ function shipBillAddr() {
       <#-- after initial screen; show detailed screens for selected type -->
   <#if (paymentMethodTypeId!) == "CREDIT_CARD">
     <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
-      <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>changeCreditCardAndBillingAddress</@pageUrl>" name="${parameters.formNameValue}">
         <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
         <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
     <#elseif requestParameters.useShipAddr??>
-      <form method="post" action="<@ofbizUrl>enterCreditCard</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>enterCreditCard</@pageUrl>" name="${parameters.formNameValue}">
     <#else>
-      <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>enterCreditCardAndBillingAddress</@pageUrl>" name="${parameters.formNameValue}">
     </#if>
   <#elseif (paymentMethodTypeId!) == "EFT_ACCOUNT">
     <#if eftAccount?has_content && postalAddress?has_content>
-      <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>changeEftAccountAndBillingAddress</@pageUrl>" name="${parameters.formNameValue}">
         <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
         <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
     <#elseif requestParameters.useShipAddr??>
-      <form method="post" action="<@ofbizUrl>enterEftAccount</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>enterEftAccount</@pageUrl>" name="${parameters.formNameValue}">
     <#else>
-      <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@pageUrl>enterEftAccountAndBillingAddress</@pageUrl>" name="${parameters.formNameValue}">
     </#if>
   <#elseif (paymentMethodTypeId!) == "GIFT_CARD"> <#--Don't know much how this is handled -->
-    <form method="post" action="<@ofbizUrl>enterGiftCard</@ofbizUrl>" name="${parameters.formNameValue}">
+    <form method="post" action="<@pageUrl>enterGiftCard</@pageUrl>" name="${parameters.formNameValue}">
   <#elseif (paymentMethodTypeId!) == "EXT_OFFLINE">
-    <form method="post" action="<@ofbizUrl>processPaymentSettings</@ofbizUrl>" name="${parameters.formNameValue}">
+    <form method="post" action="<@pageUrl>processPaymentSettings</@pageUrl>" name="${parameters.formNameValue}">
   <#else>
     <@commonMsg type="error">${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!uiLabelMap.CommonNA}</@commonMsg>
     <form method="post" action="#" name="${parameters.formNameValue!}">

@@ -23,17 +23,24 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
 import org.ofbiz.base.location.FlexibleLocation;
@@ -44,6 +51,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -51,11 +59,17 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapContext;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.webapp.event.EventUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  * ConfigXMLReader.java - Reads and parses the XML site config files.
+ * <p>
+ * SCIPIO: NOTE: 2018-11-07: All public fields in these classes are now final, and should always have
+ * been treated as final (thread safety and other reasons).
+ * TODO?: Should probably use unmodifiable maps and lists everywhere...
  */
 public class ConfigXMLReader {
 
@@ -141,7 +155,7 @@ public class ConfigXMLReader {
         File configFile = new File(filePath);
         return getControllerConfig(configFile.toURI().toURL());
     }
-    
+
     /**
      * SCIPIO: Overload that supports optional loading.
      * Added 2017-11-18.
@@ -159,7 +173,7 @@ public class ConfigXMLReader {
             // SCIPIO: use one single factory method from now on...
             //controllerConfig = controllerCache.putIfAbsentAndGet(url, new ControllerConfig(url));
             controllerConfig = readControllerConfig(url, false);
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+            controllerConfig = controllerCache.putIfAbsentAndGet(url,
                     controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
             return controllerConfig;
         }
@@ -174,11 +188,19 @@ public class ConfigXMLReader {
         ControllerConfig controllerConfig = controllerCache.get(url);
         if (controllerConfig == null) {
             controllerConfig = readControllerConfig(url, optional);
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+            controllerConfig = controllerCache.putIfAbsentAndGet(url,
                     controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
             return controllerConfig;
         }
         return controllerConfig.isNull() ? null : controllerConfig;
+    }
+
+    /**
+     * SCIPIO: version of getControllerConfig that supports optional loading.
+     * Added 2017-05-03.
+     */
+    private static ControllerConfig getControllerConfig(ControllerConfig.Include include) throws WebAppConfigurationException {
+        return getControllerConfig(include.getLocation(), include.isOptional());
     }
 
     /**
@@ -188,10 +210,19 @@ public class ConfigXMLReader {
     public static ControllerConfig readControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
         try {
             return ControllerConfigFactory.getFactory().readControllerConfig(url);
+        } catch(FatalWebAppConfigurationException e) {
+            // TODO: REVIEW: This block allows factory to bypass the FileNotFoundException check 
+            if (e.getCause() instanceof WebAppConfigurationException) {
+                throw (WebAppConfigurationException) e.getCause();
+            } else {
+                throw new WebAppConfigurationException(e.getCause());
+            }
         } catch(WebAppConfigurationException e) {
             if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
-                if (Debug.infoOn()) {
-                    Debug.logInfo("controller skipped (not found, optional): " + url.toString(), module);
+                // SCIPIO: NOTE: Changed this to verbose to simplify and to make this consistent with loadIncludes
+                // below, which also can generate a similar message (when component missing)
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("controller skipped (not found, optional): " + url.toString(), module);
                 }
                 return null;
             } else {
@@ -200,6 +231,17 @@ public class ConfigXMLReader {
         }
     }
 
+    /**
+     * SCIPIO: A hack for {@link #readControllerConfig} to allow passing through FileNotFoundException.
+     * TODO: REVIEW: hackish
+     */
+    @SuppressWarnings("serial")
+    private static class FatalWebAppConfigurationException extends WebAppConfigurationException {
+        public FatalWebAppConfigurationException(Throwable t) {
+            super(t);
+        }
+    }
+    
     public static URL getControllerConfigURL(ServletContext context) {
         try {
             return context.getResource(controllerXmlFileName);
@@ -209,14 +251,15 @@ public class ConfigXMLReader {
         }
     }
 
-    /** Loads the XML file and returns the root element 
+    /** Loads the XML file and returns the root element
      * @throws WebAppConfigurationException */
     private static Element loadDocument(URL location) throws WebAppConfigurationException {
         try {
             Document document = UtilXml.readXmlDocument(location, true);
             Element rootElement = document.getDocumentElement();
-            if (Debug.verboseOn())
-                Debug.logVerbose("Loaded XML Config - " + location, module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("Loaded XML Config - " + location, module);
+            }
             return rootElement;
         } catch (java.io.FileNotFoundException e) { // SCIPIO: special case: let caller log this one, IF necessary
             throw new WebAppConfigurationException(e);
@@ -232,84 +275,248 @@ public class ConfigXMLReader {
      * 2018-06-13.
      */
     public static abstract class ControllerConfigFactory {
-        private static final ControllerConfigFactory defaultFactory = 
+        private static final ControllerConfigFactory defaultFactory =
                 getFactoryFromProperty("requestHandler", "controller.config.factoryClass");
-        
+
         public abstract ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException;
 
         public static ControllerConfigFactory getFactory() {
             return defaultFactory;
         }
-        
+
         @SuppressWarnings("unchecked")
         public static ControllerConfigFactory getFactoryFromProperty(String resource, String property) {
             String factoryClassName = UtilProperties.getPropertyValue(resource, property);
             ControllerConfigFactory factory;
             try {
-                Class<? extends ControllerConfigFactory> factoryClass = 
+                Class<? extends ControllerConfigFactory> factoryClass =
                         (Class<? extends ControllerConfigFactory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClassName);
                 factory = (ControllerConfigFactory) factoryClass.newInstance();
             } catch (Exception e) {
                 Debug.logError(e, "Could not initialize controller config factory '" + factoryClassName + "': " + e.getMessage(), module);
                 factory = new ControllerConfig.Factory();
             }
-            Debug.logInfo("Initialized ControllerConfigFactory from properties (" 
+            Debug.logInfo("Initialized ControllerConfigFactory from properties ("
                 + resource + "#" + property + "): " + factory.getClass().getName(), module);
             return factory;
         }
     }
 
     public static class ControllerConfig {
-        // SCIPIO: special key for cache lookups that return null
-        public static final ControllerConfig NULL_CONFIG = new ControllerConfig();
-        
-        public URL url;
+        public static final ControllerConfig NULL_CONFIG; // SCIPIO: special key for cache lookups that return null
+        static {
+            ControllerConfig config = null;
+            try {
+                config = new ControllerConfig(null);
+            } catch (Exception e) { // SCIPIO: NOTE: this is only here to satisfy compiler, never thrown when url == null
+                Debug.logError(e, module);
+            }
+            NULL_CONFIG = config;
+        }
+
+        public final URL url;
         // SCIPIO: switched all to protected from private (see ResolvedControllerConfig)
-        protected String errorpage;
-        protected String protectView;
-        protected String owner;
-        protected String securityClass;
-        protected String defaultRequest;
-        protected String statusCode;
+        protected final String errorpage;
+        protected final String protectView;
+        protected final String owner;
+        protected final String securityClass;
+        protected final String defaultRequest;
+        protected final Integer statusCodeNumber; // SCIPIO: Now an integer: String statusCode
         // SCIPIO: extended info on includes needed
         //protected List<URL> includes = new ArrayList<URL>();
-        protected List<Include> includes = new ArrayList<>();
+        protected final List<Include> includes; // = new ArrayList<>();
         // SCIPIO: split-up includes
-        protected List<Include> includesPreLocal = new ArrayList<>();
-        protected List<Include> includesPostLocal = new ArrayList<>();
-        protected Map<String, Event> firstVisitEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
-        protected Map<String, Event> preprocessorEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
-        protected Map<String, Event> postprocessorEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
-        protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
-        protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
-        protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
-        protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
-        protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
-        protected Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
-        protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
-        protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
-        protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
-        
+        protected final List<Include> includesPreLocal; // = new ArrayList<>();
+        protected final List<Include> includesPostLocal; // = new ArrayList<>();
+        protected final Map<String, Event> firstVisitEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> preprocessorEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> postprocessorEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> afterLoginEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> beforeLogoutEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> afterLogoutEventList; // = new LinkedHashMap<String, Event>(); // SCIPIO: added 2018-12-03
+        protected final Map<String, String> eventHandlerMap; // = new HashMap<String, String>();
+        protected final Map<String, String> viewHandlerMap; // = new HashMap<String, String>();
+        protected final Map<String, RequestMap> requestMapMap; // = new HashMap<String, RequestMap>();
+        protected final Map<String, ViewMap> viewMapMap; // = new HashMap<String, ViewMap>();
+        protected final ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+        protected final Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
+        protected final List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
+        protected final String defaultViewLastView; // SCIPIO: added 2018-10-26
+        protected final Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap; // SCIPIO: added 2018-11-23
+
+        // SCIPIO: DEV NOTE:
+        // If you add any members to this class, make sure to reflect it in ResolvedControllerConfig further below!
+        // i.e the public getters such as getRequestMapMap must be overridden in ResolvedControllerConfig!
+
+        /**
+         * SCIPIO: Copy of above fields, ugly kludge to avoid having to more invasive rewrites. Only
+         * used during init.
+         */
+        private static class ConfigFields {
+            protected String errorpage;
+            protected String protectView;
+            protected String owner;
+            protected String securityClass;
+            protected String defaultRequest;
+            protected Integer statusCodeNumber; // SCIPIO: Now an integer: String statusCode
+            // SCIPIO: extended info on includes needed
+            //protected List<URL> includes = new ArrayList<URL>();
+            protected List<Include> includes = new ArrayList<>();
+            // SCIPIO: split-up includes
+            protected List<Include> includesPreLocal = new ArrayList<>();
+            protected List<Include> includesPostLocal = new ArrayList<>();
+            protected Map<String, Event> firstVisitEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> preprocessorEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> postprocessorEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> afterLogoutEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
+            protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
+            protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
+            protected Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
+            protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+            protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
+            protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
+            protected String defaultViewLastView; // SCIPIO: added 2018-10-26
+            protected Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap = new LinkedHashMap<>(); // SCIPIO: added 2018-11-23
+        }
+
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
-            Element rootElement = loadDocument(url);
-            if (rootElement != null) {
-                long startTime = System.currentTimeMillis();
-                loadIncludes(rootElement);
-                loadGeneralConfig(rootElement);
-                loadHandlerMap(rootElement);
-                loadRequestMap(rootElement);
-                loadViewMap(rootElement);
-                if (Debug.infoOn()) {
-                    double totalSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-                    String locString = this.url.toExternalForm();
-                    Debug.logInfo("controller loaded: " + totalSeconds + "s, " + this.requestMapMap.size() + " requests, " + this.viewMapMap.size() + " views in " + locString, module);
+            Builder builder = new Builder(); // SCIPIO
+
+            if (url != null) { // SCIPIO: Added condition (for ControllerConfig.NULL_CONFIG)
+                Element rootElement = loadDocument(url);
+                if (rootElement != null) {
+                    long startTime = System.currentTimeMillis();
+                    builder.loadIncludes(rootElement);
+                    builder.loadGeneralConfig(rootElement);
+                    builder.loadHandlerMap(rootElement);
+                    builder.loadRequestMap(rootElement);
+                    builder.loadViewMap(rootElement);
+                    if (Debug.infoOn()) {
+                        double totalSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+                        String locString = this.url.toExternalForm();
+                        Debug.logInfo("controller loaded: " + totalSeconds + "s, " + builder.requestMapMap.size() + " requests, " + builder.viewMapMap.size() + " views in " + locString, module);
+                    }
+                } else {
+                    Debug.logError("No root element found for controller: " + url, module); // SCIPIO: Added log line, hopefully never happens
                 }
             }
+
+            // SCIPIO: Locals
+            builder.optimizeFields();
+            this.errorpage = builder.errorpage;
+            this.protectView = builder.protectView;
+            this.owner = builder.owner;
+            this.securityClass = builder.securityClass;
+            this.defaultRequest = builder.defaultRequest;
+            this.statusCodeNumber = builder.statusCodeNumber;
+            this.includes = builder.includes;
+            this.includesPreLocal = builder.includesPreLocal;
+            this.includesPostLocal = builder.includesPostLocal;
+            this.firstVisitEventList = builder.firstVisitEventList;
+            this.preprocessorEventList = builder.preprocessorEventList;
+            this.postprocessorEventList = builder.postprocessorEventList;
+            this.afterLoginEventList = builder.afterLoginEventList;
+            this.beforeLogoutEventList = builder.beforeLogoutEventList;
+            this.afterLogoutEventList = builder.afterLogoutEventList;
+            this.eventHandlerMap = builder.eventHandlerMap;
+            this.viewHandlerMap = builder.viewHandlerMap;
+            this.requestMapMap = builder.requestMapMap;
+            this.viewMapMap = builder.viewMapMap;
+            this.viewAsJsonConfig = builder.viewAsJsonConfig;
+            this.allowViewSaveDefault = builder.allowViewSaveDefault;
+            this.allowViewSaveViewNameFilters = builder.allowViewSaveViewNameFilters;
+            this.defaultViewLastView = builder.defaultViewLastView;
+            this.eventHandlerWrapperMap = builder.eventHandlerWrapperMap;
         }
-        
-        private ControllerConfig() { // SCIPIO: special null config 
-            this.url = null;
+
+        /**
+         * SCIPIO: Optimizing copy constructor: Copies config, with option to pre-resolve fields from 
+         * the public getter operations.
+         * <p>
+         * NOTE: Passing useResolvedFields false makes this practically useless because fields should not be modified.
+         * <p>
+         * Used to implement {@link ConfigXMLReader.ResolvedControllerConfig}.
+         */
+        protected ControllerConfig(ControllerConfig srcConfig, boolean useResolvedFields) throws WebAppConfigurationException {
+            this.url = srcConfig.url;
+
+            if (useResolvedFields) {
+                this.errorpage = srcConfig.getErrorpage();
+                this.protectView = srcConfig.getProtectView();
+                this.owner = srcConfig.getOwner();
+                this.securityClass = srcConfig.getSecurityClass();
+                this.defaultRequest = srcConfig.getDefaultRequest();
+                this.statusCodeNumber = srcConfig.getStatusCodeNumber();
+                this.includes = getOptList(srcConfig.includes);
+                this.includesPreLocal = getOptList(srcConfig.includesPreLocal);
+                this.includesPostLocal = getOptList(srcConfig.includesPostLocal);
+                this.firstVisitEventList = getOrderedOptMap(srcConfig.getFirstVisitEventList());
+                this.preprocessorEventList = getOrderedOptMap(srcConfig.getPreprocessorEventList());
+                this.postprocessorEventList = getOrderedOptMap(srcConfig.getPostprocessorEventList());
+                this.afterLoginEventList = getOrderedOptMap(srcConfig.getAfterLoginEventList());
+                this.beforeLogoutEventList = getOrderedOptMap(srcConfig.getBeforeLogoutEventList());
+                this.afterLogoutEventList = getOrderedOptMap(srcConfig.getAfterLogoutEventList());
+                this.eventHandlerMap = getOptMap(srcConfig.getEventHandlerMap());
+                this.viewHandlerMap = getOptMap(srcConfig.getViewHandlerMap());
+                this.requestMapMap = getOptMap(srcConfig.getRequestMapMap());
+                this.viewMapMap = getOptMap(srcConfig.getViewMapMap());
+                this.viewAsJsonConfig = srcConfig.getViewAsJsonConfig(); // SCIPIO: added 2017-05-15
+                this.allowViewSaveDefault = srcConfig.getAllowViewSaveDefault(); // SCIPIO: added 2018-06-13
+                this.allowViewSaveViewNameFilters = getOptList(srcConfig.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
+                this.defaultViewLastView = srcConfig.getDefaultViewLastView();
+                this.eventHandlerWrapperMap = getOrderedOptMap(srcConfig.getEventHandlerWrapperMap());
+            } else {
+                this.errorpage = srcConfig.errorpage;
+                this.protectView = srcConfig.protectView;
+                this.owner = srcConfig.owner;
+                this.securityClass = srcConfig.securityClass;
+                this.defaultRequest = srcConfig.defaultRequest;
+                this.statusCodeNumber = srcConfig.statusCodeNumber;
+                this.includes = srcConfig.includes;
+                this.includesPreLocal = srcConfig.includesPreLocal;
+                this.includesPostLocal = srcConfig.includesPostLocal;
+                this.firstVisitEventList = srcConfig.firstVisitEventList;
+                this.preprocessorEventList = srcConfig.preprocessorEventList;
+                this.postprocessorEventList = srcConfig.postprocessorEventList;
+                this.afterLoginEventList = srcConfig.afterLoginEventList;
+                this.beforeLogoutEventList = srcConfig.beforeLogoutEventList;
+                this.afterLogoutEventList = srcConfig.afterLogoutEventList;
+                this.eventHandlerMap = srcConfig.eventHandlerMap;
+                this.viewHandlerMap = srcConfig.viewHandlerMap;
+                this.requestMapMap = srcConfig.requestMapMap;
+                this.viewMapMap = srcConfig.viewMapMap;
+                this.viewAsJsonConfig = srcConfig.viewAsJsonConfig;
+                this.allowViewSaveDefault = srcConfig.allowViewSaveDefault;
+                this.allowViewSaveViewNameFilters = srcConfig.allowViewSaveViewNameFilters;
+                this.defaultViewLastView = srcConfig.defaultViewLastView;
+                this.eventHandlerWrapperMap = srcConfig.eventHandlerWrapperMap;
+            }
+        }
+
+        private static <K, V> Map<K, V> getOptMap(Map<K, V> map) { // SCIPIO: Used to optimize MapContext down to a simpler map.
+            return new HashMap<>(map); // convert MapContext to much faster HashMap
+        }
+
+        protected static <K, V> Map<K, V> getOrderedOptMap(Map<K, V> map) { // SCIPIO: Used to optimize MapContext down to a simpler order-preserving map.
+            // SCIPIO: 2018-06-14: FIXME: the MapContext iteration order will be wrong here (minor issue)...
+            return new LinkedHashMap<>(map); // convert MapContext to much faster HashMap
+        }
+
+        protected static <V> List<V> getOptList(List<V> list) { // SCIPIO: Used to optimize LinkedList or other down to a fast list.
+            ArrayList<V> arrayList;
+            if (list instanceof ArrayList) {
+                arrayList = (ArrayList<V>) list;
+                // NO! do not modify original instance (ControllerConfig field)
+                //arrayList.trimToSize();
+            } else {
+                arrayList = new ArrayList<>(list);
+                arrayList.trimToSize();
+            }
+            return arrayList;
         }
 
         public static class Factory extends ControllerConfigFactory { // SCIPIO
@@ -324,11 +531,11 @@ public class ConfigXMLReader {
         }
 
         // SCIPIO: all calls below modified for more complex include options (non-recursive include)
-        
+
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -340,7 +547,7 @@ public class ConfigXMLReader {
             }
             result.push(afterLoginEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -356,7 +563,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -368,7 +575,7 @@ public class ConfigXMLReader {
             }
             result.push(beforeLogoutEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -381,9 +588,37 @@ public class ConfigXMLReader {
             return result;
         }
 
+        public Map<String, Event> getAfterLogoutEventList() throws WebAppConfigurationException { // SCIPIO
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.afterLogoutEventList);
+                    }
+                }
+            }
+            result.push(afterLogoutEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.afterLogoutEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
         public String getDefaultRequest() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String defaultRequest = controllerConfig.getDefaultRequest();
@@ -402,7 +637,7 @@ public class ConfigXMLReader {
                 return defaultRequest;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String defaultRequest = controllerConfig.getDefaultRequest();
@@ -422,7 +657,7 @@ public class ConfigXMLReader {
 
         public String getErrorpage() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String errorpage = controllerConfig.getErrorpage();
@@ -441,7 +676,7 @@ public class ConfigXMLReader {
                 return errorpage;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String errorpage = controllerConfig.getErrorpage();
@@ -462,7 +697,7 @@ public class ConfigXMLReader {
         public Map<String, String> getEventHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -474,7 +709,7 @@ public class ConfigXMLReader {
             }
             result.push(eventHandlerMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -487,10 +722,42 @@ public class ConfigXMLReader {
             return result;
         }
 
+        /**
+         * SCIPIO: Resolves and returns all event handler wrappers, by name.
+         * Added 2018-11-23.
+         */
+        public Map<String, EventHandlerWrapperDef> getEventHandlerWrapperMap() throws WebAppConfigurationException { // SCIPIO
+            MapContext<String, EventHandlerWrapperDef> result = MapContext.getMapContext();
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerWrapperMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerWrapperMap);
+                    }
+                }
+            }
+            result.push(eventHandlerWrapperMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerWrapperMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerWrapperMap);
+                    }
+                }
+            }
+            return result;
+        }
+        
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -502,7 +769,7 @@ public class ConfigXMLReader {
             }
             result.push(firstVisitEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -517,7 +784,7 @@ public class ConfigXMLReader {
 
         public String getOwner() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String owner = controllerConfig.getOwner();
@@ -536,7 +803,7 @@ public class ConfigXMLReader {
                 return owner;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String owner = controllerConfig.getOwner();
@@ -557,7 +824,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getPostprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -569,7 +836,7 @@ public class ConfigXMLReader {
             }
             result.push(postprocessorEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -585,7 +852,7 @@ public class ConfigXMLReader {
         public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -597,7 +864,7 @@ public class ConfigXMLReader {
             }
             result.push(preprocessorEventList);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -612,7 +879,7 @@ public class ConfigXMLReader {
 
         public String getProtectView() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String protectView = controllerConfig.getProtectView();
@@ -631,7 +898,7 @@ public class ConfigXMLReader {
                 return protectView;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String protectView = controllerConfig.getProtectView();
@@ -652,34 +919,59 @@ public class ConfigXMLReader {
         public Map<String, RequestMap> getRequestMapMap() throws WebAppConfigurationException {
             MapContext<String, RequestMap> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getRequestMapMap());
+                        mergePushRequestMapMap(result, controllerConfig.getRequestMapMap(), controllerConfig);
                     } else {
-                        result.push(controllerConfig.requestMapMap);
+                        mergePushRequestMapMap(result, controllerConfig.requestMapMap, controllerConfig);
                     }
                 }
             }
-            result.push(requestMapMap);
+            mergePushRequestMapMap(result, requestMapMap, this); // SCIPIO: pushMergeRequestMapMap
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getRequestMapMap());
+                        mergePushRequestMapMap(result, controllerConfig.getRequestMapMap(), controllerConfig);
                     } else {
-                        result.push(controllerConfig.requestMapMap);
+                        mergePushRequestMapMap(result, controllerConfig.requestMapMap, controllerConfig);
                     }
                 }
             }
             return result;
         }
 
+        /**
+         * SCIPIO: Add the requestMapMap on top of the result map context, honoring request-map override-mode.
+         * <p>
+         * TODO: REVIEW: The whole MapContext on top of these copies is probably slow for nothing, but for scipio not concerned with the performance
+         * because this is cached by {@link ConfigXMLReader.ResolvedControllerConfig}. Maybe review in future.
+         */
+        private void mergePushRequestMapMap(MapContext<String, RequestMap> result, Map<String, RequestMap> requestMapMap, ControllerConfig controllerConfig) {
+            Map<String, RequestMap> updatedRequestMapMap = new HashMap<>();
+            for(Map.Entry<String, RequestMap> entry : requestMapMap.entrySet()) {
+                String uri = entry.getKey();
+                RequestMap requestMap = entry.getValue();
+                if (requestMap.getOverrideMode() == RequestMap.OverrideMode.MERGE) {
+                    RequestMap existingRequestMap = result.get(uri);
+                    if (existingRequestMap != null) {
+                        updatedRequestMapMap.put(uri, new RequestMap(existingRequestMap, requestMap));
+                    } else {
+                        updatedRequestMapMap.put(uri, requestMap);
+                    }
+                } else {
+                    updatedRequestMapMap.put(uri, requestMap);
+                }
+            }
+            result.push(updatedRequestMapMap);
+        }
+
         public String getSecurityClass() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String securityClass = controllerConfig.getSecurityClass();
@@ -698,7 +990,7 @@ public class ConfigXMLReader {
                 return securityClass;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String securityClass = controllerConfig.getSecurityClass();
@@ -717,35 +1009,41 @@ public class ConfigXMLReader {
         }
 
         public String getStatusCode() throws WebAppConfigurationException {
+            // SCIPIO: now delegating
+            Integer statusCodeNumber = getStatusCodeNumber();
+            return (statusCodeNumber != null) ? statusCodeNumber.toString() : null;
+        }
+
+        public Integer getStatusCodeNumber() throws WebAppConfigurationException { // SCIPIO
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
-                    String statusCode;
+                    Integer statusCode;
                     if (include.recursive) {
-                        statusCode = controllerConfig.getStatusCode();
+                        statusCode = controllerConfig.getStatusCodeNumber();
                     } else {
-                        statusCode = controllerConfig.statusCode;
+                        statusCode = controllerConfig.statusCodeNumber;
                     }
                     if (statusCode != null) {
                         return statusCode;
                     }
                 }
             }
-            if (statusCode != null) {
-                return statusCode;
+            if (statusCodeNumber != null) {
+                return statusCodeNumber;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
-                    String statusCode;
+                    Integer statusCode;
                     if (include.recursive) {
-                        statusCode = controllerConfig.getStatusCode();
+                        statusCode = controllerConfig.getStatusCodeNumber();
                     } else {
-                        statusCode = controllerConfig.statusCode;
+                        statusCode = controllerConfig.statusCodeNumber;
                     }
                     if (statusCode != null) {
                         return statusCode;
@@ -758,7 +1056,7 @@ public class ConfigXMLReader {
         public Map<String, String> getViewHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -770,7 +1068,7 @@ public class ConfigXMLReader {
             }
             result.push(viewHandlerMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -786,7 +1084,7 @@ public class ConfigXMLReader {
         public Map<String, ViewMap> getViewMapMap() throws WebAppConfigurationException {
             MapContext<String, ViewMap> result = MapContext.getMapContext();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -798,7 +1096,7 @@ public class ConfigXMLReader {
             }
             result.push(viewMapMap);
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -816,7 +1114,7 @@ public class ConfigXMLReader {
          */
         public ViewAsJsonConfig getViewAsJsonConfig() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     ViewAsJsonConfig viewAsJsonConfig;
                     if (include.recursive) {
@@ -833,7 +1131,7 @@ public class ConfigXMLReader {
                 return viewAsJsonConfig;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     ViewAsJsonConfig viewAsJsonConfig;
                     if (include.recursive) {
@@ -862,7 +1160,7 @@ public class ConfigXMLReader {
          */
         public Boolean getAllowViewSaveDefault() throws WebAppConfigurationException {
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     Boolean result;
                     if (include.recursive) {
@@ -879,7 +1177,7 @@ public class ConfigXMLReader {
                 return allowViewSaveDefault;
             }
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     Boolean result;
                     if (include.recursive) {
@@ -901,7 +1199,7 @@ public class ConfigXMLReader {
         public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
             List<NameFilter<Boolean>> result = new ArrayList<>();
             for (Include include : includesPreLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -915,7 +1213,7 @@ public class ConfigXMLReader {
                 result.addAll(this.allowViewSaveViewNameFilters);
             }
             for (Include include : includesPostLocal) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
@@ -928,9 +1226,64 @@ public class ConfigXMLReader {
             return result;
         }
 
+        /**
+         * SCIPIO: returns view-last default-view-name.
+         */
+        public String getDefaultViewLastView() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    String result;
+                    if (include.recursive) {
+                        result = controllerConfig.getDefaultViewLastView();
+                    } else {
+                        result = controllerConfig.defaultViewLastView;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            if (defaultViewLastView != null) {
+                return defaultViewLastView;
+            }
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    String result;
+                    if (include.recursive) {
+                        result = controllerConfig.getDefaultViewLastView();
+                    } else {
+                        result = controllerConfig.defaultViewLastView;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        protected static class Builder extends ConfigFields { // SCIPIO: 2018-11-07: ugly kludge for initialization
+
+        private void optimizeFields() {
+            ((ArrayList<Include>) this.includes).trimToSize();
+            ((ArrayList<Include>) this.includesPreLocal).trimToSize();
+            ((ArrayList<Include>) this.includesPostLocal).trimToSize();
+        }
+
         private void loadGeneralConfig(Element rootElement) {
             this.errorpage = UtilXml.childElementValue(rootElement, "errorpage");
-            this.statusCode = UtilXml.childElementValue(rootElement, "status-code");
+            String statusCode = UtilXml.childElementValue(rootElement, "status-code");
+            Integer statusCodeNumber = null; // SCIPIO: Straight Integer
+            if (UtilValidate.isNotEmpty(statusCode)) {
+                try {
+                    statusCodeNumber = Integer.parseInt(statusCode);
+                } catch(NumberFormatException e) {
+                    Debug.logError("Invalid status-code (" + statusCode + ") for controller", module);
+                }
+            }
+            this.statusCodeNumber = statusCodeNumber;
             Element protectElement = UtilXml.firstChildElement(rootElement, "protect");
             if (protectElement != null) {
                 this.protectView = protectElement.getAttribute("view");
@@ -946,7 +1299,7 @@ public class ConfigXMLReader {
             if (firstvisitElement != null) {
                 for (Element eventElement : UtilXml.childElementList(firstvisitElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.firstVisitEventList.put(eventName, new Event(eventElement));
@@ -957,7 +1310,7 @@ public class ConfigXMLReader {
             if (preprocessorElement != null) {
                 for (Element eventElement : UtilXml.childElementList(preprocessorElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.preprocessorEventList.put(eventName, new Event(eventElement));
@@ -968,7 +1321,7 @@ public class ConfigXMLReader {
             if (postprocessorElement != null) {
                 for (Element eventElement : UtilXml.childElementList(postprocessorElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.postprocessorEventList.put(eventName, new Event(eventElement));
@@ -979,7 +1332,7 @@ public class ConfigXMLReader {
             if (afterLoginElement != null) {
                 for (Element eventElement : UtilXml.childElementList(afterLoginElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.afterLoginEventList.put(eventName, new Event(eventElement));
@@ -990,10 +1343,21 @@ public class ConfigXMLReader {
             if (beforeLogoutElement != null) {
                 for (Element eventElement : UtilXml.childElementList(beforeLogoutElement, "event")) {
                     String eventName = eventElement.getAttribute("name");
-                    if (UtilValidate.isEmpty(eventName)) {
+                    if (eventName.isEmpty()) {
                         eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
                     }
                     this.beforeLogoutEventList.put(eventName, new Event(eventElement));
+                }
+            }
+            // SCIPIO: after-logout events
+            Element afterLogoutElement = UtilXml.firstChildElement(rootElement, "after-logout");
+            if (afterLogoutElement != null) {
+                for (Element eventElement : UtilXml.childElementList(afterLogoutElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.afterLogoutEventList.put(eventName, new Event(eventElement));
                 }
             }
             // SCIPIO: new
@@ -1005,6 +1369,7 @@ public class ConfigXMLReader {
             }
             // SCIPIO: new
             Boolean allowViewSaveDefault = null;
+            String defaultViewLastView = null;
             ArrayList<NameFilter<Boolean>> allowViewSaveViewNameFilters = null;
             Element commonSettingsElem = UtilXml.firstChildElement(rootElement, "common-settings");
             if (commonSettingsElem != null) {
@@ -1025,23 +1390,39 @@ public class ConfigXMLReader {
                             }
                             allowViewSaveViewNameFilters.trimToSize();
                         }
+                        Element viewLastElement = UtilXml.firstChildElement(responseSettingsElem, "view-last");
+                        if (viewLastElement != null) {
+                            defaultViewLastView = viewLastElement.getAttribute("default-view");
+                        }
                     }
                 }
             }
             this.allowViewSaveDefault = allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
+            this.defaultViewLastView = (UtilValidate.isNotEmpty(defaultViewLastView) && !"_none_".equals(defaultViewLastView)) ? defaultViewLastView : null;
         }
-        
+
         private void loadHandlerMap(Element rootElement) {
             for (Element handlerElement : UtilXml.childElementList(rootElement, "handler")) {
                 String name = handlerElement.getAttribute("name");
                 String type = handlerElement.getAttribute("type");
                 String className = handlerElement.getAttribute("class");
 
-                if ("view".equals(type)) {
-                    this.viewHandlerMap.put(name, className);
+                if ("request-handler-wrapper".equals(type)) { // SCIPIO
+                    String triggersStr = handlerElement.getAttribute("triggers");
+                    List<String> triggers;
+                    if (triggersStr.isEmpty() || "all".equals(triggersStr)) {
+                        triggers = null;
+                    } else {
+                        triggers = new ArrayList<>(Arrays.asList(triggersStr.split(",")));
+                    }
+                    this.eventHandlerWrapperMap.put(name, new EventHandlerWrapperDef(className, triggers));
                 } else {
-                    this.eventHandlerMap.put(name, className);
+                    if ("view".equals(type)) {
+                        this.viewHandlerMap.put(name, className);
+                    } else {
+                        this.eventHandlerMap.put(name, className);
+                    }
                 }
             }
         }
@@ -1049,30 +1430,47 @@ public class ConfigXMLReader {
         protected void loadIncludes(Element rootElement) {
             for (Element includeElement : UtilXml.childElementList(rootElement, "include")) {
                 String includeLocation = includeElement.getAttribute("location");
-                if (UtilValidate.isNotEmpty(includeLocation)) {
+                if (!includeLocation.isEmpty()) {
                     // SCIPIO: support non-recursive
                     boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
                     boolean optional = "true".equals(includeElement.getAttribute("optional"));
-                    try {
-                        URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
-                        String order = includeElement.getAttribute("order");
-                        Include include = new Include(urlLocation, recursive, optional, order);
-                        includes.add(include);
-                        if (include.isPostLocal()) {
-                            includesPostLocal.add(include);
-                        } else {
-                            includesPreLocal.add(include);
+                    String order = includeElement.getAttribute("order");
+                    if (includeLocation.startsWith("component://*/")) { // SCIPIO: new case
+                        if (!optional) {
+                            Debug.logWarning("Include at [" + includeLocation + "] has component wildcard but not marked optional"
+                                    + "; you probably want optional=\"true\"",  module);
                         }
-                    } catch (ComponentNotFoundURLException mue) { // SCIPIO: 2017-08-03: special case needed for missing component
-                        if (optional) {
-                            if (Debug.verboseOn()) Debug.logVerbose("Skipping optional processing include at [" + includeLocation + "]: component not found", module);
-                        } else {
-                            Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module);
+                        String includeSuffix = includeLocation.substring("component://*".length());
+                        for(ComponentConfig component : ComponentConfig.getAllComponents()) {
+                            loadInclude("component://" + component.getGlobalName() + includeSuffix, recursive, optional, order, true);
                         }
-                    } catch (MalformedURLException mue) {
-                        Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module); // SCIPIO: 2017-08-03: typo fix
+                    } else {
+                        loadInclude(includeLocation, recursive, optional, order, false);
                     }
                 }
+            }
+        }
+
+        private void loadInclude(String includeLocation, boolean recursive, boolean optional, String order, boolean wildcard) { // SCIPIO: refactored from loadIncludes
+            try {
+                URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
+                Include include = new Include(urlLocation, recursive, optional, order);
+                includes.add(include);
+                if (include.isPostLocal()) {
+                    includesPostLocal.add(include);
+                } else {
+                    includesPreLocal.add(include);
+                }
+            } catch (ComponentNotFoundURLException e) { // SCIPIO: 2017-08-03: special case needed for missing component
+                if (optional) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Skipping optional processing include at [" + includeLocation + "]: component not found", module);
+                    }
+                } else {
+                    Debug.logError(e, "Error processing include at [" + includeLocation + "]: " + e.toString(), module);
+                }
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Error processing include at [" + includeLocation + "]: " + e.toString(), module); // SCIPIO: 2017-08-03: typo fix
             }
         }
 
@@ -1090,12 +1488,14 @@ public class ConfigXMLReader {
             }
         }
 
+        }
+
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public URL getUrl() {
             return url;
         }
-        
+
         private <K, V> MapContext<K, V> getMapContextForEventList() { // SCIPIO: refactored into factory method
             return MapContext.getMapContext();
         }
@@ -1108,42 +1508,52 @@ public class ConfigXMLReader {
             public final boolean recursive;
             public final boolean optional; // SCIPIO: added 2017-05-03
             public final Order order; // SCIPIO: added 2017-05-03
-            
+
             public Include(URL location, boolean recursive, boolean optional, Order order) {
                 this.location = location;
                 this.recursive = recursive;
                 this.optional = optional;
                 this.order = order;
             }
-            
+
             public Include(URL location, boolean recursive, boolean optional, String order) {
                 this(location, recursive, optional, Order.fromName(order));
             }
-            
+
             public Include(URL location, boolean recursive) {
                 this(location, recursive, false, Order.PRE_LOCAL);
             }
-            
+
             public boolean isPostLocal() {
                 return this.order == Order.POST_LOCAL;
             }
             public enum Order {
-                PRE_LOCAL,
-                POST_LOCAL;
+                PRE_LOCAL("pre-local"),
+                POST_LOCAL("post-local");
+
+                private final String name;
+
+                private Order(String name) {
+                    this.name = name;
+                }
                 
+                public String getName() {
+                    return name;
+                }
+
                 public static Order fromName(String name) {
-                    if (name == null || name.isEmpty() || name.equals("pre-local")) {
+                    if (name == null || name.isEmpty() || PRE_LOCAL.name.equals(name)) {
                         return PRE_LOCAL;
-                    } else if ("post-local".equals(name)) {
+                    } else if (POST_LOCAL.name.equals(name)) {
                         return POST_LOCAL;
                     } else {
                         throw new IllegalArgumentException("invalid controller include order value: " + name);
                     }
                 }
             }
-            
+
             // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-            
+
             public URL getLocation() {
                 return location;
             }
@@ -1159,6 +1569,33 @@ public class ConfigXMLReader {
             public Order getOrder() {
                 return order;
             }
+
+            @Override
+            public String toString() {
+                return "[location=" + location + ", recursive=" + recursive + ", optional=" + optional
+                        + ", order=" + order.getName() + "]";
+            }
+        }
+        
+        public static class EventHandlerWrapperDef {
+            private final String className;
+            private final Collection<String> triggers;
+            
+            public EventHandlerWrapperDef(String className, Collection<String> triggers) {
+                this.className = className;
+                this.triggers = triggers;
+            }
+
+            public String getClassName() {
+                return className;
+            }
+
+            /**
+             * Returns the triggers, or null if meant to apply to all.
+             */
+            public Collection<String> getTriggers() {
+                return triggers;
+            }
         }
     }
 
@@ -1173,61 +1610,29 @@ public class ConfigXMLReader {
      */
     public static class ResolvedControllerConfig extends ControllerConfig {
 
-        protected final ViewAsJsonConfig viewAsJsonConfigOrDefault;
-        
-        public ResolvedControllerConfig(URL url) throws WebAppConfigurationException {
-            super(url);
-            
-            this.errorpage = super.getErrorpage();
-            this.protectView = super.getProtectView();
-            this.owner = super.getOwner();
-            this.securityClass = super.getSecurityClass();
-            this.defaultRequest = super.getDefaultRequest();
-            this.statusCode = super.getStatusCode();
-
-            // SCIPIO: split-up includes
-            this.firstVisitEventList = getOrderedOptMap(super.getFirstVisitEventList());
-            this.preprocessorEventList = getOrderedOptMap(super.getPreprocessorEventList());
-            this.postprocessorEventList = getOrderedOptMap(super.getPostprocessorEventList());
-            this.afterLoginEventList = getOrderedOptMap(super.getAfterLoginEventList());
-            this.beforeLogoutEventList = getOrderedOptMap(super.getBeforeLogoutEventList());
-            this.eventHandlerMap = getOptMap(super.getEventHandlerMap());
-            this.viewHandlerMap = getOptMap(super.getViewHandlerMap());
-            this.requestMapMap = getOptMap(super.getRequestMapMap());
-            this.viewMapMap = getOptMap(super.getViewMapMap());
-            this.viewAsJsonConfig = super.getViewAsJsonConfig(); // SCIPIO: added 2017-05-15
-            this.allowViewSaveDefault = super.getAllowViewSaveDefault(); // SCIPIO: added 2018-06-13
-            this.viewAsJsonConfigOrDefault = super.getViewAsJsonConfigOrDefault();
-            this.allowViewSaveViewNameFilters = getOptList(super.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
-        }
-
-        private static <K, V> Map<K, V> getOptMap(Map<K, V> map) {
-            return new HashMap<>(map); // convert MapContext to much faster HashMap
-        }
-        
-        private static <K, V> Map<K, V> getOrderedOptMap(Map<K, V> map) {
-            // SCIPIO: 2018-06-14: FIXME: the MapContext iteration order will be wrong here...
-            return new LinkedHashMap<>(map); // convert MapContext to much faster HashMap
-        }
-
-        private static <V> List<V> getOptList(List<V> list) {
-            ArrayList<V> arrayList;
-            if (list instanceof ArrayList) {
-                arrayList = (ArrayList<V>) list;
-            } else {
-                arrayList = new ArrayList<>(list);
-            }
-            arrayList.trimToSize();
-            return arrayList;
+        public ResolvedControllerConfig(ControllerConfig srcConfig) throws WebAppConfigurationException {
+            super(srcConfig, true);
         }
 
         public static class Factory extends ControllerConfigFactory {
             @Override
             public ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException {
-                return new ResolvedControllerConfig(url);
+                ControllerConfig cc = new ControllerConfig(url);
+                try {
+                    return new ResolvedControllerConfig(cc);
+                } catch(WebAppConfigurationException e) {
+                    if (e.getCause() instanceof java.io.FileNotFoundException) {
+                        // SPECIAL: Due to pre-resolving, we must treat FileNotFoundException here as "fatal",
+                        // and we can't pass it back down due to readControllerConfig method handling it and hiding errors.
+                        // TODO: REVIEW: hackish
+                        throw new FatalWebAppConfigurationException(e);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         }
-        
+
         @Override
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             return afterLoginEventList;
@@ -1236,6 +1641,11 @@ public class ConfigXMLReader {
         @Override
         public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
             return beforeLogoutEventList;
+        }
+
+        @Override
+        public Map<String, Event> getAfterLogoutEventList() throws WebAppConfigurationException {
+            return afterLogoutEventList;
         }
 
         @Override
@@ -1253,6 +1663,11 @@ public class ConfigXMLReader {
             return eventHandlerMap;
         }
 
+        @Override
+        public Map<String, EventHandlerWrapperDef> getEventHandlerWrapperMap() throws WebAppConfigurationException { // SCIPIO
+            return eventHandlerWrapperMap;
+        }
+        
         @Override
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             return firstVisitEventList;
@@ -1288,9 +1703,14 @@ public class ConfigXMLReader {
             return securityClass;
         }
 
+        //@Override
+        //public String getStatusCode() throws WebAppConfigurationException {
+        //    return statusCode;
+        //}
+
         @Override
-        public String getStatusCode() throws WebAppConfigurationException {
-            return statusCode;
+        public Integer getStatusCodeNumber() throws WebAppConfigurationException {
+            return statusCodeNumber;
         }
 
         @Override
@@ -1310,7 +1730,8 @@ public class ConfigXMLReader {
 
         @Override
         public ViewAsJsonConfig getViewAsJsonConfigOrDefault() throws WebAppConfigurationException {
-            return viewAsJsonConfigOrDefault;
+            // No optimization needed: super only calls getViewAsJsonConfig and does a null check (cheap operation)
+            return super.getViewAsJsonConfigOrDefault();
         }
 
         @Override
@@ -1322,26 +1743,50 @@ public class ConfigXMLReader {
         public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
             return allowViewSaveViewNameFilters;
         }
-    }
-    
-    public static class Event {
-        public String type;
-        public String path;
-        public String invoke;
-        public boolean globalTransaction = true;
-        public Metrics metrics = null;
-        public Boolean transaction = null; // SCIPIO: A generic transaction flag
-        public String abortTransaction = ""; // SCIPIO: Allow aborting transaction 
 
+        @Override
+        public String getDefaultViewLastView() throws WebAppConfigurationException {
+            return defaultViewLastView;
+        }
+    }
+
+    public static class Event {
+        public static final List<String> TRIGGERS = UtilMisc.unmodifiableArrayList(
+                "firstvisit", "preprocessor", "security-auth", "request", "after-login", "before-logout", "after-logout"); // SCIPIO
+        public static final Set<String> TRIGGERS_SET = UtilMisc.unmodifiableHashSetCopy(TRIGGERS); // SCIPIO
+
+        private static final int DEFAULT_TRANSACTION_TIMEOUT = 0; // SCIPIO
+
+        // SCIPIO: 2018-11-07: All fields now final.
+        public final String type;
+        public final String path;
+        public final String invoke;
+        public final boolean globalTransaction; // = true;
+        public final int transactionTimeout;
+        public final Metrics metrics; // = null;
+        public final Boolean transaction; // = null; // SCIPIO: A generic transaction flag
+        public final String abortTransaction; // = ""; // SCIPIO: Allow aborting transaction
+        protected final List<ValueExpr> synchronizedExprList; // SCIPIO
+        protected final String scriptBody; // SCIPIO
+        protected Object compiledScript; // SCIPIO: Optimization
+        
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
             this.path = eventElement.getAttribute("path");
             this.invoke = eventElement.getAttribute("invoke");
             this.globalTransaction = !"false".equals(eventElement.getAttribute("global-transaction"));
+            String tt = eventElement.getAttribute("transaction-timeout");
+            int transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT; // SCIPIO: Locals
+            if(!tt.isEmpty()) {
+                transactionTimeout = Integer.valueOf(tt);
+            }
+            this.transactionTimeout = transactionTimeout;
             // Get metrics.
             Element metricsElement = UtilXml.firstChildElement(eventElement, "metric");
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
+            } else { // SCIPIO
+                this.metrics = null;
             }
             // SCIPIO: new attribs
             String transStr = eventElement.getAttribute("transaction");
@@ -1353,6 +1798,19 @@ public class ConfigXMLReader {
                 transaction = null;
             }
             this.abortTransaction = eventElement.getAttribute("abort-transaction");
+            
+            List<ValueExpr> synchronizedExprList = null;
+            List<? extends Element> synchronizeElementList = UtilXml.childElementList(eventElement, "synchronized");
+            if (UtilValidate.isNotEmpty(synchronizeElementList)) {
+                synchronizedExprList = new ArrayList<>(synchronizeElementList.size());
+                for(Element synchronizeElement : synchronizeElementList) {
+                    synchronizedExprList.add(ValueExpr.getInstance(ValueExpr.ensureDelims(synchronizeElement.getAttribute("value"))));
+                }
+            }
+            this.synchronizedExprList = synchronizedExprList;
+
+            // SCIPIO: Script body
+            this.scriptBody = UtilXml.childElementValue(eventElement, "script", null);
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1360,21 +1818,32 @@ public class ConfigXMLReader {
             this.path = path;
             this.invoke = invoke;
             this.globalTransaction = globalTransaction;
+            // SCIPIO: Added missing inits
+            this.abortTransaction = "";
+            this.transaction = null;
+            this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
+            this.metrics = null;
+            this.synchronizedExprList = null;
+            this.scriptBody = null;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
                 Boolean transaction, String abortTransaction) {
-            super();
             this.type = type;
             this.path = path;
             this.invoke = invoke;
             this.globalTransaction = globalTransaction;
             this.transaction = transaction;
             this.abortTransaction = abortTransaction;
+            // SCIPIO: Added missing inits
+            this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
+            this.metrics = null;
+            this.synchronizedExprList = null;
+            this.scriptBody = null;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getType() {
             return type;
         }
@@ -1402,59 +1871,210 @@ public class ConfigXMLReader {
         public String getAbortTransaction() {
             return abortTransaction;
         }
+
+        public List<ValueExpr> getSynchronizeExprList() { // SCIPIO
+            return synchronizedExprList;
+        }
+
+        // SCIPIO: TODO: REVIEW: this violates this xml class design to a small extent...
+        public List<Object> getSynchronizeObjList(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+            if (synchronizedExprList == null) {
+                return null;
+            }
+            List<Object> objList = new ArrayList<>(synchronizedExprList.size());
+            for(ValueExpr expr : synchronizedExprList) {
+                objList.add(expr.getValue(request, response));
+            }
+            return objList;
+        }
+
+        public String getScriptBody() {
+            return scriptBody;
+        }
+        
+        public Object getCompiledScript() {
+            return compiledScript;
+        }
+
+        public void setCompiledScript(Object compiledScript) { // NOTE: no need for thread safety on this field
+            this.compiledScript = compiledScript;
+        }
     }
 
     public static class RequestMap {
-        public String uri;
-        public boolean edit = true;
-        public boolean trackVisit = true;
-        public boolean trackServerHit = true;
-        public String description;
-        public Event event;
-        public boolean securityHttps = false;
-        public boolean securityAuth = false;
-        public boolean securityCert = false;
-        public boolean securityExternalView = true;
-        public boolean securityDirectRequest = true;
-        public Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
-        public Metrics metrics = null;
+        // SCIPIO
+        private static final Set<String> allowedMethods = // NOTE: excludes "all"
+                UtilMisc.unmodifiableHashSet("get", "post", "head", "put", "delete", "patch", "options");
+
+        // SCIPIO: 2018-11-07: All fields now final.
+        public final String uri;
+        public final Set<String> methods; // SCIPIO: Allowed HTTP methods
+        public final boolean edit; // = true;
+        public final boolean trackVisit; // = true;
+        public final boolean trackServerHit; // = true;
+        public final String description;
+        public final Event event;
+        public final boolean securityHttps; // = true;
+        public final boolean securityAuth; // = false;
+        public final boolean securityCert; // = false;
+        public final boolean securityExternalView; // = true;
+        public final boolean securityDirectRequest; // = true;
+        public final Map<String, RequestResponse> requestResponseMap; // = new HashMap<String, RequestResponse>();
+        public final Metrics metrics; // = null
+        public final OverrideMode overrideMode;
+
+        // SCIPIO: Special definition-presence flags, needed by merge constructor to determine if should use the base or override settings
+        private final boolean methodsSpecified;
+        private final boolean editSpecified;
+        private final boolean trackVisitSpecified;
+        private final boolean trackServerHitSpecified;
+        private final boolean securitySpecified;
 
         public RequestMap(Element requestMapElement) {
             // Get the URI info
             this.uri = requestMapElement.getAttribute("uri");
-            this.edit = !"false".equals(requestMapElement.getAttribute("edit"));
-            this.trackServerHit = !"false".equals(requestMapElement.getAttribute("track-serverhit"));
-            this.trackVisit = !"false".equals(requestMapElement.getAttribute("track-visit"));
+            // SCIPIO: HTTP methods
+            // NOTE: We will be permissive to uppercase for security reasons, but should be written with lowercase in files.
+            String methodStr = requestMapElement.getAttribute("method");
+            if (methodStr.isEmpty()) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = false;
+            } else if ("all".equalsIgnoreCase(methodStr)) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = true;
+            } else {
+                String[] methodList = methodStr.toLowerCase(Locale.getDefault()).split("\\s*,\\s*");
+                Set<String> methods = new HashSet<>();
+                for(String method : methodList) {
+                    if (!allowedMethods.contains(method)) {
+                        Debug.logError("request-map '" + this.uri + "' specifies invalid HTTP method: " 
+                                + method + " in value '" + methodStr + "' (allowed values: " + allowedMethods + ")", module);
+                    } else {
+                        methods.add(method);
+                    }
+                }
+                this.methods = methods;
+                methodsSpecified = true;
+            }
+            String editStr = requestMapElement.getAttribute("edit");
+            this.edit = !"false".equals(editStr);
+            this.editSpecified = UtilValidate.isNotEmpty(editStr); // SCIPIO
+            
+            String trackServerHitStr = requestMapElement.getAttribute("track-serverhit");
+            this.trackServerHit = !"false".equals(trackServerHitStr);
+            this.trackServerHitSpecified = UtilValidate.isNotEmpty(trackServerHitStr); // SCIPIO
+            String trackVisitStr = requestMapElement.getAttribute("track-visit");
+            this.trackVisit = !"false".equals(trackVisitStr);
+            this.trackVisitSpecified = UtilValidate.isNotEmpty(trackVisitStr); // SCIPIO
             // Check for security
+            boolean securityHttps = true; // SCIPIO: Added locals here
+            boolean securityAuth = false;
+            boolean securityCert = false;
+            boolean securityExternalView = true;
+            boolean securityDirectRequest = true;
             Element securityElement = UtilXml.firstChildElement(requestMapElement, "security");
             if (securityElement != null) {
-                this.securityHttps = "true".equals(securityElement.getAttribute("https"));
-                this.securityAuth = "true".equals(securityElement.getAttribute("auth"));
-                this.securityCert = "true".equals(securityElement.getAttribute("cert"));
-                this.securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));
-                this.securityDirectRequest = !"false".equals(securityElement.getAttribute("direct-request"));
+                if (!UtilProperties.propertyValueEqualsIgnoreCase("url", "no.http", "Y")) {
+                    // SCIPIO: 2018-07-09: default is now true
+                    //this.securityHttps = "true".equals(securityElement.getAttribute("https"));
+                    securityHttps = !"false".equals(securityElement.getAttribute("https"));
+                } else {
+                    String httpRequestMapList = UtilProperties.getPropertyValue("url", "http.request-map.list");
+                    if (UtilValidate.isNotEmpty(httpRequestMapList)) {
+                        List<String> reqList = StringUtil.split(httpRequestMapList, ",");
+                        if (reqList.contains(this.uri)) {
+                            // SCIPIO: 2018-07-09: default is now true
+                            //this.securityHttps = "true".equals(securityElement.getAttribute("https"));
+                            securityHttps = !"false".equals(securityElement.getAttribute("https"));
+                        }
+                    }
+                }
+                securityAuth = "true".equals(securityElement.getAttribute("auth"));
+                securityCert = "true".equals(securityElement.getAttribute("cert"));
+                securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));
+                securityDirectRequest = !"false".equals(securityElement.getAttribute("direct-request"));
+                this.securitySpecified = true; // SCIPIO
+            } else {
+                this.securitySpecified = false; // SCIPIO
             }
+            this.securityHttps = securityHttps; // SCIPIO: Added locals here
+            this.securityAuth = securityAuth;
+            this.securityCert = securityCert;
+            this.securityExternalView = securityExternalView;
+            this.securityDirectRequest = securityDirectRequest;
             // Check for event
             Element eventElement = UtilXml.firstChildElement(requestMapElement, "event");
             if (eventElement != null) {
                 this.event = new Event(eventElement);
+            } else { // SCIPIO
+                this.event = null;
             }
             // Check for description
             this.description = UtilXml.childElementValue(requestMapElement, "description");
             // Get the response(s)
+            Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>(); // SCIPIO
             for (Element responseElement : UtilXml.childElementList(requestMapElement, "response")) {
                 RequestResponse response = new RequestResponse(responseElement);
                 requestResponseMap.put(response.name, response);
             }
+            this.requestResponseMap = requestResponseMap;
             // Get metrics.
             Element metricsElement = UtilXml.firstChildElement(requestMapElement, "metric");
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
+            } else { // SCIPIO
+                this.metrics = null;
             }
+            this.overrideMode = OverrideMode.fromNameAlways(requestMapElement.getAttribute("override-mode"));
         }
 
-        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        /**
+         * SCIPIO: Merge constructor, for {@link OverrideMode#MERGE}.
+         */
+        RequestMap(RequestMap baseMap, RequestMap overrideMap) {
+            this.uri = overrideMap.uri;
+
+            this.methodsSpecified = overrideMap.methodsSpecified || baseMap.methodsSpecified;
+            this.methods = overrideMap.methodsSpecified ? overrideMap.methods : baseMap.methods;
+                    
+            this.editSpecified = overrideMap.editSpecified || baseMap.editSpecified;
+            this.edit = overrideMap.editSpecified ? overrideMap.edit : baseMap.edit;
+            
+            this.trackVisitSpecified = overrideMap.trackVisitSpecified || baseMap.trackVisitSpecified;
+            this.trackVisit = overrideMap.trackVisitSpecified ? overrideMap.trackVisit : baseMap.trackVisit;
+
+            this.trackServerHitSpecified = overrideMap.trackServerHitSpecified || baseMap.trackServerHitSpecified;
+            this.trackServerHit = overrideMap.trackVisitSpecified ? overrideMap.trackServerHit : baseMap.trackServerHit;
+            
+            this.description = (overrideMap.description != null) ? overrideMap.description : baseMap.description;
+            this.event = (overrideMap.event != null) ? overrideMap.event : baseMap.event;
+
+            this.securitySpecified = overrideMap.securitySpecified || baseMap.securitySpecified;
+            if (overrideMap.securitySpecified) {
+                this.securityHttps = overrideMap.securityHttps;
+                this.securityAuth = overrideMap.securityAuth;
+                this.securityCert = overrideMap.securityCert;
+                this.securityExternalView = overrideMap.securityExternalView;
+                this.securityDirectRequest = overrideMap.securityDirectRequest;
+            } else {
+                this.securityHttps = baseMap.securityHttps;
+                this.securityAuth = baseMap.securityAuth;
+                this.securityCert = baseMap.securityCert;
+                this.securityExternalView = baseMap.securityExternalView;
+                this.securityDirectRequest = baseMap.securityDirectRequest;
+            }
+            
+            Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
+            requestResponseMap.putAll(baseMap.requestResponseMap);
+            requestResponseMap.putAll(overrideMap.requestResponseMap);
+            this.requestResponseMap = requestResponseMap;
+            this.metrics = (overrideMap.metrics != null) ? overrideMap.metrics : baseMap.metrics;
+
+            this.overrideMode = OverrideMode.DEFAULT; // This flag should not be transitive
+        }
         
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+
         public String getUri() {
             return uri;
         }
@@ -1506,11 +2126,42 @@ public class ConfigXMLReader {
         public Metrics getMetrics() {
             return metrics;
         }
+
+        public OverrideMode getOverrideMode() {
+            return overrideMode;
+        }
+
+        public enum OverrideMode { // SCIPIO
+            REPLACE("replace"),
+            MERGE("merge");
+            
+            public static final OverrideMode DEFAULT = REPLACE;
+            
+            private final String name;
+            private OverrideMode(String name) { this.name = name; }
+
+            public String getName() {
+                return name;
+            }
+
+            public static OverrideMode fromNameAlways(String name) {
+                if (UtilValidate.isEmpty(name)) {
+                    return DEFAULT;      
+                }
+                for(OverrideMode mode : OverrideMode.values()) {
+                    if (mode.name.equals(name)) {
+                        return mode;
+                    }
+                }
+                throw new IllegalArgumentException("Unrecognized controller request-map override-mode: " + name);
+            }
+        }
     }
 
     public static class RequestResponse {
 
         public static RequestResponse createEmptyNoneRequestResponse() {
+            /* SCIPIO: 2018-11-07: now a dedicated constructor for this
             RequestResponse requestResponse = new RequestResponse();
             requestResponse.name = "empty-none";
             requestResponse.type = "none";
@@ -1520,23 +2171,72 @@ public class ConfigXMLReader {
             requestResponse.value = "";
             requestResponse.typeEnum = Type.NONE;// SCIPIO
             return requestResponse;
+            */
+            return new RequestResponse("empty-none", "none", "", Type.NONE);
         }
 
-        public String name;
-        public String type;
-        public String value;
-        public String statusCode;
-        public boolean saveLastView = false;
-        public boolean saveCurrentView = false;
-        public boolean saveHomeView = false;
-        public Map<String, String> redirectParameterMap = new HashMap<String, String>();
-        public Map<String, String> redirectParameterValueMap = new HashMap<String, String>();
-        public Set<String> excludeParameterSet = null; // SCIPIO: new 2017-04-24
-        public String includeMode = "auto"; // SCIPIO: new 2017-04-24
-        public Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
-        private Type typeEnum; // SCIPIO: new 2018-06-13
-
+        // SCIPIO: 2018-11-07: All fields now final.
+        public final String name;
+        public final String type;
+        public final String value;
+        public final String statusCode;
+        private final Integer statusCodeNumber; // SCIPIO: new (pre-parsed)
+        public final boolean saveLastView; // = false;
+        public final boolean saveCurrentView; // = false;
+        public final boolean saveHomeView; // = false;
+        public final Map<String, String> redirectParameterMap; // = new HashMap<String, String>();
+        public final Map<String, String> redirectParameterValueMap; // = new HashMap<String, String>();
+        public final Set<String> excludeParameterSet; // = null; // SCIPIO: new 2017-04-24
+        public final String includeMode; // = "auto"; // SCIPIO: new 2017-04-24
+        public final Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
+        private final Type typeEnum; // SCIPIO: new 2018-06-13
+        private final ValueExpr valueExpr; // SCIPIO: 2018-11-19: precompiled value expression
+        private final AttributesSpec redirectAttributes; // SCIPIO
+        private final String connectionState; // SCIPIO
+        
+        /**
+         * @deprecated SCIPIO: 2018-11-07: This does nothing useful, all fields are final and should never have been
+         * modifiable.
+         */
+        @Deprecated
         public RequestResponse() {
+            this.name = null;
+            this.type = null;
+            this.value = null;
+            this.statusCode = null;
+            this.statusCodeNumber = null; // SCIPIO
+            this.saveLastView = false;
+            this.saveCurrentView = false;
+            this.saveHomeView = false;
+            this.redirectParameterMap = Collections.emptyMap(); // SCIPIO: use unmodifiable map
+            this.redirectParameterValueMap = Collections.emptyMap();
+            this.excludeParameterSet = null;
+            this.includeMode = "auto";
+            this.allowViewSave = null;
+            this.typeEnum = null;
+            this.valueExpr = null;
+            this.redirectAttributes = AttributesSpec.NONE;
+            this.connectionState = null;
+        }
+
+        private RequestResponse(String name, String type, String value, Type typeEnum) { // SCIPIO: 2018-11-07
+            this.name = name;
+            this.type = type;
+            this.value = value;
+            this.statusCode = null;
+            this.statusCodeNumber = null; // SCIPIO
+            this.saveLastView = false;
+            this.saveCurrentView = false;
+            this.saveHomeView = false;
+            this.redirectParameterMap = Collections.emptyMap(); // SCIPIO: use unmodifiable map
+            this.redirectParameterValueMap = Collections.emptyMap();
+            this.excludeParameterSet = null;
+            this.includeMode = "auto";
+            this.allowViewSave = null;
+            this.typeEnum = typeEnum;
+            this.valueExpr = null;
+            this.redirectAttributes = (typeEnum != null) ? typeEnum.getRedirectAttributesDefault() : AttributesSpec.NONE;
+            this.connectionState = null;
         }
 
         public RequestResponse(Element responseElement) {
@@ -1544,48 +2244,89 @@ public class ConfigXMLReader {
             this.type = responseElement.getAttribute("type");
             this.value = responseElement.getAttribute("value");
             this.statusCode = responseElement.getAttribute("status-code");
+            Integer statusCodeNumber = null; // SCIPIO: Straight Integer
+            if (UtilValidate.isNotEmpty(this.statusCode)) {
+                try {
+                    statusCodeNumber = Integer.parseInt(this.statusCode);
+                } catch(NumberFormatException e) {
+                    Debug.logError("Invalid status-code (" + this.statusCode + ") for controller request response '" + this.name + "'", module);
+                }
+            }
+            this.statusCodeNumber = statusCodeNumber;
             this.saveLastView = "true".equals(responseElement.getAttribute("save-last-view"));
             this.saveCurrentView = "true".equals(responseElement.getAttribute("save-current-view"));
             this.saveHomeView = "true".equals(responseElement.getAttribute("save-home-view"));
+            Map<String, String> redirectParameterMap = new HashMap<String, String>(); // SCIPIO: Locals
+            Map<String, String> redirectParameterValueMap = new HashMap<String, String>();
             for (Element redirectParameterElement : UtilXml.childElementList(responseElement, "redirect-parameter")) {
                 if (UtilValidate.isNotEmpty(redirectParameterElement.getAttribute("value"))) {
-                    this.redirectParameterValueMap.put(redirectParameterElement.getAttribute("name"), redirectParameterElement.getAttribute("value"));
+                    redirectParameterValueMap.put(redirectParameterElement.getAttribute("name"), redirectParameterElement.getAttribute("value"));
                 } else {
                     String from = redirectParameterElement.getAttribute("from");
                     if (UtilValidate.isEmpty(from))
                         from = redirectParameterElement.getAttribute("name");
-                    this.redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
+                    redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
                 }
             }
             // SCIPIO: new 2017-04-24
             Set<String> excludeParameterSet = new HashSet<>();
+            String includeMode = "auto";
             for (Element redirectParametersElement : UtilXml.childElementList(responseElement, "redirect-parameters")) {
                 for (Element redirectParameterElement : UtilXml.childElementList(redirectParametersElement, "param")) {
                     if ("exclude".equals(redirectParameterElement.getAttribute("mode"))) {
                         excludeParameterSet.add(redirectParameterElement.getAttribute("name"));
                     } else {
                         if (UtilValidate.isNotEmpty(redirectParameterElement.getAttribute("value"))) {
-                            this.redirectParameterValueMap.put(redirectParameterElement.getAttribute("name"), redirectParameterElement.getAttribute("value"));
+                            redirectParameterValueMap.put(redirectParameterElement.getAttribute("name"), redirectParameterElement.getAttribute("value"));
                         } else {
                             String from = redirectParameterElement.getAttribute("from");
                             if (UtilValidate.isEmpty(from))
                                 from = redirectParameterElement.getAttribute("name");
-                            this.redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
+                            redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
                         }
                     }
                 }
-                this.includeMode = redirectParametersElement.getAttribute("include-mode");
-            } 
-            if (excludeParameterSet.size() > 0) {
-                this.excludeParameterSet = Collections.unmodifiableSet(excludeParameterSet);
+                includeMode = redirectParametersElement.getAttribute("include-mode");
             }
+            this.includeMode = includeMode;
+            this.redirectParameterMap = redirectParameterMap; // SCIPIO: unmodifiable
+            this.redirectParameterValueMap = redirectParameterValueMap;
+            this.excludeParameterSet = excludeParameterSet;
             Boolean allowViewSave = UtilMisc.booleanValue(responseElement.getAttribute("allow-view-save")); // SCIPIO
             this.allowViewSave = allowViewSave;
             this.typeEnum = Type.fromName(this.type);
+            // SCIPIO: precompiled value expression
+            this.valueExpr = ValueExpr.getInstance(this.value);
+            // SCIPIO: redirect-attributes
+            String saveRequestStr = responseElement.getAttribute("save-request");
+            Set<String> includeRequestAttributes = null;
+            Set<String> excludeRequestAttributes = null;
+            for (Element redirectAttributesElement : UtilXml.childElementList(responseElement, "redirect-attributes")) {
+                for (Element requestAttributeElement : UtilXml.childElementList(redirectAttributesElement, "request-attribute")) {
+                    if ("exclude".equals(requestAttributeElement.getAttribute("mode"))) {
+                        if (excludeRequestAttributes == null) {
+                            excludeRequestAttributes = new HashSet<>();
+                        }
+                        excludeRequestAttributes.add(requestAttributeElement.getAttribute("name"));
+                    } else {
+                        if (includeRequestAttributes == null) {
+                            includeRequestAttributes = new HashSet<>();
+                        }
+                        includeRequestAttributes.add(requestAttributeElement.getAttribute("name"));
+                    }
+                }
+            }
+            AttributesSpec spec = this.typeEnum.getRedirectAttributesDefault();
+            if (!saveRequestStr.isEmpty() || includeRequestAttributes != null || excludeRequestAttributes != null) {
+                spec = AttributesSpec.getSpec(saveRequestStr, includeRequestAttributes, excludeRequestAttributes);
+            }
+            this.redirectAttributes = spec;
+            String connectionState = responseElement.getAttribute("connection-state");
+            this.connectionState = connectionState.isEmpty() ? null : connectionState;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getName() {
             return name;
         }
@@ -1600,6 +2341,10 @@ public class ConfigXMLReader {
 
         public String getStatusCode() {
             return statusCode;
+        }
+
+        public Integer getStatusCodeNumber() { // SCIPIO
+            return statusCodeNumber;
         }
 
         public boolean isSaveLastView() {
@@ -1633,9 +2378,21 @@ public class ConfigXMLReader {
         public Boolean getAllowViewSave() { // SCIPIO
             return allowViewSave;
         }
-        
+
         public Type getTypeEnum() { // SCIPIO
             return typeEnum;
+        }
+
+        public ValueExpr getValueExpr() { // SCIPIO
+            return valueExpr;
+        }
+
+        public AttributesSpec getRedirectAttributes() { // SCIPIO
+            return redirectAttributes;
+        }
+
+        public String getConnectionState() { // SCIPIO
+            return connectionState;
         }
 
         public enum Type { // SCIPIO: 2018-06
@@ -1647,33 +2404,40 @@ public class ConfigXMLReader {
             REQUEST("request"),
             REQUEST_REDIRECT("request-redirect"),
             REQUEST_REDIRECT_NOPARAM("request-redirect-noparam"),
+            REQUEST_REDIRECT_LAST("request-redirect-last"),
             URL("url"),
             CROSS_REDIRECT("cross-redirect");
-            
-            private static final Map<String, Type> nameMap;
-            static {
-                Map<String, Type> map = new HashMap<>();
-                for(Type type : Type.values()) { map.put(type.getName(), type); }
-                nameMap = map;
-            }
-            
+
+            /**
+             * SCIPIO: Default save-request spec for request-redirect-*.
+             * <p>
+             * TODO: REVIEW: In theory this should be MESSAGES or NONE; ALL was stock default and flawed...
+             * DEV NOTE: don't forget to replace second occurrence below... 
+             */
+            public static final AttributesSpec DEFAULT_REQUEST_REDIRECT_SPEC = AttributesSpec.ALL;
+
             private final String name;
             private final boolean redirectType;
             private final boolean requestType;
             private final boolean viewType;
-            
+            private final AttributesSpec redirectAttributesDefault;
+
             private Type(String name) {
                 this.name = name;
                 this.redirectType = name.contains("redirect") || "url".equals(name);
                 this.requestType = "request".equals(name);
                 this.viewType = name.contains("view");
+                // TODO: REVIEW: In future this might change to default false for all...
+                this.redirectAttributesDefault = name.startsWith("request-redirect") ? AttributesSpec.ALL : AttributesSpec.NONE;
             }
-            
+
             public static Type fromName(String name) {
-                Type type = nameMap.get(name);
-                if (type == null) throw new IllegalArgumentException("unrecognized"
-                        + " controller request response type: " + name);
-                return type;
+                for(Type value : Type.values()) { 
+                    if (value.getName().equals(name)) {
+                        return value;
+                    }
+                }
+                throw new IllegalArgumentException("unrecognized controller request response type: " + name);
             }
 
             public String getName() {
@@ -1691,25 +2455,93 @@ public class ConfigXMLReader {
             public boolean isViewType() {
                 return viewType;
             }
+            
+            public AttributesSpec getRedirectAttributesDefault() {
+                return redirectAttributesDefault;
+            }
+        }
+
+        public static abstract class AttributesSpec { // SCIPIO
+            public static final AttributesSpec ALL = new AttributesSpec() {
+                @Override public boolean isAll() { return true; }
+                @Override public boolean includeAttribute(String attributeName) { return true; }
+            };
+            public static final AttributesSpec EVENT_MESSAGES = new AttributesSpec() {
+                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMsgAttrNames().contains(attributeName); }
+            };
+            public static final AttributesSpec NONE = new AttributesSpec() {
+                @Override public boolean isNone() { return true; }
+                @Override public boolean includeAttribute(String attributeName) { return false; }
+            };
+
+            static AttributesSpec getSpec(String mode, Set<String> includeAttributes, Set<String> excludeAttributes) {
+                if ("messages".equals(mode)) {
+                    if (includeAttributes == null && excludeAttributes == null) {
+                        return EVENT_MESSAGES;
+                    }
+                    // SPECIAL: here, include messages plus/minus extras
+                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    if (includeAttributes != null) {
+                        includeAttr.addAll(includeAttributes);
+                    }
+                    if (excludeAttributes != null) {
+                        includeAttr.removeAll(excludeAttributes);
+                    }
+                    if (includeAttr.equals(EventUtil.getEventErrorMsgAttrNames())) { // avoid needless copies
+                        return EVENT_MESSAGES;
+                    }
+                    return new IncludeAttributesSpec(includeAttr);
+                } else if (includeAttributes != null || "none".equals(mode)) {
+                    // whitelist mode
+                    if (includeAttributes != null && !includeAttributes.isEmpty()) {
+                        // none plus extras
+                        return new IncludeAttributesSpec(includeAttributes);
+                    }
+                    return NONE;
+                } else {
+                    if (excludeAttributes != null && !excludeAttributes.isEmpty()) {
+                        // blacklist mode
+                        return new ExcludeAttributesSpec(excludeAttributes);
+                    }
+                    return ALL;
+                }
+            }
+
+            public boolean isNone() { return false; }
+            public boolean isAll() { return false; }
+            public abstract boolean includeAttribute(String attributeName);
+            
+            static class IncludeAttributesSpec extends AttributesSpec {
+                private final Set<String> attributes;
+                IncludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
+                @Override public boolean includeAttribute(String attributeName) { return attributes.contains(attributeName); }
+            }
+            
+            static class ExcludeAttributesSpec extends AttributesSpec {
+                private final Set<String> attributes;
+                ExcludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
+                @Override public boolean includeAttribute(String attributeName) { return !attributes.contains(attributeName); }
+            }
         }
     }
 
     public static class ViewMap {
-        public String viewMap;
-        public String name;
-        public String page;
-        public String type;
-        public String info;
-        public String contentType;
-        public String encoding;
-        public String xFrameOption;
-        public String strictTransportSecurity;
-        public String description;
-        public boolean noCache = false;
+        // SCIPIO: 2018-11-07: All fields now final.
+        public final String viewMap = null; // SCIPIO: TODO: REVIEW: what is this??
+        public final String name;
+        public final String page;
+        public final String type;
+        public final String info;
+        public final String contentType;
+        public final String encoding;
+        public final String xFrameOption;
+        public final String strictTransportSecurity;
+        public final String description;
+        public final boolean noCache; // = false;
 
         public ViewMap(Element viewMapElement) {
             this.name = viewMapElement.getAttribute("name");
-            this.page = viewMapElement.getAttribute("page");
+            String page = viewMapElement.getAttribute("page"); // SCIPIO: made local
             this.type = viewMapElement.getAttribute("type");
             this.info = viewMapElement.getAttribute("info");
             this.contentType = viewMapElement.getAttribute("content-type");
@@ -1718,13 +2550,14 @@ public class ConfigXMLReader {
             this.xFrameOption = viewMapElement.getAttribute("x-frame-options");
             this.strictTransportSecurity = viewMapElement.getAttribute("strict-transport-security");
             this.description = UtilXml.childElementValue(viewMapElement, "description");
-            if (UtilValidate.isEmpty(this.page)) {
-                this.page = this.name;
+            if (UtilValidate.isEmpty(page)) {
+                page = this.name;
             }
+            this.page = page;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
-        
+
         public String getViewMap() {
             return viewMap;
         }
@@ -1767,35 +2600,44 @@ public class ConfigXMLReader {
      * Added 2017-05-15.
      */
     public static class ViewAsJsonConfig {
-        public boolean enabled;
-        public boolean updateSession;
-        public boolean regularLogin;
-        public String jsonRequestUri;
-        
+        // SCIPIO: 2018-11-07: All fields now final.
+        private final boolean enabled;
+        private final boolean updateSession;
+        private final boolean regularLogin;
+        private final String jsonRequestUri;
+
         public ViewAsJsonConfig(Element element) {
             this.enabled = UtilMisc.booleanValue(element.getAttribute("enabled"), false);
             this.updateSession = UtilMisc.booleanValue(element.getAttribute("update-session"), false);
             this.regularLogin = UtilMisc.booleanValue(element.getAttribute("regular-login"), false);
-            this.jsonRequestUri = element.getAttribute("json-request-uri");
-            if (jsonRequestUri.isEmpty()) this.jsonRequestUri = null;
+            String jsonRequestUri = element.getAttribute("json-request-uri");
+            this.jsonRequestUri = jsonRequestUri.isEmpty() ? null : jsonRequestUri;
         }
-        
+
         public ViewAsJsonConfig() {
             // all false/null by default
+            this.enabled = false;
+            this.updateSession = false;
+            this.regularLogin = false;
+            this.jsonRequestUri = null;
         }
 
         public boolean isEnabled() {
             return enabled;
         }
+
         public boolean isUpdateSession() {
             return updateSession;
         }
+
         public boolean isRegularLogin() {
             return regularLogin;
         }
+
         public String getJsonRequestUri() {
             return jsonRequestUri;
         }
+
         public String getJsonRequestUriAlways() throws WebAppConfigurationException {
             if (jsonRequestUri == null) throw new WebAppConfigurationException(new IllegalStateException("Cannot forward view-as-json: missing json-request-uri configuration"));
             return jsonRequestUri;
@@ -1808,7 +2650,7 @@ public class ConfigXMLReader {
      */
     public static abstract class NameFilter<V> {
         private final V useValue;
-        
+
         public NameFilter(V useValue) {
             this.useValue = useValue;
         }
@@ -1824,26 +2666,26 @@ public class ConfigXMLReader {
                     try {
                         useValue = (V) ObjectType.simpleTypeConvert(useValueStr, cls.getName(), null, null);
                     } catch (GeneralException e) {
-                        Debug.logError("Could not convert controller name filter result '" 
+                        Debug.logError("Could not convert controller name filter result '"
                                 + useValueStr + "' to type: " + cls.getName(), module);
                     }
                 }
             }
             if (element.getAttribute("prefix").length() > 0) {
-                return new PrefixNameFilter(element.getAttribute("prefix"), useValue);
+                return new PrefixNameFilter<V>(element.getAttribute("prefix"), useValue);
             } else if (element.getAttribute("suffix").length() > 0) {
-                return new SuffixNameFilter(element.getAttribute("suffix"), useValue);
+                return new SuffixNameFilter<V>(element.getAttribute("suffix"), useValue);
             } else if (element.getAttribute("regexp").length() > 0) {
-                return new RegexNameFilter(element.getAttribute("regexp"), useValue);
+                return new RegexNameFilter<V>(element.getAttribute("regexp"), useValue);
             } else {
-                return new FalseNameFilter(useValue);
+                return new FalseNameFilter<V>(useValue);
             }
         }
 
         public V getUseValue() {
             return useValue;
         }
-        
+
         public abstract boolean matches(String fieldValue);
 
         public static class FalseNameFilter<V> extends NameFilter<V> {
@@ -1855,7 +2697,7 @@ public class ConfigXMLReader {
                 return false;
             }
         }
-        
+
         public static class PrefixNameFilter<V> extends NameFilter<V> {
             private final String prefix;
             public PrefixNameFilter(String prefix, V useValue) {
@@ -1867,7 +2709,7 @@ public class ConfigXMLReader {
                 return fieldValue.startsWith(prefix);
             }
         }
-        
+
         public static class SuffixNameFilter<V> extends NameFilter<V> {
             private final String suffix;
             public SuffixNameFilter(String suffix, V useValue) {
@@ -1888,6 +2730,174 @@ public class ConfigXMLReader {
             @Override
             public boolean matches(String fieldValue) {
                 return pattern.matcher(fieldValue).matches();
+            }
+        }
+    }
+
+    /**
+     * SCIPIO: Precompiles parsable request responses and synchronize values.
+     * Similar to FlexibleStringExpander but with some specific expression support for controller.
+     */
+    public static abstract class ValueExpr {
+        protected final String origValue;
+
+        protected ValueExpr(String origValue) {
+            this.origValue = origValue;
+        }
+
+        public static String ensureDelims(String value) {
+            if (value == null) {
+                return null;
+            }
+            if (!value.startsWith("${")) {
+                value = "${" + value + "}";
+            }
+            return value;
+        }
+
+        public static ValueExpr getInstance(String value) {
+            if (value == null) {
+                return NullValueExpr.INSTANCE;
+            }
+            if (value.startsWith("${") && value.endsWith("}")) {
+                String expr = value.substring(2, value.length() - 1).trim();
+                int dotIndex = expr.indexOf('.');
+                if (dotIndex >= 0) {
+                    String scope = expr.substring(0, dotIndex);
+                    String name = expr.substring(dotIndex+1);
+                    if (scope.length() > 0 && name.length() > 0) {
+                        if ("requestAttributes".equals(scope)) {
+                            return new ReqAttrValueExpr(value, name);
+                        } else if ("requestParameters".equals(scope)) {
+                            return new ReqParamValueExpr(value, name);
+                        } else if ("requestAttrParam".equals(scope)) {
+                            return new ReqAttrParamValueExpr(value, name);
+                        } else if ("sessionAttributes".equals(scope)) {
+                            return new SessionAttrValueExpr(value, name);
+                        } else if ("applicationAttributes".equals(scope)) {
+                            return new ApplAttrValueExpr(value, name);
+                        }
+                    }
+                }
+                return new FlexibleValueExpr(value);
+            }
+            return new ConstValueExpr(value);
+        }
+
+        public abstract Object getValue(HttpServletRequest request, HttpServletResponse response);
+
+        public String getOrigValue() {
+            return origValue;
+        }
+        
+        protected static class NullValueExpr extends ValueExpr {
+            public static final NullValueExpr INSTANCE = new NullValueExpr();
+            protected NullValueExpr() {
+                super("");
+            }
+            
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return null;
+            }
+        }
+
+        protected static class ConstValueExpr extends ValueExpr {
+            protected ConstValueExpr(String value) {
+                super(value);
+            }
+            
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return origValue;
+            }
+        }
+
+        protected static class FlexibleValueExpr extends ValueExpr {
+            protected final FlexibleStringExpander exdr;
+            protected FlexibleValueExpr(String expr) {
+                super(expr);
+                this.exdr = FlexibleStringExpander.getInstance(expr);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                Map<String, Object> context = new HashMap<>();
+                context.put("request", request);
+                context.put("response", response);
+                // TODO?: more fields (not too many, otherwise may be slow)...
+                return exdr.expand(context);
+            }
+        }
+
+        protected static abstract class NameBasedValueExpr extends ValueExpr {
+            protected final String name;
+            protected NameBasedValueExpr(String origValue, String name) {
+                super(origValue);
+                this.name = name;
+            }
+        }
+        
+        protected static class ReqAttrValueExpr extends NameBasedValueExpr {
+            protected ReqAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getAttribute(name);
+            }
+        }
+
+        protected static class ReqParamValueExpr extends NameBasedValueExpr {
+            protected ReqParamValueExpr(String origValue, String name) {
+                super(origValue, name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getParameter(name);
+            }
+        }
+
+        protected static class ReqAttrParamValueExpr extends NameBasedValueExpr {
+            protected ReqAttrParamValueExpr(String origValue, String name) {
+                super(origValue, name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                Object attrValue = request.getAttribute(name);
+                if (attrValue == null) {
+                    attrValue = request.getParameter(name);
+                }
+                return attrValue;
+            }
+        }
+
+        protected static class SessionAttrValueExpr extends NameBasedValueExpr {
+            protected SessionAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    return session.getAttribute(name);
+                }
+                return null;
+            }
+        }
+
+        protected static class ApplAttrValueExpr extends NameBasedValueExpr {
+            protected ApplAttrValueExpr(String origValue, String name) {
+                super(origValue, name);
+            }
+
+            @Override
+            public Object getValue(HttpServletRequest request, HttpServletResponse response) {
+                return request.getServletContext().getAttribute(name);
             }
         }
     }

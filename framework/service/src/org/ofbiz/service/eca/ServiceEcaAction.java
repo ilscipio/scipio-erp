@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -112,22 +112,22 @@ public class ServiceEcaAction implements java.io.Serializable {
         }
 
         if (eventName.startsWith("global-")) {
-            if (eventName.equals("global-rollback")) {
+            if ("global-rollback".equals(eventName)) {
                 ServiceSynchronization.registerRollbackService(dctx, serviceName, runAsUser, context, "async".equals(serviceMode), persist); // using the actual context so we get updates
-            } else if (eventName.equals("global-commit")) {
+            } else if ("global-commit".equals(eventName)) {
                 ServiceSynchronization.registerCommitService(dctx, serviceName, runAsUser, context, "async".equals(serviceMode), persist); // using the actual context so we get updates
-            } else if (eventName.equals("global-commit-post-run")) {
+            } else if ("global-commit-post-run".equals(eventName)) {
                 ServiceSynchronization.registerCommitService(dctx, serviceName, runAsUser, context, "async".equals(serviceMode), persist); // using the actual context so we get updates
             }
         } else {
             // standard ECA
-            if (this.serviceMode.equals("sync")) {
+            if ("sync".equals(this.serviceMode)) {
                 if (newTransaction) {
                     actionResult = dispatcher.runSync(this.serviceName, actionContext, -1, true);
                 } else {
                     actionResult = dispatcher.runSync(this.serviceName, actionContext);
                 }
-            } else if (this.serviceMode.equals("async")) {
+            } else if ("async".equals(this.serviceMode)) {
                 dispatcher.runAsync(serviceName, actionContext, persist);
             }
         }
@@ -194,7 +194,7 @@ public class ServiceEcaAction implements java.io.Serializable {
                 } else {
                     List<Object> origErrorMessageList = UtilGenerics.checkList(result.get(ModelService.ERROR_MESSAGE_LIST));
                     if (origErrorMessageList == null) {
-                        origErrorMessageList = new LinkedList<Object>();
+                        origErrorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
                         result.put(ModelService.ERROR_MESSAGE_LIST, origErrorMessageList);
                     }
                     origErrorMessageList.add(0, errorMessage);
@@ -230,6 +230,41 @@ public class ServiceEcaAction implements java.io.Serializable {
         }
 
         return success;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        if (UtilValidate.isNotEmpty(eventName)) buf.append("[").append(eventName).append("]");
+        if (UtilValidate.isNotEmpty(ignoreError)) buf.append("[").append(ignoreError).append("]");
+        if (UtilValidate.isNotEmpty(ignoreFailure)) buf.append("[").append(ignoreFailure).append("]");
+        if (UtilValidate.isNotEmpty(newTransaction)) buf.append("[").append(newTransaction).append("]");
+        if (UtilValidate.isNotEmpty(persist)) buf.append("[").append(persist).append("]");
+        if (UtilValidate.isNotEmpty(resultMapName)) buf.append("[").append(resultMapName).append("]");
+        if (UtilValidate.isNotEmpty(resultToContext)) buf.append("[").append(resultToContext).append("]");
+        if (UtilValidate.isNotEmpty(resultToResult)) buf.append("[").append(resultToResult).append("]");
+        if (UtilValidate.isNotEmpty(runAsUser)) buf.append("[").append(runAsUser).append("]");
+        if (UtilValidate.isNotEmpty(serviceMode)) buf.append("[").append(serviceMode).append("]");
+        if (UtilValidate.isNotEmpty(serviceName)) buf.append("[").append(serviceName).append("]");
+        return buf.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((eventName == null) ? 0 : eventName.hashCode());
+        result = prime * result + (ignoreError ? 1231 : 1237);
+        result = prime * result + (ignoreFailure ? 1231 : 1237);
+        result = prime * result + (newTransaction ? 1231 : 1237);
+        result = prime * result + (persist ? 1231 : 1237);
+        result = prime * result + ((resultMapName == null) ? 0 : resultMapName.hashCode());
+        result = prime * result + (resultToContext ? 1231 : 1237);
+        result = prime * result + (resultToResult ? 1231 : 1237);
+        result = prime * result + ((runAsUser == null) ? 0 : runAsUser.hashCode());
+        result = prime * result + ((serviceMode == null) ? 0 : serviceMode.hashCode());
+        result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
+        return result;
     }
 
     @Override

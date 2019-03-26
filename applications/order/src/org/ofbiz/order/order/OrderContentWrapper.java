@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
@@ -37,7 +36,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
@@ -67,7 +65,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
     public OrderContentWrapper(GenericValue entityValue, HttpServletRequest request) {
         super(entityValue, request);
     }
-    
+
     public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
             boolean useCache) {
         super(dispatcher, entityValue, locale, mimeTypeId, useCache);
@@ -90,7 +88,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getOrderContentAsText(order, orderContentTypeId, locale, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -115,7 +113,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
          */
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
 
-        String orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
+        String orderItemSeqId = ("OrderItem".equals(order.getEntityName())? order.getString("orderItemSeqId"): "_NA_");
 
         String cacheKey = (useCache) ? orderContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + order.get("orderId") + SEPARATOR + orderItemSeqId + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
@@ -137,10 +135,8 @@ public class OrderContentWrapper extends CommonContentWrapper {
                 orderContentCache.put(cacheKey, outString);
             }
             return outString;
-        } catch (GeneralException e) {
-            Debug.logError(e, "Error rendering OrderContent, inserting empty String", module);
-            return "";
-        } catch (IOException e) {
+
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, "Error rendering OrderContent, inserting empty String", module);
             return "";
         }
@@ -155,7 +151,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
             orderId = order.getString("orderId");
         }
         if (orderItemSeqId == null && order != null) {
-            orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
+            orderItemSeqId = ("OrderItem".equals(order.getEntityName())? order.getString("orderItemSeqId"): "_NA_");
         }
 
         if (delegator == null && order != null) {

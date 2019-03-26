@@ -82,7 +82,7 @@ if (partyId) {
     }
 }
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 cartPartyId = cart.getPartyId();
 context.cart = cart;
 

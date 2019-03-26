@@ -85,7 +85,6 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
 
     @Override
     public void addSqlValue(StringBuilder sql, ModelEntity entity, List<EntityConditionParam> entityConditionParams, boolean compat, L lhs, R rhs, Datasource datasourceInfo) {
-        //Debug.logInfo("EntityComparisonOperator.addSqlValue field=" + lhs + ", value=" + rhs + ", value type=" + (rhs == null ? "null object" : rhs.getClass().getName()), module);
 
         // if this is an IN operator and the rhs Object isEmpty, add "1=0" instead of the normal SQL.  Note that "FALSE" does not work with all databases.
         if (this.idInt == EntityOperator.ID_IN && UtilValidate.isEmpty(rhs)) {
@@ -138,7 +137,7 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
     public abstract boolean compare(L lhs, R rhs);
 
     public Boolean eval(Delegator delegator, Map<String, ? extends Object> map, L lhs, R rhs) {
-        return Boolean.valueOf(mapMatches(delegator, map, lhs, rhs));
+        return mapMatches(delegator, map, lhs, rhs);
     }
 
     @Override
@@ -160,7 +159,9 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
             rightValue = rhs;
         }
 
-        if (leftValue == WILDCARD || rightValue == WILDCARD) return true;
+        if (leftValue == WILDCARD || rightValue == WILDCARD) {
+            return true;
+        }
         return compare(UtilGenerics.<L>cast(leftValue), UtilGenerics.<R>cast(rightValue));
     }
 
@@ -173,9 +174,8 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
         if (item instanceof EntityConditionValue) {
             EntityConditionValue ecv = (EntityConditionValue) item;
             return ecv.freeze();
-        } else {
-            return item;
         }
+        return item;
     }
 
     public EntityComparisonOperator(int id, String code) {
@@ -248,19 +248,18 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
         return true;
     }
 
+    @SuppressWarnings("unlikely-arg-type") // SCIPIO: suppress, we know that somewhat related types are chosen for L and R
     public static final <L,R> boolean compareIn(L lhs, R rhs) {
         if (lhs == null) {
             if (rhs != null) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
         } else if (rhs instanceof Collection<?>) {
             if (((Collection<?>) rhs).contains(lhs)) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         } else if (lhs.equals(rhs)) {
             return true;
         } else {

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -22,35 +9,35 @@ under the License.
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     }
 }
@@ -64,7 +51,7 @@ function submitForm(form, mode, value) {
 
             <#-- SCIPIO: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
-            <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
+            <#assign selectedShippingMethod = raw(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
@@ -74,19 +61,18 @@ function submitForm(form, mode, value) {
                     orders with offline calculation, but we know the failure is very likely to be misconfiguration
                     or connectivity failure, and by default we can't assume the store is equipped to handle offlines in these cases.
                     NOTE: Failure is subtly noted by the absence of ship estimate (null). -->
-                <#if shippingEstWpr.getShippingEstimate(carrierShipmentMethod)??>
-                  <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-                  <#assign labelContent>
-                    <#if shoppingCart.getShippingContactMechId()??>
-                      <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
-                    </#if>
-                    <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                    <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if>
-                  </#assign>
-                  <#--<@commonInvField type="generic" labelContent=labelContent>-->
-                  <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->
-                  <#--</@commonInvField>-->
+                <#assign shippingEst = "">
+                <#if shoppingCart.getShippingContactMechId()??>
+                  <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                 </#if>
+                <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
+                <#assign labelContent>
+                  <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
+                  <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
+                </#assign>
+                <#--<@commonInvField type="generic" labelContent=labelContent>-->
+                <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->
+                <#--</@commonInvField>-->
               </#list>
               <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                 <#assign labelContent>${uiLabelMap.OrderUseDefault}.</#assign>
@@ -141,7 +127,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </b>
                   </div>
-                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_nav_info!} ${styles.action_view!}" target="_BLANK">${uiLabelMap.PartyProfile}</a>.</div>
+                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@pageUrl>viewprofile?DONE_PAGE=checkoutoptions</@pageUrl>" class="${styles.link_nav_info!} ${styles.action_view!}" target="_BLANK">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                   <@field type="input" widgetOnly=true size="30" name="order_additional_emails" value=(parameters.order_additional_emails!shoppingCart.getOrderAdditionalEmails()!)/>

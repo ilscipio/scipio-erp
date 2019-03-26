@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Entity Tenant Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <service name="createComponent" default-entity-name="Component" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Component Record</description>
+        <auto-attributes mode="IN" include="pk"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateComponent" default-entity-name="Component" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Component record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteComponent" default-entity-name="Component" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a Component record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+</services>

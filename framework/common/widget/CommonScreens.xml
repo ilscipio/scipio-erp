@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -166,6 +153,32 @@ under the License.
                     }
                 }
             ]]></script>
+            
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.webapp.website.WebSiteProperties
+                import org.ofbiz.webapp.website.WebSiteEntityNotFoundException
+                import org.ofbiz.base.util.Debug;
+                import org.ofbiz.base.util.UtilProperties
+                
+                final String module = "CommonsScreens#GlobalActions";
+                
+                try {
+                    Debug.logVerbose("############ BEGIN WEBSITE CHECK #############", module);                    
+                    WebSiteProperties.from(request);
+                    context.webSiteFound = true;
+                    Debug.logVerbose("############ END WEBSITE CHECK   #############", module);
+                } catch (WebSiteEntityNotFoundException we) {
+                    Debug.logError("############ WEBSITE CHECK FAILED #############", module);
+                    context.webSiteFound = false;
+                    context.webSiteIdNotFound = we.getWebSiteId();
+                    scipioBaseUrl = UtilProperties.getPropertyValue("general", "scipioerp.base.url", "");
+                    scipioDevSetupUrl = UtilProperties.getPropertyValue("general", "community/developer/installation-configuration/", "");
+                    context.scipioSetupUrl = scipioBaseUrl + scipioDevSetupUrl;                    
+                    
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonSystemNotProperlyConfigured", locale));
+                }
+            ]]></script>
+            
             <!-- Fetch messages from system -->
             <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/GetUserNotifications.groovy" />
         </actions>
@@ -183,7 +196,9 @@ under the License.
             <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
             <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
             <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
-            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
+            <!-- SCIPIO: This is counter-productive; we use app-bar-display
+            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!- - disable ofbiz setup by default - ->
+            -->
 
             <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
             <set field="origTitle" from-field="title" />
@@ -249,367 +264,415 @@ under the License.
                 </if>
             </actions>
             <widgets>
-                <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
-                    when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
-                    in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
-                    note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
-                <section contains="${headAppContainsExpr}, *">
-                    <condition>
-                        <if-empty field="parameters.ajaxUpdateEvent" />
-                    </condition>
-                    <widgets>
-                        <!-- render html head open -->
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://common/webcommon/includes/htmlHeadOpen.ftl" />
-                            </html>
-                        </platform-specific>
-                        <!-- render header -->
-                        <section name="Global-Head-Header">
-                            <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="${headerTemplateLocation}" />
-                                    </html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
-                        <!-- render appbar or its opening part -->
-                        <section name="Global-Main-Nav">
+                <section>
+                    <condition><if-true field="webSiteFound" /></condition>
+                    <widgets>                        
+                        <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
+                            when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
+                            in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
+                            note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
+                        <section contains="${headAppContainsExpr}, *">
                             <condition>
-                                <not>
-                                    <if-empty field="appbarOpenTemplateLocation" />
-                                </not>
+                                <if-empty field="parameters.ajaxUpdateEvent" />
                             </condition>
                             <widgets>
+                                <!-- render html head open -->
                                 <platform-specific>
                                     <html>
-                                        <html-template location="${appbarOpenTemplateLocation}" />
+                                        <html-template location="component://common/webcommon/includes/htmlHeadOpen.ftl" />
                                     </html>
                                 </platform-specific>
-                            </widgets>
-                            <fail-widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="${appbarTemplateLocation}" />
-                                    </html>
-                                </platform-specific>
-                            </fail-widgets>
-                        </section>
-                    </widgets>
-                </section>
-                <section contains="${headAppContainsExpr}, *">
-                    <condition>
-                        <and>
-                            <if-empty field="parameters.ajaxUpdateEvent" />
-                            <not><if-true field="customSideBar"/></not>
-                        </and>
-                    </condition>
-                    <widgets>
-                        <!-- render appheader: both menu widget style and ftl template style menus are supported -->
-                        <section name="Global-App-Nav">
-                            <condition>
-                                <not>
-                                    <if-empty field="userLogin" />
-                                </not>
-                            </condition>
-                            <widgets>
-                                <section>
+                                <!-- render header -->
+                                <section name="Global-Head-Header">
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${headerTemplateLocation}" />
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                </section>
+                                <!-- render appbar or its opening part -->
+                                <section name="Global-Main-Nav">
                                     <condition>
                                         <not>
-                                            <if-empty field="appheaderTemplate" />
+                                            <if-empty field="appbarOpenTemplateLocation" />
                                         </not>
                                     </condition>
                                     <widgets>
                                         <platform-specific>
                                             <html>
-                                                <html-template location="${appheaderTemplate}" />
+                                                <html-template location="${appbarOpenTemplateLocation}" />
                                             </html>
                                         </platform-specific>
                                     </widgets>
                                     <fail-widgets>
-                                        <!-- FIXME: conflict/inconsistency between context.applicationTitle 
-                                            and parameters.applicationTitle (the latter risks allowing user input as title!) -->
-                                        <section>
-                                            <condition>
-                                                <not>
-                                                    <if-empty field="parameters.applicationTitle" />
-                                                </not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="apptitle">${parameters.applicationTitle}</label>
-                                            </widgets>
-                                        </section>
-                                        <section>
-                                            <condition>
-                                                <not>
-                                                    <if-empty field="applicationMenuLocation" />
-                                                </not>
-                                            </condition>
-                                            <widgets>
-                                                <include-menu name="${applicationMenuName}" location="${applicationMenuLocation}" />
-                                            </widgets>
-                                        </section>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${appbarTemplateLocation}" />
+                                            </html>
+                                        </platform-specific>
                                     </fail-widgets>
                                 </section>
                             </widgets>
-                            <fail-widgets>
-                                <!-- better to just not include this, the CommonAppBarMenu doesn't show anything by default if the user isn't logged in, causing a funny empty menu: <include-menu name="CommonAppBarMenu" location="component://common/widget/CommonMenus.xml"/> -->
-                            </fail-widgets>
                         </section>
-                    </widgets>
-                </section>
-                <!-- render the appbar closing part -->
-                <section contains="${headAppContainsExpr}, *">
-                    <condition>
-                        <and>
-                            <if-empty field="parameters.ajaxUpdateEvent" />
-                            <not>
-                                <if-empty field="appbarCloseTemplateLocation" />
-                            </not>
-                        </and>
-                    </condition>
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="${appbarCloseTemplateLocation}" />
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
-                <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
-                     include in <head></head>, but doesn't seem worth it for now -->
-                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
-                <!-- render content area -->
-                <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
-                    <widgets>
-                        <decorator-section-include name="pre-content"/>
-                    </widgets>
-                </section>
-                <container style="${styles.grid_theme}" id="content-main-section">
-                    <section>
-                        <condition>
-                            <not>
-                                <if-empty-section section-name="content-full-screen"/>
-                            </not>
-                        </condition>
-                        <widgets>
-                            <section name="Global-Content-Full">
-                                <widgets>
-                                    <decorator-section-include name="content-full-screen"/>
-                                </widgets>
-                            </section>      
-                        </widgets>
-                        <fail-widgets>
-                        <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
-                            
-                            <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
-                            <section name="Global-Content-Main">
-                                <condition>
-                                    <if-true field="customSideBar" />
-                                </condition>
-                                <widgets>
-                                    <!-- Theme styling  -->
-                                    <section>
-                                        <!-- Not Authenticated Screens -->
-                                        <condition>
-                                            <if-empty field="userLogin" />
-                                        </condition>
-                                        <actions>
-                                            <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
-                                            <set field="noTitle" value="true"/>
-                                        </actions>
-                                        <widgets>
-                                            <container id="content-main-body">
-                                                <include-screen name="column-main"/>
-                                            </container>
-                                        </widgets>
-                                        <!-- Authenticated Screens -->
-                                        <fail-widgets>
-                                            <section>
-                                                <actions>
-                                                    <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
-                                                </actions>
-                                                <widgets>
-                                                    <container id="content-main-body">
-                                                        <include-screen name="column-main"/>
-                                                    </container>
-                                                 </widgets>
-                                            </section>
-                                        </fail-widgets>
-                                    </section>
-                                    <!--  Theme styling -->
-                                </widgets>
-                                <fail-widgets>
-                                    <!-- Default layout -->
-                                    <section>
-                                        <!-- Not Authenticated Screens -->
-                                        <condition>
-                                            <if-empty field="userLogin" />
-                                        </condition>
-                                        <actions>
-                                            <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
-                                            <set field="noTitle" value="true"/>
-                                        </actions>
-                                        <widgets>
-                                            <container id="content-main-body">
-                                                <include-screen name="column-main"/>
-                                            </container>
-                                        </widgets>
-                                        <!-- Authenticated Screens -->
-                                        <fail-widgets>
-                                            <section>
-                                                <condition>
-                                                    <and>
-                                                        <or>
-                                                            <if-empty-section section-name="left-column" />
-                                                            <if-false field="showLeftColumn" />
-                                                        </or>
-                                                        <or>
-                                                            <if-empty-section section-name="right-column" />
-                                                            <if-false field="showRightColumn" />
-                                                        </or>
-                                                    </and>
-                                                </condition>
-                                                <actions>
-                                                    <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
-                                                </actions>
-                                                <widgets>
-                                                    <container id="content-main-body">
-                                                        <include-screen name="column-main"/>
-                                                    </container>
-                                                 </widgets>
-                                            </section>
-                                            <section>
-                                                <condition>
-                                                    <and>
-                                                        <not>
-                                                            <or>
-                                                                <if-empty-section section-name="left-column" />
-                                                                <if-false field="showLeftColumn" />
-                                                            </or>
-                                                        </not>
-                                                        <or>
-                                                            <if-empty-section section-name="right-column" />
-                                                            <if-false field="showRightColumn" />
-                                                        </or>
-                                                    </and>
-                                                </condition>
-                                                <actions>
-                                                   <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
-                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="column-left"/>
-                                                    <include-screen name="column-main"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <condition>
-                                                    <and>
-                                                        <or>
-                                                            <if-empty-section section-name="left-column" />
-                                                            <if-false field="showLeftColumn" />
-                                                        </or>
-                                                        <not>
-                                                            <or>
-                                                                <if-empty-section section-name="right-column" />
-                                                                <if-false field="showRightColumn" />
-                                                            </or>
-                                                        </not>
-                                                    </and>
-                                                </condition>
-                                                <actions>
-                                                   <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
-                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="column-main"/>
-                                                    <include-screen name="column-right"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <condition>
-                                                    <and>
-                                                        <not>
-                                                            <or>
-                                                                <if-empty-section section-name="left-column" />
-                                                                <if-false field="showLeftColumn" />
-                                                            </or>
-                                                        </not>
-                                                        <not>
-                                                            <or>
-                                                                <if-empty-section section-name="right-column" />
-                                                                <if-false field="showRightColumn" />
-                                                            </or>
-                                                        </not>
-                                                    </and>
-                                                </condition>
-                                                <actions>
-                                                   <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
-                                                   <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
-                                                   <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="column-left"/>
-                                                    <include-screen name="column-main"/>
-                                                    <include-screen name="column-right"/>
-                                                </widgets>
-                                            </section>
-                                        </fail-widgets>
-                                    </section>
-                                <!-- Default layout -->
-                                </fail-widgets>
-                            </section>
-                        </fail-widgets>
-                    </section>
-                </container>
-                <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
-                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
-                    <condition>
-                        <if-empty field="parameters.ajaxUpdateEvent" />
-                    </condition>
-                    <widgets>
-                        <!-- render footer -->
-                        <section name="Global-Footer">
+                        <section contains="${headAppContainsExpr}, *">
                             <condition>
-                                <if-empty field="applicationFooterTemplate" />
+                                <and>
+                                    <if-empty field="parameters.ajaxUpdateEvent" />
+                                    <not><if-true field="customSideBar"/></not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <!-- render appheader: both menu widget style and ftl template style menus are supported -->
+                                <section name="Global-App-Nav">
+                                    <condition>
+                                        <not>
+                                            <if-empty field="userLogin" />
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <not>
+                                                    <if-empty field="appheaderTemplate" />
+                                                </not>
+                                            </condition>
+                                            <widgets>
+                                                <platform-specific>
+                                                    <html>
+                                                        <html-template location="${appheaderTemplate}" />
+                                                    </html>
+                                                </platform-specific>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <!-- FIXME: conflict/inconsistency between context.applicationTitle 
+                                                    and parameters.applicationTitle (the latter risks allowing user input as title!) -->
+                                                <section>
+                                                    <condition>
+                                                        <not>
+                                                            <if-empty field="parameters.applicationTitle" />
+                                                        </not>
+                                                    </condition>
+                                                    <widgets>
+                                                        <label style="apptitle">${parameters.applicationTitle}</label>
+                                                    </widgets>
+                                                </section>
+                                                <section>
+                                                    <condition>
+                                                        <not>
+                                                            <if-empty field="applicationMenuLocation" />
+                                                        </not>
+                                                    </condition>
+                                                    <widgets>
+                                                        <include-menu name="${applicationMenuName}" location="${applicationMenuLocation}" />
+                                                    </widgets>
+                                                </section>
+                                            </fail-widgets>
+                                        </section>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <!-- better to just not include this, the CommonAppBarMenu doesn't show anything by default if the user isn't logged in, causing a funny empty menu: <include-menu name="CommonAppBarMenu" location="component://common/widget/CommonMenus.xml"/> -->
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                        <!-- render the appbar closing part -->
+                        <section contains="${headAppContainsExpr}, *">
+                            <condition>
+                                <and>
+                                    <if-empty field="parameters.ajaxUpdateEvent" />
+                                    <not>
+                                        <if-empty field="appbarCloseTemplateLocation" />
+                                    </not>
+                                </and>
                             </condition>
                             <widgets>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="${footerTemplateLocation}" />
+                                        <html-template location="${appbarCloseTemplateLocation}" />
                                     </html>
                                 </platform-specific>
                             </widgets>
-                            <fail-widgets>
+                        </section>
+                        <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
+                             include in <head></head>, but doesn't seem worth it for now -->
+                        <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                            <widgets>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="${applicationFooterTemplate}" />
+                                        <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
                                     </html>
                                 </platform-specific>
-                            </fail-widgets>
+                            </widgets>
+                        </section>
+                        <!-- render content area -->
+                        <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                            <widgets>
+                                <decorator-section-include name="pre-content"/>
+                            </widgets>
+                        </section>
+                        <container style="${styles.grid_theme}" id="content-main-section">
+                            <section>
+                                <condition>
+                                    <not>
+                                        <if-empty-section section-name="content-full-screen"/>
+                                    </not>
+                                </condition>
+                                <widgets>
+                                    <section name="Global-Content-Full">
+                                        <widgets>
+                                            <decorator-section-include name="content-full-screen"/>
+                                        </widgets>
+                                    </section>      
+                                </widgets>
+                                <fail-widgets>
+                                <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
+                                    
+                                    <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
+                                    <section name="Global-Content-Main">
+                                        <condition>
+                                            <if-true field="customSideBar" />
+                                        </condition>
+                                        <widgets>
+                                            <!-- Theme styling  -->
+                                            <section>
+                                                <!-- Not Authenticated Screens -->
+                                                <condition>
+                                                    <if-empty field="userLogin" />
+                                                </condition>
+                                                <actions>
+                                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                                    <set field="noTitle" value="true"/>
+                                                </actions>
+                                                <widgets>
+                                                    <container id="content-main-body">
+                                                        <include-screen name="column-main"/>
+                                                    </container>
+                                                </widgets>
+                                                <!-- Authenticated Screens -->
+                                                <fail-widgets>
+                                                    <section>
+                                                        <actions>
+                                                            <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                                        </actions>
+                                                        <widgets>
+                                                            <container id="content-main-body">
+                                                                <include-screen name="column-main"/>
+                                                            </container>
+                                                         </widgets>
+                                                    </section>
+                                                </fail-widgets>
+                                            </section>
+                                            <!--  Theme styling -->
+                                        </widgets>
+                                        <fail-widgets>
+                                            <!-- Default layout -->
+                                            <section>
+                                                <!-- Not Authenticated Screens -->
+                                                <condition>
+                                                    <if-empty field="userLogin" />
+                                                </condition>
+                                                <actions>
+                                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                                    <set field="noTitle" value="true"/>
+                                                </actions>
+                                                <widgets>
+                                                    <container id="content-main-body">
+                                                        <include-screen name="column-main"/>
+                                                    </container>
+                                                </widgets>
+                                                <!-- Authenticated Screens -->
+                                                <fail-widgets>
+                                                    <section>
+                                                        <condition>
+                                                            <and>
+                                                                <or>
+                                                                    <if-empty-section section-name="left-column" />
+                                                                    <if-false field="showLeftColumn" />
+                                                                </or>
+                                                                <or>
+                                                                    <if-empty-section section-name="right-column" />
+                                                                    <if-false field="showRightColumn" />
+                                                                </or>
+                                                            </and>
+                                                        </condition>
+                                                        <actions>
+                                                            <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                                                        </actions>
+                                                        <widgets>
+                                                            <container id="content-main-body">
+                                                                <include-screen name="column-main"/>
+                                                            </container>
+                                                         </widgets>
+                                                    </section>
+                                                    <section>
+                                                        <condition>
+                                                            <and>
+                                                                <not>
+                                                                    <or>
+                                                                        <if-empty-section section-name="left-column" />
+                                                                        <if-false field="showLeftColumn" />
+                                                                    </or>
+                                                                </not>
+                                                                <or>
+                                                                    <if-empty-section section-name="right-column" />
+                                                                    <if-false field="showRightColumn" />
+                                                                </or>
+                                                            </and>
+                                                        </condition>
+                                                        <actions>
+                                                           <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
+                                                           <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                                        </actions>
+                                                        <widgets>
+                                                            <include-screen name="column-left"/>
+                                                            <include-screen name="column-main"/>
+                                                        </widgets>
+                                                    </section>
+                                                    <section>
+                                                        <condition>
+                                                            <and>
+                                                                <or>
+                                                                    <if-empty-section section-name="left-column" />
+                                                                    <if-false field="showLeftColumn" />
+                                                                </or>
+                                                                <not>
+                                                                    <or>
+                                                                        <if-empty-section section-name="right-column" />
+                                                                        <if-false field="showRightColumn" />
+                                                                    </or>
+                                                                </not>
+                                                            </and>
+                                                        </condition>
+                                                        <actions>
+                                                           <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
+                                                           <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                                                        </actions>
+                                                        <widgets>
+                                                            <include-screen name="column-main"/>
+                                                            <include-screen name="column-right"/>
+                                                        </widgets>
+                                                    </section>
+                                                    <section>
+                                                        <condition>
+                                                            <and>
+                                                                <not>
+                                                                    <or>
+                                                                        <if-empty-section section-name="left-column" />
+                                                                        <if-false field="showLeftColumn" />
+                                                                    </or>
+                                                                </not>
+                                                                <not>
+                                                                    <or>
+                                                                        <if-empty-section section-name="right-column" />
+                                                                        <if-false field="showRightColumn" />
+                                                                    </or>
+                                                                </not>
+                                                            </and>
+                                                        </condition>
+                                                        <actions>
+                                                           <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
+                                                           <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
+                                                           <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
+                                                        </actions>
+                                                        <widgets>
+                                                            <include-screen name="column-left"/>
+                                                            <include-screen name="column-main"/>
+                                                            <include-screen name="column-right"/>
+                                                        </widgets>
+                                                    </section>
+                                                </fail-widgets>
+                                            </section>
+                                        <!-- Default layout -->
+                                        </fail-widgets>
+                                    </section>
+                                </fail-widgets>
+                            </section>
+                        </container>
+                        <!-- TODO: this could be in theme as described above, but not worth it for now -->
+                        <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                        <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                            <condition>
+                                <if-empty field="parameters.ajaxUpdateEvent" />
+                            </condition>
+                            <widgets>
+                                <!-- render footer -->
+                                <section name="Global-Footer">
+                                    <condition>
+                                        <if-empty field="applicationFooterTemplate" />
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${footerTemplateLocation}" />
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="${applicationFooterTemplate}" />
+                                            </html>
+                                        </platform-specific>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
                         </section>
                     </widgets>
+                    <fail-widgets>
+                        <section contains="${headAppContainsExpr}, *">
+                            <widgets>
+                                <!-- render html head open -->
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/htmlHeadOpen.ftl" /></html></platform-specific>
+                                <!-- render header -->
+                                <section name="Global-Head-Header">
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://base-theme/includes/fallback/header.ftl" /></html></platform-specific>                                        
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>                        
+                        <!-- Render body -->
+                        <section name="Global-Content-Main">
+                            <actions>
+                                <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                <set field="noTitle" value="true"/>
+                            </actions>
+                            <widgets>
+                                <container id="content-main-body">
+                                    <container style="${columnMainStyle}" id="main-content">
+                                        <section name="Global-Column-Main-Inner">
+                                            <widgets>
+                                                <platform-specific><html><html-template location="${messagesTemplateLocation}" /></html></platform-specific>
+                                                <platform-specific><html><html-template location="component://base-theme/includes/fallback/main.ftl" /></html></platform-specific>
+                                            </widgets>
+                                        </section>
+                                    </container>
+                                </container>
+                            </widgets>
+                        </section>                        
+                        <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                            <widgets>
+                            <!-- render footer -->
+                            <section name="Global-Footer">
+                                <widgets>
+                                    <platform-specific><html><html-template location="component://base-theme/includes/fallback/footer.ftl" /></html></platform-specific>
+                                </widgets>
+                            </section>
+                            </widgets>
+                        </section>                       
+                    </fail-widgets>
                 </section>
-            </widgets>
+            </widgets>            
         </section>
     </screen>
 
@@ -620,7 +683,6 @@ under the License.
                 <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
             </condition>
             <widgets>
-
                 <section>
                     <actions>
                         <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -688,7 +750,6 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-
             </widgets>
             <fail-widgets>
                 <section>
@@ -832,6 +893,8 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
                 <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
             </actions>
             <widgets>
@@ -844,7 +907,19 @@ under the License.
     <screen name="GlobalFoDecorator">
         <section>
             <actions>
-                <set field="layoutSettings.commonHeaderImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
+                <!-- SCIPIO: No, groovy puts in logoImageUrl
+                <set field="layoutSettings.commonHeaderImageUrl" default-value="/images/scipio/scipio-logo.svg"/>-->
+                <if>
+                    <condition>
+                        <if-empty field="layoutSettings.commonHeaderImageUrl"/>
+                    </condition>
+                    <then>
+                        <!-- TODO: REVIEW: setting this field at all is probably flawed or wrong -->
+                        <set field="layoutSettings.commonHeaderImageUrl" from-field="logoImageUrl" default-value="/images/scipio/scipio-logo.svg" global="true"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <platform-specific>
@@ -866,7 +941,9 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/><!-- SCIPIO: global="true" is required -->
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -885,6 +962,8 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+                <set field="chiSetGlobal" type="Boolean" value="true"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonHeaderInfo.groovy"/>
             </actions>
             <widgets>
                 <platform-specific>
@@ -1525,7 +1604,7 @@ under the License.
           menu-item-alias definitions (added for 1.14.3) in menu definitions.
           For example if a new-record screen identifies itself with "NewRecord" set in activeSubMenuItem, the corresponding
           sub-menu's definition can be augmented with an alias to make it behave like PARENT(-NOSUB):
-            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/ContentMenus.xml">
+            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/CommonMenus.xml">
                 [...]
                 <menu-item-alias name="NewRecord" for="PARENT-NOSUB"/>
                 [...]

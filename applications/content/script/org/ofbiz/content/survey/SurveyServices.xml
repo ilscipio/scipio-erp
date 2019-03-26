@@ -30,7 +30,7 @@
         <sequenced-id sequence-name="Survey" field="newEntity.surveyId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyId" field="newEntity.surveyId"/>
+        <field-to-result field="newEntity.surveyId" result-name="surveyId"/>
     </simple-method>
     <simple-method method-name="updateSurvey" short-description="Update Survey">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -63,6 +63,7 @@
         </if-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyMultiRespId" result-name="surveyMultiRespId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyMultiResp" short-description="Update Survey Multi-Response">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -93,6 +94,7 @@
         <make-next-seq-id value-field="newEntity" seq-field-name="surveyMultiRespColId" numeric-padding="2"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyMultiRespColId" result-name="surveyMultiRespColId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyMultiRespColumn" short-description="Update Survey Multi-Response Column/Category">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -123,6 +125,7 @@
         <make-next-seq-id value-field="newEntity" seq-field-name="surveyPageSeqId" numeric-padding="2"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.surveyPageSeqId" result-name="surveyPageSeqId"/><!-- SCIPIO: 2018-09-10: fixed missing from upstream code -->
     </simple-method>
     <simple-method method-name="updateSurveyPage" short-description="Update Survey Page">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -173,12 +176,8 @@
 
     <!-- Methods for SurveyQuestion -->
     <simple-method method-name="createSurveyQuestion" short-description="Create Survey Question">
-        <check-permission action="_CREATE" permission="CONTENTMGR">
-            <fail-property resource="ContentUiLabels" property="ContentSecurityCreatePermission"/>
-        </check-permission>
         <if>
             <condition>
-
                 <and>
                     <if-compare field="surveyQuestionTypeId" value="ENUMERATION" operator="equals"/>
                     <if-empty field="enumTypeId"/>
@@ -213,12 +212,9 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="SurveyQuestion" field="newEntity.surveyQuestionId"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyQuestionId" field="newEntity.surveyQuestionId"/>
+        <field-to-result field="newEntity.surveyQuestionId" result-name="surveyQuestionId"/>
     </simple-method>
     <simple-method method-name="updateSurveyQuestion" short-description="Update Survey Question">
-        <check-permission action="_UPDATE" permission="CONTENTMGR">
-            <fail-property resource="ContentUiLabels" property="ContentSecurityUpdatePermission"/>
-        </check-permission>
         <if>
             <condition>
                 <and>
@@ -336,7 +332,7 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="SurveyQuestionCategory" field="newEntity.surveyQuestionCategoryId"/>
         <create-value value-field="newEntity"/>
-        <field-to-result result-name="surveyQuestionCategoryId" field="newEntity.surveyQuestionCategoryId"/>
+        <field-to-result field="newEntity.surveyQuestionCategoryId" result-name="surveyQuestionCategoryId"/>
     </simple-method>
     <simple-method method-name="updateSurveyQuestionCategory" short-description="Update Survey QuestionCategory">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -394,7 +390,11 @@
         <make-value entity-name="SurveyTrigger" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate"><!-- SCIPIO: 2018-09-10: missing from stock -->
+            <now-timestamp field="newEntity.fromDate"/>
+        </if-empty>
         <create-value value-field="newEntity"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/><!-- SCIPIO: 2018-09-10: missing from stock -->
     </simple-method>
     <simple-method method-name="updateSurveyTrigger" short-description="Update SurveyTrigger">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -473,14 +473,14 @@
         <set field="answers" from-field="parameters.answers"/>
 
         <!-- make sure all required fields were responded to -->
-        <iterate entry="surveyQuestionAndAppl" list="surveyQuestionAndApplList">
+        <iterate list="surveyQuestionAndApplList" entry="surveyQuestionAndAppl">
             <!-- for validation get SurveyMultiResp and SurveyMultiRespColumn entries and if exist process for each surveyMultiRespColId -->
             <get-related-one value-field="surveyQuestionAndAppl" relation-name="SurveyMultiResp" to-value-field="surveyMultiResp" use-cache="true"/>
             <if-not-empty field="surveyMultiResp">
                 <!-- if the surveyQuestionAndAppl has a surveyMultiRespColId, then just look for one answer with that ID -->
                 <if-empty field="surveyQuestionAndAppl.surveyMultiRespColId">
                     <get-related value-field="surveyMultiResp" relation-name="SurveyMultiRespColumn" list="surveyMultiRespColumnList" use-cache="true"/>
-                    <iterate entry="surveyMultiRespColumn" list="surveyMultiRespColumnList">
+                    <iterate list="surveyMultiRespColumnList" entry="surveyMultiRespColumn">
                         <set field="answerFieldName" value="answers[&quot;${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}&quot;]"/>
                         <call-simple-method method-name="validateSurveyResponseInline"/>
                     </iterate>
@@ -507,9 +507,9 @@
         </if-compare>
 
         <if-empty field="surveyResponse">
-            <make-value value-field="surveyResponse" entity-name="SurveyResponse"/>
+            <make-value entity-name="SurveyResponse" value-field="surveyResponse"/>
             <sequenced-id sequence-name="SurveyResponse" field="surveyResponse.surveyResponseId"/>
-            <set-nonpk-fields value-field="surveyResponse" map="parameters"/>
+            <set-nonpk-fields map="parameters" value-field="surveyResponse"/>
             <create-value value-field="surveyResponse"/>
         </if-empty>
 
@@ -530,7 +530,7 @@
 
         <!-- lookup any existing response answers -->
         <get-related value-field="surveyResponse" relation-name="SurveyResponseAnswer" list="existingAnswers"/>
-        <iterate entry="existingAnswer" list="existingAnswers">
+        <iterate list="existingAnswers" entry="existingAnswer">
             <set field="currentAnswersFieldName" from-field="existingAnswer.surveyQuestionId"/>
             <if>
                 <condition>
@@ -538,7 +538,7 @@
                         <not>
                             <if-empty field="existingAnswer.surveyMultiRespColId"/>
                         </not>
-                        <if-compare operator="not-equals" field="existingAnswer.surveyMultiRespColId" value="_NA_"/>
+                        <if-compare field="existingAnswer.surveyMultiRespColId" operator="not-equals" value="_NA_"/>
                     </and>
                 </condition>
                 <then>
@@ -549,14 +549,14 @@
         </iterate>
 
         <!-- create the response answers -->
-        <iterate entry="surveyQuestionAndAppl" list="surveyQuestionAndApplList">
+        <iterate list="surveyQuestionAndApplList" entry="surveyQuestionAndAppl">
             <!-- for process inputs get SurveyMultiResp and SurveyMultiRespColumn entries and if exist process for each surveyMultiRespColId -->
             <get-related-one value-field="surveyQuestionAndAppl" relation-name="SurveyMultiResp" to-value-field="surveyMultiResp" use-cache="true"/>
             <if-not-empty field="surveyMultiResp">
                 <!-- if the surveyQuestionAndAppl has a surveyMultiRespColId, then just look for one answer with that ID -->
                 <if-empty field="surveyQuestionAndAppl.surveyMultiRespColId">
                     <get-related value-field="surveyMultiResp" relation-name="SurveyMultiRespColumn" list="surveyMultiRespColumnList" use-cache="true"/>
-                    <iterate entry="surveyMultiRespColumn" list="surveyMultiRespColumnList">
+                    <iterate list="surveyMultiRespColumnList" entry="surveyMultiRespColumn">
                         <set field="currentFieldName" value="${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}"/>
                         <call-simple-method method-name="processSurveyResponseInline"/>
                     </iterate>
@@ -609,7 +609,7 @@
             <set field="finAccountMap.statusId" value="FNACT_ACTIVE"/>
             <set field="codeOk" value="false"/>
             <find-by-and entity-name="FinAccount" map="finAccountMap" list="finAccountList"/>
-            <iterate entry="finAccount" list="finAccountList">
+            <iterate list="finAccountList" entry="finAccount">
                 <if-compare field="finAccount.finAccountCode" operator="equals" value="${${answerFieldName}}">
                     <set field="codeOk" value="true"/>
                 </if-compare>
@@ -772,32 +772,32 @@
                     <set value="DOCUMENT" field="partyContent.contentTypeId"/>
                     <set value="PERSONAL" field="partyContent.dataCategoryId"/>
                     <set value="CTNT_PUBLISHED" field="partyContent.statusId"/-->
-                    
+
                     <!--  First create the Content record -->
                     <make-value entity-name="Content" value-field="content"/>
                     <sequenced-id field="content.contentId" sequence-name="Content"/>
                     <set field="content.contentTypeId" value="DOCUMENT"/>
                     <set field="content.statusId" value="CTNT_PUBLISHED" />
                     <create-value value-field="content"/>
-                    
+
                     <!-- Create the DataResource record -->
                     <set field="dataResource.dataResourceTypeId" value="IMAGE_OBJECT"/>
                     <set field="dataResource.mimeTypeId" from-field="answers._${surveyQuestionAndAppl.surveyQuestionId}_contentType"/>
                     <set field="dataResource.objectInfo" from-field="answers._${surveyQuestionAndAppl.surveyQuestionId}_fileName"/>
-                    
+
                     <call-service service-name="createDataResource" in-map-name="dataResource">
                         <result-to-field result-name="dataResourceId"/>
                     </call-service>
-                    
+
                     <!-- Create the ImageDataResource record -->
                     <set field="imageDataResource.dataResourceId" from-field="dataResourceId"/>
                     <set field="imageDataResource.imageData" from-field="answers[&quot;${currentFieldName}&quot;]"/>
-                    <call-service service-name="createImageDataResource" in-map-name="imageDataResource"/>                    
-                    
+                    <call-service service-name="createImageDataResource" in-map-name="imageDataResource"/>
+
                     <!-- Associate the DataResource with the Content record -->
                     <set field="content.dataResourceId" from-field="dataResourceId"/>
                     <store-value value-field="content"/>
-                    
+
                     <set field="partyContent.partyId" from-field="parameters.partyId"/>
                     <set field="partyContent.contentId" from-field="content.contentId"/>
                     <set field="partyContent.partyContentTypeId" value="INTERNAL"/>

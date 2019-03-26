@@ -55,15 +55,17 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  */
-public class EntityFinderUtil {
+public final class EntityFinderUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private EntityFinderUtil () {}
 
     public static Map<FlexibleMapAccessor<Object>, Object> makeFieldMap(Element element) {
         Map<FlexibleMapAccessor<Object>, Object> fieldMap = null;
         List<? extends Element> fieldMapElementList = UtilXml.childElementList(element, "field-map");
         if (fieldMapElementList.size() > 0) {
-            fieldMap = new HashMap<FlexibleMapAccessor<Object>, Object>(fieldMapElementList.size());
+            fieldMap = new HashMap<>(fieldMapElementList.size());
             for (Element fieldMapElement: fieldMapElementList) {
                 // set the env-name for each field-name, noting that if no field-name is specified it defaults to the env-name
                 String fieldName = fieldMapElement.getAttribute("field-name");
@@ -94,7 +96,6 @@ public class EntityFinderUtil {
     }
 
     public static void expandFieldMapToContext(Map<FlexibleMapAccessor<Object>, Object> fieldMap, Map<String, Object> context, Map<String, Object> outContext) {
-        //Debug.logInfo("fieldMap: " + fieldMap, module);
         if (fieldMap != null) {
             for (Map.Entry<FlexibleMapAccessor<Object>, Object> entry: fieldMap.entrySet()) {
                 FlexibleMapAccessor<Object> serviceContextFieldAcsr = entry.getKey();
@@ -116,7 +117,7 @@ public class EntityFinderUtil {
         List<FlexibleStringExpander> selectFieldExpanderList = null;
         List<? extends Element> selectFieldElementList = UtilXml.childElementList(element, "select-field");
         if (selectFieldElementList.size() > 0) {
-            selectFieldExpanderList = new ArrayList<FlexibleStringExpander>(selectFieldElementList.size());
+            selectFieldExpanderList = new ArrayList<>(selectFieldElementList.size());
             for (Element selectFieldElement: selectFieldElementList) {
                 selectFieldExpanderList.add(FlexibleStringExpander.getInstance(selectFieldElement.getAttribute("field-name")));
             }
@@ -127,7 +128,7 @@ public class EntityFinderUtil {
     public static Set<String> makeFieldsToSelect(List<FlexibleStringExpander> selectFieldExpanderList, Map<String, Object> context) {
         Set<String> fieldsToSelect = null;
         if (UtilValidate.isNotEmpty(selectFieldExpanderList)) {
-            fieldsToSelect = new HashSet<String>();
+            fieldsToSelect = new HashSet<>();
             for (FlexibleStringExpander selectFieldExpander: selectFieldExpanderList) {
                 fieldsToSelect.add(selectFieldExpander.expandString(context));
             }
@@ -138,7 +139,7 @@ public class EntityFinderUtil {
     public static List<String> makeOrderByFieldList(List<FlexibleStringExpander> orderByExpanderList, Map<String, Object> context) {
         List<String> orderByFields = null;
         if (UtilValidate.isNotEmpty(orderByExpanderList)) {
-            orderByFields = new ArrayList<String>(orderByExpanderList.size());
+            orderByFields = new ArrayList<>(orderByExpanderList.size());
             for (FlexibleStringExpander orderByExpander: orderByExpanderList) {
                 orderByFields.add(orderByExpander.expandString(context));
             }
@@ -207,9 +208,9 @@ public class EntityFinderUtil {
             if ((operator.equals(EntityOperator.IN) || operator.equals(EntityOperator.BETWEEN) || operator.equals(EntityOperator.NOT_IN))
                     && value instanceof String) {
                 String delim = null;
-                if (((String)value).indexOf("|") >= 0) {
+                if (((String)value).indexOf('|') >= 0) {
                     delim = "|";
-                } else if (((String)value).indexOf(",") >= 0) {
+                } else if (((String)value).indexOf(',') >= 0) {
                     delim = ",";
                 }
                 if (delim != null) {
@@ -224,7 +225,9 @@ public class EntityFinderUtil {
                 value = modelEntity.convertFieldValue(modelEntity.getField(fieldName), value, modelFieldTypeReader, context);
             }
 
-            if (Debug.verboseOn()) Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
+            }
 
             if (this.ignoreIfEmpty && ObjectType.isEmpty(value)) {
                 return null;
@@ -238,20 +241,17 @@ public class EntityFinderUtil {
                             EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName), UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), EntityFunction.UPPER(value)),
                             EntityOperator.OR,
                             EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
-                } else {
-                    return EntityCondition.makeCondition(
-                            EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value),
-                            EntityOperator.OR,
-                            EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
                 }
-            } else {
-                if (ignoreCase) {
-                    // use the stuff to upper case both sides
-                    return EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName), UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), EntityFunction.UPPER(value));
-                } else {
-                    return EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value);
-                }
+                return EntityCondition.makeCondition(
+                        EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value),
+                        EntityOperator.OR,
+                        EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, null));
             }
+            if (ignoreCase) {
+                // use the stuff to upper case both sides
+                return EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName), UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), EntityFunction.UPPER(value));
+            }
+            return EntityCondition.makeCondition(fieldName, UtilGenerics.<EntityComparisonOperator<?,?>>cast(operator), value);
         }
     }
 
@@ -273,7 +273,7 @@ public class EntityFinderUtil {
             if (subElements.isEmpty()) {
                 this.conditionList = null;
             } else {
-                List<Condition> conditionList = new ArrayList<Condition>(subElements.size());
+                List<Condition> conditionList = new ArrayList<>(subElements.size());
                 for (Element subElement : subElements) {
                     if ("condition-expr".equals(subElement.getNodeName())) {
                         conditionList.add(new ConditionExpr(subElement));
@@ -297,7 +297,7 @@ public class EntityFinderUtil {
                 Condition condition = this.conditionList.get(0);
                 return condition.createCondition(context, modelEntity, modelFieldTypeReader);
             }
-            List<EntityCondition> entityConditionList = new ArrayList<EntityCondition>(this.conditionList.size());
+            List<EntityCondition> entityConditionList = new ArrayList<>(this.conditionList.size());
             for (Condition curCondition: this.conditionList) {
                 EntityCondition econd = curCondition.createCondition(context, modelEntity, modelFieldTypeReader);
                 if (econd != null) {
@@ -386,7 +386,7 @@ public class EntityFinderUtil {
                 }
                 result = results.subList(start, end);
             } else {
-                result = new LinkedList<GenericValue>();
+                result = new LinkedList<>();
             }
             listAcsr.put(context, result);
         }
@@ -449,7 +449,7 @@ public class EntityFinderUtil {
                 }
                 result = results.subList(begin, end);
             } else {
-                result = new LinkedList<GenericValue>();
+                result = new LinkedList<>();
             }
             listAcsr.put(context, result);
         }

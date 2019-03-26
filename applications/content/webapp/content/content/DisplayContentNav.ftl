@@ -17,7 +17,7 @@
   under the License.
   -->
 
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
 
 <@script>
 <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
@@ -42,7 +42,7 @@ var rawdata = [
                 </#if>
                 {
                 "data": {"title" : unescapeHtmlText("${content.contentName!assoc.contentIdTo}"), "attr": {"href": "javascript:void(0);", "onClick" : "callDocument('${assoc.contentIdTo}');"}},
-                <#assign assocChilds  = delegator.findByAnd("ContentAssoc",{"contentId":assoc.contentIdTo, "contentAssocTypeId":"TREE_CHILD"}, Static["org.ofbiz.base.util.UtilMisc"].toList("sequenceNum"), false)/>
+                <#assign assocChilds  = delegator.findByAnd("ContentAssoc",{"contentId":assoc.contentIdTo, "contentAssocTypeId":"TREE_CHILD"}, UtilMisc.toList("sequenceNum"), false)/>
                     "attr": {"id" : "${assoc.contentIdTo}", "contentId" : "${assoc.contentId}", "AssocType" : "${assoc.contentAssocTypeId}", "fromDate" : "${assoc.fromDate}"}
                 <#if assocChilds?has_content>
                     ,"children": [
@@ -61,7 +61,7 @@ var rawdata = [
 
  <#-------------------------------------------------------------------------------------define Requests-->
     var treeSelected = false;
-    var listDocument =  '<@ofbizUrl>views/ShowDocument</@ofbizUrl>';
+    var listDocument =  '<@pageUrl>views/ShowDocument</@pageUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
@@ -80,11 +80,11 @@ var rawdata = [
     function callDocument(contentId) {
         var tabitem='${activeSubMenuItem!}';
         if (tabitem=="navigateContent")
-            listDocument = '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ListDocument</@pageUrl>';
         if (tabitem=="LookupContentTree")
-            listDocument = '<@ofbizUrl>views/ListContentTree</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ListContentTree</@pageUrl>';
         if (tabitem=="LookupDetailContentTree")
-            listDocument = '<@ofbizUrl>views/ViewContentDetail</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ViewContentDetail</@pageUrl>';
 
         //jQuerry Ajax Request
         jQuery.ajax({
@@ -101,7 +101,7 @@ var rawdata = [
      }
  <#------------------------------------------------------pagination function -->
     function nextPrevDocumentList(url){
-        url= '<@ofbizUrl>'+url+'</@ofbizUrl>';
+        url= '<@pageUrl>'+url+'</@pageUrl>';
          jQuery.ajax({
             url: url,
             type: 'POST',

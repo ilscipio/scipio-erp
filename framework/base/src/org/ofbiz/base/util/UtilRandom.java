@@ -1,5 +1,6 @@
 package org.ofbiz.base.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -9,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+
 
 /**
  * SCIPIO: Randomization utilities.
@@ -18,7 +22,7 @@ public class UtilRandom {
     /**
      * Method should generate random number that represents a time between two
      * dates.
-     * 
+     *
      * @return
      */
     private static long getRandomTimeBetweenTwoDates(Timestamp beginDate, Map<String, Object> context) {
@@ -72,10 +76,10 @@ public class UtilRandom {
         }
         return randomDate;
     }
-    
+
     static String generateRandomPassword(int len){
         System.out.println("Your Password ");
-        String charsCaps="ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+        String charsCaps="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String Chars="abcdefghijklmnopqrstuvwxyz";
         String nums="0123456789";
         String symbols="!@#$%^&*()_+-=.,/';:?><~*/-+";
@@ -90,7 +94,7 @@ public class UtilRandom {
 
     }
 
-    public static int random(List myList) {
+    public static int random(List<?> myList) {
         int size = myList.size();
         int index = new Random().nextInt(size);
         return index;
@@ -115,8 +119,16 @@ public class UtilRandom {
         return x;
     }
 
-    public static String generateRandom() {        
+    public static String generateRandom() {
         return new BigInteger(130, new SecureRandom()).toString(32);
     }
 
+    public static BigDecimal getRandomBigDecimal(double min, double max) {        
+        return new BigDecimal(getRandomDouble(min, max));
+    }
+    
+    public static double getRandomDouble(double min, double max) {                
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
+    
 }

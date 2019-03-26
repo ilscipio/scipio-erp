@@ -22,7 +22,7 @@ import freemarker.template.TemplateModelException;
  * or where clear variants must be provided as parameters or overloads.
  * <p>
  * In general, Freemarker utilities here and in specific classes come in two
- * flavors: context-dependent and context-independent. 
+ * flavors: context-dependent and context-independent.
  * <p>
  * Context-dependent means they will fetch
  * the environment, variables and state from static methods provided by Freemarker using
@@ -36,7 +36,7 @@ import freemarker.template.TemplateModelException;
  * Most methods are between: they operate only on given parameters (no access to global state) but accept
  * context parameters.
  * <p>
- * Note this class and specific utility classes are not meant to be a java facade equivalents 
+ * Note this class and specific utility classes are not meant to be a java facade equivalents
  * of <code>utilities.ftl</code>.
  * <em>DEV NOTE:</em> I don't think it's worth maintaining a java facade for the
  * utility classes. <code>utilities.ftl</code> largely provides that for FTL templates and macros
@@ -50,10 +50,10 @@ import freemarker.template.TemplateModelException;
 public abstract class CommonFtlUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected CommonFtlUtil() {
     }
-    
+
     public static Environment getCurrentEnvironment() throws TemplateModelException {
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         if (env == null) {
@@ -61,5 +61,5 @@ public abstract class CommonFtlUtil {
         }
         return env;
     }
-    
+
 }

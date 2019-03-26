@@ -28,6 +28,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.order.shoppingcart.CartSync;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.WebShoppingCart;
@@ -63,6 +64,10 @@ public class ProductStoreCartAwareEvents {
         }
 
         HttpSession session = request.getSession();
+        
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO (NOTE: must include productStoreId get/set)
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+        
         String oldProductStoreId = (String) session.getAttribute("productStoreId");
 
         if (productStoreId.equals(oldProductStoreId)) {
@@ -104,12 +109,13 @@ public class ProductStoreCartAwareEvents {
         // - leave the old cart as-is (don't clear it, want to leave the auto-save list intact)
         // - but create a new cart (which will load from auto-save list if applicable) and put it in the session
 
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         // this should always be different given the previous session productStoreId check, but just in case...
         if (!productStoreId.equals(cart.getProductStoreId())) {
             // this is a really simple operation now that we have prepared all of the data, as done above in this method
             cart = new WebShoppingCart(request);
-            session.setAttribute("shoppingCart", cart);
+            ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
+        }
+
         }
     }
 }

@@ -19,6 +19,7 @@
 package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
@@ -52,9 +54,45 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 /**
  * ProductStoreWorker - Worker class for store related functionality
  */
-public class ProductStoreWorker {
+public final class ProductStoreWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Map<String, String> defaultProductStoreEmailScreenLocation; // SCIPIO: made final and unmodifiable
+
+    static {
+        Map<String, String> emails = new HashMap<>(); // SCIPIO
+        
+        // SCIPIO: now points to shop
+        emails.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        emails.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        emails.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
+        emails.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
+
+        emails.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+
+        // SCIPIO: new payment status mails
+        emails.put("PRDS_ODR_PAY_CHANGE", "component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice");
+        emails.put("PRDS_ODR_PAY_COMPLT", "component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice");
+
+        emails.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
+        emails.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
+        emails.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
+
+        emails.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        emails.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
+
+        emails.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
+
+        emails.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+
+        emails.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
+
+        emails.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+
+        defaultProductStoreEmailScreenLocation = Collections.unmodifiableMap(emails);
+    }
+
+    private ProductStoreWorker() {}
 
     public static GenericValue getProductStore(String productStoreId, Delegator delegator) {
         if (productStoreId == null || delegator == null) {
@@ -94,8 +132,7 @@ public class ProductStoreWorker {
     public static String getStoreCurrencyUomId(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError(
-                    "No product store found in request, cannot set CurrencyUomId!", module);
+            Debug.logError("No product store found in request, cannot set CurrencyUomId!", module);
             return null;
         } else {
             return UtilHttp.getCurrencyUom(request.getSession(), productStore.getString("defaultCurrencyUomId"));
@@ -105,8 +142,7 @@ public class ProductStoreWorker {
     public static Locale getStoreLocale(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError(
-                    "No product store found in request, cannot set locale!", module);
+            Debug.logError("No product store found in request, cannot set locale!", module);
             return null;
         } else {
             return UtilHttp.getLocale(request, request.getSession(), productStore.getString("defaultLocaleString"));
@@ -251,12 +287,10 @@ public class ProductStoreWorker {
                 BigDecimal maxWeight = method.getBigDecimal("maxWeight");
                 if (minWeight != null && minWeight.compareTo(BigDecimal.ZERO) > 0 && minWeight.compareTo(weight) > 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to not enough weight", module);
                     continue;
                 }
                 if (maxWeight != null && maxWeight.compareTo(BigDecimal.ZERO) > 0 && maxWeight.compareTo(weight) < 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to too much weight", module);
                     continue;
                 }
 
@@ -265,12 +299,10 @@ public class ProductStoreWorker {
                 BigDecimal maxTotal = method.getBigDecimal("maxTotal");
                 if (minTotal != null && minTotal.compareTo(BigDecimal.ZERO) > 0 && minTotal.compareTo(orderTotal) > 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to not enough order total", module);
                     continue;
                 }
                 if (maxTotal != null && maxTotal.compareTo(BigDecimal.ZERO) > 0 && maxTotal.compareTo(orderTotal) < 0) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to too much shipping total", module);
                     continue;
                 }
 
@@ -289,7 +321,6 @@ public class ProductStoreWorker {
                     }
                     if (!allMatch) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method because not all products are less then min size", module);
                         continue;
                     }
                 }
@@ -305,7 +336,6 @@ public class ProductStoreWorker {
                     }
                     if (!allMatch) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method because one or more products were more then max size", module);
                         continue;
                     }
                 }
@@ -316,12 +346,10 @@ public class ProductStoreWorker {
                 boolean isUspsAddress = ContactMechWorker.isUspsAddress(shippingAddress);
                 if ("N".equals(allowUspsAddr) && isUspsAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Remove shipping method due to USPS address", module);
                     continue;
                 }
                 if ("Y".equals(requireUspsAddr) && !isUspsAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to NON-USPS address", module);
                     continue;
                 }
 
@@ -332,12 +360,10 @@ public class ProductStoreWorker {
                 boolean isCompanyAddress = ContactMechWorker.isCompanyAddress(shippingAddress, companyPartyId);
                 if ("N".equals(allowCompanyAddr) && isCompanyAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to Company address", module);
                     continue;
                 }
                 if ("Y".equals(requireCompanyAddr) && !isCompanyAddress) {
                     returnShippingMethods.remove(method);
-                    //Debug.logInfo("Removed shipping method due to NON-Company address", module);
                     continue;
                 }
 
@@ -346,7 +372,6 @@ public class ProductStoreWorker {
                 if (includeFreeShipping != null && "N".equalsIgnoreCase(includeFreeShipping)) {
                     if (UtilValidate.isEmpty(itemSizes) && orderTotal.compareTo(BigDecimal.ZERO) == 0) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to all items being exempt from shipping", module);
                         continue;
                     }
                 }
@@ -357,7 +382,6 @@ public class ProductStoreWorker {
                 if (UtilValidate.isNotEmpty(includeGeoId) || UtilValidate.isNotEmpty(excludeGeoId)) {
                     if (shippingAddress == null) {
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to empty shipping adresss (may not have been selected yet)", module);
                         continue;
                     }
                 }
@@ -368,7 +392,6 @@ public class ProductStoreWorker {
                             !GeoWorker.containsGeo(includeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
                         // not in required included geos
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to being outside the included GEO", module);
                         continue;
                     }
                 }
@@ -379,7 +402,6 @@ public class ProductStoreWorker {
                             GeoWorker.containsGeo(excludeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
                         // in excluded geos
                         returnShippingMethods.remove(method);
-                        //Debug.logInfo("Removed shipping method due to being inside the excluded GEO", module);
                         continue;
                     }
                 }
@@ -404,7 +426,6 @@ public class ProductStoreWorker {
                         }
                         if (!foundOne) {
                             returnShippingMethods.remove(method);
-                            //Debug.logInfo("Removed shipping method due to no required features found", module);
                             continue;
                         }
                     }
@@ -420,7 +441,6 @@ public class ProductStoreWorker {
                         for (GenericValue appl: excludedFeatures) {
                             if (featureIdMap.containsKey(appl.getString("productFeatureId"))) {
                                 returnShippingMethods.remove(method);
-                                //Debug.logInfo("Removed shipping method due to an exluded feature being found : " + appl.getString("productFeatureId"), module);
                                 continue;
                             }
                         }
@@ -453,7 +473,7 @@ public class ProductStoreWorker {
 
     public static ProductStoreSurveyWrapper getRandomSurveyWrapper(Delegator delegator, String productStoreId, String groupName, String partyId, Map<String, Object> passThruFields) {
         List<GenericValue> randomSurveys = getSurveys(delegator, productStoreId, groupName, null, "RANDOM_POLL", null);
-        if (!UtilValidate.isEmpty(randomSurveys)) {
+        if (UtilValidate.isNotEmpty(randomSurveys)) {
             Random rand = new Random();
             int index = rand.nextInt(randomSurveys.size());
             GenericValue appl = randomSurveys.get(index);
@@ -485,33 +505,36 @@ public class ProductStoreWorker {
         storeSurveys = EntityUtil.filterByDate(storeSurveys);
 
         // limit based on group name
-        if (!UtilValidate.isEmpty(groupName)) {
+        if (UtilValidate.isNotEmpty(groupName)) {
             storeSurveys = EntityUtil.filterByAnd(storeSurveys, UtilMisc.toMap("groupName", groupName));
         }
 
-         Debug.logInfo("getSurvey for product " + productId,module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("getSurvey for product " + productId, module);
+        }
         // limit by product
-        if (!UtilValidate.isEmpty(productId) && !UtilValidate.isEmpty(storeSurveys)) {
-            for (GenericValue surveyAppl: storeSurveys) {
-                GenericValue product = null;
-                String virtualProductId = null;
-
-                // if the item is a variant, get its virtual productId
-                try {
-                    product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
-                    if ((product != null) && ("Y".equals(product.get("isVariant")))) {
-                        if (parentProductId != null) {
-                            virtualProductId = parentProductId;
-                        }
-                        else {
-                            virtualProductId = ProductWorker.getVariantVirtualId(product);
-                        }
-                        Debug.logInfo("getSurvey for virtual product " + virtualProductId,module);
+        if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(storeSurveys)) {
+            // SCIPIO: 2019-03-06: Moved the following Product lookup to outside the for loop
+            GenericValue product = null;
+            String virtualProductId = null;
+            // if the item is a variant, get its virtual productId
+            try {
+                product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+                if ((product != null) && ("Y".equals(product.get("isVariant")))) {
+                    if (parentProductId != null) {
+                        virtualProductId = parentProductId;
+                    } else {
+                        virtualProductId = ProductWorker.getVariantVirtualId(product);
                     }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem finding product from productId " + productId, module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("getSurvey for virtual product " + virtualProductId, module);
+                    }
                 }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem finding product from productId " + productId, module);
+            }
 
+            for (GenericValue surveyAppl: storeSurveys) {
                 // use survey if productId or virtualProductId of the variant product is in the ProductStoreSurveyAppl
                 if (surveyAppl.get("productId") != null) {
                     if (surveyAppl.get("productId").equals(productId)) {
@@ -621,7 +644,7 @@ public class ProductStoreWorker {
                     Debug.logError("Error calling isStoreInventoryRequired service, result is: " + invReqResult, module);
                     return false;
                 }
-                requiredOkay = Boolean.valueOf(wantRequired.booleanValue() == "Y".equals(invReqResult.get("requireInventory")));
+                requiredOkay = wantRequired == "Y".equals(invReqResult.get("requireInventory"));
             }
 
             Boolean availableOkay = null;
@@ -631,10 +654,10 @@ public class ProductStoreWorker {
                     Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
                     return false;
                 }
-                availableOkay = Boolean.valueOf(wantAvailable.booleanValue() == "Y".equals(invAvailResult.get("available")));
+                availableOkay = wantAvailable == "Y".equals(invAvailResult.get("available"));
             }
 
-            if ((requiredOkay == null || requiredOkay.booleanValue()) && (availableOkay == null || availableOkay.booleanValue())) {
+            if ((requiredOkay == null || requiredOkay) && (availableOkay == null || availableOkay)) {
                 return true;
             } else {
                 return false;
@@ -694,7 +717,7 @@ public class ProductStoreWorker {
             try {
                 productFacilities = product.getRelated("ProductFacility", null, null, true);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Error invoking getRelatedCache in isCatalogInventoryAvailable", module);
+                Debug.logWarning(e, "Error invoking getRelated in isCatalogInventoryAvailable", module);
                 return false;
             }
 
@@ -710,42 +733,17 @@ public class ProductStoreWorker {
         }
     }
 
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
-
-    static {
-        // SCIPIO: now points to shop
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
-
-        defaultProductStoreEmailScreenLocation.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
-    }
-
     public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
         return defaultProductStoreEmailScreenLocation.get(emailType);
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
      */
     public static GenericValue getContentReferenceStore(List<GenericValue> productStores) {
-        if (productStores == null) return null;
+        if (productStores == null) {
+            return null;
+        }
         for(GenericValue productStore : productStores) {
             if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
                 return productStore;
@@ -753,13 +751,15 @@ public class ProductStoreWorker {
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
      * Prints warning if no content reference and multiple stores with different defaultLocaleString.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores, String multiWarningInfo) {
-        if (productStores == null || productStores.size() == 0) return null;
+        if (productStores == null || productStores.size() == 0) {
+            return null;
+        }
         for(GenericValue productStore : productStores) {
             if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
                 return productStore;
@@ -767,19 +767,184 @@ public class ProductStoreWorker {
         }
         GenericValue productStore = productStores.get(0);
         if (productStores.size() > 1 && multiWarningInfo != null) {
-            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\"" 
-                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store (" 
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\""
+                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store ("
                     + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
                     + ") as content reference", module);
         }
         return productStore;
     }
-    
+
     /**
      * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
      * Does not show warning if no content reference and multiple stores.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores) {
         return getContentReferenceStoreOrFirst(productStores, null);
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y,
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * <strong>WARN:</strong> In most cases relying looking up WebSite using productStoreId (like this method) 
+     * means there is a design issue in code, and the code should be changed to pass a webSiteId around
+     * instead (with this as fallback only).
+     * <p>
+     * Added 2018-10-02.
+     */
+    public static GenericValue getStoreDefaultWebSite(Delegator delegator, String productStoreId, boolean useCache) {
+        if (UtilValidate.isEmpty(productStoreId)) {
+            return null;
+        }
+        try {
+            List<GenericValue> webSiteList = EntityQuery.use(delegator)
+                    .from("WebSite").where("productStoreId", productStoreId).cache(useCache).queryList();
+            if (webSiteList.size() == 1) {
+                return webSiteList.get(0);
+            // NOTE: This is technically possible, so a warning is not appropriate.
+            //} else if (webSiteList.size() == 0) {
+            //    Debug.logWarning("...", module);
+            } else if (webSiteList.size() >= 2) {
+                List<GenericValue> defaultWebSiteList = EntityUtil.filterByAnd(webSiteList, 
+                        UtilMisc.toMap("isStoreDefault", "Y"));
+                if (defaultWebSiteList.size() == 1) {
+                    return defaultWebSiteList.get(0);
+                } else if (defaultWebSiteList.size() >= 2) {
+                    Debug.logError("Found multiple WebSites marked default (isStoreDefault Y)"
+                            + " for product store '" + productStoreId + "'; only one should be marked default"
+                            + "; using first found (" + defaultWebSiteList.get(0).getString("webSiteId") + ")", module);
+                    return defaultWebSiteList.get(0);
+                } else {
+                    Debug.logWarning("Cannot determine a default WebSite for product store '" + productStoreId 
+                            + "'; no WebSites marked as store default (isStoreDefault Y)"
+                            + "; to rectify this, visit: /catalog/control/EditProductStoreWebSites?productStoreId=" + productStoreId, module);
+                }
+            }
+        } catch(GenericEntityException e) {
+            Debug.logError(e, "Cannot determine a WebSite for product store '" 
+                    + productStoreId + "'", module);
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y,
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * <strong>WARN:</strong> In most cases relying looking up WebSite using productStoreId (like this method) 
+     * means there is a design issue in code, and the code should be changed to pass a webSiteId around
+     * instead (with this as fallback only).
+     * <p>
+     * Added 2019-01.
+     */
+    public static GenericValue getStoreDefaultWebSite(Delegator delegator, GenericValue productStore, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        return getStoreDefaultWebSite(delegator, productStore.getString("productStoreId"), useCache);
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y, 
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2018-10-02.
+     */
+    public static String getStoreDefaultWebSiteId(Delegator delegator, String productStoreId, boolean useCache) {
+        GenericValue webSite = getStoreDefaultWebSite(delegator, productStoreId, useCache);
+        return (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y, 
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2019-01.
+     */
+    public static String getStoreDefaultWebSiteId(Delegator delegator, GenericValue productStore, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        GenericValue webSite = getStoreDefaultWebSite(delegator, productStore.getString("productStoreId"), useCache);
+        return (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+    
+    /**
+     * SCIPIO: Returns the logically configured value of catalog.properties#store.email.useStoreDefaultWebSite.
+     * <p>
+     * Values: "default" or empty means should use the default WebSite only if there is no explicit webSiteId
+     * configured; "no" means never use the fallback; "force" means override the webSiteId with the default.
+     * <p>
+     * Added 2019-01.
+     */
+    public static String getUseStoreDefaultWebSiteForEmails(Delegator delegator) {
+        return EntityUtilProperties.getPropertyValue("catalog", "store.email.useStoreDefaultWebSite", delegator);
+    }
+
+    /**
+     * SCIPIO: Returns the logically appropriate webSiteId that should be used for an email sent for the given
+     * ProductStore (high-level helper method).
+     * <p>
+     * This consults the catalog.properties#store.email.useStoreDefaultWebSite configuration and the 
+     * WebSite.isStoreDefault flag.
+     * <p>
+     * Added 2019-01.
+     *
+     * @param delegator The delegator
+     * @param productStoreId The ProductStore ID
+     * @param webSiteId If the record (e.g. OrderHeader) has an explicitly-recorded webSiteId, it should be passed here
+     * @return The webSiteId of the WebSite that should be used for the email for this store
+     */
+    public static String getStoreWebSiteIdForEmail(Delegator delegator, String productStoreId, String webSiteId, boolean useCache) {
+        String useDefaultWebSite = getUseStoreDefaultWebSiteForEmails(delegator);
+        if ("never".equals(useDefaultWebSite)) {
+            return webSiteId;
+        }
+        if (!"force".equals(useDefaultWebSite) && UtilValidate.isNotEmpty(webSiteId)) {
+            return webSiteId;
+        }
+        return getStoreDefaultWebSiteId(delegator, productStoreId, useCache);
+    }
+
+    /**
+     * SCIPIO: Returns the logically appropriate webSiteId that should be used for an email sent for the given
+     * ProductStore (high-level helper method).
+     * <p>
+     * This consults the catalog.properties#store.email.useStoreDefaultWebSite configuration and the 
+     * WebSite.isStoreDefault flag.
+     * <p>
+     * Added 2019-01.
+     *
+     * @param delegator The delegator
+     * @param productStore The ProductStore entity
+     * @param webSiteId If the record (e.g. OrderHeader) has an explicitly-recorded webSiteId, it should be passed here
+     * @return The webSiteId of the WebSite that should be used for the email for this store
+     */
+    public static String getStoreWebSiteIdForEmail(Delegator delegator, GenericValue productStore, String webSiteId, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        return getStoreWebSiteIdForEmail(delegator, productStore.getString("productStoreId"), webSiteId, useCache);
     }
 }

@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -70,7 +57,7 @@ under the License.
         <check-errors/>
         <entity-one entity-name="OrderAdjustment" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
-        
+
         <if-not-empty field="parameters.productPromoCodeId">
             <entity-one entity-name="OrderProductPromoCode" value-field="lookedUpValue"/>
             <if-not-empty field="lookedUpValue">
@@ -101,6 +88,7 @@ under the License.
         <set from-field="parameters.comments" field="orderNotification.comments"/>
         <now-timestamp field="orderNotification.notificationDate"/>
         <create-value value-field="orderNotification"/>
+        <field-to-result field="orderNotification.orderNotificationId" result-name="orderNotificationId"/><!-- SCIPIO: 2018-09-10: return the new orderNotificationId -->
     </simple-method>
 
     <simple-method method-name="updateOrderStatusFromReceipt" short-description="Update Order Status From ShipmentReceipt">
@@ -116,9 +104,9 @@ under the License.
                 <set field="totalsMap[receipt.orderItemSeqId]" value="0" type="BigDecimal"/>
             </if-empty>
             <calculate field="totalsMap[receipt.orderItemSeqId]">
-                <calcop field="totalsMap[receipt.orderItemSeqId]" operator="add">
-                    <calcop field="receipt.quantityAccepted" operator="get"/>
-                    <calcop field="receipt.quantityRejected" operator="get"/>
+                <calcop operator="add" field="totalsMap[receipt.orderItemSeqId]">
+                    <calcop operator="get" field="receipt.quantityAccepted"/>
+                    <calcop operator="get" field="receipt.quantityRejected"/>
                 </calcop>
             </calculate>
             <set from-field="receipt.orderId" field="newLookupMap.orderId"/>

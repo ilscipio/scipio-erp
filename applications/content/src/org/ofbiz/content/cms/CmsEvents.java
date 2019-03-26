@@ -220,10 +220,14 @@ public class CmsEvents {
                         Debug.logError(e, module);
                     }
                     if (errorPage != null) {
-                        if (Debug.verboseOn()) Debug.logVerbose("Found error pages " + statusCode + " : " + errorPage, module);
+                        if (Debug.verboseOn()) {
+                             Debug.logVerbose("Found error pages " + statusCode + " : " + errorPage, module);
+                        }
                         contentId = errorPage.getString("contentId");
                     } else {
-                        if (Debug.verboseOn()) Debug.logVerbose("No specific error page, falling back to the Error Container for " + statusCode, module);
+                        if (Debug.verboseOn()) {
+                             Debug.logVerbose("No specific error page, falling back to the Error Container for " + statusCode, module);
+                        }
                         contentId = errorContainer.getString("contentId");
                     }
                     mapKey = null;
@@ -234,7 +238,7 @@ public class CmsEvents {
                     try {
                         GenericValue errorPage = EntityQuery.use(delegator).from("Content").where("contentId", "CONTENT_ERROR_" + statusCode).cache().queryOne();
                         if (errorPage != null) {
-                            Debug.logVerbose("Found generic page " + statusCode, module);
+                            if (Debug.verboseOn()) Debug.logVerbose("Found generic page " + statusCode, module);
                             contentId = errorPage.getString("contentId");
                             mapKey = null;
                             hasErrorPage = true;
@@ -253,7 +257,7 @@ public class CmsEvents {
                 templateMap.put("statusCode", statusCode);
 
                 // make the link prefix
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 templateMap.put("_REQUEST_HANDLER_", rh);
 
@@ -269,7 +273,7 @@ public class CmsEvents {
                     // SCIPIO: modified to pass name
                     FormStringRenderer formStringRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
                     templateMap.put("formStringRenderer", formStringRenderer);
-                    
+
                     // if use web analytics
                     List<GenericValue> webAnalytics = EntityQuery.use(delegator).from("WebAnalyticsConfig").where("webSiteId", webSiteId).queryList();
                     // render
@@ -295,7 +299,7 @@ public class CmsEvents {
                 String siteName = null;
                 try {
                     GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache().queryOne();
-                    if (content != null && UtilValidate.isNotEmpty(content)) {
+                    if (content != null && UtilValidate.isNotEmpty(content.getString("contentName"))) {
                         contentName = content.getString("contentName");
                     } else {
                         request.setAttribute("_ERROR_MESSAGE_", "Content: " + contentName + " [" + contentId + "] is not a publish point for the current website: [" + webSiteId + "]");

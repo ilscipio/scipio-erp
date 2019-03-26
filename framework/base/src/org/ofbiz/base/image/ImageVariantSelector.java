@@ -19,20 +19,20 @@ import org.ofbiz.base.util.UtilValidate;
 public interface ImageVariantSelector {
 
     VariantInfo getCanvasBestFitVariant(String mode, Integer width, Integer height);
-    
+
     public interface VariantInfo {
         String getName();
         int getWidth();
         int getHeight();
     }
-    
+
     public interface Factory {
-        
+
         /**
          * Gets a variant selector from a pre-parsed ImageProperties.xml file as map of string entries.
          */
         ImageVariantSelector fromImagePropertiesMap(String name, String sourceType, String location, Map<String, Map<String, String>> imgPropsMap);
-        
+
         /**
          * @param location
          * @param locale
@@ -41,32 +41,32 @@ public interface ImageVariantSelector {
          * @throws IllegalArgumentException
          */
         ImageVariantSelector fromImagePropertiesXml(String imgPropsPath, Locale locale) throws IOException, IllegalArgumentException;
-        
+
         ImageVariantSelector fromImagePropertiesXml(String imgPropsPath) throws IOException;
-        
+
         /**
          * Best-effort attempt to get a variant selector for the specific resource's URL path, e.g.,
          * an image link such as /images/somedir/myimage.jpg. See implementations for caveats.
          */
         ImageVariantSelector fromResourceUrlPath(String path) throws IOException;
-        
+
     }
-    
+
     /**
      * For use in configuration files (to bypass dependencies).
      */
     public interface FactorySource {
         Factory getFactory();
     }
-    
+
     public static class FactoryUtil {
-        
+
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-        
+
         public static Factory getFactoryFromSource(String factorySourceClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
             return ((FactorySource) Thread.currentThread().getContextClassLoader().loadClass(factorySourceClass).newInstance()).getFactory();
         }
-        
+
         public static Factory getFactoryFromPropertySafe(String resource, String name, String defaultVal) {
             String factorySourceClass = null;
             try {

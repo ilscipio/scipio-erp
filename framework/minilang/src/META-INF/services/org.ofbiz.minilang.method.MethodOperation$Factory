@@ -101,5 +101,7 @@ org.ofbiz.minilang.method.ifops.IfNotEmpty$IfNotEmptyFactory
 org.ofbiz.minilang.method.otherops.Calculate$CalculateFactory
 org.ofbiz.minilang.method.otherops.Log$LogFactory
 org.ofbiz.minilang.method.otherops.PropertyToField$PropertyToFieldFactory
+org.ofbiz.minilang.method.otherops.Synchronized$SynchronizedFactory
 org.ofbiz.minilang.method.otherops.Trace$TraceFactory
+org.ofbiz.minilang.method.otherops.Try$TryFactory
 org.ofbiz.minilang.method.serviceops.FieldToResult$FieldToResultFactory

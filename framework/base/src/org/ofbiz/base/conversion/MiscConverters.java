@@ -169,10 +169,9 @@ public class MiscConverters implements ConverterLoader {
 
         public <S, T> Converter<S, T> createConverter(Class<S> sourceClass, Class<T> targetClass) {
             if (String.class == sourceClass && Enum.class.isAssignableFrom(targetClass)) {
-                return UtilGenerics.cast(new StringToEnum<E>());
-            } else {
-                return null;
+                return UtilGenerics.cast(new StringToEnum<>());
             }
+            return null;
         }
     }
 
@@ -234,9 +233,8 @@ public class MiscConverters implements ConverterLoader {
             Locale loc = UtilMisc.parseLocale(obj);
             if (loc != null) {
                 return loc;
-            } else {
-                throw new ConversionException("Could not convert " + obj + " to Locale: ");
             }
+            throw new ConversionException("Could not convert " + obj + " to Locale: ");
         }
     }
 

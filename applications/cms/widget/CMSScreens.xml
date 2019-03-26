@@ -337,7 +337,30 @@
             </widgets>
         </section>
     </screen>
-    
+
+    <screen name="customImageSizePresets">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="Media"/>
+                <set field="activeSubMenuItem" value="customImageSizePresets"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <entity-condition list="customImageSizePresets" entity-name="ImageSizePreset">
+                    <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/media/customImageSizePreset.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- Exports Tika media types (mime-types) to entity MimeType representations -->
     <screen name="libMimeTypeExport">
         <section>
@@ -364,7 +387,7 @@
                     <xml><html-template trim-lines="false"><![CDATA[
 <#if mimeTypes?has_content>
   <#list mimeTypes as mimeType>
-    <MimeType mimeTypeId="${rawString(mimeType.mimeTypeId)}" description="${rawString(mimeType.description)}"/>
+    <MimeType mimeTypeId="${raw(mimeType.mimeTypeId)}" description="${raw(mimeType.description)}"/>
   </#list>
 </#if>
                     ]]></html-template></xml>
@@ -405,7 +428,6 @@
                 <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsMenuTree.groovy"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsContentTree.groovy"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -424,8 +446,6 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsDataImport"/>
                 <set field="activeSubMenuItem" value="dataImport"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" from-field="parameters.TRANSACTION_TIMEOUT" default-value="7200"/>
-
                 <set field="messages" from-field="parameters.messages"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/importexport/CmsDataImport.groovy"/>
                 <!-- NOTE: ENTITY_MAINT is still checked for some parameter options -->

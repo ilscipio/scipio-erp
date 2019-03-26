@@ -15,7 +15,7 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["orgPartyId", "partyId"]/><#-- these will conflict with SetupWorker -->
         <@field type="hidden" name="isCreateOrganization" value=(organizationInfo??)?string("N","Y")/>
         
@@ -24,7 +24,7 @@
         
       <#if organizationInfo??>
         <@field type="display" name="partyId" label=uiLabelMap.PartyPartyId><#rt/>
-            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=(params.partyId!)/><#t/>
+            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${raw(params.partyId!)}" text=(params.partyId!)/><#t/>
         </@field><#lt/>
         <@field type="hidden" name="partyId" value=(params.partyId!)/> 
       <#else>
@@ -39,7 +39,7 @@
       <#assign fieldsRequired = true>
         
         <#if organizationInfo??>
-          <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}">
+          <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${raw(params.partyId!)}">
           <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
           </#assign>
         <#else>

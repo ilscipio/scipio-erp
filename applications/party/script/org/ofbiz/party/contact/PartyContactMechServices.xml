@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -27,10 +14,10 @@ under the License.
         </if-empty>
 
         <!-- check if the contact mech infostring is already existing if so, do not create a new one-->
-        <entity-and list="partyAndContactMechs" entity-name="PartyAndContactMech" filter-by-date="true">
+        <entity-and entity-name="PartyAndContactMech" list="partyAndContactMechs" filter-by-date="true">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
         </entity-and>
-        <iterate entry="partyAndContactMech" list="partyAndContactMechs">
+        <iterate list="partyAndContactMechs" entry="partyAndContactMech">
             <entity-one entity-name="ContactMechType" value-field="contactMechType">
                 <field-map field-name="contactMechTypeId" from-field="partyAndContactMech.contactMechTypeId"/>
             </entity-one>
@@ -70,11 +57,8 @@ under the License.
         <create-value value-field="newValue"/>
     </simple-method>
 
-    <simple-method method-name="updatePartyContactMech" short-description="Update a PartyContactMech">
-        <if-empty field="parameters.partyId">
-            <set field="parameters.partyId" from-field="userLogin.partyId"/>
-        </if-empty>
-        
+    <!-- SCIPIO: 2018-11-02: Code Factored out from updatePartyContactMech -->
+    <simple-method method-name="lookupPartyContactMech" short-description="Lookup a PartyContactMech (logic from updatePartyContactMech)">
         <!-- Find old value -->
         <make-value entity-name="PartyContactMech" value-field="partyContactMechMap"/>
         <set-pk-fields value-field="partyContactMechMap" map="parameters"/>
@@ -85,15 +69,31 @@ under the License.
         </if-empty>
         <check-errors/>
         <filter-list-by-date list="partyContactMechs" to-list="validPartyContactMechs"/>
-        <first-from-list entry="partyContactMech" list="validPartyContactMechs"/>
+        <first-from-list list="validPartyContactMechs" entry="partyContactMech"/>
         <if-empty field="partyContactMech">
             <!-- SCIPIO: new message with info for expired contact edit attempts -->
             <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_specified_contact_info_expired"/></add-error>
         </if-empty>
         <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="updatePartyContactMech" short-description="Update a PartyContactMech">
+        <if-empty field="parameters.partyId">
+            <set field="parameters.partyId" from-field="userLogin.partyId"/>
+        </if-empty>
+
+        <if-not-empty field="parameters.partyContactMech">
+            <!-- SCIPIO: 2018-11-02: support service interface that accepts already looked-up PartyContactMech -->
+            <set field="partyContactMech" from-field="parameters.partyContactMech"/>
+            <else>
+                <!-- SCIPIO: 2018-11-02: Code factored out -->
+                <call-simple-method method-name="lookupPartyContactMech"/>
+                <check-errors/>
+            </else>
+        </if-not-empty>
 
         <clone-value value-field="partyContactMech" new-value-field="newPartyContactMech"/>
-        
+
         <!-- If we already have a new contactMechId don't update ContactMech -->
         <if-empty field="parameters.newContactMechId">
             <set-service-fields service-name="updateContactMech" map="parameters" to-map="updateContactMechMap"/>
@@ -106,16 +106,16 @@ under the License.
                 <log level="info" message="Using supplied new contact mech id: ${newPartyContactMech.contactMechId}"/>
             </else>
         </if-empty>
-        
+
         <if-compare-field to-field="newPartyContactMech.contactMechId" field="parameters.contactMechId" operator="not-equals">
-            <set-nonpk-fields value-field="newPartyContactMech" map="parameters"/>
+            <set-nonpk-fields map="parameters" value-field="newPartyContactMech"/>
             <now-timestamp field="newPartyContactMech.fromDate"/>
             <now-timestamp field="partyContactMech.thruDate"/>
             <store-value value-field="partyContactMech"/>
             <create-value value-field="newPartyContactMech"/>
             <get-related value-field="partyContactMech" relation-name="PartyContactMechPurpose" list="partyContactMechPurposes"/>
             <filter-list-by-date list="partyContactMechPurposes"/>
-            <iterate entry="partyContactMechPurposeOld" list="partyContactMechPurposes">
+            <iterate list="partyContactMechPurposes" entry="partyContactMechPurposeOld">
                 <clone-value value-field="partyContactMechPurposeOld" new-value-field="partyContactMechPurpose"/>
                 <now-timestamp field="partyContactMechPurposeOld.thruDate"/>
                 <store-value value-field="partyContactMechPurposeOld"/>
@@ -134,11 +134,14 @@ under the License.
             <field-to-result field="newPartyContactMech.contactMechId" result-name="contactMechId"/>
             <field-to-request field="newPartyContactMech.contactMechId" request-name="contactMechId"/>
             <else>
-                <set field="extension" from-field="partyContactMech.extension"/>
-                <set-nonpk-fields value-field="partyContactMech" map="parameters"/>
-                <if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
-                    <set field="partyContactMech.thruDate" value=""/>
-                </if-compare-field>
+                <!-- SCIPIO: 2018-11-02: This extension check to set thruDate is doubtful and probably never worked
+                    anyway because the set statement was missing set-if-null="true", so just remove it;
+                    extension is now handled in updatePartyTelecomNumber instead
+                <set field="extension" from-field="partyContactMech.extension"/>-->
+                <set-nonpk-fields map="parameters" value-field="partyContactMech"/>
+                <!--<if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
+                    <set field="partyContactMech.thruDate" value="" set-if-null="true"/><!- - SCIPIO: 2018-11-02: set-if-null="true" required to set null - ->
+                </if-compare-field>-->
                 <store-value value-field="partyContactMech"/>
                 <log level="info" message="Setting id to result: ${partyContactMech.contactMechId}"/>
                 <field-to-result field="partyContactMech.contactMechId" result-name="contactMechId"/>
@@ -148,7 +151,8 @@ under the License.
 
     </simple-method>
 
-    <simple-method method-name="deletePartyContactMech" short-description="Delete a PartyContactMech">
+    <!-- SCIPIO: SCIPIO: 2018-10-30: Renamed to deletePartyContactMechOnly -->
+    <simple-method method-name="deletePartyContactMechOnly" short-description="Delete a PartyContactMech only">
         <make-value entity-name="PartyContactMech" value-field="newPartyContactMech"/>
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
@@ -158,15 +162,39 @@ under the License.
         <set-pk-fields value-field="partyContactMechMap" map="parameters"/>
         <find-by-and entity-name="PartyContactMech" list="partyContactMechs" map="partyContactMechMap"/>
         <filter-list-by-date list="partyContactMechs" to-list="validPartyContactMechs"/>
-        <first-from-list entry="partyContactMech" list="validPartyContactMechs"/>
+        <first-from-list list="validPartyContactMechs" entry="partyContactMech"/>
         <if-empty field="partyContactMech">
             <add-error>
                 <fail-property resource="PartyUiLabels" property="PartyContactMechNotFoundCannotDelete"/>
             </add-error>
             <return/>
         </if-empty>
-        <now-timestamp field="partyContactMech.thruDate"/>
+        <!-- SCIPIO: reuse timestamp if possible
+        <now-timestamp field="partyContactMech.thruDate"/>-->
+        <if-not-empty field="nowTimestamp">
+            <set field="partyContactMech.thruDate" from-field="nowTimestamp"/>
+            <else>
+                <now-timestamp field="partyContactMech.thruDate"/>
+            </else>
+        </if-not-empty>
         <store-value value-field="partyContactMech"/>
+    </simple-method>
+
+    <simple-method method-name="deletePartyContactMechAndPurposes" short-description="Delete a PartyContactMech and purposes"><!-- SCIPIO: 2018-10-30 -->
+        <now-timestamp field="nowTimestamp"/><!-- We'll use this same date for all the thruDates to make expiries easier to track -->
+        <call-simple-method method-name="deletePartyContactMechOnly"/>
+        <check-errors/>
+        <get-related value-field="partyContactMech" relation-name="PartyContactMechPurpose" list="partyContactMechPurposes"/>
+        <filter-list-by-date list="partyContactMechPurposes" valid-date="nowTimestamp"/>
+        <iterate list="partyContactMechPurposes" entry="partyContactMechPurposeOld">
+            <set field="partyContactMechPurposeOld.thruDate" from-field="nowTimestamp"/>
+            <store-value value-field="partyContactMechPurposeOld"/>
+        </iterate>
+        <check-errors/>
+    </simple-method>
+    <simple-method method-name="deletePartyContactMech" short-description="Delete a PartyContactMech and purposes"><!-- SCIPIO: 2018-10-30: backward-compat alias -->
+        <call-simple-method method-name="deletePartyContactMechAndPurposes"/>
+        <check-errors/>
     </simple-method>
 
     <simple-method method-name="createPartyPostalAddress" short-description="Create a PostalAddress for party">
@@ -179,31 +207,27 @@ under the License.
             <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyCreated"/>
             <result-to-field result-name="contactMechId" field="newPartyContactMech.contactMechId"/>
         </call-service>
-
         <check-errors/>
         <set-service-fields service-name="createPartyContactMech" map="parameters" to-map="createPartyContactMechMap"/>
         <set field="createPartyContactMechMap.contactMechId" from-field="newPartyContactMech.contactMechId"/>
         <set field="createPartyContactMechMap.contactMechTypeId" value="POSTAL_ADDRESS"/>
-
         <call-service service-name="createPartyContactMech" in-map-name="createPartyContactMechMap" break-on-error="true">
             <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyCreated"/>
         </call-service>
         <field-to-request field="newPartyContactMech.contactMechId" request-name="contactMechId"/>
         <field-to-result field="newPartyContactMech.contactMechId" result-name="contactMechId"/>
     </simple-method>
-
     <simple-method method-name="updatePartyPostalAddress" short-description="Update a PostalAddress for party">
+        <field-to-result field="parameters.contactMechId" result-name="oldContactMechId"/><!-- SCIPIO: 2018-11-01: new -->
         <make-value entity-name="PartyContactMech" value-field="newPartyContactMech"/>
         <if-empty field="parameters.partyId">
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
         </if-empty>
-
         <set-service-fields service-name="updatePostalAddress" map="parameters" to-map="updatePostalAddressMap"/>
         <call-service in-map-name="updatePostalAddressMap" service-name="updatePostalAddress">
             <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyUpdated"/>
             <result-to-field result-name="contactMechId" field="newPartyContactMech.contactMechId"/>
         </call-service>
-
         <set-service-fields service-name="updatePartyContactMech" map="parameters" to-map="updatePartyContactMechMap"/>
         <set field="updatePartyContactMechMap.newContactMechId" from-field="newPartyContactMech.contactMechId"/>
         <set field="updatePartyContactMechMap.contactMechTypeId" value="POSTAL_ADDRESS"/>
@@ -245,18 +269,34 @@ under the License.
             <set field="parameters.partyId" from-field="userLogin.partyId"/>
         </if-empty>
 
+        <!-- SCIPIO: 2018-11-02: code refactored out from updatePartyContactMech -->
+        <call-simple-method method-name="lookupPartyContactMech"/>
+        <check-errors/>
+        <set field="updatePartyContactMechMap.partyContactMech" from-field="partyContactMech"/>
+
+        <!-- SCIPIO: 2018-11-02: If extension has changed, force clone the whole number which will create
+            a new ContactMech and PartyContactMech (PartyContactMech contains the extension field) to preserve
+            history, while avoiding sharing contactMechIds to prevent issues in buggy code -->
+        <set field="extensionPresent" type="Boolean" value="${groovy:parameters.containsKey('extension')}"/>
+        <if-compare field="extensionPresent" operator="equals" type="Boolean" value="true">
+            <if-compare-field field="parameters.extension" operator="not-equals" to-field="partyContactMech.extension">
+                <set field="updateTelecomNumberMap.forceNewRecord" type="Boolean" value="true"/>
+            </if-compare-field>
+        </if-compare>
+
         <set-service-fields service-name="updateTelecomNumber" map="parameters" to-map="updateTelecomNumberMap"/>
         <call-service service-name="updateTelecomNumber" in-map-name="updateTelecomNumberMap">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
             <result-to-field result-name="contactMechId" field="newPartyContactMech.contactMechId"/>
         </call-service>
 
-        <set-service-fields service-name="updatePartyContactMech" map="parameters" to-map="updatePartyContactMechMap"/>
+        <!-- SCIPIO: 2018-11-01: Switched to updatePartyContactMechGiven -->
+        <set-service-fields service-name="updatePartyContactMechGiven" map="parameters" to-map="updatePartyContactMechMap"/>
         <set field="updatePartyContactMechMap.newContactMechId" from-field="newPartyContactMech.contactMechId"/>
         <set field="updatePartyContactMechMap.contactMechTypeId" value="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to updatePartyContactMechMap: ${updatePartyContactMechMap.newContactMechId}"/>
 
-        <call-service in-map-name="updatePartyContactMechMap" service-name="updatePartyContactMech">
+        <call-service in-map-name="updatePartyContactMechMap" service-name="updatePartyContactMechGiven">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
         </call-service>
         <log level="info" message="Setting result id: ${newPartyContactMech.contactMechId}"/>
@@ -275,7 +315,7 @@ under the License.
         <check-errors/>
 
         <!-- if e-mail address already exists simply return -->
-        <entity-condition list="partyAndContactMechs" entity-name="PartyAndContactMech">
+        <entity-condition entity-name="PartyAndContactMech" list="partyAndContactMechs">
             <condition-list combine="and">
                 <condition-expr field-name="partyId" from-field="parameters.partyId"/>
                 <condition-expr field-name="contactMechTypeId" value="EMAIL_ADDRESS"/>
@@ -285,7 +325,7 @@ under the License.
         <filter-list-by-date list="partyAndContactMechs"/>
         <if-not-empty field="partyAndContactMechs">
             <log level="info" message="E-mail address: ${parameters.emailAddress} already exists, did not add again.."/>
-            <first-from-list entry="existsPartyAndContactMech" list="partyAndContactMechs"/>
+            <first-from-list list="partyAndContactMechs" entry="existsPartyAndContactMech"/>
             <field-to-result field="existsPartyAndContactMech.contactMechId" result-name="contactMechId"/>
             <field-to-request field="existsPartyAndContactMech.contactMechId" request-name="contactMechId"/>
             <return/>
@@ -363,9 +403,11 @@ under the License.
         </entity-and>
 
         <set field="dash" value="-"/>
-        <set field="emptyString" value=""/>
+        <!-- SCIPIO: 2018-11-02: This does not produce an empty string
+        <set field="emptyString" value=""/>-->
+        <set field="emptyString" value="${''}"/>
         <set field="inputTelno" value="${str:replaceAll(parameters.telno, dash, emptyString)}"/>
-        <iterate entry="contactMech" list="contactMechs">
+        <iterate list="contactMechs" entry="contactMech">
             <set field="telno" value="${str:replace(contactMech.tnContactNumber, dash, emptyString)}"/>
             <if-compare-field field="inputTelno" operator="equals" to-field="telno">
                 <set field="partyId" from-field="contactMech.partyId"/>
@@ -396,9 +438,11 @@ under the License.
         </entity-and>
 
         <set field="dash" value="-"/>
-        <set field="emptyString" value=""/>
+        <!-- SCIPIO: 2018-11-02: This does not produce an empty string
+        <set field="emptyString" value=""/>-->
+        <set field="emptyString" value="${''}"/>
         <set field="inputTelno" from-field="parameters.telno"/>
-        <iterate entry="contactMech" list="contactMechs">
+        <iterate list="contactMechs" entry="contactMech">
             <set field="telno" from-field="contactMech.tnContactNumber"/>
             <!--set field="telno" value="${str:replace(contactMech.tnContactNumber, dash, emptyString)}"/-->
             <if-compare-field field="inputTelno" operator="equals" to-field="telno">
@@ -425,7 +469,7 @@ under the License.
 
     <simple-method method-name="createPostalAddressAndPurposes" short-description="Create postal address, purposes and set them defaults" login-required="false">
         <if-not-empty field="parameters.roleTypeId">
-            <entity-one value-field="partyRole" entity-name="PartyRole" />
+            <entity-one entity-name="PartyRole" value-field="partyRole" />
             <if-empty field="partyRole">
                 <set field="roleTypeId" from-field="parameters.roleTypeId"/>
                 <add-error><fail-property resource="PartyUiLabels" property="PartyRoleTypeNotFoundForTheParty"/></add-error>
@@ -451,12 +495,11 @@ under the License.
                         <field-map field-name="partyId" from-field="userLogin.partyId"/>
                         <field-map field-name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
                     </entity-and>
-                    <if-not-empty field="pcmpList">
-                        <first-from-list entry="pcmp" list="pcmpList"/>
+                    <iterate list="pcmpList" entry="pcmp">
                         <set-service-fields service-name="deletePartyContactMechPurposeIfExists" map="pcmp" to-map="serviceInMap"/>
                         <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
                         <clear-field field="serviceInMap"/>
-                    </if-not-empty>
+                    </iterate>
                     <set field="serviceContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
                     <call-service service-name="createPartyContactMechPurpose" in-map-name="serviceContext"/>
 
@@ -470,11 +513,10 @@ under the License.
                         <field-map field-name="partyId" from-field="userLogin.partyId"/>
                         <field-map field-name="contactMechPurposeTypeId" value="BILLING_LOCATION"/>
                     </entity-and>
-                    <if-not-empty field="pcmpList">
-                        <first-from-list entry="pcmp" list="pcmpList"/>
+                    <iterate list="pcmpList" entry="pcmp">
                         <set-service-fields service-name="deletePartyContactMechPurposeIfExists" map="pcmp" to-map="serviceInMap"/>
                         <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
-                    </if-not-empty>
+                    </iterate>
                     <set field="serviceContext.contactMechPurposeTypeId" value="BILLING_LOCATION"/>
                     <call-service service-name="createPartyContactMechPurpose" in-map-name="serviceContext"/>
 
@@ -506,6 +548,10 @@ under the License.
                         <result-to-result result-name="contactMechId"/>
                     </call-service>
                 <else>
+                    <!-- SCIPIO: WARN: This section (all stock code) is a special case for: 
+                            (parameters.contactMechId == partyProfileDefault.defaultBillAddr == partyProfileDefault.defaultShipAddr)
+                         It leaves the previous contact mech unexpired because supposedly for UI purposes or rather because it assumes
+                         the other ship/bill should stay as it is. -->
                     <set-service-fields service-name="updatePostalAddress" map="parameters" to-map="updatePostalAddressMap"/>
                     <call-service service-name="updatePostalAddress" in-map-name="updatePostalAddressMap">
                         <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyUpdated"/>
@@ -556,12 +602,11 @@ under the License.
                             <field-map field-name="partyId" from-field="userLogin.partyId"/>
                             <field-map field-name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
                         </entity-and>
-                        <if-not-empty field="pcmpList">
-                            <first-from-list list="pcmpList" entry="pcmp"/>
+                        <iterate list="pcmpList" entry="pcmp">
                             <set-service-fields service-name="deletePartyContactMechPurposeIfExists" map="pcmp" to-map="serviceInMap"/>
                             <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
                             <clear-field field="serviceInMap"/>
-                        </if-not-empty>
+                        </iterate>
                         <set field="serviceContext.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
                         <call-service service-name="createPartyContactMechPurpose" in-map-name="serviceContext"/>
                         <clear-field field="pcmpList"/>
@@ -588,11 +633,10 @@ under the License.
                             <field-map field-name="partyId" from-field="userLogin.partyId"/>
                             <field-map field-name="contactMechPurposeTypeId" value="BILLING_LOCATION"/>
                         </entity-and>
-                        <if-not-empty field="pcmpList">
-                            <first-from-list list="pcmpList" entry="pcmp"/>
+                        <iterate list="pcmpList" entry="pcmp">
                             <set-service-fields service-name="deletePartyContactMechPurposeIfExists" map="pcmp" to-map="serviceInMap"/>
                             <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
-                        </if-not-empty>
+                        </iterate>
                         <set field="serviceContext.contactMechPurposeTypeId" value="BILLING_LOCATION"/>
                         <call-service service-name="createPartyContactMechPurpose" in-map-name="serviceContext"/>
                     </if-empty>
@@ -607,6 +651,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateContactMechAndPurposes" short-description="Update postal address, telecom number and purposes">
+        <!-- SCIPIO: WARN: See updatePostalAddressAndPurposes implementation for issues -->
         <set-service-fields service-name="updatePostalAddressAndPurposes" map="parameters" to-map="updatePostalAddressAndPurposesCtx"/>
         <call-service service-name="updatePostalAddressAndPurposes" in-map-name="updatePostalAddressAndPurposesCtx">
             <result-to-result result-name="contactMechId"/>

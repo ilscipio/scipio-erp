@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -47,6 +34,7 @@ under the License.
     <service name="setPaymentStatus" engine="simple" default-entity-name="Payment"
         location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="setPaymentStatus" auth="true">
         <description>Change the status of a Payment</description>
+        <permission-service service-name="acctgPaymentPermissionCheck" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
@@ -145,6 +133,7 @@ under the License.
             location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="voidPayment" auth="true">
         <description>Sets payment status to PMNT_VOID, removes all PaymentApplications, changes related invoice statuses to 
             INVOICE_READY if status is INVOICE_PAID, and reverses related AcctgTrans by calling copyAcctgTransAndEntries service</description>
+        <permission-service service-name="acctgPaymentPermissionCheck" main-action="UPDATE"/>
         <attribute name="paymentId" mode="IN" optional="false" type="String"/>
         <attribute name="finAccountTransId" type="String" mode="OUT" optional="true"/>
         <attribute name="statusId" type="String" mode="OUT" optional="true"/>
@@ -270,6 +259,136 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="removePaymentContent" auth="true">
         <description>Remove Content From Payment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="create" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="updateBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="update" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="delete" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createDeduction" engine="entity-auto" invoke="create" default-entity-name="Deduction" auth="true">
+        <description>Create a Deduction record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDeduction" engine="entity-auto" invoke="update" default-entity-name="Deduction" auth="true">
+        <description>Update a Deduction record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDeduction" engine="entity-auto" invoke="delete" default-entity-name="Deduction" auth="true">
+        <description>Delete a Deduction record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createDeductionType" engine="entity-auto" invoke="create" default-entity-name="DeductionType" auth="true">
+        <description>Create a Deduction Type record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDeductionType" engine="entity-auto" invoke="update" default-entity-name="DeductionType" auth="true">
+        <description>Update a Deduction Type record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDeductionType" engine="entity-auto" invoke="delete" default-entity-name="DeductionType" auth="true">
+        <description>Delete a Deduction Type record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentAttribute" engine="entity-auto" invoke="create" default-entity-name="PaymentAttribute" auth="true">
+        <description>Create a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentAttribute" engine="entity-auto" invoke="update" default-entity-name="PaymentAttribute" auth="true">
+        <description>Update a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentAttribute" engine="entity-auto" invoke="delete" default-entity-name="PaymentAttribute" auth="true">
+        <description>Delete a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentBudgetAllocation" engine="entity-auto" invoke="create" default-entity-name="PaymentBudgetAllocation" auth="true">
+        <description>Create a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentBudgetAllocation" engine="entity-auto" invoke="update" default-entity-name="PaymentBudgetAllocation" auth="true">
+        <description>Update a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentBudgetAllocation" engine="entity-auto" invoke="delete" default-entity-name="PaymentBudgetAllocation" auth="true">
+        <description>Delete a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentContentType" engine="entity-auto" invoke="create" default-entity-name="PaymentContentType" auth="true">
+        <description>Create a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentContentType" engine="entity-auto" invoke="update" default-entity-name="PaymentContentType" auth="true">
+        <description>Update a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentContentType" engine="entity-auto" invoke="delete" default-entity-name="PaymentContentType" auth="true">
+        <description>Delete a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentGroupType" engine="entity-auto" invoke="create" default-entity-name="PaymentGroupType" auth="true">
+        <description>Create a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentGroupType" engine="entity-auto" invoke="update" default-entity-name="PaymentGroupType" auth="true">
+        <description>Update a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentGroupType" engine="entity-auto" invoke="delete" default-entity-name="PaymentGroupType" auth="true">
+        <description>Delete a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentType" engine="entity-auto" invoke="create" default-entity-name="PaymentType" auth="true">
+        <description>Create a PaymentType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentType" engine="entity-auto" invoke="update" default-entity-name="PaymentType" auth="true">
+        <description>Update a PaymentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentType" engine="entity-auto" invoke="delete" default-entity-name="PaymentType" auth="true">
+        <description>Delete a PaymentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentTypeAttr" engine="entity-auto" invoke="create" default-entity-name="PaymentTypeAttr" auth="true">
+        <description>Create a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentTypeAttr" engine="entity-auto" invoke="update" default-entity-name="PaymentTypeAttr" auth="true">
+        <description>Update a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentTypeAttr" engine="entity-auto" invoke="delete" default-entity-name="PaymentTypeAttr" auth="true">
+        <description>Delete a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
 </services>

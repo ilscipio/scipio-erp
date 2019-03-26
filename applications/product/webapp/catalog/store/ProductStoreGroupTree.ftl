@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@script>
@@ -35,7 +22,7 @@ var rawdata = [
     <#list parentGroupList as parentGroup>
                    {
                     "data": {"title" : unescapeHtmlText("<#if parentGroup.productStoreGroupName??>${parentGroup.productStoreGroupName?js_string} [${parentGroup.productStoreGroupId?js_string}]</#if>"),
-                                  "attr": {"href" : "<@ofbizUrl>EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId?js_string}');"}},
+                                  "attr": {"href" : "<@pageUrl>EditProductStoreGroupAndAssoc</@pageUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId?js_string}');"}},
                     "attr": {"parentGroupId" : "${parentGroup.productStoreGroupId?js_string}"}, 
                     "state" : "closed"
                     }<#if parentGroup_has_next>,</#if>
@@ -49,7 +36,7 @@ var rawdata = [
         "plugins" : [ "themes", "json_data","ui" ,"cookies", "types"],
             "json_data" : {
                 "data" : rawdata,
-                "ajax" : { "url" : "<@ofbizUrl>getProductStoreGroupRollupHierarchy</@ofbizUrl>",
+                "ajax" : { "url" : "<@pageUrl>getProductStoreGroupRollupHierarchy</@pageUrl>",
                            "type" : "POST",
                            "data" : function (n) {
                                return {

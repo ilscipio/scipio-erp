@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,7 +26,7 @@ under the License.
   <!-- org.ofbiz.service.schedule -->
   <!-- ========================================================= -->
 
-    <entity entity-name="JobSandbox" package-name="org.ofbiz.service.schedule" title="Job Scheduler Sandbox Entity"
+    <entity entity-name="JobSandbox" package-name="org.ofbiz.service.schedule" title="Job Scheduler Sandbox"
             sequence-bank-size="100" never-cache="true">
         <field name="jobId" type="id-ne"></field>
         <field name="jobName" type="name"></field>
@@ -100,7 +87,7 @@ under the License.
     </extend-entity>
     <entity entity-name="RecurrenceInfo"
             package-name="org.ofbiz.service.schedule"
-            title="Recurrence Info Entity">
+            title="Recurrence Info">
       <field name="recurrenceInfoId" type="id-ne"></field>
       <field name="startDateTime" type="date-time"></field>
       <field name="exceptionDateTimes" type="very-long"></field>
@@ -118,7 +105,7 @@ under the License.
     </entity>
     <entity entity-name="RecurrenceRule"
             package-name="org.ofbiz.service.schedule"
-            title="Recurrence Rule Entity">
+            title="Recurrence Rule">
       <field name="recurrenceRuleId" type="id-ne"></field>
       <field name="frequency" type="short-varchar"></field>
       <field name="untilDateTime" type="date-time"></field>
@@ -137,7 +124,7 @@ under the License.
       <field name="xName" type="very-long"></field>
       <prim-key field="recurrenceRuleId"/>
     </entity>
-    <entity entity-name="RuntimeData" package-name="org.ofbiz.service.schedule" title="Runtime Data Entity"
+    <entity entity-name="RuntimeData" package-name="org.ofbiz.service.schedule" title="Runtime Data"
             sequence-bank-size="100">
         <field name="runtimeDataId" type="id-ne"></field>
         <field name="runtimeInfo" type="very-long"></field>
@@ -184,7 +171,7 @@ under the License.
 
     <view-entity entity-name="TemporalExpressionChild"
             package-name="org.ofbiz.service.schedule"
-            title="Temporal Expression Children View Entity">
+            title="Temporal Expression Children View">
       <member-entity entity-alias="TEA" entity-name="TemporalExpressionAssoc"/>
       <member-entity entity-alias="TE" entity-name="TemporalExpression"/>
       <alias-all entity-alias="TEA">
@@ -196,10 +183,27 @@ under the License.
       </view-link>
     </view-entity>
 
+    <entity entity-name="JobManagerLock" package-name="org.ofbiz.service.schedule" title="Lock Job Manager Scheduler">
+        <field name="instanceId" type="id"/>
+        <field name="fromDate" type="date-time"/>
+        <field name="thruDate" type="date-time"/>
+        <field name="reasonEnumId" type="id"/>
+        <field name="comments" type="comment"/>
+        <field name="createdDate" type="date-time"/>
+        <field name="createdByUserLogin" type="id-vlong"/>
+        <field name="lastModifiedDate" type="date-time"/>
+        <field name="lastModifiedByUserLogin" type="id-vlong"/>
+        <prim-key field="instanceId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="JOBLK_ENUM_REAS" rel-entity-name="Enumeration" title="Reason">
+            <key-map field-name="reasonEnumId" rel-field-name="enumId"/>
+        </relation>
+    </entity>
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.service.semaphore -->
   <!-- ========================================================= -->
-    <entity entity-name="ServiceSemaphore" package-name="org.ofbiz.service.semaphore" title="Semaphore Lock Entity"
+    <entity entity-name="ServiceSemaphore" package-name="org.ofbiz.service.semaphore" title="Semaphore Lock"
             sequence-bank-size="100">
         <field name="serviceName" type="name"></field>
         <field name="lockedByInstanceId" type="id"></field>

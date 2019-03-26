@@ -1,6 +1,6 @@
 <#if prodCatalogId?has_content>
     <@section title=sectionTitle>    
-        <form method="post" action="<@ofbizUrl>addProdCatalogToParty</@ofbizUrl>" name="AddProdCatalogToParty">    
+        <form method="post" action="<@pageUrl>addProdCatalogToParty</@pageUrl>" name="AddProdCatalogToParty">    
             <input type="hidden" name="prodCatalogId" value="${prodCatalogId}"/>
             <@row>
                 <@cell columns=12>

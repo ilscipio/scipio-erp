@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -66,20 +53,22 @@ function onClickShippingMethod(e) {
 </@script>
 
 <@section id="optInfoSection">
-  <form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
+  <form id="quickAnonOptSetupForm" method="post" action="<@pageUrl>quickAnonProcessShipOptions</@pageUrl>" name="quickAnonOptSetupForm">
 
   <@row>
     <@cell columns=6>
       <div class="errorMessage" id="noShippingMethodSelectedError"></div>
       <@field type="generic" label=uiLabelMap.OrderMethod>
+        <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
         <#list carrierShipmentMethodList as carrierShipmentMethod>
+           <#assign shippingEst = ""><#-- SCIPIO: Var init -->
            <#if shoppingCart.getShippingContactMechId()??>
                <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
            </#if>
-           <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign>
+           <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign><#-- SCIPIO: NO_SHIPPING check -->
            
-           <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
+           <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
+           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == chosenShippingMethod) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
         </#list>
         <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
           <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value="Default" checked=true label=uiLabelMap.OrderUseDefault />

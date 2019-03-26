@@ -1,22 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#escape x as x?xml>
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://content/webapp/content/common/contentlib.ftl" as contentlib>
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+
 <#if orderHeader?has_content><fo:block font-size="16pt" font-weight="bold" margin-bottom="5mm">${orderHeader.getRelatedOne("OrderType", false).get("description",locale)}</fo:block></#if>
 
 
@@ -75,6 +66,90 @@ under the License.
       </fo:table-row>
     </fo:table-header>
 
+    <#-- SCIPIO: Factored out table row markup -->
+    <#macro invoiceRow>
+      <fo:table-row height="8mm" line-height="8mm">
+        <fo:table-cell number-columns-spanned="5">
+          <fo:block text-align="left" font-size="8pt">
+            <#nested>
+          </fo:block>
+        </fo:table-cell>
+      </fo:table-row>
+    </#macro>
+
+
+    <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+    <#macro orderItemAttrInfo orderItem showCfgOpt=true showItemAttr=true>
+      <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
+      <#if showCfgOpt>
+        <#if orderItemProdCfgMap??>
+          <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+        <#else>
+          <#local cfgWrp = false><#-- TODO -->
+        </#if>
+        <#if !cfgWrp?is_boolean>
+          <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+          <#if selectedOptions?has_content>
+            <@invoiceRow>
+              <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
+                <#list selectedOptions as option>
+                  <fo:list-item>
+                    <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()"><fo:block>${option.getDescription()}</fo:block></fo:list-item-body>
+                  </fo:list-item>
+                </#list>
+              </fo:list-block>
+            </@invoiceRow>
+          </#if>
+        </#if>
+      </#if>
+      <#if showItemAttr>
+        <#if orderItemAttrMap??>
+          <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+        <#else>
+          <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+        </#if>
+        <#if orderItemAttributes?has_content>
+           <@invoiceRow>
+              <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
+                <#list orderItemAttributes as orderItemAttribute>
+                  <fo:list-item>
+                    <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()"><fo:block>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</fo:block></fo:list-item-body>
+                  </fo:list-item>
+                </#list>
+              </fo:list-block>
+            </@invoiceRow>
+        </#if>
+      </#if>
+    </#macro>
+
+    <#macro orderItemGiftCardActInfo gcInfoList>
+      <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
+        <#list gcInfoList as gcInfo>
+          <fo:list-item>
+            <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()"><fo:block>${uiLabelMap.AccountingCardNumber} : ${acctlib.getGiftCardDisplayNumber(gcInfo.cardNumber!)}</fo:block></fo:list-item-body>
+          </fo:list-item>
+        </#list>
+      </fo:list-block>
+    </#macro>
+    
+    <#-- SCIPIO: Based on orderlib macro -->
+    <#macro orderItemSurvResList survResList srqaArgs={} useTitleLine=false interactive=false maxInline=-1 class="" listClass="">
+      <#local class = addClassArgDefault(class, "order-item-survres-list")>
+        <#list survResList as surveyResponse>
+            <#local survey = surveyResponse.getRelatedOne("Survey")!>
+            <#if useTitleLine>
+              <#local surveyDesc = survey.get("description", locale)!>
+              <#if surveyDesc?has_content>${surveyDesc}</#if>
+            </#if>
+            <#if (maxInline != 0) && ("Y" == survey.showOnInvoice!)>
+              <@contentlib.renderSurveyResponse surveyResponse=surveyResponse tmplLoc="component://content/template/survey/qalistresult.fo.ftl"
+                srqaArgs=({"listClass":listClass, "max":maxInline} + srqaArgs)/>
+            </#if>
+        </#list>
+    </#macro>
 
     <fo:table-body font-size="10pt" table-layout="fixed" width="100%">
         <#list orderItemList as orderItem>
@@ -88,9 +163,11 @@ under the License.
                 <fo:table-cell>
                     <fo:block text-align="left">
                         <#if orderItem.supplierProductId?has_content>
-                            ${orderItem.supplierProductId}
-                        <#elseif productId??>
-                            ${orderItem.productId!(uiLabelMap.CommonNA)}
+                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.supplierProductId, false)!"">
+                            ${orderItem.supplierProductId}<#if origProductId?has_content> (${origProductId})</#if>
+                        <#elseif productId?has_content>
+                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, productId, false)!"">
+                            ${productId}<#if origProductId?has_content> (${origProductId})</#if>
                         <#elseif orderItemType??>
                             ${orderItemType.get("description",locale)}
                         <#else>
@@ -100,7 +177,7 @@ under the License.
                 <fo:table-cell>
                     <fo:block text-align="left">${orderItem.itemDescription!}</fo:block>
                 </fo:table-cell>
-                  <fo:table-cell>
+                <fo:table-cell>
                     <fo:block text-align="right"><#if remainingQuantity??>${remainingQuantity?string.number}</#if> </fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="right">
@@ -114,7 +191,29 @@ under the License.
                             </#if>
                     </fo:block>
                 </fo:table-cell>
-            </fo:table-row>        
+            </fo:table-row>
+
+            <#-- SCIPIO: NOTE: You may (un)comment or modify these calls to control the verbosity -->
+            <@orderItemAttrInfo orderItem=orderItem showCfgOpt=true showItemAttr=true/>
+            <#-- SCIPIO: Show purchased account brief/masked info -->
+            <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem, "")!>
+            <#if gcInfoList?has_content>
+              <@invoiceRow>
+                <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
+                <#assign survResList = orderlib.getOrderItemSurvResList(orderItem)!>
+                <#if survResList?has_content>
+                  <@orderItemSurvResList survResList=survResList/>
+                </#if>
+              </@invoiceRow>
+            <#else>
+              <#-- SCIPIO: show application survey response QA list for this item -->
+              <@invoiceRow>
+                <#assign survResList = orderlib.getOrderItemSurvResList(orderItem)!>
+                <#if survResList?has_content>
+                  <@orderItemSurvResList survResList=survResList/>
+                </#if>
+              </@invoiceRow>
+            </#if>
         </#list>
                 
         <#-- blank line -->

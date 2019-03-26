@@ -45,29 +45,32 @@
     
     <!-- SCIPIO: new Sidebar menus  -->
     <menu name="PageTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="pageId" from-field="parameters.pageId"/>
+            <set field="path" from-field="parameters.path"/>
+            <set field="webSiteId" from-field="parameters.webSiteId"/>
+            <if>
+                <condition><not><if-empty field="pageId"/></not></condition>
+                <then><set field="webSiteId" value="" set-if-null="true"/></then>
+            </if>
+        </actions>
         <menu-item name="listPages" title="${uiLabelMap.CmsListPages}">
             <link target="pages"/>
         </menu-item>
         <menu-item name="editPage" title="${uiLabelMap.CmsEditPage}" always-expand-selected-or-ancestor="false">
             <condition>
                 <or>
+                    <not><if-empty field="pageId"/></not>
                     <and>
-                        <not>
-                            <if-empty field="parameters.path"/>
-                        </not>
-                        <not>
-                            <if-empty field="parameters.webSiteId"/>
-                        </not>
+                        <not><if-empty field="path"/></not>
+                        <not><if-empty field="webSiteId"/></not>
                     </and>
-                    <not>
-                        <if-empty field="parameters.pageId"/>
-                    </not>
                 </or>
             </condition>
             <link target="editPage">
-                <parameter param-name="pageId" from-field="parameters.pageId"/>
-                <parameter param-name="path" from-field="parameters.path"/>
-                <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
+                <parameter param-name="pageId" from-field="pageId"/>
+                <parameter param-name="path" from-field="path"/>
+                <parameter param-name="webSiteId" from-field="webSiteId"/>
             </link>
         </menu-item>
     </menu>
@@ -121,10 +124,13 @@
     <menu name="TemplateSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="TemplateTabBar" recursive="includes-only" />
     </menu>
-    
+
     <menu name="MediaTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="media" title="${uiLabelMap.CmsListMedia}">
             <link target="media"/>
+        </menu-item>
+        <menu-item name="customImageSizePresets" title="${uiLabelMap.CmsCustomImageSizePresets}">
+            <link target="customImageSizePresets"/>
         </menu-item>
     </menu>
         

@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.util;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -15,35 +16,50 @@ public class SeoStringUtil {
 
     public static final String URL_HYPHEN = "-";
     public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";
-    public static Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
-    
+    public static final Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
+    public static final char[] dashedArray = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
+
     /**
-     * Generates a hash of a given plainText
-     * 
+     * Generates a hash of a given plainText using ISO_8859_1.
+     * WARNING: FIXME?: 2018-09: This uses md5, fast but insecure.
+     * @deprecated 2018-09: Use {@link #getHash(String, Charset)} instead.
+     *
      * @param plainText
      * @return md5-hash
      */
     public static String getHash(String plain) {
-        return getHash(plain, "ISO-8859-1");
+        return getHash(plain, StandardCharsets.ISO_8859_1);
     }
 
+    /**
+     * Generates a hash.
+     * WARNING: FIXME?: 2018-09: This uses md5, fast but insecure.
+     * @deprecated 2018-09: Use {@link #getHash(String, Charset)} instead.
+     */
+    @Deprecated
     public static String getHash(String plain, String encoding) {
-        byte[] bytes = null;
+        Charset charset;
         try {
-            bytes = plain.getBytes(encoding);
-        }
-        catch (UnsupportedEncodingException e) {
-            String msg = "No such Encoding: " + e.getMessage();
-            Debug.logError(msg, module);
+            charset = Charset.forName(encoding);
+        } catch (Exception e) {
+            Debug.logError("No such encoding: " + e.toString(), module);
             return null;
         }
-        return org.apache.commons.codec.digest.DigestUtils.md5Hex(bytes);
+        return getHash(plain, charset);
+    }
 
+    /**
+     * Generates a hash.
+     * WARNING: FIXME?: 2018-09: This uses md5, fast but insecure.
+     */
+    public static String getHash(String plain, Charset encoding) {
+        byte[] bytes = plain.getBytes(encoding);
+        return org.apache.commons.codec.digest.DigestUtils.md5Hex(bytes);
     }
 
     /**
      * taken from http://stackoverflow.com/questions/25259/how-does-stackoverflow-generate-its-seo-friendly-urls
-     * 
+     *
      * @param name
      * @return
      */
@@ -66,12 +82,9 @@ public class SeoStringUtil {
                 sb.append(c);
                 prevdash = false;
             }
-            else if (c == ' ' || c == ',' || c == '.' || c == '/' || c == '\\' || c == '-' || c == '_' || c == '=' || c == '?' || c == ':'
-                    || c == ';') {
-                if (!prevdash && sb.length() > 0) {
-                    sb.append('-');
-                    prevdash = true;
-                }
+            else if ((new String(dashedArray).indexOf(c) == -1) && (!prevdash && sb.length() > 0)) {
+                sb.append('-');
+                prevdash = true;
             }
             else if ((int) c >= 128) {
                 int prevlen = sb.length();
@@ -91,7 +104,7 @@ public class SeoStringUtil {
 
     /**
      * taken from http://meta.stackoverflow.com/questions/7435/non-us-ascii-characters-dropped-from-full-profile-url/7696#7696
-     * 
+     *
      * @param c
      * @return
      */

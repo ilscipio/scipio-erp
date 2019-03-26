@@ -36,17 +36,17 @@ import org.ofbiz.service.ServiceUtil;
 public class ImageVariantConfig implements Serializable, ImageVariantSelector {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    public static final ImageVariantConfig FALLBACK = new ImageVariantConfig("dummy", null, null, 
+
+    public static final ImageVariantConfig FALLBACK = new ImageVariantConfig("dummy", null, null,
             UtilMisc.toList(new VariantInfo("thumbnail", 100, 100)));
-    
+
     private static final Factory FACTORY = new Factory();
     private static final Cache CACHE = new Cache();
-    private static final PathVariantConfig PATHVARIANTCFG = PathVariantConfig.fromPropertiesSafe("imagecommon", 
+    private static final PathVariantConfig PATHVARIANTCFG = PathVariantConfig.fromPropertiesSafe("imagecommon",
             "image.variant.selector.bypath.", CACHE); // always use cache for this... for now
-    
+
     public static final String COMMON_IMAGEPROP_FILEPATH = "/framework/common/config/ImageProperties.xml";
-    
+
     protected final String name;
     protected final String sourceType;
     protected final String location;
@@ -56,11 +56,11 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     //protected transient VariantInfo biggestVariant;
     //protected transient VariantInfo smallestVariant;
     protected transient Map<String, VariantInfo> exactDimVariantMap; // maps "widthxheight" string to VariantInfo
-    
+
     public ImageVariantConfig(String name, String sourceType, String location, Collection<VariantInfo> variants) {
-        this(name, sourceType, location, variants, null); 
+        this(name, sourceType, location, variants, null);
     }
-    
+
     protected ImageVariantConfig(String name, String sourceType, String location, Collection<VariantInfo> variants, Map<String, Map<String, String>> variantStringMap) {
         this.name = name;
         this.sourceType = sourceType;
@@ -80,14 +80,14 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         this.variantStringMap = (variantStringMap != null) ? Collections.unmodifiableMap(variantStringMap) : null;
         this.exactDimVariantMap = null;
     }
-    
+
     public static class Factory implements ImageVariantSelector.Factory {
         @Override
         public ImageVariantConfig fromImagePropertiesMap(String name, String sourceType, String location, Map<String, Map<String, String>> imgPropsMap) {
             Collection<VariantInfo> dimMap = parseImagePropertiesMap(imgPropsMap);
             return new ImageVariantConfig(name, sourceType, location, dimMap, imgPropsMap);
         }
-        
+
         @Override
         public ImageVariantConfig fromImagePropertiesXml(String imgPropsPath, Locale locale) throws IOException, IllegalArgumentException {
             String fullPath = getImagePropertiesFullPath(imgPropsPath);
@@ -95,19 +95,19 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             if (!ServiceUtil.isSuccess(result)) throw new IOException(ServiceUtil.getErrorMessage(result));
             Map<String, Map<String, String>> imgPropsMap = UtilGenerics.checkMap(result.get("xml"));
             // FIXME?: currently setting name and location to same, because the props don't h
-            return fromImagePropertiesMap(imgPropsPath, "file", fullPath, imgPropsMap); 
+            return fromImagePropertiesMap(imgPropsPath, "file", fullPath, imgPropsMap);
         }
-        
+
         @Override
         public ImageVariantConfig fromImagePropertiesXml(String imgPropsPath) throws IOException {
             return fromImagePropertiesXml(imgPropsPath, Locale.ENGLISH);
         }
-        
+
         @Override
         public ImageVariantConfig fromResourceUrlPath(String path) throws IOException {
             return PATHVARIANTCFG.getVariantCfgForPath(path);
         }
-        
+
         public static class FactorySource implements ImageVariantSelector.FactorySource {
             @Override
             public Factory getFactory() {
@@ -115,12 +115,12 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             }
         }
     }
-    
+
     public static class Cache extends Factory {
 
         private static final UtilCache<String, ImageVariantConfig> imgPropsPathCache = UtilCache.createUtilCache("common.image.variant.imgpropxml");
-       
-        
+
+
         @Override
         public ImageVariantConfig fromImagePropertiesMap(String name, String sourceType, String location,
                 Map<String, Map<String, String>> imgPropsMap) {
@@ -147,7 +147,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public ImageVariantConfig fromResourceUrlPath(String path) throws IOException {
             return FACTORY.fromResourceUrlPath(path);
         }
-        
+
         public static class FactorySource implements ImageVariantSelector.FactorySource {
             @Override
             public Cache getFactory() {
@@ -159,11 +159,11 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public static Factory getFactory() {
         return FACTORY;
     }
-    
+
     public static Cache getCache() {
         return CACHE;
     }
-    
+
     public static ImageVariantConfig fromImagePropertiesMap(String name, String sourceType, String location, Map<String, Map<String, String>> imgPropsMap) {
         return getCache().fromImagePropertiesMap(name, sourceType, location, imgPropsMap);
     }
@@ -171,11 +171,11 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public static ImageVariantConfig fromImagePropertiesXml(String imgPropsPath, Locale locale) throws IOException, IllegalArgumentException {
         return getCache().fromImagePropertiesXml(imgPropsPath, locale);
     }
-    
+
     public static ImageVariantConfig fromImagePropertiesXml(String imgPropsPath) throws IOException {
         return getCache().fromImagePropertiesXml(imgPropsPath);
     }
-    
+
     private static List<VariantInfo> parseImagePropertiesMap(Map<String, Map<String, String>> map) throws NumberFormatException {
         List<VariantInfo> res = new ArrayList<>();
         for(Map.Entry<String, Map<String, String>> entry : map.entrySet()) {
@@ -183,7 +183,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         }
         return res;
     }
-    
+
     /**
      * NOTE: currently this may be just a path, but could be something else.
      */
@@ -208,15 +208,15 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public VariantInfo getVariant(String name) {
         return variantMap.get(name);
     }
-    
+
     public boolean hasVariant(String name) {
         return variantMap.get(name) != null;
     }
-    
+
     public Set<String> getVariantNames() {
         return variantMap.keySet();
     }
-    
+
     public Map<String, VariantInfo> getVariantMap() {
         return variantMap;
     }
@@ -224,7 +224,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public List<VariantInfo> getVariantList() {
         return variantList;
     }
-    
+
     /**
      * Returns the original string map for compatibility with old ofbiz methods.
      */
@@ -271,11 +271,11 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
          * Selects the largest variant that is smaller than both canvas dimensions.
          */
         MAXIMUM("max"),;
-        
+
         public static final FitMode DEFAULT = MINIMUM;
-        
+
         private final String strName;
-        
+
         private FitMode(String strName) {
             this.strName = strName;
         }
@@ -283,14 +283,14 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public String getStrName() {
             return strName;
         }
-        
+
         public static FitMode fromStrNameParamSafe(String strName) {
             if ("min".equals(strName) || "true".equals(strName)) return MINIMUM;
             else if ("max".equals(strName)) return MAXIMUM;
             else return null;
         }
     }
-    
+
     /**
      * Tries to return the best variant for the canvas size, or null if there is no preferable option (usually
      * caller should use original in this case... unsure how to handle).
@@ -305,7 +305,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             bestVariant = getExactDimVariantMap().get(VariantInfo.getDimString(width, height));
             if (bestVariant != null) return bestVariant;
         }
-        
+
         if (mode == null || mode == FitMode.MINIMUM) {
             // here we get the smallest variant that is larger than the canvas dimensions (so that we
             // make the browser resize it DOWN instead of up, making less detail loss)
@@ -387,7 +387,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         }
         return bestVariant;
     }
-    
+
     public VariantInfo getCanvasBestFitVariant(String mode, Integer width, Integer height) {
         return getCanvasBestFitVariant(FitMode.fromStrNameParamSafe(mode), width, height);
     }
@@ -407,7 +407,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public String toString() {
         return "[name: " + getName() + ", location: " + getLocation() + "]";
     }
-    
+
     public static class VariantInfo implements Serializable, ImageVariantSelector.VariantInfo { // TODO: move elsewhere
         private final String name;
         private final int width;
@@ -431,63 +431,63 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public int getHeight() {
             return height;
         }
-        
+
         public int getNumPixels() {
             return getWidth()*getHeight();
         }
-        
+
         public String getDimString() {
             return getWidth()+"x"+getHeight();
         }
-        
+
         public static String getDimString(int width, int height) {
             return width+"x"+height;
         }
-        
+
         @Override
         public String toString() {
             return getName()+"="+getDimString();
         }
-        
+
         public boolean biggerEqualThan(int width, int height) {
             return this.width >= width && this.height >= height;
         }
-        
+
         public boolean biggerEqualThan(VariantInfo other) {
             return biggerEqualThan(other.width, other.height);
         }
-        
+
         @Override
         public boolean equals(Object other) {
             if (!(other instanceof VariantInfo)) return false;
             return equals((VariantInfo) other);
         }
-        
+
         public boolean equals(VariantInfo other) {
             return equalsProps(other) && name.equals(other.name);
         }
-        
+
         public boolean equalsProps(VariantInfo other) {
             return other != null && width == other.width && height == other.height;
         }
-        
+
         public void propsToStringMap(Map<String, ? super String> map) {
             map.put("width", ""+width);
             map.put("height", ""+height);
         }
-        
+
         public Map<String, String> propsToStringMap() {
             Map<String, String> map = new HashMap<>();
             propsToStringMap(map);
             return map;
         }
     }
-    
+
     public static class PathVariantConfig implements Serializable {
         protected final Map<String, ImageVariantConfig> pathPrefixMap;
         protected final List<String> pathPrefixList;
         protected final ImageVariantConfig defaultCfg;
-        
+
         public PathVariantConfig(Map<String, ImageVariantConfig> pathPrefixMap, ImageVariantConfig defaultCfg) {
             this.pathPrefixMap = Collections.unmodifiableMap(new HashMap<>(pathPrefixMap));
             this.pathPrefixList = Collections.unmodifiableList(new ArrayList<>(pathPrefixMap.keySet()));
@@ -498,7 +498,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             Map<String, String> entries = new HashMap<>();
             // get the .cfgfile entries
             Properties properties = UtilProperties.getProperties(resource);
-            UtilProperties.putPropertiesWithPrefixSuffix(entries, properties, 
+            UtilProperties.putPropertiesWithPrefixSuffix(entries, properties,
                     namePrefix, ".cfgfile", false, false, false);
             ImageVariantConfig defaultCfg = null;
             Map<String, ImageVariantConfig> pathPrefixMap = new LinkedHashMap<>();
@@ -523,7 +523,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             if (defaultCfg == null) throw new IllegalArgumentException("missing default variant configuration");
             return new PathVariantConfig(pathPrefixMap, defaultCfg);
         }
-        
+
         public static PathVariantConfig fromPropertiesSafe(String resource, String namePrefix, Factory cfgFactory) {
             try {
                 return fromProperties(resource, namePrefix, cfgFactory);
@@ -532,7 +532,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
                 return new PathVariantConfig(new HashMap<String, ImageVariantConfig>(), null);
             }
         }
-        
+
         public Map<String, ImageVariantConfig> getPathPrefixMap() {
             return pathPrefixMap;
         }
@@ -552,12 +552,12 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             return defaultCfg;
         }
     }
-     
+
     /**
      * If imgPropertyPath starts with component://, expands it to a full path; otherwise, assumes
      * it is a path from scipio project root and expands it to a full path using <code>ofbiz.home</code>.
-     * @throws IllegalArgumentException 
-     * @throws MalformedURLException 
+     * @throws IllegalArgumentException
+     * @throws MalformedURLException
      */
     public static String getImagePropertiesFullPath(String imgPropertyPath) throws IOException {
         try {
@@ -572,7 +572,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             throw new IOException(e);
         }
     }
-    
+
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for common image size definitions.
      * Added 2017-08-08.
@@ -580,7 +580,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public static String getCommonImagePropertiesFullPath() throws IOException {
         return getImagePropertiesFullPath(COMMON_IMAGEPROP_FILEPATH);
     }
-    
+
     public static String getCommonImagePropertiesPath() throws IOException {
         return COMMON_IMAGEPROP_FILEPATH;
     }

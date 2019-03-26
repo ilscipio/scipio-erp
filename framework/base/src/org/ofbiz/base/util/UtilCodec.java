@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.codec.EncoderResolver;
-import org.ofbiz.base.util.codec.HtmlSanitizerPolicies;
 import org.owasp.esapi.codecs.CSSCodec;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
@@ -69,23 +68,23 @@ public class UtilCodec {
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     private static final RawEncoder rawEncoder = getDefaultEncoder(new RawEncoder());
-    
+
     private static final UrlCodec urlCodec = new UrlCodec(); // SCIPIO: FIXME: this needs to be split between encode and decode...
     private static final List<Codec> codecs;
     static {
-        List<Codec> tmpCodecs = new ArrayList<Codec>();
+        List<Codec> tmpCodecs = new ArrayList<>();
         tmpCodecs.add(new HTMLEntityCodec());
         tmpCodecs.add(new PercentCodec());
         codecs = Collections.unmodifiableList(tmpCodecs);
     }
-    
+
     /**
      * SCIPIO: list of available encoder names.
      */
     private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
             "raw", "url", "xml", "html", "cssstr", "cssid", "string"
     })));
-    
+
     /**
      * SCIPIO: list of available decoder names.
      */
@@ -102,8 +101,8 @@ public class UtilCodec {
 
     public static interface SimpleEncoder {
         public String encode(String original);
-        public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method 
-        
+        public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method
+
         /**
          * SCIPIO: Returns the language of this encoder.
          * Added 2018-06-11 (backported from Scipio's own ContentLangUtil.ContentSanitizer, which will be killed).
@@ -287,7 +286,7 @@ public class UtilCodec {
             return "cssid";
         }
     }
-    
+
     /**
      * SCIPIO: CSS string literal encoder, ONLY for values placed between quotes.
      */
@@ -308,13 +307,13 @@ public class UtilCodec {
             return "cssstr";
         }
     }
-    
+
     /**
      * SCIPIO: Javascript string literal encoder, ONLY for values placed between quotes.
      */
     public static class JsStringEncoder implements SimpleEncoder {
         public String encode(String original) {
-            return (original != null) ? 
+            return (original != null) ?
                     freemarker.template.utility.StringUtil.javaScriptStringEnc(original) : null;
         }
         @Override
@@ -326,13 +325,13 @@ public class UtilCodec {
             return "jsstr";
         }
     }
-    
+
     /**
      * SCIPIO: JSON string literal encoder, ONLY for values placed between quotes.
      */
     public static class JsonStringEncoder implements SimpleEncoder {
         public String encode(String original) {
-            return (original != null) ? 
+            return (original != null) ?
                     freemarker.template.utility.StringUtil.jsonStringEnc(original) : null;
         }
         @Override
@@ -344,7 +343,7 @@ public class UtilCodec {
             return "jsonstr";
         }
     }
-    
+
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
@@ -361,8 +360,8 @@ public class UtilCodec {
             return "raw";
         }
     }
-    
-    
+
+
     // ================== Begin General Functions ==================
 
     private static final Map<String, SimpleEncoder> encoderMap;
@@ -371,7 +370,7 @@ public class UtilCodec {
 
         // SCIPIO: 2018-06-11: dump the html specific profile encoders into here
         map.putAll(policyEncoders);
-        
+
         map.put(rawEncoder.getLang(), rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
         map.put(urlCodec.getLang(), urlCodec);
         map.put(xmlEncoder.getLang(), xmlEncoder);
@@ -393,36 +392,36 @@ public class UtilCodec {
             sb.append(map.get(name).getClass().getName());
         }
         Debug.logInfo(sb.toString(), module);
-        
+
         encoderMap = map;
     }
-    
+
     @SuppressWarnings("unchecked")
     private static <T extends SimpleEncoder> T getDefaultEncoder(T defaultEncoder) { // SCIPIO
         T encoder = null;
         try {
             encoder = (T) policyEncoders.get(defaultEncoder.getLang() + "-default");
         } catch(ClassCastException e) {
-            Debug.logError(e, "Unexpected script language encoder class for type '" 
+            Debug.logError(e, "Unexpected script language encoder class for type '"
                     + defaultEncoder.getLang() + "-default; verify property configuration", module);
         }
         return (encoder != null) ? encoder : defaultEncoder;
     }
-    
+
     public static SimpleEncoder getEncoder(String type) {
         return encoderMap.get(type);
     }
-    
+
     /**
      * SCIPIO: Returns raw/dummy encoder (quick method).
      * <p>
-     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to 
+     * NOTE: Generic SimpleEncoder type is returned as opposed to RawEncoder in order to
      * preserve the abstraction provided by {@link #getEncoder(String)}.
      */
     public static SimpleEncoder getRawEncoder() {
         return rawEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns default html encoder (quick method).
      */
@@ -436,14 +435,14 @@ public class UtilCodec {
     public static SimpleEncoder getXmlEncoder() {
         return xmlEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns url encoder (quick method).
      */
     public static SimpleEncoder getUrlEncoder() {
         return urlCodec;
     }
-    
+
     /**
      * SCIPIO: Returns css string literator encoder (quick method).
      * @deprecated ambiguous; use {@link #getCssIdEncoder()} or {@link #getCssStringEncoder()} instead
@@ -452,21 +451,21 @@ public class UtilCodec {
     public static SimpleEncoder getCssEncoder() {
         return cssStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns css identifier encoder, aggressive (quick method).
      */
     public static SimpleEncoder getCssIdEncoder() {
         return cssIdEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns css string literator encoder, aggressive (quick method).
      */
     public static SimpleEncoder getCssStringEncoder() {
         return cssStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns Javascript string literator encoder.
      * Based on Freemarker ?js_string algorithm.
@@ -474,7 +473,7 @@ public class UtilCodec {
     public static SimpleEncoder getJsStringEncoder() {
         return jsStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns JSON string literator encoder.
      * Based on Freemarker ?json_string algorithm.
@@ -482,14 +481,14 @@ public class UtilCodec {
     public static SimpleEncoder getJsonStringEncoder() {
         return jsonStringEncoder;
     }
-    
+
     /**
      * SCIPIO: Checks if encoder is raw encoder (abstraction).
      */
     public static boolean isRawEncoder(SimpleEncoder encoder) {
         return (encoder instanceof RawEncoder);
     }
-    
+
     /**
      * SCIPIO: Checks if encoder is null or raw encoder (abstraction).
      */
@@ -504,28 +503,28 @@ public class UtilCodec {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Returns url decoder (quick method).
      */
     public static SimpleDecoder getUrlDecoder() {
         return urlCodec;
     }
-    
+
     /**
      * SCIPIO: Returns all available encoder names.
      */
     public static Set<String> getEncoderNames() {
         return encoderNames;
     }
-    
+
     /**
      * SCIPIO: Returns all available decoder names.
      */
     public static Set<String> getDecoderNames() {
         return decoderNames;
     }
-    
+
     /**
      * SCIPIO: Quick encoding method.
      * <p>
@@ -534,14 +533,14 @@ public class UtilCodec {
     public static String encode(String value, String lang) {
         return getEncoder(lang).encode(value);
     }
-    
+
     /**
      * SCIPIO: Quick decoding method.
      */
     public static String decode(String value, String lang) {
         return getDecoder(lang).decode(value);
     }
-    
+
     /**
      * SCIPIO: Quick sanitizing method.
      */
@@ -571,9 +570,9 @@ public class UtilCodec {
             clean = true;
 
             // try each codec and keep track of which ones work
-            Iterator i = codecs.iterator();
+            Iterator<Codec> i = codecs.iterator();
             while (i.hasNext()) {
-                Codec codec = (Codec) i.next();
+                Codec codec = i.next();
                 String old = working;
                 working = codec.decode(working);
                 if (!old.equals(working)) {
@@ -593,34 +592,36 @@ public class UtilCodec {
         if (foundCount >= 2 && mixedCount > 1) {
             if (restrictMultiple || restrictMixed) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Multiple (" + foundCount + "x) and mixed encoding (" + mixedCount + "x) detected in " + input, module);
             }
+            Debug.logWarning("Multiple (" + foundCount + "x) and mixed encoding (" + mixedCount + "x) detected in " + input, module);
         } else if (foundCount >= 2) {
             if (restrictMultiple) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Multiple (" + foundCount + "x) encoding detected in " + input, module);
             }
+            Debug.logWarning("Multiple (" + foundCount + "x) encoding detected in " + input, module);
         } else if (mixedCount > 1) {
             if (restrictMixed) {
                 throw new IntrusionException("Input validation failure");
-            } else {
-                Debug.logWarning("Mixed encoding (" + mixedCount + "x) detected in " + input, module);
             }
+            Debug.logWarning("Mixed encoding (" + mixedCount + "x) detected in " + input, module);
         }
         return working;
     }
 
     /**
      * Uses a black-list approach for necessary characters for HTML.
-     * Does not allow various characters (after canonicalization), including "<", ">", "&" (if not followed by a space), and "%" (if not followed by a space).
+     * <p>
+     * Does not allow various characters (after canonicalization), including
+     * "&lt;", "&gt;", "&amp;" (if not followed by a space), and "%" (if not
+     * followed by a space).
      *
      * @param value
      * @param errorMessageList
      */
     public static String checkStringForHtmlStrictNone(String valueName, String value, List<String> errorMessageList) {
-        if (UtilValidate.isEmpty(value)) return value;
+        if (UtilValidate.isEmpty(value)) {
+            return value;
+        }
 
         // canonicalize, strict (error on double-encoding)
         try {
@@ -635,34 +636,6 @@ public class UtilCodec {
         if (value.indexOf("<") >= 0 || value.indexOf(">") >= 0) {
             errorMessageList.add("In field [" + valueName + "] less-than (<) and greater-than (>) symbols are not allowed.");
         }
-
-        /* NOTE DEJ 20090311: After playing with this more this doesn't seem to be necessary; the canonicalize will convert all such characters into actual text before this check is done, including other illegal chars like &lt; which will canonicalize to < and then get caught
-        // check for & followed a semicolon within 7 characters, no spaces in-between (and perhaps other things sometime?)
-        int curAmpIndex = value.indexOf("&");
-        while (curAmpIndex > -1) {
-            int semicolonIndex = value.indexOf(";", curAmpIndex + 1);
-            int spaceIndex = value.indexOf(" ", curAmpIndex + 1);
-            if (semicolonIndex > -1 && (semicolonIndex - curAmpIndex <= 7) && (spaceIndex < 0 || (spaceIndex > curAmpIndex && spaceIndex < semicolonIndex))) {
-                errorMessageList.add("In field [" + valueName + "] the ampersand (&) symbol is only allowed if not used as an encoded character: no semicolon (;) within 7 spaces or there is a space between.");
-                // once we find one like this we have the message so no need to check for more
-                break;
-            }
-            curAmpIndex = value.indexOf("&", curAmpIndex + 1);
-        }
-         */
-
-        /* NOTE DEJ 20090311: After playing with this more this doesn't seem to be necessary; the canonicalize will convert all such characters into actual text before this check is done, including other illegal chars like %3C which will canonicalize to < and then get caught
-        // check for % followed by 2 hex characters
-        int curPercIndex = value.indexOf("%");
-        while (curPercIndex >= 0) {
-            if (value.length() > (curPercIndex + 3) && UtilValidate.isHexDigit(value.charAt(curPercIndex + 1)) && UtilValidate.isHexDigit(value.charAt(curPercIndex + 2))) {
-                errorMessageList.add("In field [" + valueName + "] the percent (%) symbol is only allowed if followed by a space.");
-                // once we find one like this we have the message so no need to check for more
-                break;
-            }
-            curPercIndex = value.indexOf("%", curPercIndex + 1);
-        }
-         */
 
         // TODO: anything else to check for that can be used to get HTML or JavaScript going without these characters?
 
@@ -705,11 +678,10 @@ public class UtilCodec {
             if (theObject instanceof String) {
                 if (this.encoder != null) {
                     return encoder.encode((String) theObject);
-                } else {
-                    // SCIPIO: removed HTML bias
-                    //return UtilCodec.getEncoder("html").encode((String) theObject);
-                    return (String) theObject;
                 }
+                // SCIPIO: removed HTML bias
+                //return UtilCodec.getEncoder("html").encode((String) theObject);
+                return (String) theObject;
             } else if (theObject instanceof Map<?, ?>) {
                 return EncodingMapWrapper.getEncodingMapWrapper(UtilGenerics.<K, Object>checkMap(theObject), this.encoder);
             }
@@ -725,7 +697,7 @@ public class UtilCodec {
         @Override
         public String toString() { return this.internalMap.toString(); }
     }
-    
+
     /**
      * SCIPIO: the original HtmlEncodingMapWrapper, as a specialization.
      */

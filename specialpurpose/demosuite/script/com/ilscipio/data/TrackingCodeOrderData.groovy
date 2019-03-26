@@ -11,16 +11,20 @@ import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
 
-
-
 public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
+    private static final String module = "TrackingCodeOrderData.groovy";
     final String DEFAULT_WEBAPP_NAME = "shop";
 
+    public String getDataType() {
+        return null;
+    }
+
     TrackingCodeOrderData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", module);
     }
 
     public void init() {
@@ -34,7 +38,7 @@ public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
         context.trackingCodeTypeList = trackingCodeTypeList;
     }
 
-    List prepareData(int index) throws Exception {
+    List prepareData(int index, AbstractDataObject data) throws Exception {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         if (context.trackingCodeTypeList && context.orderHeaderList) {
             trackingCodeType =  context.trackingCodeTypeList.get(UtilRandom.random(context.trackingCodeTypeList));

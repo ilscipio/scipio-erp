@@ -36,19 +36,43 @@ components.each { component ->
          componentMap.rootLocation =  component.getRootLocation();
          componentMap.enabled = (component.enabled() == true? "Y" : "N");
          componentMap.webAppName = webApp.getName();
-         componentMap.contextRoot = webApp.getContextRoot();
+         componentMap.contextRoot = webApp.getContextRoot() ?: "/"; // SCIPIO: Root will be empty string, show as "/"
          componentMap.location = webApp.getLocation();
+         // SCIPIO: Relative locations and appBarDisplay
+         def relRootLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.rootLocation) ?: "";
+         if (relRootLoc?.endsWith("/")) {
+             relRootLoc = relRootLoc[0..-2];
+         }
+         componentMap.relRootLoc = relRootLoc
+         def relWebLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.location) ?: "";
+         if (relWebLoc?.endsWith("/")) {
+             relWebLoc = relWebLoc[0..-2];
+         }
+         componentMap.relWebLoc = relWebLoc;
+         appBarDisplay = webApp.getAppBarDisplay();
+         componentMap.componentMap = componentMap;
+         componentMap.contextRootLinkUri = (componentMap.contextRoot && (appBarDisplay || 
+             (componentMap.compName == "solr" && componentMap.webAppName == "solr"))) ? componentMap.contextRoot : null;
          componentList.add(componentMap);
      }
      if (UtilValidate.isEmpty(webApps)) {
          componentMap = [:];
          componentMap.compName = component.getComponentName();
-         componentMap.rootLocation =  component.getRootLocation();
+         componentMap.rootLocation = component.getRootLocation();
          componentMap.enabled = (component.enabled() == true? "Y" : "N");
          componentList.add(componentMap);
          componentMap.webAppName = "";
          componentMap.contextRoot = "";
          componentMap.location = "";
+         // SCIPIO: Relative locations and appBarDisplay
+         def relRootLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.rootLocation) ?: "";
+         if (relRootLoc?.endsWith("/")) {
+             relRootLoc = relRootLoc[0..-2];
+         }
+         componentMap.relRootLoc = relRootLoc
+         componentMap.relWebLoc = "";
+         componentMap.appBarDisplay = false;
+         componentMap.contextRootLinkUri = null;
      }
 }
 
@@ -63,6 +87,7 @@ for (int entry = 0; entry < componentList.size(); entry++) {
         componentList[entry].compName = "";
         componentList[entry].rootLocation = "";
         componentList[entry].enabled = "";
+        componentList[entry].relRootLoc = ""; // SCIPIO
     }    
     lastComp = compSave;
 }

@@ -100,6 +100,42 @@ public class UomWorker {
     }
 
     /**
+    * SCIPIO: Method to use a conversion unit from a specific date
+    */
+   public static BigDecimal convertDatedUom(Timestamp timeStamp, BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher,boolean safe) {
+       if (originalValue == null || uomId == null || uomIdTo == null) return null;
+       if (uomId.equals(uomIdTo)) return originalValue;
+       //BigDecimal conversionRate = BigDecimal.ONE;
+       //BigDecimal convertedValue = BigDecimal.ZERO;
+       //Delegator delegator = dispatcher.getDelegator();
+
+       Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
+       svcInMap.put("originalValue", originalValue);
+       svcInMap.put("uomId", uomId);
+       svcInMap.put("uomIdTo", uomIdTo);
+       svcInMap.put("asOfDate", timeStamp);
+
+       Map<String, Object> svcOutMap = new LinkedHashMap<String, Object>();
+       try {
+           // SCIPIO: support safe mode: create a new transaction to prevent screen crashes
+           if (safe) {
+               svcOutMap = dispatcher.runSync("convertUom", svcInMap, -1, true);
+           } else {
+               svcOutMap = dispatcher.runSync("convertUom", svcInMap);
+           }
+       } catch (GenericServiceException ex) {
+           Debug.logError(ex, module);
+           return null;
+       }
+
+       if (svcOutMap.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS) && svcOutMap.get("convertedValue") != null) {
+           return (BigDecimal) svcOutMap.get("convertedValue");
+       }
+       Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
+       return null;
+   }
+
+    /**
      * Convenience method to call the convertUom service
      * <p>
      * SCIPIO: modified to support safe call
@@ -108,12 +144,12 @@ public class UomWorker {
         if (originalValue == null || uomId == null || uomIdTo == null) return null;
         if (uomId.equals(uomIdTo)) return originalValue;
 
-        Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> svcInMap =  new LinkedHashMap<>();
         svcInMap.put("originalValue", originalValue);
         svcInMap.put("uomId", uomId);
         svcInMap.put("uomIdTo", uomIdTo);
 
-        Map<String, Object> svcOutMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> svcOutMap;
         try {
             // SCIPIO: support safe mode: create a new transaction to prevent screen crashes
             if (safe) {
@@ -132,7 +168,7 @@ public class UomWorker {
         Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
         return null;
     }
-    
+
 
     /**
      * Convenience method to call the convertUom service
@@ -142,7 +178,7 @@ public class UomWorker {
     public static BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {
         return convertUom(originalValue, uomId, uomIdTo, dispatcher, false);
     }
-    
+
     /**
      * SCIPIO: Convenience method to call the convertUom service, which is always safe to call
      * from screens and will not throw exceptions or trigger transaction failures.
@@ -157,7 +193,7 @@ public class UomWorker {
      * in the UI.
      * <p>
      * TODO: this is slow; should optimize somehow...
-     * 
+     *
      * @param asTarget ternary Boolean value: true means match only convertible-to Uoms, false means convertible-from, and null means both
      */
     public static List<GenericValue> getConvertibleUoms(Delegator delegator, LocalDispatcher dispatcher, Boolean asTarget,
@@ -179,13 +215,13 @@ public class UomWorker {
                             EntityOperator.OR,
                             EntityCondition.makeCondition("uomIdTo", uom.getString("uomId")));
                 }
-                
+
                 conversionList = delegator.findList("UomConversion", srcTargetCond, null, null, null, cache);
                 if (!conversionList.isEmpty()) {
                     resultUomList.add(uom);
                     continue;
                 }
- 
+
                 EntityCondition cond = srcTargetCond;
                 if (filterByDate) {
                     cond = EntityCondition.makeCondition(cond, EntityOperator.AND,
@@ -197,7 +233,7 @@ public class UomWorker {
                     continue;
                 }
             }
-            
+
             return resultUomList;
         } catch(Exception e) {
             Debug.logError(e, module);

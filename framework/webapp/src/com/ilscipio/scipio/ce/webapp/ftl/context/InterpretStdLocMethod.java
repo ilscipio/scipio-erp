@@ -32,8 +32,8 @@ public class InterpretStdLocMethod extends InterpretStdMethod {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         return execTyped(args, true);
     }
-    
+
 }

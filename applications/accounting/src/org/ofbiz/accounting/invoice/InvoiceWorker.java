@@ -20,12 +20,14 @@ package org.ofbiz.accounting.invoice;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,24 +46,27 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * InvoiceWorker - Worker methods of invoices
  */
-public class InvoiceWorker {
+public final class InvoiceWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static BigDecimal ZERO = BigDecimal.ZERO;
-    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-    private static int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
-    private static int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
+    private static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+    private static final int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+    private static final RoundingMode taxRounding = UtilNumber.getRoundingMode("salestax.rounding");
+
+    private InvoiceWorker () {}
 
     /**
      * Return the total amount of the invoice (including tax) using the the invoiceId as input.
      * @param delegator the delegator
      * @param invoiceId the invoice id
-     * @return Return the total amount of the invoice 
+     * @return Return the total amount of the invoice
      */
     public static BigDecimal getInvoiceTotal(Delegator delegator, String invoiceId) {
         return getInvoiceTotal(delegator, invoiceId, Boolean.TRUE);
@@ -107,14 +112,63 @@ public class InvoiceWorker {
         }
         BigDecimal amount = invoiceItem.getBigDecimal("amount");
         if (amount == null) {
-            amount = ZERO;
+            amount = BigDecimal.ZERO;
         }
         return quantity.multiply(amount).setScale(decimals, rounding);
     }
 
+    /**
+     * Method to return the invoice item description with following step
+     * 1. take the item description field
+     * 2. if tax associate, resolve the taxAuthorityRateProduct description
+     * 3. if product associate, call content wrapper to resolve PRODUCT_NAME or take the brandName
+     * 4. take the item Type line description
+     * <p>
+     * SCIPIO: 2018-09-26: TODO: REVIEW: html product name escaping...
+     *
+     * @param dispatcher
+     * @param invoiceItem
+     * @param locale
+     * @return the item description
+     * @throws GenericEntityException
+     */
+    public static String getInvoiceItemDescription(LocalDispatcher dispatcher, GenericValue invoiceItem, Locale locale) throws GenericEntityException {
+        Delegator delegator = invoiceItem.getDelegator();
+        String description = invoiceItem.getString("description");
+        if (UtilValidate.isEmpty(description)) {
+            String taxAuthorityRateSeqId = invoiceItem.getString("taxAuthorityRateSeqId");
+            if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
+                GenericValue taxRate = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
+                if (taxRate != null) {
+                    description = (String) taxRate.get("description", locale);
+                }
+            }
+        }
+        if (UtilValidate.isEmpty(description)) {
+            String productId = invoiceItem.getString("productId");
+            if (UtilValidate.isNotEmpty(productId)) {
+                GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+                ProductContentWrapper productContentWrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
+                // SCIPIO
+                //StringUtil.StringWrapper stringWrapper = productContentWrapper.get("PRODUCT_NAME", "html");
+                //if (stringWrapper != null) {
+                //    description = stringWrapper.toString();
+                //}
+                description = productContentWrapper.get("PRODUCT_NAME", "html"); // SCIPIO: TODO: REVIEW: html
+                if (UtilValidate.isEmpty(description)) {
+                    description = product.getString("brandName");
+                }
+            }
+        }
+        if (UtilValidate.isEmpty(description)) {
+            description = (String) invoiceItem.getRelatedOne("InvoiceItemType", true).get("description",locale);
+        }
+        return description;
+    }
+
     /** Method to get the taxable invoice item types as a List of invoiceItemTypeIds.  These are identified in Enumeration with enumTypeId TAXABLE_INV_ITM_TY. */
     public static List<String> getTaxableInvoiceItemTypeIds(Delegator delegator) throws GenericEntityException {
-        List<String> typeIds = new LinkedList<String>();
+        List<String> typeIds = new LinkedList<>();
         List<GenericValue> invoiceItemTaxTypes = EntityQuery.use(delegator).from("Enumeration").where("enumTypeId", "TAXABLE_INV_ITM_TY")
                 .cache().queryList();
         for (GenericValue invoiceItemTaxType : invoiceItemTaxTypes) {
@@ -124,7 +178,7 @@ public class InvoiceWorker {
     }
 
     public static BigDecimal getInvoiceTaxTotal(GenericValue invoice) {
-        BigDecimal taxTotal = ZERO;
+        BigDecimal taxTotal = BigDecimal.ZERO;
         Map<String, Set<String>> taxAuthPartyAndGeos = InvoiceWorker.getInvoiceTaxAuthPartyAndGeos(invoice);
         for (Map.Entry<String, Set<String>> taxAuthPartyGeos : taxAuthPartyAndGeos.entrySet()) {
             String taxAuthPartyId = taxAuthPartyGeos.getKey();
@@ -159,9 +213,8 @@ public class InvoiceWorker {
       * @return Return the total amount of the invoice
       */
      public static BigDecimal getInvoiceTotal(GenericValue invoice, Boolean actualCurrency) {
-        BigDecimal invoiceTotal = ZERO;
-        BigDecimal invoiceTaxTotal = ZERO;
-        invoiceTaxTotal = InvoiceWorker.getInvoiceTaxTotal(invoice);
+        BigDecimal invoiceTotal = BigDecimal.ZERO;
+        BigDecimal invoiceTaxTotal = InvoiceWorker.getInvoiceTaxTotal(invoice);
 
         List<GenericValue> invoiceItems = null;
         try {
@@ -216,8 +269,9 @@ public class InvoiceWorker {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Trouble getting Party from InvoiceRole", module);
             }
-            if (party != null)
+            if (party != null) {
                 return party;
+            }
         }
         return null;
     }
@@ -259,10 +313,36 @@ public class InvoiceWorker {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Trouble getting Party from InvoiceRole", module);
             }
-            if (party != null)
+            if (party != null) {
                 return party;
+            }
         }
         return null;
+    }
+
+    /**
+      * Method to obtain the shipping address from an invoice
+      * first resolve from InvoiceContactMech and if not found try from Shipment if present
+      * @param invoice GenericValue object of the Invoice
+      * @return GenericValue object of the PostalAddress
+      */
+    public static GenericValue getShippingAddress(GenericValue invoice) {
+        GenericValue postalAddress = getInvoiceAddressByType(invoice, "SHIPPING_LOCATION", false);
+        Delegator delegator = invoice.getDelegator();
+        if (postalAddress == null) {
+            try {
+                GenericValue shipmentView = EntityQuery.use(delegator).from("InvoiceItemAndShipmentView")
+                        .where("invoiceId", invoice.get("invoiceId")).queryFirst();
+                if (shipmentView != null) {
+                    GenericValue shipment = EntityQuery.use(delegator).from("Shipment")
+                        .where("shipmentId", shipmentView.get("shipmentId")).queryOne();
+                    postalAddress = shipment.getRelatedOne("DestinationPostalAddress", false);
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError("Touble getting ContactMech entity from OISG", module);
+            }
+        }
+        return postalAddress;
     }
 
     /**
@@ -284,6 +364,10 @@ public class InvoiceWorker {
     }
 
     public static GenericValue getInvoiceAddressByType(GenericValue invoice, String contactMechPurposeTypeId) {
+        return getInvoiceAddressByType(invoice, contactMechPurposeTypeId, true);
+    }
+
+    public static GenericValue getInvoiceAddressByType(GenericValue invoice, String contactMechPurposeTypeId, boolean fetchPartyAddress) {
         Delegator delegator = invoice.getDelegator();
         List<GenericValue> locations = null;
         // first try InvoiceContactMech to see if we can find the address needed
@@ -293,14 +377,16 @@ public class InvoiceWorker {
             Debug.logError("Touble getting InvoiceContactMech entity list", module);
         }
 
-        if (UtilValidate.isEmpty(locations))    {
+        if (UtilValidate.isEmpty(locations) && fetchPartyAddress)    {
             // if no locations found get it from the PartyAndContactMech using the from and to party on the invoice
             String destinationPartyId = null;
             Timestamp now = UtilDateTime.nowTimestamp();
-            if (invoice.getString("invoiceTypeId").equals("SALES_INVOICE"))
+            if ("SALES_INVOICE".equals(invoice.getString("invoiceTypeId"))) {
                 destinationPartyId = invoice.getString("partyId");
-            if (invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))
+            }
+            if ("PURCHASE_INVOICE".equals(invoice.getString("invoiceTypeId"))) {
                 destinationPartyId = invoice.getString("partyId");
+            }
             try {
                 locations = EntityQuery.use(delegator).from("PartyContactWithPurpose")
                         .where("partyId", destinationPartyId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
@@ -332,7 +418,7 @@ public class InvoiceWorker {
                 Debug.logError(e, "Trouble getting Contact for contactMechId: " + locations.get(0).getString("contactMechId"), module);
             }
 
-            if (contactMech != null && contactMech.getString("contactMechTypeId").equals("POSTAL_ADDRESS"))    {
+            if (contactMech != null && "POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")))    {
                 try {
                     postalAddress = contactMech.getRelatedOne("PostalAddress", false);
                     return postalAddress;
@@ -364,7 +450,7 @@ public class InvoiceWorker {
         return InvoiceWorker.getInvoiceTotal(invoice, actualCurrency).subtract(getInvoiceApplied(invoice, actualCurrency));
     }
     /**
-     * Returns amount not applied (i.e., still outstanding) of an invoice at an asOfDate, based on Payment.effectiveDate <= asOfDateTime
+     * Returns amount not applied (i.e., still outstanding) of an invoice at an asOfDate, based on Payment.effectiveDate &lt;= asOfDateTime
      *
      * @param invoice GenericValue object of the invoice
      * @param asOfDateTime the date to use
@@ -386,7 +472,7 @@ public class InvoiceWorker {
     }
 
     /**
-     * Returns amount applied to invoice before an asOfDateTime, based on Payment.effectiveDate <= asOfDateTime
+     * Returns amount applied to invoice before an asOfDateTime, based on Payment.effectiveDate &lt;= asOfDateTime
      *
      * @param delegator the delegator
      * @param invoiceId the invoice id
@@ -398,7 +484,7 @@ public class InvoiceWorker {
             throw new IllegalArgumentException("Null delegator is not allowed in this method");
         }
 
-        BigDecimal invoiceApplied = ZERO;
+        BigDecimal invoiceApplied = BigDecimal.ZERO;
         List<GenericValue> paymentApplications = null;
 
         // lookup payment applications which took place before the asOfDateTime for this invoice
@@ -479,7 +565,7 @@ public class InvoiceWorker {
      * @return the applied total as BigDecimal
      */
     public static BigDecimal getInvoiceItemApplied(GenericValue invoiceItem) {
-        BigDecimal invoiceItemApplied = ZERO;
+        BigDecimal invoiceItemApplied = BigDecimal.ZERO;
         List<GenericValue> paymentApplications = null;
         try {
             paymentApplications = invoiceItem.getRelated("PaymentApplication", null, null, false);
@@ -506,10 +592,7 @@ public class InvoiceWorker {
             if (UtilValidate.isNotEmpty(party) && party.getString("baseCurrencyUomId") != null) {
                 otherCurrencyUomId = party.getString("baseCurrencyUomId");
             } else {
-                otherCurrencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", delegator);
-            }
-            if (otherCurrencyUomId == null) {
-                otherCurrencyUomId = "USD"; // final default
+                otherCurrencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting database records....", module);
@@ -524,7 +607,7 @@ public class InvoiceWorker {
             if (UtilValidate.isNotEmpty(acctgTransEntries)) {
                 GenericValue acctgTransEntry = (acctgTransEntries.get(0)).getRelated("AcctgTransEntry", null, null, false).get(0);
                 BigDecimal origAmount = acctgTransEntry.getBigDecimal("origAmount");
-                if (origAmount.compareTo(ZERO) == 1) {
+                if (origAmount.compareTo(BigDecimal.ZERO) == 1) {
                     conversionRate = acctgTransEntry.getBigDecimal("amount").divide(acctgTransEntry.getBigDecimal("origAmount"), new MathContext(100)).setScale(decimals,rounding);
                 }
             }
@@ -581,14 +664,14 @@ public class InvoiceWorker {
     /**
      * Return a list of taxes separated by Geo and party and return the tax grand total
      * @param invoice Generic Value
-     * @return  Map: taxByTaxAuthGeoAndPartyList(List) and taxGrandTotal(BigDecimal)
+     * @return Map taxByTaxAuthGeoAndPartyList(List) and taxGrandTotal(BigDecimal)
      */
     @Deprecated
     public static Map<String, Object> getInvoiceTaxByTaxAuthGeoAndParty(GenericValue invoice) {
-        BigDecimal taxGrandTotal = ZERO;
-        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = new LinkedList<Map<String, Object>>();
+        BigDecimal taxGrandTotal = BigDecimal.ZERO;
+        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = new LinkedList<>();
         List<GenericValue> invoiceItems = null;
-        if (UtilValidate.isNotEmpty(invoice)) {
+        if (invoice != null) {
             try {
                 invoiceItems = invoice.getRelated("InvoiceItem", null, null, false);
             } catch (GenericEntityException e) {
@@ -617,16 +700,16 @@ public class InvoiceWorker {
                         //get all records for invoices filtered by taxAuthGeoId and taxAurhPartyId
                         List<GenericValue> invoiceItemsByTaxAuthGeoAndPartyIds = EntityUtil.filterByAnd(invoiceItems, UtilMisc.toMap("taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
                         if (UtilValidate.isNotEmpty(invoiceItemsByTaxAuthGeoAndPartyIds)) {
-                            BigDecimal totalAmount = ZERO;
+                            BigDecimal totalAmount = BigDecimal.ZERO;
                             //Now for each invoiceItem record get and add amount.
                             for (GenericValue invoiceItem : invoiceItemsByTaxAuthGeoAndPartyIds) {
                                 BigDecimal amount = invoiceItem.getBigDecimal("amount");
                                 if (amount == null) {
-                                    amount = ZERO;
+                                    amount = BigDecimal.ZERO;
                                 }
                                 totalAmount = totalAmount.add(amount).setScale(taxDecimals, taxRounding);
                             }
-                            totalAmount = totalAmount.setScale(UtilNumber.getBigDecimalScale("salestax.calc.decimals"), UtilNumber.getBigDecimalRoundingMode("salestax.rounding"));
+                            totalAmount = totalAmount.setScale(UtilNumber.getBigDecimalScale("salestax.calc.decimals"), UtilNumber.getRoundingMode("salestax.rounding"));
                             taxByTaxAuthGeoAndPartyList.add(UtilMisc.<String, Object>toMap("taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, "totalAmount", totalAmount));
                             taxGrandTotal = taxGrandTotal.add(totalAmount);
                         }
@@ -634,7 +717,7 @@ public class InvoiceWorker {
                 }
             }
         }
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
@@ -647,10 +730,11 @@ public class InvoiceWorker {
      *         will not account for tax lines that do not contain a taxAuthPartyId
      */
     public static Map<String, Set<String>> getInvoiceTaxAuthPartyAndGeos (GenericValue invoice) {
-        Map<String, Set<String>> result = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> result = new HashMap<>();
 
-        if (invoice == null)
-           throw new IllegalArgumentException("Invoice cannot be null.");
+        if (invoice == null) {
+            throw new IllegalArgumentException("Invoice cannot be null.");
+        }
         List<GenericValue> invoiceTaxItems = null;
         try {
             Delegator delegator = invoice.getDelegator();
@@ -668,7 +752,7 @@ public class InvoiceWorker {
                 String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                 if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
                     if (!result.containsKey(taxAuthPartyId)) {
-                        Set<String> taxAuthGeos = new HashSet<String>();
+                        Set<String> taxAuthGeos = new HashSet<>();
                         taxAuthGeos.add(taxAuthGeoId);
                         result.put(taxAuthPartyId, taxAuthGeos);
                     } else {
@@ -678,7 +762,7 @@ public class InvoiceWorker {
                 }
             }
         }
-        // Add Vat included
+        // SCIPIO: Add Vat included
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
@@ -698,8 +782,7 @@ public class InvoiceWorker {
                 }
             }
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         return result;
     }
@@ -724,21 +807,21 @@ public class InvoiceWorker {
             Debug.logError(e, "Trouble getting InvoiceItem list", module);
             return null;
         }
-        // Vat Included
+        // SCIPIO: Vat Included
+        /* TODO?: REVIEW: is taxAlreadyIncluded still needed later, or can be removed?
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX"
                             , "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId)).queryList();
-            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);          
+            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
-
-       //return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
-       return getTaxTotalForInvoiceItems(invoiceTaxItems);
+        return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
+        */
+        return getTaxTotalForInvoiceItems(invoiceTaxItems);
     }
 
     /** Returns the invoice tax total for unattributed tax items, that is items which have no taxAuthPartyId value
@@ -767,13 +850,13 @@ public class InvoiceWorker {
      */
     private static BigDecimal getTaxTotalForInvoiceItems(List<GenericValue> taxInvoiceItems) {
         if (taxInvoiceItems == null) {
-            return ZERO;
+            return BigDecimal.ZERO;
         }
-        BigDecimal taxTotal = ZERO;
+        BigDecimal taxTotal = BigDecimal.ZERO;
         for (GenericValue taxInvoiceItem : taxInvoiceItems) {
             BigDecimal amount = taxInvoiceItem.getBigDecimal("amount");
             if (amount == null) {
-                amount = ZERO;
+                amount = BigDecimal.ZERO;
             }
             BigDecimal quantity = taxInvoiceItem.getBigDecimal("quantity");
             if (quantity == null) {
@@ -785,9 +868,9 @@ public class InvoiceWorker {
         }
         return taxTotal.setScale(decimals, rounding);
     }
-    
+
     /**
-     * Get the order id for a specific invoice
+     * SCIPIO: Get the order id for a specific invoice
      *
      * @param delegator
      * @param invoiceId
@@ -809,8 +892,44 @@ public class InvoiceWorker {
 
         return orderItemBilling.getString("orderId");
     }
+
     /**
-     * Gets included tax amount out of Order Adjustments (either from TaxAuthority Services or OrderAdjustment)
+     * SCIPIO: Get the orderItem+orderItemSeqId for a specific invoice item.
+     * NOTE: This does not necessarily give an OrderItem value.
+     */
+    public static Map<String, Object> getInvoiceItemOrderItemInfo(Delegator delegator, String invoiceId, String invoiceItemSeqId) throws GenericEntityException {
+        return EntityQuery.use(delegator).from("OrderItemBilling")
+            .where("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId)
+            .queryFirst();
+    }
+
+    /**
+     * SCIPIO: Get the orderItem+orderItemSeqId for a specific invoice item.
+     * NOTE: This does not necessarily give an OrderItem value.
+     */
+    public static Map<String, Object> getInvoiceItemOrderItemInfo(Delegator delegator, Map<String, ?> invoiceItem) throws GenericEntityException {
+        return getInvoiceItemOrderItemInfo(delegator, (String) invoiceItem.get("invoiceId"), (String) invoiceItem.get("invoiceItemSeqId"));
+    }
+
+    /**
+     * SCIPIO: Get the OrderItem for a specific invoice item.
+     */
+    public static GenericValue getInvoiceItemOrderItem(Delegator delegator, String invoiceId, String invoiceItemSeqId) throws GenericEntityException {
+        GenericValue oib = EntityQuery.use(delegator).from("OrderItemBilling")
+            .where("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId)
+            .queryFirst();
+        return (oib != null) ? oib.getRelatedOne("OrderItem") : null;
+    }
+
+    /**
+     * SCIPIO: Get the OrderItem for a specific invoice item.
+     */
+    public static GenericValue getInvoiceItemOrderItem(Delegator delegator, Map<String, ?> invoiceItem) throws GenericEntityException {
+        return getInvoiceItemOrderItem(delegator, (String) invoiceItem.get("invoiceId"), (String) invoiceItem.get("invoiceItemSeqId"));
+    }
+
+    /**
+     * SCIPIO: Gets included tax amount out of Order Adjustments (either from TaxAuthority Services or OrderAdjustment)
      *
      * @param adjustments
      * @return Tax Amount, Zero if there are no adjustments
@@ -826,10 +945,11 @@ public class InvoiceWorker {
                 taxAmountIncluded = taxAmountIncluded.subtract(exemptAmount);
             }
         }
-        return taxAmountIncluded.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return taxAmountIncluded.setScale(2, RoundingMode.HALF_UP);
     }
+
     /**
-     * Returns a List of the TaxAuthority RateProducts for the given Invoice.
+     * SCIPIO: Returns a List of the TaxAuthority RateProducts for the given Invoice.
      * @param invoice GenericValue object representing the Invoice
      * @return A Map containing the each taxAuthRateProduct as a key and a Set of ... (was: taxAuthGeoIds for that taxAuthPartyId as the values.  Note this method
      *         will not account for tax lines that do not contain a taxAuthPartyId)
@@ -859,8 +979,8 @@ public class InvoiceWorker {
                     if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
                         if (!result.containsKey(taxAuthorityRateSeqId)) {
                             String taxGlAccountId = null;
-                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
-                            if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
+                            if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                                 taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                             }
                             if (taxGlAccountId == null) {
@@ -887,20 +1007,21 @@ public class InvoiceWorker {
             Debug.logError(e, "Trouble getting TaxAuthorityRateProduct/TaxAuthorityGlAccount for InvoiceItem: " + e, module);
             return null;
         }
-        // Vat Included
-        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        // SCIPIO: Vat Included
+        // TODO: REVIEW: is taxAlreadyIncluded still needed later, or can be removed?
+        //BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
-            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
             for (GenericValue orderAdjustment : orderAdjustments) {
                 String taxAuthorityRateSeqId = orderAdjustment.getString("taxAuthorityRateSeqId");
                 if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
                     if (!result.containsKey(taxAuthorityRateSeqId)) {
                         String taxGlAccountId = null;
-                        GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
-                        if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                        GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true);
+                        if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                             taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                         }
                         if (taxGlAccountId == null) {
@@ -921,13 +1042,13 @@ public class InvoiceWorker {
                 }
             }
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }        
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
+        }
         return result;
     }
 
     /**
+     * SCIPIO: getInvoiceTaxTotalForTaxGlAccount.
      * @param invoice GenericValue object representing the invoice
      * @param taxAuthPartyId
      * @param taxAuthGeoId
@@ -946,8 +1067,8 @@ public class InvoiceWorker {
             for (GenericValue invoiceItem : invoiceTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(invoiceTaxItem);
-                GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
-                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOne("TaxAuthorityRateProduct", true);
+                if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }
                 if (taxGlAccountId == null) {
@@ -978,12 +1099,12 @@ public class InvoiceWorker {
             orderAdjustmentsTaxItems = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
             //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
-            orderAdjustmentsTaxItemsToProcess = new ArrayList(orderAdjustmentsTaxItems);
+            orderAdjustmentsTaxItemsToProcess = new ArrayList<>(orderAdjustmentsTaxItems);
             for (GenericValue orderAdjustment : orderAdjustmentsTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(orderAdjustment);
-                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
-                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOne("TaxAuthorityRateProduct", true);
+                if (taxAuthorityRateProduct != null && taxAuthorityRateProduct.getModelEntity().isField("taxGlAccountId")) { // taxGlAccountId may only be present in addon...
                     taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
                 }
                 if (taxGlAccountId == null) {
@@ -1004,14 +1125,14 @@ public class InvoiceWorker {
             taxAlreadyIncluded = taxAlreadyIncluded.add(getTaxAmountIncluded(orderAdjustmentsTaxItemsToProcess));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error while getting", module);
-        }      
+        }
         BigDecimal taxForInvoiceItems = InvoiceWorker.getTaxTotalForInvoiceItems(invoiceTaxItems);
         BigDecimal taxTotal = taxForInvoiceItems.add(taxAlreadyIncluded);
        return taxTotal;
     }
 
     /**
-     * Method to return the amount of tax included of an invoiceItem
+     * SCIPIO: Method to return the amount of tax included of an invoiceItem
      *
      * @param invoiceItem GenericValue object of the invoice item
      * @return tax amount included as BigDecimal
@@ -1031,8 +1152,8 @@ public class InvoiceWorker {
     }
 
     /**
-     * Method to return the amount of tax included of an orderItem
-     * 
+     * SCIPIO: Method to return the amount of tax included of an orderItem
+     *
      * @param orderItem
      *            GenericValue object of the order item
      * @return tax amount included as BigDecimal

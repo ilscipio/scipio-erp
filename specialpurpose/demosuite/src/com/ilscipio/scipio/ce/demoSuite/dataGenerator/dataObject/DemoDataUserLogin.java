@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
-public class DemoDataUserLogin implements DemoDataObject {
+public class DemoDataUserLogin implements AbstractDataObject {
 
     private String userLoginId;
     private String currentPassword;

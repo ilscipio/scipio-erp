@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,20 +13,20 @@ under the License.
 
     <!-- Product View Services -->
     <service name="getProduct" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodFindProduct">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindProduct" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a product value object.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
     </service>
     <service name="getProductVariant" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodFindSelectedVariant">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindSelectedVariant" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a list of variant product value objects.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="selectedFeatures" type="java.util.Map" mode="IN"/>
         <attribute name="products" type="java.util.List" mode="OUT"/>
     </service>
     <service name="getProductFeatureSet" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a Set of product features (distinct)</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="true"/>
@@ -53,7 +40,7 @@ under the License.
         <attribute name="featureSet" type="java.util.Set" mode="OUT"/>
     </service>
     <service name="getProductVariantTree" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodMakeFeatureTree">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodMakeFeatureTree" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a tree of product variants based on a virtual product and a list of features.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="featureOrder" type="java.util.Collection" mode="IN"/>
@@ -65,13 +52,13 @@ under the License.
         <attribute name="virtualVariant" type="java.util.List" mode="OUT" optional="true"/>
     </service>
     <service name="getAllProductVariants" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAllVariants">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAllVariants" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a Collection of products from a 'virtual' parent product.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
     </service>
     <service name="getAssociatedProducts" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAssociatedByType">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAssociatedByType" log="quiet"><!-- SCIPIO: quiet -->
         <description>
             Finds associated products by the defined type.  Only one of either productId or productIdTo can be supplied,
             not both.  If bidirectional is set to true then the passed in productId will be treated as both a productId
@@ -88,7 +75,7 @@ under the License.
         <attribute name="assocProducts" type="java.util.Collection" mode="OUT" optional="true"/>
     </service>
     <service name="getProductFeatures" engine="java"
-            location="org.ofbiz.product.product.ProductServices" invoke="prodGetFeatures">
+            location="org.ofbiz.product.product.ProductServices" invoke="prodGetFeatures" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a Collection of product features (ProductFeatureAndAppl) for a product.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="type" type="String" mode="IN" optional="true"/>
@@ -96,7 +83,7 @@ under the License.
         <attribute name="productFeatures" type="java.util.Collection" mode="OUT"/>
     </service>
     <service name="getSuppliersForProduct" engine="java"
-            location="org.ofbiz.product.supplier.SupplierProductServices" invoke="getSuppliersForProduct">
+            location="org.ofbiz.product.supplier.SupplierProductServices" invoke="getSuppliersForProduct" log="quiet"><!-- SCIPIO: quiet -->
         <description>Finds a list of SupplierProduct entity values based on a productId.
               If other parameters are given, they are used to filter the list down.</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
@@ -120,7 +107,7 @@ under the License.
 
     <!-- Category View Services -->
     <service name="getProductCategoryMembers" engine="java"
-            location="org.ofbiz.product.category.CategoryServices" invoke="getCategoryMembers">
+            location="org.ofbiz.product.category.CategoryServices" invoke="getCategoryMembers" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets ProductCategoryMembers for the category_id</description>
         <attribute name="categoryId" type="String" mode="IN"/>
         <attribute name="category" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
@@ -128,14 +115,14 @@ under the License.
     </service>
     
     <service name="getAssociatedProductsList" engine="simple" auth="false"
-        location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="getAssociatedProductsList">
+        location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="getAssociatedProductsList" log="quiet"><!-- SCIPIO: quiet -->
         <description>Set the product options for selected product category, mostly used by getDependentDropdownValues</description>
         <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
         <attribute name="products" mode="OUT" type="java.util.List"/>
     </service>
     
     <service name="getPreviousNextProducts" engine="java"
-        location="org.ofbiz.product.category.CategoryServices" invoke="getPreviousNextProducts">
+        location="org.ofbiz.product.category.CategoryServices" invoke="getPreviousNextProducts" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets the previous and next product Ids.</description>
         <attribute name="categoryId" type="String" mode="IN"/>
         <attribute name="productId" type="String" mode="IN"/>
@@ -148,7 +135,7 @@ under the License.
         <attribute name="nextProductId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="getProductCategoryAndLimitedMembers" engine="java"
-            location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryAndLimitedMembers">
+            location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryAndLimitedMembers" log="quiet"><!-- SCIPIO: quiet -->
         <description>Gets a productCategory and a Collection of associated productCategoryMembers and calculates limiting parameters</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>

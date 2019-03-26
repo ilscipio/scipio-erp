@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
@@ -111,16 +98,20 @@ under the License.
     <Enumeration description="Back-Order" enumCode="ODR_BACKORDER" enumId="PRDS_ODR_BACKORDER" enumTypeId="PRDS_EMAIL" sequenceId="04"/>
     <Enumeration description="Order Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
     <Enumeration description="Payment Retry" enumCode="ODR_PAYRETRY" enumId="PRDS_ODR_PAYRETRY" enumTypeId="PRDS_EMAIL" sequenceId="06"/>
-    <Enumeration description="Return Accepted" enumCode="RTN_ACCEPT" enumId="PRDS_RTN_ACCEPT" enumTypeId="PRDS_EMAIL" sequenceId="07"/>
-    <Enumeration description="Return Completed" enumCode="RTN_COMPLETE" enumId="PRDS_RTN_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
-    <Enumeration description="Return Cancelled" enumCode="RTN_CANCEL" enumId="PRDS_RTN_CANCEL" enumTypeId="PRDS_EMAIL" sequenceId="09"/>
-    <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="10"/>
-    <Enumeration description="Tell-A-Friend" enumCode="TELL_FRIEND" enumId="PRDS_TELL_FRIEND" enumTypeId="PRDS_EMAIL" sequenceId="11"/>
-    <Enumeration description="Gift-Card Purchase" enumCode="GC_PURCHASE" enumId="PRDS_GC_PURCHASE" enumTypeId="PRDS_EMAIL" sequenceId="12"/>
-    <Enumeration description="Gift-Card Reload" enumCode="GC_RELOAD" enumId="PRDS_GC_RELOAD" enumTypeId="PRDS_EMAIL" sequenceId="13"/>
-    <Enumeration description="Quote Created" enumCode="QUO_CREATED" enumId="PRDS_QUO_CREATED" enumTypeId="PRDS_EMAIL" sequenceId="14"/>
-    <Enumeration description="Quote Confirmation" enumCode="QUO_CONFIRM" enumId="PRDS_QUO_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="15"/>
-    <Enumeration description="Shipment Complete" enumCode="SHP_COMPLETE" enumId="PRDS_ODR_SHIP_COMPLT" enumTypeId="PRDS_EMAIL" sequenceId="16"/>
+    <!--SCIPIO: new payment status-->
+    <Enumeration description="Payment Status Change" enumCode="ODR_PAY_CHANGE" enumId="PRDS_ODR_PAY_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="07"/>
+    <Enumeration description="Payment Completed" enumCode="ODR_PAY_COMPLT" enumId="PRDS_ODR_PAY_COMPLT" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
+
+    <Enumeration description="Return Accepted" enumCode="RTN_ACCEPT" enumId="PRDS_RTN_ACCEPT" enumTypeId="PRDS_EMAIL" sequenceId="09"/>
+    <Enumeration description="Return Completed" enumCode="RTN_COMPLETE" enumId="PRDS_RTN_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="10"/>
+    <Enumeration description="Return Cancelled" enumCode="RTN_CANCEL" enumId="PRDS_RTN_CANCEL" enumTypeId="PRDS_EMAIL" sequenceId="11"/>
+    <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="12"/>
+    <Enumeration description="Tell-A-Friend" enumCode="TELL_FRIEND" enumId="PRDS_TELL_FRIEND" enumTypeId="PRDS_EMAIL" sequenceId="13"/>
+    <Enumeration description="Gift-Card Purchase" enumCode="GC_PURCHASE" enumId="PRDS_GC_PURCHASE" enumTypeId="PRDS_EMAIL" sequenceId="14"/>
+    <Enumeration description="Gift-Card Reload" enumCode="GC_RELOAD" enumId="PRDS_GC_RELOAD" enumTypeId="PRDS_EMAIL" sequenceId="15"/>
+    <Enumeration description="Quote Created" enumCode="QUO_CREATED" enumId="PRDS_QUO_CREATED" enumTypeId="PRDS_EMAIL" sequenceId="16"/>
+    <Enumeration description="Quote Confirmation" enumCode="QUO_CONFIRM" enumId="PRDS_QUO_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="17"/>
+    <Enumeration description="Shipment Complete" enumCode="SHP_COMPLETE" enumId="PRDS_ODR_SHIP_COMPLT" enumTypeId="PRDS_EMAIL" sequenceId="18"/>
 
     <EnumerationType description="Facility Location Type" enumTypeId="FACLOC_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>
@@ -393,7 +384,8 @@ under the License.
     <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
 
     <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
-    <Enumeration description="Cart Sub-total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
+    <Enumeration description="Cart Sub-total" enumCode="ORDER_SUBTOTAL" enumId="PPIP_ORDER_SUBTOTAL" sequenceId="18" enumTypeId="PROD_PROMO_IN_PARAM"/>
+    <Enumeration description="Cart Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
     <Enumeration description="Total Amount of Product" enumCode="PRODUCT_TOTAL" enumId="PPIP_PRODUCT_TOTAL" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
     <Enumeration description="X Amount of Product" enumCode="PRODUCT_AMOUNT" enumId="PPIP_PRODUCT_AMOUNT" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
     <Enumeration description="X Quantity of Product" enumCode="PRODUCT_QUANT" enumId="PPIP_PRODUCT_QUANT" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
@@ -434,7 +426,7 @@ under the License.
 
     <EnumerationType description="Product Promotion Action" enumTypeId="PROD_PROMO_ACTION" hasTable="N" parentTypeId="PROD_PROMO"/>
     <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-    <!--Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/--> <!-- free shipping promo is commented out in java code for now... -->
+    <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/> <!-- free shipping promo is commented out in java code for now... -->
     <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
     <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
     <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>

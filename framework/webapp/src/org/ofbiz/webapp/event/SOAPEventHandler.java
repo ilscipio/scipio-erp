@@ -19,6 +19,7 @@
 package org.ofbiz.webapp.event;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
@@ -37,12 +38,12 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.apache.axiom.soap.SOAPModelBuilder;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
@@ -54,6 +55,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.engine.SoapSerializer;
+import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 import org.ofbiz.webapp.control.RequestHandler;
@@ -150,8 +152,8 @@ public class SOAPEventHandler implements EventHandler {
 
         // get the service name and parameters
         try {
-            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(request.getInputStream());
-            StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(xmlReader);
+            InputStream inputStream = (InputStream) request.getInputStream();
+            SOAPModelBuilder builder = (SOAPModelBuilder) OMXMLBuilderFactory.createSOAPModelBuilder(inputStream, "UTF-8");
             reqEnv = (SOAPEnvelope) builder.getDocumentElement();
 
             // log the request message
@@ -166,7 +168,7 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException("Cannot get the envelope", e);
         }
 
-        Debug.logVerbose("[Processing]: SOAP Event", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SOAP Event", module);
 
         String serviceName = null;
         try {
@@ -192,11 +194,12 @@ public class SOAPEventHandler implements EventHandler {
                 }
 
                 Map<String, Object> serviceResults = dispatcher.runSync(serviceName, parameters);
-                Debug.logVerbose("[EventHandler] : Service invoked", module);
+                if (Debug.verboseOn()) Debug.logVerbose("[EventHandler] : Service invoked", module);
 
                 createAndSendSOAPResponse(serviceResults, serviceName, response);
 
             } catch (GenericServiceException e) {
+                Debug.logError(e, module);
                 if (UtilProperties.getPropertyAsBoolean("service", "secureSoapAnswer", true)) {
                     sendError(response, "Problem processing the service, check your parameters.", serviceName);
                 } else {
@@ -205,7 +208,6 @@ public class SOAPEventHandler implements EventHandler {
                     } else {
                         sendError(response, e.getMessageList(), serviceName);
                     }
-                    Debug.logError(e, module);
                     return null;
                 }
             }
@@ -234,11 +236,11 @@ public class SOAPEventHandler implements EventHandler {
     private void createAndSendSOAPResponse(Map<String, Object> serviceResults, String serviceName, HttpServletResponse response) throws EventHandlerException {
         try {
         // setup the response
-            Debug.logVerbose("[EventHandler] : Setting up response message", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[EventHandler] : Setting up response message", module);
             String xmlResults = SoapSerializer.serialize(serviceResults);
             //Debug.logInfo("xmlResults ==================" + xmlResults, module);
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlResults));
-            StAXOMBuilder resultsBuilder = new StAXOMBuilder(reader);
+            StAXOMBuilder resultsBuilder = (StAXOMBuilder) OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), reader);
             OMElement resultSer = resultsBuilder.getDocumentElement();
 
             // create the response soap
@@ -287,7 +289,7 @@ public class SOAPEventHandler implements EventHandler {
             res.setContentType("text/xml");
             String xmlResults= SoapSerializer.serialize(object);
             XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlResults));
-            StAXOMBuilder resultsBuilder = new StAXOMBuilder(xmlReader);
+            StAXOMBuilder resultsBuilder = (StAXOMBuilder) OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), xmlReader);
             OMElement resultSer = resultsBuilder.getDocumentElement();
 
             // create the response soap

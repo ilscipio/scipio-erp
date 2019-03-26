@@ -21,7 +21,8 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.common.CommonWorkers;
 import org.ofbiz.webapp.control.*;
 
-context.autoUserLogin = session.getAttribute("autoUserLogin");
+// SCIPIO: This is already set in context by ScreenRenderer, and session re-read is bad
+//context.autoUserLogin = session.getAttribute("autoUserLogin");
 context.autoLogoutUrl = LoginWorker.makeLoginUrl(request, "autoLogout");
 
 previousParams = session.getAttribute("_PREVIOUS_PARAMS_");

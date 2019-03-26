@@ -8,6 +8,9 @@ final module = "SetupAccounting.groovy";
 
 SetupWorker setupWorker = context.setupWorker;
 setupStep = context.setupStep;
+if (!setupWorker) {
+    setupWorker = SetupWorker.getWorker(request);
+}
 
 /*
  * Request states

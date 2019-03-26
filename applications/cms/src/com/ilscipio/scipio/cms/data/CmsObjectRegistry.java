@@ -11,6 +11,7 @@ import com.ilscipio.scipio.cms.control.CmsProcessMapping;
 import com.ilscipio.scipio.cms.control.CmsProcessViewMapping;
 import com.ilscipio.scipio.cms.control.CmsViewMapping;
 import com.ilscipio.scipio.cms.data.CmsDataObject.DataObjectWorker;
+import com.ilscipio.scipio.cms.menu.CmsMenu;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptAssoc;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplateVersion;
@@ -28,7 +29,7 @@ import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
  * initialization, otherwise initialization problems ensue.
  */
 public final class CmsObjectRegistry {
-    
+
     /**
      * Maps entity names to {@link CmsDataObject.DataObjectWorker} instances.
      * Needed to be able to instantiate {@link CmsDataObject} instances generically
@@ -37,15 +38,16 @@ public final class CmsObjectRegistry {
     private static final Map<String, DataObjectWorker<?>> entityDataObjectWorkerMap;
     static {
         Map<String, DataObjectWorker<?>> map = new HashMap<>();
-        
+
         // major types
+        map.put("CmsMenu", CmsMenu.getWorker());
         map.put("CmsScriptTemplate", CmsScriptTemplate.getWorker());
         map.put("CmsAssetTemplate", CmsAssetTemplate.getWorker());
         map.put("CmsPageTemplate", CmsPageTemplate.getWorker());
         map.put("CmsPage", CmsPage.getWorker());
         map.put("CmsProcessMapping", CmsProcessMapping.getWorker());
         map.put("CmsViewMapping", CmsViewMapping.getWorker());
-        
+
         //minor types
         map.put("CmsAssetTemplateVersion", CmsAssetTemplateVersion.getWorker());
         map.put("CmsAttributeTemplate", CmsAttributeTemplate.getWorker());
@@ -57,18 +59,18 @@ public final class CmsObjectRegistry {
         map.put("CmsAssetTemplateScriptAssoc", CmsAssetTemplateScriptAssoc.getWorker());
         map.put("CmsPageTemplateScriptAssoc", CmsPageTemplateScriptAssoc.getWorker());
         map.put("CmsPageScriptAssoc", CmsPageScriptAssoc.getWorker());
-        
+
         entityDataObjectWorkerMap = Collections.unmodifiableMap(map);
     }
-    
+
     public static Map<String, DataObjectWorker<?>> getEntityDataObjectWorkerMap() {
         return entityDataObjectWorkerMap;
     }
-    
+
     public static DataObjectWorker<?> getEntityDataObjectWorker(String entityName) {
         return entityDataObjectWorkerMap.get(entityName);
     }
-    
+
     public static DataObjectWorker<?> getEntityDataObjectWorkerAlways(String entityName) {
         DataObjectWorker<?> res = entityDataObjectWorkerMap.get(entityName);
         if (res == null) throw new IllegalArgumentException("Unrecognized CMS entity name for data object worker: " + entityName);

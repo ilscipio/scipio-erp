@@ -1,6 +1,5 @@
 package org.ofbiz.widget.model;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,14 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelScreenSettings.AutoIncludeSettings;
 import org.ofbiz.widget.model.ModelScreenSettings.IncludeSettings;
 import org.ofbiz.widget.model.ModelScreenWidget.DecoratorScreen;
@@ -27,7 +22,6 @@ import org.ofbiz.widget.model.ScreenFallback.FlexibleScreenFallbackSettings;
 import org.ofbiz.widget.model.ScreenFallback.SimpleFlexibleScreenFallbackSettings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * SCIPIO: Model for new "screen-group" element, child of top "screens" element, and
@@ -39,12 +33,12 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String ROOT_GROUP_NAME = "root-screens";
-    
+
     protected final ModelScreens modelScreens;
-    
+
     protected final ModelScreenSettings effectiveSettings;
     protected final Map<String, ModelScreenSettings> screenSettingsMap;
-    
+
     protected final Map<String, ModelScreen> screenMap;
     protected final List<ModelScreen> screenList;
 
@@ -61,7 +55,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         screenList.trimToSize();
         this.screenList = screenList;
     }
-    
+
     public ModelScreenGroup(Element groupingElement, boolean rootGroup, ModelScreens modelScreens, String sourceLocation) {
         this(groupingElement, rootGroup, modelScreens, sourceLocation, true);
     }
@@ -72,7 +66,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
 
         Map<String, ModelScreenSettings> screenSettingsMap = new LinkedHashMap<String, ModelScreenSettings>();
         Map<String, ModelScreen> screenMap = new LinkedHashMap<>();
-        
+
         // NOTE: auto settings only supported on root group currently (TODO? other groups? probably not worth it)
         if (rootGroup && useAutoIncludeSettings && !modelScreens.isAutoIncludeSettingsConfigFile(sourceLocation)) {
             String configFilePath = modelScreens.getAutoIncludeSettingsConfigFilePath(sourceLocation);
@@ -102,20 +96,20 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                 }
             }
         }
-        
+
         List<? extends Element> childElements;
         childElements = UtilXml.childElementList(groupingElement, "include-settings");
         for (Element childElement: childElements) {
             IncludeSettings inclSettings = new IncludeSettings(childElement, sourceLocation);
             addSettings(screenSettingsMap, inclSettings.getSettingsAlways());
         }
-        
+
         childElements = UtilXml.childElementList(groupingElement, "screen-settings");
         for (Element childElement: childElements) {
             ModelScreenSettings settings = new ModelScreenSettings(childElement, sourceLocation);
             addSettings(screenSettingsMap, settings);
         }
-        
+
         // Merge all the active settings.
         ModelScreenSettings effectiveSettings = null;
         for(ModelScreenSettings settings : screenSettingsMap.values()) {
@@ -138,7 +132,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             }
         }
         screenSettingsMap.put(effectiveSettings.getName(), effectiveSettings);
-        
+
         List<Element> screenElements = new ArrayList<>();
         childElements = UtilXml.childElementList(groupingElement, "include-screens");
         for (Element childElement: childElements) {
@@ -152,9 +146,9 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                 FlexibleScreenFallbackSettings prevFallbackSettings = DecoratorScreen.getOverridingDefaultFallbackSettings();
                 try {
                     FlexibleScreenFallbackSettings newSettings = effectiveSettings.getDecoratorScreenSettings().getDefaultDecoratorFallbackSettings();
-                    DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ? 
+                    DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ?
                                     new SimpleFlexibleScreenFallbackSettings(prevFallbackSettings, newSettings) : newSettings);
-                    
+
                     ModelScreen modelScreen = new ModelScreen(childElement, this, sourceLocation);
                     //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
                     screenMap.put(modelScreen.getName(), modelScreen);
@@ -184,7 +178,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             screenSettingsMap.put(settings.getName(), settings);
         }
     }
-    
+
     public ModelScreenSettings getEffectiveSettings() {
         return effectiveSettings;
     }
@@ -201,7 +195,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
     public List<ModelScreen> getScreenList() {
         return screenList;
     }
-    
+
     ModelScreens getModelScreens() {
         return modelScreens;
     }
@@ -219,7 +213,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
      * &lt;screen name="xxx"&gt;
      *     &lt;section&gt;
      *         &lt;widgets&gt;
-     *             &lt;include-screens name="xxx" location="..."/&gt; 
+     *             &lt;include-screens name="xxx" location="..."/&gt;
      *         &lt;/widgets&gt;
      *     &lt;/section&gt;
      * &lt;/screen&gt;
@@ -231,14 +225,14 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         protected final String name;
         protected final String groupName;
         protected final boolean recursive;
-        
+
         public IncludeScreens(String location, String name, String groupName, boolean recursive) {
             this.location = location;
             this.name = name;
             this.groupName = groupName;
             this.recursive = recursive;
         }
-        
+
         public IncludeScreens(Element inclScreensElement, String sourceLocation) {
             this.location = inclScreensElement.getAttribute("location");
             this.name = inclScreensElement.getAttribute("name");
@@ -249,7 +243,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                         + "the current file [" + sourceLocation + "]; must be different");
             }
         }
-        
+
         public List<String> getScreenNameList() {
             try {
                 URL screenFileUrl = FlexibleLocation.resolveLocation(location);
@@ -275,7 +269,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                     groupElements.add(rootElement);
                     groupElements.addAll(UtilXml.childElementList(rootElement, "screen-group"));
                 }
-                
+
                 Set<String> resolvedScreenNames = new LinkedHashSet<>();
                 for(Element groupElement : groupElements) {
                     List<? extends Element> childElements;
@@ -288,7 +282,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                             }
                         }
                     }
-                    
+
                     childElements = UtilXml.childElementList(groupElement);
                     for(Element screenElement : childElements) {
                         if (ModelScreen.isScreenElement(screenElement)) {
@@ -296,7 +290,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                         }
                     }
                 }
-                
+
                 List<String> resolvedScreenElementList = new ArrayList<>();
                 if (UtilValidate.isNotEmpty(name)) {
                     if (!resolvedScreenNames.contains(name)) {
@@ -315,7 +309,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                 return new ArrayList<>();
             }
         }
-        
+
         /**
          * Generates delegating placeholder screens, with no parent.
          */
@@ -346,7 +340,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             }
             return delegScreens;
         }
-        
+
         /**
          * Generates delegating placeholder screens as children of specified element.
          */
@@ -369,7 +363,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             includeScreenElement.setAttribute("location", targetLocation);
             return screenElement;
         }
-        
+
         public static Element createDelegatingActionsScreenElement(Document document, String localName, String targetName, String targetLocation) {
             Element screenElement = document.createElement("screen");
             screenElement.setAttribute("name", localName);
@@ -381,7 +375,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             includeScreenActionsElement.setAttribute("location", targetLocation);
             return screenElement;
         }
-        
+
         public String getLocation() {
             return location;
         }
@@ -403,7 +397,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
     public String getContainerLocation() { // SCIPIO: new
         return modelScreens.getLocation();
     }
-    
+
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "screen-group";

@@ -2,7 +2,7 @@
 
 <@modal id="expireAllCategoryProductMembers">
     <@section title=uiLabelMap.ProductExpireAllProductMembers>
-        <form method="post" action="<@ofbizUrl>expireAllCategoryProductMembers</@ofbizUrl>" name="expireAllCategoryProductMembersForm">
+        <form method="post" action="<@pageUrl>expireAllCategoryProductMembers</@pageUrl>" name="expireAllCategoryProductMembersForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
             <@field type="datetime" label=uiLabelMap.CommonDate required=true name="thruDate" value="" size="25" maxlength="30" id="thruDate2"/>
@@ -12,6 +12,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_expireAllCategoryProductMembers').foundation('reveal','open');
+        try {
+            $('#modal_expireAllCategoryProductMembers').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_expireAllCategoryProductMembers').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

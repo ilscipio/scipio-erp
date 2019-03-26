@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- SCIPIO: 2017-04-13: if the value was just deleted, do not allow editing -->
 <#if (deleteSuccess!false) == true>
@@ -52,9 +39,13 @@ function ShowTab(lname) {
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
-        <#if hasCreatePermission>          
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+        <#if modelEntity??>
+          <@menuitem type="link" href=makePageUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <#else>
+          <@menuitem type="link" href=makePageUrl("entitymaint") text=uiLabelMap.WebtoolsBackToEntityList class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        </#if>
+        <#if hasCreatePermission && modelEntity??>          
+          <@menuitem type="link" href=makePageUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
           <#if !enableEdit>
             <#--WARN: TODO: REVIEW for security issues-->
             <#local editLabel = uiLabelMap.CommonEdit>
@@ -63,19 +54,19 @@ function ShowTab(lname) {
               <#local editLabel = uiLabelMap.CommonRecreate>
               <#local editClass = styles.action_add!>
             </#if>
-            <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
+            <@menuitem type="link" href=makePageUrl("ViewGeneric?${raw(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
           </#if>
         </#if>
         <#if value?has_content && (deleteSuccess!false) != true>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makePageUrl("UpdateGeneric?UPDATE_MODE=DELETE&${raw(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
     </@menu>
 </#macro>
 
-<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${rawString(entityName)}" -->
-
+<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${raw(entityName)}" -->
+  <#if modelEntity??>
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
         <#--<@mli arrival="common-view"><a href="#common-view">${uiLabelMap.CommonView}</a></@mli>-->
@@ -134,11 +125,11 @@ function ShowTab(lname) {
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
-          <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>" method="post" name="updateForm">
+          <form action="<@pageUrl>UpdateGeneric?entityName=${entityName}&amp;enableEdit=true</@pageUrl>" method="post" name="updateForm">
             <@fields type="default-manual">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
-            <@table type="fields" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="fields" autoAltRows=true>
               <#if value?has_content>
                 <#if hasUpdatePermission>
                   <#if newFieldPkList?has_content>
@@ -154,7 +145,7 @@ function ShowTab(lname) {
                     </#list>
                   </#if>
                 <#else>
-                  <@commonMsg type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@commonMsg>
+                  <@commonMsg type="error">${uiLabelMap.WebtoolsEntityCreatePermissionError} ${entityName} ${plainTableName}</@commonMsg>
                   <#assign showFields = false>
                 </#if>
               <#else>
@@ -195,7 +186,7 @@ function ShowTab(lname) {
                     </#list>
                   </#if>
                 <#else>
-                  <@tr type="meta"><@td><@commonMsg type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@commonMsg></@td></@tr>
+                  <@tr type="meta"><@td><@commonMsg type="error">${uiLabelMap.WebtoolsEntityCreatePermissionError} ${entityName} ${plainTableName}</@commonMsg></@td></@tr>
                   <#assign showFields = false>
                 </#if>
               </#if>
@@ -242,7 +233,7 @@ function ShowTab(lname) {
                             <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+                          <@field type="submit" submitType="link" href=makePageUrl("ViewGeneric?${raw(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>
@@ -259,7 +250,7 @@ function ShowTab(lname) {
             <@cell>
               <@heading id="current-view" attribs={"data-magellan-destination":"current-view"}>${uiLabelMap.WebtoolsEntityCurrentValue}</@heading>
               <#if value?has_content>
-                <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12"> <#-- orig: class="basic-table ${styles.grid_large!}12" --> <#-- orig: cellspacing="0" -->
+                <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12">
                   <@thead>
                   <@tr>
                     <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>
@@ -294,16 +285,16 @@ function ShowTab(lname) {
                         <@pul title="${relation.title}${relation.relatedTable}">
                             <@pli type="description">${relation.type}</@pli>
                 <#if relation.valueRelated?has_content>
-                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></@pli>
+                            <@pli><a href="<@pageUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@pageUrl>">${uiLabelMap.CommonView}</a></@pli>
                 </#if>
                 <#if hasAllCreate || relCreate>
-                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></@pli>
+                            <@pli><a href="<@pageUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@pageUrl>">${uiLabelMap.CommonCreate}</a></@pli>
                 </#if>
 
             <#if relation.valueRelated?has_content>
                             <@pli>
                               <@modal id="rel_${relation.relatedTable}" label=uiLabelMap.CommonValues>                                
-                                  <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12"> <#-- orig: cellspacing="0" -->
+                                  <@table type="fields" autoAltRows=true class="+${styles.grid_large!}12">
                                     <@thead>
                                         <@tr>
                                             <@th class="${styles.grid_large!}3">${uiLabelMap.WebtoolsFieldName}</@th>
@@ -333,7 +324,7 @@ function ShowTab(lname) {
                            -->
                           <#else>
                             <@pli>
-                              <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a>
+                              <a href="<@pageUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@pageUrl>">${uiLabelMap.CommonFind}</a>
                             </@pli>                       
                           </#if>
             </#if>
@@ -345,4 +336,10 @@ function ShowTab(lname) {
             </@cell>
       </@row> 
     </#if>
+    
+  <#else>
+    <#--<#if entityName?has_content>
+      <@commonMsg type="error">${getLabel('WebtoolsEntityNotFoundSpecified', '', {"entityName":entityName})}.</@commonMsg>
+    </#if>-->
+  </#if>
 </@section>

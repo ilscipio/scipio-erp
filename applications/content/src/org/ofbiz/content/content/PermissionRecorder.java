@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
@@ -41,7 +42,7 @@ public class PermissionRecorder {
 
     protected boolean isOn = false;
     protected GenericValue userLogin;
-    protected List<Map<String, Object>> permCheckResults = new LinkedList<Map<String, Object>>();
+    protected List<Map<String, Object>> permCheckResults = new LinkedList<>();
     protected boolean entityPermCheckResult = false;
     protected String currentContentId = "";
     protected Map<String, Object> currentContentMap;
@@ -129,7 +130,7 @@ public class PermissionRecorder {
             currentContentMap = new HashMap<String, Object>();
             permCheckResults.add(currentContentMap);
             currentContentMap.put("contentId", id);
-            currentContentMap.put("checkResults", new LinkedList());
+            currentContentMap.put("checkResults", new LinkedList<>());
         }
         currentContentId = id;
     }
@@ -161,49 +162,39 @@ public class PermissionRecorder {
         permCheckResults.add(currentContentMap);
         String s = null;
         if (targetOperations != null) {
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations:" + targetOperations, module);
             s = targetOperations.toString();
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations(string):" + s, module);
             currentContentMap.put("contentOperationId", s);
         }
         if (purposes != null) {
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes:" + purposes, module);
             s = purposes.toString();
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes(string):" + s, module);
             currentContentMap.put("contentPurposeTypeId", s);
         }
         if (roles != null) {
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles:" + roles, module);
             s = roles.toString();
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles(string):" + s, module);
             currentContentMap.put("roleTypeId", s);
         }
         if (targStatusList != null) {
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList:" + targStatusList, module);
             s = targStatusList.toString();
-            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList(string):" + s, module);
             currentContentMap.put("statusId", s);
         }
-        List<Map<String, Object>> checkResultList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> checkResultList = new LinkedList<>();
         currentContentMap.put("privilegeEnumId", privilegeEnumId);
         currentContentMap.put("contentId", contentId);
         currentContentMap.put("checkResultList", checkResultList);
         currentContentMap.put("matches", null);
         currentContentId = contentId;
-        //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, currentContentMap:" + currentContentMap, module);
     }
 
     public void record(GenericValue purposeOp, boolean targetOpCond, boolean purposeCond, boolean statusCond, boolean privilegeCond, boolean roleCond) {
         Map<String, Object> map = UtilMisc.makeMapWritable(purposeOp);
-        map.put("contentOperationIdCond", Boolean.valueOf(targetOpCond));
-        map.put("contentPurposeTypeIdCond", Boolean.valueOf(purposeCond));
-        map.put("statusIdCond", Boolean.valueOf(statusCond));
-        map.put("privilegeEnumIdCond", Boolean.valueOf(privilegeCond));
-        map.put("roleTypeIdCond", Boolean.valueOf(roleCond));
+        map.put("contentOperationIdCond", targetOpCond);
+        map.put("contentPurposeTypeIdCond", purposeCond);
+        map.put("statusIdCond", statusCond);
+        map.put("privilegeEnumIdCond", privilegeCond);
+        map.put("roleTypeIdCond", roleCond);
         map.put("contentId", currentContentId);
         List<Map<String, Object>> checkResultList = UtilGenerics.checkList(currentContentMap.get("checkResultList"));
         checkResultList.add(map);
-        //if (Debug.infoOn()) Debug.logInfo("record, map:" + map, module);
     }
 
     public String toHtml() {
@@ -215,7 +206,6 @@ public class PermissionRecorder {
         sb.append(".headr {background-color:white; font-weight:bold; font-family:Verdana,Arial,sans-serif; font-size:12px; }");
         sb.append("</style>");
 
-        //if (Debug.infoOn()) Debug.logInfo("toHtml, style:" + sb.toString(), module);
         sb.append("<table border=\"1\" >");
         // Do header row
         sb.append("<tr>");
@@ -224,7 +214,6 @@ public class PermissionRecorder {
         sb.append("Content Id");
         sb.append("</td>");
 
-        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
         for (int i=0; i < fieldTitles.length; i++) {
             String opField = fieldTitles[i];
             sb.append("<td class=\"headr\">");
@@ -245,14 +234,12 @@ public class PermissionRecorder {
         StringBuilder sb = new StringBuilder();
         List<Map<String, Object>> resultList = UtilGenerics.checkList(cMap.get("checkResultList"));
         for (Map<String, Object> rMap : resultList) {
-            //if (Debug.infoOn()) Debug.logInfo("renderCCMapHtml, (1):" + rMap, module);
             sb.append(renderResultRowHtml(rMap, cMap));
         }
 
         return sb.toString();
     }
 
-    //public static final String [] opFields = { "contentPurposeTypeId", "contentOperationId", "roleTypeId", "statusId", "privilegeEnumId"};
 
     public String renderResultRowHtml(Map<String, Object> rMap, Map<String, Object> currentContentResultMap) {
         StringBuilder sb = new StringBuilder();
@@ -281,7 +268,6 @@ public class PermissionRecorder {
         sb.append("<td class=\"target\" >&nbsp;</td>");
         sb.append("</tr>");
 
-        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2):" + sb.toString(), module);
         // Do UUT row
         sb.append("<tr>");
 
@@ -293,20 +279,17 @@ public class PermissionRecorder {
         for (int i=0; i < opFields.length; i++) {
             String opField = opFields[i];
             Boolean bool = (Boolean)rMap.get(opField + "Cond");
-            String cls = (bool.booleanValue()) ? "pass" : "fail";
-            if (!bool.booleanValue())
+            String cls = (bool) ? "pass" : "fail";
+            if (!bool)
                 isPass = false;
             sb.append("<td class=\"" + cls + "\">");
-        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2b):" + sb.toString(), module);
             s = (String)rMap.get(opField);
-        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (s):" + s,  module);
             sb.append(s);
             sb.append("</td>");
         }
         String passFailCls = (isPass) ? "pass" : "fail";
-        sb.append("<td class=\"" + passFailCls +"\">" + passFailCls.toUpperCase() + "</td>");
+        sb.append("<td class=\"" + passFailCls +"\">" + passFailCls.toUpperCase(Locale.getDefault()) + "</td>");
         sb.append("</tr>");
-        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (3):" + sb.toString(), module);
 
         return sb.toString();
     }

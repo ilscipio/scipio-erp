@@ -18,7 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.marketing.tracking;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,16 +34,15 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.webapp.stats.VisitHandler;
-import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * Events used for maintaining TrackingCode related information
@@ -147,9 +150,9 @@ public class TrackingCodeEvents {
                     trackingCode.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 
                     //use nearly unlimited trackable lifetime: 10 billion seconds, 310 years
-                    trackingCode.set("trackableLifetime", Long.valueOf(10000000000L));
+                    trackingCode.set("trackableLifetime", 10000000000L);
                     //use 2592000 seconds as billable lifetime: equals 1 month
-                    trackingCode.set("billableLifetime", Long.valueOf(2592000));
+                    trackingCode.set("billableLifetime", 2592000L);
 
                     trackingCode.set("comments", "This TrackingCode has default values because no default TrackingCode could be found.");
 
@@ -223,21 +226,25 @@ public class TrackingCodeEvents {
 
         // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
         Long trackableLifetime = trackingCode.getLong("trackableLifetime");
-        if (trackableLifetime != null && (trackableLifetime.longValue() > 0 || trackableLifetime.longValue() == -1)) {
+        if (trackableLifetime != null && (trackableLifetime > 0 || trackableLifetime == -1)) {
             Cookie trackableCookie = new Cookie("TKCDT_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
-            if (trackableLifetime.longValue() > 0) trackableCookie.setMaxAge(trackableLifetime.intValue());
+            if (trackableLifetime > 0) trackableCookie.setMaxAge(trackableLifetime.intValue());
             trackableCookie.setPath("/");
             if (cookieDomain.length() > 0) trackableCookie.setDomain(cookieDomain);
+            trackableCookie.setSecure(true);
+            trackableCookie.setHttpOnly(true);
             response.addCookie(trackableCookie);
         }
 
         // if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
         Long billableLifetime = trackingCode.getLong("billableLifetime");
-        if (billableLifetime != null && (billableLifetime.longValue() > 0 || billableLifetime.longValue() == -1)) {
+        if (billableLifetime != null && (billableLifetime > 0 || billableLifetime == -1)) {
             Cookie billableCookie = new Cookie("TKCDB_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
-            if (billableLifetime.longValue() > 0) billableCookie.setMaxAge(billableLifetime.intValue());
+            if (billableLifetime > 0) billableCookie.setMaxAge(billableLifetime.intValue());
             billableCookie.setPath("/");
             if (cookieDomain.length() > 0) billableCookie.setDomain(cookieDomain);
+            billableCookie.setSecure(true);
+            billableCookie.setHttpOnly(true);
             response.addCookie(billableCookie);
         }
 
@@ -245,7 +252,12 @@ public class TrackingCodeEvents {
         int siteIdCookieAge = (60 * 60 * 24 * 365); // should this be configurable?
         String siteId = request.getParameter("siteId");
         if (UtilValidate.isNotEmpty(siteId)) {
-            String visitorSiteIdCookieName = "Ofbiz.TKCD.SiteId";
+            try { // SCIPIO: 2018-11-05: Only encode if not empty (upstream code moved)
+                siteId = URLEncoder.encode(siteId, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                Debug.logError(e, "Error while saving TrackingCodeVisit", module);
+            }
+            String visitorSiteIdCookieName = "Scipio.TKCD.SiteId";
             String visitorSiteId = null;
             // first try to get the current ID from the visitor cookie
             javax.servlet.http.Cookie[] cookies = request.getCookies();
@@ -258,19 +270,23 @@ public class TrackingCodeEvents {
                 }
             }
 
-            if (visitorSiteId == null || (visitorSiteId != null && !visitorSiteId.equals(siteId))) {
-                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie siteIdCookie = new Cookie("Ofbiz.TKCD.SiteId" ,siteId);
+            if (visitorSiteId == null || (siteId != null && !visitorSiteId.equals(siteId))) {
+                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Scipio.TKCD.SiteId and timeout will be 60 * 60 * 24 * 365
+                Cookie siteIdCookie = new Cookie("Scipio.TKCD.SiteId", siteId);
                 siteIdCookie.setMaxAge(siteIdCookieAge);
                 siteIdCookie.setPath("/");
                 if (cookieDomain.length() > 0) siteIdCookie.setDomain(cookieDomain);
-                    response.addCookie(siteIdCookie);
-                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Ofbiz.TKCSiteId and timeout will be 60 * 60 * 24 * 365
-                Cookie updatedTimeStampCookie = new Cookie("Ofbiz.TKCD.UpdatedTimeStamp" ,UtilDateTime.nowTimestamp().toString());
+                siteIdCookie.setSecure(true);
+                siteIdCookie.setHttpOnly(true);
+                response.addCookie(siteIdCookie);
+                // if trackingCode.siteId is  not null  write a trackable cookie with name in the form: Scipio.TKCD.UpdatedTimeStamp and timeout will be 60 * 60 * 24 * 365
+                Cookie updatedTimeStampCookie = new Cookie("Scipio.TKCD.UpdatedTimeStamp", UtilDateTime.nowTimestamp().toString());
                 updatedTimeStampCookie.setMaxAge(siteIdCookieAge);
                 updatedTimeStampCookie.setPath("/");
                 if (cookieDomain.length() > 0) updatedTimeStampCookie.setDomain(cookieDomain);
-                    response.addCookie(updatedTimeStampCookie);
+                updatedTimeStampCookie.setSecure(true);
+                updatedTimeStampCookie.setHttpOnly(true);
+                response.addCookie(updatedTimeStampCookie);
             }
         }
 
@@ -285,10 +301,10 @@ public class TrackingCodeEvents {
         String prodCatalogId = trackingCode.getString("prodCatalogId");
         if (UtilValidate.isNotEmpty(prodCatalogId)) {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
             // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
-            CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
+            //CategoryWorker.setTrail(request, new LinkedList<String>());
+            CategoryWorker.setTrailIfFirstInRequest(request, new ArrayList<>()); // SCIPIO: ArrayList
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
@@ -441,22 +457,19 @@ public class TrackingCodeEvents {
 
         Cookie[] cookies = request.getCookies();
         Timestamp affiliateReferredTimeStamp = null;
-        String siteId = null;
+        String siteIdEnc = null; // SCIPIO: 2018-11-05: New var because it must be URL-decoded
         String isBillable = null;
         String trackingCodeId = null;
         if (cookies != null && cookies.length > 0) {
             for (int i = 0; i < cookies.length; i++) {
                 String cookieName = cookies[i].getName();
-
-                //Debug.logInfo(" cookieName is " + cookieName, module);
-                //Debug.logInfo(" cookieValue is " + cookies[i].getValue(), module);
                 // find the siteId cookie if it exists
-                if ("Ofbiz.TKCD.SiteId".equals(cookieName)) {
-                    siteId = cookies[i].getValue();
+                if ("Scipio.TKCD.SiteId".equals(cookieName)) {
+                    siteIdEnc = cookies[i].getValue();
                 }
 
                 // find the referred timestamp cookie if it exists
-                if ("Ofbiz.TKCD.UpdatedTimeStamp".equals(cookieName)) {
+                if ("Scipio.TKCD.UpdatedTimeStamp".equals(cookieName)) {
                     String affiliateReferredTime = cookies[i].getValue();
                     if (affiliateReferredTime !=null && !affiliateReferredTime.equals("")) {
                         try {
@@ -488,6 +501,17 @@ public class TrackingCodeEvents {
         }
 
         if (trackingCode != null) {
+            String siteId = null;
+            if (UtilValidate.isNotEmpty(siteIdEnc)) {
+                try { // SCIPIO: 2018-11-05: Decode var before storing in DB (this 
+                    siteId = URLDecoder.decode(siteIdEnc, "UTF-8");
+                } catch(Exception e) {
+                    Debug.logWarning("makeTrackingCodeOrders: Unable to URL-decode the \"Scipio.TKCD.SiteId\" cookie value [" + siteIdEnc 
+                            + "]; will be stored as-is in TrackingCodeOrder; cause: " + e.toString(), module);
+                    siteId = siteIdEnc;
+                }
+            }
+
             //check effective dates
             if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
                 if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId", module);

@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
     <#assign showInput = "Y">
     
     <#if (shipments?has_content) || (isOrderStatusApproved == false)>
@@ -25,7 +12,7 @@ under the License.
     </#if>
 
     <@section>
-        <form name="selectOrderForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
+        <form name="selectOrderForm" method="post" action="<@pageUrl>VerifyPick</@pageUrl>">
             <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
             <@field type="generic" label=uiLabelMap.ProductOrderId>                    
                 <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader" value=(orderId!)/>                    
@@ -37,7 +24,7 @@ under the License.
             </@field>
             <@field type="submit" text="${rawLabel('ProductVerify')} ${rawLabel('OrderOrder')}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
         </form>
-        <form name="clearPickForm" method="post" action="<@ofbizUrl>cancelAllRows</@ofbizUrl>">
+        <form name="clearPickForm" method="post" action="<@pageUrl>cancelAllRows</@pageUrl>">
             <input type="hidden" name="orderId" value="${orderId!}"/>
             <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
             <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
@@ -45,7 +32,7 @@ under the License.
     </@section>
     
     <#if orderHeader?? && orderHeader?has_content && orderItemShipGroup?has_content>
-        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
+        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
         <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if (orderItemShipGroup.contactMechId)?has_content>
                 <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
@@ -99,7 +86,7 @@ under the License.
             <@row>
                 <@cell>
                     <#list shipments as shipment>
-                        ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                        ${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
                     </#list>
                 </@cell>
             </@row>
@@ -110,8 +97,8 @@ under the License.
                         <@menu type="button">
                             <#list invoiceIds as invoiceId>
                               <@menuitem type="generic">
-                                    ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                    (<a href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                               </@menuitem>
                             </#list>
                         </@menu>
@@ -124,7 +111,7 @@ under the License.
     <#if showInput != "N">
         <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
         <@section title=sectionTitle>
-            <form name="singlePickForm" method="post" action="<@ofbizUrl>processVerifyPick</@ofbizUrl>">
+            <form name="singlePickForm" method="post" action="<@pageUrl>processVerifyPick</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
@@ -137,12 +124,12 @@ under the License.
         <#if orderItems?has_content>
             <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
             <@section title=sectionTitle>                
-                <form name="multiPickForm" method="post" action="<@ofbizUrl>processBulkVerifyPick</@ofbizUrl>">
+                <form name="multiPickForm" method="post" action="<@pageUrl>processBulkVerifyPick</@pageUrl>">
                     <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
                     <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                         <@thead>
                             <@tr>                                    
                                 <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>
@@ -188,7 +175,7 @@ under the License.
                                     <@td>${orderItemSeqId!}</@td>
                                     <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
                                     <@td>
-                                        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
+                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
                                     </@td>
                                     <@td>
                                         <@field type="select" name="geo_o_${orderItem_index}">                                            
@@ -272,14 +259,14 @@ under the License.
     
         <#assign orderId = orderId! >
         <#assign pickRows = verifyPickSession.getPickRows(orderId)!>
-        <form name="completePickForm" method="post" action="<@ofbizUrl>completeVerifiedPick</@ofbizUrl>">
+        <form name="completePickForm" method="post" action="<@pageUrl>completeVerifiedPick</@pageUrl>">
             <input type="hidden" name="orderId" value="${orderId!}"/>
             <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
             <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
             <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             <#if pickRows?has_content>
                 <@section title="${rawLabel('ProductVerified')} ${rawLabel('OrderItems')} : ${pickRows.size()!}">
-                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                         <@thead>
                             <@tr class="header-row">
                                 <@th>${uiLabelMap.ProductItem} ${uiLabelMap.CommonNbr}</@th>

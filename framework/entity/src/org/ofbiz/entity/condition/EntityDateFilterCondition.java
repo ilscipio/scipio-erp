@@ -19,7 +19,7 @@
 package org.ofbiz.entity.condition;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +30,14 @@ import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.model.ModelEntity;
 
 /**
- * Date-range condition. 
+ * Date-range condition.
  *
  */
 @SuppressWarnings("serial")
 public final class EntityDateFilterCondition extends EntityCondition {
 
-    protected final String fromDateName;
-    protected final String thruDateName;
+    private final String fromDateName;
+    private final String thruDateName;
 
     public EntityDateFilterCondition(String fromDateName, String thruDateName) {
         this.fromDateName = fromDateName;
@@ -69,7 +69,9 @@ public final class EntityDateFilterCondition extends EntityCondition {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EntityDateFilterCondition)) return false;
+        if (!(obj instanceof EntityDateFilterCondition)) {
+            return false;
+        }
         EntityDateFilterCondition other = (EntityDateFilterCondition) obj;
         return equals(fromDateName, other.fromDateName) && equals(thruDateName, other.thruDateName);
     }
@@ -115,15 +117,15 @@ public final class EntityDateFilterCondition extends EntityCondition {
     }
 
     /**
-     * Creates an EntityCondition representing a date range filter query to be used against 
-     * entities that themselves represent a date range.  When used the resulting entities 
+     * Creates an EntityCondition representing a date range filter query to be used against
+     * entities that themselves represent a date range.  When used the resulting entities
      * will meet at least one of the following criteria:
      * - fromDate is equal to or after rangeStart but before rangeEnd
      * - thruDate is equal to or after rangeStart but before rangeEnd
      * - fromDate is null and thruDate is equal to or after rangeStart
      * - thruDate is null and fromDate is before rangeEnd
      * - fromDate is null and thruDate is null
-     * 
+     *
      * @param rangeStart    The start of the range to filter against
      * @param rangeEnd      The end of the range to filter against
      * @param fromDateName  The name of the field containing the entity's "fromDate"
@@ -131,7 +133,7 @@ public final class EntityDateFilterCondition extends EntityCondition {
      * @return EntityCondition representing the date range filter
      */
     public static EntityCondition makeRangeCondition(Timestamp rangeStart, Timestamp rangeEnd, String fromDateName, String thruDateName) {
-        List<EntityCondition> criteria = new LinkedList<EntityCondition>();
+        List<EntityCondition> criteria = new ArrayList<>(); // SCIPIO: switched to ArrayList
         // fromDate is equal to or after rangeStart but before rangeEnd
         criteria.add(
                 EntityCondition.makeCondition(

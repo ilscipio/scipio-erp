@@ -30,7 +30,6 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.service.eca.ServiceEcaAction;
 import org.ofbiz.service.eca.ServiceEcaCondition;
 import org.ofbiz.service.eca.ServiceEcaRule;
@@ -59,7 +58,7 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
         // populate the services called Set
         for (ServiceEcaAction ecaAction: serviceEcaRule.getEcaActionList()) {
             servicesCalledByThisServiceEca.add(aif.getServiceArtifactInfo(ecaAction.getServiceName()));
-            UtilMisc.addToSortedSetInMap(this, aif.allServiceEcaInfosReferringToServiceName, ecaAction.getServiceName());
+            addToSortedSetInMap(this, aif.allServiceEcaInfosReferringToServiceName, ecaAction.getServiceName()); // SCIPIO: switched method
         }
     }
 
@@ -141,10 +140,10 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
 
         /* going to try this without any attributes...
         // attributes
-        List<Map<String, Object>> attributesList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> attributesList = new ArrayList<>();
         topLevelMap.put("attributes", attributesList);
         for (ModelParam param: this.modelService.getModelParamList()) {
-            Map<String, Object> attributeMap = new HashMap<String, Object>();
+            Map<String, Object> attributeMap = new HashMap<>();
             attributesList.add(attributeMap);
 
             if (useMoreDetailedNames) {

@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -28,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.Converters;
@@ -40,6 +40,11 @@ import org.w3c.dom.Node;
 /**
  * Utilities for analyzing and converting Object types in Java
  * Takes advantage of reflection
+ * <p>
+ * SCIPIO: <strong>WARNING:</code> 2018-03-26: The behavior of the
+ * methods {@link #interfaceOf(Class, Class)} and {@link #instanceOf(Class, Class)}
+ * have been modified; they now both behavior closer to the equivalent of a
+ * {@code instanceof} operation.
  */
 public class ObjectType {
 
@@ -50,8 +55,8 @@ public class ObjectType {
     public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
     public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
 
-    private static final Map<String, String> classAlias = new HashMap<String, String>();
-    private static final Map<String, Class> primitives = new HashMap<String, Class>();
+    private static final Map<String, String> classAlias = new HashMap<>();
+    private static final Map<String, Class<?>> primitives = new HashMap<>();
 
     static {
         classAlias.put("Object", "java.lang.Object");
@@ -114,12 +119,14 @@ public class ObjectType {
         }
 
         int genericsStart = className.indexOf("<");
-        if (genericsStart != -1) className = className.substring(0, genericsStart);
+        if (genericsStart != -1) {
+            className = className.substring(0, genericsStart);
+        }
 
         // Handle array classes. Details in http://java.sun.com/j2se/1.5.0/docs/guide/jni/spec/types.html#wp16437
         if (className.endsWith("[]")) {
             if (Character.isLowerCase(className.charAt(0)) && className.indexOf(".") < 0) {
-               String prefix = className.substring(0, 1).toUpperCase();
+                String prefix = className.substring(0, 1).toUpperCase(Locale.getDefault());
                // long and boolean have other prefix than first letter
                if (className.startsWith("long")) {
                    prefix = "J";
@@ -138,7 +145,9 @@ public class ObjectType {
             className = classAlias.get(className);
         }
 
-        if (loader == null) loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+            loader = Thread.currentThread().getContextClassLoader();
+        }
 
         theClass = Class.forName(className, true, loader);
 
@@ -159,7 +168,9 @@ public class ObjectType {
         Class<?> c = loadClass(className);
         Object o = c.newInstance();
 
-        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        }
         return o;
     }
 
@@ -207,7 +218,9 @@ public class ObjectType {
         Constructor<?> con = c.getConstructor(sig);
         Object o = con.newInstance(parameters);
 
-        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        }
         return o;
     }
 
@@ -250,23 +263,49 @@ public class ObjectType {
 
     /**
      * Tests if a class properly implements the specified interface.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-03-26: This method's behavior has changed:
+     * it now recursively checks all of <code>objectClass</code>'s implemented interfaces
+     * to see if <code>interfaceClass</code> is one of them. Previously, it only checked
+     * the immediately/explicitly declared super interfaces of <code>objectClass</code>
+     * and its parent classes (this is presumably what was meant by "properly implements";
+     * however, that behavior caused noticeable limitations in the
+     * {@link org.ofbiz.base.conversion.AbstractConverter}s and elsewhere;
+     * meanwhile, this method was poorly named and therefore prone to being misused.
+     * Due to this change, this method is now effectively performing nothing more than
+     * a single simple {@code instanceof} operation. In addition, it also now returns
+     * true if objectClass and interfaceClass are the same, an interface.
+     * <p>
+     * 2018-03-26: As such, this method has now been reduced, for performance reasons, to:
+     * {@code typeClass.isAssignableFrom(objectClass)} plus some null checks.
+     * Another change 
+     * <p>
+     * <strong>It is recommended to avoid using this method in client code, and instead
+     * use a better library such as {@link org.apache.commons.lang3.ClassUtils}.
+     *
      * @param objectClass Class to test
      * @param interfaceClass Class to test against
      * @return true if interfaceClass is an interface of objectClass
      */
     public static boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass) {
+        /* SCIPIO: 2019-01-23: Replaced with a saner check
         while (objectClass != null) {
-            // SCIPIO (03/26/2018): objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
-            // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit 
+            // SCIPIO: 2018-03-26: objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
+            // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit
             // implemented interfaces.
+            //Class<?>[] ifaces = objectClass.getInterfaces();
             List<Class<?>> ifaces = ClassUtils.getAllInterfaces(objectClass);
 
             for (Class<?> iface: ifaces) {
-                if (iface == interfaceClass) return true;
+                if (iface == interfaceClass) {
+                    return true;
+                }
             }
             objectClass = objectClass.getSuperclass();
         }
-        return false;
+        return false; */
+        return (objectClass != null && interfaceClass != null &&
+                interfaceClass.isInterface() && interfaceClass.isAssignableFrom(objectClass));
     }
 
     /**
@@ -338,9 +377,10 @@ public class ObjectType {
      * @return true if objectClass is a class of or a sub-class of the parent
      */
     public static boolean isOrSubOf(Class<?> objectClass, Class<?> parentClass) {
-        //Debug.logInfo("Checking isOrSubOf for [" + objectClass.getName() + "] and [" + objectClass.getName() + "]", module);
         while (objectClass != null) {
-            if (objectClass == parentClass) return true;
+            if (objectClass == parentClass) {
+                return true;
+            }
             objectClass = objectClass.getSuperclass();
         }
         return false;
@@ -400,8 +440,9 @@ public class ObjectType {
     public static boolean instanceOf(Class<?> objectClass, String typeName, ClassLoader loader) {
         Class<?> infoClass = loadInfoClass(typeName, loader);
 
-        if (infoClass == null)
+        if (infoClass == null) {
             throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
+        }
 
         return instanceOf(objectClass, infoClass);
     }
@@ -424,21 +465,20 @@ public class ObjectType {
     }
 
     public static Class<?> loadInfoClass(String typeName, ClassLoader loader) {
-        //Class infoClass = null;
         try {
-            return ObjectType.loadClass(typeName, loader);
+            return loadClass(typeName, loader);
         } catch (SecurityException se1) {
             throw new IllegalArgumentException("Problems with classloader: security exception (" +
                     se1.getMessage() + ")");
         } catch (ClassNotFoundException e1) {
             try {
-                return ObjectType.loadClass(LANG_PACKAGE + typeName, loader);
+                return loadClass(LANG_PACKAGE + typeName, loader);
             } catch (SecurityException se2) {
                 throw new IllegalArgumentException("Problems with classloader: security exception (" +
                         se2.getMessage() + ")");
             } catch (ClassNotFoundException e2) {
                 try {
-                    return ObjectType.loadClass(SQL_PACKAGE + typeName, loader);
+                    return loadClass(SQL_PACKAGE + typeName, loader);
                 } catch (SecurityException se3) {
                     throw new IllegalArgumentException("Problems with classloader: security exception (" +
                             se3.getMessage() + ")");
@@ -458,23 +498,45 @@ public class ObjectType {
      * @return true if obj is an instance of a sub-class of typeClass
      */
     public static boolean instanceOf(Object obj, Class<?> typeClass) {
-        if (obj == null) return true;
+        if (obj == null) {
+            return true;
+        }
         Class<?> objectClass = obj.getClass();
         return instanceOf(objectClass, typeClass);
     }
 
     /**
      * Tests if a class is a class of a sub-class of or properly implements an interface.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-03-26: The behavior of this method has changed, due to the
+     * modification of the {@link #interfaceOf(Class, Class)} method (above) on which it depended,
+     * which previously only returned true on matching <code>typeClass</code> to the immediate/explicit
+     * super interfaces of the <code>objectClass</code> or its parent classes, rather than recursively
+     * checking all interfaces of those interfaces...
+     * Due to this change, this method is now effectively performing nothing more than
+     * a single simple {@code instanceof} operation.
+     * <p>
+     * 2018-03-26: As such, this method has now been reduced, for performance reasons, to:
+     * {@code typeClass.isAssignableFrom(objectClass)}.
+     * <p>
+     * <strong>It is recommended to avoid using this method in client code, and instead
+     * use a better library such as {@link org.apache.commons.lang3.ClassUtils}.
+     *
      * @param objectClass Class to test
      * @param typeClass Class to test against
      * @return true if objectClass is a class or sub-class of, or implements typeClass
      */
     public static boolean instanceOf(Class<?> objectClass, Class<?> typeClass) {
+        /* SCIPIO: 2019-01-28: Since we changed the implementation of
+         *     boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass)
+         * to fully recurse the interfaces, this method - which was always extremely
+         * slow - can now be reduced to a single simple "instanceof" test.
+         * This should help improve performance in service interface validation and numerous others.
         if (typeClass.isInterface() && !objectClass.isInterface()) {
             return interfaceOf(objectClass, typeClass);
-        } else {
-            return isOrSubOf(objectClass, typeClass);
         }
+        return isOrSubOf(objectClass, typeClass); */
+        return typeClass.isAssignableFrom(objectClass);
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
@@ -482,9 +544,16 @@ public class ObjectType {
     }
 
     /**
-     * Converts the passed object to the named simple type.  Supported types
-     * include: String, Boolean, Double, Float, Long, Integer, Date (java.sql.Date),
-     * Time, Timestamp, TimeZone;
+     * Converts the passed object to the named type.
+     * Initially created for only simple types but actually handle more types and not all simple types.
+     * See ObjectTypeTests class for more, and (normally) up to date information
+     *
+     * Supported types:
+     * - All primitives
+     * - Simple types: String, Boolean, Double, Float, Long, Integer, BigDecimal.
+     * - Other Objects: List, Map, Set, Calendar, Date (java.sql.Date), Time, Timestamp, TimeZone, Date (util.Date and sql.Date)
+     * - Simple types (maybe) not handled: Short, BigInteger, Byte, Character, ObjectName and Void...
+     *
      * @param obj Object to convert
      * @param type Optional Java class name of type to convert to. A <code>null</code> or empty <code>String</code> will return the original object.
      * @param format Optional (can be null) format string for Date, Time, Timestamp
@@ -508,9 +577,8 @@ public class ObjectType {
             String nodeValue =  node.getTextContent();
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 return nodeValue;
-            } else {
-                return simpleTypeConvert(nodeValue, type, format, timeZone, locale, noTypeFail);
             }
+            return simpleTypeConvert(nodeValue, type, format, timeZone, locale, noTypeFail);
         }
         int genericsStart = type.indexOf("<");
         if (genericsStart != -1) {
@@ -532,13 +600,17 @@ public class ObjectType {
         Converter<Object, Object> converter = null;
         try {
             converter = (Converter<Object, Object>) Converters.getConverter(sourceClass, targetClass);
-        } catch (ClassNotFoundException e) {}
+        } catch (ClassNotFoundException e) {
+            // SCIPIO: 2018-08-30: do not do this for now, callers may not expect it
+            //Debug.logError(e, module);
+            if (Debug.verboseOn()) {
+                Debug.logWarning("Could not convert object: " + e.toString(), module);
+            }
+        }
+
         if (converter != null) {
-            LocalizedConverter<Object, Object> localizedConverter = null;
-            try {
-                localizedConverter = (LocalizedConverter) converter;
-            } catch (ClassCastException e) {}
-            if (localizedConverter != null) {
+            if (converter instanceof LocalizedConverter) {
+                LocalizedConverter<Object, Object> localizedConverter = (LocalizedConverter<Object, Object>) converter;
                 if (timeZone == null) {
                     timeZone = TimeZone.getDefault();
                 }
@@ -566,13 +638,28 @@ public class ObjectType {
         }
         if (noTypeFail) {
             throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
-        } else {
-            if (Debug.infoOn()) Debug.logInfo("No type conversion available for " + obj.getClass().getName() + " to " + targetClass.getName() + ", returning original object.", module);
-            return obj;
         }
+        if (Debug.infoOn()) {
+            Debug.logInfo("No type conversion available for " + obj.getClass().getName() + " to " + targetClass.getName() + ", returning original object.", module);
+        }
+        return obj;
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
+        return simpleTypeConvert(obj, type, format, locale, true);
+    }
+
+    // SCIPIO: Compatibility wrappers
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, TimeZone timeZone, Locale locale, boolean noTypeFail) throws GeneralException {
+        return simpleTypeConvert(obj, type, format, timeZone, locale, noTypeFail);
+    }
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
+        return simpleTypeOrObjectConvert(obj, type, format, null, locale, noTypeFail);
+    }
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
         return simpleTypeConvert(obj, type, format, locale, true);
     }
 
@@ -580,11 +667,13 @@ public class ObjectType {
         List<Object> messages, Locale locale, ClassLoader loader, boolean value2InlineConstant) {
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
+        if (verboseOn) {
+            Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
+        }
 
         try {
             if (!"PlainString".equals(type)) {
-                Class<?> clz = ObjectType.loadClass(type, loader);
+                Class<?> clz = loadClass(type, loader);
                 type = clz.getName();
             }
         } catch (ClassNotFoundException e) {
@@ -615,7 +704,7 @@ public class ObjectType {
                 value2Locale = UtilMisc.parseLocale("en");
             }
             try {
-                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, value2Locale);
+                convertedValue2 = simpleTypeConvert(value2, type, format, value2Locale);
             } catch (GeneralException e) {
                 Debug.logError(e, module);
                 messages.add("Could not convert value2 for comparison: " + e.getMessage());
@@ -631,7 +720,7 @@ public class ObjectType {
 
         Object convertedValue1 = null;
         try {
-            convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
+            convertedValue1 = simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             messages.add("Could not convert value1 for comparison: " + e.getMessage());
@@ -664,29 +753,36 @@ public class ObjectType {
                 String str2 = (String) convertedValue2;
 
                 return str1.indexOf(str2) < 0 ? Boolean.FALSE : Boolean.TRUE;
-            } else {
-                messages.add("Error in XML file: cannot do a contains compare between a String and a non-String type");
-                return null;
             }
+            messages.add("Error in XML file: cannot do a contains compare between a String and a non-String type");
+            return null;
         } else if ("is-empty".equals(operator)) {
-            if (convertedValue1 == null)
+            if (convertedValue1 == null) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
+            }
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0) {
                 return Boolean.TRUE;
-            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0) {
                 return Boolean.TRUE;
+            }
             return Boolean.FALSE;
         } else if ("is-not-empty".equals(operator)) {
-            if (convertedValue1 == null)
+            if (convertedValue1 == null) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
+            }
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof List<?> && ((List<?>) convertedValue1).size() == 0) {
                 return Boolean.FALSE;
-            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0)
+            }
+            if (convertedValue1 instanceof Map<?, ?> && ((Map<?, ?>) convertedValue1).size() == 0) {
                 return Boolean.FALSE;
+            }
             return Boolean.TRUE;
         }
 
@@ -712,12 +808,13 @@ public class ObjectType {
             tempNum = (Number) convertedValue2;
             double value2Double = tempNum.doubleValue();
 
-            if (value1Double < value2Double)
+            if (value1Double < value2Double) {
                 result = -1;
-            else if (value1Double > value2Double)
+            } else if (value1Double > value2Double) {
                 result = 1;
-            else
+            } else {
                 result = 0;
+            }
         } else if ("java.sql.Date".equals(type)) {
             java.sql.Date value1Date = (java.sql.Date) convertedValue1;
             java.sql.Date value2Date = (java.sql.Date) convertedValue2;
@@ -734,10 +831,11 @@ public class ObjectType {
             Boolean value1Boolean = (Boolean) convertedValue1;
             Boolean value2Boolean = (Boolean) convertedValue2;
             if ("equals".equals(operator)) {
-                if ((value1Boolean.booleanValue() && value2Boolean.booleanValue()) || (!value1Boolean.booleanValue() && !value2Boolean.booleanValue()))
+                if ((value1Boolean && value2Boolean) || (!value1Boolean && !value2Boolean)) {
                     result = 0;
-                else
+                } else {
                     result = 1;
+                }
             } else if ("not-equals".equals(operator)) {
                 if ((!value1Boolean && value2Boolean) || (value1Boolean && !value2Boolean)) {
                     // SCIPIO: 2018-11-02: stock bugfix: fixed inverted results!
@@ -762,50 +860,88 @@ public class ObjectType {
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator, module);
+        if (verboseOn) {
+            Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator, module);
+        }
         if ("less".equals(operator)) {
-            if (result >= 0)
+            if (result >= 0) {
                 return Boolean.FALSE;
+            }
         } else if ("greater".equals(operator)) {
-            if (result <= 0)
+            if (result <= 0) {
                 return Boolean.FALSE;
+            }
         } else if ("less-equals".equals(operator)) {
-            if (result > 0)
+            if (result > 0) {
                 return Boolean.FALSE;
+            }
         } else if ("greater-equals".equals(operator)) {
-            if (result < 0)
+            if (result < 0) {
                 return Boolean.FALSE;
+            }
         } else if ("equals".equals(operator)) {
-            if (result != 0)
+            if (result != 0) {
                 return Boolean.FALSE;
+            }
         } else if ("not-equals".equals(operator)) {
-            if (result == 0)
+            if (result == 0) {
                 return Boolean.FALSE;
+            }
         } else {
             messages.add("Specified compare operator \"" + operator + "\" not known.");
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Returning true", module);
+        if (verboseOn) {
+            Debug.logVerbose("Returning true", module);
+        }
         return Boolean.TRUE;
     }
 
     @SuppressWarnings("unchecked")
     public static boolean isEmpty(Object value) {
-        if (value == null) return true;
+        if (value == null) {
+            return true;
+        }
 
-        if (value instanceof String) return ((String) value).length() == 0;
-        if (value instanceof Collection) return ((Collection<? extends Object>) value).size() == 0;
-        if (value instanceof Map) return ((Map<? extends Object, ? extends Object>) value).size() == 0;
-        if (value instanceof CharSequence) return ((CharSequence) value).length() == 0;
-        if (value instanceof IsEmpty) return ((IsEmpty) value).isEmpty();
+        if (value instanceof String) {
+            return ((String) value).length() == 0;
+        }
+        if (value instanceof Collection) {
+            return ((Collection<? extends Object>) value).size() == 0;
+        }
+        if (value instanceof Map) {
+            return ((Map<? extends Object, ? extends Object>) value).size() == 0;
+        }
+        if (value instanceof CharSequence) {
+            return ((CharSequence) value).length() == 0;
+        }
+        if (value instanceof IsEmpty) {
+            return ((IsEmpty) value).isEmpty();
+        }
 
         // These types would flood the log
         // Number covers: BigDecimal, BigInteger, Byte, Double, Float, Integer, Long, Short
-        if (value instanceof Boolean) return false;
-        if (value instanceof Number) return false;
-        if (value instanceof Character) return false;
-        if (value instanceof java.util.Date) return false;
+        if (value instanceof Boolean) {
+            return false;
+        }
+        if (value instanceof Number) {
+            return false;
+        }
+        if (value instanceof Character) {
+            return false;
+        }
+        if (value instanceof java.util.Date) {
+            return false;
+        }
+        // SCIPIO: Check array length
+        if (value.getClass().isArray()) {
+            return Array.getLength(value) == 0;
+        }
+        // SCIPIO: Check Iterable (NOTE: inefficient, should probably be avoided)
+        if (value instanceof Iterable) {
+            return !((Iterable<?>) value).iterator().hasNext();
+        }
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("In ObjectType.isEmpty(Object value) returning false for " + value.getClass() + " Object.", module);
@@ -829,12 +965,8 @@ public class ObjectType {
 
         @Override
         public boolean equals(Object other) {
-            if (other instanceof NullObject) {
-                // should do equality of object? don't think so, just same type
-                return true;
-            } else {
-                return false;
-            }
+            // should do equality of object? don't think so, just same type
+            return other instanceof NullObject;
         }
     }
 }

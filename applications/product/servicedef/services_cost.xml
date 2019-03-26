@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -124,5 +111,47 @@ under the License.
                 location="component://product/script/org/ofbiz/product/cost/CostServices.xml" invoke="productCostPercentageFormula" auth="true">
         <description>Formula that creates a cost component equal to a percentage of total product cost</description>
         <implements service="productCostCalcInterface"/>
+    </service>
+    <service name="createCostComponentAttribute" default-entity-name="CostComponentAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Cost Component Attribute Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateCostComponentAttribute" default-entity-name="CostComponentAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a CostComponentAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCostComponentAttribute" default-entity-name="CostComponentAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete an existing CostComponentAttribute Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="createCostComponentType" default-entity-name="CostComponentType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Cost Component Type Record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateCostComponentType" default-entity-name="CostComponentType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Cost Component Type</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCostComponentType" default-entity-name="CostComponentType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete an existing Cost Component Type Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="createCostComponentTypeAttr" default-entity-name="CostComponentTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Cost Component Type Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateCostComponentTypeAttr" default-entity-name="CostComponentTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Cost Component Type</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCostComponentTypeAttr" default-entity-name="CostComponentTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete an existing Cost Component Type Attr Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 </services>

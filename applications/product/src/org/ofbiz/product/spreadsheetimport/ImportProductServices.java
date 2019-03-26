@@ -28,13 +28,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilMisc;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.CellType;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -48,7 +47,7 @@ public class ImportProductServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
-    
+
     /**
      * This method is responsible to import spreadsheet data into "Product" and
      * "InventoryItem" entities into database. The method uses the
@@ -61,14 +60,15 @@ public class ImportProductServices {
      * @param dctx the dispatch context
      * @param context the context
      * @return the result of the service execution
+     * @throws IOException
      */
-    public static Map<String, Object> productImportFromSpreadsheet(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> productImportFromSpreadsheet(DispatchContext dctx, Map<String, ? extends Object> context) throws IOException {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         // System.getProperty("user.dir") returns the path upto ofbiz home
         // directory
         String path = System.getProperty("user.dir") + "/spreadsheet";
-        List<File> fileItems = new LinkedList<File>();
+        List<File> fileItems = new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(path)) {
             File importDir = new File(path);
@@ -76,29 +76,32 @@ public class ImportProductServices {
                 File[] files = importDir.listFiles();
                 // loop for all the containing xls file in the spreadsheet
                 // directory
-                for (int i = 0; i < files.length; i++) {
-                    if (files[i].getName().toUpperCase().endsWith("XLS")) {
-                        fileItems.add(files[i]);
+                if (files == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FileFilesIsNull", locale));
+                }
+                for (File file : files) {
+                    if (file.getName().toUpperCase(Locale.getDefault()).endsWith("XLS")) {
+                        fileItems.add(file);
                     }
                 }
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductProductImportDirectoryNotFound", locale));
             }
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductProductImportPathNotSpecified", locale));
         }
 
         if (fileItems.size() < 1) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductProductImportPathNoSpreadsheetExists", locale) + path);
         }
 
         for (File item: fileItems) {
             // read all xls file and create workbook one by one.
-            List<Map<String, Object>> products = new LinkedList<Map<String, Object>>();
-            List<Map<String, Object>> inventoryItems = new LinkedList<Map<String, Object>>();
+            List<Map<String, Object>> products = new LinkedList<>();
+            List<Map<String, Object>> inventoryItems = new LinkedList<>();
             POIFSFileSystem fs = null;
             HSSFWorkbook wb = null;
             try {
@@ -106,12 +109,13 @@ public class ImportProductServices {
                 wb = new HSSFWorkbook(fs);
             } catch (IOException e) {
                 Debug.logError("Unable to read or create workbook from file", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "ProductProductImportCannotCreateWorkbookFromFile", locale));
             }
 
             // get first sheet
             HSSFSheet sheet = wb.getSheetAt(0);
+            wb.close();
             int sheetLastRowNumber = sheet.getLastRowNum();
             for (int j = 1; j <= sheetLastRowNumber; j++) {
                 HSSFRow row = sheet.getRow(j);
@@ -119,13 +123,14 @@ public class ImportProductServices {
                     // read productId from first column "sheet column index
                     // starts from 0"
                     HSSFCell cell2 = row.getCell(2);
-                    cell2.setCellType(HSSFCell.CELL_TYPE_STRING);
+                    cell2.setCellType(CellType.STRING); // SCIPIO: switched to CellType enum
                     String productId = cell2.getRichStringCellValue().toString();
                     // read QOH from ninth column
                     HSSFCell cell5 = row.getCell(5);
                     BigDecimal quantityOnHand = BigDecimal.ZERO;
-                    if (cell5 != null && cell5.getCellType() == HSSFCell.CELL_TYPE_NUMERIC)
+                    if (cell5 != null && cell5.getCellType() == CellType.NUMERIC) { // SCIPIO: switched to CellType enum
                         quantityOnHand = new BigDecimal(cell5.getNumericCellValue());
+                    }
 
                     // check productId if null then skip creating inventory item
                     // too.
@@ -133,12 +138,13 @@ public class ImportProductServices {
 
                     if (productId != null && !productId.trim().equalsIgnoreCase("") && !productExists) {
                         products.add(ImportProductHelper.prepareProduct(productId));
-                        if (quantityOnHand.compareTo(BigDecimal.ZERO) >= 0)
+                        if (quantityOnHand.compareTo(BigDecimal.ZERO) >= 0) {
                             inventoryItems.add(ImportProductHelper.prepareInventoryItem(productId, quantityOnHand,
                                     delegator.getNextSeqId("InventoryItem")));
-                        else
+                        } else {
                             inventoryItems.add(ImportProductHelper.prepareInventoryItem(productId, BigDecimal.ZERO, delegator
                                     .getNextSeqId("InventoryItem")));
+                        }
                     }
                     int rowNum = row.getRowNum() + 1;
                     if (row.toString() != null && !row.toString().trim().equalsIgnoreCase("") && productExists) {
@@ -157,14 +163,15 @@ public class ImportProductServices {
                         delegator.create(inventoryItemGV);
                     } catch (GenericEntityException e) {
                         Debug.logError("Cannot store product", module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                                 "ProductProductImportCannotStoreProduct", locale));
                     }
                 }
             }
             int uploadedProducts = products.size() + 1;
-            if (products.size() > 0)
+            if (products.size() > 0) {
                 Debug.logInfo("Uploaded " + uploadedProducts + " products from file " + item.getName(), module);
+            }
         }
         return ServiceUtil.returnSuccess();
     }

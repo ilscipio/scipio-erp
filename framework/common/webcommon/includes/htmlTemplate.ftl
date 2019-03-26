@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- SCIPIO: THIS LIBRARY IS DEPRECATED AND OBSOLETE. DO NOT USE IN SCIPIO-BASED TEMPLATES. -->
 
@@ -27,9 +14,9 @@ under the License.
 <#include "component://widget/templates/htmlScreenMacroLibrary.ftl"> 
 <#include "component://widget/templates/htmlMenuMacroLibrary.ftl">
 ... and use ones with caching of the directives so only interpreted once per request
-<@('<#include "' + (rawString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (rawString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (rawString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
+<@('<#include "' + (raw(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (raw(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (raw(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
 
 <#assign formMacroLibIncludeDirective = getRequestVar("formMacroLibIncludeDirective")!"">
 
@@ -38,9 +25,9 @@ under the License.
     <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
 <#else>
     <#-- note: getMacroLibraryPath only available since scipio renderer mod -->
-    <#assign formMacroLibraryPath = rawString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
-    <#assign screenMacroLibraryPath = rawString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
-    <#assign menuMacroLibraryPath = rawString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
+    <#assign formMacroLibraryPath = raw((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
+    <#assign screenMacroLibraryPath = raw((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
+    <#assign menuMacroLibraryPath = raw((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
 
     <#assign formMacroLibIncludeDirective = ('<#include "' + formMacroLibraryPath + '">')?interpret>
     <#assign screenMacroLibIncludeDirective = ('<#include "' + screenMacroLibraryPath + '">')?interpret>
@@ -58,13 +45,13 @@ under the License.
 
 <#macro lookupField className="" alert="" name="" value="" size="20" maxlength="20" id="" event="" action="" readonly="" autocomplete="" descriptionFieldName="" formName="" fieldFormName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled="" presentation="layer" width="" height="" position="topleft" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="">
     <#if (!ajaxEnabled?has_content)>
-        <#assign javascriptEnabled = Static["org.ofbiz.base.util.UtilHttp"].isJavaScriptEnabled(request) />
+        <#assign javascriptEnabled = UtilHttp.isJavaScriptEnabled(request) />
         <#if (javascriptEnabled)>
             <#local ajaxEnabled = true>
         </#if>
     </#if>
     <#if (!id?has_content)>
-        <#local id = Static["org.ofbiz.base.util.UtilHttp"].getNextUniqueId(request) />
+        <#local id = UtilHttp.getNextUniqueId(request) />
     </#if>
     <#if "true" == readonly>
         <#local readonly = true/>
@@ -82,7 +69,7 @@ under the License.
 <#macro nextPrev commonUrl="" ajaxEnabled=false javaScriptEnabled=false paginateStyle="nav-pager" paginateFirstStyle="nav-first" viewIndex=0 highIndex=0 listSize=0 viewSize=1 ajaxFirstUrl="" firstUrl="" paginateFirstLabel="" paginatePreviousStyle="nav-previous" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" paginateNextStyle="nav-next" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="nav-last" ajaxLastUrl="" lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" showCount=true position="">
     <#local javaScriptEnabled = javaScriptEnabled />
     <#if (!javaScriptEnabled)>
-        <#local javaScriptEnabled = Static["org.ofbiz.base.util.UtilHttp"].isJavaScriptEnabled(request) />
+        <#local javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request) />
     </#if>
     <#if (commonUrl?has_content)>
         <#if (!firstUrl?has_content)>

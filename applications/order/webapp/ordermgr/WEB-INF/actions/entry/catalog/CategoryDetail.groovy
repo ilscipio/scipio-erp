@@ -83,15 +83,23 @@ context.listSize = catResult.listSize;
 // set this as a last viewed
 // DEJ20070220: WHY is this done this way? why not use the existing CategoryWorker stuff?
 LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
+// SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
+// The synchronized block locks on the _previous_ list instance, and then changes the instance.
 lastViewedCategories = session.getAttribute("lastViewedCategories");
+synchronized(lastViewedCategories != null ? lastViewedCategories : UtilHttp.getSessionSyncObject(session)) {
+lastViewedCategories = session.getAttribute("lastViewedCategories"); // SCIPIO: Re-read because other thread changed it
 if (!lastViewedCategories) {
     lastViewedCategories = [];
-    session.setAttribute("lastViewedCategories", lastViewedCategories);
+    //session.setAttribute("lastViewedCategories", lastViewedCategories); // SCIPIO: Moved below
+} else {
+    lastViewedCategories = new ArrayList(lastViewedCategories); // SCIPIO: Make local copy
 }
 lastViewedCategories.remove(productCategoryId);
 lastViewedCategories.add(0, productCategoryId);
 while (lastViewedCategories.size() > LAST_VIEWED_TO_KEEP) {
     lastViewedCategories.remove(lastViewedCategories.size() - 1);
+}
+session.setAttribute("lastViewedCategories", lastViewedCategories); // SCIPIO: Safe publish
 }
 
 // set the content path prefix

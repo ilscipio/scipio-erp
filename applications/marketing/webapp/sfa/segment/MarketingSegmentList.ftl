@@ -1,6 +1,6 @@
 <#if listMarketingSegment?has_content>
     <@section>
-        <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1>
             <#-- Header Begins -->
             <@thead>
                 <@tr>
@@ -15,7 +15,7 @@
             <#list listMarketingSegment as marketingSegment>
                 <#assign segmentGroupType = marketingSegment.getRelatedOne("SegmentGroupType", false) />                   
                 <@tr>
-                    <@td><a href="<@ofbizUrl>viewSegmentGroup?segmentGroupId=${marketingSegment.segmentGroupId}</@ofbizUrl>">${marketingSegment.segmentGroupId}</a></@td>
+                    <@td><a href="<@pageUrl>viewSegmentGroup?segmentGroupId=${marketingSegment.segmentGroupId}</@pageUrl>">${marketingSegment.segmentGroupId}</a></@td>
                     <@td>${segmentGroupType.description!}</@td>
                     <@td>${marketingSegment.productStoreId!}</@td>                                                 
                     <@td>${marketingSegment.description}</@td>
@@ -25,7 +25,7 @@
         </@table>    
         
         <#list listMarketingSegment as marketingSegment>
-            <form name="deleteMarketingSegment_${marketingSegment_index}" action="<@ofbizUrl>deleteSegmentGroup</@ofbizUrl>" method="POST">
+            <form name="deleteMarketingSegment_${marketingSegment_index}" action="<@pageUrl>deleteSegmentGroup</@pageUrl>" method="POST">
                 <@field name="segmentGroupId" type="hidden" value=marketingSegment.segmentGroupId />
             </form>
         </#list>

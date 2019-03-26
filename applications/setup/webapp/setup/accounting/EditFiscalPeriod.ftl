@@ -41,7 +41,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupTimePeriodForm id formActionType target params treeFieldValues={}>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["topGlAccountId"]/>
         <@acctgCommonTreeFormFields params=params initialValues=treeFieldValues/>
        
@@ -51,15 +51,15 @@
         <@field type="hidden" name="isUpdateTimePeriod" value=(formActionType == "edit")?string("Y", "N")/>
         
         <#assign fieldsRequired = true>
-      	<#if formActionType != "new">    	
-	      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>      		 
-	            <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
-	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
-	           	</span>--<#t/>           	
-	        </@field><#lt/>
-	        <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
+          <#if formActionType != "new">        
+              <@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>               
+                <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
+                    <@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${raw(params.orgPartyId!)}&customTimePeriodId=${raw(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
+                   </span>--<#t/>               
+            </@field><#lt/>
+            <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
         <#else>
-        	<@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
+            <@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
                 <option value="">&nbsp;</option>
                 <#list allCustomTimePeriods as allCustomTimePeriod>
                     <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)!>                    
@@ -79,44 +79,44 @@
                 </#list>
             </@field>
         </#if>
-		
-		
-	    <#if formActionType == "edit">
-	        <@field type="display" label=uiLabelMap.FormFieldTitle_customTimePeriodId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-customTimePeriodId">
-	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
-	            </span><#t/>
-	        </@field><#lt/>
-	        <@field type="hidden" name="customTimePeriodId" value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
-	    <#else>
-	        <#-- TODO: REVIEW: required=true -->
-	        <@field type="input" name="customTimePeriodId" label=uiLabelMap.CommonId value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
-	    </#if>
+        
+        
+        <#if formActionType == "edit">
+            <@field type="display" label=uiLabelMap.FormFieldTitle_customTimePeriodId><#rt/>
+                <span class="acctg-managefield acctg-managefield-for-customTimePeriodId">
+                    <@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${raw(params.orgPartyId!)}&customTimePeriodId=${raw(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
+                </span><#t/>
+            </@field><#lt/>
+            <@field type="hidden" name="customTimePeriodId" value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
+        <#else>
+            <#-- TODO: REVIEW: required=true -->
+            <@field type="input" name="customTimePeriodId" label=uiLabelMap.CommonId value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
+        </#if>
 
-	    <@field type="text" name="periodNum" value=(params.periodNum!) label=uiLabelMap.AccountingPeriodNumber class="+acctg-inputfield" />
-	    <@field type="text" name="periodName" value=(params.periodName!) label=uiLabelMap.AccountingPeriodName class="+acctg-inputfield" />	    
-	    
-	    <@field type="select" name="periodTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
-	      <option value="" disabled="disabled"></option>
-	      <#list periodTypes as periodType>
-	        <#assign selected = (rawString(params.periodTypeId!) == (periodType.periodTypeId!))>
-	        <option value="${periodType.periodTypeId!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
-	      </#list>
-	    </@field>
-	    
-	    <#--
-		    <#if formActionType == "edit">
-	        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
-	        <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
-	      <#else>
-	        <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
-	      </#if>
-	      -->
-	    <@field type="datetime" name="fromDate" value=(params.fromDate!"") required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
-	    <@field type="datetime" name="thruDate" value=(params.thruDate!"") required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
-	    
-	    <@field type="checkbox" name="isClosed" value=(params.isClosed!"N") altValue=false checked=(params.isClosed?has_content && params.isClosed == "Y")
-	    	required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>	       
+        <@field type="text" name="periodNum" value=(params.periodNum!) label=uiLabelMap.AccountingPeriodNumber class="+acctg-inputfield" />
+        <@field type="text" name="periodName" value=(params.periodName!) label=uiLabelMap.AccountingPeriodName class="+acctg-inputfield" />        
+        
+        <@field type="select" name="periodTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
+          <option value="" disabled="disabled"></option>
+          <#list periodTypes as periodType>
+            <#assign selected = (raw(params.periodTypeId!) == (periodType.periodTypeId!))>
+            <option value="${periodType.periodTypeId!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
+          </#list>
+        </@field>
+        
+        <#--
+            <#if formActionType == "edit">
+            <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
+            <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
+          <#else>
+            <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
+          </#if>
+          -->
+        <@field type="datetime" name="fromDate" value=(params.fromDate!"") required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
+        <@field type="datetime" name="thruDate" value=(params.thruDate!"") required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
+        
+        <@field type="checkbox" name="isClosed" value=(params.isClosed!"N") altValue=false checked=(params.isClosed?has_content && params.isClosed == "Y")
+            required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>           
     </@form>
 </#macro>
 
@@ -154,7 +154,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteTimePeriodForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["topGlAccountId"]/>
       <@acctgCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

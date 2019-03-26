@@ -23,15 +23,15 @@ import java.util.Map;
 
 import javax.transaction.Transaction;
 
-import org.ofbiz.service.calendar.RecurrenceRule;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
-import org.ofbiz.base.util.Debug;
 
 /**
  * Generic Services Local Dispatcher
@@ -59,7 +59,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
 
     /**
      * SCIPIO: Modified to accept an eventId
-     * 
+     *
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
     @Override
@@ -87,6 +87,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
                 } catch (JobManagerException jme) {
                     throw new GenericServiceException(jme.getMessage(), jme);
                 }
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
                 String errMsg = "General error while scheduling job";
                 Debug.logError(e, errMsg, module);
@@ -114,7 +116,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             }
         }
     }
-    
+
     /**
      * SCIPIO: This is now a delegating method
      */
@@ -142,7 +144,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     public void addCommitService(String serviceName, boolean persist, Object... context) throws GenericServiceException {
         addCommitService(serviceName, ServiceUtil.makeContext(context), persist);
     }
-    
+
     @Override
     public ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException { // SCIPIO
         return ServiceSynchronization.getInstance();

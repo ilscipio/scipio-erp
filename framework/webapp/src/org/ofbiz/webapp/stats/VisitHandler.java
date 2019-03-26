@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -81,7 +82,7 @@ public class VisitHandler {
             if (modelUserLogin.isField("partyId")) {
                 visit.set("partyId", userLogin.get("partyId"));
             }
-            visit.set("userCreated", Boolean.valueOf(userCreated));
+            visit.set("userCreated", userCreated);
 
             // make sure the visitorId is still in place
             if (visitor != null) {
@@ -111,7 +112,9 @@ public class VisitHandler {
         if (!UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "false")) {
             GenericValue visit = (GenericValue) session.getAttribute("visit");
             if (visit == null) {
-                synchronized (session) {
+                // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+                //synchronized (session) {
+                synchronized (UtilHttp.getSessionSyncObject(session)) {
                     visit = (GenericValue) session.getAttribute("visit");
                     if (visit == null) {
                         Delegator delegator = null;
@@ -147,8 +150,8 @@ public class VisitHandler {
                             visit.set("fromDate", new Timestamp(session.getCreationTime()));
 
                             visit.set("initialLocale", initialLocale);
-                            if (initialRequest != null) visit.set("initialRequest", initialRequest.length() > 250 ? initialRequest.substring(0, 250) : initialRequest);
-                            if (initialReferrer != null) visit.set("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);
+                            if (initialRequest != null) visit.set("initialRequest", initialRequest); // SCIPIO: 2018-08-28: readded null check here in case issues with session
+                            if (initialReferrer != null) visit.set("initialReferrer", initialReferrer); // SCIPIO: 2018-08-28: readded null check here in case issues with session
                             if (initialUserAgent != null) visit.set("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);
                             visit.set("webappName", webappName);
                             if (UtilProperties.propertyValueEquals("serverstats", "stats.proxy.enabled", "true")) {
@@ -163,7 +166,7 @@ public class VisitHandler {
                             GenericValue visitor = (GenericValue) session.getAttribute("visitor");
                             if (visitor != null) {
                                 String visitorId = visitor.getString("visitorId");
-                                
+
                                 // sometimes these values get stale, so check it before we use it
                                 try {
                                     GenericValue checkVisitor = EntityQuery.use(delegator).from("Visitor").where("visitorId", visitorId).queryOne();
@@ -211,7 +214,9 @@ public class VisitHandler {
 
             GenericValue visitor = (GenericValue) session.getAttribute("visitor");
             if (visitor == null) {
-                synchronized (session) {
+                // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+                //synchronized (session) {
+                synchronized (UtilHttp.getSessionSyncObject(session)) {
                     visitor = (GenericValue) session.getAttribute("visitor");
                     if (visitor == null) {
 
@@ -254,7 +259,10 @@ public class VisitHandler {
                                         // looks like we have an ID that doesn't exist in our database, so we'll create a new one
                                         visitor = delegator.makeValue("Visitor");
                                         visitor = delegator.createSetNextSeqId(visitor);
-                                        if (Debug.infoOn()) Debug.logInfo("The visitorId [" + cookieVisitorId + "] found in cookie was invalid, creating new Visitor with ID [" + visitor.getString("visitorId") + "]", module);
+                                        if (Debug.infoOn()) {
+                                            String visitorId = visitor != null ? visitor.getString("visitorId") : "empty visitor";
+                                            Debug.logInfo("The visitorId [" + cookieVisitorId + "] found in cookie was invalid, creating new Visitor with ID [" + visitorId + "]", module);
+                                        }
                                     }
                                 } catch (GenericEntityException e) {
                                     Debug.logError(e, "Error finding visitor with ID from cookie: " + cookieVisitorId, module);
@@ -271,6 +279,8 @@ public class VisitHandler {
                             Cookie visitorCookie = new Cookie(visitorCookieName, visitor.getString("visitorId"));
                             visitorCookie.setMaxAge(60 * 60 * 24 * 365);
                             visitorCookie.setPath("/");
+                            visitorCookie.setSecure(true);
+                            visitorCookie.setHttpOnly(true);
                             response.addCookie(visitorCookie);
                         }
                     }

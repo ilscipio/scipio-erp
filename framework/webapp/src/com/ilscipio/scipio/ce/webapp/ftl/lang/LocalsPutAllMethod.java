@@ -36,9 +36,8 @@ public class LocalsPutAllMethod extends VarsPutAllMethod {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         return execPutAll(args, new LangFtlUtil.LocalFtlVarHandler(env), env);
     }

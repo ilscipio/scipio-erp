@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -107,15 +94,18 @@ under the License.
                 
                 <set field="titleProperty" value="PageTitleSalesInvoiceByProductGlAccountSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There is no SalesInvoiceByProductGlAccountSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There is no SalesInvoiceByProductGlAccountSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductGlAccountSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -130,15 +120,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitlePaymentByMethodSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no PaymentByMethodSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no PaymentByMethodSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/PaymentByMethodSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -152,15 +145,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitleInventoryIssueSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no InventoryIssueSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no InventoryIssueSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/InventoryIssueSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -174,15 +170,18 @@ under the License.
             
                 <set field="titleProperty" value="PageTitleFinancialAccountSummary"/>
 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>
+                <!-- SCIPIO: FIXME?: There was no FinancialAccountSummary.bsh in stock 14-17.
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <!-- SCIPIO: FIXME?: There was no FinancialAccountSummary.ftl in stock 14-17.
                             <platform-specific>
                                 <html><html-template location="component://accounting/webapp/accounting/reports/FinancialAccountSummary.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
+                            <label text="${uiLabelMap.CommonNotImplementedSentence}"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -197,11 +196,8 @@ under the License.
                 <set field="titleProperty" value="AccountingTrialBalance"/>
                 <set field="activeSubMenuItem" value="TrialBalance"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
+                
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <entity-condition entity-name="Party" list="parties">
                     <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
@@ -252,11 +248,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
+                
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <entity-condition entity-name="Party" list="parties">
                     <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
@@ -278,11 +271,8 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
+                
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <entity-condition entity-name="Party" list="parties">
                     <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
@@ -310,13 +300,7 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingBalanceSheet"/>
-                <set field="activeSubMenuItem" value="BalanceSheet"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                <set field="activeSubMenuItem" value="BalanceSheet"/>                
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/BalanceSheet.groovy"/>
@@ -358,11 +342,7 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/BalanceSheet.groovy"/>
@@ -392,12 +372,8 @@ under the License.
             <actions>
                 <set field="viewSize" value="99999"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>                
+                
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/BalanceSheet.groovy"/>
@@ -419,13 +395,7 @@ under the License.
                 <set field="viewSize" value="99999"/>
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
                 <set field="activeSubMenuItem" value="ComparativeBalanceSheet"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
-                
+
                 <set field="period1ThruDate" from-field="parameters.period1ThruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="period1GlFiscalTypeId" from-field="parameters.period1GlFiscalTypeId" default-value="ACTUAL"/>
                 <set field="thruDate" from-field="period1ThruDate" type="Timestamp"/>
@@ -507,11 +477,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
                 <set field="activeSubMenuItem" value="ComparativeBalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <set field="period1ThruDate" from-field="parameters.period1ThruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="period1GlFiscalTypeId" from-field="parameters.period1GlFiscalTypeId" default-value="ACTUAL"/>
@@ -578,11 +543,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeBalanceSheet"/>
                 <set field="activeSubMenuItem" value="ComparativeBalanceSheet"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <set field="period1ThruDate" from-field="parameters.period1ThruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="period1GlFiscalTypeId" from-field="parameters.period1GlFiscalTypeId" default-value="ACTUAL"/>
@@ -644,9 +604,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result" auto-field-map="true"/>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -711,9 +669,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result" auto-field-map="true"/>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
@@ -748,9 +704,6 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result" auto-field-map="true"/>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
@@ -774,11 +727,6 @@ under the License.
                 <set field="titleProperty" value="AccountingIncomeStatement"/>
                 <set field="activeSubMenuItem" value="IncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -886,11 +834,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
@@ -987,11 +930,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
@@ -1068,12 +1006,7 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeIncomeStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeIncomeStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
-
+                
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -1204,10 +1137,7 @@ under the License.
                 <set field="activeSubMenuItem" value="GlAccountBalanceByCostCenter"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
-                <set field="partyIds[]" from-field="organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result" auto-field-map="true"/>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                <set field="partyIds[]" from-field="organizationPartyId"/>                
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -1256,9 +1186,7 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result" auto-field-map="true"/>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyIds" value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}" type="List"/>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
@@ -1367,11 +1295,7 @@ under the License.
                 <set field="titleProperty" value="AccountingCashFlowStatement"/>
                 <set field="activeSubMenuItem" value="CashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -1476,11 +1400,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
@@ -1561,11 +1480,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
@@ -1625,11 +1539,6 @@ under the License.
                 <set field="titleProperty" value="AccountingComparativeCashFlowStatement"/>
                 <set field="activeSubMenuItem" value="ComparativeCashFlowStatement"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" type="String"/>
-                <service service-name="getPartyAccountingPreferences" result-map="result">
-                    <field-map field-name="organizationPartyId"/>
-                </service>
-                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
 
                 <!-- Get a default fromDate -->
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">

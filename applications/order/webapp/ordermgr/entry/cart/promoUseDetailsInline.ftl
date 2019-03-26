@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <div>
@@ -27,9 +14,9 @@ under the License.
                     <@heading>${productPromoUseInfo.promoName!}</@heading>
                     <#if productPromoUseInfo.productPromoCodeId?has_content> - ${uiLabelMap.OrderWithPromoCode} [${productPromoUseInfo.productPromoCodeId}]</#if>
                     <#if (productPromoUseInfo.totalDiscountAmount != 0)> - ${uiLabelMap.CommonTotalValue} <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
-                    <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId!}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
+                    <br/><a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId!}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                     <#if productPromoUseInfo.productPromoCodeId?has_content>
-                        <br/><a href="<@ofbizUrl>removePromotion?promoCode=${productPromoUseInfo.productPromoCodeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.OrderRemovePromotion}</a>
+                        <br/><a href="<@pageUrl>removePromotion?promoCode=${productPromoUseInfo.productPromoCodeId!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.OrderRemovePromotion}</a>
                     </#if>
                 </li>
                 <#if (productPromoUseInfo.quantityLeftInActions > 0)>
@@ -50,7 +37,7 @@ under the License.
                             <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
                             <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>
                             <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                            <li>&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} ${uiLabelMap.CommonUsedAs} <#if isQualifier>${uiLabelMap.CommonQualifier}<#else>${uiLabelMap.CommonBenefit}</#if> ${uiLabelMap.OrderOfPromotion} <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoActualPK.productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></li>
+                            <li>&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} ${uiLabelMap.CommonUsedAs} <#if isQualifier>${uiLabelMap.CommonQualifier}<#else>${uiLabelMap.CommonBenefit}</#if> ${uiLabelMap.OrderOfPromotion} <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromoActualPK.productPromoId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></li>
                             <!-- productPromoActualPK ${productPromoActualPK.toString()} -->
                         </#list>
                     </ul>
@@ -59,7 +46,7 @@ under the License.
                             <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
                             <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
                             <#assign isQualifier = "ProductPromoCond" == productPromoFailedPK.getEntityName()>
-                            <li>&nbsp;&nbsp;-&nbsp;${uiLabelMap.CommonCouldBeUsedAs} <#if isQualifier>${uiLabelMap.CommonQualifier}<#else>${uiLabelMap.CommonBenefit}</#if> ${uiLabelMap.OrderOfPromotion} <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoFailedPK.productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></li>
+                            <li>&nbsp;&nbsp;-&nbsp;${uiLabelMap.CommonCouldBeUsedAs} <#if isQualifier>${uiLabelMap.CommonQualifier}<#else>${uiLabelMap.CommonBenefit}</#if> ${uiLabelMap.OrderOfPromotion} <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromoFailedPK.productPromoId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></li>
                             <!-- Total times checked but failed: ${failedQuantityUsed}, productPromoFailedPK ${productPromoFailedPK.toString()} -->
                         </#list>
                     </ul>

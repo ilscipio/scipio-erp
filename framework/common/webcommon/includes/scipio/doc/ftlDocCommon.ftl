@@ -89,7 +89,7 @@
   <#if escape>
     <#return escapeVal(text, 'html')>
   <#else>
-    <#return rawString(text)>
+    <#return raw(text)>
   </#if>
 </#function>
 
@@ -126,7 +126,7 @@
 <#-- Does bold, underline, italic (rudimentary!)
    NOTE: some of this overlaps with interpretedText; that's okay -->
 <#function decorateText text>
-  <#return rawString(text)?replace("{{{", "<code>")?replace("}}}", "</code>")
+  <#return raw(text)?replace("{{{", "<code>")?replace("}}}", "</code>")
     ?replace("(((", "")?replace(")))", "")
     ?replace("'{3}(.*?)'{3}", "<strong>$1</strong>", "r")?replace("(&#39;){3}(.*?)(&#39;){3}", "<strong>$2</strong>", "r")
     ?replace("'{2}(.*?)'{2}", "<em>$1</em>", "r")?replace("(&#39;){2}(.*?)(&#39;){2}", "<em>$2</em>", "r")
@@ -142,7 +142,7 @@
 
 <#-- interprets {{{, ((( and auto-highlighted entry references -->
 <#macro interpretedText text autoEntryRefs=true escape=true>
-  <#list tmplHelper.splitByTextualElems(rawString(text), entryMap, libMap, libInfo) as entry>
+  <#list tmplHelper.splitByTextualElems(raw(text), entryMap, libMap, libInfo) as entry>
     <#if entry?is_hash>
       <#if entry.type == "entryref">
         <#-- NOTE: prevent duplicate refs via global record -->

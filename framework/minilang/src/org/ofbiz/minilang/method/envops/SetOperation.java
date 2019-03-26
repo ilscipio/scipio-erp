@@ -26,20 +26,22 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.MiniLangValidate;
 import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.ValidationException;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;set&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cset%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class SetOperation extends MethodOperation {
 
@@ -89,8 +91,10 @@ public final class SetOperation extends MethodOperation {
     public SetOperation(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "from-field", "from", "value", "default-value", "default", "format", "type", "set-if-null", "set-if-empty");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
             MiniLangValidate.requireAnyAttribute(simpleMethod, element, "from-field", "from", "value");
@@ -99,13 +103,23 @@ public final class SetOperation extends MethodOperation {
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field");
             MiniLangValidate.noChildElements(simpleMethod, element);
         }
+        // SCIPIO: 2018-11-02: Log error against this, because it is a noop, set-if-null="true" is required:
+        //   <set field="xxx" value=""/>
+        // Warn even when validation disabled because it can lead to serious errors
+        if (element.hasAttribute("value") && UtilValidate.isEmpty(element.getAttribute("value")) && !element.hasAttribute("from")
+                && !element.hasAttribute("from-field") && !element.hasAttribute("default-value") && !element.hasAttribute("set-if-null")) {
+            ValidationException e = new ValidationException("set field=\"" + element.getAttribute("field") + "\" has no effect; value=\"\" only sets null if set-if-null=\"true\" specified", simpleMethod, element);
+            Debug.logError(e.getMessage(), module);
+        }
         boolean elementModified = autoCorrect(element);
         if (elementModified && MiniLangUtil.autoCorrectOn()) {
             MiniLangUtil.flagDocumentAsCorrected(element);
         }
         this.fieldFma = FlexibleMapAccessor.getInstance(element.getAttribute("field"));
         String fromAttribute = element.getAttribute("from");
-        if (MiniLangUtil.containsScript(fromAttribute)) {
+        // SCIPIO: Use safer script check (see MiniLangUtil.containsScript(String) for details)
+        //if (MiniLangUtil.containsScript(fromAttribute)) {
+        if (MiniLangUtil.startsWithScriptPrefix(fromAttribute)) {
             this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(fromAttribute));
             this.fromFma = FlexibleMapAccessor.getInstance(null);
         } else {
@@ -144,8 +158,9 @@ public final class SetOperation extends MethodOperation {
             }
         } else if (!this.fromFma.isEmpty()) {
             newValue = this.fromFma.get(methodContext.getEnvMap());
-            if (Debug.verboseOn())
-                Debug.logVerbose("In screen getting value for field from [" + this.fromFma.toString() + "]: " + newValue, module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("In screen getting value for field from [" + this.fromFma.toString() + "]: " + newValue, module);
+            }
         } else if (!this.valueFse.isEmpty()) {
             newValue = this.valueFse.expand(methodContext.getEnvMap());
             isConstant = true;
@@ -156,13 +171,15 @@ public final class SetOperation extends MethodOperation {
             isConstant = true;
         }
         if (!setIfNull && newValue == null && !"NewMap".equals(this.type) && !"NewList".equals(this.type)) {
-            if (Debug.verboseOn())
-                Debug.logVerbose("Field value not found (null) with name [" + fromFma + "] and value [" + valueFse + "], and there was not default value, not setting field", module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("Field value not found (null) with name [" + fromFma + "] and value [" + valueFse + "], and there was not default value, not setting field", module);
+            }
             return true;
         }
         if (!setIfEmpty && ObjectType.isEmpty(newValue)) {
-            if (Debug.verboseOn())
-                Debug.logVerbose("Field value not found (empty) with name [" + fromFma + "] and value [" + valueFse + "], and there was not default value, not setting field", module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("Field value not found (empty) with name [" + fromFma + "] and value [" + valueFse + "], and there was not default value, not setting field", module);
+            }
             return true;
         }
         if (this.type.length() > 0) {
@@ -194,8 +211,9 @@ public final class SetOperation extends MethodOperation {
                 }
             }
         }
-        if (Debug.verboseOn())
-            Debug.logVerbose("Setting field [" + this.fieldFma.toString() + "] to value: " + newValue, module);
+        if (Debug.verboseOn()) {
+             Debug.logVerbose("Setting field [" + this.fieldFma.toString() + "] to value: " + newValue, module);
+        }
         this.fieldFma.put(methodContext.getEnvMap(), newValue);
         return true;
     }

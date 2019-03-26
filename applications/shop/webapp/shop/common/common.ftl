@@ -1,10 +1,27 @@
+<#-- SCIPIO: Common Shop templates utilities and definitions include -->
 
-<#-- SCIPIO: common shop-wide helper definitions and macros -->
+<#-- contentlib, orderlib
+    NOTE: 2019-03: Currently several of contentlib/orderlib's markup-generating macros are duplicated below, to separate
+        frontend from backend; however it is acceptable to call pure function orderlib methods from here for reuse.  -->
+<#import "component://content/webapp/content/common/contentlib.ftl" as contentlib>
+<#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+
+<#-- acctlib: getGiftCardDisplayNumber, getCreditCardDisplayNumber, ... -->
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+<#-- For now, for compatibility and ease of use, dump acctlib into main namespace...
+    TODO: REVIEW: This might become less appropriate later... -->
+<#include "component://accounting/webapp/accounting/common/acctlib.ftl">
+
+<#-- 2018-11-29: Returns shopping cart IF exists (for shop, almost always does)
+    Templates that are not sure if cart is in context or not MUST use this; do NOT access sessionAttributes.shoppingCart anymore! -->
+<#function getShoppingCart>
+    <#return shoppingCart!cart!Static["org.ofbiz.order.shoppingcart.ShoppingCartEvents"].getCartObjectIfExists(request!)!>
+</#function>
 
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
   <#local class = addClassArgDefault(class, styles.link_nav_inline!)>
-  <a href="${escapeFullUrl(updateLink, 'html')}"<@compiledClassAttribStr class=class />>${uiLabelMap.CommonUpdate}</a><#t>
+  <a href="${escapeFullUrl(updateLink, 'html')}"<@compiledClassAttribStr class=class/>>${uiLabelMap.CommonUpdate}</a><#t>
 </#macro>
 
 <#macro formattedAddressBasic address emphasis=false abbrev=false verbose=true>
@@ -77,7 +94,7 @@
   <#if verbose>
     <#--
     <#if !paymentMethod?has_content>
-      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod")>
+      <#local paymentMethod = creditCard.getRelatedOne("PaymentMethod", false)>
     </#if>
     -->
     ${(delegator.findOne("Enumeration", {"enumId":creditCard.cardType!}, true).get("description", locale))!creditCard.cardType!}<#t>
@@ -143,27 +160,6 @@
   </#if>
 </#macro>
 
-<#-- Migrated from checkoutpayment.ftl -->
-<#function getGiftCardDisplayNumber giftCard>
-    <#if giftCard?has_content && giftCard.cardNumber?has_content>
-      <#local giftCardNumber = "" />
-      <#local pcardNumber = giftCard.cardNumber />
-      <#if pcardNumber?has_content>
-        <#local psize = pcardNumber?length - 4 />
-        <#if (0 < psize)>
-          <#list 0 .. psize-1 as foo>
-            <#local giftCardNumber = giftCardNumber + "*" />
-          </#list>
-          <#local giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-        <#else>
-          <#local giftCardNumber = pcardNumber />
-        </#if>
-        <#return giftCardNumber>
-      </#if>
-    </#if>
-</#function>
-
-
 <#-- Generic javascript for radios that have a "new item" option that should display content when radio selected 
     WARN: JS callbacks are highly coupled with macro -->
 <#macro initItemSelectionWithContentFormScript itemFieldClass contentItems=[]
@@ -210,9 +206,9 @@ jQuery(document).ready(function() {
                     fieldIdHideMap[eid] = e;
                 }
             }
-            ${rawString(updateCallbackPerElemJs)}
+            ${raw(updateCallbackPerElemJs)}
         });
-        ${rawString(updateCallbackPreVisibJs)}
+        ${raw(updateCallbackPreVisibJs)}
         jQuery.each(contentIdHideMap, function(k, v) {
             if (v && v.is(':visible')) {
                 v.fadeOut('fast');
@@ -243,7 +239,7 @@ jQuery(document).ready(function() {
             }
         }
         -->
-        ${rawString(updateCallbackPostVisibJs)}
+        ${raw(updateCallbackPostVisibJs)}
     };
 
     updateItemVisibility(); <#-- Needed for page refreshes to work and to set initial visibility (if FTL doesn't do it) -->
@@ -401,7 +397,6 @@ jQuery(document).ready(function() {
     </@field>   
 </#macro>
 
-
 <#function getLocalizedPersonalTitle personalTitle>
     <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
         This is probably an error because the values read from DB become hard to re-localize.
@@ -413,3 +408,26 @@ jQuery(document).ready(function() {
     <#if personalTitle == "Dr." || personalTitle == uiLabelMap.CommonTitleDr><#return uiLabelMap.CommonTitleDr></#if>
     <#-- return nothing if could not detect so caller can default -->
 </#function>
+
+<#-- NOTE: Copied from orderlib; interactive=true implementation is removed to avoid needless extra templates,
+    and the SurveyResponseQaList template (fron content) is duplicated for frontend at: component://shop/templates/survey/qalistresult.ftl -->
+<#macro orderItemSurvResList survResList srqaArgs={} useTitleLine=false interactive=false maxInline=-1 class="" listClass="+order-item-attrib-list">
+  <#if survResList?has_content>
+  <#local class = addClassArgDefault(class, "order-item-survres-list")>
+  <div<@compiledClassAttribStr class=class/>>
+    <#list survResList as surveyResponse>
+      <div class="survres-entry">
+        <#local survey = surveyResponse.getRelatedOne("Survey")!>
+        <#if useTitleLine>
+          <#local surveyDesc = survey.get("description", locale)!>
+          <#if surveyDesc?has_content><span class="survres-desc">${surveyDesc}</span></#if>
+        </#if>
+        <#if (maxInline != 0) && ("Y" == survey.showOnInvoice!)>
+          <@contentlib.renderSurveyResponse surveyResponse=surveyResponse tmplLoc="component://shop/templates/survey/qalistresult.ftl"
+            srqaArgs=({"listClass":listClass, "max":maxInline} + srqaArgs)/>
+        </#if>
+      </div>
+    </#list>
+  </div>
+  </#if>
+</#macro>

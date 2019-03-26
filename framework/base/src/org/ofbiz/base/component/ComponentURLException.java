@@ -10,9 +10,9 @@ import java.net.MalformedURLException;
  */
 @SuppressWarnings("serial")
 public class ComponentURLException extends MalformedURLException {
-    
+
     private final Throwable cause;
-   
+
     /**
      * Constructor with extra component error cause.
      * DEV NOTE: this does does not initialize Throwable's cause member; it returns through {@link #getCause()} only;
@@ -22,7 +22,7 @@ public class ComponentURLException extends MalformedURLException {
         super(msg);
         this.cause = cause;
     }
-    
+
     public ComponentURLException(String msg) {
         super(msg);
         this.cause = null;
@@ -50,7 +50,7 @@ public class ComponentURLException extends MalformedURLException {
             return msg != null ? new ComponentURLException(msg, e) : new ComponentURLException(e);
         }
     }
-    
+
     /**
      * Returns a cause of this ComponentURLException
      * DEV NOTE: this returns the local cause member, NOT the Throwable one.
@@ -75,5 +75,5 @@ public class ComponentURLException extends MalformedURLException {
             super(cause);
         }
     }
-    
+
 }

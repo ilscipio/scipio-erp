@@ -50,11 +50,16 @@
             <link target="FindAgreement"/>
         </menu-item>      
         
-        <!-- Journals -->
-        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="TransactionReports" />
+        <!-- Transactions -->
+        <menu-item name="Transactions" title="${uiLabelMap.AccountingTransactions}">
+            <link target="Transactions" />
         </menu-item>
         
+        <!-- Reports -->
+        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingReports}">
+            <link target="TransactionReports" />
+        </menu-item>
+
         <!-- Controlling -->
         <menu-item name="controlling" title="${uiLabelMap.AccountingControlling}">
             <link target="ListBudgets"/>
@@ -101,8 +106,11 @@
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
         </menu-item>
-        <menu-item name="Journals">
-            <sub-menu name="Journals" include="JournalsSideBar"/>
+        <menu-item name="Transactions">
+            <sub-menu name="Transactions" include="TransactionsSideBar"/>
+        </menu-item>
+        <menu-item name="TransactionReports">
+            <sub-menu name="TransactionReports" include="TransactionReportsSideBar"/>
         </menu-item>
         <menu-item name="payments">
             <sub-menu name="Payment" include="PaymentSideBar"/>
@@ -281,10 +289,12 @@
     * Chart of accounts
     **************
      -->
-     <menu name="CommonGLSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="CommonGLSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="GlAccountNavigate">
         <actions>
-            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            <!-- SCIPIO: DEV NOTE: This must NOT be set global or it may get shadowed by a null in the MapStack: global="true";
+                global is usually not appropriate for menu actions -->
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
         </actions>
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
@@ -356,22 +366,40 @@
     * Contracts 
     **************
     -->
-    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
-            <link target="FindAgreement" />
-        </menu-item>
-    </menu>
-    
-    <menu name="AgreementSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2}">
-        <!-- 
-        <menu-item name="NewAgreement" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAgreement}" widget-style="+${styles.action_nav} ${styles.action_add}">
+    <!--SCIPIO: Agreement fixes -->
+    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditAgreement" menu-container-style="+scipio-nav-actions-menu">
+        <menu-item name="EditAgreement" title="${uiLabelMap.AccountingAgreement}">
             <link target="EditAgreement">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-         -->
-        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="AgreementItems" title="${uiLabelMap.CommonItems}">
+            <link target="ListAgreementItems">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+            <sub-menu include="AgreementItemSideBar" name="AgreementItem"/>
+        </menu-item>
+        <menu-item name="AgreementRoles" title="${uiLabelMap.CommonParties}">
+            <link target="EditAgreementRoles">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="AgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}">
+            <link target="EditAgreementTerms">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="AgreementWorkEffort" title="${uiLabelMap.WorkEffort}">
+            <link target="EditAgreementWorkEffortApplics">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="AgreementTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditAgreementItem" menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="EditAgreementItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditAgreementItem">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
@@ -380,7 +408,7 @@
             <condition>
                 <if-empty field="agreementItem.agreementItemSeqId"/>
             </condition>
-            <link target="EditAgreementRole">
+            <link target="EditAgreementRoles">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
@@ -396,11 +424,10 @@
             <condition>
                 <if-empty field="agreementItem.agreementItemSeqId"/>
             </condition>
-            <link target="EditAgreementTerms">
+            <link target="EditAgreementWorkEffortApplics">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        
         <menu-item name="NewGeo" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonGeo}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
@@ -458,22 +485,31 @@
     </menu>
 
     <menu name="AgreementItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="buttonBarItem">
+          default-menu-item-name="EditAgreementItem">
         <menu-item name="EditAgreementItem" title="${uiLabelMap.AccountingAgreementItem}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="EditAgreementItem">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
         <menu-item name="ListAgreementGeographicalApplic" title="${uiLabelMap.CommonGeo}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementGeographicalApplic">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
-        <menu-item name="ListAgreementItemFacility" title="${uiLabelMap.ProductFacilities}">
+        <menu-item name="ListAgreementItemWarehouses" title="${uiLabelMap.ProductFacilities}">
             <condition>
-                <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+                <and>
+                    <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+                    <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+                </and>
             </condition>
             <link target="ListAgreementItemFacilities">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
@@ -481,6 +517,9 @@
             </link>
         </menu-item>
         <menu-item name="ListAgreementItemParties" title="${uiLabelMap.PartyParties}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementItemParties">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
@@ -488,7 +527,10 @@
         </menu-item>
         <menu-item name="ListAgreementItemProducts" title="${uiLabelMap.ProductProducts}">
             <condition>
-                <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+                <and>
+                    <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+                    <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+                </and>
             </condition>
             <link target="ListAgreementItemProducts">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
@@ -496,6 +538,9 @@
             </link>
         </menu-item>
         <menu-item name="ListAgreementPromoAppls" title="${uiLabelMap.AccountingAgreementPromoAppls}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementPromoAppls">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
@@ -503,7 +548,10 @@
         </menu-item>
         <menu-item name="ListAgreementItemSupplierProducts" title="${uiLabelMap.ProductProducts}">
             <condition>
-                <if-compare field="agreement.agreementTypeId" operator="equals" value="PURCHASE_AGREEMENT" />
+                <and>
+                    <if-compare field="agreement.agreementTypeId" operator="equals" value="PURCHASE_AGREEMENT" />
+                    <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+                </and>
             </condition>
             <link target="ListAgreementItemSupplierProducts">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
@@ -511,23 +559,37 @@
             </link>
         </menu-item>
         <menu-item name="ListAgreementItemTerms" title="${uiLabelMap.AccountingAgreementItemTerms}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementItemTerms">
                 <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
         <menu-item name="FacilitiesReport" title="${uiLabelMap.Facilities}: ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementItemFacilitiesReport" target-window="_blank">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
         <menu-item name="ProductsReport" title="${uiLabelMap.Products}: ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
             <link target="ListAgreementItemProductsReport" target-window="_blank">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
+    </menu>
+
+    <menu name="AgreementItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditAgreementItem" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="AgreementItemTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="AgreementItemSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1240,22 +1302,37 @@
     
     <!-- 
     **************
-    * Journals 
+    * Transactions 
     **************
     -->
-    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="Journals" always-expand-selected-or-ancestor="true">
+    <menu name="TransactionsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
-            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            <!-- SCIPIO: DEV NOTE: This must NOT be set global or it may get shadowed by a null in the MapStack: global="true";
+                global is usually not appropriate for menu actions -->
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>            
+        </actions>
+    </menu>
+
+    <!-- 
+    **************
+    * Reports 
+    **************
+    -->
+    <menu name="TransactionReportsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="TransactionTotals" always-expand-selected-or-ancestor="true">
+        <actions>
+            <!-- SCIPIO: DEV NOTE: This must NOT be set global or it may get shadowed by a null in the MapStack: global="true";
+                global is usually not appropriate for menu actions -->
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
         </actions>
         <!--
         <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}" sort-mode="off">
             <link target="journals" />
         </menu-item>-->
         
-        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+<!--         <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
             <link target="TransactionReports" />
-        </menu-item>
+        </menu-item> -->
         <menu-item name="SalesInvoiceByProductCategorySummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
             <link target="SalesInvoiceByProductCategorySummary" >
                 <parameter param-name="organizationPartyId"/>
@@ -1407,11 +1484,10 @@
     **************
      -->
      <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- SCIPIO: redundant
-        <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
+        <menu-item name="findPayments" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
             <link target="findPayments" />
         </menu-item>
-        -->
+
         <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabOverview}">
             <condition>
                 <not>
@@ -1454,12 +1530,28 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+        <menu-item name="editPaymentApplications" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabApplications}">
+        </menu-item>
+
+        <menu-item name="authorizeTransaction" title="${uiLabelMap.AccountingAuthorize}">
+            <link target="AuthorizeTransaction"/>
+        </menu-item>
+        <menu-item name="captureTransaction" title="${uiLabelMap.AccountingCapture}">
+            <link target="CaptureTransaction"/>
+        </menu-item>
+        <menu-item name="gatewayResponses" title="${uiLabelMap.AccountingGatewayResponses}">
+            <link target="FindGatewayResponses"/>
+        </menu-item>
+        <menu-item name="manualTransaction" title="${uiLabelMap.AccountingManualTransaction}">
+            <link target="ManualTransaction"/>
+        </menu-item>
     </menu>
 
     <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
-        <menu-item-alias name="findPayment" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newPayment" for="PARENT-NOSUB"/>
+        <!-- <menu-item-alias name="findPayments" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="newPayment" for="PARENT-NOSUB"/> --> 
+        <!-- <menu-item-alias name="newPayment" for="PARENT-WITHSUB"/> -->
     </menu>
 
     <menu name="PaymentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1714,7 +1806,9 @@
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-menu-item-name="settings" always-expand-selected-or-ancestor="true">
         <actions>
-            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            <!-- SCIPIO: DEV NOTE: This must NOT be set global or it may get shadowed by a null in the MapStack: global="true";
+                global is usually not appropriate for menu actions -->
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
         </actions>
         <menu-item name="settings" title="${uiLabelMap.AccountingCompanies}" sort-mode="off">
             <link target="settings" />
@@ -1746,12 +1840,11 @@
             <link target="FindPaymentGatewayConfig"/>
             <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
         </menu-item>
-        <!--
-        <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="SetupGlJournals">
+        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="journals">
                 <parameter param-name="organizationPartyId" />
             </link>
-        </menu-item>-->
+        </menu-item>
         <menu-item name="GlAccountAssignment" title="${uiLabelMap.AccountingGlAccountDefault}">
             <link target="GlAccountAssignment">
                 <parameter param-name="organizationPartyId" />
@@ -1767,16 +1860,16 @@
         <menu-item name="findVendors" title="${uiLabelMap.AccountingVendors}">
             <link target="findVendors"/>
         </menu-item>
-        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingSetTimePeriod}">
+        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriods}">
             <link target="TimePeriods">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
-        <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingUpdateTimePeriod}">
+        <!-- <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingUpdateTimePeriod}">
             <link target="EditCustomTimePeriod">
                 <parameter param-name="organizationPartyId" />
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     
     <!-- Payment Gateway -->

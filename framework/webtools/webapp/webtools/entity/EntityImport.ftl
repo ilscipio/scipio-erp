@@ -1,24 +1,14 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#include "component://webtools/webapp/webtools/entity/entitycommon.ftl">
+
 <#-- SCIPIO: 2017-06-15: extra template configuration -->
 <#assign eiActionUri = eiActionUri!"entityImport">
 <#assign eiAllowServerLocs = eiAllowServerLocs!true><#-- if false, no file locations allowed -->
+<#assign eiUnsafeFieldOpt = eiUnsafeFieldOpt!true>
 <#assign eiInfoMsg = eiInfoMsg!(uiLabelMap.WebtoolsXMLImportInfo)>
 <#assign eiShowMsgs = eiShowMsgs!true>
 
@@ -58,7 +48,7 @@ under the License.
 
   <#macro entityImportForm srcType enctype="" submitText="">
     <#if limitStrValToItems(srcType, importSrcTypeItems)??><#-- only show forms for available items -->
-      <form method="post" action="<@ofbizUrl uri=eiActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
+      <form method="post" action="<@pageUrl uri=eiActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
          <#lt/> id="entityimport-${srcType}-form" class="entityimport-form entityimport-${srcType}-form"<#if srcType != importSrcType> style="display:none;"</#if>>
         <@field type="hidden" name="importSrcType" value=srcType/>
         <#nested>
@@ -66,12 +56,15 @@ under the License.
         <#-- SCIPIO: NOTE: 2017-06-15: fmfilename can be combined with any data source -->
         <@field type="input" size="40" name="fmfilename" value=(fmfilename!) label=uiLabelMap.WebtoolsAbsoluteFTLFilename/>
       </#if>
+      <#if eiUnsafeFieldOpt>
+        <@eiUnsafeEntityField values=parameters/>
+      </#if>
         <#-- SCIPIO: NOTE: 2017-06-15: the common fields are now available to all source types (they were not in stock ofbiz) -->
-        <@field type="checkbox" name="mostlyInserts" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>
-        <@field type="checkbox" name="maintainTimeStamps" checked=keepStamps?? label=uiLabelMap.WebtoolsMaintainTimestamps/>
-        <@field type="checkbox" name="createDummyFks" checked=createDummyFks?? label=uiLabelMap.WebtoolsCreateDummyFks/>
-        <@field type="checkbox" name="checkDataOnly" checked=checkDataOnly?? label=uiLabelMap.WebtoolsCheckDataOnly/>
-        <@field type="input" size="6" value=txTimeoutStr!'7200' name="txTimeout" label=uiLabelMap.WebtoolsTimeoutSeconds/>
+        <@field type="checkbox" name="mostlyInserts" value="true" checked=mostlyInserts?? label=uiLabelMap.WebtoolsMostlyInserts/>
+        <@field type="checkbox" name="maintainTimeStamps" value="true" checked=keepStamps?? label=uiLabelMap.WebtoolsMaintainTimestamps/>
+        <@field type="checkbox" name="createDummyFks" value="true" checked=createDummyFks?? label=uiLabelMap.WebtoolsCreateDummyFks/>
+        <@field type="checkbox" name="checkDataOnly" value="true" checked=checkDataOnly?? label=uiLabelMap.WebtoolsCheckDataOnly/>
+        <@field type="input" name="txTimeout" value=(txTimeoutStr!"7200") label=uiLabelMap.WebtoolsTimeoutSeconds size="6"/>
         <@field type="submit" text=submitText class="+${styles.link_run_sys!} ${styles.action_import!}"/>
       </form>
     </#if>

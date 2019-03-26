@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if productPromoCode??>
     <@section title=uiLabelMap.ProductPromoCodeEmails>
             <#list productPromoCodeEmails as productPromoCodeEmail>
               <div>
-                <form name="deleteProductPromoCodeEmail_${productPromoCodeEmail_index}" method="post" action="<@ofbizUrl>deleteProductPromoCodeEmail</@ofbizUrl>">
+                <form name="deleteProductPromoCodeEmail_${productPromoCodeEmail_index}" method="post" action="<@pageUrl>deleteProductPromoCodeEmail</@pageUrl>">
                   <input type="hidden" name="productPromoCodeId" value="${productPromoCodeEmail.productPromoCodeId}"/>                
                   <input type="hidden" name="emailAddress" value="${productPromoCodeEmail.emailAddress}"/>                
                   <input type="hidden" name="productPromoId" value="${productPromoId}"/>                
@@ -29,7 +16,7 @@ under the License.
               </div>                
             </#list>
             <div>
-                <form method="post" action="<@ofbizUrl>createProductPromoCodeEmail</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createProductPromoCodeEmail</@pageUrl>">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <span>${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
@@ -38,7 +25,7 @@ under the License.
                 <#if (productPromoCode.requireEmailOrParty!) == "N">
                     <div class="tooltip">${uiLabelMap.ProductNoteRequireEmailParty}</div>
                 </#if>
-                <form method="post" action="<@ofbizUrl>createBulkProductPromoCodeEmail?productPromoCodeId=${productPromoCodeId!}</@ofbizUrl>" enctype="multipart/form-data">
+                <form method="post" action="<@pageUrl>createBulkProductPromoCodeEmail?productPromoCodeId=${productPromoCodeId!}</@pageUrl>" enctype="multipart/form-data">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <input type="file" size="40" name="uploadedFile" />
@@ -49,10 +36,10 @@ under the License.
     
     <@section title=uiLabelMap.ProductPromoCodeParties>
             <#list productPromoCodeParties as productPromoCodeParty>
-                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
+                <div><a href="<@pageUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>
             <div>
-                <form method="post" action="<@ofbizUrl>createProductPromoCodeParty</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createProductPromoCodeParty</@pageUrl>">
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <span>${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />

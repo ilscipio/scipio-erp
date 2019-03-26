@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -22,26 +9,26 @@ under the License.
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if showMessageLinks?default("false")?upper_case == "TRUE">
-                <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
+                <a href="<@pageUrl>messagelist</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
             </#if>
         </div>
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if ((showMessageLinks!"FALSE")?upper_case) == "TRUE">
-          <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
+          <@menuitem type="link" href=makePageUrl("messagelist") text=uiLabelMap.EcommerceViewList />
         </#if>
     </@menu>
 </#macro>
 <@section title=(pageHeader!) menuContent=menuContent menuLayoutTitle="inline-title">
-      <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
+      <form name="contactus" method="post" action="<@pageUrl>${submitRequest}</@pageUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
         <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI"/>
         <#if productStore?has_content>
           <input type="hidden" name="partyIdTo" value="${productStore.payToPartyId!}"/>
         </#if>
-        <input type="hidden" name="note" value="${Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request)}"/>
+        <input type="hidden" name="note" value="${UtilHttp.getFullRequestUrl(request)}"/>
         <#if message?has_content>
           <input type="hidden" name="parentCommEventId" value="${communicationEvent.communicationEventId}"/>
           <#if (communicationEvent.origCommEventId?? && communicationEvent.origCommEventId?length > 0)>
@@ -51,13 +38,13 @@ under the License.
           </#if>
           <input type="hidden" name="origCommEventId" value="${orgComm}"/>
         </#if>
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom" -->
+        <@table type="fields">
           <@tr>
             <@td colspan="2">&nbsp;</@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.CommonFrom}</@td>
-            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)</@td>
+            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@pageUrl>autoLogout</@pageUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)</@td>
           </@tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>

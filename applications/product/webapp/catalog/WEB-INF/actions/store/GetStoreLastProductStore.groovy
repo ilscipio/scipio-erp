@@ -4,7 +4,9 @@
  * set globalContext, only context, for safety.
  */
 
-useGlobal = context.getStoreLastProductStore?.global;
+args = context.getStoreLastProductStore ?: [:];
+ 
+useGlobal = args.global;
 if (useGlobal == null) {
     useGlobal = false;
 }
@@ -13,13 +15,8 @@ storeLastProductStoreId = session.getAttribute("storeLastProductStoreId");
 context.storeLastProductStoreId = storeLastProductStoreId;
  
 if (!parameters.productStoreId && !context.productStoreId && !globalContext.productStoreId) {
-    productStoreId = session.getAttribute("storeLastProductStoreId");
-    
-    // 2017-11: fallback support
-    if (!productStoreId) {
-        productStoreId = context.getStoreLastProductStore?.defaultProductStoreId;
-    }
-    
+    productStoreId = args.overrideProductStoreId ?: session.getAttribute("storeLastProductStoreId") ?: args.defaultProductStoreId;
+
     parameters.productStoreId = productStoreId;
     if (useGlobal) {
         globalContext.productStoreId = productStoreId;

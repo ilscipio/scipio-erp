@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -166,14 +153,15 @@ under the License.
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <!--field name="statusId"><hidden value="CRQ_REJECTED"/></field-->
         <field name="rejectAction" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
-            <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}">
+            <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}"
+                link-type="hidden-form"><!-- SCIPIO: Do POST not GET as this modifies system state -->
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
             </hyperlink>
         </field>
     </form>
     <form name="ListRequestItems" type="list" use-row-submit="true" title="" list-name="custRequestItems"
-        odd-row-style="alternate-row" paginate-target="RequestItems"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" paginate-target="requestitems"><!-- SCIPIO: Fixed wrong request: paginate-target="RequestItems" -->
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>
@@ -562,7 +550,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" widget-style="${styles.link_run_sys} ${styles.action_remove}">
-            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
+            <hyperlink description="${uiLabelMap.CommonExpire}" target="expireCustRequestParty">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -749,10 +737,27 @@ under the License.
         <field name="saveAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" target="updaterequest"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="getProjectTaskExists" type="Boolean" value="true"/>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><not><if-service service-name="getProjectTask"/></not></condition>
+                <then>
+                    <set field="getProjectTaskExists" type="Boolean" value="false"/>
+                    <script lang="groovy"><![CDATA[
+                        org.ofbiz.base.util.Debug.logWarning("Cannot get task info for cust request; requires projectmgr addon", "ListCustRequests.groovy");
+                    ]]></script>
+                </then>
+            </if>
+        </actions>
         <row-actions>
-            <service service-name="getProjectTask" result-map="taskResult">
-                <field-map field-name="taskId" from-field="workEffortId"/>
-            </service>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><if-true field="getProjectTaskExists"/></condition>
+                <then>
+                    <service service-name="getProjectTask" result-map="taskResult">
+                        <field-map field-name="taskId" from-field="workEffortId"/>
+                    </service>
+                </then>
+            </if>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
@@ -775,10 +780,27 @@ under the License.
         <field name="actualHours" map-name="taskResult.taskInfo"><display/></field>
     </form>
     <form name="ListMyCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" target="updaterequest"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="getProjectTaskExists" type="Boolean" value="true"/>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><not><if-service service-name="getProjectTask"/></not></condition>
+                <then>
+                    <set field="getProjectTaskExists" type="Boolean" value="false"/>
+                    <script lang="groovy"><![CDATA[
+                        org.ofbiz.base.util.Debug.logWarning("Cannot get task info for cust request; requires projectmgr addon", "ListCustRequests.groovy");
+                    ]]></script>
+                </then>
+            </if>
+        </actions>
         <row-actions>
-            <service service-name="getProjectTask" result-map="taskResult">
-                <field-map field-name="taskId" from-field="workEffortId"/>
-            </service>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><if-true field="getProjectTaskExists"/></condition>
+                <then>
+                    <service service-name="getProjectTask" result-map="taskResult">
+                        <field-map field-name="taskId" from-field="workEffortId"/>
+                    </service>
+                </then>
+            </if>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">

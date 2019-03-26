@@ -19,10 +19,13 @@
 
 package org.ofbiz.service;
 
+import java.io.Serializable;
+
 /**
  * ModelServiceIface
  */
-public class ModelServiceIface {
+@SuppressWarnings("serial")
+public class ModelServiceIface implements Serializable { // SCIPIO: added Serializable
 
     protected String service;
     protected boolean optional;

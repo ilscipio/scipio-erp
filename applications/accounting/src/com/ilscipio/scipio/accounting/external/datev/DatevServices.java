@@ -33,7 +33,7 @@ public class DatevServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -252,7 +252,7 @@ public class DatevServices {
     }
 
     /**
-     * 
+     *
      * @param dctx
      * @param context
      * @return

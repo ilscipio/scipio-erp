@@ -28,6 +28,8 @@ import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.PropertyNotFoundException;
 
+import org.ofbiz.base.util.Debug;
+
 import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.misc.LocalMessages;
 import de.odysseus.el.tree.Bindings;
@@ -44,8 +46,6 @@ import de.odysseus.el.tree.impl.ast.AstDot;
 import de.odysseus.el.tree.impl.ast.AstEval;
 import de.odysseus.el.tree.impl.ast.AstIdentifier;
 import de.odysseus.el.tree.impl.ast.AstNode;
-
-import org.ofbiz.base.util.Debug;
 
 /** A facade class used to connect the OFBiz framework to the JUEL library.
  *<p>The Unified Expression Language specification doesn't allow assignment of
@@ -78,7 +78,11 @@ public class JuelConnector {
             Object base = null;
             try {
                 base = prefix.eval(bindings, context);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose(e, module);
+                }
+            }
             Object property = getProperty(bindings, context);
             if (property == null && strict) {
                 throw new PropertyNotFoundException(LocalMessages.get("error.property.property.notfound", "null", base));
@@ -112,7 +116,11 @@ public class JuelConnector {
             Object base = null;
             try {
                 base = prefix.eval(bindings, context);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose(e, module);
+                }
+            }
             Object property = getProperty(bindings, context);
             if (property == null && strict) {
                 throw new PropertyNotFoundException(LocalMessages.get("error.property.property.notfound", "null", base));
@@ -179,9 +187,7 @@ public class JuelConnector {
         public Tree build(String expression) throws ELException {
             try {
                 return new ExtendedParser(this, expression).tree();
-            } catch (ScanException e) {
-                throw new ELException(LocalMessages.get("error.build", expression, e.getMessage()));
-            } catch (ParseException e) {
+            } catch (ScanException | ParseException e) {
                 throw new ELException(LocalMessages.get("error.build", expression, e.getMessage()));
             }
         }

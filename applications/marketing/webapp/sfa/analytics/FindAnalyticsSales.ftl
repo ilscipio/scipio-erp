@@ -1,5 +1,5 @@
 <@section>
-    <form name="SaleOrdersByChannel" action="<@ofbizUrl>AnalyticsSales</@ofbizUrl>" method="post">
+    <form name="SaleOrdersByChannel" action="<@pageUrl>AnalyticsSales</@pageUrl>" method="post">
         <@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId">
             <@field type="option" value="" 
               selected=(!productStoreId?has_content)>${uiLabelMap.CommonAny}</@field>
@@ -12,12 +12,12 @@
         <@field name="fromDate" type="datetime" value=(parameters.fromDate!) label=uiLabelMap.CommonFrom />
         <@field name="thruDate" type="datetime" value=(parameters.thruDate!) label=uiLabelMap.CommonThru tooltip=uiLabelMap.CommonLeaveEmptyForNowDate/>
         <@field type="select" name="intervalScope" label=uiLabelMap.CommonTimeInterval required=true><#-- uiLabelMap.CommonIntervalScope -->
-            <#assign intervals = Static["org.ofbiz.base.util.UtilDateTime"].TIME_INTERVALS />
+            <#assign intervals = UtilDateTime.getTimeIntervals() />
             <#assign currInterval = chartIntervalScope!parameters.intervalScope!"">
             <#-- This contradicted the groovy which required an interval scope
             <option value=""></option>-->
             <#list intervals as interval>
-                <option value="${interval}"<#if currInterval == interval> selected="selected"</#if>>${interval?capitalize}</option>
+                <option value="${interval}"<#if currInterval == interval> selected="selected"</#if>>${getLabel("Common" + interval?capitalize)}</option>
             </#list>
         </@field>
         <@field type="select" name="salesChannel" label=uiLabelMap.OrderSalesChannel>

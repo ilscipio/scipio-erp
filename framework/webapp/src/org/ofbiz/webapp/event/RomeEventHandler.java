@@ -26,9 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.webapp.control.ConfigXMLReader;
-import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+import org.ofbiz.webapp.control.RequestHandler;
 
 import com.rometools.rome.feed.WireFeed;
 import com.rometools.rome.io.FeedException;
@@ -66,8 +66,8 @@ public class RomeEventHandler implements EventHandler {
         String mainLinkReq = request.getParameter("mainLinkReq");
 
         // create the links; but the query string must be created by the service
-        String entryLink = handler.makeLink(request, response, entryLinkReq, true, false, false);
-        String mainLink = handler.makeLink(request, response, mainLinkReq, true, false, false);
+        String entryLink = handler.makeLink(request, response, entryLinkReq, true, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
+        String mainLink = handler.makeLink(request, response, mainLinkReq, true, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
         request.setAttribute("entryLink", entryLink);
         request.setAttribute("mainLink", mainLink);
 

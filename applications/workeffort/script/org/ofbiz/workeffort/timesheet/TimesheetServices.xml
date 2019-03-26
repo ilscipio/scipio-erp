@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,7 +10,7 @@ under the License.
 
     <!-- Timesheet Services -->
     <simple-method method-name="createTimesheet" short-description="Create Timesheet">
-        <make-value value-field="newEntity" entity-name="Timesheet"/>
+        <make-value entity-name="Timesheet" value-field="newEntity"/>
         <sequenced-id sequence-name="Timesheet" field="newEntity.timesheetId"/>
         <field-to-result field="newEntity.timesheetId" result-name="timesheetId"/>
 
@@ -79,16 +66,11 @@ under the License.
     <simple-method  method-name="createTimesheets" short-description="Creates Timesheet multiple parties at a time">
        <iterate list="parameters.partyIdList" entry="partyId">
            <set field="parameters.partyId" from-field="partyId"/>
-           <set-service-fields to-map="createParams" service-name="createTimesheet" map="parameters"/>
+           <set-service-fields service-name="createTimesheet" map="parameters" to-map="createParams"/>
            <call-service service-name="createTimesheet" in-map-name="createParams"/>
        </iterate>
     </simple-method>
     <simple-method method-name="addTimesheetToInvoice" short-description="Add Timesheet to Invoice">
-        <check-permission permission="WORKEFFORTMGR" action="_CREATE">
-            <fail-property resource="WorkEffortUiLabels" property="WorkEffortCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-one entity-name="Timesheet" value-field="timesheet"/>
         <get-related value-field="timesheet" relation-name="TimeEntry" list="timeEntryList"/>
 
@@ -116,10 +98,6 @@ under the License.
         <call-simple-method method-name="createTimeEntryInvoiceItemsInline"/>
     </simple-method>
     <simple-method method-name="addWorkEffortTimeToInvoice" short-description="Add Work Effort Time to Invoice">
-        <check-permission permission="WORKEFFORTMGR" action="_CREATE">
-            <fail-property resource="WorkEffortUiLabels" property="WorkEffortCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
         <entity-one entity-name="WorkEffort" value-field="workEffort"/>
         <if-empty field="parameters.invoiceId">
             <set-service-fields service-name="createInvoice" map="parameters" to-map="createInvoiceMap"/>
@@ -169,7 +147,7 @@ under the License.
             <set field="invoiceItemMap.description" value="${workEffort.workEffortName} [Task:${workEffort.workEffortId}]"/>
             <get-related value-field="workEffort" relation-name="CustRequestWorkEffort" list="custRequestWorkEfforts"/>
             <if-not-empty field="custRequestWorkEfforts">
-                <first-from-list entry="custRequestWorkEffort" list="custRequestWorkEfforts"/>
+                <first-from-list list="custRequestWorkEfforts" entry="custRequestWorkEffort"/>
                 <get-related-one value-field="custRequestWorkEffort" relation-name="CustRequest" to-value-field="custRequest"/>
                 <if-not-empty field="custRequest">
                     <set field="invoiceItemDescription" value="${custRequest.custRequestName} [CRQ:${custRequest.custRequestId}] ${custRequest.description}"/>
@@ -177,7 +155,7 @@ under the License.
                 </if-not-empty>
             </if-not-empty>
         </if-not-empty>
-        <iterate entry="timeEntry" list="timeEntryList">
+        <iterate list="timeEntryList" entry="timeEntry">
             <if>
                 <condition>
                     <or>
@@ -208,7 +186,7 @@ under the License.
                                     <field-map field-name="partyId" from-field="timeEntry.partyId"/>
                                 </entity-and>
                                 <if-not-empty field="partyRates">
-                                    <first-from-list entry="partyRate" list="partyRates"/>
+                                    <first-from-list list="partyRates" entry="partyRate"/>
                                     <if-not-empty field="partyRate.percentageUsed">
                                         <calculate field="timeEntry.hours" type="Double">
                                             <calcop operator="multiply" field="timeEntry.hours">
@@ -229,7 +207,7 @@ under the License.
                                 <result-to-field result-name="rateAmount"/>
                             </call-service>
                             <!--  check if the RateTypeId changed or the first time entry record and invoice item is not exist with the same amount and description-->
-                            <entity-and list="existAmountAndDescriptionInvoiceItems" entity-name="InvoiceItem">
+                            <entity-and entity-name="InvoiceItem" list="existAmountAndDescriptionInvoiceItems">
                                 <field-map field-name="invoiceId" from-field="invoiceItemMap.invoiceId"/>
                                 <field-map field-name="amount" from-field="rateAmount"/>
                                 <field-map field-name="description" from-field="invoiceItemMap.description"/>
@@ -306,21 +284,14 @@ under the License.
 
     <!-- TimesheetRole Services -->
     <simple-method method-name="createTimesheetRole" short-description="Create TimesheetRole">
-        <check-permission permission="WORKEFFORTMGR" action="_CREATE">
-            <fail-property resource="WorkEffortUiLabels" property="WorkEffortCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value value-field="newEntity" entity-name="TimesheetRole"/>
+        <set field="ensurePartyRoleCtx.partyId" from-field="parameters.partyId"/>
+        <set field="ensurePartyRoleCtx.roleTypeId" from-field="parameters.roleTypeId"/>
+        <call-service service-name="ensurePartyRole" in-map-name="ensurePartyRoleCtx"/>
+        <make-value entity-name="TimesheetRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="deleteTimesheetRole" short-description="Delete TimesheetRole">
-        <check-permission permission="WORKEFFORTMGR" action="_DELETE">
-            <fail-property resource="WorkEffortUiLabels" property="WorkEffortCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-one entity-name="TimesheetRole" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
@@ -330,7 +301,7 @@ under the License.
         <call-simple-method method-name="checkTimesheetStatus"/>
         <now-timestamp field="nowTimestamp"/>
 
-        <make-value value-field="newEntity" entity-name="TimeEntry"/>
+        <make-value entity-name="TimeEntry" value-field="newEntity"/>
         <sequenced-id sequence-name="TimeEntry" field="newEntity.timeEntryId"/>
         <field-to-result field="newEntity.timeEntryId" result-name="timeEntryId"/>
 
@@ -345,12 +316,12 @@ under the License.
     <simple-method method-name="updateTimeEntry" short-description="Update TimeEntry">
         <entity-one entity-name="TimeEntry" value-field="lookedUpValue"/>
         <call-simple-method method-name="checkTimesheetStatus"/>
-        
+
         <!-- update all fields except invoiceId,invoiceItemSeqId and only those if they are not yet set -->
         <map-to-map map="parameters" to-map="fieldsToCopy"/>
         <clear-field field="fieldsToCopy.invoiceId"/>
         <clear-field field="fieldsToCopy.invoiceItemSeqId"/>
-        
+
         <!-- if dates are updated and no hours value is specified, calc it here -->
         <if>
             <condition>
@@ -370,16 +341,16 @@ under the License.
                 <set field="fieldsToCopy.hours" value="${groovy:org.ofbiz.base.util.UtilDateTime.getInterval((fieldsToCopy.fromDate ? fieldsToCopy.fromDate : lookedUpValue.fromDate), (fieldsToCopy.thruDate ? fieldsToCopy.thruDate : lookedUpValue.thruDate))/3600000}" type="Double"/>
             </then>
         </if>
-        
+
         <set-nonpk-fields map="fieldsToCopy" value-field="lookedUpValue"/>
-        
+
         <if-not-empty field="parameters.invoiceId">
             <if-empty field="lookedUpValue.invoiceId">
                 <set field="lookedUpValue.invoiceId" from-field="parameters.invoiceId"/>
                 <set field="lookedUpValue.invoiceItemSeqId" from-field="parameters.invoiceItemSeqId"/>
             </if-empty>
         </if-not-empty>
-        
+
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTimeEntry" short-description="Delete TimeEntry">
@@ -394,11 +365,6 @@ under the License.
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="getTimeEntryRate" short-description="Get TimeEntry Rate">
-        <check-permission permission="WORKEFFORTMGR" action="_VIEW">
-            <fail-property resource="WorkEffortUiLabels" property="WorkEffortViewPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-one entity-name="TimeEntry" value-field="timeEntry"/>
 
         <set-service-fields service-name="getRateAmount" map="parameters" to-map="getRate"/>

@@ -27,7 +27,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 // rounding mode
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+rounding = UtilNumber.getRoundingMode("invoice.rounding");
 context.decimals = decimals;
 context.rounding = rounding;
 
@@ -37,7 +37,7 @@ payments = [];
 // first ensure ability to print
 security = request.getAttribute("security");
 context.put("security", security);
-if (!security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", session)) {
+if (!security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", request)) {
     context.payments = payments; // if no permission, just pass an empty list for now
     return;
 }

@@ -20,6 +20,7 @@
 package org.ofbiz.service.eca;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -32,7 +33,8 @@ import org.w3c.dom.Element;
 /**
  * ServiceEcaSetField
  */
-public class ServiceEcaSetField {
+@SuppressWarnings("serial")
+public class ServiceEcaSetField implements java.io.Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -106,13 +108,13 @@ public class ServiceEcaSetField {
             return newStr.toString();
         }
         if ("to-upper".equalsIgnoreCase(format)) {
-            return s.toUpperCase();
+            return s.toUpperCase(Locale.getDefault());
         }
         if ("to-lower".equalsIgnoreCase(format)) {
-            return s.toLowerCase();
+            return s.toLowerCase(Locale.getDefault());
         }
         if ("hash-code".equalsIgnoreCase(format)) {
-            return Integer.valueOf(s.hashCode());
+            return s.hashCode();
         }
         if ("long".equalsIgnoreCase(format)) {
             return Long.valueOf(s);
@@ -137,6 +139,19 @@ public class ServiceEcaSetField {
 
         Debug.logWarning("Format function not found [" + format + "] return string unchanged - " + s, module);
         return s;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((envName == null) ? 0 : envName.hashCode());
+        result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+        result = prime * result + ((format == null) ? 0 : format.hashCode());
+        // SCIPIO: 2018-10-09: TODO: REVIEW: this is not in equals, can't be here...
+        //result = prime * result + ((mapName == null) ? 0 : mapName.hashCode());
+        result = prime * result + ((value == null) ? 0 : value.hashCode());
+        return result;
     }
 
     @Override

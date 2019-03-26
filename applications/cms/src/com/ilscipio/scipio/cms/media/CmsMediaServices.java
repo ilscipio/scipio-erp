@@ -2,6 +2,7 @@ package com.ilscipio.scipio.cms.media;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -27,6 +28,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.FindServices;
+import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -36,7 +38,9 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GeneralServiceException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -53,12 +57,12 @@ public abstract class CmsMediaServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     static final String logPrefix = "Cms: Media: ";
-    private static final ServiceErrorFormatter errorFmt = 
+    private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Media Error").build();
-    
+
     protected CmsMediaServices() {
     }
-    
+
     /**
      * Generates a list of all available media files. Can be filtered by
      * DataResourceType (TODO).
@@ -74,7 +78,7 @@ public abstract class CmsMediaServices {
         Integer viewSize = (Integer) context.get("viewSize") != null ? (Integer) context.get("viewSize") : 50;
         String dataResourceTypeId = (String) context.get("dataResourceTypeId");
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("inputFields"));
-        
+
         try {
             Map<String, Object> queryStringMap = new LinkedHashMap<String, Object>();
             ModelEntity modelEntity = delegator.getModelEntity("DataResourceMediaFileView");
@@ -84,7 +88,7 @@ public abstract class CmsMediaServices {
             } else {
                 tmpList = null;
             }
-            
+
             EntityCondition cond;
             if (tmpList != null && tmpList.size() > 0) {
                 if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
@@ -101,14 +105,14 @@ public abstract class CmsMediaServices {
                     cond = null;
                 }
             }
-            
+
             EntityCondition scpMediaCond = EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA");
             if (cond != null) {
                 cond = EntityCondition.makeCondition(cond, EntityOperator.AND, scpMediaCond);
             } else {
                 cond = scpMediaCond;
             }
-            
+
             Map<String, Object> findContext = new HashMap<>();
             findContext.put("userLogin", context.get("userLogin"));
 
@@ -123,7 +127,7 @@ public abstract class CmsMediaServices {
             try {
                 listSize = listIt.getResultsSizeAfterPartialList();
                 list = listIt.getPartialList(start + 1, viewSize);
-    
+
                 listSize = listIt.getResultsSizeAfterPartialList();
             } finally {
                 if (listIt != null) listIt.close();
@@ -144,7 +148,7 @@ public abstract class CmsMediaServices {
 
     /**
      * Uploads a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -165,10 +169,10 @@ public abstract class CmsMediaServices {
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
         boolean autoResize = Boolean.TRUE.equals(context.get("autoVariants"));
-        
+
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = UtilDateTime.nowTimestamp();
-        
+
         StringToInteger std = new StringToInteger();
         Integer fileSizeConverted = 0;
         try {
@@ -214,8 +218,8 @@ public abstract class CmsMediaServices {
                             mediaDataResource.put("documentData", byteBuffer.array());
                         } else {
                             // TODO: REVIEW: I'm not sure we should cover this case (2017-07-31: at least log it)
-                            Debug.logInfo(logPrefix+"Could not determine media category for dataResourceTypeId '" 
-                                    + dataResourceTypeId + "' and mimeTypeId '" + mimeType.getString("mimeTypeId") 
+                            Debug.logInfo(logPrefix+"Could not determine media category for dataResourceTypeId '"
+                                    + dataResourceTypeId + "' and mimeTypeId '" + mimeType.getString("mimeTypeId")
                                     + "'; storing as OtherDataResource", module);
                             mediaDataResource = delegator.makeValue("OtherDataResource");
                             mediaDataResource.put("dataResourceContent", byteBuffer.array());
@@ -231,11 +235,15 @@ public abstract class CmsMediaServices {
                         dataResource.put("createdDate", createdDate);
                         if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE)) { // 2017-08-11: pre-read width & height, for future queries
                             try {
-                                BufferedImage bugImg = ImageIO.read(new ByteArrayInputStream(byteBuffer.array()));
-                                dataResource.put("scpWidth", (long) bugImg.getWidth());
-                                dataResource.put("scpHeight", (long) bugImg.getHeight());
+                                BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(byteBuffer.array()));
+                                if (bufImg == null) { // SCIPIO: may be null
+                                    Debug.logError(logPrefix+"Error uploading media file: Could not read/parse image file type to determine dimensions", module);
+                                    return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ScaleImage.unable_to_parse", locale));
+                                }
+                                dataResource.put("scpWidth", (long) bufImg.getWidth());
+                                dataResource.put("scpHeight", (long) bufImg.getHeight());
                             } catch(Exception e) {
-                                Debug.logError(e, logPrefix+"Error uploading media file: Could not read/parse image file: " + e.getMessage(), module);
+                                Debug.logError(e, logPrefix+"Error uploading media file: Could not read/parse image file type to determine dimensions: " + e.getMessage(), module);
                                 return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ScaleImage.unable_to_parse", locale) + ": " + e.getMessage());
                             }
                         }
@@ -243,7 +251,7 @@ public abstract class CmsMediaServices {
                         String dataResourceId = dataResource.getString("dataResourceId");
                         result.put("dataResourceId", dataResourceId);
                         result.put("dataResourceTypeId", dataResourceTypeId);
-                        
+
                         GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
                         fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
                         fileSizeDataResourceAttr.put("attrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
@@ -252,7 +260,7 @@ public abstract class CmsMediaServices {
 
                         mediaDataResource.put("dataResourceId", dataResourceId);
                         mediaDataResource.create();
-                        
+
                         GenericValue content = delegator.makeValue("Content");
                         content.put("contentTypeId", "SCP_MEDIA");
                         content.put("contentName", contentName);
@@ -261,7 +269,7 @@ public abstract class CmsMediaServices {
                         content = delegator.createSetNextSeqId(content);
                         String contentId = content.getString("contentId");
                         result.put("contentId", contentId);
-                        
+
                         if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE) && autoResize) {
                             try {
                                 Map<String, Object> resizeCtx = dctx.makeValidContext("cmsRebuildMediaVariants", ModelService.IN_PARAM, context);
@@ -278,7 +286,7 @@ public abstract class CmsMediaServices {
                                 return err.returnError();
                             }
                         }
-                        
+
                     } else {
                         throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                     }
@@ -303,10 +311,191 @@ public abstract class CmsMediaServices {
 
         return result;
     }
+    
+    /**
+     * Uploads a media file using custom variant sizes
+     *
+     * @param dctx
+     * @param context
+     * @return
+     * @throws GeneralServiceException 
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> uploadMediaFileImageCustomVariantSizes(DispatchContext dctx, Map<String, Object> context) throws GeneralServiceException {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        
+        
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+            String customVariantSizeMethod = (String) context.get("customVariantSizeMethod");
+            ImageVariantConfig imageVariantConfig = null;
+            List<GenericValue> customImageSizes = UtilMisc.newList();
+            if (customVariantSizeMethod.equals("customVariantSizesImgProp")) {
+                if (context.containsKey("customVariantSizesImgProp")) {
+                    imageVariantConfig = ImageVariantConfig.fromImagePropertiesXml((String) context.get("customVariantSizesImgProp"));
+                } else {
+                    Debug.logWarning("Custom image dimension properties file not found.", module);
+                }
+            } else if (customVariantSizeMethod.equals("customVariantSizesPreset")) {
+                if (context.containsKey("customVariantSizesPreset")) {
+                    Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
+                    String presetId = (String) context.get("customVariantSizesPreset");
+                    List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).cache(false).queryList();
+                    GenericValue imagePreset = EntityQuery.use(delegator).from("ImageSizePreset").where(UtilMisc.toMap("presetId", presetId)).queryOne(); 
+                    for (GenericValue imageSize : imageSizes) {
+                        GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", false);
+                        imgPropsMap.put(imageSizeDimension.getString("sizeName"),
+                                UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight")));
+                        customImageSizes.add(imageSizeDimension);
+                    }
+                    imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
+                } else {
+                    Debug.logWarning("Custom image size dimension preset not found.", module);
+                }
+            } else if (customVariantSizeMethod.equals("customVariantSizesForm")) {
+                if (context.containsKey("variantSizeName") && context.containsKey("variantSizeWidth") && context.containsKey("variantSizeHeight") && context.containsKey("variantSizeSequenceNum")) {
+                    Map<String, Map<String, String>> imgPropsMap = CmsMediaServices.getImgPropsMap(context);
+                    imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
+                    if (context.containsKey("saveAsPreset") && ((boolean) context.get("saveAsPreset"))) {
+                        String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
+                        customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context),
+                                (List<String>) context.get("variantSizeSequenceNum")), "ImageSizeDimension");
+                    }
+                } else {
+                    Debug.logWarning("Custom image size dimensions not found.", module);
+                }
+            }
+            if (UtilValidate.isNotEmpty(imageVariantConfig)) {
+                context.put("imageVariantConfig", imageVariantConfig);
+            }
+
+            result = dispatcher.runSync("cmsUploadMediaFile",
+                    ServiceUtil.setServiceFields(dispatcher, "cmsUploadMediaFile", context,
+                            (GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
+                            (Locale) context.get("locale")));
+
+            if (result.containsKey("contentId")) {
+                String contentId = (String) result.get("contentId");
+
+                if (!customImageSizes.isEmpty()) {
+                    EntityListIterator eli = null;
+                    try {
+                        eli = CmsMediaWorker.getMediaContentDataResourceViewTo(delegator,
+                                "IMAGE_OBJECT",  CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId),
+                                null);
+                        List<GenericValue> variantContentDataResources = eli.getCompleteList();
+                        if (UtilValidate.isNotEmpty(variantContentDataResources)) {
+                            for (GenericValue customImageSize : customImageSizes) {
+                                GenericValue variantContentDataResource = EntityUtil.getFirst(EntityUtil.filterByAnd(
+                                        variantContentDataResources, UtilMisc.toList(EntityCondition.makeCondition("caMapKey",
+                                                EntityOperator.EQUALS, customImageSize.getString("sizeName")))));
+                                variantContentDataResource.put("drSizeId", customImageSize.get("sizeId"));
+                                GenericValue dataResource = variantContentDataResource.extractViewMember("DataResource");
+                                dataResource.store();
+                            }
+                        }
+                    } catch (GenericEntityException e) {
+                        throw e;
+                    } finally {
+                        if (UtilValidate.isNotEmpty(eli)) {
+                            eli.close();
+                        }
+                    }
+                    
+
+                    if (context.containsKey("srcsetModeEnumId")) {
+                        GenericValue imageViewPort = delegator.makeValidValue("ResponsiveImage", UtilMisc
+                                .toMap("srcsetModeEnumId", context.get("srcsetModeEnumId"), "contentId", contentId));
+                        imageViewPort.create();
+                        if (context.get("srcsetModeEnumId").equals("IMG_SRCSET_VW")) {
+                            List<GenericValue> imageMediaQueries = UtilMisc.newList();
+                            List<String> mediaQueries = (List<String>) context.get("viewPortMediaQuery");
+                            List<String> viewPortLength = (List<String>) context.get("viewPortLength");
+                            List<String> viewPortSequenceNum = (List<String>) context.get("viewPortSequenceNum");
+                            if (mediaQueries.size() == viewPortLength.size()) {
+                                int i = 0;
+                                for (String mediaQuery : mediaQueries) {
+                                    imageMediaQueries.add(delegator.makeValidValue("ResponsiveImageVP",
+                                            UtilMisc.toMap("contentId", contentId, "viewPortMediaQuery", mediaQuery,
+                                                    "viewPortLength", Long.parseLong(viewPortLength.get(i)),
+                                                    "sequenceNum", Long.parseLong(viewPortSequenceNum.get(i)))));
+                                    i++;
+                                }
+                                delegator.storeAll(imageMediaQueries);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (GenericServiceException e) {
+            result = ServiceUtil.returnError(e.getMessageList());
+        } catch (IOException e) {
+            result = ServiceUtil.returnError(e.getMessage());
+        } catch (GenericEntityException e) {
+            result = ServiceUtil.returnError(e.getMessage());
+        }
+        
+        return result;
+    }
+
+    /**
+     * Creates an image size preset
+     *
+     * @param dctx
+     * @param context
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> createCustomImageSizePreset(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
+        try {
+            saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context), (List<String>) context.get("variantSizeSequenceNum"));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessageList());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Map<String, String>> getImgPropsMap(Map<String, Object> context) { 
+        Map<String, Map<String, String>> imgPropsMap = UtilMisc.newInsertOrderMap();    
+        List<String> variantSizeNames = (List<String>) context.get("variantSizeName");
+        List<String> variantSizeWidth = (List<String>) context.get("variantSizeWidth");
+        List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");        
+        if (variantSizeNames.size() == variantSizeWidth.size() && variantSizeNames.size() == variantSizeHeight.size()) {
+            for (int i = 0; i < variantSizeNames.size(); i++) {
+                if (UtilValidate.isNotEmpty(variantSizeNames.get(i)) && UtilValidate.isNotEmpty(variantSizeWidth.get(i)) && UtilValidate.isNotEmpty(variantSizeHeight.get(i)))
+                    imgPropsMap.put(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i)));
+            }
+        }
+        return imgPropsMap;
+    }
+    
+    private static List<GenericValue> saveCustomImageSizePreset(Delegator delegator, String presetName, Map<String, Map<String, String>> imgPropsMap, List<String> sequenceNums) throws GenericEntityException {
+        List<GenericValue> toStore = UtilMisc.newList();
+        GenericValue imageSizePreset = delegator.makeValidValue("ImageSizePreset",
+                UtilMisc.toMap("presetId", delegator.getNextSeqId("ImageSizePreset"), "presetName", presetName));
+        toStore.add(imageSizePreset);
+        int i = 0;
+        for (String sizeName : imgPropsMap.keySet()) {
+            Map<String, String> sizes = imgPropsMap.get(sizeName);
+            GenericValue imageSizeDimension = delegator.makeValidValue("ImageSizeDimension", UtilMisc.toMap("sizeId", delegator.getNextSeqId("ImageSizeDimension"), "sizeName",
+                    sizeName, "dimensionWidth", Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height")), "sequenceNum", Long.parseLong(sequenceNums.get(i))));
+            toStore.add(imageSizeDimension);
+            toStore.add(delegator.makeValidValue("ImageSize",
+                    UtilMisc.toMap("presetId", imageSizePreset.get("presetId"), "sizeId", imageSizeDimension.get("sizeId"))));
+            i++;
+        }
+        delegator.storeAll(toStore);
+        return toStore;
+    }
 
     /**
      * Updates a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -322,12 +511,12 @@ public abstract class CmsMediaServices {
         String contentId = (String) context.get("contentId");
         String dataResourceId = (String) context.get("dataResourceId");
         String dataResourceTypeId;
-        
+
         if (UtilValidate.isEmpty(contentId) && UtilValidate.isEmpty(dataResourceId)) {
             result = ServiceUtil.returnError("cmsUpdateMediaFile requires either a contentId or dataResourceId, not passed");
             return result;
         }
-        
+
         String contentName = (String) context.get("contentName");
         Boolean isPublic = (Boolean) context.get("isPublic");
         String statusId = (String) context.get("statusId");
@@ -366,21 +555,21 @@ public abstract class CmsMediaServices {
             // field modifications to the entities of its variant/resized images (may help optimizations also)
             if ("IMAGE_OBJECT".equals(dataResourceTypeId)) {
                 Set<String> visitedContentIdTo = new HashSet<>();
-                
+
                 for(GenericValue varContentAssocTo : CmsMediaWorker.getVariantContentAssocTo(delegator, contentId)) {
                     String varContentId = varContentAssocTo.getString("contentId");
                     if (visitedContentIdTo.contains(varContentId)) continue;
                     visitedContentIdTo.add(varContentId);
-                    
+
                     String sizeType = varContentAssocTo.getString("caMapKey");
-                    
+
                     GenericValue varContent = delegator.findOne("Content", UtilMisc.toMap("contentId", varContentId), false);
                     if (UtilValidate.isEmpty(dataResource)) {
                         return ServiceUtil.returnError("Bad media file - Content not found for variant contentId '" + varContentId + "'");
                     }
-                    
+
                     // TODO: REVIEW: here dataResourceName could be set to either contentName OR the filename...
-                    
+
                     // FIXME: this emulates the DB image resize service... poorly
                     Map<String, Object> imageCtx = new HashMap<>();
                     //imageCtx.put("origfn", imageOrigFnNoExt);
@@ -391,14 +580,14 @@ public abstract class CmsMediaServices {
                     imageCtx.put("fields", fieldsCtx);
                     imageCtx.put("sizetype", sizeType);
                     imageCtx.put("type", sizeType);
-                    
+
                     if (UtilValidate.isNotEmpty(contentName)) {
                         // SPECIAL
                         varContent.put("contentName", CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR.get("contentName").expandString(imageCtx, timeZone, locale));
                     }
                     varContent.store();
                     String varDataResourceId = varContent.getString("dataResourceId");
-                    
+
                     GenericValue varDataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", varDataResourceId), false);
                     if (UtilValidate.isEmpty(varDataResource)) {
                         return ServiceUtil.returnError("Bad media file - DataResource not found for variant dataResourceId '" + varDataResourceId + "'");
@@ -428,10 +617,10 @@ public abstract class CmsMediaServices {
         result.put("dataResourceTypeId", dataResourceTypeId);
         return result;
     }
-    
+
     /**
      * Deletes a media file
-     * 
+     *
      * @param dctx
      * @param context
      * @return
@@ -451,11 +640,11 @@ public abstract class CmsMediaServices {
             result = ServiceUtil.returnError("cmsDeleteMediaFile requires either a contentId or dataResourceId, not passed");
             return result;
         }
-        
+
         try {
             GenericValue content = CmsMediaWorker.getContentForMedia(delegator, contentId, dataResourceId);
             contentId = content.getString("contentId");
-            
+
             // delete any associated first
             for(GenericValue contentAssoc : delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", contentId), null, false)) {
                 try {
@@ -475,7 +664,7 @@ public abstract class CmsMediaServices {
                     return err.returnError();
                 }
             }
-            
+
             try {
                 Map<String, Object> servCtx = new HashMap<>();
                 servCtx.put("userLogin", userLogin);
@@ -499,7 +688,8 @@ public abstract class CmsMediaServices {
 
         return result;
     }
-    
+
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> rebuildMediaVariants(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -507,18 +697,18 @@ public abstract class CmsMediaServices {
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
         //TimeZone timeZone = (TimeZone) context.get("timeZone");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         Collection<String> contentIdList = UtilGenerics.checkCollection(context.get("contentIdList"));
         boolean force = Boolean.TRUE.equals(context.get("force"));
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = (Timestamp) context.get("createdDate");
         if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
-        
+
         EntityListIterator contentDataResourceList;
-        
+
         Boolean sepTrans = (Boolean) context.get("sepTrans");
         if (sepTrans == null) sepTrans = (contentIdList == null);
-        
+
         Set<String> remainingContentIds = new HashSet<>();
         boolean doLog = false;
         String imagePropXmlPath;
@@ -531,29 +721,39 @@ public abstract class CmsMediaServices {
                 remainingContentIds = new HashSet<>(contentIdList);
                 contentDataResourceList = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT", contentIdList, null);
             }
-            
+
             imagePropXmlPath = CmsMediaWorker.getCmsImagePropertiesPath();
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating resized images", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-        
+
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
                     Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
                 }
+                // SCIPIO (01/19/2018): Get custom image sizes, if present
+                Map<String, GenericValue> customImageSizesByName = UtilMisc.newMap();
+                if (context.containsKey("customImageSizes")) {
+                    List<GenericValue> customImageSizes = (List<GenericValue>) context.get("customImageSizes");
+                    for (GenericValue customImageSize : customImageSizes) {
+                        customImageSizesByName.put(customImageSize.getString("sizeName"),  customImageSize);
+                    }
+                }
+                
                 long imgCount = 0;
                 GenericValue contentDataResource;
                 while((contentDataResource = contentDataResourceList.next()) != null) {
                     String contentId = contentDataResource.getString("contentId");
                     remainingContentIds.remove(contentId);
+                    
                     if (force || CmsMediaWorker.hasVariantContent(delegator, contentId)) {
                         if (doLog) {
                             Debug.logInfo(logPrefix+"rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                         }
-                        
+
                         try {
                             Map<String, Object> resizeCtx = dctx.makeValidContext("contentImageDbScaleInAllSizeCore", ModelService.IN_PARAM, context);
                             resizeCtx.put("imageOrigContentId", contentId);
@@ -562,20 +762,26 @@ public abstract class CmsMediaServices {
                             }
                             resizeCtx.put("imagePropXmlPath", imagePropXmlPath);
                             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
-                            
+
                             Map<String, Object> contentFields = new HashMap<>();
                             contentFields.putAll(CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR);
                             contentFields.put("contentTypeId", "SCP_MEDIA_VARIANT");
                             resizeCtx.put("contentFields", contentFields);
-            
+
                             Map<String, Object> dataResourceFields = new HashMap<>();
                             dataResourceFields.putAll(CmsMediaWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
                             dataResourceFields.put("dataResourceTypeId", "IMAGE_OBJECT");
                             dataResourceFields.put("statusId", contentDataResource.get("drStatusId"));
                             dataResourceFields.put("isPublic", contentDataResource.get("drIsPublic"));
+                            
+                            // SCIPIO (01/19/2018): Add the custom dimension to the variant dataSource
+                            if (customImageSizesByName.containsKey(null)) {
+                                dataResourceFields.put("sizeId", customImageSizesByName.get(null).getString("sizedId"));
+                            }
+                            
                             resizeCtx.put("dataResourceFields", dataResourceFields);
                             resizeCtx.put("createdDate", createdDate);
-                            
+
                             Map<String, Object> resizeResult;
                             if (sepTrans) {
                                 resizeResult = dispatcher.runSync("contentImageDbScaleInAllSizeCore", resizeCtx, -1, true);
@@ -615,7 +821,7 @@ public abstract class CmsMediaServices {
         }
         return result;
     }
-    
+
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
     public static Map<String, Object> removeMediaVariants(DispatchContext dctx, Map<String, ?> context) {
@@ -625,10 +831,10 @@ public abstract class CmsMediaServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         Collection<String> contentIdList = UtilGenerics.checkCollection(context.get("contentIdList"));
         EntityListIterator contentDataResourceList;
-        
+
         Set<String> remainingContentIds = new HashSet<>();
         boolean doLog = false;
         try {
@@ -645,7 +851,7 @@ public abstract class CmsMediaServices {
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }
-        
+
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
@@ -659,7 +865,7 @@ public abstract class CmsMediaServices {
                     if (doLog) {
                         Debug.logInfo(logPrefix+"removeMediaVariants: Removing variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                     }
-                    
+
                     for(String contentIdTo : CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId)) {
                         try {
                             Map<String, Object> servCtx = new HashMap<>();
@@ -679,7 +885,7 @@ public abstract class CmsMediaServices {
                         }
                     }
                     delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG));
-                    
+
                     imgCount++;
                 }
                 if (remainingContentIds.size() > 0) {

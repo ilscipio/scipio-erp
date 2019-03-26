@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -154,12 +141,27 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <if>
-                    <condition><if-empty field="prodCatalog"/></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateProdCatalog"/></not>
+                            <not><if-false field="isSpecificCatalog"/></not>
+                        </and>
+                    </condition>
                     <then>
-                        <!-- FIXME? globals not good... -->
-                        <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
-                        <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
-                    </then>
+                        <if>
+                            <condition><if-empty field="prodCatalog"/></condition>
+                            <then>
+                                <!-- FIXME?: global="true" not good... -->
+                                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                                <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
+                            </then>
+                            <else>
+                                <!-- forces consistency --><!-- FIXME?: global="true" not good... -->
+                                <set field="prodCatalogId" from-field="prodCatalog.prodCatalogId" global="true"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${prodCatalogId}"/>
+                   </then>
                 </if>
                 <if>
                     <condition><not><if-empty field="prodCatalog"/></not></condition>
@@ -175,7 +177,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.prodCatalogId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -183,8 +185,8 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <not><if-empty field="prodCatalog"/></not>
-                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="ProductCatalog"/>
+                                    <!--<not><if-empty field="prodCatalog"/></not> - doesn't really do anything -->
+                                    <not><if-true field="isCreateProdCatalog"/></not>
                                 </or>
                             </condition>
                             <widgets>
@@ -204,10 +206,24 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <if>
-                    <condition><if-empty field="productCategory"/></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateCategory"/></not>
+                            <not><if-false field="isSpecificCategory"/></not>
+                        </and>
+                    </condition>
                     <then>
-                        <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                        <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                        <if>
+                            <condition><if-empty field="productCategory"/></condition>
+                            <then>
+                                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                                <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                            </then>
+                            <else>
+                                <set field="productCategoryId" from-field="productCategory.productCategoryId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productCategoryId}"/>
                     </then>
                 </if>
                 <if>
@@ -224,7 +240,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productCategoryId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -257,10 +273,22 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 
-                <!-- SCIPIO: FIXME: these global="true" will create problems... -->
-                <set field="productId" from-field="parameters.productId" global="true"/>
-                <entity-one entity-name="Product" value-field="product"/>
-                <set field="product" from-field="product" global="true"/>
+                <if>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateProduct"/></not>
+                            <not><if-false field="isSpecificProduct"/></not>
+                        </and>
+                    </condition>
+                    <then>
+                        <!-- SCIPIO: FIXME: these global="true" will create problems... -->
+                        <set field="productId" from-field="parameters.productId" global="true"/>
+                        <entity-one entity-name="Product" value-field="product"/>
+                        <set field="product" from-field="product" global="true"/>
+                        
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productId}"/>
+                    </then>
+                </if>
                 <if>
                     <condition>
                         <not><if-empty field="product"/></not>
@@ -280,7 +308,7 @@ under the License.
                 <set field="prefixedQualifiedLabel" value="${uiLabelMap.ProductProductQualifiedLabel}"/><!-- this label references ${qualifiedLabel} -->
                 <set field="titleFormatPrefix" value="${groovy: (context.labelTitlePropertyFull == true || !context.labelTitleProperty) ? context.qualifiedLabel : context.prefixedQualifiedLabel}"/>
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${parameters.productId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${titleElemName} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
@@ -290,9 +318,9 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or><!-- TODO: review this condition -->
-                                    <not><if-empty field="product"/></not>
-                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditProduct"/>
+                                <or>
+                                    <!--<not><if-empty field="product"/></not> - doesn't really do anything -->
+                                    <not><if-true field="isCreateProduct"/></not>
                                 </or>
                             </condition>
                             <widgets>
@@ -473,17 +501,32 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
-                    Do NOT set these global. -->
                 <if>
-                    <condition><if-empty field="productStore"/></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateProductStore"/></not>
+                            <not><if-false field="isSpecificProductStore"/></not>
+                        </and>
+                    </condition>
                     <then>
-                        <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-                        <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
-                            <field-map field-name="productStoreId" from-field="productStoreId"/>
-                        </entity-one>
+                        <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                            Do NOT set these global. -->
+                        <if>
+                            <condition><if-empty field="productStore"/></condition>
+                            <then>
+                                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                                <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
+                                    <field-map field-name="productStoreId" from-field="productStoreId"/>
+                                </entity-one>
+                            </then>
+                            <else>
+                                <set field="productStoreId" from-field="productStore.productStoreId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productStoreId}"/>
                     </then>
                 </if>
+                
                 <if>
                     <condition><not><if-empty field="productStore"/></not></condition>
                     <then>
@@ -497,7 +540,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid
                     NOTE: this is generally placed because some fallbacks don't have an accessible points -->
@@ -556,6 +599,7 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Shipping" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListShipmentMethodTypes"/>                
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
@@ -595,6 +639,25 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO (11/30/2018): New carrier decorator -->
+    <screen name="CommonCarrierDecorator">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Carriers"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListCarrierShipmentMethods"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <!-- <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPriceRuleId} ${${extraFunctionName}}"/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">            
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <!-- SCIPIO: New, transferred from Content app -->
     <screen name="CommonWebSiteDecorator">
@@ -606,20 +669,31 @@ under the License.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
                 <if>
-                    <condition><if-empty field="webSite"/></condition>
+                    <condition><not><if-true field="isCreateWebSite"/></not></condition>
                     <then>
-                        <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
-                        <entity-one entity-name="WebSite" value-field="webSite"/>
+                        <if>
+                            <condition><if-empty field="webSite"/></condition>
+                            <then>
+                                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                                <entity-one entity-name="WebSite" value-field="webSite"/>
+                            </then>
+                            <else>
+                                <set field="webSiteId" from-field="webSite.webSiteId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${webSiteId}"/>
                     </then>
                 </if>
+                
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
-                <!-- 2017-11: fallback -->
-                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>
+                <!-- 2018-10: don't do this as fallback - override it - otherwise more problems
+                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>-->
+                <set field="getStoreLastProductStore.overrideProductStoreId" from-field="webSite.productStoreId"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
@@ -855,7 +929,7 @@ under the License.
     <screen name="ProductStoreGroupTree">
         <section>
             <actions>
-                <entity-one value-field="parentProductStoreGroup" entity-name="ProductStoreGroup"/>
+                <entity-one entity-name="ProductStoreGroup" value-field="parentProductStoreGroup"/>
                 <entity-condition entity-name="ProductStoreGroup" list="parentProductStoreGroups">
                     <condition-expr field-name="primaryParentGroupId" from-field="nullField"/>
                 </entity-condition>
@@ -938,17 +1012,32 @@ under the License.
         <section>
             <actions>
                 <if>
-                    <condition><if-empty field="subscription"/></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateSubscription"/></not>
+                            <not><if-false field="isSpecificSubscription"/></not>
+                        </and>
+                    </condition>
                     <then>
-                        <set field="subscriptionId" from-field="parameters.subscriptionId"/>
-                        <entity-one entity-name="Subscription" value-field="subscription"/>
+                        <if>
+                            <condition><if-empty field="subscription"/></condition>
+                            <then>
+                                <set field="subscriptionId" from-field="parameters.subscriptionId"/>
+                                <entity-one entity-name="Subscription" value-field="subscription"/>
+                            </then>
+                            <else>
+                                <set field="subscriptionId" from-field="subscription.subscriptionId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${subscriptionId}"/>
                     </then>
                 </if>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscription"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Subscriptions"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscriptions"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="subscriptionPermissionCheck" main-action="VIEW"/>
                 </condition-to-field>

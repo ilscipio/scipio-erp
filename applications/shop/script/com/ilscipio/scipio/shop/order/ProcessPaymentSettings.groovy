@@ -26,6 +26,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.order.shoppingcart.CartUpdate
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
@@ -33,7 +34,11 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
-cart = ShoppingCartEvents.getCartObject(request);
+//cart = ShoppingCartEvents.getCartObject(request);
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO
+cart = cartUpdate.getCartForUpdate();
+    
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
@@ -81,4 +86,10 @@ if (errorMessages || errorMaps) {
     request.setAttribute(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
     return "error";
 }
+
+cartUpdate.commit(cart); // SCIPIO
+} finally {
+    cartUpdate.close();
+}
+
 return "success";

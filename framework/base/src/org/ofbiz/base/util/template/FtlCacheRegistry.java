@@ -28,14 +28,14 @@ public class FtlCacheRegistry {
      * File locations are globally unique in any context.
      */
     public static final String MAIN_LOCATION_CACHE = "main-loc";
-    
+
     /**
      * The main body cached used by the configuration.
      * Designates cache whose key is the template body itself (usually for short templates).
      * The body is unique in any context.
      */
     public static final String MAIN_BODY_CACHE = "main-body";
-    
+
     // This is unlikely to make sense on its own... the name namespace must be explicit
     // and so this is not specific enough.
 //    /**
@@ -43,22 +43,22 @@ public class FtlCacheRegistry {
 //     * with a generated name.
 //     */
 //    public static final String MAIN_NAME_CACHE = "main-name";
-    
+
     private static final FtlCacheRegistry registry = new FtlCacheRegistry();
-    
+
     private final Object syncObj = new Object();
     /**
      * NOTE: the Map is immutable and uses double-locking idiom.
      */
     private Map<CacheKey, UtilCache<String, Template>> caches = Collections.emptyMap();
-    
+
     protected FtlCacheRegistry() {
     }
 
     public static FtlCacheRegistry getDefault() {
         return registry;
     }
-    
+
     public void registerCache(String cacheType, Configuration config, UtilCache<String, Template> cache) {
         synchronized(syncObj) {
             Map<CacheKey, UtilCache<String, Template>> newCaches = new HashMap<>(this.caches);
@@ -66,17 +66,17 @@ public class FtlCacheRegistry {
             this.caches = Collections.unmodifiableMap(newCaches);
         }
     }
-    
+
     public UtilCache<String, Template> getCache(String cacheType, Configuration config) {
         Map<CacheKey, UtilCache<String, Template>> caches = this.caches;
         CacheKey key = new CacheKey(cacheType, config);
         return caches.get(key);
     }
-    
+
     private static class CacheKey {
         private final String cacheType;
         private final Configuration config;
-        
+
         public CacheKey(String cacheType, Configuration config) {
             this.cacheType = cacheType;
             this.config = config;

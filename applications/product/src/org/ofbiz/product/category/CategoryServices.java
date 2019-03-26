@@ -73,11 +73,11 @@ public class CategoryServices {
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", categoryId).cache().queryOne();
             members = EntityUtil.filterByDate(productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"), true), true);
-            if (Debug.verboseOn())
-                Debug.logVerbose("Category: " + productCategory + " Member Size: " + members.size() + " Members: " + members, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Category: " + productCategory + " Member Size: " + members.size() + " Members: " + members, module);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem reading product categories: " + e.getMessage(), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "categoryservices.problems_reading_category_entity",
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    "categoryservices.problems_reading_category_entity", 
                     UtilMisc.toMap("errMessage", e.getMessage()), locale));
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -90,7 +90,7 @@ public class CategoryServices {
         Delegator delegator = dctx.getDelegator();
         String categoryId = (String) context.get("categoryId");
         String productId = (String) context.get("productId");
-        boolean activeOnly = (context.get("activeOnly") != null ? ((Boolean) context.get("activeOnly")).booleanValue() : true);
+        boolean activeOnly = (context.get("activeOnly") != null ? (Boolean) context.get("activeOnly") : true);
         Integer index = (Integer) context.get("index");
         Timestamp introductionDateLimit = (Timestamp) context.get("introductionDateLimit");
         Timestamp releaseDateLimit = (Timestamp) context.get("releaseDateLimit");
@@ -101,33 +101,28 @@ public class CategoryServices {
         }
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
-        if (orderByFields == null)
-            orderByFields = new LinkedList<String>();
+        if (orderByFields == null) orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         GenericValue productCategory;
         List<GenericValue> productCategoryMembers;
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", categoryId).cache().queryOne();
-            productCategoryMembers = EntityQuery.use(delegator).from(entityName).where("productCategoryId", categoryId).orderBy(orderByFields).cache(true)
-                    .queryList();
+            productCategoryMembers = EntityQuery.use(delegator).from(entityName).where("productCategoryId", categoryId).orderBy(orderByFields).cache(true).queryList();
         } catch (GenericEntityException e) {
             Debug.logInfo(e, "Error finding previous/next product info: " + e.toString(), module);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, "categoryservices.error_find_next_products",
-                    UtilMisc.toMap("errMessage", e.getMessage()), locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, "categoryservices.error_find_next_products", UtilMisc.toMap("errMessage", e.getMessage()), locale));
         }
         if (activeOnly) {
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
         }
         List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
         if (introductionDateLimit != null) {
-            EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null),
-                    EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
+            EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
             filterConditions.add(condition);
         }
         if (releaseDateLimit != null) {
-            EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null),
-                    EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit));
+            EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit));
             filterConditions.add(condition);
         }
         if (!filterConditions.isEmpty()) {
@@ -135,16 +130,15 @@ public class CategoryServices {
         }
 
         if (productId != null && index == null) {
-            for (GenericValue v : productCategoryMembers) {
+            for (GenericValue v: productCategoryMembers) {
                 if (v.getString("productId").equals(productId)) {
-                    index = Integer.valueOf(productCategoryMembers.indexOf(v));
+                    index = productCategoryMembers.indexOf(v);
                 }
             }
         }
 
         if (index == null) {
-            // this is not going to be an error condition because we don't want
-            // it to be so critical, ie rolling back the transaction and such
+            // this is not going to be an error condition because we don't want it to be so critical, ie rolling back the transaction and such
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, "categoryservices.product_not_found", locale));
         }
 
@@ -154,16 +148,16 @@ public class CategoryServices {
         String previous = null;
         String next = null;
 
-        if (index.intValue() - 1 >= 0 && index.intValue() - 1 < productCategoryMembers.size()) {
-            previous = productCategoryMembers.get(index.intValue() - 1).getString("productId");
+        if (index - 1 >= 0 && index - 1 < productCategoryMembers.size()) {
+            previous = productCategoryMembers.get(index - 1).getString("productId");
             result.put("previousProductId", previous);
         } else {
             previous = productCategoryMembers.get(productCategoryMembers.size() - 1).getString("productId");
             result.put("previousProductId", previous);
         }
 
-        if (index.intValue() + 1 < productCategoryMembers.size()) {
-            next = productCategoryMembers.get(index.intValue() + 1).getString("productId");
+        if (index + 1 < productCategoryMembers.size()) {
+            next = productCategoryMembers.get(index + 1).getString("productId");
             result.put("nextProductId", next);
         } else {
             next = productCategoryMembers.get(0).getString("productId");
@@ -172,10 +166,8 @@ public class CategoryServices {
         return result;
     }
 
-    private static String getCategoryFindEntityName(Delegator delegator, List<String> orderByFields, Timestamp introductionDateLimit,
-            Timestamp releaseDateLimit) {
-        // allow orderByFields to contain fields from the Product entity, if
-        // there are such fields
+    private static String getCategoryFindEntityName(Delegator delegator, List<String> orderByFields, Timestamp introductionDateLimit, Timestamp releaseDateLimit) {
+        // allow orderByFields to contain fields from the Product entity, if there are such fields
         String entityName = introductionDateLimit == null && releaseDateLimit == null ? "ProductCategoryMember" : "ProductAndCategoryMember";
         if (orderByFields == null) {
             return entityName;
@@ -187,9 +179,8 @@ public class CategoryServices {
 
         ModelEntity productModel = delegator.getModelEntity("Product");
         ModelEntity productCategoryMemberModel = delegator.getModelEntity("ProductCategoryMember");
-        for (String orderByField : orderByFields) {
-            // Get the real field name from the order by field removing
-            // ascending/descending order
+        for (String orderByField: orderByFields) {
+            // Get the real field name from the order by field removing ascending/descending order
             if (UtilValidate.isNotEmpty(orderByField)) {
                 int startPos = 0, endPos = orderByField.length();
 
@@ -214,8 +205,7 @@ public class CategoryServices {
                     // that's what we wanted to find out, so we can quit now
                     break;
                 } else {
-                    // ahh!! bad field name, don't worry, it will blow up in the
-                    // query
+                    // ahh!! bad field name, don't worry, it will blow up in the query
                 }
             }
         }
@@ -226,24 +216,23 @@ public class CategoryServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productCategoryId = (String) context.get("productCategoryId");
-        boolean limitView = ((Boolean) context.get("limitView")).booleanValue();
-        int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
+        boolean limitView = (Boolean) context.get("limitView");
+        int defaultViewSize = (Integer) context.get("defaultViewSize");
         Timestamp introductionDateLimit = (Timestamp) context.get("introductionDateLimit");
         Timestamp releaseDateLimit = (Timestamp) context.get("releaseDateLimit");
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
-        if (orderByFields == null)
-            orderByFields = new LinkedList<String>();
+        if (orderByFields == null) orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         String prodCatalogId = (String) context.get("prodCatalogId");
 
-        boolean useCacheForMembers = (context.get("useCacheForMembers") == null || ((Boolean) context.get("useCacheForMembers")).booleanValue());
-        boolean activeOnly = (context.get("activeOnly") == null || ((Boolean) context.get("activeOnly")).booleanValue());
+        boolean useCacheForMembers = (context.get("useCacheForMembers") == null || (Boolean) context.get("useCacheForMembers"));
+        boolean activeOnly = (context.get("activeOnly") == null || (Boolean) context.get("activeOnly"));
 
-        // checkViewAllow defaults to false, must be set to true and pass the
-        // prodCatalogId to enable
-        boolean checkViewAllow = (prodCatalogId != null && context.get("checkViewAllow") != null && ((Boolean) context.get("checkViewAllow")).booleanValue());
+        // checkViewAllow defaults to false, must be set to true and pass the prodCatalogId to enable
+        boolean checkViewAllow = (prodCatalogId != null && context.get("checkViewAllow") != null &&
+                (Boolean) context.get("checkViewAllow"));
 
         String viewProductCategoryId = null;
         if (checkViewAllow) {
@@ -251,19 +240,25 @@ public class CategoryServices {
         }
 
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-
         int viewIndex = 0;
-        try {
-            viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
-        } catch (Exception e) {
-            viewIndex = 0;
+        if (UtilValidate.isNotEmpty((String) context.get("viewIndexString"))) { // SCIPIO: Added empty test
+            try {
+                viewIndex = Integer.parseInt((String) context.get("viewIndexString"));
+            } catch (NumberFormatException e) { // SCIPIO: Switched: Exception
+                //viewIndex = 0; // SCIPIO: redundant
+                Debug.logError("getProductCategoryAndLimitedMembers: error parsing viewIndexString: " + e.getMessage(), module); // SCIPIO
+            }
         }
 
         int viewSize = defaultViewSize;
-        try {
-            viewSize = Integer.valueOf((String) context.get("viewSizeString")).intValue();
-        } catch (Exception e) {
-            viewSize = defaultViewSize;
+        if (UtilValidate.isNotEmpty((String) context.get("viewSizeString"))) { // SCIPIO: Added empty test
+            try {
+                viewSize = Integer.parseInt((String) context.get("viewSizeString"));
+            } catch (NumberFormatException e) {
+                // SCIPIO: unhelpful
+                //Debug.logError(e.getMessage(), module);
+                Debug.logError("getProductCategoryAndLimitedMembers: error parsing viewSizeString: " + e.getMessage(), module); // SCIPIO
+            }
         }
 
         GenericValue productCategory = null;
@@ -286,7 +281,8 @@ public class CategoryServices {
             lowIndex = 0;
             highIndex = 0;
         }
-        Boolean filterOutOfStock = false;
+
+        boolean filterOutOfStock = false;
         try {
             String productStoreId = (String) context.get("productStoreId");
             if (UtilValidate.isNotEmpty(productStoreId)) {
@@ -298,30 +294,26 @@ public class CategoryServices {
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
         }
+
         List<GenericValue> productCategoryMembers = null;
         if (productCategory != null) {
             try {
                 if (useCacheForMembers) {
-                    productCategoryMembers = EntityQuery.use(delegator).from(entityName).where("productCategoryId", productCategoryId).orderBy(orderByFields)
-                            .cache(true).queryList();
+                    productCategoryMembers = EntityQuery.use(delegator).from(entityName).where("productCategoryId", productCategoryId).orderBy(orderByFields).cache(true).queryList();
                     if (activeOnly) {
                         productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
                     }
                     List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
                     if (introductionDateLimit != null) {
-                        EntityCondition condition = EntityCondition.makeCondition(
-                                EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-                                EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
+                        EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
                         filterConditions.add(condition);
                     }
                     if (releaseDateLimit != null) {
-                        EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null),
-                                EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit));
+                        EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit));
                         filterConditions.add(condition);
                     }
                     if (!filterConditions.isEmpty()) {
-                        productCategoryMembers = EntityUtil.filterByCondition(productCategoryMembers,
-                                EntityCondition.makeCondition(filterConditions, EntityOperator.AND));
+                        productCategoryMembers = EntityUtil.filterByCondition(productCategoryMembers, EntityCondition.makeCondition(filterConditions, EntityOperator.AND));
                     }
 
                     // filter out of stock products
@@ -329,9 +321,8 @@ public class CategoryServices {
                         try {
                             productCategoryMembers = ProductWorker.filterOutOfStockProducts(productCategoryMembers, dispatcher, delegator);
                         } catch (GeneralException e) {
-                            Debug.logWarning("Problem filtering out of stock products :" + e.getMessage(), module);
+                            Debug.logWarning("Problem filtering out of stock products :"+e.getMessage(), module);
                         }
-
                     }
                     // filter out the view allow before getting the sublist
                     if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
@@ -348,7 +339,7 @@ public class CategoryServices {
                     // get only between low and high indexes
                     if (limitView) {
                         if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                            productCategoryMembers = productCategoryMembers.subList(lowIndex - 1, highIndex);
+                            productCategoryMembers = productCategoryMembers.subList(lowIndex-1, highIndex);
                         }
                     } else {
                         lowIndex = 1;
@@ -359,59 +350,59 @@ public class CategoryServices {
                     mainCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
                     if (activeOnly) {
                         mainCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
-                        mainCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
-                                EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+                        mainCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
                     }
                     if (introductionDateLimit != null) {
-                        mainCondList.add(
-                                EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-                                        EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit)));
+                        mainCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit)));
                     }
                     if (releaseDateLimit != null) {
-                        mainCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null),
-                                EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit)));
+                        mainCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("releaseDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("releaseDate", EntityOperator.LESS_THAN_EQUAL_TO, releaseDateLimit)));
                     }
                     EntityCondition mainCond = EntityCondition.makeCondition(mainCondList, EntityOperator.AND);
 
-                    // set distinct on
-                    // using list iterator
-                    EntityListIterator pli = EntityQuery.use(delegator).from(entityName).where(mainCond).orderBy(orderByFields).cursorScrollInsensitive()
-                            .maxRows(highIndex).queryIterator();
+                    // set distinct on using list iterator
+                    EntityQuery eq = EntityQuery.use(delegator)
+                            .from(entityName)
+                            .where(mainCond)
+                            .orderBy(orderByFields)
+                            .cursorScrollInsensitive()
+                            .maxRows(highIndex);
 
-                    // get the partial list for this page
-                    if (limitView) {
-                        if (viewProductCategoryId != null) {
-                            // do manual checking to filter view allow
-                            productCategoryMembers = new LinkedList<GenericValue>();
-                            GenericValue nextValue;
-                            int chunkSize = 0;
-                            listSize = 0;
+                    try (EntityListIterator pli = eq.queryIterator()) {
+                        // get the partial list for this page
+                        if (limitView) {
+                            if (viewProductCategoryId != null) {
+                                // do manual checking to filter view allow
+                                productCategoryMembers = new LinkedList<GenericValue>();
+                                GenericValue nextValue;
+                                int chunkSize = 0;
+                                listSize = 0;
 
-                            while ((nextValue = pli.next()) != null) {
-                                String productId = nextValue.getString("productId");
-                                if (CategoryWorker.isProductInCategory(delegator, productId, viewProductCategoryId)) {
-                                    if (listSize + 1 >= lowIndex && chunkSize < viewSize) {
-                                        productCategoryMembers.add(nextValue);
-                                        chunkSize++;
+                                while ((nextValue = pli.next()) != null) {
+                                    String productId = nextValue.getString("productId");
+                                    if (CategoryWorker.isProductInCategory(delegator, productId, viewProductCategoryId)) {
+                                        if (listSize + 1 >= lowIndex && chunkSize < viewSize) {
+                                            productCategoryMembers.add(nextValue);
+                                            chunkSize++;
+                                        }
+                                        listSize++;
                                     }
-                                    listSize++;
                                 }
+                            } else {
+                                productCategoryMembers = pli.getPartialList(lowIndex, viewSize);
+                                listSize = pli.getResultsSizeAfterPartialList();
                             }
                         } else {
-                            productCategoryMembers = pli.getPartialList(lowIndex, viewSize);
+                            productCategoryMembers = pli.getCompleteList();
+                            if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
+                                // filter out the view allow
+                                productCategoryMembers = CategoryWorker.filterProductsInCategory(delegator, productCategoryMembers, viewProductCategoryId);
+                            }
 
-                            listSize = pli.getResultsSizeAfterPartialList();
+                            listSize = productCategoryMembers.size();
+                            lowIndex = 1;
+                            highIndex = listSize;
                         }
-                    } else {
-                        productCategoryMembers = pli.getCompleteList();
-                        if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
-                            // fiter out the view allow
-                            productCategoryMembers = CategoryWorker.filterProductsInCategory(delegator, productCategoryMembers, viewProductCategoryId);
-                        }
-
-                        listSize = productCategoryMembers.size();
-                        lowIndex = 1;
-                        highIndex = listSize;
                     }
                     // filter out of stock products
                     if (filterOutOfStock) {
@@ -419,9 +410,10 @@ public class CategoryServices {
                             productCategoryMembers = ProductWorker.filterOutOfStockProducts(productCategoryMembers, dispatcher, delegator);
                             listSize = productCategoryMembers.size();
                         } catch (GeneralException e) {
-                            Debug.logWarning("Problem filtering out of stock products :" + e.getMessage(), module);
+                            Debug.logWarning("Problem filtering out of stock products :"+e.getMessage(), module);
                         }
                     }
+
                     // null safety
                     if (productCategoryMembers == null) {
                         productCategoryMembers = new LinkedList<GenericValue>();
@@ -430,9 +422,6 @@ public class CategoryServices {
                     if (highIndex > listSize) {
                         highIndex = listSize;
                     }
-
-                    // close the list iterator
-                    pli.close();
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
@@ -440,20 +429,18 @@ public class CategoryServices {
         }
 
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("viewIndex", Integer.valueOf(viewIndex));
-        result.put("viewSize", Integer.valueOf(viewSize));
-        result.put("lowIndex", Integer.valueOf(lowIndex));
-        result.put("highIndex", Integer.valueOf(highIndex));
-        result.put("listSize", Integer.valueOf(listSize));
-        if (productCategory != null)
-            result.put("productCategory", productCategory);
-        if (productCategoryMembers != null)
-            result.put("productCategoryMembers", productCategoryMembers);
+        result.put("viewIndex", viewIndex);
+        result.put("viewSize", viewSize);
+        result.put("lowIndex", lowIndex);
+        result.put("highIndex", highIndex);
+        result.put("listSize", listSize);
+        if (productCategory != null) result.put("productCategory", productCategory);
+        if (productCategoryMembers != null) result.put("productCategoryMembers", productCategoryMembers);
         return result;
     }
-    
+
     /**
-     * @deprecated SCIPIO: To be removed in future (TODO) - use 
+     * @deprecated SCIPIO: To be removed in future (TODO) - use
      * {@link com.ilscipio.scipio.product.category.CategoryEvents#getChildCategoryTree(HttpServletRequest, HttpServletResponse)}
      * or buildCategoryTree service instead.
      */
@@ -461,7 +448,7 @@ public class CategoryServices {
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
         return com.ilscipio.scipio.product.category.CategoryEvents.getChildCategoryTree(request, response);
     }
-    
+
     /**
      * SCIPIO: getProductCategoryContentLocalizedSimpleTextViews.
      * Added 2017-10-27.
@@ -470,29 +457,29 @@ public class CategoryServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        
+
         String productCategoryId = (String) context.get("productCategoryId");
         Collection<String> prodCatContentTypeIdList = UtilGenerics.checkCollection(context.get("prodCatContentTypeIdList"));
         boolean filterByDate = !Boolean.FALSE.equals(context.get("filterByDate"));
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
-        
-        Map<String, List<GenericValue>> viewsByType = null; 
+
+        Map<String, List<GenericValue>> viewsByType = null;
         try {
-            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher, 
+            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher,
                     productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
             Map<String, Object> result = ServiceUtil.returnSuccess();
             postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
             return result;
         } catch (Exception e) {
-            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels", 
+            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels",
                     "productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
                     "productCategoryId", productCategoryId);
             Debug.logError(e, PropertyMessageExUtil.makeLogMessage(msgIntro, e), module);
             return ServiceUtil.returnFailure(msgIntro, e, locale);
         }
     }
-    
-    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context, 
+
+    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context,
             Map<String, List<GenericValue>> viewsByType, Map<String, Object> result) {
         if (!Boolean.FALSE.equals(context.get("getViewsByType"))) {
             result.put("viewsByType", viewsByType);
@@ -504,7 +491,7 @@ public class CategoryServices {
             result.put("textByTypeAndLocale", LocalizedContentWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
         }
     }
-    
+
     /**
      * SCIPIO: replaceProductCategoryContentLocalizedSimpleTexts.
      * Added 2017-12-06.
@@ -514,20 +501,20 @@ public class CategoryServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         String productCategoryId = (String) context.get("productCategoryId");
-        
+
         try {
             GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), false);
             if (productCategory == null) {
                 throw new IllegalArgumentException(UtilProperties.getMessage("ProductUiLabels", "ProductCategoryNotFoundForCategoryID", locale) + ": " + productCategoryId);
             }
-            
+
             Map<String, Object> contentFieldsUnparsed = UtilGenerics.checkMap(context.get("contentFields"));
             Map<String, List<Map<String, Object>>> contentFields = LocalizedContentWorker.parseLocalizedSimpleTextContentFieldParams(contentFieldsUnparsed, null, true);
-        
+
             for(Map.Entry<String, List<Map<String, Object>>> entry : contentFields.entrySet()) {
                 String prodCatContentTypeId = entry.getKey();
                 List<Map<String, Object>> entries = entry.getValue();
-            
+
                 List<GenericValue> productCategoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent")
                         .where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).filterByDate()
                         .orderBy("-fromDate").queryList();
@@ -536,7 +523,7 @@ public class CategoryServices {
                     Debug.logWarning("replaceProductCategoryContentLocalizedSimpleTexts: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
                             + prodCatContentTypeId + "' for category '" + productCategoryId + "'; updating only latest (contentId: '" + productCategoryContent.getString("contentId") + "')", module);
                 }
-                
+
                 String mainContentId = null;
                 if (productCategoryContent != null) {
                     mainContentId = productCategoryContent.getString("contentId");
@@ -552,7 +539,7 @@ public class CategoryServices {
                 if (mainContentId == null && servResult.get("mainContentId") != null) {
                     // must create a new ProductContent record
                     mainContentId = (String) servResult.get("mainContentId");
-                    
+
                     productCategoryContent = delegator.makeValue("ProductCategoryContent");
                     productCategoryContent.put("productCategoryId", productCategoryId);
                     productCategoryContent.put("contentId", mainContentId);
@@ -573,9 +560,9 @@ public class CategoryServices {
             return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + e.getMessage());
         }
     }
+
     private static String getReplStcAltLocErrorPrefix(Map<String, ?> context, Locale locale) {
-        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category", 
+        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
                 context, locale);
     }
-    
 }

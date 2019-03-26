@@ -16,22 +16,22 @@ import org.ofbiz.common.image.ImageType.ImageTypeInfo;
  */
 public abstract class AbstractImageOp implements ImageOp {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected static void putDefaultImageTypeOptions(Map<String, Object> options) {
         // NOTE: comments below only apply to the filters that make use of these options
-        
+
         // TODO: REVIEW: if this is uncommented, it will force the specified types
         // as result formats even if the filter could have preserved the original/input image format
         //options.put("targettype", ImageType.DEFAULT);
-        
+
         // used when targettype not set
         options.put("defaulttype", ImageType.DEFAULT);
-        
+
         // if these fallbacks are set, they are used as result formats for any
         // input types the filter can't replicated (custom and/or indexed)
         options.put("fallbacktype", ImageType.DEFAULT);
     }
-    
+
     protected final AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory;
     protected final String name;
     protected final Map<String, Object> confOptions;
@@ -40,8 +40,8 @@ public abstract class AbstractImageOp implements ImageOp {
      * This is defaultOptions + confOptions.
      */
     protected final Map<String, Object> confDefOptions;
-    
-    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name, 
+
+    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name,
             Map<String, Object> confOptions, Map<String, Object> defOptions) {
         this.factory = factory;
         this.name = name;
@@ -53,8 +53,8 @@ public abstract class AbstractImageOp implements ImageOp {
         confDefOptions.putAll(this.confOptions);
         this.confDefOptions = confDefOptions;
     }
-    
-    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name, 
+
+    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name,
             Map<String, Object> confOptions) {
         this(factory, name, confOptions, factory.getDefaultOptions());
     }
@@ -83,12 +83,12 @@ public abstract class AbstractImageOp implements ImageOp {
     public AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> getFactory() {
         return factory;
     }
-    
+
     @Override
     public Map<String, Object> makeValidOptions(Map<String, Object> options) {
         return factory.makeValidOptions(options);
     }
-    
+
     protected Map<String, Object> getEffectiveOptions(Map<String, Object> options) {
         if (options == null || options.isEmpty()) return confDefOptions;
         else if (confDefOptions.isEmpty()) return options;
@@ -98,7 +98,7 @@ public abstract class AbstractImageOp implements ImageOp {
             return mergedMap;
         }
     }
-    
+
     protected String getApiName() {
         return getFactory().getApiName();
     }
@@ -107,11 +107,11 @@ public abstract class AbstractImageOp implements ImageOp {
     public String toString() {
         return "[" + getName() + "/" + getApiName() + "/defaults:" + getConfiguredAndDefaultOptions().toString() + "]";
     }
-    
+
     public String toString(Map<String, Object> options) {
         return "[" + getName() + "/" + getApiName() + "/options:" + options.toString() + "]";
     }
-    
+
     // NOTE: this needs two params otherwise the multiple inherit hierarchy breaks
     public static abstract class AbstractImageOpFactory<T extends AbstractImageOp, V extends ImageOp> implements ImageOpFactory<V> {
         @Override
@@ -127,9 +127,9 @@ public abstract class AbstractImageOp implements ImageOp {
             }
             return getImageOpInst(name, mergedOptions);
         }
-        
+
         protected abstract String getApiName();
-        
+
         /**
          * Helper for implementing {@link ImageOpFactory#makeValidOptions}.
          * If the value is null but srcOptions contained the key, then we put null, because this may
@@ -140,14 +140,14 @@ public abstract class AbstractImageOp implements ImageOp {
                 destOptions.put(name, value);
             }
         }
-        
+
         protected Map<String, Object> makeOptionsMap(Map<String, Object> srcMap) {
             return new HashMap<>(srcMap);
         }
         protected Map<String, Object> makeOptionsMap() {
             return new HashMap<>();
         }
-        
+
         protected void putCommonImageTypeOptions(Map<String, Object> destOptions, Map<String, Object> srcOptions) {
             putOption(destOptions, "overridetype", getImageTypeOption(srcOptions, "overridetype"), srcOptions);
             putOption(destOptions, "targettype", getImageTypeOption(srcOptions, "targettype"), srcOptions);
@@ -159,13 +159,13 @@ public abstract class AbstractImageOp implements ImageOp {
     protected static Boolean getForceOp(Map<String, Object> options) {
         return UtilMisc.booleanValue(options.get("forceop"));
     }
-    
+
     /**
      * Should return true if the the op implementation PROPERLY supports writing out directly
      * to given dest image type without extra conversions.
      */
     public abstract boolean isNativeSupportedDestImagePixelType(int imagePixelType);
-    
+
     /**
      * Should return true if the the op implementation PROPERLY supports writing out directly
      * to given dest image type without extra conversions.
@@ -174,7 +174,7 @@ public abstract class AbstractImageOp implements ImageOp {
     public boolean isNativeSupportedDestImageType(ImageTypeInfo type) {
         return isNativeSupportedDestImagePixelType(type.getPixelType());
     }
-    
+
     /**
      * Parses (if needed) and returns an ImageType option from the options map.
      * This always returns an instance except when the map does not contain the field name at all,
@@ -188,11 +188,11 @@ public abstract class AbstractImageOp implements ImageOp {
             throw new IllegalArgumentException("Invalid image type option " + fieldName + ": " + e.getMessage(), e);
         }
     }
-    
+
     public static ImageType getImageTypeOption(Map<String, Object> options, String fieldName) {
         return getImageTypeOption(options, fieldName, null);
     }
-    
+
     /**
      * Returns an ImagePixelType (BufferedImage TYPE_XXX) int for the given ImageType option appropriate
      * for the given image. May return null.
@@ -212,31 +212,31 @@ public abstract class AbstractImageOp implements ImageOp {
         if (type != null) return type;
         return defaultImageType;
     }
-    
+
     protected static ImageType getFallbackImageType(Map<String, Object> options, BufferedImage srcImage, ImageType defaultImageType) {
         return getImageTypeOption(options, "fallbacktype", defaultImageType);
     }
-    
+
     protected int getFirstSupportedDestPixelTypeFromAllDefaults(Map<String, Object> options, BufferedImage srcImage, Integer fallbackType) {
         return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", fallbackType, ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
     }
-    
+
     protected int getFirstSupportedDestPixelTypeFromAllDefaults(Map<String, Object> options, BufferedImage srcImage) {
         return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", "fallbackType", ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
     }
-    
+
     protected int getFirstSupportedDestPixelTypeFromSystemDefaults(Map<String, Object> options, BufferedImage srcImage) {
         return getFirstSupportedDestPixelType(options, srcImage, ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
     }
-    
+
     protected Integer getFirstSupportedDestPixelTypeFromOptionDefaults(Map<String, Object> options, BufferedImage srcImage, Integer fallbackType) {
         return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", fallbackType);
     }
-    
+
     protected Integer getFirstSupportedDestPixelTypeFromOptionDefaults(Map<String, Object> options, BufferedImage srcImage) {
         return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", "fallbackType");
     }
-    
+
     protected Integer getFirstSupportedDestPixelType(Map<String, Object> options, BufferedImage srcImage, Object... candidateTypes) {
         for(Object candidateType : candidateTypes) {
             if (candidateType == null) continue;
@@ -252,14 +252,14 @@ public abstract class AbstractImageOp implements ImageOp {
             } else {
                 throw new IllegalArgumentException("invalid candidate type");
             }
-            if (intCandidateType != null && !ImagePixelType.isTypeSpecial(intCandidateType) && 
+            if (intCandidateType != null && !ImagePixelType.isTypeSpecial(intCandidateType) &&
                     isNativeSupportedDestImagePixelType(intCandidateType)) {
                 return intCandidateType;
             }
         }
         return null;
     }
-    
+
     /**
      * Returns true if and only if checkConvertResultImageType is expected to perform a post-op conversion.
      * Used to optimize the intermediate image type.
@@ -268,17 +268,17 @@ public abstract class AbstractImageOp implements ImageOp {
     protected boolean isPostConvertResultImage(BufferedImage srcImage, Map<String, Object> options, ImageTypeInfo targetTypeInfo) {
         Integer targetPixelType = targetTypeInfo != null ? targetTypeInfo.getPixelType() : null;
         if (targetPixelType == null || targetPixelType == ImagePixelType.TYPE_NOPRESERVE) return false; // sanity check, mostly
-        
+
         ImageTypeInfo resolvedTargetPixelType = ImageType.resolveTargetType(targetTypeInfo, srcImage);
-        
+
         // TODO?: other missing type conversion loss checks...
-        
+
         // DO NOT convert to indexed if lossless mode (TODO: REVIEW)
         if (ImagePixelType.isTypeIndexedOrCustom(resolvedTargetPixelType.getPixelType()) && targetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
             return false;
         return true;
     }
-    
+
     /**
      * Best-effort attempt to honor requests for specific format or orig-preserve of the returned image after an image operation.
      * <p>
@@ -293,16 +293,16 @@ public abstract class AbstractImageOp implements ImageOp {
      * <p>
      * NOTE: targetType should be already resolved (don't pass TYPE_PRESERVE here).
      * <p>
-     * FIXME?: this checks for type using a simple (modifiedImage.getType() == targetType) check, which 
+     * FIXME?: this checks for type using a simple (modifiedImage.getType() == targetType) check, which
      * may miss details about the image...
      */
-    protected BufferedImage checkConvertResultImageType(BufferedImage srcImage, BufferedImage modifiedImage, 
+    protected BufferedImage checkConvertResultImageType(BufferedImage srcImage, BufferedImage modifiedImage,
             Map<String, Object> options, ImageTypeInfo targetTypeInfo) {
         // TODO: optimize this call (plus caller should already have done it), the same things are redone several times
         if (!isPostConvertResultImage(srcImage, options, targetTypeInfo)) {
             return modifiedImage;
         }
-        
+
         // TODO: optimize this call
         if (ImageType.imageMatchesRequestedType(modifiedImage, targetTypeInfo, srcImage)) return modifiedImage;
 
@@ -316,9 +316,9 @@ public abstract class AbstractImageOp implements ImageOp {
             resultImage = ImageTransform.createBufferedImage(resolvedTargetPixelType, modifiedImage.getWidth(), modifiedImage.getHeight());
         }
 
-        if (ImageUtil.verboseOn()) 
+        if (ImageUtil.verboseOn())
             Debug.logInfo("Applying required image pixel type post-op conversion ("
-                    + "input type: " + ImageType.printImageTypeInfo(srcImage) 
+                    + "input type: " + ImageType.printImageTypeInfo(srcImage)
                     + "; post-op type: " + ImageType.printImageTypeInfo(modifiedImage)
                     + "; target type: " + ImageType.printImageTypeInfo(resultImage)
                     + ")", module);

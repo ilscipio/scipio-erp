@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -94,7 +81,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="${orderByString}"/>
                 </entity-condition>
-                <iterate entry="inventoryItemAndLocation" list="inventoryItemAndLocations">
+                <iterate list="inventoryItemAndLocations" entry="inventoryItemAndLocation">
                     <if-compare field="parameters.quantityNotReserved" operator="greater" value="0" type="Double">
                         <!-- this is a little trick to get the InventoryItem value object without doing a query, possible since all fields on InventoryItem are also on InventoryItemAndLocation with the same names -->
                         <make-value entity-name="InventoryItem" map="inventoryItemAndLocation" value-field="inventoryItem"/>
@@ -117,7 +104,7 @@ under the License.
                         </condition-list>
                         <order-by field-name="${orderByString}"/>
                     </entity-condition>
-                    <iterate entry="inventoryItemAndLocation" list="inventoryItemAndLocations">
+                    <iterate list="inventoryItemAndLocations" entry="inventoryItemAndLocation">
                         <if-compare field="parameters.quantityNotReserved" operator="greater" value="0" type="Double">
                             <!-- this is a little trick to get the InventoryItem value object without doing a query, possible since all fields on InventoryItem are also on InventoryItemAndLocation with the same names -->
                             <make-value entity-name="InventoryItem" map="inventoryItemAndLocation" value-field="inventoryItem"/>
@@ -141,7 +128,7 @@ under the License.
                         </condition-list>
                         <order-by field-name="${orderByString}"/>
                     </entity-condition>
-                    <iterate entry="inventoryItem" list="inventoryItems">
+                    <iterate list="inventoryItems" entry="inventoryItem">
                         <if>
                             <condition>
                                 <and>
@@ -173,9 +160,9 @@ under the License.
                             <set from-field="parameters.orderItemSeqId" field="createDetailMap.orderItemSeqId"/>
                             <set from-field="parameters.shipGroupSeqId" field="createDetailMap.shipGroupSeqId"/>
                             <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-                                <calcop field="parameters.quantityNotReserved" operator="negative"/>
+                                <calcop operator="negative" field="parameters.quantityNotReserved"/>
                             </calculate>
-                            
+
                             <if-not-empty field="parameters.reserveReasonEnumId"><set from-field="parameters.reserveReasonEnumId" field="createDetailMap.reasonEnumId"/></if-not-empty>
                             <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                             <clear-field field="createDetailMap"/>
@@ -194,13 +181,13 @@ under the License.
                                 </if-not-empty>
                             </if-empty>
                             <!-- TODO: Convert this to a <set-calendar> operation -->
-                            <call-bsh><![CDATA[
-                            java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-                            com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance();
-                            cal.setTimeInMillis(orderDate.getTime());
-                            cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-                            return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));
-                            ]]></call-bsh>
+                            <script lang="groovy"><![CDATA[
+                            java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate")
+                            com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance()
+                            cal.setTimeInMillis(orderDate.getTime())
+                            cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue())
+                            return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()))
+                            ]]></script>
 
                             <!-- create or update OrderItemShipGrpInvRes record -->
                             <set from-field="parameters.orderId" field="reserveOisgirMap.orderId"/>
@@ -242,7 +229,7 @@ under the License.
                             <set from-field="parameters.orderItemSeqId" field="createDetailMap.orderItemSeqId"/>
                             <set from-field="parameters.shipGroupSeqId" field="createDetailMap.shipGroupSeqId"/>
                             <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-                                <calcop field="parameters.quantityNotReserved" operator="negative"/>
+                                <calcop operator="negative" field="parameters.quantityNotReserved"/>
                             </calculate>
                             <if-not-empty field="parameters.reserveReasonEnumId"><set from-field="parameters.reserveReasonEnumId" field="createDetailMap.reasonEnumId"/></if-not-empty>
                             <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
@@ -262,13 +249,13 @@ under the License.
                                 </if-not-empty>
                             </if-empty>
                             <!-- TODO: Convert this to a <set-calendar> operation -->
-                            <call-bsh><![CDATA[
-                            java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-                            com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance();
-                            cal.setTimeInMillis(orderDate.getTime());
-                            cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-                            return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));
-                            ]]></call-bsh>
+                            <script lang="groovy"><![CDATA[
+                            java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate")
+                            com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance()
+                            cal.setTimeInMillis(orderDate.getTime())
+                            cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue())
+                            return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()))
+                            ]]></script>
 
                             <!-- create OrderItemShipGrpInvRes record -->
                             <set from-field="parameters.orderId" field="reserveOisgirMap.orderId"/>
@@ -315,7 +302,7 @@ under the License.
           <set field="createDetailMap.availableToPromiseDiff" value="-1" type="BigDecimal"/>
           <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
         </if-compare>
-        <set-service-fields map="parameters" to-map="cancelOrderItemShipGrpInvResMap" service-name="cancelOrderItemShipGrpInvRes"/>
+        <set-service-fields service-name="cancelOrderItemShipGrpInvRes" map="parameters" to-map="cancelOrderItemShipGrpInvResMap"/>
         <set field="cancelOrderItemShipGrpInvResMap.cancelQuantity" from-field="parameters.quantity"/>
         <!-- Step 1 cancel our reservation, we'll later reserve Inventory we want-->
         <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOrderItemShipGrpInvResMap"/>
@@ -343,9 +330,9 @@ under the License.
         <!--Step 2 Check if its reserved for other order -->
         <set field="inventoryReservationLookUp.inventoryItemId" from-field="inventoryItem.inventoryItemId"/>
         <find-by-and map="inventoryReservationLookUp" list="invReservations" entity-name="OrderItemShipGrpInvRes"/>
-        <first-from-list entry="inventoryItemReservation" list="invReservations"/>
+        <first-from-list list="invReservations" entry="inventoryItemReservation"/>
         <if-not-empty field="inventoryItemReservation">
-            <set-service-fields map="inventoryItemReservation" to-map="cancelOrderItemShipGrpInvResMap" service-name="cancelOrderItemShipGrpInvRes"/>
+            <set-service-fields service-name="cancelOrderItemShipGrpInvRes" map="inventoryItemReservation" to-map="cancelOrderItemShipGrpInvResMap"/>
             <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOrderItemShipGrpInvResMap"/>
             <!-- Hold our inventoryItem -->
             <refresh-value value-field="inventoryItem"/>
@@ -420,7 +407,7 @@ under the License.
                     <clear-field field="reserveOisgirMap"/>
 
                     <calculate field="parameters.quantityNotReserved">
-                        <calcop field="parameters.quantityNotReserved" operator="subtract"><number value="1.0"/></calcop>
+                        <calcop operator="subtract" field="parameters.quantityNotReserved"><number value="1.0"/></calcop>
                     </calculate>
                 </if-compare>
             </if-compare>
@@ -454,7 +441,7 @@ under the License.
                         <set from-field="parameters.orderId" field="createDetailMap.orderId"/>
                         <set from-field="parameters.orderItemSeqId" field="createDetailMap.orderItemSeqId"/>
                         <calculate field="createDetailMap.availableToPromiseDiff" decimal-scale="6">
-                            <calcop field="parameters.deductAmount" operator="negative"/>
+                            <calcop operator="negative" field="parameters.deductAmount"/>
                         </calculate>
                         <if-not-empty field="ebayReserveReasonEnumId"><set from-field="parameters.reserveReasonEnumId" field="createDetailMap.reasonEnumId"/></if-not-empty>
                         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
@@ -504,13 +491,13 @@ under the License.
             <set field="daysToShip" value="30" type="Long"/>
         </if-empty>
         <!-- TODO: Convert this to a <set-calendar> operation -->
-        <call-bsh><![CDATA[
-        java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-        com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance();
-        cal.setTimeInMillis(orderDate.getTime());
-        cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-        return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));
-        ]]></call-bsh>
+        <script lang="groovy"><![CDATA[
+        java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate")
+        com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance()
+        cal.setTimeInMillis(orderDate.getTime())
+        cal.add(com.ibm.icu.util.Calendar.DAY_OF_YEAR, daysToShip.intValue())
+        return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()))
+        ]]></script>
     </simple-method>
 
     <simple-method method-name="reserveOrderItemInventory" short-description="Reserve Order Item Inventory">
@@ -564,7 +551,7 @@ under the License.
             <log level="verbose" message="OISGIR Cancel for single item : ${oisgirListLookupMap}"/>
         </if-not-empty>
         <find-by-and entity-name="OrderItemShipGrpInvRes" map="oisgirListLookupMap" list="oisgirList" use-cache="false"/>
-        <iterate entry="oisgir" list="oisgirList">
+        <iterate list="oisgirList" entry="oisgir">
             <set from-field="oisgir.orderId" field="cancelOisgirMap.orderId"/>
             <set from-field="oisgir.orderItemSeqId" field="cancelOisgirMap.orderItemSeqId"/>
             <set from-field="oisgir.shipGroupSeqId" field="cancelOisgirMap.shipGroupSeqId"/>
@@ -593,7 +580,7 @@ under the License.
             <set from-field="parameters.orderItemSeqId" field="oisgirListLookupMap.orderItemSeqId"/>
             <set from-field="parameters.shipGroupSeqId" field="oisgirListLookupMap.shipGroupSeqId"/>
             <find-by-and entity-name="OrderItemShipGrpInvRes" map="oisgirListLookupMap" list="oisgirList" use-cache="false"/>
-            <iterate entry="oisgir" list="oisgirList">
+            <iterate list="oisgirList" entry="oisgir">
                 <if-compare field="toCancelAmount" operator="greater" value="0" type="BigDecimal">
                     <if-compare-field field="oisgir.quantity" to-field="toCancelAmount" operator="greater-equals" type="BigDecimal">
                         <set from-field="toCancelAmount" field="cancelOisgirMap.cancelQuantity"/>

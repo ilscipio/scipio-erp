@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -29,24 +16,24 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED">
-          <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") class="+${styles.action_nav!}" text=uiLabelMap.OrderRequestReturn />
+          <@menuitem type="link" href=makePageUrl("makeReturn?orderId=${orderHeader.orderId}") class="+${styles.action_nav!}" text=uiLabelMap.OrderRequestReturn />
         </#if>
       </@menu>
     </#macro>
-    <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
+    <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@pageUrl>orderstatus?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
     <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
-        <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+        <@table type="fields">
             <#-- placing customer information -->
             <#if localOrderReadHelper?? && orderHeader?has_content>
               <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
-              <#if displayParty?has_content>
-                  <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+              <#if displayParty?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
+                  <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
               </#if>
               <@tr>
                 <@td align="right" valign="top" width="15%"><b>${uiLabelMap.PartyName}</b>
                 </@td>
                 <@td valign="top" width="80%">
-                    ${(displayPartyNameResult.fullName)!"[Name Not Found]"}
+                    ${(displayPartyNameResult.fullName)!("["+rawLabel("OrderPartyNameNotFound")+"]")}
                 </@td>
               </@tr>
               <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
@@ -106,7 +93,7 @@ under the License.
                   <#assign groupNumber = groupIdx + 1>
                 </#if>
 
-              <@table type="fields"> <#-- orig: width="100%" border="0" cellpadding="1" -->
+              <@table type="fields">
                 <#if shippingAddress?has_content>
                   <@tr>
                     <@td align="right" valign="top" width="15%">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]

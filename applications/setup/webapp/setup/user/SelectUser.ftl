@@ -38,7 +38,7 @@
     });
 </@script>
 
-  <@form method="get" action=makeOfbizUrl("setupUser") id="setupUser-selectUser-form">
+  <@form method="get" action=makePageUrl("setupUser") id="setupUser-selectUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["userPartyId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
@@ -46,12 +46,12 @@
     <@field type="generic" label=uiLabelMap.SetupSelectUserForSetup>
         <#-- FIXME: submit doesn't align -->
         <@field type="select" name="userPartyId" id="setupUser-selectUser-select" class="+setupUser-selectUser-select" inline=true style="display:inline-block;">
-            <option value="">[${uiLabelMap.SetupCreateNewUser}]</option>
+            <option value="">[${uiLabelMap.PageTitleCreateNewParty}]</option>
             <option value="" disabled="disabled"></option>
             <#if parties?has_content>
               <#list parties as partyEntry>
                 <#assign curParty = delegator.findOne("Party", {"partyId": partyEntry.partyIdTo}, true)>
-                <#assign selected = (rawString(partyEntry.partyIdTo) == rawString(userPartyId!))>
+                <#assign selected = (raw(partyEntry.partyIdTo) == raw(userPartyId!))>
                 <option value="${curParty.partyId}"<#if selected> selected="selected"</#if>>[${curParty.partyId}]</option>
               </#list>
             </#if>
@@ -63,7 +63,7 @@
     </@field>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupWizard") id="setupUser-selectContinueUser-form">
+  <@form method="get" action=makePageUrl("setupWizard") id="setupUser-selectContinueUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["userPartyId"]/>
     <#--<@field type="hidden" name="setupContinue" value="Y"/> not needed yet-->
@@ -71,7 +71,7 @@
     <@field type="hidden" name="userPartyId" value=""/>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupUser") id="setupUser-newUser-form">
+  <@form method="get" action=makePageUrl("setupUser") id="setupUser-newUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["userPartyId"]/>    
     <@field type="hidden" name="newUser" value="Y"/>

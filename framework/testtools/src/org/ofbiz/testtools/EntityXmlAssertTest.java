@@ -22,17 +22,16 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestResult;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityDataAssert;
 import org.ofbiz.entity.util.EntitySaxReader;
 import org.ofbiz.service.testtools.OFBizTestCase;
 import org.w3c.dom.Element;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestResult;
 
 public class EntityXmlAssertTest extends OFBizTestCase {
 
@@ -44,7 +43,7 @@ public class EntityXmlAssertTest extends OFBizTestCase {
     /**
      * Tests of entity xml
      * @param caseName test case name
-     * @param mainElement DOM main element 
+     * @param mainElement DOM main element
      */
     public EntityXmlAssertTest(String caseName, Element mainElement) {
         super(caseName);

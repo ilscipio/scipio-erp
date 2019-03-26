@@ -44,40 +44,43 @@ import org.ofbiz.webapp.WebAppUtil;
 import freemarker.template.TemplateException;
 
 /**
- * Provides generic services related to preparing and
- * delivering notifications via email.
+ * Provides generic services related to preparing and delivering notifications
+ * via email.
  * <p>
  * To use the NotificationService, a message specific service should be
- * defined for a particular <a href="http://freemarker.sourceforge.net/docs/dgui_quickstart_template.html">
- * Freemarker Template</a> mapping the required fields of the
- * template to the required attributes of the service.
+ * defined for a particular
+ * <a href="http://freemarker.sourceforge.net/docs/dgui_quickstart_template.html">
+ * Freemarker Template</a> mapping the required fields of the template to the
+ * required attributes of the service.
+ * </p>
  * <p>
- * This service definition should extend the <code>sendNotificationInterface<code>
+ * This service definition should extend the <code>sendNotificationInterface</code>
  * or the <code>prepareNotificationInterface</code> service interface
  * and simply invoke the associated method defined in this class.
- * <p>
- * <blockquote>
+ * </p>
  * <pre>
- *     &lt;service name="sendPoPickupNotification" engine="java"
- *             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification"&gt;
- *         &lt;description&gt;Sends notification based on a message template&lt;/description&gt;
- *         &lt;implements service="sendNotificationInterface"/&gt;
- *         &lt;attribute name="orderId" type="String" mode="IN" optional="false"/&gt;
- *     &lt;/service&gt;
+ * {@code
+ * <service name="sendPoPickupNotification" engine="java"
+ *         location="org.ofbiz.content.email.NotificationServices"
+ *         invoke="sendNotification">
+ *     <description>Sends notification based on a message template</description>
+ *     <implements service="sendNotificationInterface"/>
+ *     <attribute name="orderId" type="String" mode="IN" optional="false"/>
+ * </service>
+ * }
  * </pre>
- * </blockquote>
  * <p>
- * An optional parameter available to all message templates is <code>baseUrl</code>
- * which can either be specified when the service is invoked or let the
- * <code>NotificationService</code> attempt to resolve it as best it can,
- * see {@link #setBaseUrl(Delegator, String, Map) setBaseUrl(Map)} for details on how this is achieved.
- * <p>
+ * An optional parameter available to all message templates is
+ * <code>baseUrl</code> which can either be specified when the service is
+ * invoked or let the <code>NotificationService</code> attempt to resolve it
+ * as best it can, see {@link #setBaseUrl(Delegator, String, Map) setBaseUrl(Map)}
+ * for details on how this is achieved.
+ * </p>
  * The following example shows what a simple notification message template,
  * associated with the above service, might contain:
  * <blockquote>
  * <pre>
  *     Please use the following link to schedule a delivery date:
- *     &lt;p&gt;
  *     ${baseUrl}/ordermgr/control/schedulepo?orderId=${orderId}"
  * </pre>
  * </blockquote>
@@ -85,6 +88,7 @@ import freemarker.template.TemplateException;
  * The template file must be found on the classpath at runtime and
  * match the "templateName" field passed to the service when it
  * is invoked.
+ * </p>
  * <p>
  * For complex messages with a large number of dynamic fields, it may be wise
  * to implement a custom service that takes one or two parameters that can
@@ -92,7 +96,7 @@ import freemarker.template.TemplateException;
  * the {@link #prepareNotification(DispatchContext, Map) prepareNotification(DispatchContext, Map)}
  * or {@link #sendNotification(DispatchContext, Map) sendNotification(DispatchContext, Map)}
  * methods directly to generate or generate and send the notification respectively.
- *
+ * </p>
  */
 public class NotificationServices {
 
@@ -142,7 +146,7 @@ public class NotificationServices {
             // make sure we have a valid body before sending
             if (body != null) {
                 // retain only the required attributes for the sendMail service
-                Map<String, Object> emailContext =  new LinkedHashMap<String, Object>();
+                Map<String, Object> emailContext =  new LinkedHashMap<>();
                 emailContext.put("sendTo", context.get("sendTo"));
                 emailContext.put("body", body);
                 emailContext.put("sendCc", context.get("sendCc"));
@@ -190,12 +194,14 @@ public class NotificationServices {
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> result = null;
         if (templateData == null) {
-            templateData =  new LinkedHashMap<String, Object>();
+            templateData =  new LinkedHashMap<>();
         }
 
         try {
-            // ensure the baseURl is defined
-            setBaseUrl(delegator, webSiteId, templateData);
+            // ensure the baseUrl is defined
+            // SCIPIO: 2019-02-04: Use better method
+            //setBaseUrl(delegator, webSiteId, templateData);
+            checkSetWebSiteFields(delegator, webSiteId, templateData);
 
             // initialize the template reader and processor
             URL templateUrl = FlexibleLocation.resolveLocation(templateName);
@@ -244,6 +250,14 @@ public class NotificationServices {
      * such as the <code>baseUrl</code>, perhaps using the standard
      * <code>ResourceBundle</code> java approach so that both classes
      * and static files may be invoked.
+     * <p>
+     * SCIPIO: This now also puts the following extra fields in the context:
+     * <ul>
+     * <li>baseWebSiteId (2015-10-16): the webSiteId, with extra prefix to prevent conflicts
+     * <li>baseWebappPath (2018-08-01): the combination of webappPathPrefix+contextRoot for
+     *                                  the given website (this is simply the context root if
+     *                                  webappPathPrefix is not explicitly configured)
+     * </ul>
      *
      * @param context   The context to check and, if necessary, set the
      * <code>baseUrl</code>.
@@ -258,19 +272,64 @@ public class NotificationServices {
                 }
                 OfbizUrlBuilder builder = OfbizUrlBuilder.from(webAppInfo, delegator);
                 StringBuilder newURL = new StringBuilder();
-                builder.buildHostPart(newURL, "", false);
+                builder.buildHostPart(newURL, "", false, false);
                 context.put("baseUrl", newURL.toString());
                 newURL = new StringBuilder();
-                builder.buildHostPart(newURL, "", true);
+                builder.buildHostPart(newURL, "", true, false);
                 context.put("baseSecureUrl", newURL.toString());
+
+                // SCIPIO: 2018-08-01: store baseWebappPath, which is webappPathPrefix + contextPath
+                newURL = new StringBuilder();
+                builder.buildPathPartWithContextPath(newURL);
+                context.put("baseWebappPath", newURL.toString());
             } catch (Exception e) {
-                Debug.logWarning(e, "Exception thrown while adding baseUrl to context: ", module);
+                // SCIPIO: better log
+                if (webSiteId != null) {
+                    // should not happen
+                    Debug.logError(e, "Exception while adding baseUrl to context [webSiteId: " + webSiteId + "]", module);
+                } else {
+                    // may happen in stock (for now)
+                    Debug.logWarning("Exception while adding baseUrl to context [no webSiteId available]: " + e.toString(), module);
+                }
             }
         }
-        
+
         // SCIPIO: use this method to also store a baseWebSiteId in the context, so template has knowledge
         if (!context.containsKey("baseWebSiteId")) {
             context.put("baseWebSiteId", webSiteId);
         }
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId in context IF there isn't already a key for it.
+     * @return the effective webSiteId
+     */
+    public static String checkSetWebSiteId(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        String contextWebSiteId = (String) context.get("webSiteId");
+        if (contextWebSiteId == null && !context.containsKey("webSiteId")) {
+            context.put("webSiteId", webSiteId);
+            return webSiteId;
+        } else {
+            return contextWebSiteId;
+        }
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them.
+     * NOTE: You probably want to call the abstracted method {@link #checkSetWebSiteIdAndRelated} instead.
+     * @return the effective webSiteId
+     */
+    public static String checkSetBaseUrlAndWebSiteId(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        setBaseUrl(delegator, webSiteId, context);
+        return checkSetWebSiteId(delegator, webSiteId, context);
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them,
+     * and along with anything related (abstraction method).
+     * @return the effective webSiteId
+     */
+    public static String checkSetWebSiteFields(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        return checkSetBaseUrlAndWebSiteId(delegator, webSiteId, context);
     }
 }

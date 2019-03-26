@@ -28,19 +28,19 @@ import com.ilscipio.scipio.content.content.ContentTraversalException.StopContent
  */
 public class ContentTraverser extends AbstractContentEntityVisitor {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected final ContentEntityVisitor visitor;
     protected final Delegator delegator;
     protected final LocalDispatcher dispatcher;
     protected final ContentTraverserConfig travConfig;
-    
+
     public ContentTraverser(ContentEntityVisitor visitor, Delegator delegator, LocalDispatcher dispatcher, ContentTraverserConfig travConfig) {
         this.visitor = (visitor != null) ? visitor : this;
         this.delegator = delegator;
         this.dispatcher = dispatcher;
         this.travConfig = (travConfig != null) ? travConfig : newTravConfig();
     }
-    
+
     public ContentTraverser(Delegator delegator, LocalDispatcher dispatcher, ContentTraverserConfig travConfig) {
         this(null, delegator, dispatcher, travConfig);
     }
@@ -49,7 +49,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
         private boolean useCache = false;
         private boolean filterByDate;
         private Timestamp moment;
-        
+
         private boolean includeCore = true;
         private boolean includeRole = true;
         private boolean includeAttr = true;
@@ -60,116 +60,116 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
         private boolean includeParentContentRecursive = false; // WARN: dangerous
         private boolean includeMediaData = true;
         private boolean includeKeyword = true;
-        
+
         public boolean isUseCache() {
             return useCache;
         }
-        
+
         public ContentTraverserConfig setUseCache(boolean useCache) {
             this.useCache = useCache;
             return this;
         }
-        
+
         public boolean isFilterByDate() {
             return filterByDate;
         }
-        
+
         public ContentTraverserConfig setFilterByDate(boolean filterByDate) {
             this.filterByDate = filterByDate;
             return this;
         }
-        
+
         public Timestamp getMoment() {
             return moment;
         }
-        
+
         public ContentTraverserConfig setMoment(Timestamp moment) {
             this.moment = moment;
             return this;
         }
-        
+
         public boolean isIncludeCore() {
             return includeCore;
         }
-        
+
         public ContentTraverserConfig setIncludeCore(boolean includeCore) {
             this.includeCore = includeCore;
             return this;
         }
-        
+
         public boolean isIncludeRole() {
             return includeRole;
         }
-        
+
         public ContentTraverserConfig setIncludeRole(boolean includeRole) {
             this.includeRole = includeRole;
             return this;
         }
-        
+
         public boolean isIncludeAttr() {
             return includeAttr;
         }
-        
+
         public ContentTraverserConfig setIncludeAttr(boolean includeAttr) {
             this.includeAttr = includeAttr;
             return this;
         }
-        
+
         public boolean isIncludeChildContentAssoc() {
             return includeChildContentAssoc;
         }
-        
+
         public ContentTraverserConfig setIncludeChildContentAssoc(boolean includeChildContentAssoc) {
             this.includeChildContentAssoc = includeChildContentAssoc;
             return this;
         }
-        
+
         public boolean isIncludeChildContentRecursive() {
             return includeChildContentRecursive;
         }
-        
+
         public ContentTraverserConfig setIncludeChildContentRecursive(boolean includeChildContentRecursive) {
             this.includeChildContentRecursive = includeChildContentRecursive;
             return this;
         }
-        
+
         public boolean isIncludeParentContentAssoc() {
             return includeParentContentAssoc;
         }
-        
+
         public ContentTraverserConfig setIncludeParentContentAssoc(boolean includeParentContentAssoc) {
             this.includeParentContentAssoc = includeParentContentAssoc;
             return this;
         }
-        
+
         public boolean isIncludeParentContentRecursive() {
             return includeParentContentRecursive;
         }
-        
+
         public ContentTraverserConfig setIncludeParentContentRecursive(boolean includeParentContentRecursive) {
             this.includeParentContentRecursive = includeParentContentRecursive;
             return this;
         }
-        
+
         public boolean isIncludeMediaData() {
             return includeMediaData;
         }
-        
+
         public ContentTraverserConfig setIncludeMediaData(boolean includeMediaData) {
             this.includeMediaData = includeMediaData;
             return this;
         }
-        
+
         public boolean isIncludeKeyword() {
             return includeKeyword;
         }
-        
+
         public ContentTraverserConfig setIncludeKeyword(boolean includeKeywords) {
             this.includeKeyword = includeKeywords;
             return this;
         }
     }
-    
+
     public ContentTraverserConfig newTravConfig() {
         return new ContentTraverserConfig();
     }
@@ -177,11 +177,11 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
     public ContentTraverserConfig getTravConfig() {
         return travConfig;
     }
-    
+
     public boolean isUseCache() {
         return travConfig.isUseCache();
     }
-    
+
     /**
      * SCIPIO: Best-effort iterates the given Content records, its related Content records, all linked DataResource records,
      * and other records, and for each calls back the {@link ContentEntityVisitor#visitEntity(GenericValue)} method.
@@ -195,7 +195,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
         if (content == null) throw new GeneralException("content not found for contentId '" + contentId + "'");
         return traverseContentAndRelated(contentId, content);
     }
-    
+
     /**
      * SCIPIO: Best-effort iterates the given Content records, its related Content records, all linked DataResource records,
      * and other records, and for each calls back the {@link ContentEntityVisitor#visitEntity(GenericValue)} method.
@@ -207,7 +207,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
     public boolean traverseContentAndRelated(GenericValue content) throws GeneralException {
         return traverseContentAndRelated(content.getString("contentId"), content);
     }
-    
+
     /**
      * SCIPIO: Best-effort iterates the given Content records, its related Content records, all linked DataResource records,
      * and other records, and for each calls back the {@link ContentEntityVisitor#visitEntity(GenericValue)} method.
@@ -225,15 +225,15 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
             return false;
         }
     }
-    
+
     protected void traverseContentAndRelatedImpl(String contentId, GenericValue content) throws GeneralException {
-        
+
         List<GenericValue> contentAssocChild = null;
         if (travConfig.isIncludeChildContentAssoc()) {
             contentAssocChild = EntityQuery.use(delegator).from("ContentAssoc")
                     .where("contentId", contentId).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment())
                     .orderBy("sequenceNum").cache(isUseCache()).queryList();
-            
+
             if (travConfig.isIncludeChildContentRecursive()) {
                 for(GenericValue contentAssoc : contentAssocChild) {
                     String contentIdTo = contentAssoc.getString("contentIdTo");
@@ -246,13 +246,13 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 }
             }
         }
-        
+
         List<GenericValue> contentAssocParent = null;
         if (travConfig.isIncludeParentContentAssoc()) {
             contentAssocParent = EntityQuery.use(delegator).from("ContentAssoc")
                     .where("contentIdTo", contentId).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment())
                     .cache(isUseCache()).queryList(); // NOTE: here, .orderBy("sequenceNum") is meaningless
-            
+
             if (travConfig.isIncludeParentContentRecursive()) {
                 for(GenericValue contentAssoc : contentAssocChild) {
                     String contentIdStart = contentAssoc.getString("contentId");
@@ -265,7 +265,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 }
             }
         }
-        
+
         if (travConfig.isIncludeAttr()) {
             List<GenericValue> contentAttrList = EntityQuery.use(delegator).from("ContentAttribute")
                     .where("contentId", contentId).cache(isUseCache()).queryList();
@@ -273,7 +273,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 visitor.visitEntity(contentAttr);
             }
         }
-        
+
         if (travConfig.isIncludeRole()) {
             List<GenericValue> contentRoleList = EntityQuery.use(delegator).from("ContentRole")
                     .where("contentId", contentId).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).cache(isUseCache()).queryList();
@@ -281,7 +281,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 visitor.visitEntity(contentAttr);
             }
         }
-        
+
         if (travConfig.isIncludeKeyword()) {
             List<GenericValue> contentKeywordList = EntityQuery.use(delegator).from("ContentKeyword")
                     .where("contentId", contentId).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).cache(isUseCache()).queryList();
@@ -289,7 +289,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 visitor.visitEntity(contentkeyword);
             }
         }
-        
+
         String dataResourceId = content.getString("dataResourceId");
         if (dataResourceId != null) {
             GenericValue dataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId), isUseCache());
@@ -304,7 +304,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                         visitor.visitEntity(electronicText);
                     }
                 }
-                
+
                 if (travConfig.isIncludeAttr()) {
                     List<GenericValue> dataResAttrList = EntityQuery.use(delegator).from("DataResourceAttribute")
                             .where("dataResourceId", dataResourceId).cache(travConfig.isUseCache()).queryList();
@@ -312,7 +312,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                         visitor.visitEntity(dataResAttr);
                     }
                 }
-                
+
                 if (travConfig.isIncludeRole()) {
                     List<GenericValue> dataResRoleList = EntityQuery.use(delegator).from("DataResourceRole")
                             .where("dataResourceId", dataResourceId).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).cache(isUseCache()).queryList();
@@ -320,7 +320,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                         visitor.visitEntity(dataResRole);
                     }
                 }
-                
+
                 if (travConfig.isIncludeMediaData()) {
                     GenericValue mediaDataRes = DataResourceWorker.getMediaDataResourceFromDataResource(dataResource, isUseCache());
                     if (mediaDataRes != null) {
@@ -329,17 +329,17 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
                 }
             }
         }
-        
+
         if (travConfig.isIncludeCore()) {
             visitor.visitEntity(content);
         }
-        
+
         if (contentAssocChild != null) {
             for(GenericValue contentAssoc : contentAssocChild) {
                 visitor.visitEntity(contentAssoc);
             }
         }
-        
+
         if (contentAssocParent != null) {
             for(GenericValue contentAssoc : contentAssocParent) {
                 visitor.visitEntity(contentAssoc);
@@ -350,7 +350,7 @@ public class ContentTraverser extends AbstractContentEntityVisitor {
     protected String getLogMsgPrefix() {
         return "Content: ";
     }
-    
+
     protected String getLogErrorPrefix() {
         return "Error traversing Content records: ";
     }

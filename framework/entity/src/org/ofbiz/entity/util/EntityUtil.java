@@ -21,13 +21,14 @@ package org.ofbiz.entity.util;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,9 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -49,10 +52,23 @@ import org.ofbiz.entity.model.ModelField;
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
  */
-public class EntityUtil {
+public final class EntityUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * SCIPIO: A list of entities names which are typically dangerous to update, remove or import.
+     * Includes:
+     * <ul>
+     *   <li>EntityKeyStore - Database-specific entity field encryption keys</li>
+     * </ul>
+     * First added 2018-09-17.
+     */
+    private static final Set<String> unsafeEntitiesForUpdate = UtilMisc.unmodifiableHashSet("EntityKeyStore");
+
+    private EntityUtil() {}
+
+    @SafeVarargs
     public static <V> Map<String, V> makeFields(V... args) {
         Map<String, V> fields = new HashMap<String, V>();
         if (args != null) {
@@ -132,7 +148,12 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that are currently active.
+     * Returns the values that are currently active.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@return List of GenericValue's that are currently active
@@ -142,7 +163,12 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that are currently active.
+     * Returns the values that are currently active.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param allAreSame Specifies whether all values in the List are of the same entity; this can help speed things up a fair amount since we only have to see if the from and thru date fields are valid once
@@ -153,7 +179,12 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -164,7 +195,12 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -175,7 +211,12 @@ public class EntityUtil {
     }
 
     /**
-     *returns the values that are active at the moment.
+     * Returns the values that are active at the moment.
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
      *
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@param moment the moment in question
@@ -188,7 +229,7 @@ public class EntityUtil {
         if (fromDateName == null) fromDateName = "fromDate";
         if (thruDateName == null) thruDateName = "thruDate";
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(datedValues.size()); // SCIPIO: switched to ArrayList
         Iterator<T> iter = datedValues.iterator();
 
         if (allAreSame) {
@@ -198,10 +239,30 @@ public class EntityUtil {
             if (iter.hasNext()) {
                 T datedValue = iter.next();
 
+                /**
+                 * SCIPIO: 2018-09-29: When filterByDate is used on an entity without fromDate/thruDate, we will
+                 * log as an error instead of throwing exception and crashing the system.
+                 * This is because due to entitymodel changes it's extremely common to accidentally add
+                 * a .filterByDate() call, so at least this way this error will not cause significant damage.
+                 * Since in 90% of cases the bugfix is simply to remove the call, this is a fairly safe way to
+                 * address the issue.
+                 */
                 fromDateField = datedValue.getModelEntity().getField(fromDateName);
-                if (fromDateField == null) throw new IllegalArgumentException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                // SCIPIO: EntityFieldNotFoundException
+                //if (fromDateField == null) throw new EntityFieldNotFoundException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                if (fromDateField == null) { // SCIPIO: 2018-09-29
+                    Exception e = new EntityFieldNotFoundException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                    return new ArrayList<>(datedValues);
+                }
                 thruDateField = datedValue.getModelEntity().getField(thruDateName);
-                if (thruDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                // SCIPIO: EntityFieldNotFoundException
+                //if (thruDateField == null) throw new EntityFieldNotFoundException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                if (thruDateField == null) { // SCIPIO: 2018-09-29
+                    Exception e = new EntityFieldNotFoundException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                    return new ArrayList<>(datedValues);
+                }
 
                 java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
                 java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
@@ -223,12 +284,17 @@ public class EntityUtil {
             // if not all values are known to be of the same entity, must check each one...
             while (iter.hasNext()) {
                 T datedValue = iter.next();
-                java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
-                java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
+                try {
+                    java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
+                    java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
 
-                if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment) || fromDate.equals(moment))) {
+                    if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment) || fromDate.equals(moment))) {
+                        result.add(datedValue);
+                    }// else not active at moment
+                } catch(EntityFieldNotFoundException e) { // SCIPIO: 2018-09-29
+                    Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
                     result.add(datedValue);
-                }// else not active at moment
+                }
             }
         }
 
@@ -263,10 +329,10 @@ public class EntityUtil {
 
         List<T> result = null;
         if (UtilValidate.isEmpty(fields)) {
-            result = new LinkedList<T>();
-            result.addAll(values);
+            result = new ArrayList<>(values); // SCIPIO: switched to ArrayList
+            //result.addAll(values);
         } else {
-            result = new LinkedList<T>();
+            result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
             for (T value: values) {
                 if (value.matchesFields(fields)) {
                     result.add(value);
@@ -290,7 +356,7 @@ public class EntityUtil {
             return values;
         }
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             boolean include = true;
 
@@ -313,12 +379,11 @@ public class EntityUtil {
      *@return List of GenericValue's that match the values in fields
      */
     public static <T extends GenericEntity> List<T> filterByOr(List<T> values, List<? extends EntityCondition> exprs) {
-        if (values == null) return null;
-        if (UtilValidate.isEmpty(exprs)) {
+        if (values == null || UtilValidate.isEmpty(exprs)) {
             return values;
         }
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             boolean include = false;
 
@@ -334,6 +399,39 @@ public class EntityUtil {
     }
 
     /**
+     *returns the values in the order specified after with localized value
+     *
+     *@param values List of GenericValues
+     *@param orderBy The fields of the named entity to order the query by;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@param locale Locale use to retrieve localized value
+     *@return List of GenericValue's in the proper order
+     */
+    public static <T extends GenericEntity> List<T> localizedOrderBy(Collection<T> values, List<String> orderBy, Locale locale) {
+        if (values == null) return null;
+        if (values.isEmpty()) return new ArrayList<T>();
+        //force check entity label before order by
+        List<T> localizedValues = new ArrayList<T>();
+        for (T value : values) {
+            @SuppressWarnings("unchecked")
+            T newValue = (T) value.clone();
+            for (String orderByField : orderBy) {
+                if (orderByField.endsWith(" DESC")) {
+                    orderByField= orderByField.substring(0, orderByField.length() - 5);
+                } else if (orderByField.endsWith(" ASC")) {
+                    orderByField= orderByField.substring(0, orderByField.length() - 4);
+                } else if (orderByField.startsWith("-")
+                        || orderByField.startsWith("+")) {
+                    orderByField= orderByField.substring(1, orderByField.length());
+                }
+                newValue.put(orderByField, value.get(orderByField, locale));
+            }
+            localizedValues.add(newValue);
+        }
+        return orderBy(localizedValues, orderBy);
+    }
+
+    /**
      *returns the values in the order specified
      *
      *@param values List of GenericValues
@@ -343,14 +441,14 @@ public class EntityUtil {
      */
     public static <T extends GenericEntity> List<T> orderBy(Collection<T> values, List<String> orderBy) {
         if (values == null) return null;
-        if (values.size() == 0) return new LinkedList<T>();
+        if (values.isEmpty()) return new ArrayList<T>();
         if (UtilValidate.isEmpty(orderBy)) {
-            List<T> newList = new LinkedList<T>();
+            List<T> newList = new ArrayList<T>();
             newList.addAll(values);
             return newList;
         }
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<T>();
         result.addAll(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByList(orderBy));
@@ -362,37 +460,14 @@ public class EntityUtil {
      */
     @Deprecated
     public static List<GenericValue> getRelated(String relationName, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("deprecated EntityUtil method, please replace as suggested in API Java Doc: getRelated(String, List)", module); // SCIPIO: fixed message (removed stack trace, not that useful for us)
         return getRelated(relationName, null, values, false);
-    }
-
-    /**
-     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
-     */
-    @Deprecated
-    public static List<GenericValue> getRelatedCache(String relationName, List<GenericValue> values) throws GenericEntityException {
-        return getRelated(relationName, null, values, true);
-    }
-
-    /**
-     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
-     */
-    @Deprecated
-    public static List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
-        return getRelated(relationName, fields, values, false);
-    }
-
-    /**
-     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
-     */
-    @Deprecated
-    public static List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
-        return getRelated(relationName, fields, values, true);
     }
 
     public static List<GenericValue> getRelated(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values, boolean useCache) throws GenericEntityException {
         if (values == null) return null;
 
-        List<GenericValue> result = new LinkedList<GenericValue>();
+        List<GenericValue> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (GenericValue value: values) {
             result.addAll(value.getRelated(relationName, fields, null, useCache));
         }
@@ -402,7 +477,7 @@ public class EntityUtil {
     public static <T extends GenericEntity> List<T> filterByCondition(List<T> values, EntityCondition condition) {
         if (values == null) return null;
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             if (condition.entityMatches(value)) {
                 result.add(value);
@@ -414,7 +489,7 @@ public class EntityUtil {
     public static <T extends GenericEntity> List<T> filterOutByCondition(List<T> values, EntityCondition condition) {
         if (values == null) return null;
 
-        List<T> result = new LinkedList<T>();
+        List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             if (!condition.entityMatches(value)) {
                 result.add(value);
@@ -490,7 +565,7 @@ public class EntityUtil {
         if (genericValueList == null || fieldName == null) {
             return null;
         }
-        List<T> fieldList = new LinkedList<T>();
+        List<T> fieldList = new ArrayList<>(genericValueList.size()); // SCIPIO: switched to ArrayList
         Set<T> distinctSet = null;
         if (distinct) {
             distinctSet = new HashSet<T>();
@@ -517,7 +592,7 @@ public class EntityUtil {
         if (genericValueEli == null || fieldName == null) {
             return null;
         }
-        List<T> fieldList = new LinkedList<T>();
+        List<T> fieldList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         Set<T> distinctSet = null;
         if (distinct) {
             distinctSet = new HashSet<T>();
@@ -549,34 +624,129 @@ public class EntityUtil {
     public static boolean isMultiTenantEnabled() {
         return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general", "multitenant"));
     }
-    
-    
+
+    /**
+     * @param viewIndex
+     * @param viewSize
+     * @return the calculated start index based on viewIndex and viewSize
+     * @see EntityUtil#getPagedList
+     */
+    public static int getStartIndexFromViewIndex(int viewIndex, int viewSize) {
+        if (viewIndex == 0) {
+            return 1;
+        }
+        return (viewIndex * viewSize) + 1;
+    }
+
+    /**
+     * @param iter EntityListIterator
+     * @param viewIndex
+     * @param viewSize
+     * @return PagedList object with a subset of data items from EntityListIterator based on viewIndex and viewSize
+     * @throws GenericEntityException
+     * @see org.ofbiz.entity.util.EntityListIterator
+     */
+    public static PagedList<GenericValue> getPagedList(EntityListIterator iter, int viewIndex, int viewSize) throws GenericEntityException {
+        int startIndex = getStartIndexFromViewIndex(viewIndex, viewSize);
+        int endIndex = (startIndex + viewSize) - 1;
+
+        List<GenericValue> dataItems = iter.getPartialList(startIndex, viewSize);
+        if (dataItems.size() < viewIndex) {
+            endIndex = (endIndex - viewSize) + dataItems.size();
+        }
+
+        int size = iter.getResultsSizeAfterPartialList();
+        if (endIndex > size) {
+            endIndex = size;
+        }
+
+        return new PagedList<GenericValue>(startIndex, endIndex, size, viewIndex, viewSize, dataItems);
+    }
+
     /**
      * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
-     * @param value
-     * @return
-     * */
+     * @deprecated use {@link org.ofbiz.base.util.UtilMisc#booleanValueIndicator(Object)} instead.
+     */
+    @Deprecated
     public static Boolean toBoolean(String value) {
         if ("Y".equalsIgnoreCase(value)) {
             return true;
-        }
-        else if ("N".equalsIgnoreCase(value)) {
+        } else if ("N".equalsIgnoreCase(value)) {
             return false;
-        }
-        else {
+        } else {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Type conversion of Strings that resemble "Y" or "N" values to Boolean
-     * 
-     * @param value
-     * @param defaultVal Default value
-     * @return
+     * @deprecated use {@link org.ofbiz.base.util.UtilMisc#booleanValueIndicator(Object, boolean)} instead.
      */
+    @Deprecated
     public static boolean toBoolean(String indicator, boolean defaultVal) {
         Boolean result = toBoolean(indicator);
         return result != null ? result : defaultVal;
+    }
+
+    /**
+     * SCIPIO: A list of entities names which are typically dangerous to update, remove or import.
+     * Includes:
+     * <ul>
+     *   <li>EntityKeyStore - Database-specific entity field encryption keys</li>
+     * </ul>
+     * First added 2018-09-17.
+     */
+    public static Set<String> getUnsafeEntitiesForUpdate(Delegator delegator) {
+        return unsafeEntitiesForUpdate;
+    }
+
+    /*
+     * SCIPIO: COMPLETELY DEPRECATED METHODS
+     * These were removed all the way back in ofbiz 15 and should never be used anymore.
+     * They are moved down here in Scipio to avoid maintenance issues.
+     */
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedCache(String relationName, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedCache(String, List)", module);
+        return getRelated(relationName, null, values, true);
+    }
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedByAnd(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAnd(String, Map, List)", module);
+        return getRelated(relationName, fields, values, false);
+    }
+
+    /**
+     * @deprecated use {@link #getRelated(String, Map, List, boolean)}
+     */
+    @Deprecated
+    public static List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
+        Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache(String, Map, List)", module);
+        return getRelated(relationName, fields, values, true);
+    }
+    
+    /**
+     * SCIPIO: An utility method used to filter a list of mixed entities by entityName
+     * 
+     * @param originalList
+     * @param entityName
+     * @return
+     */
+    public static List<GenericValue> filterByEntityName(List<GenericValue> originalList, String entityName) {
+        List<GenericValue> filteredList = UtilMisc.newList();
+        for (GenericValue value : originalList ) {
+            if (value.getEntityName().equals(entityName)) {
+                filteredList.add(value);
+            }
+        }
+        return filteredList;
     }
 }

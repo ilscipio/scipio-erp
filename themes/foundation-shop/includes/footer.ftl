@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "common.ftl">
 
@@ -36,13 +23,13 @@ under the License.
       <ul class="other-links">
         <#-- language select --> 
           <li>
-              <a href="<@ofbizUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@pageUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@pageUrl>">
                 ${uiLabelMap.CommonChooseLanguage}
               </a>
           </li>
-        <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
-        <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
-        <li><a href="https://www.scipio-erp.com/products/faq">FAQ's</a></li>
+        <li><a href="<@pageUrl>showAllPromotions</@pageUrl>">${uiLabelMap.ProductPromotions}</a></li>
+        <li><a href="<@pageUrl>license</@pageUrl>">License</a></li>  
+        <li><a href="https://www.scipioerp.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
     <@cell columns=3>      
@@ -73,7 +60,7 @@ under the License.
         <@cell columns=12>
          <small>
          ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.scipioerp.com" target="_blank">SCIPIO ERP</a>.
-         View <a href="<@ofbizUrl>license</@ofbizUrl>">LICENSE</a>.
+         View <a href="<@pageUrl>license</@pageUrl>">LICENSE</a>.
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>
         </@cell>
@@ -89,7 +76,7 @@ under the License.
         <#list layoutSettings.VT_FTPR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -100,7 +87,7 @@ under the License.
         <#list layoutSettings.javaScriptsFooter as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -113,7 +100,7 @@ under the License.
         <#list layoutSettings.VT_FTR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -126,7 +113,7 @@ under the License.
         <#list layoutSettings.VT_BTM_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>

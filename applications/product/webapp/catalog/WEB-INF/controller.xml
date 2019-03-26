@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -53,6 +40,7 @@ under the License.
         <response name="success" type="request" value="main"/>
     </request-map>
     <request-map uri="chain">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
         <response name="success" type="request" value="/view"/>
         <response name="error" type="view" value="error"/>
@@ -246,6 +234,7 @@ under the License.
     </request-map>
 
     <!-- ================ Category ProdCatalog Requests ================= -->
+    <!-- SCIPIO: EditCategoryProdCatalogs screen was removed
     <request-map uri="EditCategoryProdCatalogs">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryProdCatalogs"/>
@@ -268,8 +257,10 @@ under the License.
         <response name="success" type="view" value="EditCategoryProdCatalogs"/>
         <response name="error" type="view" value="EditCategoryProdCatalogs"/>
     </request-map>
+    -->
 
     <!-- ================ Category FeatureCat Requests ================= -->
+    <!-- SCIPIO: screen EditCategoryFeatureCats removed
     <request-map uri="EditCategoryFeatureCats">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
@@ -316,12 +307,14 @@ under the License.
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
         <response name="error" type="view" value="EditCategoryFeatureCats"/>
     </request-map>
+    -->
     <request-map uri="CreateProductFeature">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateProductFeature"/>
     </request-map>
 
     <!-- ================ Category Roles Requests ================= -->
+    <!-- SCIPIO: EditCategoryParties screen was removed
     <request-map uri="EditCategoryParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryParties"/>
@@ -344,8 +337,10 @@ under the License.
         <response name="success" type="view" value="EditCategoryParties"/>
         <response name="error" type="view" value="EditCategoryParties"/>
     </request-map>
+    -->
 
     <!-- ================ Product Category Attribute Requests ================= -->
+    <!-- SCIPIO: EditCategoryAttributes screen was removed
     <request-map uri="EditCategoryAttributes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryAttributes"/>
@@ -368,8 +363,10 @@ under the License.
         <response name="success" type="view" value="EditCategoryAttributes"/>
         <response name="error" type="view" value="EditCategoryAttributes"/>
     </request-map>
+    -->
 
     <!-- ================ Product Category Link Requests ================= -->
+    <!-- SCIPIO: EditProductCategoryLinks screen was removed
     <request-map uri="EditProductCategoryLinks">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductCategoryLinks"/>
@@ -392,6 +389,7 @@ under the License.
         <response name="success" type="view" value="EditProductCategoryLinks"/>
         <response name="error" type="view" value="EditProductCategoryLinks"/>
     </request-map>
+    -->
 
     <!-- ================ Product Requests ================= -->
      <request-map uri="FindProduct">
@@ -1368,6 +1366,13 @@ under the License.
         <response name="success" type="view" value="EditProductFeatures"/>
         <response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
+    <!-- SCIPIO (2019-08-02): Returns the feature codes available for a given ProductFeatureType in json format  -->
+    <request-map uri="FindProductFeatureTypesAndCodes">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="findProductFeatureTypesAndCodes"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="createProductFeatureApplAttr">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFeatureApplAttr"/>
@@ -2081,6 +2086,12 @@ under the License.
         <response name="success" type="view" value="EditProductStoreWebSites"/>
         <response name="error" type="view" value="EditProductStoreWebSites"/>
     </request-map>
+    <request-map uri="setProductStoreDefaultWebSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setProductStoreDefaultWebSite"/>
+        <response name="success" type="view" value="EditProductStoreWebSites"/>
+        <response name="error" type="view" value="EditProductStoreWebSites"/>
+    </request-map>
 
     <!-- ================ ProductStore Role Requests ================= -->
     <request-map uri="FindProductStoreRoles">
@@ -2244,6 +2255,17 @@ under the License.
     <request-map uri="deleteCarrierShipmentMethod">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteCarrierShipmentMethod"/>
+        <response name="success" type="view" value="ListCarrierShipmentMethods"/>
+        <response name="error" type="view" value="ListCarrierShipmentMethods"/>
+    </request-map>
+    <request-map uri="addCarrier">
+        <security https="true" auth="true"/>                
+        <response name="success" type="view" value="NewCarrier"/>
+        <response name="error" type="view" value="ListCarrierShipmentMethods"/>
+    </request-map>
+    <request-map uri="createCarrier">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCarrier"/>        
         <response name="success" type="view" value="ListCarrierShipmentMethods"/>
         <response name="error" type="view" value="ListCarrierShipmentMethods"/>
     </request-map>
@@ -2775,11 +2797,6 @@ under the License.
         <response name="success" type="view" value="ImageFrames"/>
         <response name="error" type="view" value="ImageFrames"/>
     </request-map>
-    <request-map uri="ImageWatermarking">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ImageWatermarking"/>
-        <response name="error" type="view" value="ImageWatermarking"/>
-    </request-map>
     <request-map uri="ImageCropping">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ImageCropping"/>
@@ -2862,18 +2879,6 @@ under the License.
         <response name="success" type="view" value="ListImageManage"/>
         <response name="error" type="view" value="ListImageManage"/>
     </request-map>
-    <request-map uri="createWatermarkImage">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.imagemanagement.WatermarkImage" invoke="createWatermarkImage"/>
-        <response name="success" type="view" value="ListImageManage"/>
-        <response name="error" type="view" value="ImageWatermarking"/>
-    </request-map>
-    <request-map uri="previewWatermarkImage">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.imagemanagement.WatermarkImage" invoke="previewWatermarkImage"/>
-        <response name="success" type="view" value="viewPreviewImage"/>
-        <response name="error" type="view" value="viewPreviewImage"/>
-    </request-map>
     <request-map uri="previewFrameImage">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.product.imagemanagement.FrameImage" invoke="previewFrameImage"/>
@@ -2885,7 +2890,7 @@ under the License.
         </response>
     </request-map>
     <request-map uri="viewImage">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!- - SCIPIO: 2018-07-09: set https and auth true - ->
         <response name="success" type="view" value="viewImage"/>
         <response name="error" type="view" value="viewImage"/>
     </request-map>
@@ -2936,7 +2941,6 @@ under the License.
         <security https="true" auth="true"/>
         <event type="groovy" path="component://product/webapp/catalog/WEB-INF/actions/imagemanagement/checkAction.groovy"/>
         <response name="frame" type="request" value="ImageFrames"/>
-        <response name="watermark" type="request" value="ImageWatermarking"/>
         <response name="crop" type="request" value="ImageCropping"/>
         <response name="rotate" type="request" value="ImageRotating"/>
         <response name="noAction" type="request-redirect" value="ListImageManage"/>
@@ -2972,12 +2976,6 @@ under the License.
         <response name="success" type="view" value="ListPeopleRejected"/>
         <response name="error" type="view" value="ListPeopleRejected"/>
     </request-map>
-    <request-map uri="setPreviewWaterMark">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.imagemanagement.WatermarkImage" invoke="setPreviewWaterMark"/>
-        <response name="success" type="view" value="viewPreviewImage"/>
-        <response name="error" type="view" value="viewPreviewImage"/>
-    </request-map>
     <request-map uri="chooseFrameImage">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.product.imagemanagement.FrameImage" invoke="chooseFrameImage"/>
@@ -2995,12 +2993,6 @@ under the License.
     <request-map uri="LookupImageFrame">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupImageFrame"/>
-    </request-map>
-    <request-map uri="deletePreviewWatermarkImage">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.imagemanagement.WatermarkImage" invoke="deletePreviewWatermarkImage"/>
-        <response name="success" type="view" value="ListImageManage"/>
-        <response name="error" type="view" value="ImageWatermarking"/>
     </request-map>
     <request-map uri="ImageResize">
         <security https="true" auth="true"/>
@@ -3198,14 +3190,14 @@ under the License.
     <view-map name="FindCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#FindCategory"/>
     <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/>
     <view-map name="EditCategoryContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContent"/>
-    <view-map name="EditCategoryAttributes" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryAttributes"/>
+    <!--<view-map name="EditCategoryAttributes" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryAttributes"/> - SCIPIO: removed -->
     <view-map name="EditCategoryContentContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContentContent"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryRollup"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProducts"/>
-    <view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/>
-    <view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/>
-    <view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/>
-    <view-map name="EditProductCategoryLinks" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditProductCategoryLinks"/>
+    <!--<view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/> - SCIPIO: removed -->
+    <!--<view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/> - SCIPIO: removed -->
+    <!--<view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/> - SCIPIO: removed -->
+    <!--<view-map name="EditProductCategoryLinks" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditProductCategoryLinks"/> - SCIPIO: removed -->
     <view-map name="EditCategorySection" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategorySection"/>
 
     <view-map name="createProductInCategoryStart" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryStart"/>
@@ -3335,6 +3327,7 @@ under the License.
     <view-map name="ListQuantityBreaks" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListQuantityBreaks"/>
     <view-map name="ListShipmentMethodTypes" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListShipmentMethodTypes"/>
     <view-map name="ListCarrierShipmentMethods" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListCarrierShipmentMethods"/>
+    <view-map name="NewCarrier" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#NewCarrier"/>
 
     <!-- SCIPIO: Remove    
     <view-map name="EditProductTag" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductTag"/> -->
@@ -3370,7 +3363,6 @@ under the License.
     <view-map name="ImageApprove" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageApprove" type="screen"/>
     <view-map name="ImageRejected" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageRejected" type="screen"/>
     <view-map name="ImageFrames" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageFrames" type="screen"/>
-    <view-map name="ImageWatermarking" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageWatermarking" type="screen"/>
     <view-map name="ImageCropping" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageCropping" type="screen"/>
     <view-map name="ImageRotating" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageRotating" type="screen"/>
     <view-map name="ImageShare" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageShare" type="screen"/>

@@ -27,7 +27,7 @@ public class AttribsExpression implements Serializable {
         super();
         this.attribsExpr = attribsExpr;
     }
-    
+
     /**
      * SCIPIO: Builds an attrib expression for internal storage.
      */
@@ -51,11 +51,11 @@ public class AttribsExpression implements Serializable {
         }
         return new AttribsExpression(attribsExpr);
     }
-    
+
     static AttribsExpression makeAttribsExpr(String attribsExprStr) {
         return makeAttribsExpr(attribsExprStr, null);
     }
-    
+
     static AttribsExpression makeAttribsExpr() {
         return makeAttribsExpr("", null);
     }
@@ -72,18 +72,18 @@ public class AttribsExpression implements Serializable {
             return new AttribsExpression(attribsExpr);
         }
     }
-    
+
     /**
      * Compiles an attrib expression for usage in templates or other.
      */
     public String compile(Map<String, Object> context) {
         return "{" + attribsExpr.expandString(context) + "}";
     }
-    
+
     protected static String compileAttribsExpr(FlexibleStringExpander attribsExpr, Map<String, Object> context) {
         return "{" + attribsExpr.expandString(context) + "}";
     }
-    
+
     /**
      * Strips starting "{" and trailing "}" from a JSON-like map expression and trims.
      */
@@ -102,7 +102,7 @@ public class AttribsExpression implements Serializable {
             return "";
         }
     }
-    
+
     /**
      * Combines two map expressions into one map expression.
      */
@@ -120,5 +120,5 @@ public class AttribsExpression implements Serializable {
         }
     }
 
-    
+
 }

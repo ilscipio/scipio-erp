@@ -6,11 +6,11 @@
   <#-- NOTE: the "disabled" logic is overridden and determined by SetupWorker -->
   <#local stepState = (setupStepStates[name])!{}>
   <@step name=name 
-    icon=("fa "+rawString((setupStepIconMap[name])!(setupStepIconMap["default"])!))
+    icon=("fa "+raw((setupStepIconMap[name])!(setupStepIconMap["default"])!))
     href=makeSetupStepUrl(name, stepState)
     completed=((stepState.completed)!false) 
     disabled=((setupStepDisabledMap[name])!true)
-    >${uiLabelMap[rawString((setupStepTitlePropMap[name])!"")]}</@step>
+    >${uiLabelMap[raw((setupStepTitlePropMap[name])!"")]}</@step>
 </#macro>
 
 <@section>

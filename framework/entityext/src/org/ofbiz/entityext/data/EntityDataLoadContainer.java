@@ -35,7 +35,6 @@ import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -325,10 +324,12 @@ public class EntityDataLoadContainer implements Container {
             }
         }
         // load specify components
-        List<String> loadComponents = new LinkedList<String>();
+        List<String> loadComponents; // SCIPIO: 2018-10-14: now initialized below
+        List<String> componentList = StringUtil.split(this.component, ","); // SCIPIO: 2018-10-14: support multiple components, comma-separated
         if (UtilValidate.isNotEmpty(delegator.getDelegatorTenantId()) && EntityUtil.isMultiTenantEnabled()) {
+            loadComponents = new ArrayList<>(); // SCIPIO
             try {
-                if (UtilValidate.isEmpty(this.component)) {
+                if (UtilValidate.isEmpty(componentList)) { // SCIPIO: 2018-10-14: switched test
                     for (ComponentConfig config : allComponents) {
                         loadComponents.add(config.getComponentName());
                     }
@@ -338,16 +339,22 @@ public class EntityDataLoadContainer implements Container {
                     }
                     Debug.logInfo("Loaded components by tenantId : " + delegator.getDelegatorTenantId() + ", " + tenantComponents.size() + " components", module);
                 } else {
-                    List<GenericValue> tenantComponents = EntityQuery.use(baseDelegator).from("TenantComponent").where("tenantId", delegator.getDelegatorTenantId(), "componentName", this.component).orderBy("sequenceNum").queryList();
-                    for (GenericValue tenantComponent : tenantComponents) {
-                        loadComponents.add(tenantComponent.getString("componentName"));
+                    // SCIPIO: 2018-10-14: support multiple components
+                    for(String component : componentList) {
+                        List<GenericValue> tenantComponents = EntityQuery.use(baseDelegator).from("TenantComponent").where("tenantId", delegator.getDelegatorTenantId(), "componentName", component).orderBy("sequenceNum").queryList();
+                        for (GenericValue tenantComponent : tenantComponents) {
+                            loadComponents.add(tenantComponent.getString("componentName"));
+                        }
+                        Debug.logInfo("Loaded tenantId : " + delegator.getDelegatorTenantId() + " and component : " + this.component, module);
                     }
-                    Debug.logInfo("Loaded tenantId : " + delegator.getDelegatorTenantId() + " and component : " + this.component, module);
                 }
                 Debug.logInfo("Loaded : " + loadComponents.size() + " components", module);
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
             }
+        } else {
+            // SCIPIO: 2018-10-14: support multiple components
+            loadComponents = componentList;
         }
         // check for drop index/fks
         if (dropConstraints) {
@@ -548,7 +555,7 @@ public class EntityDataLoadContainer implements Container {
                 }
             }
 
-            Debug.logImportant("Creating foreign key indcies...", module);
+            Debug.logImportant("Creating foreign key indices...", module);
             for (String entityName : modelEntityNames) {
                 ModelEntity modelEntity = modelEntities.get(entityName);
                 if (modelEntity != null) {

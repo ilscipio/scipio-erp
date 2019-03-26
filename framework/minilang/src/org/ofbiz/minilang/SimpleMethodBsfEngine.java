@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.minilang;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.MethodContext;
  * <P>
  * This is the OFBiz MiniLang SimpleMethod adapter for IBM's Bean Scripting Famework. It is an implementation of the BSFEngine class, allowing BSF aware applications to use SimpleMethod as a scripting
  * language.
- * 
+ *
  * <P>
  * There should only be ONE simple-method in the XML file and it will be run as an event.
  */
@@ -47,9 +47,8 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
     /**
      * This is an implementation of the apply() method. It executes the funcBody text in an "anonymous" method call with arguments.
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object apply(String source, int lineNo, int columnNo, Object funcBody, Vector namesVec, Vector argsVec) throws BSFException {
+    public Object apply(String source, int lineNo, int columnNo, Object funcBody, @SuppressWarnings("rawtypes") Vector namesVec, @SuppressWarnings("rawtypes") Vector argsVec) throws BSFException {
         // if (namesVec.size() != argsVec.size()) throw new BSFException("number of params/names mismatch");
         // if (!(funcBody instanceof String)) throw new BSFException("apply: function body must be a string");
         throw new BSFException("The apply method is not yet supported for simple-methods");
@@ -57,7 +56,7 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
 
     /**
      * Invoke method name on the specified scripted object. The object may be null to indicate the global namespace of the interpreter.
-     * 
+     *
      * @param object
      *            may be null for the global namespace.
      */
@@ -100,9 +99,8 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         eval(source, lineNo, columnNo, script);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
+    public void initialize(BSFManager mgr, String lang, @SuppressWarnings("rawtypes") Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
         // declare the bsf manager for callbacks, etc.
         context.put("bsf", mgr);
@@ -114,9 +112,9 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
 
     /*
      * public void compileApply (String source, int lineNo, int columnNo, Object funcBody, Vector paramNames, Vector arguments, CodeBuffer cb) throws BSFException;
-     * 
+     *
      * public void compileExpr (String source, int lineNo, int columnNo, Object expr, CodeBuffer cb) throws BSFException;
-     * 
+     *
      * public void compileScript (String source, int lineNo, int columnNo, Object script, CodeBuffer cb) throws BSFException;
      */
 

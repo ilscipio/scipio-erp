@@ -47,22 +47,22 @@ import org.ofbiz.service.ServiceUtil;
 public abstract class WebAppServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final int VISIT_STAT_INTERVAL = 1000;
-    
+
     protected WebAppServices() {
     }
 
     public static Map<String, Object> expireOldVisits(DispatchContext dctx, Map<String, ?> context) {
         OldVisitHandler handler = new OldVisitHandler(dctx, context, "expireOldVisits", "expire") {
             private Map<String, Object> fieldsToSet = UtilMisc.toMap("thruDate", now);
-            
+
             @Override
             protected EntityCondition getVisitCond() {
                 Timestamp olderThan = getVisitCutoffDate("serverstats", "stats.expire.visit.daysOld");
 
                 Debug.logInfo(logPrefix+"Expiring all Visits older than: " + olderThan, module);
-                
+
                 return EntityCondition.makeCondition(
                         EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
                         EntityOperator.AND,
@@ -80,7 +80,7 @@ public abstract class WebAppServices {
         };
         return handler.execAsService();
     }
-    
+
     public static Map<String, Object> purgeOldVisits(DispatchContext dctx, Map<String, ?> context) {
         OldVisitHandler handler = new OldVisitHandler(dctx, context, "purgeOldVisits", "purge") {
             @Override
@@ -99,13 +99,13 @@ public abstract class WebAppServices {
             protected int updateAllVisits(EntityCondition cond) throws Exception {
                 return delegator.removeByCondition("Visit", cond);
             }
-            
+
         };
         return handler.execAsService();
     }
-    
+
     private static abstract class OldVisitHandler {
-        
+
         protected final DispatchContext dctx;
         protected final Map<String, ?> context;
         protected final Delegator delegator;
@@ -113,7 +113,7 @@ public abstract class WebAppServices {
         protected final String serviceName;
         protected final String logPrefix;
         protected final String actionWord;
-        
+
         public OldVisitHandler(DispatchContext dctx, Map<String, ?> context, String serviceName, String actionWord) {
             super();
             this.dctx = dctx;
@@ -132,7 +132,7 @@ public abstract class WebAppServices {
                 return execPerRow();
             }
         }
-        
+
         public Map<String, Object> execSingleOp() {
             boolean dryRun = Boolean.TRUE.equals(context.get("dryRun"));
 
@@ -143,7 +143,7 @@ public abstract class WebAppServices {
             // SCIPIO: FIXME?: originally transaction handling was based on purgeOldJobs
             // but discovered some flaws, so forced to use a less efficient EntityListIterator usage
             // with constant transaction suspend/being/commit/resume...
-            
+
             // always suspend the current transaction; use the one internally
             Transaction parent = null;
             try {
@@ -201,11 +201,11 @@ public abstract class WebAppServices {
                 return ServiceUtil.returnSuccess(msg);
             }
         }
-        
-        
+
+
         public Map<String, Object> execPerRow() {
             boolean dryRun = Boolean.TRUE.equals(context.get("dryRun"));
-            
+
             int success = 0;
             int error = 0;
             int visited = 0;
@@ -215,7 +215,7 @@ public abstract class WebAppServices {
             // SCIPIO: FIXME?: originally transaction handling was based on purgeOldJobs
             // but discovered some flaws, so forced to use a less efficient EntityListIterator usage
             // with constant transaction suspend/being/commit/resume...
-            
+
             // always suspend the current transaction; use the one internally
             Transaction parent = null;
             try {
@@ -271,7 +271,7 @@ public abstract class WebAppServices {
                                     Debug.logError(e, logPrefix+"Error committing " + actionWord + " for Visit '" + visit.get("visitId") + ": " + e.getMessage(), module);
                                     isSuccess = false;
                                 }
-                                
+
                                 if (parentTx1 != null) {
                                     try {
                                         TransactionUtil.resume(parentTx1);
@@ -282,13 +282,13 @@ public abstract class WebAppServices {
                                     }
                                 }
                             }
-                            
+
                             if (isSuccess) success++;
                             else error++;
                             visited++;
-                            
+
                             if ((visited % VISIT_STAT_INTERVAL) == 0) {
-                                Debug.logInfo(logPrefix+"Processed " + visited + "/" + total 
+                                Debug.logInfo(logPrefix+"Processed " + visited + "/" + total
                                         + " visits (success: " + success + ", error: " + error + ")", module);
                             }
                         }
@@ -336,13 +336,13 @@ public abstract class WebAppServices {
                 return ServiceUtil.returnSuccess(msg);
             }
         }
-        
+
         protected abstract EntityCondition getVisitCond();
-        
+
         protected abstract void updateVisit(GenericValue visit) throws Exception;
-        
+
         protected abstract int updateAllVisits(EntityCondition cond) throws Exception;
-        
+
         protected final Timestamp getVisitCutoffDate(String propResource, String propName) {
             Timestamp olderThan = (Timestamp) context.get("olderThan");
             if (olderThan == null) {

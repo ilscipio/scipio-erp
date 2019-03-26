@@ -93,7 +93,7 @@ public class LoginWorker {
     public static final String X509_CERT_ATTR = "SSLx509Cert";
 
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
-    public static Map<String, GenericValue> externalLoginKeys = new ConcurrentHashMap<String, GenericValue>();
+    public static final Map<String, GenericValue> externalLoginKeys = new ConcurrentHashMap<String, GenericValue>();
 
     public static StringWrapper makeLoginUrl(PageContext pageContext) {
         return makeLoginUrl(pageContext, "checkLogin");
@@ -141,7 +141,9 @@ public class LoginWorker {
         if (externalKey != null) return externalKey;
 
         HttpSession session = request.getSession();
-        synchronized (session) {
+        // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+        //synchronized (session) {
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
             // if the session has a previous key in place, remove it from the master list
             String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
 
@@ -176,7 +178,9 @@ public class LoginWorker {
 
     public static void setLoggedOut(String userLoginId, Delegator delegator) {
         if (UtilValidate.isEmpty(userLoginId)) {
-            Debug.logWarning("Called setLogged out with empty userLoginId", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning("Called setLogged out with empty userLoginId", module);
+            }
         }
 
         Transaction parentTx = null;
@@ -219,7 +223,9 @@ public class LoginWorker {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    Debug.logVerbose("Resumed the parent transaction.", module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", module);
+                    }
                 } catch (GenericTransactionException ite) {
                     Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
                 }
@@ -248,7 +254,9 @@ public class LoginWorker {
                     request.setAttribute("_ERROR_MESSAGE_LIST", errorMessageList);
                 }
                 errorMessageList.add("User does not have permission or is flagged as logged out");
-                Debug.logInfo("User does not have permission or is flagged as logged out", module);
+                if (Debug.infoOn()) {
+                    Debug.logInfo("User does not have permission or is flagged as logged out", module);
+                }
                 doBasicLogout(userLogin, request, response);
                 userLogin = null;
             }
@@ -341,7 +349,7 @@ public class LoginWorker {
                 if (!ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig) || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
                     // keep the previous request name in the session
                     session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
-    
+
                     // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
                     // keep 2 maps: one for URL parameters and one for form parameters
                     Map<String, Object> urlParams = UtilHttp.getUrlOnlyParameterMap(request);
@@ -380,13 +388,18 @@ public class LoginWorker {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        
+
+        // Prevent session fixation by making Tomcat generate a new jsessionId (ultimately put in cookie).
+        if (!session.isNew()) {  // Only do when really signing in.
+            request.changeSessionId();
+        }
+
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        
+
         if(UtilValidate.isNotEmpty(userLogin)){
             return "loggedIn";
         }
-        
+
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
 
@@ -436,37 +449,6 @@ public class LoginWorker {
             }
 
             if (delegatorNameHashIndex == -1 || (currentDelegatorTenantId != null && !tenantId.equals(currentDelegatorTenantId))) {
-                /* don't require this, allow a user to authenticate inside the tenant as long as the userLoginId and
-                 * password match what is in that tenant's database; instead just set things up below
-                try {
-                    List<GenericValue> tenantUserLoginList = delegator.findList("TenantUserLogin", EntityCondition.makeCondition(EntityOperator.AND, "tenantId", tenantId, "userLoginId", username), null, null, null, false);
-                    if (tenantUserLoginList != null && tenantUserLoginList.size() > 0) {
-                        ServletContext servletContext = session.getServletContext();
-
-                        // if so make that tenant active, setup a new delegator and a new dispatcher
-                        String delegatorName = delegator.getDelegatorName() + "#" + tenantId;
-
-                        // after this line the delegator is replaced with the new per-tenant delegator
-                        delegator = DelegatorFactory.getDelegator(delegatorName);
-                        dispatcher = ContextFilter.makeWebappDispatcher(servletContext, delegator);
-
-                        // NOTE: these will be local for now and set in the request and session later, after we've verified that the user
-                        setupNewDelegatorEtc = true;
-                    } else {
-                        // not associated with this tenant, can't login
-                        String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.unable_to_login_tenant", UtilHttp.getLocale(request));
-                        request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                        return "error";
-                    }
-                } catch (GenericEntityException e) {
-                    String errMsg = "Error checking TenantUserLogin: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    return "error";
-                }
-                */
-
-
                 // make that tenant active, setup a new delegator and a new dispatcher
                 String delegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
 
@@ -481,7 +463,7 @@ public class LoginWorker {
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 }
-                
+
                 // SCIPIO: stop if delegator null, for now
                 if(delegator == null){
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", "Tenant [" + tenantId + "]  not found...");
@@ -495,7 +477,9 @@ public class LoginWorker {
             }
         } else {
             // Set default delegator
-            Debug.logInfo("Setting default delegator", module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Setting default delegator", module);
+            }
             String delegatorName = delegator.getDelegatorBaseName();
             try {
                 // after this line the delegator is replaced with default delegator
@@ -508,7 +492,6 @@ public class LoginWorker {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-           
             setupNewDelegatorEtc = true;
         }
 
@@ -574,8 +557,8 @@ public class LoginWorker {
             // check to see if a password change is required for the user
             Map<String, Object> userLoginSession = checkMap(result.get("userLoginSession"), String.class, Object.class);
             if (userLogin != null && "Y".equals(userLogin.getString("requirePasswordChange"))) {
-            	// SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
-            	request.setAttribute("tmpUserLogin", userLogin);
+                // SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
+                request.setAttribute("tmpUserLogin", userLogin);
                 return "requirePasswordChange";
             }
             String autoChangePassword = EntityUtilProperties.getPropertyValue("security", "user.auto.change.password.enable", "false", delegator);
@@ -611,7 +594,7 @@ public class LoginWorker {
         }
     }
 
-    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
+    protected static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
         HttpSession session = request.getSession();
         // NOTE: we do NOT want to set this in the servletContext, only in the request and session
         // We also need to setup the security objects since they are dependent on the delegator
@@ -664,7 +647,7 @@ public class LoginWorker {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
-        
+
         // SCIPIO: This forces the language to be set accordingly to the user's
         // language settings. Unfortunately it seems to be changed some where
         // else. ShopSetup.groovy is used as a fallback, although it won't be
@@ -684,7 +667,7 @@ public class LoginWorker {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error getting user preference", module);
         }
-        session.setAttribute("javaScriptEnabled", Boolean.valueOf("Y".equals(javaScriptEnabled)));
+        session.setAttribute("javaScriptEnabled", "Y".equals(javaScriptEnabled));
 
         ModelEntity modelUserLogin = userLogin.getModelEntity();
         if (modelUserLogin.isField("partyId")) {
@@ -716,11 +699,13 @@ public class LoginWorker {
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runBeforeLogoutEvents(request, response);
 
-
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
         doBasicLogout(userLogin, request, response);
+
+        // SCIPIO: after-logout
+        rh.runAfterLogoutEvents(request, response);
 
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
@@ -784,16 +769,42 @@ public class LoginWorker {
         // DON'T save the cart, causes too many problems: if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
     }
 
+    /**
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute)
+     * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
+     * <p>
+     * Default: true
+     * <p>
+     * Added 2018-07-11.
+     */
+    protected static boolean isAutoUserLoginEnabled(ServletContext servletContext) {
+        return UtilMisc.booleanValue(servletContext.getAttribute("autoUserLoginOn"), true);
+    }
+
+    /**
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute)
+     * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
+     * <p>
+     * Default: true
+     * <p>
+     * Added 2018-07-11.
+     */
+    public static boolean isAutoUserLoginEnabled(HttpServletRequest request) {
+        return isAutoUserLoginEnabled(request.getServletContext());
+    }
+
     public static String autoLoginSet(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
-        if (userLogin != null) {
+        if (isAutoUserLoginEnabled(request) && userLogin != null) { // SCIPIO: 2018-07-11: only set if enabled for webapp
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
             autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
             autoLoginCookie.setDomain(domain);
             autoLoginCookie.setPath("/");
+            autoLoginCookie.setSecure(true);
+            autoLoginCookie.setHttpOnly(true);
             response.addCookie(autoLoginCookie);
             return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
         } else {
@@ -803,6 +814,13 @@ public class LoginWorker {
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
         return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+    }
+
+    protected static String getAutoLoginCookieName(String webappName) {
+        // SCIPIO: OFBiz patch - Original does not work when the mount point has multiple slashes:  example: /en/shop vs /shop
+        // NOTE: UtilHttp.getApplicationName above now already does this for us - this one is left here for backward-compatibility only
+        //return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        return webappName.replaceAll("/", "_") + ".autoUserLoginId";
     }
 
     public static String getAutoUserLoginId(HttpServletRequest request) {
@@ -824,12 +842,17 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
 
-        return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
+        if (isAutoUserLoginEnabled(request)) { // SCIPIO: 2018-07-11: ignore if autoUserLogin is off
+            return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
+        }
+        return "success";
     }
 
     private static String autoLoginCheck(Delegator delegator, HttpSession session, String autoUserLoginId) {
         if (autoUserLoginId != null) {
-            Debug.logInfo("Running autoLogin check.", module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Running autoLogin check.", module);
+            }
             try {
                 GenericValue autoUserLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", autoUserLoginId).queryOne();
                 GenericValue person = null;
@@ -860,8 +883,18 @@ public class LoginWorker {
         GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
 
         // remove the cookie
+        // SCIPIO: 2018-07-11: There could be issues with autoUserLogin not being proper in session
+        // due to complexity of events and sync, so do a manual check for the cookie in the request headers in addition to session
+        //if (userLogin != null) {
+        //    Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+        String autoLoginUserId;
         if (userLogin != null) {
-            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+            autoLoginUserId = userLogin.getString("userLoginId");
+        } else {
+            autoLoginUserId = getAutoUserLoginId(request);
+        }
+        if (autoLoginUserId != null) {
+            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), autoLoginUserId);
             autoLoginCookie.setMaxAge(0);
             autoLoginCookie.setPath("/");
             response.addCookie(autoLoginCookie);
@@ -1007,7 +1040,9 @@ public class LoginWorker {
                             if (m.matches()) {
                                 userLoginId = m.group(1);
                             } else {
-                                Debug.logInfo("Client certificate CN does not match pattern: [" + cnPattern + "]", module);
+                                if (Debug.infoOn()) {
+                                    Debug.logInfo("Client certificate CN does not match pattern: [" + cnPattern + "]", module);
+                                }
                             }
                         }
 
@@ -1072,7 +1107,9 @@ public class LoginWorker {
                 EntityCondition.makeConditionMap("serialNumber", "")));
 
         EntityConditionList<EntityCondition> condition = EntityCondition.makeCondition(conds);
-        Debug.logInfo("Doing issuer lookup: " + condition.toString(), module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Doing issuer lookup: " + condition.toString(), module);
+        }
         long count = EntityQuery.use(delegator).from("X509IssuerProvision").where(condition).queryCount();
         return count > 0;
     }
@@ -1140,7 +1177,9 @@ public class LoginWorker {
         try {
             userLogin.refreshFromCache();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Unable to refresh UserLogin", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(e, "Unable to refresh UserLogin", module);
+            }
         }
         return (userLogin.get("hasLoggedOut") != null ?
                 "Y".equalsIgnoreCase(userLogin.getString("hasLoggedOut")) : false);
@@ -1170,7 +1209,7 @@ public class LoginWorker {
     public static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
         Security security = (Security) request.getAttribute("security");
         if (security != null) {
-            ServletContext context = (ServletContext) request.getAttribute("servletContext");
+            ServletContext context = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
             String serverId = (String) context.getAttribute("_serverId");
             // SCIPIO: delegated to new overload
             return hasBasePermission(userLogin, request, security, serverId);
@@ -1195,7 +1234,9 @@ public class LoginWorker {
         if (info != null) {
             return hasApplicationPermission(info, security, userLogin);
         } else {
-            Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
+            }
         }
         return true;
     }
@@ -1233,24 +1274,27 @@ public class LoginWorker {
                 userLoginSessionMap = checkMap(deserObj, String.class, Object.class);
             }
         } catch (GenericEntityException ge) {
-            Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " +
-                    userLogin.getString("userLoginId"), module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + userLogin.getString("userLoginId"), module);
+            }
         } catch (Exception e) {
-            Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
+            if (Debug.warningOn()) {
+                Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
+            }
         }
         return userLoginSessionMap;
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-       return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
     }
 
     public static String autoChangePassword(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String userName = request.getParameter("USERNAME");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Integer reqToChangePwdInDays = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.days", "0", delegator));
-        Integer passwordNoticePeriod = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.notification.days", "0", delegator));
+        Integer reqToChangePwdInDays = EntityUtilProperties.getPropertyAsInteger("security", "user.change.password.days", 0);
+        Integer passwordNoticePeriod = EntityUtilProperties.getPropertyAsInteger("security", "user.change.password.notification.days", 0);
         if (reqToChangePwdInDays > 0) {
             List<GenericValue> passwordHistories = null;
             try {

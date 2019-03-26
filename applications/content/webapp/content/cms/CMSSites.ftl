@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
 function call_fieldlookup4(rootForumId, parentForumId ) {
@@ -36,11 +23,11 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 </#if>
 <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_ADMIN" >
 
-<@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside"> <#-- orig: class="boxoutside" -->
+<@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside">
   <@tr>
     <@td width='100%'>
-      <form name="userform" method="post" action="<@ofbizUrl>CMSSites</@ofbizUrl>" >
-      <@table type="fields" width="100%" class="+appTitle"> <#-- orig: class="appTitle" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <form name="userform" method="post" action="<@pageUrl>CMSSites</@pageUrl>" >
+      <@table type="fields" width="100%" class="+appTitle">
         <@tr>
           <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; Root Site ID&nbsp;&nbsp; </div>
@@ -60,10 +47,10 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <@table type="fields" width="100%" class="+boxbottom">
         <@tr>
           <@td>
-            <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
+            <form method="post" name="publishsite" action="<@pageUrl>linkContentToPubPt</@pageUrl>">
               <@table type="generic" width="100%" border="0" cellpadding="1">
                 <#assign rowCount = 0 />
                 <@showSites forumId=rootForumId />
@@ -73,7 +60,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </@tr>
         <@tr>
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>">Add Top Level Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@pageUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@pageUrl>">Add Top Level Forum</a>
          </@td >
         </@tr>
 
@@ -83,7 +70,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.moderatedSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <@table type="fields" width="100%" class="+boxoutside">
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Unapproved entries for forum Id: ${requestParameters.moderatedSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -95,7 +82,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.permRoleSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+      <@table type="fields" width="100%" class="+boxoutside">
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Associated roles for forum Id: ${requestParameters.permRoleSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -127,19 +114,19 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             ${plusMinus} ${content.contentName!}
          </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
+            <a class="${styles.link_nav!} ${styles.action_update!}" href="<@pageUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@pageUrl>">Moderate</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="${styles.link_nav!} ${styles.action_view!}" href="<@pageUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@pageUrl>">User Roles</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>">Add Child Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@pageUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@pageUrl>">Add Child Forum</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">Remove Site</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="<@pageUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@pageUrl>">Remove Site</a>
          </@td>
        </@tr>
        <#assign rowCount = rowCount + 1 />
@@ -150,8 +137,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
- <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
+ <form name="mostrecent" method="post" action="<@pageUrl>publishResponse</@pageUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
@@ -161,7 +148,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           <@td> <b>name:</b>${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <@td>
-          <a class="tabButton" href="<@ofbizUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >View</a>
+          <a class="tabButton" href="<@pageUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@pageUrl>" >View</a>
           </@td>
           <@td>
           <b>submitted:</b>
@@ -206,15 +193,15 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
   <@tr>
     <@td width='100%'>
-      <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" method="post" action="<@pageUrl>updateSiteRoles</@pageUrl>">
         <@fields type="default-manual">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
-      <@table type="fields" width="100%" class="+${styles.table_spacing_small_hint!} boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" -->
+      <@table type="fields" width="100%" class="+${styles.table_spacing_small_hint!} boxoutside">
         <@tr>
             <@td>User</@td>
             <#list blogRoleIdList as roleTypeId>

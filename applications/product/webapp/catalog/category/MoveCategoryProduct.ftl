@@ -2,7 +2,7 @@
 
 <@modal id="copyCategoryProductMembers">
     <@section title=uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory>
-        <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" name="copyCategoryProductMembersForm">
+        <form method="post" action="<@pageUrl>copyCategoryProductMembers</@pageUrl>" name="copyCategoryProductMembersForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
             <@row>
@@ -29,6 +29,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_copyCategoryProductMembers').foundation('reveal','open');
+        try {
+            $('#modal_copyCategoryProductMembers').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_copyCategoryProductMembers').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

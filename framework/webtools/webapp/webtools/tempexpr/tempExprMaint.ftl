@@ -1,31 +1,18 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://webtools/webapp/webtools/tempexpr/tempExprMacros.ftl"/>
 
 <#if temporalExpression?has_content>
   <#-- Edit existing expression -->
   <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
-    <form name="updateExpression" method="post" action="<@ofbizUrl>updateTemporalExpression</@ofbizUrl>">
+    <form name="updateExpression" method="post" action="<@pageUrl>updateTemporalExpression</@pageUrl>">
       <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
       <input type="hidden" name="tempExprTypeId" value="${temporalExpression.tempExprTypeId}"/>
   </#if>
-  <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+  <@table type="fields">
     <@tr>
       <@td>${uiLabelMap.TemporalExpressionId}</@td>
       <@td>${temporalExpression.tempExprId}</@td>
@@ -145,9 +132,9 @@ under the License.
 </#if>
 
 <#macro CreateForm expressionTypeId="" formContents=NullMacro>
-  <form name="${expressionTypeId}" method="post" action="<@ofbizUrl>createTemporalExpression</@ofbizUrl>">
+  <form name="${expressionTypeId}" method="post" action="<@pageUrl>createTemporalExpression</@pageUrl>">
     <input type="hidden" name="tempExprTypeId" value="${expressionTypeId}"/>
-    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="fields">
       <#assign mapExpression = "TemporalExpression_" + expressionTypeId/>
       <#assign headingText = uiLabelMap[mapExpression]/>
       <@tr><@td colspan="2" class="h2">${headingText}</@td></@tr>
@@ -177,7 +164,7 @@ under the License.
 </#macro>
 
 <#macro CreateExprAssocForm formName="" exprAssocType="">
-  <form name="${formName}" method="post" action="<@ofbizUrl>createTemporalExpressionAssoc</@ofbizUrl>">
+  <form name="${formName}" method="post" action="<@pageUrl>createTemporalExpressionAssoc</@pageUrl>">
     <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="fromTempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="exprAssocType" value="${exprAssocType}"/>

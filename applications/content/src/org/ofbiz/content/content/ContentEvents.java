@@ -30,10 +30,10 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.content.content.ContentKeywordIndex;
 import org.ofbiz.security.Security;
 
 
@@ -53,7 +53,6 @@ public class ContentEvents {
      * @return String specifying the exit status of this event
      */
     public static String updateAllContentKeywords(HttpServletRequest request, HttpServletResponse response) {
-        //String errMsg = "";
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
@@ -63,7 +62,7 @@ public class ContentEvents {
         String doAll = request.getParameter("doAll");
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("CONTENTMGR", "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("CONTENTMGR", "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
             Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode);
             errMsg = UtilProperties.getMessage(resource,"contentevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -110,7 +109,7 @@ public class ContentEvents {
         } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(beganTx, e.getMessage(), e);
-            } catch (Exception e1) {
+            } catch (GenericTransactionException e1) {
                 Debug.logError(e1, module);
             }
             return "error";
@@ -119,7 +118,7 @@ public class ContentEvents {
             request.setAttribute("_ERROR_MESSAGE_", t.getMessage());
             try {
                 TransactionUtil.rollback(beganTx, t.getMessage(), t);
-            } catch (Exception e2) {
+            } catch (GenericTransactionException e2) {
                 Debug.logError(e2, module);
             }
             return "error";
@@ -135,7 +134,7 @@ public class ContentEvents {
             // commit the transaction
             try {
                 TransactionUtil.commit(beganTx);
-            } catch (Exception e) {
+            } catch (GenericTransactionException e) {
                 Debug.logError(e, module);
             }
         }

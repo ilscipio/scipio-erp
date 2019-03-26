@@ -19,13 +19,13 @@
 
 package org.ofbiz.service.xmlrpc;
 
+import java.security.KeyStore;
+
 import org.apache.xmlrpc.client.XmlRpcClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransportFactory;
 import org.ofbiz.base.component.ComponentConfig;
-import org.ofbiz.base.util.KeyStoreUtil;
 import org.ofbiz.base.util.Debug;
-
-import java.security.KeyStore;
+import org.ofbiz.base.util.KeyStoreUtil;
 
 /**
  * XmlRpcClient

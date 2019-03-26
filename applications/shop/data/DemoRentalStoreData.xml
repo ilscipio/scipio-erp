@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
     <ProductStore productStoreId="RentalStore" storeName="Open Travel system Demo Site" companyName="Open Travel Ltd" title="Ready for your reservation"
-        subtitle="Part of the Apache OFBiz Family of Open Source Software" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y" isImmediatelyFulfilled="Y"
+        subtitle="Part of the Scipio ERP" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y" isImmediatelyFulfilled="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="N" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="EUR" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        visualThemeId="FOUNDATION_SHOP" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y"/>
+        <!-- SCIPIO: 2019-03-07: These now default to localized values in OrderEntityLabels.xml:
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
-        visualThemeId="FOUNDATION_SHOP" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y"/>
+        -->
 
 <!-- Note: 20092102 BB - Introducing the visualThemeId we have actually missed this headerLogo setting
 headerLogo="/images/opentravelsystem_logo.jpg"
@@ -50,6 +39,10 @@ headerLogo="/images/opentravelsystem_logo.jpg"
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="SCIPIO ERP - Backorder Notification #${orderId}" fromAddress="test@scipioerp.com"/>
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="SCIPIO ERP - Order Change Notification #${orderId}" fromAddress="test@scipioerp.com"/>
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+
+    <!-- SCIPIO: Payment status mails-->
+    <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_ODR_PAY_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+    <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_ODR_PAY_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice" subject="SCIPIO ERP - Order Payment Completed #${orderId}" fromAddress="test@scipioerp.com"/>
 
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" fromAddress="test@scipioerp.com"/>
     <ProductStoreEmailSetting productStoreId="RentalStore" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="SCIPIO ERP - Return Completed #${returnHeader.returnId}" fromAddress="test@scipioerp.com"/>

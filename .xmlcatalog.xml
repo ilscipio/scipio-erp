@@ -15,12 +15,12 @@
     you may also need to update the project name in the resource URIs below.
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/base/dtd/base-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/datafile/dtd/datafiles-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/entity/dtd/entity-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/minilang/dtd/minilang-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/service/dtd/service-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/testtools/dtd/testtools-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/webapp/dtd/webapp-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/widget/dtd/widget-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/base/dtd/base-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/datafile/dtd/datafiles-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/entity/dtd/entity-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/minilang/dtd/minilang-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/service/dtd/service-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/testtools/dtd/testtools-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/webapp/dtd/webapp-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-2.x/framework/widget/dtd/widget-catalog.xml"/>
 </catalog>

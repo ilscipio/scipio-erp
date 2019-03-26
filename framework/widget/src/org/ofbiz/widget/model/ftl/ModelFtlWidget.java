@@ -16,7 +16,7 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
     private final String location;
     private final String id;
     private final ContainsExpr containsExpr;
-    
+
     public ModelFtlWidget(String name, String dirName, String location, String id, String containsExpr) {
         super(name != null ? name : "");
         this.dirName = dirName;
@@ -24,7 +24,7 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
         this.id = id;
         this.containsExpr = ContainsExpr.getInstanceOrDefault(containsExpr);
     }
-    
+
     public ModelFtlWidget(String name, String dirName, String location, String id) {
         this(name, dirName, location, id, null);
     }
@@ -43,7 +43,7 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
         // WARN: we have to prefix this otherwise there's a risk we'll interfere with widget names
         return "ftl-" + dirName;
     }
-    
+
     @Override
     public String getTagName() {
         return dirName;

@@ -42,7 +42,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupCatalogForm id formActionType target params treeFieldValues={}>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params initialValues=treeFieldValues/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -56,13 +56,13 @@
       <@field type="select" name="prodCatalogId" label=uiLabelMap.FormFieldTitle_prodCatalogId required=true>
         <#list (availProdCatalogList![]) as prodCatalog>
           <@field type="option" value=prodCatalog.prodCatalogId 
-            selected=(rawString(params.prodCatalogId!) == rawString(prodCatalog.prodCatalogId))>${prodCatalog.catalogName!prodCatalog.prodCatalogId} [${prodCatalog.prodCatalogId}]</@field>
+            selected=(raw(params.prodCatalogId!) == raw(prodCatalog.prodCatalogId))>${prodCatalog.catalogName!prodCatalog.prodCatalogId} [${prodCatalog.prodCatalogId}]</@field>
         </#list>
       </@field>
     <#else>
       <#if formActionType == "edit">
         <@field type="display" label=uiLabelMap.FormFieldTitle_prodCatalogId><#rt/>
-            <span class="ect-managefield ect-managefield-for-prodCatalogId"><@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${rawString(params.prodCatalogId!)}" text=params.prodCatalogId!/></span><#t/>
+            <span class="ect-managefield ect-managefield-for-prodCatalogId"><@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${raw(params.prodCatalogId!)}" text=params.prodCatalogId!/></span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!) class="+ect-inputfield"/>
       <#else>
@@ -140,7 +140,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteCatalogForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

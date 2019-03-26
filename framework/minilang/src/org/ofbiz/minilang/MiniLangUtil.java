@@ -69,18 +69,20 @@ public final class MiniLangUtil {
         SCRIPT_PREFIXES = Collections.unmodifiableSet(scriptPrefixes);
     }
 
+    private MiniLangUtil() {}
+
     /**
      * Returns <code>true</code> if <code>str</code> contains a script.
      * @deprecated SCIPIO: FIXME?: this stock code fails to ensure the lang prefix
      * is actually at start of the script or checked for any delimiters whatsoever
-     * (including spaces, for which other methods are more strict, 
-     * thus creating inconsistencies against this one, though that is not 
-     * the worst possible issue). until this is better understood and resolved, this is marked 
+     * (including spaces, for which other methods are more strict,
+     * thus creating inconsistencies against this one, though that is not
+     * the worst possible issue). until this is better understood and resolved, this is marked
      * deprecated (TODO: un-mark deprecated once resolved) and new
      * code should use {@link #startsWithScriptPrefix} instead in the meantime.
      * (it is possible the current form has some valid uses, but it seems to
      * engender anything but, and as-is misleading at best)
-     * 
+     *
      * @param str The string to test
      * @return <code>true</code> if <code>str</code> contains a script
      */
@@ -95,12 +97,12 @@ public final class MiniLangUtil {
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a script prefix.
      * <p>
      * NOTE: this is an explicit (unabstracted) and safer version of {@link #containsScript}.
-     * 
+     *
      * @param str The string to test
      * @return <code>true</code> if <code>str</code> starts with a script prefix
      */
@@ -199,8 +201,8 @@ public final class MiniLangUtil {
         }
         Converter<Object, Object> converter = (Converter<Object, Object>) Converters.getConverter(sourceClass, targetClass);
         LocalizedConverter<Object, Object> localizedConverter = null;
-        try {
-            localizedConverter = (LocalizedConverter) converter;
+        if (converter instanceof LocalizedConverter) {
+            localizedConverter = (LocalizedConverter<Object, Object>) converter;
             if (locale == null) {
                 locale = Locale.getDefault();
             }
@@ -211,7 +213,7 @@ public final class MiniLangUtil {
                 format = null;
             }
             return localizedConverter.convert(obj, locale, timeZone, format);
-        } catch (ClassCastException e) {}
+        }
         return converter.convert(obj);
     }
 
@@ -231,7 +233,7 @@ public final class MiniLangUtil {
      * suitable for use with the conversion framework. If the argument is
      * <code>null</code> or a <code>String</code>, the method returns the
      * {@link PlainString} class.
-     * 
+     *
      * @param object
      * @return A <code>Class</code> that is
      * suitable for use with the conversion framework
@@ -255,7 +257,7 @@ public final class MiniLangUtil {
     /**
      * Returns <code>true</code> if <code>attributeValue</code> is a
      * constant value (it does not contain an expression).
-     * 
+     *
      * @param attributeValue The value to test
      * @return <code>true</code> if <code>attributeValue</code> is a
      * constant value
@@ -271,7 +273,7 @@ public final class MiniLangUtil {
      * Returns <code>true</code> if <code>attributeValue</code> is a
      * constant value (it does not contain an expression) or a constant
      * plus expression value.
-     * 
+     *
      * @param attributeValue The value to test
      * @return <code>true</code> if <code>attributeValue</code> is a
      * constant value or a constant plus expression value
@@ -294,7 +296,7 @@ public final class MiniLangUtil {
 
     /**
      * Returns <code>true</code> if <code>document</code> contains corrections.
-     * 
+     *
      * @param document The document to test
      * @return  <code>true</code> if <code>document</code> contains corrections
      */
@@ -305,7 +307,7 @@ public final class MiniLangUtil {
     /**
      * Writes a Mini-language <code>Document</code> to disk. The XML file is styled by the
      * config/MiniLang.xslt style sheet.
-     * 
+     *
      * @param xmlURL
      * @param document
      */
@@ -350,5 +352,4 @@ public final class MiniLangUtil {
 
     public static class PlainString {}
 
-    private MiniLangUtil() {}
 }

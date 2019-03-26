@@ -13,18 +13,16 @@
         <field name="noConditionFind">
             <hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
         </field>
-        <!-- 
-        <field name="internalName" title="${uiLabelMap.CommonName}">
-            <text-find />
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}" position="1">
+            <lookup target-form-name="LookupProduct"></lookup>
         </field>
-         -->
-        <field name="productName" position="1">
-            <text-find />
+        <field name="productName" position="2">
+            <lookup target-form-name="LookupProduct"></lookup>
         </field>
-         <field name="productId" title="${uiLabelMap.CommonId}" position="2">
-            <text-find />
+         <field name="productId" title="${uiLabelMap.CommonId}" position="1">
+            <lookup target-form-name="LookupProduct"></lookup>
         </field>
-        <field name="productTypeId" title="${uiLabelMap.CommonType}"  position="3">
+        <field name="productTypeId" title="${uiLabelMap.CommonType}"  position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -1608,7 +1606,7 @@
     <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="assocFromProducts" odd-row-style="alternate-row"
         paginate-target="EditProductAssoc"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
-            <entity-one value-field="productAssoc" entity-name="Product">
+            <entity-one entity-name="Product" value-field="productAssoc">
                 <field-map field-name="productId" value="${productIdTo}" />
             </entity-one>
         </row-actions>
@@ -2578,7 +2576,7 @@
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="WorkEffortGoodStandard" use-cache="true" list="productWorkEfforts">
-                <field-map from-field="productId" field-name="productId" />
+                <field-map field-name="productId" from-field="productId"/>
             </entity-and>
         </actions>
         <field name="productId">

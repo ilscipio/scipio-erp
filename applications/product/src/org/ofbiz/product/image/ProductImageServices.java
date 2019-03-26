@@ -27,7 +27,7 @@ public abstract class ProductImageServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String resource = "ProductErrorUiLabels";
-    
+
     protected ProductImageServices() {
     }
 
@@ -45,14 +45,14 @@ public abstract class ProductImageServices {
         Integer viewNumber = (Integer) context.get("viewNumber");
         Locale locale = (Locale) context.get("locale");
         if (locale == null) locale = Locale.getDefault();
-        
+
         Map<String, Object> contentCtx;
         try {
             contentCtx = dctx.makeValidContext("contentImageFileScaleInAllSizeCore", ModelService.IN_PARAM, context);
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         if (isStrArgEmpty(contentCtx, "imageServerPath")) {
             String imageServerPath = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", delegator);
             contentCtx.put("imageServerPath", imageServerPath);
@@ -61,9 +61,9 @@ public abstract class ProductImageServices {
             String imageUrlPrefix = EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", delegator);
             contentCtx.put("imageUrlPrefix", imageUrlPrefix);
         }
-        
+
         Map<String, Object> imagePathArgs = new HashMap<>();
-        
+
         String type = null;
         String id = (String) context.get("productId");
         if (viewType.toLowerCase().contains("main")) {
@@ -80,12 +80,12 @@ public abstract class ProductImageServices {
                 id = id + "_View_" + viewNumber;
             } else {
                 viewType = "additional" + viewNumber;
-            }    
+            }
             imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "viewtype", viewType, "sizetype", "original"));
         } else {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ProductImageViewType", UtilMisc.toMap("viewType", type), locale));
         }
-        
+
         Map<String, ?> imagePathArgsRcvd = UtilGenerics.checkMap(contentCtx.get("imagePathArgs"));
         if (imagePathArgsRcvd != null) {
             imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
@@ -99,9 +99,9 @@ public abstract class ProductImageServices {
                 return ServiceUtil.returnError("Product image configuration error: " + e.getMessage());
             }
         }
-        
+
         // TODO/FIXME: currently provides no deletion of the old images...
-        
+
         Map<String, Object> result = ContentImageServices.contentImageFileScaleInAllSizeCore(dctx, contentCtx);
         result.put("productSizeTypeList", ScaleImage.sizeTypeList);
         return result;

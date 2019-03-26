@@ -42,6 +42,8 @@ import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityCrypto;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityQuerySafe;
 import org.ofbiz.entity.util.EntityStoreOptions;
 import org.ofbiz.entity.util.SequenceUtil;
 import org.w3c.dom.Document;
@@ -218,6 +220,34 @@ public interface Delegator {
     Object encryptFieldValue(String entityName, ModelField.EncryptMethod encryptMethod, Object fieldValue) throws EntityCryptoException;
 
     /**
+     * SCIPIO: Extracts a member entity value from the given view-entity value, straight from its fields in memory,
+     * for the given view-entity entity alias OR entity name.
+     * <p>
+     * This method can be used to avoid re-querying the database needlessly for the individual entities after a view-entity lookup,
+     * without needing or using the entity cache.
+     * <p>
+     * NOTE: This method does NOT populate the system-generated fields: lastUpdatedStamp, lastUpdatedTxStamp, createdStamp, createdTxStamp.
+     * In most cases this does not cause any issues.
+     * <p>
+     * If allowPartial is false and the target entity fields cannot be fully populated from the view-entity fields, throws
+     * an exception; if true, fields are partially populated. It is up to the caller to ensure that the original
+     * view-entity definition aliases all the fields needed to populate the member.
+     * <p>
+     * If nullForAbsentOptViewLink is true, the method will <em>attempt</em> to return null for optional view-links
+     * that did not match any records.
+     * <strong>WARN:</strong> This optional view-link check is a best-effort attempt and depends on the view-entity definition;
+     * it may only work properly if the view-link aliases the primary key for the optional entity redundantly to a second alias,
+     * which will be null if the optional entity was not found. The most popular strategy is this: if your view-entity has rel-optional="true",
+     * you can use "alias-all" with a field prefix on the optional entity and <em>not</em> "exclude" the PK fields.
+     * The PK field from the referring non-optional entity will still be populated but the prefixed one will not, allowing this check to work properly.
+     * <p>
+     * NOTE: Passing the entity name (instead of entity alias) is only supported if it is aliased only once in the view-entity.
+     * <p>
+     * Added 2018-10-22.
+     */
+    GenericValue extractViewMember(GenericValue viewValue, String entityAliasOrName, boolean allowPartial, boolean nullForAbsentOptViewLink) throws GenericEntityException;
+
+    /**
      * Finds GenericValues by the conditions specified in the EntityCondition
      * object, the the EntityCondition javadoc for more details.
      *
@@ -249,7 +279,7 @@ public interface Delegator {
     EntityListIterator find(String entityName, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, Set<String> fieldsToSelect, List<String> orderBy, EntityFindOptions findOptions) throws GenericEntityException;
 
     /**
-     * Finds all Generic entities 
+     * Finds all Generic entities
      *
      * @param entityName
      *            The Name of the Entity as defined in the entity XML file
@@ -294,7 +324,7 @@ public interface Delegator {
 
     /**
      * Gets the hit count of GenericValues for the given EntityCondition objects.
-     * 
+     *
      * @param entityName
      * @param whereEntityCondition
      * @param havingEntityCondition
@@ -503,11 +533,10 @@ public interface Delegator {
     ModelEntity getModelEntity(String entityName);
 
     /**
-     * Gets a Map of entity name & entity model pairs that are in the named
+     * Gets a Map of entity name and entity model pairs that are in the named
      * group
      *
-     * @param groupName
-     *            The name of the group
+     * @param groupName The name of the group
      * @return Map of entityName String keys and ModelEntity instance values
      */
     Map<String, ModelEntity> getModelEntityMapByGroup(String groupName) throws GenericEntityException;
@@ -739,15 +768,16 @@ public interface Delegator {
     void refreshSequencer();
 
     /**
-     * Remove the Entities from the List from the persistent store. <br/>The
-     * List contains GenericEntity objects, can be either GenericPK or
-     * GenericValue. <br/>If a certain entity contains a complete primary key,
-     * the entity in the datasource corresponding to that primary key will be
-     * removed, this is like a removeByPrimary Key. <br/>On the other hand, if a
-     * certain entity is an incomplete or non primary key, if will behave like
-     * the removeByAnd method. <br/>These updates all happen in one transaction,
-     * so they will either all succeed or all fail, if the data source supports
-     * transactions.
+     * <p>Remove the Entities from the List from the persistent store.</p>
+     * <p>The List contains GenericEntity objects, can be either GenericPK or
+     * GenericValue. </p>
+     * <p>If a certain entity contains a complete primary key, the entity in
+     * the datasource corresponding to that primary key will be removed, this
+     * is like a removeByPrimary Key.</p>
+     * <p>On the other hand, if a certain entity is an incomplete or non
+     * primary key, if will behave like the removeByAnd method. </p>
+     * <p>These updates all happen in one transaction, so they will either
+     * all succeed or all fail, if the data source supports transactions.</p>
      *
      * @param dummyPKs
      *            Collection of GenericEntity instances containing the entities
@@ -858,14 +888,16 @@ public interface Delegator {
     int store(GenericValue value) throws GenericEntityException;
 
     /**
-     * Store the Entities from the List GenericValue instances to the persistent
-     * store. <br/>This is different than the normal store method in that the
+     * <p>Store the Entities from the List GenericValue instances to the persistent
+     * store.</p>
+     * <p>This is different than the normal store method in that the
      * store method only does an update, while the storeAll method checks to see
      * if each entity exists, then either does an insert or an update as
-     * appropriate. <br/>These updates all happen in one transaction, so they
+     * appropriate.</p>
+     * <p>These updates all happen in one transaction, so they
      * will either all succeed or all fail, if the data source supports
      * transactions. This is just like to othersToStore feature of the
-     * GenericEntity on a create or store.
+     * GenericEntity on a create or store.</p>
      *
      * @param values
      *            List of GenericValue instances containing the entities to
@@ -875,14 +907,16 @@ public interface Delegator {
     int storeAll(List<GenericValue> values) throws GenericEntityException;
 
     /**
-     * Store the Entities from the List GenericValue instances to the persistent
-     * store. <br/>This is different than the normal store method in that the
+     * <p>Store the Entities from the List GenericValue instances to the persistent
+     * store.</p>
+     * <p>This is different than the normal store method in that the
      * store method only does an update, while the storeAll method checks to see
      * if each entity exists, then either does an insert or an update as
-     * appropriate. <br/>These updates all happen in one transaction, so they
+     * appropriate.</p>
+     * <p>These updates all happen in one transaction, so they
      * will either all succeed or all fail, if the data source supports
      * transactions. This is just like to othersToStore feature of the
-     * GenericEntity on a create or store.
+     * GenericEntity on a create or store.</p>
      *
      * @param storeOptions
      *            An instance of EntityStoreOptions that specifies advanced store
@@ -896,7 +930,7 @@ public interface Delegator {
     int storeAll(List<GenericValue> values, EntityStoreOptions storeOptions) throws GenericEntityException;
 
     /**
-     * Store a group of values
+     * Store a group of values.
      *
      * @param entityName
      *            The name of the Entity as defined in the entity XML file
@@ -908,10 +942,149 @@ public interface Delegator {
      * @throws GenericEntityException
      */
     int storeByCondition(String entityName, Map<String, ? extends Object> fieldsToSet, EntityCondition condition) throws GenericEntityException;
-   
+
     /**
      * Get use of Distributed Cache Clear mechanism status
-     * @return boolean true if this delegator uses a Distributed Cache Clear mechanism 
+     * @return boolean true if this delegator uses a Distributed Cache Clear mechanism
      */
-    boolean useDistributedCacheClear();   
+    boolean useDistributedCacheClear();
+
+    /**
+     * SCIPIO: Helper method to determine if the entity exists by name in the system.
+     * Never throws exceptions.
+     */
+    default boolean isEntity(String entityName) {
+        return (getModelReader().getModelEntityNoCheck(entityName) != null);
+    }
+
+    /*
+     * SCIPIO: EntityQuery alias methods
+     * The abstracted methods query(), from(...) and select(...) delegate to either xxxUnsafe when called from java, groovy, xml, etc.,
+     * or xxxSafe when invoked from FreeMarker *.ftl templates; switched by {@link org.ofbiz.entity.ftl.DelegatorWrapperModel#get(String)}).
+     */
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, equivalent to:
+     * <code>EntityQuery(Safe).use(delegator)</code>; this is an alias for {@link #queryUnsafe()} for most languages,
+     * <strong>except</strong> for FreeMarker templates (*.ftl) for which {@link #querySafe()} is invoked instead.
+     */
+    default EntityQuery query() {
+        return EntityQuery.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, equivalent to:
+     * <code>EntityQuery.use(delegator)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery queryUnsafe() {
+        return EntityQuery.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, equivalent to:
+     * <code>EntityQuerySafe.use(delegator)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuerySafe querySafe() {
+        return EntityQuerySafe.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(entityName)</code>; this is an alias for {@link #fromUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
+     */
+    default EntityQuery from(String entityName) {
+        return query().from(entityName);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(dynamicViewEntity)</code>; this is an alias for {@link #fromUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
+     */
+    default EntityQuery from(DynamicViewEntity dynamicViewEntity) {
+        return query().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
+     */
+    default EntityQuery select(Set<String> fieldsToSelect) {
+        return query().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
+     */
+    default EntityQuery select(String... fieldsToSelect) {
+        return query().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery fromUnsafe(String entityName) {
+        return queryUnsafe().from(entityName);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(dynamicViewEntity)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery fromUnsafe(DynamicViewEntity dynamicViewEntity) {
+        return queryUnsafe().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery selectUnsafe(Set<String> fieldsToSelect) {
+        return queryUnsafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery selectUnsafe(String... fieldsToSelect) {
+        return queryUnsafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).from(entityName)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery fromSafe(String entityName) {
+        return querySafe().from(entityName);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).from(dynamicViewEntity)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery fromSafe(DynamicViewEntity dynamicViewEntity) {
+        return querySafe().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).select(fieldsToSelect)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery selectSafe(Set<String> fieldsToSelect) {
+        return querySafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).select(fieldsToSelect)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery selectSafe(String... fieldsToSelect) {
+        return querySafe().select(fieldsToSelect);
+    }
 }

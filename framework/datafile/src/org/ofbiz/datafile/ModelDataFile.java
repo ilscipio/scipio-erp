@@ -48,6 +48,9 @@ public class ModelDataFile {
     /** The length in bytes of a single record, ONLY if it uses fixed length records */
     public int recordLength = -1;
 
+    /** Start the file read at line */
+    public int startLine = 0;
+
     /** The delimiter used in the file, if delimiter separated fields are used */
     public char delimiter = '|';
 
@@ -60,8 +63,13 @@ public class ModelDataFile {
     /** A free form description of the file */
     public String description = "";
 
+    /**
+     * the End Of Line type (CRLF or CR)
+     */
+    private String eolType = null;
+
     /** List of record definitions for the file */
-    public List<ModelRecord> records = new ArrayList<ModelRecord>();
+    public List<ModelRecord> records = new ArrayList<>();
 
     public ModelRecord getModelRecord(String recordName) {
         for (ModelRecord curRecord: records) {
@@ -121,6 +129,14 @@ public class ModelDataFile {
         this.delimiter = delimiter;
     }
 
+    public int getStartLine() {
+        return startLine;
+    }
+
+    public void setStartLine(int startLine) {
+        this.startLine = startLine;
+    }
+
     public String getSeparatorStyle() {
         return separatorStyle;
     }
@@ -135,6 +151,14 @@ public class ModelDataFile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEOLType() {
+        return eolType;
+    }
+
+    public void setEOLType(String eolType) {
+        this.eolType = eolType;
     }
 
     public List<ModelRecord> getRecords() {

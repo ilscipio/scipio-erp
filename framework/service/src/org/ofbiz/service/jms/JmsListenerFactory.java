@@ -19,11 +19,13 @@
 package org.ofbiz.service.jms;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -123,7 +125,7 @@ public class JmsListenerFactory implements Runnable {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (GenericConfigException e) {
             Debug.logError(e, "Exception thrown while loading JMS listeners: ", module);
         }
     }
@@ -138,9 +140,9 @@ public class JmsListenerFactory implements Runnable {
         String className = server.getListenerClass();
 
         if (UtilValidate.isEmpty(className)) {
-            if (type.equals("topic"))
+            if ("topic".equals(type))
                 className = JmsListenerFactory.TOPIC_LISTENER_CLASS;
-            else if (type.equals("queue"))
+            else if ("queue".equals(type))
                 className = JmsListenerFactory.QUEUE_LISTENER_CLASS;
         }
 
@@ -157,7 +159,8 @@ public class JmsListenerFactory implements Runnable {
                         Constructor<GenericMessageListener> cn = UtilGenerics.cast(c.getConstructor(Delegator.class, String.class, String.class, String.class, String.class, String.class));
 
                         listener = cn.newInstance(delegator, serverName, jndiName, queueName, userName, password);
-                    } catch (Exception e) {
+                    } catch (RuntimeException | NoSuchMethodException | InstantiationException | IllegalAccessException
+                            | InvocationTargetException | ClassNotFoundException e) {
                         throw new GenericServiceException(e.getMessage(), e);
                     }
                     if (listener != null)

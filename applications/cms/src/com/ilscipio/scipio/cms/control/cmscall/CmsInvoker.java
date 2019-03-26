@@ -8,7 +8,7 @@ import javax.servlet.ServletContext;
 public abstract class CmsInvoker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected final ServletContext servletCtx;
 
     public CmsInvoker(ServletContext servletCtx) {

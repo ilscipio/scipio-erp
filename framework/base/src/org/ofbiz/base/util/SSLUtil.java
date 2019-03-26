@@ -49,41 +49,72 @@ import org.ofbiz.base.config.GenericConfigException;
  * KeyStoreUtil - Utilities for setting up SSL connections with specific client certificates
  *
  */
-public class SSLUtil {
+public final class SSLUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final int HOSTCERT_NO_CHECK = 0;
+    public static final int HOSTCERT_NO_CHECK = 0; // SCIPIO: 2018-08-28: keeping public for backward-compat
     public static final int HOSTCERT_MIN_CHECK = 1;
     public static final int HOSTCERT_NORMAL_CHECK = 2;
 
     private static boolean loadedProps = false;
 
+    private SSLUtil () {}
+
     static {
         SSLUtil.loadJsseProperties();
+    }
+
+    private static class TrustAnyManager implements X509TrustManager {
+
+        public void checkClientTrusted(X509Certificate[] certs, String string) throws CertificateException {
+            Debug.logImportant("Trusting (un-trusted) client certificate chain:", module);
+            for (X509Certificate cert: certs) {
+                Debug.logImportant("---- " + cert.getSubjectX500Principal().getName() + " valid: " + cert.getNotAfter(), module);
+
+            }
+        }
+
+        public void checkServerTrusted(X509Certificate[] certs, String string) throws CertificateException {
+            Debug.logImportant("Trusting (un-trusted) server certificate chain:", module);
+            for (X509Certificate cert: certs) {
+                Debug.logImportant("---- " + cert.getSubjectX500Principal().getName() + " valid: " + cert.getNotAfter(), module);
+            }
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
+
+
+    public static int getHostCertNoCheck() {
+        return HOSTCERT_NO_CHECK;
+    }
+
+    public static int getHostCertMinCheck() {
+        return HOSTCERT_MIN_CHECK;
+    }
+
+    public static int getHostCertNormalCheck() {
+        return HOSTCERT_NORMAL_CHECK;
     }
 
     public static boolean isClientTrusted(X509Certificate[] chain, String authType) {
         TrustManager[] mgrs = new TrustManager[0];
         try {
             mgrs = SSLUtil.getTrustManagers();
-        } catch (IOException e) {
-            Debug.logError(e, module);
-        } catch (GeneralSecurityException e) {
-            Debug.logError(e, module);
-        } catch (GenericConfigException e) {
+        } catch (IOException | GeneralSecurityException | GenericConfigException e) {
             Debug.logError(e, module);
         }
 
-        if (mgrs != null) {
-            for (TrustManager mgr: mgrs) {
-                if (mgr instanceof X509TrustManager) {
-                    try {
-                        ((X509TrustManager) mgr).checkClientTrusted(chain, authType);
-                        return true;
-                    } catch (CertificateException e) {
-                        // do nothing; just loop
-                    }
+        for (TrustManager mgr : mgrs) {
+            if (mgr instanceof X509TrustManager) {
+                try {
+                    ((X509TrustManager) mgr).checkClientTrusted(chain, authType);
+                    return true;
+                } catch (CertificateException e) {
+                    //Debug.logError(e, module); // SCIPIO: 2018-08-30: this was added upstream, and simply wrong
                 }
             }
         }
@@ -91,14 +122,18 @@ public class SSLUtil {
     }
 
     public static KeyManager[] getKeyManagers(String alias) throws IOException, GeneralSecurityException, GenericConfigException {
-        List<KeyManager> keyMgrs = new LinkedList<KeyManager>();
+        List<KeyManager> keyMgrs = new LinkedList<>();
         for (ComponentConfig.KeystoreInfo ksi: ComponentConfig.getAllKeystoreInfos()) {
             if (ksi.isCertStore()) {
                 KeyStore ks = ksi.getKeyStore();
                 if (ks != null) {
                     List<KeyManager> newKeyManagers = Arrays.asList(getKeyManagers(ks, ksi.getPassword(), alias));
                     keyMgrs.addAll(newKeyManagers);
-                    if (Debug.verboseOn()) Debug.logVerbose("Loaded another cert store, adding [" + (newKeyManagers == null ? "0" : newKeyManagers.size()) + "] KeyManagers for alias [" + alias + "] and keystore: " + ksi.createResourceHandler().getFullLocation(), module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Loaded another cert store, adding [" + newKeyManagers.size()
+                                + "] KeyManagers for alias [" + alias + "] and keystore: " + ksi.createResourceHandler()
+                                        .getFullLocation(), module);
+                    }
                 } else {
                     throw new IOException("Unable to load keystore: " + ksi.createResourceHandler().getFullLocation());
                 }
@@ -133,6 +168,29 @@ public class SSLUtil {
         return new TrustManager[] { tm };
     }
 
+    /**
+     * SCIPIO: Returns the component keystores in a trust manager (keystore elements in ofbiz-component.xml);
+     * same as {@link #getTrustManagers()} but without the system keystore.
+     * <p>
+     * Added 2018-07-12.
+     */
+    public static TrustManager[] getComponentTrustManagers() throws IOException, GeneralSecurityException, GenericConfigException {
+        MultiTrustManager tm = new MultiTrustManager();
+
+        for (ComponentConfig.KeystoreInfo ksi: ComponentConfig.getAllKeystoreInfos()) {
+            if (ksi.isTrustStore()) {
+                KeyStore ks = ksi.getKeyStore();
+                if (ks != null) {
+                    tm.add(ks);
+                } else {
+                    throw new IOException("Unable to load keystore: " + ksi.createResourceHandler().getFullLocation());
+                }
+            }
+        }
+
+        return new TrustManager[] { tm };
+    }
+
     public static TrustManager[] getTrustAnyManagers() {
         return new TrustManager[] { new TrustAnyManager() };
     }
@@ -151,7 +209,7 @@ public class SSLUtil {
         return keyManagers;
     }
 
-    public static TrustManager[] getTrustManagers(KeyStore ks) throws GeneralSecurityException {
+    public static TrustManager[] getTrustManagers(KeyStore ks) {
         return new TrustManager[] { new MultiTrustManager(ks) };
     }
 
@@ -224,11 +282,14 @@ public class SSLUtil {
                             Principal x500s = peerCert.getSubjectDN();
                             Map<String, String> subjectMap = KeyStoreUtil.getX500Map(x500s);
 
-                            if (Debug.infoOn())
+                            if (Debug.infoOn()) {
                                 Debug.logInfo(peerCert.getSerialNumber().toString(16) + " :: " + subjectMap.get("CN"), module);
+                            }
 
                             try {
                                 peerCert.checkValidity();
+                            } catch (RuntimeException e) {
+                                throw e;
                             } catch (Exception e) {
                                 // certificate not valid
                                 Debug.logWarning("Certificate is not valid!", module);
@@ -259,16 +320,16 @@ public class SSLUtil {
             String proxyHost = UtilProperties.getPropertyValue("jsse", "https.proxyHost", "NONE");
             String proxyPort = UtilProperties.getPropertyValue("jsse", "https.proxyPort", "NONE");
             String cypher = UtilProperties.getPropertyValue("jsse", "https.cipherSuites", "NONE");
-            if (protocol != null && !protocol.equals("NONE")) {
+            if (protocol != null && !"NONE".equals(protocol)) {
                 System.setProperty("java.protocol.handler.pkgs", protocol);
             }
-            if (proxyHost != null && !proxyHost.equals("NONE")) {
+            if (proxyHost != null && !"NONE".equals(proxyHost)) {
                 System.setProperty("https.proxyHost", proxyHost);
             }
-            if (proxyPort != null && !proxyPort.equals("NONE")) {
+            if (proxyPort != null && !"NONE".equals(proxyPort)) {
                 System.setProperty("https.proxyPort", proxyPort);
             }
-            if (cypher != null && !cypher.equals("NONE")) {
+            if (cypher != null && !"NONE".equals(cypher)) {
                 System.setProperty("https.cipherSuites", cypher);
             }
 
@@ -276,28 +337,6 @@ public class SSLUtil {
                 System.setProperty("javax.net.debug","ssl:handshake");
             }
             loadedProps = true;
-        }
-    }
-
-    static class TrustAnyManager implements X509TrustManager {
-
-        public void checkClientTrusted(X509Certificate[] certs, String string) throws CertificateException {
-            Debug.logImportant("Trusting (un-trusted) client certificate chain:", module);
-            for (X509Certificate cert: certs) {
-                Debug.logImportant("---- " + cert.getSubjectX500Principal().getName() + " valid: " + cert.getNotAfter(), module);
-
-            }
-        }
-
-        public void checkServerTrusted(X509Certificate[] certs, String string) throws CertificateException {
-            Debug.logImportant("Trusting (un-trusted) server certificate chain:", module);
-            for (X509Certificate cert: certs) {
-                Debug.logImportant("---- " + cert.getSubjectX500Principal().getName() + " valid: " + cert.getNotAfter(), module);
-            }
-        }
-
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
         }
     }
 }

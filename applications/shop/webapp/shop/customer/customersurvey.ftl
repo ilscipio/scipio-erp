@@ -1,30 +1,27 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <@section title=((survey.surveyName)!)>
     <#-- Render the survey -->
     <#if surveyWrapper?has_content>
-        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
-          ${surveyWrapper.render(context)}
+        <#-- SCIPIO: 2019-03-06: Now supports surveyAction and surveyMarkup error/missing fallback
+            NOTE: surveyWrapper.render(context) may return null/void/missing/empty upon error or upon empty output -->
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl uri=surveyAction!'profilesurvey' escapeAs='html'/>">
+          <input type="hidden" name="surveyAction" value="${surveyAction!'profilesurvey'}"/><#-- SCIPIO: need for error case -->
+          <#assign surveyMarkup = surveyWrapper.render(context)!>
+          <#if surveyMarkup?has_content>
+            ${surveyMarkup}
+          <#else>
+            <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
+            <a href="<@pageUrl uri='main'/>" class="${styles.link_nav} ${styles.action_view}">${uiLabelMap.CommonHome}</a>
+          </#if>
         </form>
     <#else>
         <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
+        <a href="<@pageUrl uri='main'/>" class="${styles.link_nav} ${styles.action_view}">${uiLabelMap.CommonHome}</a>
     </#if>
 </@section>

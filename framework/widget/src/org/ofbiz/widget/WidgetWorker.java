@@ -23,28 +23,23 @@ import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
@@ -60,7 +55,8 @@ public final class WidgetWorker {
         // We may get an encoded request like: &#47;projectmgr&#47;control&#47;EditTaskContents&#63;workEffortId&#61;10003
         // Try to reducing a possibly encoded string down to its simplest form: /projectmgr/control/EditTaskContents?workEffortId=10003
         // This step make sure the following appending externalLoginKey operation to work correctly
-        String localRequestName = StringEscapeUtils.unescapeHtml(target);
+        // SCIPIO: NOTE: we are less likely to have this escaping issue, because we turn off the HTML early escaping in Scipio and leave it to Freemarker.
+        String localRequestName = StringEscapeUtils.unescapeHtml4(target);
         localRequestName = UtilHttp.encodeAmpersands(localRequestName);
 
         Appendable localWriter = new StringWriter();
@@ -116,15 +112,16 @@ public final class WidgetWorker {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
-                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-                RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                externalWriter.append(rh.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
+                // SCIPIO: 2018-08-15: this is now static method
+                //ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
+                //RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
+                externalWriter.append(RequestHandler.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
             } else {
                 localWriter = tempWriter;
             }
         } else if ("content".equals(targetType)) {
             appendContentUrl(localWriter, localRequestName, request);
-        } else if ("plain".equals(targetType)) {
+        } else if ("plain".equals(targetType)) { // SCIPIO: NOTE: 2018-09-04: this was removed by upstream, I am leaving in, this was not bad...
             localWriter.append(localRequestName);
         } else {
             localWriter.append(localRequestName);
@@ -171,7 +168,7 @@ public final class WidgetWorker {
                 externalWriter.append('=');
                 // SCIPIO: simplified
                 UtilCodec.SimpleEncoder simpleEncoder = WidgetWorker.getEarlyEncoder(context);
-                if (parameterValue != null) { // simpleEncoder != null && 
+                if (parameterValue != null) { // simpleEncoder != null &&
                     externalWriter.append(simpleEncoder.encode(URLEncoder.encode(parameterValue, Charset.forName("UTF-8").displayName())));
                 //} else {
                 //    // SCIPIO: even if HTML encoding were disabled, the link param should have been URL-encoded; they're two different layers
@@ -190,9 +187,21 @@ public final class WidgetWorker {
         writer.append(buffer.toString());
         writer.append(location);
     }
+    
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer method must be used instead
+     * ({@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHyperlinkByType}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHyperlinkByType(Appendable writer, String linkType, String linkStyle, String targetType, String target,
             Map<String, String> parameterMap, String description, String targetWindow, String confirmation, ModelFormField modelFormField,
             HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHyperlinkByType: Deprecated method called (target: " + target + "); use the MacroFormRenderer method instead", module); // SCIPIO
+        /* SCIPIO: 2018-09-04: TODO: REVIEW: from upstream...
+        if (modelFormField == null) {
+            throw new IllegalArgumentException("modelFormField in WidgetWorker.makeHyperlinkByType has turned out to be null");
+        }
+        */
         String realLinkType = WidgetWorker.determineAutoLinkType(linkType, target, targetType, request);
         if ("hidden-form".equals(realLinkType)) {
             if (modelFormField != null && "multi".equals(modelFormField.getModelForm().getType())) {
@@ -213,11 +222,17 @@ public final class WidgetWorker {
         } else {
             WidgetWorker.makeHyperlinkString(writer, linkStyle, targetType, target, parameterMap, description, confirmation, modelFormField, request, response, context, targetWindow);
         }
-
     }
+
+    /**
+     * @deprecated SCIPIO: 2018-10-18: Macro form renderer (Freemarker) makeHyperlinkString macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHyperlinkString}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHyperlinkString(Appendable writer, String linkStyle, String targetType, String target, Map<String, String> parameterMap,
             String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String targetWindow)
             throws IOException {
+        Debug.logWarning("makeHyperlinkString: Deprecated method called (target: " + target + "); use the MacroFormRenderer (Freemarker) macro instead", module); // SCIPIO
         if (UtilValidate.isNotEmpty(description) || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             writer.append("<a");
 
@@ -264,7 +279,13 @@ public final class WidgetWorker {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer (Freemarker) makeHiddenFormLinkAnchor macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkAnchor}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHiddenFormLinkAnchor(Appendable writer, String linkStyle, String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHiddenFormLinkAnchor: Deprecated method called; use the MacroFormRenderer (Freemarker) macros instead", module); // SCIPIO
         if (UtilValidate.isNotEmpty(description) || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             writer.append("<a");
 
@@ -305,11 +326,17 @@ public final class WidgetWorker {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2018-10-18: The macro form renderer (Freemarker) makeHiddenFormLinkForm macro must be used instead
+     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkForm}); this method may be unmaintained and insecure.
+     */
+    @Deprecated
     public static void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
+        Debug.logWarning("makeHiddenFormLinkForm: Deprecated method called (target: " + target + "); use the MacroFormRenderer (Freemarker) macro instead", module); // SCIPIO
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context); // SCIPIO: pass null for fullPath/secure/encode
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {
@@ -336,167 +363,26 @@ public final class WidgetWorker {
 
         writer.append("</form>");
     }
-    
-    
-    /**
-     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
-        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-        if (rowSubmitFields != null) {
-            writer.append("<script type=\"text/javascript\">\r\n");
-            writer.append("jQuery(document).ready(function() {\r\n");
-            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-            writer.append("\tif (submitForm) {\r\n");
-            for (ModelFormField rowSubmitField : rowSubmitFields) {
-                String submitFieldName = rowSubmitField.getName();
-                String submitFieldId = rowSubmitField.getCurrentContainerId(context);
-                if (UtilValidate.isEmpty(submitFieldId)) {
-                    Debug.logWarning("makeJSForRowSubmit: submit field '" + submitFieldName +
-                            "' of form '" + rowSubmitField.getModelForm().getName() + 
-                            "' was not assigned a unique element ID; unable to build javascript", module);
-                    continue;
-                }
-                writer.append("\t\tvar submitField = $(\"#" + submitFieldId + "\");\r\n");
-                writer.append("\t\t$(submitField).click(function(e) {\r\n");
-                writer.append("\t\te.preventDefault();\r\n");
-                writer.append("\t\tvar checked = false;\r\n");
-                
-                // FIXME: flawed lookup required to get around datatables parents lookup broken for datatables
-                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
-                //writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction], input[type=checkbox][name^=selectAction]\").each( function (j, r) {\r\n");
-
-                writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
-
-                writer.append("\t\t\t\tchecked = true;\r\n");
-                makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\t}\r\n");
-                writer.append("\t\t});\r\n");
-                writer.append("\t\tif (checked) {\r\n");
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
-                writer.append("\t\t} else {\r\n");
-                String noRowMsg = UtilProperties.getMessage("CommonUiLabels", "CommonNoRowSelected", (Locale) context.get("locale"));
-                writer.append("\t\t\talert(\"" + getEncoder(context).encode(noRowMsg) + "\");\r\n");
-                writer.append("\t\t}\r\n");
-                writer.append("\t\t});\r\n");
-            }
-            writer.append("\t} else {\r\n");
-            writer.append("\t\treturn false;\r\n");
-            writer.append("\t}\r\n");
-            writer.append("});\r\n");
-            writer.append("</script>\r\n");
-        }
-    }
-    
-   
-    /**
-     * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
-        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-        if (rowSubmitFields != null) {
-            writer.append("<script type=\"text/javascript\">\r\n");
-            writer.append("jQuery(document).ready(function() {\r\n");
-            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-            writer.append("\tif (submitForm) {\r\n");
-            for (ModelFormField rowSubmitField : rowSubmitFields) {
-                writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
-                writer.append("\t\t$(id).click(function(e) {\r\n");
-                writer.append("\t\te.preventDefault();\r\n");
-                makeHiddenFieldsForHiddenForm(writer);
-                writer.append("\t\t\tsubmitForm.submit();\r\n");
-                writer.append("\t\t});\r\n");
-            }
-            writer.append("\t} else {\r\n");
-            writer.append("\t\treturn false;\r\n");
-            writer.append("\t}\r\n");
-            writer.append("});\r\n");
-            writer.append("</script>\r\n");
-        }
-    }
-    
-    /**
-     * SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
-     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
-     */
-    @Deprecated
-    public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
-            HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
-        String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
-                "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));        
-        if (modelForm.getUseRowSubmit())
-            makeJSForRowSubmit(writer, context, modelForm, hiddenFormName);
-        else
-            makeJSForInlineSubmit(writer, context, modelForm, hiddenFormName);
-        writer.append("<form method=\"post\"");
-        writer.append(" action=\"");
-        // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        // SCIPIO: don't call if target is empty (probably shouldn't happen, but does)
-        if (UtilValidate.isNotEmpty(target)) {
-            WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, null, null, null, request, response, context);   
-        }
-        writer.append("\"");
-
-        if (UtilValidate.isNotEmpty(targetWindow)) {
-            writer.append(" target=\"");
-            writer.append(targetWindow);
-            writer.append("\"");
-        }
-
-        writer.append(" onsubmit=\"javascript:submitFormDisableSubmits(this);\"");
-
-        writer.append(" name=\"");
-        writer.append(hiddenFormName);
-        writer.append("\">");
-
-        for (Map.Entry<String, String> parameter: parameterMap.entrySet()) {
-            if (parameter.getValue() != null) {
-                writer.append("<input name=\"");
-                writer.append(parameter.getKey());
-                writer.append("\" value=\"");
-                writer.append(getEncoder(context).encode((parameter.getValue())));
-                writer.append("\" type=\"hidden\"/>");
-            }
-        }
-        writer.append("</form>");
-    }
-    
-    @Deprecated
-    private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
-        writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
-        writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
-        writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
-        writer.append("\t\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
-        writer.append("\t\t\t\t\t$(submitForm).append($(hiddenField));\r\n");
-        writer.append("\t\t\t\t}\r\n");
-        writer.append("\t\t\t});\r\n");        
-    }
 
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {
         if (UtilValidate.isNotEmpty(modelForm.getName()))
             return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
         else if (UtilValidate.isNotEmpty(context.get("formName")))
             return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
-        return prefix;    
+        return prefix;
     }
-    
+
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
         ModelForm modelForm = null;
         // SCIPIO: make sure model form field not empty
-        if (UtilValidate.isNotEmpty(modelFormField)) {
+        if (modelFormField != null) {
             modelForm = modelFormField.getModelForm();
         }
         Integer itemIndex = (Integer) context.get("itemIndex");
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
+        if (modelForm != null && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
@@ -506,35 +392,34 @@ public final class WidgetWorker {
             formUniqueId = (String) context.get("formUniqueId");
         }
         if (itemIndex != null) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue() + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
-        } else {
-            return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
+            return formName + modelForm.getItemIndexSeparator() + itemIndex + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
         }
+        return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
     }
-    
+
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {
         if ("auto".equals(linkType)) {
-            if ("intra-app".equals(targetType)) {
+            if (target != null && "intra-app".equals(targetType)) { // SCIPIO: Added null target check, in case
                 String requestUri = (target.indexOf('?') > -1) ? target.substring(0, target.indexOf('?')) : target;
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 ConfigXMLReader.RequestMap requestMap = null;
                 try {
                     requestMap = rh.getControllerConfig().getRequestMapMap().get(requestUri);
-                } catch (WebAppConfigurationException e) {
-                    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                // SCIPIO: There's no reason for this to crash or print huge error; will be handled elsewhere
+                //} catch (WebAppConfigurationException e) {
+                //    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                } catch (Exception e) {
+                    Debug.logError("determineAutoLinkType: Cannot determine widget link type for target '" + target 
+                            + "': Exception thrown while parsing controller.xml file: " + e.toString(), module);
                 }
                 if (requestMap != null && requestMap.event != null) {
                     return "hidden-form";
-                } else {
-                    return "anchor";
                 }
-            } else {
-                return "anchor";
             }
-        } else {
-            return linkType;
+            return "anchor";
         }
+        return linkType;
     }
 
     /** Returns the script location based on a script combined name:
@@ -544,7 +429,7 @@ public final class WidgetWorker {
      * @return The script location
      */
     public static String getScriptLocation(String combinedName) {
-        int pos = combinedName.lastIndexOf("#");
+        int pos = combinedName.lastIndexOf('#');
         if (pos == -1) {
             return combinedName;
         }
@@ -559,7 +444,7 @@ public final class WidgetWorker {
      * @return The method name or <code>null</code>
      */
     public static String getScriptMethodName(String combinedName) {
-        int pos = combinedName.lastIndexOf("#");
+        int pos = combinedName.lastIndexOf('#');
         if (pos == -1) {
             return null;
         }
@@ -568,14 +453,28 @@ public final class WidgetWorker {
 
     public static int getPaginatorNumber(Map<String, Object> context) {
         int paginator_number = 0;
-        Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
-        if (globalCtx != null) {
-            Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+        if (context != null) {
+            /* SCIPIO: 2018-09-04: TODO: REVIEW: new code form upstream...
+            Integer paginateNumberInt= (Integer)context.get("PAGINATOR_NUMBER");
             if (paginateNumberInt == null) {
-                paginateNumberInt = Integer.valueOf(0);
-                globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                paginateNumberInt = 0;
+                context.put("PAGINATOR_NUMBER", paginateNumberInt);
+                Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                if (globalCtx != null) {
+                    globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                }
             }
-            paginator_number = paginateNumberInt.intValue();
+            paginator_number = paginateNumberInt;
+            */
+            Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+            if (globalCtx != null) {
+                Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+                if (paginateNumberInt == null) {
+                    paginateNumberInt = 0;
+                    globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                }
+                paginator_number = paginateNumberInt;
+            }
         }
         return paginator_number;
     }
@@ -587,7 +486,16 @@ public final class WidgetWorker {
             if (UtilValidate.isNotEmpty(NO_PAGINATOR)) {
                 globalCtx.remove("NO_PAGINATOR");
             } else {
-                Integer paginateNumberInt = Integer.valueOf(getPaginatorNumber(context) + 1);
+                /* SCIPIO: 2018-09-04: TODO: REVIEW: new code from upstream
+                Integer paginateNumberInt= (Integer)globalCtx.get("PAGINATOR_NUMBER");
+                if (paginateNumberInt == null) {
+                    paginateNumberInt = 0;
+                }
+                paginateNumberInt = paginateNumberInt + 1;
+                globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
+                context.put("PAGINATOR_NUMBER", paginateNumberInt);
+                */
+                Integer paginateNumberInt = getPaginatorNumber(context) + 1;
                 globalCtx.put("PAGINATOR_NUMBER", paginateNumberInt);
             }
         }
@@ -603,11 +511,27 @@ public final class WidgetWorker {
         return delegator;
     }
 
+    /** Extracts parameters from a target URL string, prepares them for an Ajax
+     * JavaScript call. This method is currently set to return a parameter string
+     * suitable for the Prototype.js library.
+     * <p>
+     * SCIPIO: 2018-09-07: Method was moved here from {@link org.ofbiz.widget.renderer.html.HtmlWidgetRenderer}.
+     * NOTE: The previous Prototype.js comment is probably irrelevant.
+     * @param target Target URL string
+     * @return Parameter string
+     */
+    public static String getAjaxParamsFromTarget(String target) {
+        String targetParams = UtilHttp.getQueryStringFromTarget(target);
+        targetParams = targetParams.replace("?", "");
+        targetParams = targetParams.replace("&amp;", "&");
+        return targetParams;
+    }
+
     /**
      * SCIPIO: Returns the generic platform simpleEncoder from context, appropriate for point-of-use encoding and other purposes.
      * If none, returns a dummy raw encoder so null tests never needed.
      * <p>
-     * NOTE: For macro rendering, this is conceptually inappropriate to use in most cases 
+     * NOTE: For macro rendering, this is conceptually inappropriate to use in most cases
      * (because point-of-use is within the macros); all the java code is prior to point-of-use
      * which means you should call {@link #getEarlyEncoder} instead, which we will disable
      * by default in Scipio in favor of encoding from macros (point-of-use).
@@ -619,10 +543,10 @@ public final class WidgetWorker {
         }
         return encoder;
     }
-    
+
     /**
-     * SCIPIO: Returns the renderer simpleEarlyEncoder, meant to encode widget values typically 
-     * at a point before their point-of-use (which is usually wrong in design, but here for legacy reasons). 
+     * SCIPIO: Returns the renderer simpleEarlyEncoder, meant to encode widget values typically
+     * at a point before their point-of-use (which is usually wrong in design, but here for legacy reasons).
      * If none, returns the platform encoder or a dummy raw encoder so null tests never needed.
      * <p>
      * This falls back to the generic platform encoder unless it is configured explicitly to use raw encoder.
@@ -637,11 +561,11 @@ public final class WidgetWorker {
         return encoder;
     }
 
-    private static final int minWidgetFolderPathLength = 
-            ("component://".length() + 1 + "/widget/".length());
-    
+    private static final int minWidgetFolderPathLength =
+            ("component://".length() + 1 + "/widget/".length()); // SCIPIO
+
     /**
-     * Returns base widget folder from component:// path, including terminating slash.
+     * SCIPIO: Returns base widget folder from component:// path, including terminating slash.
      */
     public static String getBaseWidgetFolderFromComponentPath(String path) throws IllegalArgumentException {
         if (!path.startsWith("component://")) {
@@ -656,7 +580,7 @@ public final class WidgetWorker {
         }
         return path.substring(0, i + "/widget/".length());
     }
-    
+
     /**
      * SCIPIO: Extracts ONLY the non-interpreted styles from a style string.
      * Skips anything that contains a flexible expression, removes + and = prefixes.

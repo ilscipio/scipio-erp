@@ -18,11 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.product.config;
 
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Enumeration;
-import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,11 +47,13 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 /**
  * Product Config Worker class to reduce code in templates.
  */
-public class ProductConfigWorker {
+public final class ProductConfigWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final String SEPARATOR = "::";    // cache key separator
+
+    private ProductConfigWorker () {}
 
     private static final UtilCache<String, ProductConfigWrapper> productConfigCache = UtilCache.createUtilCache("product.config", true);     // use soft reference to free up memory if needed
 
@@ -74,7 +76,9 @@ public class ProductConfigWorker {
                                                          productId, productStoreId, catalogId, webSiteId,
                                                          currencyUomId, UtilHttp.getLocale(request),
                                                          autoUserLogin);
-                configWrapper = productConfigCache.putIfAbsentAndGet(cacheKey, new ProductConfigWrapper(configWrapper));
+                // SCIPIO: The wrapper copy must be created from the result, not before being put in
+                //configWrapper = productConfigCache.putIfAbsentAndGet(cacheKey, new ProductConfigWrapper(configWrapper));
+                configWrapper = new ProductConfigWrapper(productConfigCache.putIfAbsentAndGet(cacheKey, configWrapper));
             } else {
                 configWrapper = new ProductConfigWrapper(configWrapper);
             }
@@ -89,17 +93,17 @@ public class ProductConfigWorker {
     /**
      * Fills the product content wrapper from request.
      * <p>
-     * SCIPIO: 2018-03-09: patched to support reset operation - true by default - 
+     * SCIPIO: 2018-03-09: patched to support reset operation - true by default -
      * prevents browser checkbox no-submission problems.
      */
     public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request) {
         fillProductConfigWrapper(configWrapper, request, true);
     }
-    
+
     /**
      * Fills the product content wrapper from request.
      * <p>
-     * SCIPIO: 2018-03-09: Patched to support reset operation - 
+     * SCIPIO: 2018-03-09: Patched to support reset operation -
      * prevents browser checkbox no-submission problems.
      * WARN: false is flawed without reset - is only for access to legacy behavior or if you already reset/unnecessary.
      * TODO: 2018-03-09: Does not support un-setting for multiple choice/checkbox items (no checkbox selected),
@@ -107,7 +111,7 @@ public class ProductConfigWorker {
      */
     public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request, boolean resetConfig) {
         if (resetConfig) configWrapper.resetConfigFull();
-        
+
         int numOfQuestions = configWrapper.getQuestions().size();
         for (int k = 0; k < numOfQuestions; k++) {
             String[] opts = request.getParameterValues(Integer.toString(k));
@@ -134,7 +138,7 @@ public class ProductConfigWorker {
             for (String opt: opts) {
                 // SCIPIO: 2018-02-13: option may have empty value ("No option"); this is normal; don't log warning (NumberFormatException)
                 if (UtilValidate.isEmpty(opt)) continue;
-                
+
                 int cnt = -1;
                 try {
                     cnt = Integer.parseInt(opt);
@@ -210,15 +214,17 @@ public class ProductConfigWorker {
      * @param delegator the delegator
      */
     public static void storeProductConfigWrapper(ProductConfigWrapper configWrapper, Delegator delegator) {
-        if (configWrapper == null || (!configWrapper.isCompleted()))  return;
+        if (configWrapper == null || (!configWrapper.isCompleted())) {
+            return;
+        }
         String configId = null;
         List<ConfigItem> questions = configWrapper.getQuestions();
-        List<GenericValue> configsToCheck = new LinkedList<GenericValue>();
+        List<GenericValue> configsToCheck = new LinkedList<>();
         int selectedOptionSize = 0;
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
             List<ConfigOption> options = ci.getOptions();
             if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -267,7 +273,7 @@ public class ProductConfigWorker {
                             for (ConfigItem ci: questions) {
                                 String configItemId = null;
                                 Long sequenceNum = null;
-                                List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+                                List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
                                 List<ConfigOption> options = ci.getOptions();
                                 if (ci.isStandard()) {
                                     selectedOptions.addAll(options);
@@ -287,7 +293,10 @@ public class ProductConfigWorker {
                                             if (anOption.isVirtualComponent(aComponent)) {
                                                 Map<String, String> componentOptions = anOption.getComponentOptions();
                                                 String optionProductId = aComponent.getString("productId");
-                                                String optionProductOptionId = componentOptions.get(optionProductId);
+                                                String optionProductOptionId = null;
+                                                if(UtilValidate.isNotEmpty(componentOptions)) {
+                                                    optionProductOptionId = componentOptions.get(optionProductId);
+                                                }
                                                 String configOptionId = anOption.configOption.getString("configOptionId");
                                                 configItemId = ci.getConfigItemAssoc().getString("configItemId");
                                                 sequenceNum = ci.getConfigItemAssoc().getLong("sequenceNum");
@@ -310,14 +319,14 @@ public class ProductConfigWorker {
 
                                 if (match && (UtilValidate.isEmpty(configOptionProductOptions))) {
                                     configWrapper.configId = tempConfigId;
-                                    Debug.logInfo("Existing configuration found with configId:"+ tempConfigId,  module);
+                                    Debug.logInfo("Existing configuration found with configId: "+ tempConfigId,  module);
                                     return;
                                 }
                             }
 
                         } else {
                             configWrapper.configId = tempConfigId;
-                            Debug.logInfo("Existing configuration found with configId:"+ tempConfigId,  module);
+                            Debug.logInfo("Existing configuration found with configId: "+ tempConfigId,  module);
                             return;
                         }
                     }
@@ -333,7 +342,7 @@ public class ProductConfigWorker {
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<>();
             List<ConfigOption> options = ci.getOptions();
            if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -355,7 +364,7 @@ public class ProductConfigWorker {
                 sequenceNum = ci.getConfigItemAssoc().getLong("sequenceNum");
                 for (ConfigOption oneOption: selectedOptions) {
                     Map<String, String>  componentOptions = oneOption.componentOptions;
-                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+                    List<GenericValue> toBeStored = new LinkedList<>();
                     String configOptionId = oneOption.configOption.getString("configOptionId");
                     String description = oneOption.getComments();
                     GenericValue productConfigConfig = delegator.makeValue("ProductConfigConfig");
@@ -394,7 +403,7 @@ public class ProductConfigWorker {
 
         //save  configId to configWrapper, so we can use it in shopping cart operations
         configWrapper.configId = configId;
-        Debug.logInfo("New configId created:"+ configId,  module);
+        Debug.logInfo("New configId created: " + configId,  module);
         return;
     }
 
@@ -416,8 +425,8 @@ public class ProductConfigWorker {
     public static ProductConfigWrapper loadProductConfigWrapper(Delegator delegator, LocalDispatcher dispatcher, String configId, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) {
         ProductConfigWrapper configWrapper = null;
         try {
-             configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
-            if (configWrapper != null && UtilValidate.isNotEmpty(configId)) {
+            configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
+            if (UtilValidate.isNotEmpty(configId)) {
                 configWrapper.loadConfig(delegator, configId);
             }
         } catch (Exception e) {
@@ -427,5 +436,11 @@ public class ProductConfigWorker {
         return configWrapper;
     }
 
+    /**
+     * SCIPIO: Returns true if the product is a config product (productTypeId AGGREGATED or AGGREGATED_SERVICE).
+     */
+    public static boolean isConfigProduct(GenericValue product) {
+        return ProductWorker.isConfigProduct(product);
+    }
 }
 

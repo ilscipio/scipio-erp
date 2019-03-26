@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -40,19 +27,19 @@ under the License.
           <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom /></@td>
           <@td>${status.get("description",locale)}</@td>
           <#-- invoices -->
-          <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":"${orderHeader.orderId}"}, Static["org.ofbiz.base.util.UtilMisc"].toList("invoiceId"), false) />
+          <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":raw(orderHeader.orderId)}, UtilMisc.toList("invoiceId"), false) />
           <#assign distinctInvoiceIds = Static["org.ofbiz.entity.util.EntityUtil"].getFieldListFromEntityList(invoices, "invoiceId", true)>
           <@td>
             <#-- SCIPIO: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices
                 created upon order completion. Just show it all for now (final invoice may have more information). -->
-            <a href="<@ofbizUrl>order.pdf?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
+            <a href="<@pageUrl>order.pdf?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
             <#if distinctInvoiceIds?has_content>
               <#list distinctInvoiceIds as invoiceId>
-                <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${invoiceId} (${uiLabelMap.CommonPdf})</a>
+                <a href="<@pageUrl>invoice.pdf?invoiceId=${invoiceId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${invoiceId} (${uiLabelMap.CommonPdf})</a>
               </#list>
             </#if>
           </@td>
-          <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
+          <@td><a href="<@pageUrl>orderstatus?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
         </@tr>
       </#list>
       </@tbody>
@@ -82,7 +69,7 @@ under the License.
               <@td>${porderHeader.orderId}</@td>
               <@td><@ofbizCurrency amount=porderHeader.grandTotal isoCode=porderHeader.currencyUom /></@td>
               <@td>${pstatus.get("description",locale)}</@td>
-              <@td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
+              <@td><a href="<@pageUrl>orderstatus?orderId=${porderHeader.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
             </@tr>
           </#list>
       </@tbody>
@@ -97,7 +84,7 @@ under the License.
   <#assign sectionTitle = uiLabelMap.EcommerceDownloadsAvailableTitle/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
+      <@menuitem type="link" href=makePageUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
     </@menu>
   </#macro>
   <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">

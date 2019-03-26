@@ -23,6 +23,7 @@ import java.util.Set;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.widget.model.AbstractModelAction.ClearField;
 import org.ofbiz.widget.model.AbstractModelAction.EntityAnd;
 import org.ofbiz.widget.model.AbstractModelAction.EntityCondition;
 import org.ofbiz.widget.model.AbstractModelAction.EntityOne;
@@ -58,15 +59,19 @@ import org.ofbiz.widget.model.ModelFormField.DisplayField;
 import org.ofbiz.widget.model.ModelFormField.DropDownField;
 import org.ofbiz.widget.model.ModelFormField.FieldInfoWithOptions;
 import org.ofbiz.widget.model.ModelFormField.FileField;
+import org.ofbiz.widget.model.ModelFormField.FormField;
+import org.ofbiz.widget.model.ModelFormField.GridField;
 import org.ofbiz.widget.model.ModelFormField.HiddenField;
 import org.ofbiz.widget.model.ModelFormField.HyperlinkField;
 import org.ofbiz.widget.model.ModelFormField.IgnoredField;
 import org.ofbiz.widget.model.ModelFormField.ImageField;
 import org.ofbiz.widget.model.ModelFormField.LookupField;
+import org.ofbiz.widget.model.ModelFormField.MenuField;
 import org.ofbiz.widget.model.ModelFormField.PasswordField;
 import org.ofbiz.widget.model.ModelFormField.RadioField;
 import org.ofbiz.widget.model.ModelFormField.RangeFindField;
 import org.ofbiz.widget.model.ModelFormField.ResetField;
+import org.ofbiz.widget.model.ModelFormField.ScreenField;
 import org.ofbiz.widget.model.ModelFormField.SubmitField;
 import org.ofbiz.widget.model.ModelFormField.TextField;
 import org.ofbiz.widget.model.ModelFormField.TextFindField;
@@ -195,12 +200,16 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
 
     @Override
     public void visit(GetRelated getRelated) throws Exception {
-        infoContext.addEntityName(getRelated.getRelationName());
+        // SCIPIO: This produces false positives - relation name may include a title=""
+        // TODO?: Verify relation names for real (may not be possible)
+        //infoContext.addEntityName(getRelated.getRelationName());
     }
 
     @Override
     public void visit(GetRelatedOne getRelatedOne) throws Exception {
-        infoContext.addEntityName(getRelatedOne.getRelationName());
+        // SCIPIO: This produces false positives - relation name may include a title=""
+        // TODO?: Verify relation names for real (may not be possible)
+        //infoContext.addEntityName(getRelatedOne.getRelationName());
     }
 
     @Override
@@ -263,7 +272,7 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
     }
 
     @Override
-    public void visit(ModelMenuAction.SetField setField) throws Exception {
+    public void visit(@SuppressWarnings("deprecation") ModelMenuAction.SetField setField) throws Exception { // SCIPIO: deprecation
     }
 
     @Override
@@ -398,7 +407,7 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
         @Override
         public void visit(ModelFormField field) throws Exception { // SCIPIO: added 2018-03-02
         }
-        
+
         @Override
         public void visit(CheckField checkField) {
         }
@@ -458,6 +467,21 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
         }
 
         @Override
+        public void visit(MenuField menuField) {
+            //TODO
+        }
+
+        @Override
+        public void visit(FormField formField) {
+            //TODO
+        }
+
+        @Override
+        public void visit(GridField gridField) {
+            //TODO
+        }
+
+        @Override
         public void visit(IgnoredField ignoredField) {
         }
 
@@ -488,6 +512,11 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
 
         @Override
         public void visit(ResetField resetField) {
+        }
+
+        @Override
+        public void visit(ScreenField screenField) {
+            //TODO
         }
 
         @Override
@@ -586,6 +615,11 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
 
     @Override
     public void visit(ModelSubMenu subMenu) throws Exception {
+        // SCIPIO: TODO?
+    }
+
+    @Override
+    public void visit(ClearField clearField) throws Exception {
         // SCIPIO: TODO?
     }
 }

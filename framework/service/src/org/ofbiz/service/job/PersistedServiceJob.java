@@ -26,7 +26,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -35,8 +35,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityQuery;
@@ -82,10 +80,10 @@ public class PersistedServiceJob extends GenericServiceJob {
         this.jobValue = jobValue;
         Timestamp storedDate = jobValue.getTimestamp("runTime");
         this.startTime = storedDate.getTime();
-        this.maxRetry = jobValue.get("maxRetry") != null ? jobValue.getLong("maxRetry").longValue() : -1;
+        this.maxRetry = jobValue.get("maxRetry") != null ? jobValue.getLong("maxRetry") : -1;
         Long retryCount = jobValue.getLong("currentRetryCount");
         if (retryCount != null) {
-            this.currentRetryCount = retryCount.longValue();
+            this.currentRetryCount = retryCount;
         } else {
             // backward compatibility
             this.currentRetryCount = getRetries(this.delegator);
@@ -108,16 +106,15 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (cancelTime != null || startTime != null) {
             // job not available
             throw new InvalidJobException("Job [" + getJobId() + "] is not available");
-        } else {
-            jobValue.set("statusId", "SERVICE_QUEUED");
-            try {
-                jobValue.store();
-            } catch (GenericEntityException e) {
-                throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
-            }
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
-            }
+        }
+        jobValue.set("statusId", "SERVICE_QUEUED");
+        try {
+            jobValue.store();
+        } catch (GenericEntityException e) {
+            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
+        }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
         }
     }
 
@@ -152,7 +149,10 @@ public class PersistedServiceJob extends GenericServiceJob {
         TemporalExpression expr = null;
         RecurrenceInfo recurrence = getRecurrenceInfo();
         if (recurrence != null) {
-            Debug.logWarning("Persisted Job [" + getJobId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            // SCIPIO: In all likelihood we will never deprecate the old RecurrenceInfo code, and we have stock seed/demo
+            // data using it, so this should not be a warning for us.
+            //Debug.logWarning("Persisted Job [" + getJobId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            Debug.logInfo("Persisted Job [" + getJobId() + "] references a RecurrenceInfo (recommend using TemporalExpression instead)", module);
             currentRecurrenceCount = recurrence.getCurrentCount();
             expr = RecurrenceInfo.toTemporalExpression(recurrence);
         }
@@ -164,10 +164,10 @@ public class PersistedServiceJob extends GenericServiceJob {
             }
         }
         if (jobValue.get("maxRecurrenceCount") != null) {
-            maxRecurrenceCount = jobValue.getLong("maxRecurrenceCount").longValue();
+            maxRecurrenceCount = jobValue.getLong("maxRecurrenceCount");
         }
         if (jobValue.get("currentRecurrenceCount") != null) {
-            currentRecurrenceCount = jobValue.getLong("currentRecurrenceCount").longValue();
+            currentRecurrenceCount = jobValue.getLong("currentRecurrenceCount");
         }
         if (maxRecurrenceCount != -1) {
             currentRecurrenceCount++;
@@ -186,11 +186,19 @@ public class PersistedServiceJob extends GenericServiceJob {
         } catch (GenericEntityException e) {
             throw new InvalidJobException(e);
         }
-        if (Debug.infoOn()) Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+        if (Debug.infoOn()) {
+            // SCIPIO: 2018-10-17: detect -1 case and try to make this less confusing
+            // NOTE: this is only called in GenericServiceJob.exec, so we can say "Running Job" here, should be always true...
+            //Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+            Debug.logInfo("Running Job [" + getJobName() + "] Id ["  + getJobId() + "] Service [" + getServiceName() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
+                    + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module);
+        }
     }
 
     private void createRecurrence(long next, boolean isRetryOnFailure) throws GenericEntityException {
-        if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Next runtime returned: " + next, module);
+        }
         if (next > startTime) {
             String pJobId = jobValue.getString("parentJobId");
             if (pJobId == null) {
@@ -205,14 +213,14 @@ public class PersistedServiceJob extends GenericServiceJob {
             newJob.set("runByInstanceId", null);
             newJob.set("runTime", new java.sql.Timestamp(next));
             if (isRetryOnFailure) {
-                newJob.set("currentRetryCount", new Long(currentRetryCount + 1));
+                newJob.set("currentRetryCount", currentRetryCount + 1);
             } else {
-                newJob.set("currentRetryCount", new Long(0));
+                newJob.set("currentRetryCount", 0L);
             }
             nextRecurrence = next;
-            
+
             // SCIPIO: Transfer the special new eventId field
-            // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is 
+            // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is
             // a regular recurrence and not a failure retry.
             String eventId = jobValue.getString("eventId");
             newJob.set("eventId", isRetryOnFailure ? null : eventId);
@@ -225,9 +233,11 @@ public class PersistedServiceJob extends GenericServiceJob {
                 newJob.put("recurrenceInfoId", null);
                 newJob.put("tempExprId", null);
             }
-            
+
             delegator.createSetNextSeqId(newJob);
-            if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Created next job entry: " + newJob, module);
+            }
         }
     }
 
@@ -257,13 +267,13 @@ public class PersistedServiceJob extends GenericServiceJob {
     protected void failed(Throwable t) throws InvalidJobException {
         super.failed(t);
         // if the job has not been re-scheduled; we need to re-schedule and run again
-        
+
         // SCIPIO: 2017-08-30: SPECIAL CASE: for special events (SCH_EVENT_STARTUP), we need to schedule a retry even
         // if there is already a recurrence, because the recurrence will have been setup for the specific event (SCH_EVENT_STARTUP) only;
         // if we don't make this exception, startup jobs can't easily be configured to do retries within the current execution.
         // (to prevent this, set maxRetry=0)
         // TODO: REVIEW: unclear if this exception should apply only to all event types (current case - 2017-08-30),
-        // a subset of possible event types, or only SCH_EVENT_STARTUP ("SCH_EVENT_STARTUP".equals(nextRecurrenceEventId)); 
+        // a subset of possible event types, or only SCH_EVENT_STARTUP ("SCH_EVENT_STARTUP".equals(nextRecurrenceEventId));
         // but because the retries are not given an event (see createRecurrence), it's at least consistent to have roughly same condition here,
         // and this would probably make sense for other event types...
         //if (nextRecurrence == -1) {
@@ -282,7 +292,8 @@ public class PersistedServiceJob extends GenericServiceJob {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to re-schedule job [" + getJobId() + "]: ", module);
                 }
-                if (Debug.infoOn()) Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling: " + new Date(next) + " (" + next + ")", module); // SCIPIO: 2017-09-11: improved message
+                // SCIPIO: 2018-10-17: display friendly Date format (not just the long value)
+                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + new Date(next) + " (" + next + ")", module);
             } else {
                 Debug.logWarning("Persisted Job [" + getJobId() + "] Failed. Max Retry Hit, not re-scheduling", module);
             }
@@ -310,17 +321,17 @@ public class PersistedServiceJob extends GenericServiceJob {
     protected Map<String, Object> getContext() throws InvalidJobException {
         Map<String, Object> context = null;
         try {
-            if (!UtilValidate.isEmpty(jobValue.getString("runtimeDataId"))) {
+            if (UtilValidate.isNotEmpty(jobValue.getString("runtimeDataId"))) {
                 GenericValue contextObj = jobValue.getRelatedOne("RuntimeData", false);
                 if (contextObj != null) {
                     context = UtilGenerics.checkMap(XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator), String.class, Object.class);
                 }
             }
             if (context == null) {
-                context = new HashMap<String, Object>();
+                context = new HashMap<>();
             }
             // check the runAsUser
-            if (!UtilValidate.isEmpty(jobValue.getString("runAsUser"))) {
+            if (UtilValidate.isNotEmpty(jobValue.getString("runAsUser"))) {
                 context.put("userLogin", ServiceUtil.getUserLogin(dctx, context, jobValue.getString("runAsUser")));
             }
         } catch (GenericEntityException e) {

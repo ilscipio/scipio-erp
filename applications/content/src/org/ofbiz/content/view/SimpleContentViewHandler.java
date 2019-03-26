@@ -41,7 +41,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -131,7 +130,7 @@ public class SimpleContentViewHandler extends AbstractViewHandler {
                 // DEJ20080717: why are we rendering the DataResource directly instead of rendering the content?
                 ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, dataResourceId, https, webSiteId, locale, rootDir);
                 ByteArrayInputStream bais = new ByteArrayInputStream(byteBuffer.array());
-                // setup chararcter encoding and content type
+                // setup character encoding and content type
                 String charset = dataResource.getString("characterSetId");
                 if (UtilValidate.isEmpty(charset)) {
                     charset = defaultCharset;
@@ -145,7 +144,7 @@ public class SimpleContentViewHandler extends AbstractViewHandler {
                 // setup content type
                 String contentType2 = UtilValidate.isNotEmpty(mimeTypeId) ? mimeTypeId + "; charset=" +charset : contentType;
                 String fileName = null;
-                if (!UtilValidate.isEmpty(dataResource.getString("dataResourceName"))) {
+                if (UtilValidate.isNotEmpty(dataResource.getString("dataResourceName"))) {
                     fileName = dataResource.getString("dataResourceName").replace(" ", "_"); // spaces in filenames can be a problem
                 }
 
@@ -178,7 +177,7 @@ public class SimpleContentViewHandler extends AbstractViewHandler {
 
                     // no service errors; now check the actual response
                     Boolean hasPermission = (Boolean) permSvcResp.get("hasPermission");
-                    if (!hasPermission.booleanValue()) {
+                    if (!hasPermission) {
                         String errorMsg = (String) permSvcResp.get("failMessage");
                         Debug.logError(errorMsg, module);
                         request.setAttribute("_ERROR_MESSAGE_", errorMsg);
@@ -187,11 +186,7 @@ public class SimpleContentViewHandler extends AbstractViewHandler {
                 }
                 UtilHttp.streamContentToBrowser(response, bais, byteBuffer.limit(), contentType2, fileName);
             }
-        } catch (GenericEntityException e) {
-            throw new ViewHandlerException(e.getMessage());
-        } catch (IOException e) {
-            throw new ViewHandlerException(e.getMessage());
-        } catch (GeneralException e) {
+        } catch (IOException | GeneralException e) {
             throw new ViewHandlerException(e.getMessage());
         }
     }

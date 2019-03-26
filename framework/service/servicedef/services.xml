@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -128,4 +115,138 @@ under the License.
         <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
         <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
     </service>
+
+    <!-- JobManagerLock Services -->
+    <service name="createJobManagerLock" default-entity-name="JobManagerLock" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a Job Manager Lock</description>
+        <permission-service service-name="commonGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateJobManagerLock" default-entity-name="JobManagerLock" engine="entity-auto" invoke="update" auth="true">
+        <description>Cancel a Job Sandbox Lock</description>
+        <permission-service service-name="commonGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="createCatalinaSession" default-entity-name="CatalinaSession" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a Catalina Session Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateCatalinaSession" default-entity-name="CatalinaSession" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Catalina Session Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCatalinaSession" default-entity-name="CatalinaSession" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a Catalina Session Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- StandardLanguage services -->
+    <service name="createStandardLanguage" default-entity-name="StandardLanguage" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a StandardLanguage Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateStandardLanguage" default-entity-name="StandardLanguage" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a StandardLanguage Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteStandardLanguage" default-entity-name="StandardLanguage" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a StandardLanguage Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <!-- StatusItem services -->
+    <service name="createStatusItem" default-entity-name="StatusItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a StatusItem Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateStatusItem" default-entity-name="StatusItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a StatusItem Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteStatusItem" default-entity-name="StatusItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a StatusItem Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createStatusType" default-entity-name="StatusType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a StatusType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateStatusType" default-entity-name="StatusType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a StatusType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteStatusType" default-entity-name="StatusType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a StatusType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createSequenceValueItem" default-entity-name="SequenceValueItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SequenceValueItem</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSequenceValueItem" default-entity-name="SequenceValueItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SequenceValueItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSequenceValueItem" default-entity-name="SequenceValueItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SequenceValueItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- JobSandbox Services -->
+    <service name="createJobSandbox" engine="entity-auto" invoke="create" default-entity-name="JobSandbox" auth="true">
+        <description>Create JobSandbox record</description>
+        <permission-service service-name="commonGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateJobSandbox" engine="entity-auto" invoke="update" default-entity-name="JobSandbox" auth="true">
+        <description>Update JobSandbox record</description>
+        <permission-service service-name="commonGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteJobSandbox" engine="entity-auto" invoke="delete" default-entity-name="JobSandbox" auth="true">
+        <description>Delete JobSandbox record</description>
+        <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <!-- RuntimeData Services -->
+    <service name="createRuntimeData" engine="entity-auto" invoke="create" default-entity-name="RuntimeData" auth="true">
+        <description>Create RuntimeData record</description>
+        <permission-service service-name="commonGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="runtimeInfo" allow-html="any"></override>
+    </service>
+    <service name="updateRuntimeData" engine="entity-auto" invoke="update" default-entity-name="RuntimeData" auth="true">
+        <description>Update RuntimeData record</description>
+        <permission-service service-name="commonGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteRuntimeData" engine="entity-auto" invoke="delete" default-entity-name="RuntimeData" auth="true">
+        <description>Delete RuntimeData record</description>
+        <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
 </services>

@@ -20,6 +20,7 @@ package org.ofbiz.entity.condition;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -74,8 +75,6 @@ public final class EntityExpr extends EntityCondition {
         }
         this.operator = UtilGenerics.cast(operator);
         this.rhs = rhs;
-
-        //Debug.logInfo("new EntityExpr internal field=" + lhs + ", value=" + rhs + ", value type=" + (rhs == null ? "null object" : rhs.getClass().getName()), module);
     }
 
     public EntityExpr(EntityCondition lhs, EntityJoinOperator operator, EntityCondition rhs) {
@@ -113,7 +112,6 @@ public final class EntityExpr extends EntityCondition {
 
     @Override
     public String makeWhereString(ModelEntity modelEntity, List<EntityConditionParam> entityConditionParams, Datasource datasourceInfo) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
 
         this.checkRhsType(modelEntity, null);
 
@@ -129,7 +127,6 @@ public final class EntityExpr extends EntityCondition {
 
     @Override
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
         if (lhs instanceof EntityCondition) {
             ((EntityCondition) lhs).checkCondition(modelEntity);
             ((EntityCondition) rhs).checkCondition(modelEntity);
@@ -140,7 +137,7 @@ public final class EntityExpr extends EntityCondition {
     protected void addValue(StringBuilder buffer, ModelField field, Object value, List<EntityConditionParam> params) {
         if (rhs instanceof EntityFunction.UPPER) {
             if (value instanceof String) {
-                value = ((String) value).toUpperCase();
+                value = ((String) value).toUpperCase(Locale.getDefault());
             }
         }
         super.addValue(buffer, field, value, params);
@@ -162,7 +159,9 @@ public final class EntityExpr extends EntityCondition {
     }
 
     public void checkRhsType(ModelEntity modelEntity, Delegator delegator) {
-        if (this.rhs == null || this.rhs == GenericEntity.NULL_FIELD || modelEntity == null) return;
+        if (this.rhs == null || this.rhs == GenericEntity.NULL_FIELD || modelEntity == null) {
+            return;
+        }
 
         Object value = this.rhs;
         if (this.rhs instanceof EntityFunction<?>) {
@@ -215,6 +214,9 @@ public final class EntityExpr extends EntityCondition {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
+            if (valueType == null) {
+                throw new IllegalArgumentException("Type " + curField.getType() + " not found for entity [" + modelEntity.getEntityName() + "]; probably because there is no datasource (helper) setup for the entity group that this entity is in: [" + delegator.getEntityGroupName(modelEntity.getEntityName()) + "]");
+            }
           // make sure the type of keyFieldName of EntityConditionSubSelect  matches the field Java type
             try {
                 if (!ObjectType.instanceOf(ObjectType.loadClass(valueType.getJavaType()), type.getJavaType())) {
@@ -263,16 +265,13 @@ public final class EntityExpr extends EntityCondition {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EntityExpr)) return false;
+        if (!(obj instanceof EntityExpr)) {
+            return false;
+        }
         EntityExpr other = (EntityExpr) obj;
         boolean isEqual = equals(lhs, other.lhs) &&
                equals(operator, other.operator) &&
                equals(rhs, other.rhs);
-        //if (!isEqual) {
-        //    Debug.logWarning("EntityExpr.equals is false for: \n-this.lhs=" + this.lhs + "; other.lhs=" + other.lhs +
-        //            "\nthis.operator=" + this.operator + "; other.operator=" + other.operator +
-        //            "\nthis.rhs=" + this.rhs + "other.rhs=" + other.rhs, module);
-        //}
         return isEqual;
     }
 

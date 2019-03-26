@@ -12,13 +12,13 @@ public abstract class CatalogAltUrlSanitizer {
      * Clean and convert a name to alt url for storage as ALTERNATIVE_URL.
      */
     public abstract String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType);
-    
+
     /**
      * Clean and convert an id to alt url for storage as ALTERNATIVE_URL - may be called as fallback when
      * no name found (depending on config), or may be left to live.
      */
     public abstract String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType);
-    
+
     /**
      * Clean and convert a name to alt url for storage as ALTERNATIVE_URL - returns new map with keys converted.
      */
@@ -29,12 +29,12 @@ public abstract class CatalogAltUrlSanitizer {
         }
         return newMap;
     }
-    
+
     /**
      * Cleans alt url coming out of DB IF not already applied before going into db.
      * This is a TRADEOFF with storage-time cleaning.
      * <p>
-     * WARN: 2017-11-08: FOR SEO URLs, THIS MUST DO NOTHING AND RETURN altUrl AS-IS! 
+     * WARN: 2017-11-08: FOR SEO URLs, THIS MUST DO NOTHING AND RETURN altUrl AS-IS!
      * This will allow better DB queries. See implementation.
      * <p>
      * WARN: the locale here might not perfectly match the altUrl due to performance reasons!!

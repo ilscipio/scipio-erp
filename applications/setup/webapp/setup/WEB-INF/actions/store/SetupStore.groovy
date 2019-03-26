@@ -55,14 +55,6 @@ if (partyId && partyAcctgPref == null) {
 }
 context.partyAcctgPref = partyAcctgPref;
 
-/*
-<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
-<entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
-    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
-    <entity-order-by field-name="description"/>
-</entity-options>
-</drop-down>
-*/
 currencyUomList = delegator.findByAnd("Uom", [uomTypeId:"CURRENCY_MEASURE"], ["description"], true);
 context.currencyUomList = currencyUomList;
 

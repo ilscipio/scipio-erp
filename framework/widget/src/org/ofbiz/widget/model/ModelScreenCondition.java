@@ -24,17 +24,12 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.widget.model.AbstractModelCondition;
 import org.ofbiz.widget.model.AbstractModelCondition.DefaultConditionFactory;
-import org.ofbiz.widget.model.ModelCondition;
-import org.ofbiz.widget.model.ModelConditionFactory;
-import org.ofbiz.widget.model.ModelConditionVisitor;
-import org.ofbiz.widget.model.ModelWidget;
 import org.w3c.dom.Element;
 
 /**
  * Models the &lt;condition&gt; element.
- * 
+ *
  * @see <code>widget-screen.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -44,14 +39,14 @@ public final class ModelScreenCondition implements Serializable {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -90,18 +85,17 @@ public final class ModelScreenCondition implements Serializable {
             }
             if ("if-empty-section".equals(conditionElement.getNodeName())) {
                 return new IfEmptySection(this, modelWidget, conditionElement);
-            } else {
-                return super.newInstance(this, modelWidget,conditionElement);
             }
+            return super.newInstance(this, modelWidget,conditionElement);
         }
     }
-    
+
     /**
      * SCIPIO: Quick method to make an if-true value="" -like condition dynamically which only passes
      * if result is explicit true boolean or string.
      */
     public static ModelCondition makeBooleanExprCondition(ModelWidget modelWidget, FlexibleStringExpander expr) {
-        return new AbstractModelCondition.IfTrue(SCREEN_CONDITION_FACTORY, modelWidget, 
+        return new AbstractModelCondition.IfTrue(SCREEN_CONDITION_FACTORY, modelWidget,
                 new ValueAccessor.ExpanderAccessor(expr), true, true);
     }
 }

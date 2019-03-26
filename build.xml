@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <project name="Scipio Main Build" default="build" basedir="."
@@ -138,7 +125,6 @@ under the License.
     <property name="site.dir" value="../site"/>
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
-    <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
     
     <!-- SCIPIO: New properties -->
     
@@ -193,7 +179,7 @@ under the License.
     
     <target name="sonar-init" depends="ivy-init">
         <path id="sonar-ant-tasks.class.path">
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="sonar-ant-task-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/sonar-ant-task" includes="*.jar"/>
         </path>
         <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml" classpathref="sonar-ant-tasks.class.path"/>
     </target>
@@ -256,9 +242,7 @@ under the License.
         <invokehook target="pre-clean-downloads" />
         
         <delete verbose="true" deleteonexit="true">
-            <fileset dir="framework/base/lib" includes="cobertura-*.jar"/>
-            <fileset dir="framework/base/lib" includes="sonar-*.jar"/>
-            <fileset dir="framework/base/lib" includes="activemq-*.jar"/>
+            <fileset dir="framework/base/lib/ant-opt" includes="**/*.jar"/>
             <!-- SCIPIO: 2017-04-11: for this to be consistent we have to remove all except derby
             <fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/>
             <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>-->
@@ -491,7 +475,7 @@ under the License.
     </target>
 
     <target name="svninfo"
-        description="Update the Release-revision info in the footer. Note that you need a valid Internet connection and Subversion connected to the OFBiz repository for that ">
+        description="Update the Release-revision info in the footer. Note that you need a valid Internet connection and Subversion connected to the Scipio repository for that ">
         <echo message="Creating svninfo..."/>
         
         <!-- SCIPIO: hooks -->
@@ -777,41 +761,51 @@ under the License.
     <!-- ================================================================== -->
     
     <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-lib-update">
-        <echo message="[build] ========== Start Building (Compile) =========="/>
-        
-        <!-- SCIPIO: special property to only target build command with lib.update.sources -->
-        <property name="lib.update.sources" value="${build.lib.update.sources}" if:set="build.lib.update.sources"/>
-        
-        <!-- SCIPIO: hooks -->
-        <invokehook target="pre-build" />
-        
-        <antcall target="build-dev"/>
-
-        <antcall target="build-framework"/>
-        
-        <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
-        <externalsubant>
-            <fileset dir="${basedir}/themes">
-                <include name="*/build.xml" />
-            </fileset>
-        </externalsubant>-->
-        <!-- SCIPIO: 2017-01-31: rectified build order, framework->themes->..., to match component load order -->
-        <dep-subant dir="${basedir}/themes"/>
-
-        <antcall target="build-applications"/>
-        <antcall target="build-specialpurpose"/>
-        
-        <!-- SCIPIO: addons dir -->
-        <addonsant/>
-        
-        <hotdeployant/>
-        <antcall target="clean-svninfo"/>
-        <antcall target="clean-gitinfo"/>
-
-        <!-- SCIPIO: hooks -->
-        <invokehook target="post-build" />
-        
-        <echo message="[build] ========== Done Building (Compile) =========="/>
+        <!-- SCIPIO: 2018-11-14: Can bypass actual build using flag: -Dscipio.target.build=false 
+            FIXME?: using big if here is ugly -->
+        <if>
+            <equals arg1="${scipio.target.build}" arg2="false"/>
+            <then>
+                <echo message="[build] (bypassed)"/>
+            </then>
+            <else>
+                <echo message="[build] ========== Start Building (Compile) =========="/>
+                
+                <!-- SCIPIO: special property to only target build command with lib.update.sources -->
+                <property name="lib.update.sources" value="${build.lib.update.sources}" if:set="build.lib.update.sources"/>
+                
+                <!-- SCIPIO: hooks -->
+                <invokehook target="pre-build" />
+                
+                <antcall target="build-dev"/>
+    
+                <antcall target="build-framework"/>
+                
+                <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
+                <externalsubant>
+                    <fileset dir="${basedir}/themes">
+                        <include name="*/build.xml" />
+                    </fileset>
+                </externalsubant>-->
+                <!-- SCIPIO: 2017-01-31: rectified build order, framework->themes->..., to match component load order -->
+                <dep-subant dir="${basedir}/themes"/>
+    
+                <antcall target="build-applications"/>
+                <antcall target="build-specialpurpose"/>
+                
+                <!-- SCIPIO: addons dir -->
+                <addonsant/>
+                
+                <hotdeployant/>
+                <antcall target="clean-svninfo"/>
+                <antcall target="clean-gitinfo"/>
+    
+                <!-- SCIPIO: hooks -->
+                <invokehook target="post-build" />
+                
+                <echo message="[build] ========== Done Building (Compile) =========="/>
+            </else>
+        </if>
     </target>
 
     <target name="build-framework">
@@ -898,7 +892,6 @@ under the License.
           <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/catalina/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/entity/lib" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/geronimo/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/service/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/testtools/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/webapp/lib" includes="*.jar"/>
@@ -995,7 +988,39 @@ under the License.
         <echo message="[docs-ftl-scipio-website] WARN: The output files may not be browsable locally, because the generated URLs for website may differ from the local paths (for both absolute and relative URLs)"/>
         <echo message="[docs-ftl-scipio-website] ========== Done Building (FTL docs) =========="/>
     </target>
-    
+
+    <!-- SCIPIO: Website FTL lib doc build. Currently requires a "build" on the main project to compile the compiler. -->
+    <target name="docs-ftl-scipio-ide" depends="build">
+        <antcall target="docs-ftl-scipio-ide-ftlonly"/>
+    </target>
+
+    <target name="docs-ftl-scipio-ide-ftlonly">
+        <echo message="[docs-ftl-scipio-ide] ========== Start Building (FTL docs) =========="/>
+        <echo message="[docs-ftl-scipio-ide] Building Scipio IDE-friendly FTL lib docs..."/>
+        <java classname="com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
+            <arg value="scipio-lib"/> <!-- lib format -->
+            <arg value="templating"/> <!-- doc purpose -->
+            <arg value="framework/common/webcommon/includes/scipio/lib"/> <!-- base source folder -->
+            <arg value="doc/scipio-ide/templating/ftl/lib"/> <!-- base output folder -->
+            <arg value="_NONE_"/> <!-- output file extension -->
+            <arg value="framework/common/webcommon/includes/scipio/doc/ftlDocTemplateIDE.ftl"/> <!-- doc template -->
+            <!-- source files to process -->
+            <arg value="utilities.ftl"/>
+            <arg value="standard/htmlContent.ftl"/>
+            <arg value="standard/htmlForm.ftl"/>
+            <arg value="standard/htmlInfo.ftl"/>
+            <arg value="standard/htmlNav.ftl"/>
+            <arg value="standard/htmlScript.ftl"/>
+            <arg value="standard/htmlStructure.ftl"/>
+            <arg value="standard/htmlTemplate.ftl"/>
+            <classpath>
+                <path location="framework/webapp/build/lib/ofbiz-webapp.jar"/> <!-- the compiler class currently lives in here -->
+                <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
+            </classpath>
+        </java>
+        <echo message="[docs-ftl-scipio-ide] ========== Done Building (FTL docs) =========="/>
+    </target>
+
     <!-- SCIPIO: these would have been used to deploy html files or intermediate FTLs (highly complex,
         but now we do dynamic renders which are much easier to handle
     <target name="docs-ftl-scipio-deploylocal" depends="docs-ftl-scipio">
@@ -1087,6 +1112,7 @@ under the License.
     <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) 
         TODO?: is not as versatile or friendly as it could be; didn't want to refactor all the task xml at this time -->
     <macrodef name="exec-scipio-jar">
+        <attribute name="action" default=""/>
         <attribute name="fork" default="true"/>
         <attribute name="spawn" default=""/>
         <attribute name="resultproperty" default=""/>
@@ -1096,17 +1122,28 @@ under the License.
             <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
                 <isset property="scipio.solr.reindex.auto.force"/>
                 <then>
+                    <var name="scipio.solr.reindex.startup.force" unset="true"/>
                     <property name="scipio.solr.reindex.startup.force" value="${scipio.solr.reindex.auto.force}"/>   
                 </then>
             </if>
+            <!-- Ant workarounds to enable attributes to work with if:set -->
+            <var name="exec-scipio-jar.action" unset="true"/>
+            <if>
+                <length string="@{action}" when="greater" length="0"/>
+                <then><var name="exec-scipio-jar.action" value="@{action}"/></then>
+            </if>
+            <var name="exec-scipio-jar.component" unset="true"/>
+            <if>
+                <equals arg1="@{action}" arg2="load-data"/>
+                <then><var name="exec-scipio-jar.component" value="${component}" if:set="component"/></then>
+            </if>
+            <!-- Main invocation -->
             <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
                 <equals arg1="@{secure}" arg2="true"/>
                 <then>
                     <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
                         <jvmarg value="${memory.initial.param}"/>
                         <jvmarg value="${memory.max.param}"/>
-                        <!-- SCIPIO: NOTE: Ofbiz omitted this for secure targets:
-                        <jvmarg value="${memory.maxpermsize.param}"/>-->
                         <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
                         <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
                         <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
@@ -1117,9 +1154,13 @@ under the License.
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
+                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>
+                        <arg value="${exec-scipio-jar.action}" if:set="exec-scipio-jar.action"/>
+                        <arg value="component=${exec-scipio-jar.component}" if:set="exec-scipio-jar.component"/>
                         <args/>
                     </java>
                 </then>
@@ -1127,16 +1168,19 @@ under the License.
                     <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
                         <jvmarg value="${memory.initial.param}"/>
                         <jvmarg value="${memory.max.param}"/>
-                        <jvmarg value="${memory.maxpermsize.param}"/>
                         <!-- SCIPIO: solr home -->
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
+                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>
+                        <arg value="@{action}" if:set="exec-scipio-jar.action"/>
+                        <arg value="component=${component}" if:set="exec-scipio-jar.component"/>
                         <args/>
                     </java>
                 </else>
@@ -1145,7 +1189,7 @@ under the License.
     </macrodef>
     
     <target name="start"
-            description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
+            description="Start Scipio ERP (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
         <!-- SCIPIO: -->
         <property name="currentTarget" value="start"/>
         <condition property="spawn" else="false" >
@@ -1164,7 +1208,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-batch"
-            description="Start OFBiz as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar spawn="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1178,7 +1222,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-debug"
-            description="Start OFBiz in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
@@ -1189,7 +1233,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-pos"
-            description="Start OFBiz POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start SCIPIO ERP POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
@@ -1203,7 +1247,7 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="start-both"
-            description="Start OFBiz in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Start Scipio ERP in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1217,14 +1261,14 @@ under the License.
         </exec-scipio-jar>
     </target>
     <target name="stop"
-            description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Stop Scipio ERP. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
         </exec-scipio-jar>
     </target>
     <target name="status"
-            description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+            description="Display status of Scipio ERP. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
@@ -1240,63 +1284,52 @@ under the License.
     </target>
 
     <!-- ================================================================== -->
-    <!-- Setup OFBiz Data                                                   -->
+    <!-- Setup Scipio ERP Data                                                   -->
     <!-- ================================================================== -->
 
     <target name="load-demo" depends="build"
-            description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
+            description="Load all data; meant for generic Scipio ERP development, testing, demonstration, etc purposes">
         <property name="currentTarget" value="load"/>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
-        </exec-scipio-jar>
+        <exec-scipio-jar action="load-data"/>
     </target>
     <target name="load-demo-multitenant" depends="build"
             description="Load all data needed for the multi-tenancy demonstration. Caution: this creates three databases, with each one loaded with all demo data.">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
-        </exec-scipio-jar>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#DEMO1"/>
         </exec-scipio-jar>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#DEMO2"/>
         </exec-scipio-jar>
     </target>
     <target name="load-seed" depends="build"
             description="Load ONLY the seed data (not seed-initial, demo, ext* or anything else); meant for use after an update of the code to reload the seed data as it is generally maintained along with the code and needs to be in sync for operation">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed"/>
         </exec-scipio-jar>
     </target>
     <target name="load-extseed" depends="build"
-            description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock OFBiz where the ext data basically replaces the demo data">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+            description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock Scipio ERP where the ext data basically replaces the demo data">
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext"/>
         </exec-scipio-jar>
     </target>
     <target name="load-exttest" depends="build"
-            description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock OFBiz">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+            description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock Scipio ERP">
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
         </exec-scipio-jar>
     </target>
     <target name="load-readers" depends="build"
             description='Load data using the command line argument data-readers that takes a comma separated list of readers (seed, seed-initial, demo, ext, ext-test, ext-demo). On Windows XP (at least) you need top wrap the parameters in double-quotes. For instance: ant load-readers "-Ddata-readers=seed,seed-initial,ext"'>
-        <exec-scipio-jar >
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-file" depends="build"
             description="Load data using the command line argument 'data-file' to load data from a given file using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
         <property name="delegator" value="default" />
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
         </exec-scipio-jar>
@@ -1308,8 +1341,7 @@ under the License.
             description="Load data using tenantId, syntax eg: ant load-tenant -DtenantId=DEMO1 (needs multitenant=Y in general.properties)">
     </target>
     <target name="check-tenant-id">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=tenant"/>
         </exec-scipio-jar>
         <condition property="hasTenant">
@@ -1346,14 +1378,12 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-all" depends="check-tenant-reader" if="noReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenant-reader" depends="check-tenant-reader" if="hasReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
         </exec-scipio-jar>
@@ -1374,15 +1404,13 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-component-all" depends="load-tenant-component" if="noComponentReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenant-component-reader" depends="load-tenant-component" if="hasComponentReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
             <arg value="component=${component}"/>
@@ -1396,8 +1424,7 @@ under the License.
     </target>
     <target name="check-tenants-reader">
         <property name="delegator" value="all-tenants"/>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=tenant"/>
         </exec-scipio-jar>
         <condition property="hasReader">
@@ -1414,14 +1441,12 @@ under the License.
         </condition>
     </target>
     <target name="load-tenants-all" depends="check-tenants-reader" if="noReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=${delegator}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenants-reader" depends="check-tenants-reader" if="hasReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
         </exec-scipio-jar>
@@ -1624,7 +1649,6 @@ under the License.
         <echo message="Please make sure that the driver of the platform is installed and that the databases have been created (Check names just above)"/>
         <echo>------------------------------------</echo>
         <input addproperty="continueYN" message="Continue Y or N" validargs="N,n,Y,y"/>
-
     </target>
     <target name="load-tenant-admin-user-login"
         description="Create the admin login for the tenant with admin privileges, and a temporay password equal to 'scipio'. Password must be changed on first login">
@@ -1653,8 +1677,7 @@ under the License.
         <echo message="Delegator = default#${tenantId}"/>
         <echo message="Data-readers = ${data-readers}"/>
         <echo>------------------------------------</echo>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
         </exec-scipio-jar>
@@ -1682,10 +1705,15 @@ under the License.
         <antcall target="load-admin-user-login"/>
     </target>
 
-    <target name="run-tests" description="(Unreliable) Run automated integration tests; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+    <target name="run-tests" description="(Unreliable) Run automated integration tests [SCIPIO: run 'clean-logs' first]; you have to manually execute 'ant load-demo' before (and if needed even clear your data before) and see results in runtime/logs/test-results/html/all-tests.html.
+Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <echo>===========================================================</echo>
         <echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
-        <echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
+        <echo>= the tests are based on OFBiz 14 and not always reliable.=</echo>
+        <echo>=                                                         =</echo>
+        <echo>= NOTE: To avoid dirty results, run 'clean-logs' before   =</echo>
+        <echo>= every invocation, e.g.:                                 =</echo>
+        <echo>=     ./ant clean-logs run-tests                          =</echo>
         <echo>===========================================================</echo>
         <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
@@ -1699,6 +1727,10 @@ under the License.
             </fileset>
             <report format="frames" todir="runtime/logs/test-results/html"/>
         </junitreport>
+        <echo></echo>
+        <echo>Test results can be viewed using:</echo>
+        <echo>    runtime/logs/test-results/html/all-tests.html</echo>
+        <echo></echo>
         <fail message="Test run was unsuccessful">
             <condition>
                 <not>
@@ -1707,11 +1739,118 @@ under the License.
             </condition>
         </fail>
     </target>
-    
 
-    <target name="run-tests-with-cobertura" depends="download-cobertura, run-tests"
-        description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura"/>
-    
+    <target name="run-tests-with-cobertura" depends="download-cobertura"
+        description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura">
+        <echo>=============================================================</echo>
+        <echo>=                                                           =</echo>
+        <echo>=     ** DEPRECATED: Please use Jacoco Tests instead. **    =</echo>
+        <echo>=                                                           =</echo>
+        <echo>= Scipio Cobertura integration tests. Please be aware, that =</echo>
+        <echo>= the tests are based on OFBiz_14 and not always reliable.  =</echo>
+        <echo>=============================================================</echo>
+        <exec-scipio-jar resultproperty="test.result">
+            <arg value="test"/>
+            <arg value="-portoffset=${portoffset}"/>
+            <env key="LC_ALL" value="C"/>
+        </exec-scipio-jar>
+        <antcall target="run-cobertura-analysis"/>
+    </target>
+
+    <target name="run-cobertura-analysis">
+        <iterate target="tests-cobertura" filelist="framework-builds"/>
+        <iterate target="tests-cobertura" filelist="application-builds"/>
+        <iterate target="tests-cobertura" filelist="specialpurpose-builds"/>
+        <addonsant target="tests-cobertura"/>
+        <hotdeployant target="tests-cobertura"/>
+    </target>
+
+    <target name="run-tests-with-jacoco" xmlns:jacoco="antlib:org.jacoco.ant"
+        description="Download JaCoCo and perform code coverage (same as run-tests). You will need a valid Internet connection to download JaCoCo">
+        <echo>============================================================</echo>
+        <echo>= Scipio JaCoCo integration tests. Please be aware, that    =</echo>
+        <echo>= the tests are based on OFBiz_14 and not always reliable.  =</echo>
+        <echo>=============================================================</echo>
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+            <classpath>
+                <path refid="jacoco.class.path" />
+            </classpath>
+        </taskdef>
+        <delete dir="runtime/logs/jacoco-report"/>
+        <mkdir dir="runtime/logs/jacoco-report"/>
+        <pathconvert property="jacocoAgent" refid="jacoco.agent.class.path" />
+
+        <jacoco:agent property="agentvmparam" destfile="runtime/logs/jacoco-report/scipio-base.exec" includes="*" output="file" dumponexit="true" />
+        <echo>Starting Scipio Server with Agent${agentvmparam}</echo>
+        <parallel>
+            <exec-scipio-jar resultproperty="test.result">
+                <arg value="test"/>
+                <!-- <jvmarg value="-Xnoagent"/>
+                <jvmarg value="-Djava.compiler=NONE"/>
+                <jvmarg value="-Xdebug"/>
+                <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>-->
+                <jvmarg value="${agentvmparam}" />
+                <env key="LC_ALL" value="C"/>
+            </exec-scipio-jar>
+            <sequential>
+          </sequential>
+        </parallel>
+        <antcall target="run-jacoco-analysis"/>
+        <jacoco:merge destfile="runtime/logs/jacoco-report/jacoco.exec">
+            <fileset dir="." includes="**/**/build/jacoco-result/*.exec"/>
+            <fileset dir="." includes="runtime/logs/jacoco-report/scipio-base.exec"/>
+        </jacoco:merge>
+    </target>
+
+    <target name="run-jacoco-analysis">
+        <iterate target="tests-jacoco" filelist="framework-builds"/>
+        <iterate target="tests-jacoco" filelist="application-builds"/>
+        <iterate target="tests-jacoco" filelist="specialpurpose-builds"/>
+        <addonsant target="tests-jacoco"/>
+        <hotdeployant target="tests-jacoco"/>
+    </target>
+
+    <target name="jacoco-report" xmlns:jacoco="antlib:org.jacoco.ant" depends="run-tests-with-jacoco" 
+            description="Generate a HTML code coverage report with JaCoCo can be found in runtime/logs/jacoco-report">
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+            <classpath>
+                <path refid="jacoco.class.path" />
+            </classpath>
+        </taskdef>
+
+        <delete dir="runtime/logs/jacoco-report/html"/>
+        <mkdir dir="runtime/logs/jacoco-report/html"/>
+        <delete dir="runtime/logs/jacoco-report/xml"/>
+        <mkdir dir="runtime/logs/jacoco-report/xml"/>
+        <delete dir="runtime/logs/jacoco-report/csv"/>
+        <mkdir dir="runtime/logs/jacoco-report/csv"/>
+
+        <jacoco:report>           
+            <executiondata>
+                <file file="runtime/logs/jacoco-report/jacoco.exec"/>
+            </executiondata>
+            <structure name="Scipio - Code Coverage">
+                <classfiles>
+                    <multirootfileset>
+                      <basedir file="."/>
+                      <include name="**/**/**/classes/**"/>
+                      <exclude name="**/**/**/classes/*test*"/>
+                    </multirootfileset>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <multirootfileset>
+                      <basedir file="."/>
+                      <include name="**/**/src/**"/>
+                      <exclude name="**/**/src/*test*"/>
+                    </multirootfileset>
+                </sourcefiles>
+            </structure>
+            <html destdir="runtime/logs/jacoco-report/html" />
+            <csv destfile="runtime/logs/jacoco-report/csv/report.csv" />
+            <xml destfile="runtime/logs/jacoco-report/xml/report.xml" />             
+        </jacoco:report>
+    </target>
+
     <target name="_check-separated-tests-already-setup">
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
     </target>
@@ -1792,12 +1931,12 @@ under the License.
         </fail>
     </target>
     <target name="run-test-list" depends="_setup-separated-test-run"
-            description="Run all configured tests, stopping/starting ofbiz between each test">
+            description="Run all configured tests, stopping/starting Scipio ERP between each test">
         <delete dir="runtime/logs/test-results"/>
         <ant antfile="runtime/test-list-build.xml" target="all-tests"/>
     </target>
 
-    <target name="cobertura-report"
+    <target name="cobertura-report" depends="run-tests-with-cobertura"
             description="Generate a HTML code coverage report with cobertura, can be found in runtime/logs/cobertura-report">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
@@ -1817,7 +1956,7 @@ under the License.
         </cobertura-report>
     </target>
 
-    <target name="cobertura-report-xml" depends="_setup-separated-test-run"
+    <target name="cobertura-report-xml" depends="run-tests-with-cobertura"
             description="Generate a XML file from the cobertura report, this will be used by sonar">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
@@ -1837,7 +1976,10 @@ under the License.
     </target>
 
     <target name="sonar" depends="download-sonar-ant-task,sonar-init"
-            description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/">
+            description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/
+            Available Parameters: sonar.organization, sonar.host.url, sonar.login
+            For external sonar server (sonarcloud), use ./ant sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=... -Dsonar.login=...
+            ">
         <!-- SCIPIO: now git
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
@@ -1849,20 +1991,20 @@ under the License.
             <arg value="HEAD"/>
         </exec>
 
-        <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
+        <property name="sonar.sources" value="framework/base/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
-            framework/geronimo/src, framework/jetty/src,
             framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
             framework/testtools/src, framework/webapp/src, framework/webtools/src, framework/widget/src,
-            applications/accounting/src, applications/commonext/src, applications/content/src, applications/humanres/src,
+            applications/accounting/src, applications/content/src, applications/humanres/src,
             applications/manufacturing/src, applications/marketing/src, applications/order/src, applications/party/src,
             applications/product/src, applications/securityext/src, applications/workeffort/src, specialpurpose/assetmaint/src"
             />
         <property name="sonar.tests" value="framework/base/src/org/ofbiz/base/test, framework/entity/src/org/ofbiz/entity/test,
-            framework/service/src/org/ofbiz/service/test,
-            applications/accounting/src/org/ofbiz/accounting/test, applications/content/src/org/ofbiz/content/test,
-            applications/product/src/org/ofbiz/product/test, applications/product/src/org/ofbiz/shipment/test,
-            applications/securityext/src/org/ofbiz/securityext/test" />
+            framework/service/src/org/ofbiz/service/test, applications/accounting/src/org/ofbiz/accounting/test,
+            applications/product/src/org/ofbiz/product/test, applications/product/src/org/ofbiz/shipment/test" />
+        
+        <property name="sonar.exclusions" value="**/*test*/**" />
+        <property name="sonar.java.binaries" value="**/classes" />        
 
         <!-- list of optional Sonar properties -->
         <property name="sonar.projectName" value="SCIPIO ERP" />
@@ -1870,19 +2012,30 @@ under the License.
         <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>-->
         <property name="sonar.projectKey" value="com.ilscipio:scipio" />
         <property name="sonar.projectVersion" value="${git.info.revision}" />
-        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>
         <property name="sonar.dynamicAnalysis" value="reuseReports" />
         <property name="sonar.cobertura.reportPath" value="runtime/logs/cobertura-report/coverage.xml"/>
         <property name="sonar.java.source" value="1.8" />
         <property name="sonar.java.target" value="1.8" />
-        <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
-        <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
-        <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="sonar.jdbc.username" value="${sonar.jdbc.username}" />
-        <property name="sonar.jdbc.password" value="${sonar.jdbc.password}" />
-
-        <!-- SERVER ON A REMOTE HOST -->
         <property name="sonar.host.url" value="${sonar.host.url}" />
+        
+        <if>
+            <isset property="sonar.login"/>
+            <then>
+                <echo level="verbose" message="Connecting to external sonar server"/>
+                <property name="sonar.organization" value="${sonar.organization}"/>
+                <property name="sonar.host.url" value="${sonar.host.url}" default="https://sonarcloud.io"/>
+                <property name="sonar.login" value="${sonar.login}" />
+            </then>
+            <else>
+                <echo level="verbose" message="Connecting to internal sonar server"/>
+                <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
+                <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
+                <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
+                <property name="sonar.jdbc.username" value="${sonar.jdbc.username}" />
+                <property name="sonar.jdbc.password" value="${sonar.jdbc.password}" />
+            </else>
+        </if>
+        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>        
     </target>
 
     <target name="full-sonar">
@@ -1899,9 +2052,9 @@ under the License.
     <!-- ================================================================== -->
     <!--    Ivy targets, more info at  http://ant.apache.org/ivy/  -->
     <!-- ================================================================== -->
-    
+
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
-    
+
     <target name="lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
@@ -2093,12 +2246,6 @@ under the License.
     </target>
     
     <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
-        <!-- when doing "full" clean-deployed, by default also clean out libsrc, because makes no sense
-            to keep sources for libs whose versions we might be trying to change -->
-        <property name="lib.clean.sources" value="true"/>
-        <!-- not setting this one anymore, using lib.clean.sources; as long as
-            get-lib-resolve-confs is not needed by a clean target (unlikely), this should be ok
-        <property name="lib.update.sources" value="true"/>-->
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>
@@ -2164,25 +2311,36 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="lib-dep-checkupdates"/>
     </target>
 
+    <target name="download-ant-ext" depends="ivy-init">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-ext" includes="*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-ext/[artifact]-[revision].[ext]" conf="ant-ext"/>
+    </target>    
+    
     <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
-        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete>
-        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/activemq" includes="*.jar"/></delete>
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete><!-- compatibility -->
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/activemq/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
-    <target name="download-cobertura" depends="ivy-init" description="Download cobertura related files">
-        <delete verbose="on"><fileset dir="framework/base/lib" includes="cobertura-*.jar"/></delete>
-        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
+    <target name="download-cobertura" depends="ivy-init,download-ant-ext" description="Download cobertura related files">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/cobertura" includes="*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/cobertura/[artifact]-[revision].[ext]" conf="cobertura"/>
+    </target>
+    
+    <target name="download-jacoco" depends="ivy-init,download-ant-ext" description="Download JaCoCo related files">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/jacoco" includes="*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/jacoco/[artifact]-[revision].[ext]" conf="jacoco"/>
     </target>
 
     <target name="download-PG-JDBC" depends="download-jdbc-postgresql" description="Download postgres jdbc driver (legacy alias for download-jdbc-postgresql)">
     </target>
 
     <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
-        <delete verbose="on"><fileset dir="framework/base/lib" includes="sonar-ant-task-*.jar"/></delete>
-        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/sonar-ant-task" includes="*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/sonar-ant-task/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
     </target>
 
     <target name="download-mySQL-JDBC" depends="download-jdbc-mysql" description="Download mySQL jdbc driver (legacy alias for download-jdbc-mysql)">
@@ -2237,6 +2395,7 @@ under the License.
     <target name="download-util-all" description="Utility target to download all utilities (except JDBC)">
         <antcall target="download-activemq"/>
         <antcall target="download-cobertura"/>
+        <antcall target="download-jacoco"/>
         <antcall target="download-sonar-ant-task"/>
     </target>
 
@@ -2250,7 +2409,7 @@ under the License.
     </target>
 
     <!-- ================================================================== -->
-    <!-- Create New Component. This target will create basic directory structure for an OFBiz component in hot-deploy directory. -->
+    <!-- Create New Component. This target will create basic directory structure for an Scipio ERP component in hot-deploy directory. -->
     <!-- ================================================================== -->
 
     <target name="create-component"
@@ -2615,7 +2774,7 @@ under the License.
         <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. MyTheme) [Mandatory]"/>
         <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
         <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]"/>
-        <input addproperty="is-backend" message="Is backoffice theme? (N for ecommerce theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
+        <input addproperty="is-backend" message="Is backoffice theme? (N for shop theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
         <if>
             <equals arg1="${is-backend}" arg2="Y" casesensitive="false"/>
             <then>
@@ -2745,13 +2904,13 @@ under the License.
     <!-- Old tasks.                                                         -->
     <!-- ================================================================== -->
     <target name="run">
-        <echo message="The 'run' command has been renamed 'start'; please use 'ant start' to start OFBiz."/>
+        <echo message="The 'run' command has been renamed 'start'; please use 'ant start' to start Scipio ERP."/>
     </target>
     <target name="run-debug">
-        <echo message="The 'run-debug' command has been renamed 'start-debug'; please use 'ant start-debug' to start OFBiz in debug mode."/>
+        <echo message="The 'run-debug' command has been renamed 'start-debug'; please use 'ant start-debug' to start Scipio ERP in debug mode."/>
     </target>
     <target name="run-pos">
-        <echo message="The 'run-pos' command has been renamed 'start-pos'; please use 'ant start-pos' to start the OFBiz POS."/>
+        <echo message="The 'run-pos' command has been renamed 'start-pos'; please use 'ant start-pos' to start the Scipio ERP POS."/>
     </target>
     <target name="run-install">
         <echo message="The 'run-install' command has been renamed 'load-demo'; please use 'ant load-demo' to load seed and demo data."/>
@@ -2904,9 +3063,19 @@ under the License.
     </macrodef>
     
     <target name="build-scipio-build-tools" description="Builds standalone Scipio setup/build tools">
-        <filelist id="scipio.build.tools.buildfile" dir="." files="framework/base/build-scipio-build-tools.xml"/>
-        <iterate target="jar" filelist="scipio.build.tools.buildfile"/>
-        <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
+        <!-- SCIPIO: 2018-11-14: Can bypass actual build using flag: -Dscipio.target.build=false 
+            FIXME?: using big if here is ugly -->
+        <if>
+            <equals arg1="${scipio.target.build}" arg2="false"/>
+            <then>
+                <echo message="[build-scipio-build-tools] (bypassed)"/>
+            </then>
+            <else>
+                <filelist id="scipio.build.tools.buildfile" dir="." files="framework/base/build-scipio-build-tools.xml"/>
+                <iterate target="jar" filelist="scipio.build.tools.buildfile"/>
+                <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
+            </else>
+        </if>
     </target>
     
 </project>

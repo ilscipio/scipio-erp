@@ -53,11 +53,10 @@ public class RenderSubContentTransform implements TemplateTransformModel {
 
     /**
      * @deprecated use FreeMarkerWorker.getArg()
-     * Does a conditional search to return a value for a parameter with the passed name. Looks first to see if it was passed as an argument to the transform.
-     * Secondly, it looks to see if it is passed as a parameter in the template context object.
-     * <p/>
-     * Note that this is different from the getArg method of EditRenderDataResourceTransform, which checks the request object instead of the template context
-     * object.
+     * <p>Does a conditional search to return a value for a parameter with the passed name. Looks first to see if it was passed as an argument to the transform.
+     * Secondly, it looks to see if it is passed as a parameter in the template context object.</p>
+     * <p>Note that this is different from the getArg method of EditRenderDataResourceTransform, which checks the request object instead of the template context
+     * object.</p>
      */
     @Deprecated
     public static String getArg(Map<String, Object> args, String key, Environment env) {
@@ -73,8 +72,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
     }
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
-        // final StringBuilder buf = new StringBuilder();
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = FreeMarkerWorker.getWrappedObject("context", env);
         if (ctx == null) {
@@ -82,7 +80,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
         }
         final String mapKey = FreeMarkerWorker.getArg(args, "mapKey", ctx);
         final String subContentId = FreeMarkerWorker.getArg(args, "subContentId", ctx);
-        // final String subDataResourceTypeId = FreeMarkerWorker.getArg(args, "subDataResourceTypeId", ctx);
         final String contentId = FreeMarkerWorker.getArg(args, "contentId", ctx);
         final String mimeTypeId = FreeMarkerWorker.getArg(args, "mimeTypeId", ctx);
         final String throwExceptionOnError = FreeMarkerWorker.getArg(args, "throwExceptionOnError", ctx);
@@ -130,8 +127,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
             }
 
             public void renderSubContent() throws IOException {
-                // TemplateHashModel dataRoot = env.getDataModel();
-                // Timestamp fromDate = UtilDateTime.nowTimestamp();
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = WebSiteWorker.getWebSiteId(request);
@@ -151,12 +146,10 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                     } else {
                         ContentWorker.renderSubContentAsText(dispatcher, delegator, contentId, out, mapKey, templateRoot, locale, mimeTypeId, false);
                     }
-                    //Map results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, templateRoot, locale, mimeTypeId, userLogin, fromDate);
                 } catch (GeneralException e) {
                     Debug.logError(e, "Error rendering content", module);
                     throw new IOException("Error rendering content" + e.toString());
                 }
-                //Map resultCtx = FreeMarkerWorker.getWrappedObject("context", env);
                 templateContext.put("mapKey", null);
                 templateContext.put("subContentId", null);
                 templateContext.put("subDataResourceTypeId", null);

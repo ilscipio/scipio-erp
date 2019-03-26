@@ -20,9 +20,12 @@
 package org.ofbiz.securityext.login;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -30,8 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.RandomStringUtils;
-
+import org.apache.commons.lang3.RandomStringUtils;
+import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
@@ -40,7 +43,6 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.login.LoginServices;
-import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -51,7 +53,7 @@ import org.ofbiz.product.product.ProductEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
 
 /**
@@ -61,7 +63,7 @@ public class LoginEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "SecurityextUiLabels";
-    public static final String usernameCookieName = "OFBiz.Username";
+    public static final String usernameCookieName = "Scipio.Username"; // SCIPIO: renamed cookie
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -82,15 +84,19 @@ public class LoginEvents {
             String password = request.getParameter("PASSWORD");
 
             if ((username != null) && ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-                username = username.toLowerCase();
+                username = username.toLowerCase(Locale.getDefault());
             }
             if ((password != null) && ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator)))) {
-                password = password.toLowerCase();
+                password = password.toLowerCase(Locale.getDefault());
             }
 
             // save parameters into the session - so they can be used later, if needed
-            if (username != null) session.setAttribute("USERNAME", username);
-            if (password != null) session.setAttribute("PASSWORD", password);
+            if (username != null) {
+                session.setAttribute("USERNAME", username);
+            }
+            if (password != null) {
+                session.setAttribute("PASSWORD", password);
+            }
 
         } else {
             // if the login object is valid, remove attributes
@@ -131,10 +137,10 @@ public class LoginEvents {
         String errMsg = null;
 
         if ((userLoginId != null) && ("true".equals(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-            userLoginId = userLoginId.toLowerCase();
+            userLoginId = userLoginId.toLowerCase(Locale.getDefault());
         }
 
-        if (!UtilValidate.isNotEmpty(userLoginId)) {
+        if (UtilValidate.isEmpty(userLoginId)) {
             // the password was incomplete
             errMsg = UtilProperties.getMessage(resource, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -157,7 +163,7 @@ public class LoginEvents {
 
         String passwordHint = supposedUserLogin.getString("passwordHint");
 
-        if (!UtilValidate.isNotEmpty(passwordHint)) {
+        if (UtilValidate.isEmpty(passwordHint)) {
             // the Username was not found
             errMsg = UtilProperties.getMessage(resource, "loginevents.no_password_hint_specified_try_password_emailed", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -191,10 +197,10 @@ public class LoginEvents {
         String userLoginId = request.getParameter("USERNAME");
 
         if ((userLoginId != null) && ("true".equals(EntityUtilProperties.getPropertyValue("security", "username.lowercase", delegator)))) {
-            userLoginId = userLoginId.toLowerCase();
+            userLoginId = userLoginId.toLowerCase(Locale.getDefault());
         }
 
-        if (!UtilValidate.isNotEmpty(userLoginId)) {
+        if (UtilValidate.isEmpty(userLoginId)) {
             // the password was incomplete
             errMsg = UtilProperties.getMessage(resource, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -214,9 +220,9 @@ public class LoginEvents {
             }
             if (useEncryption) {
                 // password encrypted, can't send, generate new password and email to user
-                passwordToSend = RandomStringUtils.randomAlphanumeric(Integer.parseInt(EntityUtilProperties.getPropertyValue("security", "password.length.min", "5", delegator)));
+                passwordToSend = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5));
                 if ("true".equals(EntityUtilProperties.getPropertyValue("security", "password.lowercase", delegator))){
-                    passwordToSend=passwordToSend.toLowerCase();
+                    passwordToSend=passwordToSend.toLowerCase(Locale.getDefault());
                 }
                 supposedUserLogin.set("currentPassword", HashCrypt.cryptUTF8(LoginServices.getHashType(), null, passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
@@ -246,7 +252,6 @@ public class LoginEvents {
             party = supposedUserLogin.getRelatedOne("Party", false);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            party = null;
         }
         if (party != null) {
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
@@ -256,7 +261,7 @@ public class LoginEvents {
             }
         }
 
-        if (!UtilValidate.isNotEmpty(emails.toString())) {
+        if (UtilValidate.isEmpty(emails.toString())) {
             // the Username was not found
             errMsg = UtilProperties.getMessage(resource, "loginevents.no_primary_email_address_set_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -280,14 +285,14 @@ public class LoginEvents {
         }
 
         // set the needed variables in new context
-        Map<String, Object> bodyParameters = new HashMap<String, Object>();
-        bodyParameters.put("useEncryption", Boolean.valueOf(useEncryption));
+        Map<String, Object> bodyParameters = new HashMap<>();
+        bodyParameters.put("useEncryption", useEncryption);
         bodyParameters.put("password", UtilFormatOut.checkNull(passwordToSend));
         bodyParameters.put("locale", UtilHttp.getLocale(request));
         bodyParameters.put("userLogin", supposedUserLogin);
         bodyParameters.put("productStoreId", productStoreId);
 
-        Map<String, Object> serviceContext = new HashMap<String, Object>();
+        Map<String, Object> serviceContext = new HashMap<>();
         serviceContext.put("bodyScreenUri", bodyScreenLocation);
         serviceContext.put("bodyParameters", bodyParameters);
         if (productStoreEmail != null) {
@@ -306,12 +311,12 @@ public class LoginEvents {
             if (emailTemplateSetting != null) {
                 String subject = emailTemplateSetting.getString("subject");
                 subject = FlexibleStringExpander.expandString(subject, UtilMisc.toMap("userLoginId", userLoginId));
-                serviceContext.put("subject", subject);                
+                serviceContext.put("subject", subject);
                 serviceContext.put("sendFrom", emailTemplateSetting.get("fromAddress"));
             } else {
                 serviceContext.put("subject", UtilProperties.getMessage(resource, "loginservices.password_reminder_subject", UtilMisc.toMap("userLoginId", userLoginId), UtilHttp.getLocale(request)));
                 serviceContext.put("sendFrom", EntityUtilProperties.getPropertyValue("general", "defaultFromEmailAddress", delegator));
-            }            
+            }
         }
         serviceContext.put("sendTo", emails.toString());
         serviceContext.put("partyId", party.getString("partyId"));
@@ -319,8 +324,8 @@ public class LoginEvents {
         try {
             Map<String, Object> result = dispatcher.runSync("sendMailHiddenInLogFromScreen", serviceContext);
 
-            if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
-                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
+            if (ServiceUtil.isError(result)) { // SCIPIO: 2018-10-04: Corrected error check
+                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
                 errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
@@ -379,7 +384,9 @@ public class LoginEvents {
     public static String getUsername(HttpServletRequest request) {
         String cookieUsername = null;
         Cookie[] cookies = request.getCookies();
-        if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + cookies, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Cookies: " + Arrays.toString(cookies), module);
+        }
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(usernameCookieName)) {
@@ -387,6 +394,13 @@ public class LoginEvents {
                     break;
                 }
             }
+        }
+        // SCIPIO: 2018-11-05: Decode the username (encoded in setUsername)
+        try {
+            cookieUsername = URLDecoder.decode(cookieUsername, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Debug.logWarning("getUsername: Cannot decode username [" + cookieUsername + "] from \"" 
+                    + usernameCookieName + "\" cookie; returning as-is; cause: " + e.toString(), module);
         }
         return cookieUsername;
     }
@@ -396,13 +410,29 @@ public class LoginEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         // first try to get the username from the cookie
-        synchronized (session) {
-            if (UtilValidate.isEmpty(getUsername(request))) {
+        // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+        //synchronized (session) {
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
+            // SCIPIO: 2018-11-05: This condition makes little sense, it means this could never save a new user until old cookie expires
+            // or session is cleared/logout, but user can trigger this call outside those cases with a form
+            //if (UtilValidate.isEmpty(getUsername(request))) {
+            if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {
                 // create the cookie and send it back
-                Cookie cookie = new Cookie(usernameCookieName, request.getParameter("USERNAME"));
+                String usernameParam;
+                try {
+                    usernameParam = URLEncoder.encode(request.getParameter("USERNAME"), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    // SCIPIO: 2018-11-05: Added this try/catch, but it basically impossible for it to cause error here
+                    Debug.logError("setUsername: Error encoding username from parameter [" + request.getParameter("USERNAME") 
+                        + "] for cookie; cannot set username cookie: " + e.toString(), module);
+                    return;
+                }
+                Cookie cookie = new Cookie(usernameCookieName, usernameParam);
                 cookie.setMaxAge(60 * 60 * 24 * 365);
                 cookie.setPath("/");
                 cookie.setDomain(domain);
+                cookie.setSecure(true);
+                cookie.setHttpOnly(true);
                 response.addCookie(cookie);
             }
         }

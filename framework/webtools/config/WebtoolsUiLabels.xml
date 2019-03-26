@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -20,6 +19,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ConnectionPoolStatus">
+        <value xml:lang="de">Connection Pool Status</value>
         <value xml:lang="en">Connection Pool Status</value>
         <value xml:lang="fr">État du pool de connexions</value>
         <value xml:lang="ja">接続プールステータス</value>
@@ -28,7 +28,9 @@
         <value xml:lang="zh-TW">連接池狀態</value>
     </property>
     <property key="EntityImportDeletFile">
+        <value xml:lang="de">Lösche ${fileName}</value>
         <value xml:lang="en">Deleting ${fileName}</value>
+        <value xml:lang="fr">Suppression de ${fileName}</value>
         <value xml:lang="it">Stò cancellando il file ${fileName}</value>
         <value xml:lang="ja">${fileName} を削除しています</value>
         <value xml:lang="vi">Đang xóa ${fileName}</value>
@@ -36,7 +38,9 @@
         <value xml:lang="zh-TW">正在刪除 ${fileName}</value>
     </property>
     <property key="EntityImportErrorRetrievingEntityNames">
+        <value xml:lang="de">Fehler beim Laden der Entity-Namen.</value>
         <value xml:lang="en">Error retrieving entity names.</value>
+        <value xml:lang="fr">Erreur dans la récupération des noms d'entités.</value>
         <value xml:lang="it">Errore nell'ottenere i nome delle entità.</value>
         <value xml:lang="ja">エンティティ名取得中にエラー</value>
         <value xml:lang="vi">Lỗi khi lấy tên Thực thể.</value>
@@ -44,7 +48,9 @@
         <value xml:lang="zh-TW">取得資料實體名稱時出錯.</value>
     </property>
     <property key="EntityImportFailedFile">
+        <value xml:lang="de">Der Import von ${fileName} ist fehlgeschlagen. Der Vorgang wird beim nächsten Durchlauf erneut versucht.</value>
         <value xml:lang="en">Failed ${fileName} adding to retry list for next pass</value>
+        <value xml:lang="fr">Échec sur ${fileName}, ajout dans la liste pour la prochaine passe</value>
         <value xml:lang="it">Fallita ${fileName} aggiunta alla lista di riprova al successivo passaggio</value>
         <value xml:lang="ja">${fileName} を次のパスのリトライリストに追加中に失敗</value>
         <value xml:lang="vi">Tập tin ${fileName} không thành công đã được thêm vào Danh sách để Xử lý tiếp sau</value>
@@ -52,7 +58,9 @@
         <value xml:lang="zh-TW">把失敗的檔 ${fileName} 增加重試清單,以便下輪執行</value>
     </property>
     <property key="EntityImportFailedFileList">
+        <value xml:lang="de">Fehlgeschlagene Dateien:</value>
         <value xml:lang="en">Failed Files:</value>
+        <value xml:lang="fr">Fichiers en échec :</value>
         <value xml:lang="it">Lista file che hanno avuto fallimento:</value>
         <value xml:lang="ja">失敗したファイル: </value>
         <value xml:lang="vi">Tập tin không thành công:</value>
@@ -60,7 +68,9 @@
         <value xml:lang="zh-TW">失敗的檔:</value>
     </property>
     <property key="EntityImportFailedNumberFile">
+        <value xml:lang="de">${failed} von ${total} fehlerhaft</value>
         <value xml:lang="en">Failed: ${failed} of ${total}</value>
+        <value xml:lang="fr">Échec : ${failed} sur ${total}</value>
         <value xml:lang="it">Failed: ${failed} di ${total}</value>
         <value xml:lang="ja">失敗: ${failed} / ${total}</value>
         <value xml:lang="vi">Không thành công: ${failed} của tổng ${total}</value>
@@ -68,7 +78,9 @@
         <value xml:lang="zh-TW">失敗:${failed}/${total}</value>
     </property>
     <property key="EntityImportNoDataSourceSpecified">
+        <value xml:lang="de">Der datasource helper für die Gruppe konnte nicht gefunden werden ${groupNameToUse}</value>
         <value xml:lang="en">Unable to locate the datasource helper for the group ${groupNameToUse}</value>
+        <value xml:lang="fr">Impossible de localisé la source de donnée pour le groupe ${groupNameToUse}</value>
         <value xml:lang="it">Non è possibile localizzare la sorgente dati per il gruppo ${groupNameToUse}</value>
         <value xml:lang="ja">グループ ${groupNameToUse} に対するデータソースヘルパーの確立ができません</value>
         <value xml:lang="vi">Không thể tìm thấy 'datasource helper' cho nhóm ${groupNameToUse}</value>
@@ -76,7 +88,9 @@
         <value xml:lang="zh-TW">不能找到用於群組 ${groupNameToUse} 的資料源幫助程式</value>
     </property>
     <property key="EntityImportNoXmlFileOrTextSpecified">
+        <value xml:lang="de">Es wurde keine Entity XML Datei oder Text angegeben.</value>
         <value xml:lang="en">No entity xml file or text specified</value>
+        <value xml:lang="fr">Aucun fichier xml ou texte fournit</value>
         <value xml:lang="it">Nessun file xml entità o testo specificato</value>
         <value xml:lang="ja">エンティティXMLファイルまたはテキストが指定されていません</value>
         <value xml:lang="vi">Không XML hoặc Văn bản nào của Thực thể được xác định</value>
@@ -84,7 +98,9 @@
         <value xml:lang="zh-TW">沒有指定的資料實體XML檔或本文</value>
     </property>
     <property key="EntityImportNoXmlFileSpecified">
+        <value xml:lang="de">Kein Dateiname / URL oder vollständiges XML-Dokument angegeben. Der Vorgang wurde ausgesetzt.</value>
         <value xml:lang="en">No filename/URL or complete XML document specified, doing nothing.</value>
+        <value xml:lang="fr">Pas de fichier, URL ou flux XML fournit, aucune action réalisée.</value>
         <value xml:lang="it">Nessun nome file/URL o documento XML completo specificato, nientre verrà fatto.</value>
         <value xml:lang="ja">ファイル名/URLまたは完全なXML文書が指定されていません。処理を行いません。</value>
         <value xml:lang="vi">Không Tập tin/URL hoặc tài liệu XML hoàn chỉnh nào được xác định nên hệ thống sẽ không làm gì cả.</value>
@@ -92,7 +108,9 @@
         <value xml:lang="zh-TW">沒有指定的檔案名/網址或完整的XML檔,什麼也不做.</value>
     </property>
     <property key="EntityImportNumberOfEntityToBeProcessed">
+        <value xml:lang="de">${numberRead} Entities aus ${fileName} geladen</value>
         <value xml:lang="en">Got ${numberRead} entities from ${fileName}</value>
+        <value xml:lang="fr">Chargement de ${numberRead} entités depuis ${fileName}</value>
         <value xml:lang="it">Ottenute ${numberRead} entità da ${fileName}</value>
         <value xml:lang="ja">${fileName} から ${numberRead} エンティティ取得しました</value>
         <value xml:lang="vi">Nhận ${numberRead} Thực thể từ Tập tin ${fileName}</value>
@@ -100,7 +118,9 @@
         <value xml:lang="zh-TW">從 ${fileName} 中得到了 ${numberRead} 個資料實體</value>
     </property>
     <property key="EntityImportParsingError">
+        <value xml:lang="de">FEHLER beim Lesen des Entity XML Dokuments: ${errorString}</value>
         <value xml:lang="en">ERROR parsing Entity Xml file: ${errorString}</value>
+        <value xml:lang="fr">ERREUR dans l'analyse de l'XML : ${errorString}</value>
         <value xml:lang="it">ERRORE di parsing file entità XML: ${errorString}</value>
         <value xml:lang="ja">エンティティXMLファイルパース時にエラー: ${errorString}</value>
         <value xml:lang="vi">LỖI khi phân tích tập tin XML Thực thể: ${errorString}</value>
@@ -108,7 +128,9 @@
         <value xml:lang="zh-TW">解析資料實體XML檔時出錯:${errorString}</value>
     </property>
     <property key="EntityImportPassedFile">
+        <value xml:lang="de">Durchlauf ${passes} abgeschlossen</value>
         <value xml:lang="en">Pass ${passes} complete</value>
+        <value xml:lang="fr">Passe ${passes} complete</value>
         <value xml:lang="it">Passati ${passes} completati</value>
         <value xml:lang="ja">パス ${passes} 完了しました</value>
         <value xml:lang="vi">Xử lý ${passes} hoàn thành</value>
@@ -116,7 +138,9 @@
         <value xml:lang="zh-TW">通過 ${passes} 個完成</value>
     </property>
     <property key="EntityImportPathNotFound">
+        <value xml:lang="de">Pfad nicht gefunden oder kann nicht gelesen werden.</value>
         <value xml:lang="en">path not found or can't be read</value>
+        <value xml:lang="fr">Chemin non trouvé ou non accessible</value>
         <value xml:lang="it">path non trovato o non può essere letto</value>
         <value xml:lang="ja">パスが見つからないか読み込みできません</value>
         <value xml:lang="vi">đường dẫn không tìm thấy hoặc không thể đọc nội dung</value>
@@ -124,7 +148,9 @@
         <value xml:lang="zh-TW">找不到路徑或無法讀取路徑</value>
     </property>
     <property key="EntityImportPathNotSpecified">
+        <value xml:lang="de">Pfad nicht angebeben. Der Vorgang wird ausgesetzt.</value>
         <value xml:lang="en">No path specified, doing nothing.</value>
+        <value xml:lang="fr">Pas de chemin indiqué, aucun action réalisée.</value>
         <value xml:lang="it">Nessun path specificato, non verrà fatto niente.</value>
         <value xml:lang="ja">パスが指定されていません。処理を行いません。</value>
         <value xml:lang="vi">Không xác định Đường dẫn nên hệ thống không làm gì cả.</value>
@@ -132,7 +158,9 @@
         <value xml:lang="zh-TW">沒有指定路徑,什麼也不做.</value>
     </property>
     <property key="EntityImportRowProcessed">
+        <value xml:lang="de">${numberRead} Entities werden in die Datasource geschrieben.</value>
         <value xml:lang="en">Got ${numberRead} entities to write to the datasource.</value>
+        <value xml:lang="fr">Écriture de ${numberRead} entités dans la source de donnée.</value>
         <value xml:lang="it">Ottenute ${numberRead} entità da scrivere sulla sorgente dati.</value>
         <value xml:lang="ja">エンティティデータソースに書き込むため ${numberRead} 取得しました</value>
         <value xml:lang="vi">Nhận ${numberRead} Thực thể để ghi đến Kết nối dữ liệu (datasource).</value>
@@ -140,7 +168,9 @@
         <value xml:lang="zh-TW">有 ${numberRead} 個資料實體要寫到資料源</value>
     </property>
     <property key="EntityImportSucceededNumberFile">
+        <value xml:lang="de">${succeeded} von ${total} erfolgreich hinzugefügt</value>
         <value xml:lang="en">Succeeded: ${succeeded} of ${total}</value>
+        <value xml:lang="fr">Succès : ${succeeded} sur ${total}</value>
         <value xml:lang="it">Successo: ${succeeded} di ${total}</value>
         <value xml:lang="ja">成功: ${succeeded} / ${total}</value>
         <value xml:lang="vi">Thành công: ${succeeded} trên tổng số ${total}</value>
@@ -150,6 +180,7 @@
     <property key="FormFieldTitle_date1">
         <value xml:lang="de">Datum1</value>
         <value xml:lang="en">date1</value>
+        <value xml:lang="fr">date 1</value>
         <value xml:lang="it">data 1</value>
         <value xml:lang="ja">日付1</value>
         <value xml:lang="pt">data1</value>
@@ -160,6 +191,7 @@
     <property key="FormFieldTitle_date2">
         <value xml:lang="de">Datum2</value>
         <value xml:lang="en">date2</value>
+        <value xml:lang="fr">date 2</value>
         <value xml:lang="it">data 2</value>
         <value xml:lang="ja">日付2</value>
         <value xml:lang="pt">data2</value>
@@ -169,7 +201,8 @@
     </property>
     <property key="FormFieldTitle_entityGroupId">
         <value xml:lang="de">Entität Gruppen ID</value>
-        <value xml:lang="en">Entity Group Id</value>
+        <value xml:lang="en">Entity Group ID</value>
+        <value xml:lang="fr">Réf du groupe d'entité</value>
         <value xml:lang="it">Gruppo entità</value>
         <value xml:lang="ja">エンティテイグループID</value>
         <value xml:lang="pt">ID do Grupo da Entity</value>
@@ -179,7 +212,7 @@
     </property>
     <property key="FormFieldTitle_entitySyncId">
         <value xml:lang="de">Entität Synch. ID</value>
-        <value xml:lang="en">Entity Sync Id</value>
+        <value xml:lang="en">Entity Sync ID</value>
         <value xml:lang="fr">Réf. de synchro. d'entités</value>
         <value xml:lang="it">Codice entità Sincr.</value>
         <value xml:lang="ja">エンティテイ同期ID</value>
@@ -193,6 +226,7 @@
     <property key="FormFieldTitle_eomodeldFullPath">
         <value xml:lang="de">EoModell abs. Pfad</value>
         <value xml:lang="en">EoModel Full Path</value>
+        <value xml:lang="fr">Chemin absolue du EoModel</value>
         <value xml:lang="it">Path completo EoModel</value>
         <value xml:lang="ja">EoModelフルパス</value>
         <value xml:lang="pt">Caminho completo EoModel</value>
@@ -203,6 +237,7 @@
     <property key="FormFieldTitle_exprAssocType">
         <value xml:lang="de">Ausdruck Verknüpfungstyp</value>
         <value xml:lang="en">Expr Assoc Type</value>
+        <value xml:lang="fr">Type d'association d'expresion</value>
         <value xml:lang="it">Tipo associazione espressione</value>
         <value xml:lang="ja">表現割当種類</value>
         <value xml:lang="pt">Tipo de associaÃ§Ã£o da expressÃ£o</value>
@@ -239,6 +274,7 @@
     <property key="FormFieldTitle_integer1">
         <value xml:lang="de">Integer1</value>
         <value xml:lang="en">integer1</value>
+        <value xml:lang="fr">entier 1</value>
         <value xml:lang="it">intero 1</value>
         <value xml:lang="ja">整数1</value>
         <value xml:lang="pt">INTEIRO1</value>
@@ -249,6 +285,7 @@
     <property key="FormFieldTitle_integer2">
         <value xml:lang="de">Integer2</value>
         <value xml:lang="en">integer2</value>
+        <value xml:lang="fr">entier 2</value>
         <value xml:lang="it">intero 2</value>
         <value xml:lang="ja">整数2</value>
         <value xml:lang="vi">Số nguyên2</value>
@@ -333,7 +370,7 @@
     </property>
     <property key="FormFieldTitle_runStatusId">
         <value xml:lang="de">Laufzeitstatus ID</value>
-        <value xml:lang="en">Run Status Id</value>
+        <value xml:lang="en">Run Status ID</value>
         <value xml:lang="fr">Réf. de statut en cours</value>
         <value xml:lang="it">Stato Esecuzione</value>
         <value xml:lang="ja">実行ステータスID</value>
@@ -347,6 +384,7 @@
     <property key="FormFieldTitle_string1">
         <value xml:lang="de">String1</value>
         <value xml:lang="en">string1</value>
+        <value xml:lang="fr">Chaîne de caractère 1</value>
         <value xml:lang="it">stringa 1</value>
         <value xml:lang="ja">文字列1</value>
         <value xml:lang="pt">string1</value>
@@ -357,6 +395,7 @@
     <property key="FormFieldTitle_string2">
         <value xml:lang="de">String2</value>
         <value xml:lang="en">string2</value>
+        <value xml:lang="fr">Chaîne de caractère 2</value>
         <value xml:lang="it">stringa 2</value>
         <value xml:lang="ja">文字列2</value>
         <value xml:lang="pt">string2</value>
@@ -441,6 +480,10 @@
         <value xml:lang="zh">Admin</value>
         <value xml:lang="zh-TW">Admin</value>
     </property>
+    <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="de">Demo Daten Generator</value>
+        <value xml:lang="en">Demo Data Generator</value>
+    </property>
     <property key="PageTitleEditUtilCache">
         <value xml:lang="de">Util Cache bearbeiten</value>
         <value xml:lang="en">Edit Util Cache</value>
@@ -457,6 +500,7 @@
     <property key="PageTitleEntityEoModelBundle">
         <value xml:lang="de">Entity Eo Modell-Bundle</value>
         <value xml:lang="en">Entity Eo Model Bundle</value>
+        <value xml:lang="fr">Ensemble des modèles d'entité</value>
         <value xml:lang="it">Entità Eo Model Bundle</value>
         <value xml:lang="ja">EoModelバンドルエンティティ</value>
         <value xml:lang="vi">Thực thể Eo Model Bundle</value>
@@ -554,6 +598,10 @@
         <value xml:lang="zh">实体同步状态</value>
         <value xml:lang="zh-TW">資料實體同步狀態</value>
     </property>
+    <property key="PageTitleFetchLogs">
+        <value xml:lang="de">Log-Dateien abholen</value>
+        <value xml:lang="en">Fetch Logs</value>
+    </property>
     <property key="PageTitleFindJob">
         <value xml:lang="de">Job suchen</value>
         <value xml:lang="en">Find Job</value>
@@ -567,6 +615,7 @@
         <value xml:lang="zh-TW">尋找任務</value>
     </property>
     <property key="PageTitleFindPortalPage">
+        <value xml:lang="de">Portalseite suchen</value>
         <value xml:lang="en">Find Portal page</value>
         <value xml:lang="fr">Rech. page portail</value>
         <value xml:lang="it">Ricerca pagine portale</value>
@@ -577,7 +626,7 @@
         <value xml:lang="zh-TW">查詢入口網頁</value>
     </property>
     <property key="PageTitleFindUtilCache">
-        <value xml:lang="de">Cache Wartungs</value>
+        <value xml:lang="de">Cache Wartung</value>
         <value xml:lang="en">Cache Maintenance</value>
         <value xml:lang="fr">Maintenance des caches</value>
         <value xml:lang="it">Manutenzione cache</value>
@@ -590,7 +639,7 @@
         <value xml:lang="zh-TW">快取維護頁面</value>
     </property>
     <property key="PageTitleFindUtilCacheElements">
-        <value xml:lang="de">Cache Elemente Wartungsseite</value>
+        <value xml:lang="de">Cache Elemente Wartung</value>
         <value xml:lang="en">Cache Element Maintenance</value>
         <value xml:lang="fr">Entretien d'éléments des caches</value>
         <value xml:lang="it">Manutenzione elementi cache</value>
@@ -616,7 +665,9 @@
         <value xml:lang="zh-TW">任務清單</value>
     </property>
     <property key="PageTitleJobDetails">
+        <value xml:lang="de">Job Details</value>
         <value xml:lang="en">Job Details</value>
+        <value xml:lang="fr">Détails du job</value>
         <value xml:lang="zh">任务详情</value>
         <value xml:lang="zh-TW">任務詳情</value>
     </property>
@@ -647,7 +698,9 @@
         <value xml:lang="zh-TW">檢視日誌</value>
     </property>
     <property key="PageTitleProgramExport">
+        <value xml:lang="de">Programmierbarer Export</value>
         <value xml:lang="en">Programmable Export</value>
+        <value xml:lang="fr">Export programmable</value>
         <value xml:lang="zh">可编程导出</value>
     </property>
     <property key="PageTitleRunService">
@@ -661,6 +714,11 @@
         <value xml:lang="vi">Thực thi Dịch vụ</value>
         <value xml:lang="zh">运行服务</value>
         <value xml:lang="zh-TW">執行服務</value>
+    </property>
+    <property key="PageTitleJobManagerLockList">
+        <value xml:lang="de">Job Manager Sperrliste</value>
+        <value xml:lang="en">Job manager locks list</value>
+        <value xml:lang="fr">Blocage du gestionnaire de service</value>
     </property>
     <property key="PageTitleScheduleJob">
         <value xml:lang="de">Job anlegen</value>
@@ -804,6 +862,7 @@
         <value xml:lang="zh-TW">調整偵錯級別</value>
     </property>
     <property key="WebtoolsAdminPortalPage">
+        <value xml:lang="de">Portal Seiten-Admin.</value>
         <value xml:lang="en">Portal page Admin.</value>
         <value xml:lang="fr">Admin. Page portail</value>
         <value xml:lang="ja">ポータルページの管理</value>
@@ -835,6 +894,14 @@
         <value xml:lang="zh">全部</value>
         <value xml:lang="zh-TW">全部</value>
     </property>
+    <property key="WebtoolsAllowUnsafeEntitiesDesc">
+        <value xml:lang="de">Einige Entitäten wie EntityKeyStore können schwerwiegende Probleme wie permanenten Datenverlust verursachen, wenn sie nicht unter den richtigen Bedingungen importiert werden (z. B. das Überschreiben von EntityKeyStore-Schlüsseln kann dazu führen, dass verschlüsselte Datenbankfelder vorhandener Daten dauerhaft unlesbar werden). Warnung: Aktivieren Sie dieses Kontrollkästchen nur, wenn Sie genau wissen, was Sie tun!</value>
+        <value xml:lang="en">Some entities such as EntityKeyStore can cause serious issues such as permanent data loss if not imported under the right conditions (e.g., overwriting EntityKeyStore keys can cause encrypted database fields of existing data to become permanently unreadable). Warning: Only check this box if you know exactly what you are doing!</value>
+    </property>
+    <property key="WebtoolsAllowUnsafeEntitiesNamed">
+        <value xml:lang="de">Erlaube gefährliche Wesen (${unsafeEntityNames})</value>
+        <value xml:lang="en">Allow dangerous entities (${unsafeEntityNames})</value>
+    </property>
     <property key="WebtoolsArtifactInfo">
         <value xml:lang="de">SCIPIO Elemente-Info</value>
         <value xml:lang="en">Artifact Info</value>
@@ -865,6 +932,10 @@
         <value xml:lang="vi">KHÔNG ĐỒNG BỘ</value>
         <value xml:lang="zh">异步</value>
         <value xml:lang="zh-TW">非同步</value>
+    </property>
+    <property key="WebtoolsAvailableReaders">
+        <value xml:lang="de">Verfügbare Leser</value>
+        <value xml:lang="en">Available readers</value>
     </property>
     <property key="WebtoolsBackToCacheMaintenance">
         <value xml:lang="de">Zurück zur Cache-Wartung</value>
@@ -958,7 +1029,9 @@
         <value xml:lang="zh-TW">快取維護</value>
     </property>
     <property key="WebtoolsCacheMemory">
+        <value xml:lang="de">Cache Memory</value>
         <value xml:lang="en">Cache Memory</value>
+        <value xml:lang="fr">Mémoire cache</value>
         <value xml:lang="zh">缓存内存</value>
         <value xml:lang="zh-TW">快取記憶體</value>
     </property>
@@ -1065,6 +1138,18 @@
         <value xml:lang="fr">Tout sélectionner (sauf les views)</value>
         <value xml:lang="it">Seleziona tutto</value>
         <value xml:lang="ja">すべてチェック (ビュー以外)</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh-TW">檢查全部</value>
+    </property>
+    <property key="WebtoolsCheckAllPlain">
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
         <value xml:lang="pt">Selecionar todos</value>
         <value xml:lang="th">ตรวจสอบทั้งหมด</value>
         <value xml:lang="vi">Chọn tất cả</value>
@@ -1202,6 +1287,10 @@
         <value xml:lang="zh">完成XML文档 (根标签: entity-engine-xml)</value>
         <value xml:lang="zh-TW">完成XML檔 (根標簽: entity-engine-xml)</value>
     </property>
+    <property key="WebtoolsComponentNotFoundOrNotEnabled">
+        <value xml:lang="de">Komponente nicht gefunden oder nicht aktiviert</value>
+        <value xml:lang="en">Component not found or not enabled</value>
+    </property>
     <property key="WebtoolsComponentsLoaded">
         <value xml:lang="de">Komponenten geladen</value>
         <value xml:lang="en">Loaded Components</value>
@@ -1279,6 +1368,7 @@
     <property key="WebtoolsConfiguration">
         <value xml:lang="de">Konfiguration</value>
         <value xml:lang="en">Configuration</value>
+        <value xml:lang="fr">Configuration</value>
         <value xml:lang="it">Configurazione</value>
         <value xml:lang="ja">設定</value>
         <value xml:lang="pt">ConfiguraÃ§Ã£o</value>
@@ -1287,6 +1377,7 @@
         <value xml:lang="zh-TW">配置</value>
     </property>
     <property key="WebtoolsConfirmDelete">
+        <value xml:lang="de">Sind Sie sicher, dass Sie löschen möchten?</value>
         <value xml:lang="en">Are you sure you want to delete?</value>
         <value xml:lang="fr">Êtes-vous sûr de vouloir supprimer l'élément ?</value>
     </property>
@@ -1389,6 +1480,11 @@
         <value xml:lang="zh">创建/删除主键</value>
         <value xml:lang="zh-TW">新建/刪除主鍵</value>
     </property>
+    <property key="WebtoolsCurrentJobManagerLock">
+        <value xml:lang="de">Aktuelle Jobmanager Sperrungen</value>
+        <value xml:lang="en">Current job manager locks</value>
+        <value xml:lang="fr">Blocages actuels du gestionnaire de service</value>
+    </property>
     <property key="WebtoolsDaemon">
         <value xml:lang="de">Daemon</value>
         <value xml:lang="en">Daemon</value>
@@ -1435,6 +1531,19 @@
         <value xml:lang="vi">Tập tin Thực thể lưu đến: </value>
         <value xml:lang="zh">实体文件保存到：</value>
         <value xml:lang="zh-TW">資料實體檔保存到:</value>
+    </property>
+    <property key="WebtoolsDataExport">
+        <value xml:lang="de">Daten exportieren</value>
+        <value xml:lang="en">Data Export</value>
+        <value xml:lang="fr">Export de données</value>
+        <value xml:lang="it">Esporta dati</value>
+        <value xml:lang="ja">データエクスポート</value>
+        <value xml:lang="pt">ExportaÃ§Ã£o de dados</value>
+        <value xml:lang="ro">Exporta Date</value>
+        <value xml:lang="th">ส่งออกข้อมูล</value>
+        <value xml:lang="vi">Kết xuất dữ liệu</value>
+        <value xml:lang="zh">数据导出</value>
+        <value xml:lang="zh-TW">資料匯出</value>
     </property>
     <property key="WebtoolsDataFileMainTitle">
         <value xml:lang="de">Arbeiten mit Datendateien</value>
@@ -1496,6 +1605,27 @@
         <value xml:lang="vi">Công cụ tập tin dữ liệu</value>
         <value xml:lang="zh">数据文件工具</value>
         <value xml:lang="zh-TW">資料檔工具</value>
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
+        <value xml:lang="de">Aktuell auf ${maxRecords} gesetzt</value>
+        <value xml:lang="en">Currently set to ${maxRecords}</value>
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
+        <value xml:lang="de">Das Standard-Limit an zu generierenden Datensätzen kann in general.properties #data.generator.max.records angepasst werden.</value>
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
+    </property>
+    <property key="WebtoolsDataImport">
+        <value xml:lang="de">Daten importieren</value>
+        <value xml:lang="en">Data Import</value>
+        <value xml:lang="fr">Import de données</value>
+        <value xml:lang="it">Importa dati da</value>
+        <value xml:lang="ja">XMLデータインポート</value>
+        <value xml:lang="pt">Importar dados</value>
+        <value xml:lang="ro">Importa Datele</value>
+        <value xml:lang="th">นำเข้าข้อมูล</value>
+        <value xml:lang="vi">Nhập khẩu dữ liệu</value>
+        <value xml:lang="zh">数据导入</value>
+        <value xml:lang="zh-TW">資料匯入</value>
     </property>
     <property key="WebtoolsDataIsUrl">
         <value xml:lang="de">Ist URI/URL?</value>
@@ -1572,7 +1702,9 @@
         <value xml:lang="zh-TW">預設資料實體名稱</value>
     </property>
     <property key="WebtoolsDefinitionLocation">
+        <value xml:lang="de">Definiert in</value>
         <value xml:lang="en">Definition Location</value>
+        <value xml:lang="fr">Emplacement de la définition</value>
         <value xml:lang="zh">定义位置</value>
         <value xml:lang="zh-TW">定義位置</value>
     </property>
@@ -1601,6 +1733,36 @@
         <value xml:lang="vi">Xóa giá trị này</value>
         <value xml:lang="zh">删除这个值</value>
         <value xml:lang="zh-TW">刪除這個值</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
+        <value xml:lang="de">Es konnten keine Datensätze erzeugt werden</value>
+        <value xml:lang="en">No records could be generated</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorProviders">
+        <value xml:lang="de">Daten Generatoren</value>
+        <value xml:lang="en">Data Generator Providers</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorResults">
+        <value xml:lang="de">Generierte Daten Ergebnisse</value>
+        <value xml:lang="en">Generated data results</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorServiceList">
+        <value xml:lang="de">Daten Generator Services</value>
+        <value xml:lang="en">Data Generator Services</value>
+    </property>
+    <property key="WebtoolsDeprecated">
+        <value xml:lang="de">Veraltet</value>
+        <value xml:lang="en">Deprecated</value>
+        <value xml:lang="fr">Périmé</value>
+    </property>
+    <property key="WebtoolsDeprecatedUseInstead">
+        <value xml:lang="de">Verwenden Sie stattdessen</value>
+        <value xml:lang="en">Use instead</value>
+        <value xml:lang="fr">Utilisez en remplacement</value>
+    </property>
+    <property key="WebtoolsDeveloperDocumentation">
+        <value xml:lang="de">Developer Documentation</value>
+        <value xml:lang="en">Developer Documentation</value>
     </property>
     <property key="WebtoolsDispatcherName">
         <value xml:lang="de">Dispatcher-Name</value>
@@ -1700,9 +1862,10 @@
         <value xml:lang="zh">实体</value>
         <value xml:lang="zh-TW">資料實體</value>
     </property>
-    <property key="WebtoolsEntityCretePermissionError">
+    <property key="WebtoolsEntityCreatePermissionError">
         <value xml:lang="de">Sie haben keine Berechtigung, eine Entität zu erstellen</value>
         <value xml:lang="en">You do not have permission to create a entity</value>
+        <value xml:lang="fr">Vous n'avez pas les authorisations nécessaire pour créer une entrée</value>
         <value xml:lang="it">Non hai il permesso di creare un'entità</value>
         <value xml:lang="ja">エンティティを作成する権限がありません</value>
         <value xml:lang="pt">VocÃª nÃ£o tem permissÃ£o para criar uma entidade</value>
@@ -1822,6 +1985,10 @@
         <value xml:lang="zh">实体名称</value>
         <value xml:lang="zh-TW">資料實體名稱</value>
     </property>
+    <property key="WebtoolsEntityNotFoundSpecified">
+        <value xml:lang="de">Entität nicht gefunden: ${entityName}</value>
+        <value xml:lang="en">Entity not found: ${entityName}</value>
+    </property>
     <property key="WebtoolsEntityPackages">
         <value xml:lang="de">Entitätenpakete</value>
         <value xml:lang="en">Entity Packages</value>
@@ -1930,6 +2097,10 @@
         <value xml:lang="zh">实体同步状态</value>
         <value xml:lang="zh-TW">資料實體同步狀態</value>
     </property>
+    <property key="WebtoolsEntityUtilityServices">
+        <value xml:lang="de">Entity Utility Services</value>
+        <value xml:lang="en">Entity Utility Services</value>
+    </property>
     <property key="WebtoolsEntityView">
         <value xml:lang="de">View Entity</value>
         <value xml:lang="en">View Entity</value>
@@ -1946,6 +2117,7 @@
     <property key="WebtoolsEntityXMLRepresentation">
         <value xml:lang="de">XML Repräsentation der Entität</value>
         <value xml:lang="en">Entity XML Representation</value>
+        <value xml:lang="fr">Représentation XML de l'entité</value>
         <value xml:lang="ja">エンティティのXML表現</value>
         <value xml:lang="vi">Trình diễn XML Thực thể</value>
         <value xml:lang="zh">实体XML表述</value>
@@ -1974,7 +2146,9 @@
         <value xml:lang="zh-TW">環境名稱</value>
     </property>
     <property key="WebtoolsEomodelErrorGettingEntityNames">
+        <value xml:lang="de">FEHLER: beim Lesen der Entity-Namen: ${errorString}</value>
         <value xml:lang="en">ERROR: getting entity names: ${errorString}</value>
+        <value xml:lang="fr">ERREUR: Lors de l'optention des noms d'entité ({errorString})</value>
         <value xml:lang="it">ERRORE: ottenendo i nomi delle entità: ${errorString}</value>
         <value xml:lang="ja">エラー: エンティティ名の取得中: ${errorString}</value>
         <value xml:lang="vi">Lỗi: lấy tên Thực thể: ${errorString}</value>
@@ -1982,7 +2156,9 @@
         <value xml:lang="zh-TW">錯誤:獲取機構名稱:${errorString}</value>
     </property>
     <property key="WebtoolsEomodelExported">
+        <value xml:lang="de">Die eomodeld Datei für ${entityNamesSize} entities wurde nach ${eomodeldFullPath} exportiert</value>
         <value xml:lang="en">Exported eomodeld file for ${entityNamesSize} entities to: ${eomodeldFullPath}</value>
+        <value xml:lang="fr">Fichier EoModel exporté avec ${entityNamesSize} entités vers ${eomodeldFullPath}</value>
         <value xml:lang="it">Esportato file eomodeld per ${entityNamesSize} entità in: ${eomodeldFullPath}</value>
         <value xml:lang="ja">${entityNamesSize} エンティティに対するEOMODELDファイルをエクスポートしました: ${eomodeldFullPath}</value>
         <value xml:lang="vi">Đã kết xuất eomodeld tập tin cho ${entityNamesSize} Thực thể tới: ${eomodeldFullPath}</value>
@@ -1990,7 +2166,9 @@
         <value xml:lang="zh-TW">為 ${entityNamesSize} 個資料實體匯出eomodeld格式檔到:${eomodeldFullPath}</value>
     </property>
     <property key="WebtoolsEomodelFileOrDirectoryNotFound">
+        <value xml:lang="de">FEHLER: Datei/Verzeichnis nicht gefunden: ${errorString}</value>
         <value xml:lang="en">ERROR: file/directory not found: ${errorString}</value>
+        <value xml:lang="fr">ERREUR: ficher/dossier non trouvé (${errorString})</value>
         <value xml:lang="it">ERRORE: file/directory non trovata: ${errorString}</value>
         <value xml:lang="ja">エラー: ファイル/ディレクトリが見つかりません: ${errorString}</value>
         <value xml:lang="vi">Lỗi: Tập tin / Thư mục không tìm thấy: ${errorString}</value>
@@ -1998,7 +2176,9 @@
         <value xml:lang="zh-TW">錯誤:沒有找到檔/目錄:${errorString}</value>
     </property>
     <property key="WebtoolsEomodelFullPathIsNotADirectory">
+        <value xml:lang="de">Eomodel Pfad ist kein Verzeichnis: ${eomodeldFullPath}</value>
         <value xml:lang="en">eomodel Full Path is not a directory: ${eomodeldFullPath}</value>
+        <value xml:lang="fr">Le chemin absolu donnée (${eomodeldFullPath}) n'est pas un dossier</value>
         <value xml:lang="it">eomodel path completo non è una directory: ${eomodeldFullPath}</value>
         <value xml:lang="ja">EOMODELのフルパスがディレクトリではありません: ${eomodeldFullPath}</value>
         <value xml:lang="vi">Đường dẫn đầy đủ eomodel không phải là thư mục: ${eomodeldFullPath}</value>
@@ -2006,14 +2186,18 @@
         <value xml:lang="zh-TW">eomodel完整路徑不是一個目錄:${eomodeldFullPath}</value>
     </property>
     <property key="WebtoolsEomodelFullPathIsNotWriteable">
+        <value xml:lang="de">Eomodel Pfad kann nicht gelesen werden: ${eomodeldFullPath}</value>
         <value xml:lang="en">eomodel Full Path is not write-able: ${eomodeldFullPath}</value>
+        <value xml:lang="fr">Le chemin absolu donnée (${eomodeldFullPath}) n'est pas ouvert en écriture</value>
         <value xml:lang="it">eomodel path completo non è scrivibile: ${eomodeldFullPath}</value>
         <value xml:lang="ja">EOMODELのフルパスが書き込み可能ではありません: ${eomodeldFullPath}</value>
         <value xml:lang="zh">eomodel完整路径不可写：${eomodeldFullPath}</value>
         <value xml:lang="zh-TW">eomodel完整路徑不可寫:${eomodeldFullPath}</value>
     </property>
     <property key="WebtoolsEomodelSavingFileError">
+        <value xml:lang="de">FEHLER beim speichern der Datei ${errorString}</value>
         <value xml:lang="en">ERROR saving file: ${errorString}</value>
+        <value xml:lang="fr">ERREUR lors de la sauvegarde du fichier (${eomodeldFullPath})</value>
         <value xml:lang="it">ERRORE durante il salvataggio del file: ${errorString}</value>
         <value xml:lang="ja">ファイルの保存中にエラー: ${errorString}</value>
         <value xml:lang="vi">Lỗi lưu tập tin: ${errorString}</value>
@@ -2046,32 +2230,40 @@
         <value xml:lang="zh">错误级别会指出那些仍然允许应用程序继续执行的错误事件。</value>
         <value xml:lang="zh-TW">錯誤級別會指出那些仍然允許應用程式繼續執行的錯誤事件.</value>
     </property>
-    <property key="WebtoolsErrrorParsingFile">
+    <property key="WebtoolsErrorParsingFile">
+        <value xml:lang="de">FEHLER: Parsen der Datei fehgeschlagen ${errorString}</value>
         <value xml:lang="en">ERROR: parsing file: ${errorString}</value>
+        <value xml:lang="fr">ERREUR : Lors de l'analyse du fichier (${errorString})</value>
         <value xml:lang="it">ERRORE: errore di parsing file: ${errorString}</value>
         <value xml:lang="ja">エラー: ファイルパース中: ${errorString}</value>
         <value xml:lang="vi">Lỗi: phân tícf tập tin: ${errorString}</value>
         <value xml:lang="zh">错误：解析文件：${errorString}</value>
         <value xml:lang="zh-TW">錯誤:解析檔:${errorString}</value>
     </property>
-    <property key="WebtoolsErrrorProcessingTemplateFile">
+    <property key="WebtoolsErrorProcessingTemplateFile">
+        <value xml:lang="de">FEHLER: Die Template Datei ${filename} kann nicht prozessiert werden: ${errorString}</value>
         <value xml:lang="en">ERROR: processing template file ${filename}: ${errorString}</value>
+        <value xml:lang="fr">ERREUR : lors du traitement du fichier modèle ${filename}, une exception c'est levée (${errorString})</value>
         <value xml:lang="it">ERRORE: errore di esecuzione template file ${filename}: ${errorString}</value>
         <value xml:lang="ja">エラー: テンプレートファイル ${filename} の処理中: ${errorString}</value>
         <value xml:lang="vi">Lỗi: xử lý tập tin biểu mẫu ${filename}: ${errorString}</value>
         <value xml:lang="zh">错误：处理模板文件 ${filename}：${errorString}</value>
         <value xml:lang="zh-TW">錯誤:處理模板檔 ${filename}:${errorString}</value>
     </property>
-    <property key="WebtoolsErrrorReadingFileName">
+    <property key="WebtoolsErrorReadingFileName">
+        <value xml:lang="de">FEHLER: Die Datei ${filename} kann nicht gelesen werden: ${errorString}</value>
         <value xml:lang="en">ERROR: reading file name ${filename}: ${errorString}</value>
+        <value xml:lang="fr">ERREUR : lors de la lecture du fichier ${filename}, une exception c'est levée (${errorString})</value>
         <value xml:lang="it">ERRORE: errore di lettura file ${filename}: ${errorString}</value>
         <value xml:lang="ja">エラー: ファイル名 ${filename} の読み込み中: ${errorString}</value>
         <value xml:lang="vi">Lỗi: đọc tập tin với tên ${filename}: ${errorString}</value>
         <value xml:lang="zh">错误：读取文件名 ${filename}：${errorString}</value>
         <value xml:lang="zh-TW">錯誤:讀取檔案名 ${filename}:${errorString}</value>
     </property>
-    <property key="WebtoolsErrrorReadingTemplateFile">
+    <property key="WebtoolsErrorReadingTemplateFile">
+        <value xml:lang="de">FEHLER: Die Template Datei ${filename} kann nicht gelesen werden: ${errorString}</value>
         <value xml:lang="en">ERROR: reading template file ${filename}: ${errorString}</value>
+        <value xml:lang="fr">ERREUR : lors de la lecture du fichier modèle ${filename}, une exception c'est levée (${errorString})</value>
         <value xml:lang="it">ERRORE: errore di lettura template file ${filename}: ${errorString}</value>
         <value xml:lang="ja">エラー: テンプレートファイル ${filename} の読み込み中: ${errorString}</value>
         <value xml:lang="vi">Lỗi: đọc tập tin biểu mẫu ${filename}: ${errorString}</value>
@@ -2193,6 +2385,10 @@
         <value xml:lang="zh">严重错误级别会指出那些可能导致应用程序异常中断的严重错误事件。</value>
         <value xml:lang="zh-TW">嚴重錯誤級別會指出那些可能導致應用程式異常中斷的嚴重錯誤事件.</value>
     </property>
+    <property key="WebtoolsFetchLogs">
+        <value xml:lang="de">Log-Dateien laden</value>
+        <value xml:lang="en">Fetch Logs</value>
+    </property>
     <property key="WebtoolsFieldName">
         <value xml:lang="de">Feldname</value>
         <value xml:lang="en">Field Name</value>
@@ -2231,6 +2427,10 @@
         <value xml:lang="vi">Trường</value>
         <value xml:lang="zh">域</value>
         <value xml:lang="zh-TW">域</value>
+    </property>
+    <property key="WebtoolsFieldValueNoStringRepr">
+        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
+        <value xml:lang="en">Field value can't be represented as string</value>
     </property>
     <property key="WebtoolsFind">
         <value xml:lang="de">Suchen</value>
@@ -2334,8 +2534,8 @@
     </property>
     <property key="WebtoolsForSomethingInteresting">
         <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio</value>
-        <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: scipio</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion: admin, et le mot de passe: scipio</value>
+        <value xml:lang="en">For something interesting, make sure you are logged in; try username: admin, password: scipio</value>
+        <value xml:lang="fr">Pour quelque chose d'intéressant, assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion: admin, et le mot de passe: scipio</value>
         <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio</value>
         <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
         <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio</value>
@@ -2419,7 +2619,16 @@
         <value xml:lang="zh">通用Java线程</value>
         <value xml:lang="zh-TW">通用JAVA執行緒</value>
     </property>
+    <property key="WebtoolsGeneratedDataFailed">
+        <value xml:lang="de">Fehlgeschlagen</value>
+        <value xml:lang="en">Failed</value>
+    </property>
+    <property key="WebtoolsGeneratedDataStored">
+        <value xml:lang="de">Gespeichert</value>
+        <value xml:lang="en">Stored</value>
+    </property>
     <property key="WebtoolsGeoAssocList">
+        <value xml:lang="de">Zonen Liste</value>
         <value xml:lang="en">List GeoAssoc</value>
         <value xml:lang="fr">Lister les relations de zone géographique</value>
     </property>
@@ -2478,7 +2687,9 @@
         <value xml:lang="zh-TW">連結地理(把它們結合到一個地理位置)</value>
     </property>
     <property key="WebtoolsGeoPoints">
+        <value xml:lang="de">GEO Punkte</value>
         <value xml:lang="en">GEO Points</value>
+        <value xml:lang="fr">Points GEO</value>
         <value xml:lang="zh">地理点</value>
     </property>
     <property key="WebtoolsGeosSelect">
@@ -2551,7 +2762,9 @@
         <value xml:lang="zh-TW">匯入</value>
     </property>
     <property key="WebtoolsImportExport">
+        <value xml:lang="de">Import/Export</value>
         <value xml:lang="en">Import/Export</value>
+        <value xml:lang="fr">Importer/Exporter</value>
         <value xml:lang="it">Importazione / Esportazione</value>
         <value xml:lang="ja">インポート/エクスポート</value>
         <value xml:lang="pt">Importar/Exportar</value>
@@ -2714,7 +2927,9 @@
         <value xml:lang="zh-TW">間隔</value>
     </property>
     <property key="WebtoolsInvalidFileName">
+        <value xml:lang="de">FEHLER: Ungültiger Dateiname ${filename}: ${errorString}</value>
         <value xml:lang="en">ERROR: invalid file name ${filename}: ${errorString}</value>
+        <value xml:lang="fr">ERREUR : nom de fichier ${filename} invalide, (trace d'erreur : ${errorString})</value>
         <value xml:lang="it">ERRORE: nome file invalido ${filename}: ${errorString}</value>
         <value xml:lang="ja">エラー: ファイル名 ${filename} が正しくありません: ${errorString}</value>
         <value xml:lang="vi">Lỗi: tên tập tin ${filename} không đúng định dạng: ${errorString}</value>
@@ -2859,6 +3074,11 @@
         <value xml:lang="zh">日志文件</value>
         <value xml:lang="zh-TW">日誌檔</value>
     </property>
+    <property key="WebtoolsJobManagerLockEnable">
+        <value xml:lang="de">Job Manager Sperrungen aktiviert</value>
+        <value xml:lang="en">Job manager locks enabled</value>
+        <value xml:lang="fr">Blocages actifs sur le gestionnaire de service</value>
+    </property>
     <property key="WebtoolsLHSMapName">
         <value xml:lang="de">Name der LHS-Map</value>
         <value xml:lang="en">LHS map name</value>
@@ -2987,6 +3207,7 @@
     <property key="WebtoolsLabelManagerHardcoded">
         <value xml:lang="de">Fest kodierte Label</value>
         <value xml:lang="en">Hardcoded labels</value>
+        <value xml:lang="fr">Labels codés en dure</value>
         <value xml:lang="it">Label non traducibili</value>
         <value xml:lang="ja">ハードコードされたラベル</value>
         <value xml:lang="pt">Labels Hardcoded</value>
@@ -3063,6 +3284,7 @@
     <property key="WebtoolsLabelManagerOnlyMissingTranslations">
         <value xml:lang="de">Nur fehlende Übersetzungen</value>
         <value xml:lang="en">Only Missing Translations</value>
+        <value xml:lang="fr">Seulement les traductions manquantes</value>
         <value xml:lang="it">Solo traduzioni mancanti</value>
         <value xml:lang="ja">翻訳漏れのみ</value>
         <value xml:lang="pt">SÃ³ TraduÃ§Ãµes ausentes</value>
@@ -3073,6 +3295,7 @@
     <property key="WebtoolsLabelManagerOnlyNotUsedLabels">
         <value xml:lang="de">Nur ungenutzte Labels</value>
         <value xml:lang="en">Only Not Used Labels</value>
+        <value xml:lang="fr">Seulement les labels non utilisés</value>
         <value xml:lang="it">Solo traduzioni non usate</value>
         <value xml:lang="ja">使用されていないラベルのみ</value>
         <value xml:lang="pt">SÃ³ nÃ£o labels nÃ£o utilizados</value>
@@ -3083,6 +3306,7 @@
     <property key="WebtoolsLabelManagerReferences">
         <value xml:lang="de">Referenzen</value>
         <value xml:lang="en">References</value>
+        <value xml:lang="fr">Références</value>
         <value xml:lang="it">Referenze</value>
         <value xml:lang="ja">参照</value>
         <value xml:lang="pt">ReferÃªncias</value>
@@ -3104,6 +3328,7 @@
     <property key="WebtoolsLabelManagerRow">
         <value xml:lang="de">Zeile N</value>
         <value xml:lang="en">Row n.</value>
+        <value xml:lang="fr">Ligne n.</value>
         <value xml:lang="it">N.riga</value>
         <value xml:lang="ja">行No</value>
         <value xml:lang="pt">Linha nÂº</value>
@@ -3153,6 +3378,7 @@
         <value xml:lang="zh-TW">更新標簽</value>
     </property>
     <property key="WebtoolsLabelManagerUpdateAndSave">
+        <value xml:lang="de">Aktualisieren und speichern des Labels in der XML-Datei</value>
         <value xml:lang="en">Update and Save to xml file the label</value>
         <value xml:lang="fr">Mettre à jour et sauver la  traduction dans le fichier XML</value>
         <value xml:lang="it">Aggiorna e salva la label</value>
@@ -3163,7 +3389,7 @@
         <value xml:lang="zh-TW">更新和保存到XML檔的標簽</value>
     </property>
     <property key="WebtoolsLabelManagerUpdateFile">
-        <value xml:lang="de">Datei ansehen</value>
+        <value xml:lang="de">Label Dateien aktualisieren</value>
         <value xml:lang="en">Update Labels Files</value>
         <value xml:lang="fr">Mettre à jour les fichiers de traduction</value>
         <value xml:lang="it">Aggiorna files delle labels</value>
@@ -3173,7 +3399,9 @@
         <value xml:lang="zh-TW">更新標簽檔</value>
     </property>
     <property key="WebtoolsLabelManagerViewFile">
+        <value xml:lang="de">Datei ansehen</value>
         <value xml:lang="en">View file</value>
+        <value xml:lang="fr">Voir le fichier</value>
         <value xml:lang="it">Mostra file</value>
         <value xml:lang="ja">ファイルを表示</value>
         <value xml:lang="vi">Xem tập tin</value>
@@ -3183,6 +3411,7 @@
     <property key="WebtoolsLabelManagerViewReferences">
         <value xml:lang="de">Labelreferenzen ansehen</value>
         <value xml:lang="en">View Labels References</value>
+        <value xml:lang="fr">Voir les références des labels</value>
         <value xml:lang="it">Mostra referenze labels</value>
         <value xml:lang="ja">ラベルの参照を表示</value>
         <value xml:lang="pt">Visualizar referÃªncias de labels</value>
@@ -3204,6 +3433,7 @@
     <property key="WebtoolsLabelStatsExist">
         <value xml:lang="de">Vorhandene Labels in Locale</value>
         <value xml:lang="en">Existing labels in locale</value>
+        <value xml:lang="fr">Tradutions existantes dans la langue</value>
         <value xml:lang="it">Label definite per la lingua</value>
         <value xml:lang="ja">地域のラベルが存在</value>
         <value xml:lang="vi">Đã tồn tại Nhãn ở cùng Ngôn ngữ</value>
@@ -3213,6 +3443,7 @@
     <property key="WebtoolsLabelStatsMissing">
         <value xml:lang="de">Fehlende Labels in Locale</value>
         <value xml:lang="en">Missing labels in locale</value>
+        <value xml:lang="fr">Traductions manquantes dans la langue</value>
         <value xml:lang="it">Label mancanti per la lingua</value>
         <value xml:lang="ja">地域のラベル漏れ</value>
         <value xml:lang="vi">Thiếu Nhãn ở Ngôn ngữ</value>
@@ -3222,6 +3453,7 @@
     <property key="WebtoolsLabelStatsTotal">
         <value xml:lang="de">Gesamtzahl der Labels</value>
         <value xml:lang="en">Total labels count</value>
+        <value xml:lang="fr">Total des traductions</value>
         <value xml:lang="it">Numero totale label</value>
         <value xml:lang="ja">ラベル件数合計</value>
         <value xml:lang="vi">Tổng số Nhãn</value>
@@ -3229,6 +3461,7 @@
         <value xml:lang="zh-TW">全部標籤合計</value>
     </property>
     <property key="WebtoolsLayoutDemo">
+        <value xml:lang="de">Layout Demo</value>
         <value xml:lang="en">Layout Demo</value>
         <value xml:lang="fr">Démonstration de mise en page</value>
         <value xml:lang="it">Dimostrazione Layout</value>
@@ -3238,6 +3471,7 @@
         <value xml:lang="zh-TW">佈局演示</value>
     </property>
     <property key="WebtoolsLayoutDemoText">
+        <value xml:lang="de">Testseite für Layouts. Kann zur Anpassung der visuellen Themes verwendet werden (die Ansicht des HTML Quelltext wird hierfür empfohlen).</value>
         <value xml:lang="en">Demonstrate layout best practices and provide a visual theme test page (it's recommended to use HTML source code).</value>
         <value xml:lang="fr">Démontre les bonnes pratiques de mise en page et fournit un page de test pour les thèmes (il est recommandé d'utiliser le code source HTML).</value>
         <value xml:lang="it">Dimostrazione di come utilizzare gli stili e pagina per il test dei temi visuali (si raccomanda di utilizzare il codice sorgente HTML).</value>
@@ -3257,6 +3491,11 @@
         <value xml:lang="vi">Để tất cả các điểm nhập là Trắng</value>
         <value xml:lang="zh">请让全部输入框为空白</value>
         <value xml:lang="zh-TW">請讓全部輸入框為空白</value>
+    </property>
+    <property key="WebtoolsLeaveEmptyToRunJobImmediately">
+        <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
+        <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
+        <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
     </property>
     <property key="WebtoolsLimitRowsTo">
         <value xml:lang="de">Zeilen begrenzen auf</value>
@@ -3375,6 +3614,10 @@
         <value xml:lang="zh">日志记录</value>
         <value xml:lang="zh-TW">日誌記錄</value>
     </property>
+    <property key="WebtoolsLogs">
+        <value xml:lang="de">Log-Dateien</value>
+        <value xml:lang="en">Logs</value>
+    </property>
     <property key="WebtoolsMainPage">
         <value xml:lang="de">Startseite</value>
         <value xml:lang="en">Main Page</value>
@@ -3401,7 +3644,9 @@
         <value xml:lang="zh-TW">維護時間戳？</value>
     </property>
     <property key="WebtoolsMaxInMemory">
+        <value xml:lang="de">Max in Speicher</value>
         <value xml:lang="en">Max In Memory</value>
+        <value xml:lang="fr">Max en mémoire</value>
         <value xml:lang="ja">メモリ中最大</value>
         <value xml:lang="vi">Tối đa trong bộ nhớ</value>
         <value xml:lang="zh">最大内存</value>
@@ -3482,6 +3727,7 @@
         <value xml:lang="zh-TW">記憶體</value>
     </property>
     <property key="WebtoolsMetrics">
+        <value xml:lang="de">Metriken</value>
         <value xml:lang="en">Metrics</value>
         <value xml:lang="fr">Mesures</value>
         <value xml:lang="ja">メトリックス</value>
@@ -3489,6 +3735,7 @@
         <value xml:lang="zh-TW">度量</value>
     </property>
     <property key="WebtoolsMetricsRate">
+        <value xml:lang="de">Durchsatz (ms)</value>
         <value xml:lang="en">Service Rate (ms)</value>
         <value xml:lang="fr">Durée moyenne (ms)</value>
         <value xml:lang="ja">サービスレート(ミリ秒)</value>
@@ -3496,6 +3743,7 @@
         <value xml:lang="zh-TW">服務速率(毫秒)</value>
     </property>
     <property key="WebtoolsMetricsThreshold">
+        <value xml:lang="de">Schwelle/Threshold</value>
         <value xml:lang="en">Threshold</value>
         <value xml:lang="fr">Seuil</value>
         <value xml:lang="ja">しきい値</value>
@@ -3503,6 +3751,7 @@
         <value xml:lang="zh-TW">門檻值</value>
     </property>
     <property key="WebtoolsMetricsTotalEvents">
+        <value xml:lang="de">Events Gesamt</value>
         <value xml:lang="en">Total Events</value>
         <value xml:lang="fr">Nombre d'occurences</value>
         <value xml:lang="ja">イベント合計</value>
@@ -3613,6 +3862,16 @@
         <value xml:lang="zh">大部分是插入？</value>
         <value xml:lang="zh-TW">大部分是插入？</value>
     </property>
+    <property key="WebtoolsOneTimeExecNotPersisted">
+        <value xml:lang="en">One-time execution, not persisted</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
+        <value xml:lang="fr">Exécution unique, non persistante</value>
+    </property>
+    <property key="WebtoolsOnlyInserts">
+        <value xml:lang="de">Kein Ersatzes</value>
+        <value xml:lang="en">No replacements</value>
+        <value xml:lang="fr">Pas de remplacements</value>
+    </property>
     <property key="WebtoolsMyCertificates">
         <value xml:lang="de">Meine Zertifikate</value>
         <value xml:lang="en">My Certificates</value>
@@ -3637,6 +3896,11 @@
         <value xml:lang="vi">Tên hoặc Vai trò</value>
         <value xml:lang="zh">名称或角色</value>
         <value xml:lang="zh-TW">名稱或角色</value>
+    </property>
+    <property key="WebtoolsNextJobManagerLock">
+        <value xml:lang="de">Nächste Job Manager Sperre</value>
+        <value xml:lang="en">Next job manager locks</value>
+        <value xml:lang="fr">Prochains blocages du gestionnaire de service</value>
     </property>
     <property key="WebtoolsNoEntitiesRead">
         <value xml:lang="de">Keine Entität eingelesen</value>
@@ -3707,6 +3971,10 @@
         <value xml:lang="vi">Không thấy Dịch vụ nào</value>
         <value xml:lang="zh">找不到服务</value>
         <value xml:lang="zh-TW">找不到服務</value>
+    </property>
+    <property key="WebtoolsNoStringRepr">
+        <value xml:lang="de">Keine Stringdarstellung</value>
+        <value xml:lang="en">No string representation</value>
     </property>
     <property key="WebtoolsNoUtilCacheElementsFound">
         <value xml:lang="de">Im UtilCache wurden keine Elemente gefunden</value>
@@ -3960,7 +4228,7 @@
     </property>
     <property key="WebtoolsParent">
         <value xml:lang="de">Elternreferenz</value>
-        <value xml:lang="en">Parent Id</value>
+        <value xml:lang="en">Parent ID</value>
         <value xml:lang="fr">Réf. du parent</value>
         <value xml:lang="it">Padre</value>
         <value xml:lang="ja">上位(親)ID</value>
@@ -4483,7 +4751,7 @@
     <property key="WebtoolsRunGC">
         <value xml:lang="de">GC starten</value>
         <value xml:lang="en">Run GC</value>
-        <value xml:lang="fr">Lancer le  ramasse-miette (GC)</value>
+        <value xml:lang="fr">Lancer le ramasse-miette (GC)</value>
         <value xml:lang="it">Esegui GC</value>
         <value xml:lang="ja">GCを実行</value>
         <value xml:lang="pt">Executar GC</value>
@@ -4519,6 +4787,11 @@
         <value xml:lang="zh">在失败时运行</value>
         <value xml:lang="zh-TW">在失敗時執行</value>
     </property>
+    <property key="WebtoolsRunServiceAsyncStartedInfo">
+        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
+        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
+        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
+    </property>
     <property key="WebtoolsRunTime">
         <value xml:lang="de">Laufzeit</value>
         <value xml:lang="en">Run Time</value>
@@ -4533,7 +4806,9 @@
         <value xml:lang="zh-TW">執行時間</value>
     </property>
     <property key="WebtoolsRunTimeDataInfo">
+        <value xml:lang="de">Laufzeit Informationen</value>
         <value xml:lang="en">Run Time Data Info</value>
+        <value xml:lang="fr">Information sur le moment de l'exécution </value>
         <value xml:lang="zh">运行时间数据信息</value>
         <value xml:lang="zh-TW">執行時間資料資訊</value>
     </property>
@@ -4562,6 +4837,10 @@
         <value xml:lang="vi">Công việc theo lịch</value>
         <value xml:lang="zh">任务计划</value>
         <value xml:lang="zh-TW">任務計劃</value>
+    </property>
+    <property key="WebtoolsSearchString">
+        <value xml:lang="de">Such-Anfrage</value>
+        <value xml:lang="en">Search String</value>
     </property>
     <property key="WebtoolsSecasIgnoreError">
         <value xml:lang="de">Fehler ignorieren</value>
@@ -4660,6 +4939,15 @@
         <value xml:lang="zh">选择执行程序</value>
         <value xml:lang="zh-TW">選擇執行程式</value>
     </property>
+    <property key="WebtoolsJobManagerLockList">
+        <value xml:lang="de">Job Manager Sperrliste</value>
+        <value xml:lang="en">Job manager locks List</value>
+        <value xml:lang="fr">Liste des blocages du gest. service</value>
+    </property>
+    <property key="WebtoolsServer">
+        <value xml:lang="de">Server</value>
+        <value xml:lang="en">Server</value>
+    </property>
     <property key="WebtoolsServerHitStatisticsTools">
         <value xml:lang="de">Statistik-Tools für Server-Besuche</value>
         <value xml:lang="en">Server Hit Statistics Tools</value>
@@ -4685,6 +4973,11 @@
         <value xml:lang="vi">Dịch vụ</value>
         <value xml:lang="zh">服务</value>
         <value xml:lang="zh-TW">服務</value>
+    </property>
+    <property key="WebtoolsServiceLimitedTime">
+        <value xml:lang="de">Hinweis: Die Dauer des Service ist auf das Transaktionsstandardzeitlimit beschränkt (60 seconds)</value>
+        <value xml:lang="en">Note: the duration of the service is limited to the transaction default timeout (60 seconds)</value>
+        <value xml:lang="fr">A noter : la durée du service est limitée à la valeur par défaut des transactions (60 secondes)</value>
     </property>
     <property key="WebtoolsServiceClearPreviousParams">
         <value xml:lang="de">Vorige Parameter löschen</value>
@@ -4912,6 +5205,10 @@
         <value xml:lang="zh">大小总计</value>
         <value xml:lang="zh-TW">大小總計</value>
     </property>
+    <property key="WebtoolsSolr">
+        <value xml:lang="de">Solr</value>
+        <value xml:lang="en">Solr</value>
+    </property>
     <property key="WebtoolsSpecifiedEntity1">
         <value xml:lang="de">Entität 1</value>
         <value xml:lang="en">Entity1</value>
@@ -4937,6 +5234,18 @@
         <value xml:lang="vi">Thực thể 2</value>
         <value xml:lang="zh">没有找到</value>
         <value xml:lang="zh-TW">沒有找到</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
+        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
+        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
+        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
+        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
+        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
+        <value xml:lang="en">The specified entity value has been successfully removed.</value>
     </property>
     <property key="WebtoolsSqlCommand">
         <value xml:lang="de">SQL Ausdruck</value>
@@ -5203,6 +5512,10 @@
         <value xml:lang="zh">请求标识</value>
         <value xml:lang="zh-TW">請求識別</value>
     </property>
+    <property key="WebtoolsStatsRequestsBy">
+        <value xml:lang="de">Zugriffe pro</value>
+        <value xml:lang="en">Requests by</value>
+    </property>
     <property key="WebtoolsStatsRequestStats">
         <value xml:lang="de">Anfragestatistik</value>
         <value xml:lang="en">Request Statistics</value>
@@ -5251,6 +5564,10 @@
         <value xml:lang="vi">Kết thúc</value>
         <value xml:lang="zh">停止</value>
         <value xml:lang="zh-TW">停止</value>
+    </property>
+    <property key="WebtoolsStatsSystemMemory">
+        <value xml:lang="de">System Speicher</value>
+        <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatsViewBins">
         <value xml:lang="de">Blöcke ansehen</value>
@@ -5420,6 +5737,7 @@
         <value xml:lang="zh-TW">執行離線同步</value>
     </property>
     <property key="WebtoolsTTL">
+        <value xml:lang="de">TTL</value>
         <value xml:lang="en">TTL</value>
         <value xml:lang="fr">Péremption</value>
         <value xml:lang="zh">存在时间</value>
@@ -5437,6 +5755,14 @@
         <value xml:lang="zh">数据库表</value>
         <value xml:lang="zh-TW">資料庫表</value>
     </property>
+    <property key="WebtoolsTemplateApiDocsTitle">
+        <value xml:lang="de">Templating Toolkit Dokumentation</value>
+        <value xml:lang="en">Templating Toolkit Documentation</value>
+    </property>
+    <property key="WebtoolsTemplateTest">
+        <value xml:lang="en">Template Test</value>
+        <value xml:lang="de">Template Test</value>
+    </property>
     <property key="WebtoolsTemporalExpression">
         <value xml:lang="de">Zeitausdrücke</value>
         <value xml:lang="en">Temporal Expression</value>
@@ -5447,6 +5773,16 @@
         <value xml:lang="vi">Công thức tạm tính</value>
         <value xml:lang="zh">时间表达式</value>
         <value xml:lang="zh-TW">時間運算式</value>
+    </property>
+    <property key="WebtoolsTestLabel">
+        <value xml:lang="en">Test Label</value>
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="en">Test Label</value>
     </property>
     <property key="WebtoolsTestResults">
         <value xml:lang="de">Testergebnisse</value>
@@ -5489,6 +5825,7 @@
     <property key="WebtoolsThreadId">
         <value xml:lang="de">ThreadID</value>
         <value xml:lang="en">ID</value>
+        <value xml:lang="fr">Réf</value>
         <value xml:lang="th">รหัส</value>
         <value xml:lang="vi">Id</value>
         <value xml:lang="zh">标识</value>
@@ -5622,6 +5959,11 @@
         <value xml:lang="zh">更新character-set（字符集）和 collate（校对） (基于entityengine.xml中关于数据源的设置)</value>
         <value xml:lang="zh-TW">更新character-set(字元集)和 collate(校對) (基於entityengine.xml中關於資料源的設定)</value>
     </property>
+    <property key="WebtoolsUploadXmlFile">
+        <value xml:lang="en">Upload XML File</value>
+        <value xml:lang="de">XML-Datei hochladen</value>
+        <value xml:lang="fr">Télécharger fichier XML</value>
+    </property>
     <property key="WebtoolsUsage">
         <value xml:lang="de">Nutzung</value>
         <value xml:lang="en">Usage</value>
@@ -5686,6 +6028,14 @@
         <value xml:lang="zh">已用</value>
         <value xml:lang="zh-TW">已用</value>
     </property>
+    <property key="WebtoolsUtilityAndDataGen">
+        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
+        <value xml:lang="en">Utility and Data Generation</value>
+    </property>
+    <property key="WebtoolsUtilityServices">
+        <value xml:lang="de">Utility Services</value>
+        <value xml:lang="en">Utility Services</value>
+    </property>
     <property key="WebtoolsVerboseLogLevel">
         <value xml:lang="de">Detailliert</value>
         <value xml:lang="en">Verbose</value>
@@ -5713,11 +6063,13 @@
         <value xml:lang="zh-TW">冗長級別會細顆粒地指出應用程式進行情況的資訊,適于偵錯程式.</value>
     </property>
     <property key="WebtoolsViewAsPdfTheHtmlLayoutDemo">
+        <value xml:lang="de">Anzeigen des HTML-Layouts als PDF: Testen des Makrovorlage ftl und des globalen Renderings (Screen coherence wird nicht erzwungen)</value>
         <value xml:lang="en">View as Pdf the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
         <value xml:lang="fr">Voir en Pdf la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
         <value xml:lang="zh">按PDF浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
     </property>
     <property key="WebtoolsViewAsTextTheHtmlLayoutDemo">
+        <value xml:lang="de">Anzeigen des HTML-Layouts als Text (XML, CSV und Text): Testen des Makrovorlage ftl und des globalen Renderings (Screen coherence wird nicht erzwungen)</value>
         <value xml:lang="en">View as text (xml, csv and text) the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
         <value xml:lang="fr">Voir en text (xml, csv, text) la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
         <value xml:lang="zh">按文本(XML，逗号分隔格式和文本)浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
@@ -5760,7 +6112,9 @@
         <value xml:lang="zh-TW">檢視日誌</value>
     </property>
     <property key="WebtoolsViewMetrics">
+        <value xml:lang="de">Metriken ansehen</value>
         <value xml:lang="en">View Metrics</value>
+        <value xml:lang="fr">Voir les mesures</value>
         <value xml:lang="zh">浏览度量</value>
         <value xml:lang="zh-TW">檢視度量</value>
     </property>
@@ -5893,6 +6247,15 @@
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh-TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
     </property>
+    <property key="WebtoolsXMLExportSingleInfo">
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
+    </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="en">This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</value>
@@ -5906,10 +6269,14 @@
         <value xml:lang="zh">本页面用于导入导出的实体引擎XML文档。这些文档都有一个根标签 "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="zh-TW">本頁面用於匯入匯出的資料實體引擎XML檔.這些檔都有一個根標簽 "&lt;entity-engine-xml&gt;".&lt;/entity-engine-xml&gt;</value>
     </property>
+    <property key="WebtoolsXMLImportReadersInfo">
+        <value xml:lang="de">Diese Seite kann verwendet werden, um Entity Engine-Daten für bestimmte Leser (Datentypen) aus Komponentendateien im System zu laden (oder erneut zu laden).</value>
+        <value xml:lang="en">This page can be used to load (or reload) Entity Engine data for specific readers (data types) from component data files in the system.</value>
+    </property>
     <property key="WebtoolsYouMayCreateAnEntity">
         <value xml:lang="de">You may create an Entity ${entityName} by entering the values you want, and clicking Create.</value>
         <value xml:lang="en">You may create an Entity ${entityName} by entering the values you want, and clicking Create.</value>
-        <value xml:lang="fr">Vous pouvez créer une entité  ${entityName} En entrant les valeurs que vous voulez, et en cliquant sur Créez.</value>
+        <value xml:lang="fr">Vous pouvez créer une entité ${entityName} En entrant les valeurs que vous voulez, et en cliquant sur Créez.</value>
         <value xml:lang="it">Puoi creare una Entità ${entityName} inserendo i valori che vuoi, e cliccando il tasto Creare.</value>
         <value xml:lang="ja">必要な値を入力して作成ボタンを押すと、${entityName} エンティティが作成されます。</value>
         <value xml:lang="ro">Tu poti crea o Entitate ${entityName} si introducand valorile care le vrei, si click_and tasta Creare.</value>
@@ -5918,180 +6285,24 @@
         <value xml:lang="zh">创建一个实体 ${entityName} ：输入值，然后点击新建.</value>
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="PageTitleDemoDataGenerator">
-        <value xml:lang="en">Demo Data Generator</value>
+    <property key="WebtoolsReaderImportNotice">
+        <value xml:lang="de">Eingabe Readers (Komma getrennt,keine Leerzeichen; aus entityengine.xml und ofbiz-component.xml Dateien)</value>
+        <value xml:lang="en">Enter Readers (comma separated, no spaces; from entityengine.xml and ofbiz-component.xml files)</value>
     </property>
-    <property key="WebtoolsCheckAllPlain">
-        <value xml:lang="de">Alle auswählen</value>
-        <value xml:lang="en">Check All</value>
-        <value xml:lang="fr">Tout sélectionner</value>
-        <value xml:lang="it">Seleziona tutto</value>
-        <value xml:lang="ja">すべてチェック</value>
-        <value xml:lang="pt">Selecionar todos</value>
-        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
-        <value xml:lang="vi">Chọn tất cả</value>
-        <value xml:lang="zh">检查全部</value>
-        <value xml:lang="zh-TW">檢查全部</value>
+    <property key="WebtoolsReaders">
+        <value xml:lang="de">Readers</value>
+        <value xml:lang="en">Readers</value>
     </property>
-    <property key="WebtoolsDataExport">
-        <value xml:lang="de">Daten exportieren</value>
-        <value xml:lang="en">Data Export</value>
-        <value xml:lang="fr">Export de données</value>
-        <value xml:lang="it">Esporta dati</value>
-        <value xml:lang="ja">データエクスポート</value>
-        <value xml:lang="pt">ExportaÃ§Ã£o de dados</value>
-        <value xml:lang="ro">Exporta Date</value>
-        <value xml:lang="th">ส่งออกข้อมูล</value>
-        <value xml:lang="vi">Kết xuất dữ liệu</value>
-        <value xml:lang="zh">数据导出</value>
-        <value xml:lang="zh-TW">資料匯出</value>
+    <property key="WebtoolsReadersImportLabel">
+        <value xml:lang="de">Readers (Komma getrennt,keine Leerzeichen)</value>
+        <value xml:lang="en">Readers (comma separated, no spaces)</value>
     </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
-        <value xml:lang="en">Currently set to ${maxRecords}</value>
+    <property key="WebtoolsSearchLocName">
+        <value xml:lang="de">Ort/Namen Suchen</value>
+        <value xml:lang="en">Search Names/Locations</value>
     </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
-        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
-    </property>
-    <property key="WebtoolsDataImport">
-        <value xml:lang="de">Daten importieren</value>
-        <value xml:lang="en">Data Import</value>
-        <value xml:lang="fr">Import de données</value>
-        <value xml:lang="it">Importa dati da</value>
-        <value xml:lang="ja">XMLデータインポート</value>
-        <value xml:lang="pt">Importar dados</value>
-        <value xml:lang="ro">Importa Datele</value>
-        <value xml:lang="th">นำเข้าข้อมูล</value>
-        <value xml:lang="vi">Nhập khẩu dữ liệu</value>
-        <value xml:lang="zh">数据导入</value>
-        <value xml:lang="zh-TW">資料匯入</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
-        <value xml:lang="en">No records could be generated</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorProviders">
-        <value xml:lang="en">Data Generator Providers</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorResults">
-        <value xml:lang="en">Generated data results</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorServiceList">
-        <value xml:lang="en">Data Generator Services</value>
-    </property>
-    <property key="WebtoolsDeveloperDocumentation">
-        <value xml:lang="de">Developer Documentation</value>
-        <value xml:lang="en">Developer Documentation</value>
-    </property>
-    <property key="WebtoolsEntityUtilityServices">
-        <value xml:lang="de">Entity Utility Services</value>
-        <value xml:lang="en">Entity Utility Services</value>
-    </property>
-    <property key="WebtoolsFieldValueNoStringRepr">
-        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
-        <value xml:lang="en">Field value can't be represented as string</value>
-    </property>
-    <property key="WebtoolsGeneratedDataFailed">
-        <value xml:lang="en">Failed</value>
-    </property>
-    <property key="WebtoolsGeneratedDataStored">
-        <value xml:lang="en">Stored</value>
-    </property>
-    <property key="WebtoolsLeaveEmptyToRunJobImmediately">
-        <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
-        <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
-        <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
-    </property>
-    <property key="WebtoolsLogs">
-        <value xml:lang="en">Logs</value>
-    </property>
-    <property key="WebtoolsNoStringRepr">
-        <value xml:lang="de">Keine Stringdarstellung</value>
-        <value xml:lang="en">No string representation</value>
-    </property>
-    <property key="WebtoolsOneTimeExecNotPersisted">
-        <value xml:lang="en">One-time execution, not persisted</value>
-        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
-        <value xml:lang="fr">Exécution unique, non persistante</value>
-    </property>
-    <property key="WebtoolsRunServiceAsyncStartedInfo">
-        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
-        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
-        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
-    </property>
-    <property key="WebtoolsServer">
-        <value xml:lang="de">Server</value>
-        <value xml:lang="en">Server</value>
-        <value xml:lang="fr">Server</value>
-        <value xml:lang="it">Server</value>
-        <value xml:lang="ja">Server</value>
-        <value xml:lang="pt">Server</value>
-        <value xml:lang="ro">Server</value>
-        <value xml:lang="th">Server</value>
-        <value xml:lang="vi">Server</value>
-        <value xml:lang="zh">Server</value>
-        <value xml:lang="zh-TW">Server</value>
-    </property>
-    <property key="WebtoolsSolr">
-        <value xml:lang="en">Solr</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
-        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
-        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
-        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
-        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
-        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
-        <value xml:lang="en">The specified entity value has been successfully removed.</value>
-    </property>
-    <property key="WebtoolsStatsRequestsBy">
-        <value xml:lang="de">Zugriffe pro</value>
-        <value xml:lang="en">Requests by</value>
-    </property>
-    <property key="WebtoolsStatsSystemMemory">
-        <value xml:lang="de">System Speicher</value>
-        <value xml:lang="en">System Memory</value>
-    </property>
-    <property key="WebtoolsTemplateApiDocsTitle">
-        <value xml:lang="de">Templating Toolkit Dokumentation</value>
-        <value xml:lang="en">Templating Toolkit Documentation</value>
-    </property>
-    <property key="WebtoolsTemplateTest">
-        <value xml:lang="en">Template Test</value>
-        <value xml:lang="de">Template Test</value>
-    </property>
-    <property key="WebtoolsTestLabel">
-        <value xml:lang="en">Test Label</value>
-        <value xml:lang="de">Testetikett</value>
-    </property>
-    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
-        <value xml:lang="de">Testetikett</value>
-    </property>
-    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
-        <value xml:lang="en">Test Label</value>
-    </property>
-    <property key="WebtoolsUploadXmlFile">
-        <value xml:lang="en">Upload XML File</value>
-        <value xml:lang="de">XML-Datei hochladen</value>
-        <value xml:lang="fr">Télécharger fichier XML</value>
-    </property>
-    <property key="WebtoolsUtilityAndDataGen">
-        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
-        <value xml:lang="en">Utility and Data Generation</value>
-    </property>
-    <property key="WebtoolsUtilityServices">
-        <value xml:lang="de">Utility Services</value>
-        <value xml:lang="en">Utility Services</value>
-    </property>
-    <property key="WebtoolsXMLExportSingleInfo">
-        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
-        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
-        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
+    <property key="WebtoolsType">
+        <value xml:lang="de">Typ</value>
+        <value xml:lang="en">Type</value>
     </property>
 </resource>

@@ -1,40 +1,29 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.OrderShippingInformation -->
-  <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">
+  <form id="shipOptionsAndShippingInstructions" method="post" action="<@pageUrl>processShipOptions</@pageUrl>" name="${parameters.formNameValue}">
       <input type="hidden" name="finalizeMode" value="options"/>
       <@field type="generic" label=uiLabelMap.OrderSelectShippingMethod>
+      <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
       <#list carrierShipmentMethodList as carrierShipmentMethod>
-          <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+          <#assign shippingEst = ""><#-- SCIPIO: Var init -->
+          <#if shoppingCart.getShippingContactMechId()??>
+            <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!(-1)>
+          </#if>
+          <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
           <#assign fieldLabel>
-            <#if shoppingCart.getShippingContactMechId()??>
-              <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!(-1)>
-            </#if>
             <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-              <#if shippingEst?has_content> - <#if (shippingEst > -1)><@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#else>${uiLabelMap.OrderCalculatedOffline}</#if>
-             </#if>
+              <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if><#-- SCIPIO: NO_SHIPPING check -->
+            </#if>
           </#assign>
-          <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == (chosenShippingMethod!"N@A")) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
+          <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == chosenShippingMethod) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
       </#list>
       <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
           <@field type="radio" name="shipping_method" value="Default" checked=true label="${rawLabel('OrderUseDefault')}."/>

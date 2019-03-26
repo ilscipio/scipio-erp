@@ -1,21 +1,9 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#include "component://shop/webapp/shop/cart/cartcommon.ftl">
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
   <@section title="${rawLabel('EcommerceStep')} 1: ${rawLabel('PageTitleShoppingCart')}">
@@ -34,6 +22,30 @@ under the License.
           <@td>&nbsp;</@td>
         </@tr>
       </@thead>
+
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo cartLine>
+            <#if cartLine.getConfigWrapper()??>
+              <#local selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+              <#if selectedOptions??>
+                <ul class="order-item-attrib-list">
+                  <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                  </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#local attrs = cartLine.getOrderItemAttributes()/>
+            <#if attrs?has_content>
+                <#assign attrEntries = attrs.entrySet()/>
+                <ul class="order-item-attrib-list">
+                  <#list attrEntries as attrEntry>
+                    <li>${attrEntry.getKey()}: ${attrEntry.getValue()}</li>
+                  </#list>
+                </ul>
+            </#if>
+        </#macro>
+
       <@tbody>
         <#list shoppingCart.items() as cartLine>
           <@tr id="cartItemDisplayRow_${cartLine_index}">
@@ -48,45 +60,18 @@ under the License.
                 <#-- SCIPIO: Uncomment if you want to use the image placeholders
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-                  <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+                  <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Product Image" />
                 -->
-                <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
-                <#-- For configurable products, the selected options are shown -->
-                <#if cartLine.getConfigWrapper()??>
-                  <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
-                  <#if selectedOptions??>
-                    <ul class="order-item-attrib-list">
-                    <#list selectedOptions as option>
-                        <li>${option.getDescription()}</li>
-                    </#list>
-                    </ul>
-                  </#if>
-                </#if>
-                <#assign attrs = cartLine.getOrderItemAttributes()/>
-                <#if attrs?has_content>
-                    <#assign attrEntries = attrs.entrySet()/>
-                    <ul class="order-item-attrib-list">
-                    <#list attrEntries as attrEntry>
-                        <li>
-                            ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                        </li>
-                    </#list>
-                    </ul>
-                </#if>
+                <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
               <#else>
                 <#-- non-product item -->
                 ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
-                <#assign attrs = cartLine.getOrderItemAttributes()/>
-                <#if attrs?has_content>
-                    <#assign attrEntries = attrs.entrySet()/>
-                    <ul class="order-item-attrib-list">
-                    <#list attrEntries as attrEntry>
-                        <li>
-                            ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                        </li>
-                    </#list>
-                    </ul>
-                </#if>
+              </#if>
+              <@orderItemAttrInfo cartLine=cartLine/>
+              <#-- SCIPIO: show application survey response QA list for this item -->
+              <#assign surveyResponses = cartLine.getSurveyResponses()!>
+              <#if surveyResponses?has_content>
+                <@orderItemSurvResList survResList=surveyResponses/>
               </#if>
             </@td>
             <@td headers="description"></@td>
@@ -130,7 +115,12 @@ under the License.
             <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
             <@td>&nbsp;</@td>
           </@tr>
-        
+        <@tr>
+           <@td id="vatTax" scope="row" colspan=2>${uiLabelMap.OrderTotalSalesTax}</@td>
+           <@td nowrap="nowrap" class="${styles.text_right!}" headers="vatTax" id="completedCartTotalVatTax"><@ofbizCurrency amount=shoppingCart.getTotalVATTax() isoCode=shoppingCart.getCurrency()/></@td>
+           <@td>&nbsp;</@td>
+         </@tr>
+
         <@tr>
             <@td colspan="5"></@td>
             <@td colspan="1"><hr /></@td>
@@ -149,7 +139,7 @@ under the License.
     </@table>
   </div>
   <div id="editCartPanel">
-    <form id="cartForm" method="post" action="<@ofbizUrl></@ofbizUrl>">
+    <form id="cartForm" method="post" action="">
       <fieldset>
         <input type="hidden" name="removeSelected" value="false" />
         
@@ -191,47 +181,20 @@ under the License.
                         <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                         <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                         <#if smallImageUrl?string?has_content>
-                          <#assign imgUrl><@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl></#assign>
+                          <#assign imgUrl><@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl></#assign>
                           <@img src=imgUrl width="150px;" height="75px"/>
                         </#if>
                       -->
-                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
-                    <#-- For configurable products, the selected options are shown -->
-                    <#if cartLine.getConfigWrapper()??>
-                      <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
-                      <#if selectedOptions??>
-                        <ul class="order-item-attrib-list">
-                        <#list selectedOptions as option>
-                            <li>${option.getDescription()}</li>
-                        </#list>
-                        </ul>
-                      </#if>
-                    </#if>
-                    <#assign attrs = cartLine.getOrderItemAttributes()/>
-                    <#if attrs?has_content>
-                        <#assign attrEntries = attrs.entrySet()/>
-                        <ul class="order-item-attrib-list">
-                        <#list attrEntries as attrEntry>
-                            <li>
-                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                            </li>
-                        </#list>
-                        </ul>
-                    </#if>
+                    <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
                   <#else>
                     <#-- non-product item -->
                     ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!} 
-                    <#assign attrs = cartLine.getOrderItemAttributes()/>
-                    <#if attrs?has_content>
-                        <#assign attrEntries = attrs.entrySet()/>
-                        <ul class="order-item-attrib-list">
-                        <#list attrEntries as attrEntry>
-                            <li>
-                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                            </li>
-                        </#list>
-                        </ul>
-                    </#if>
+                  </#if>
+                  <@orderItemAttrInfo cartLine=cartLine/>
+                  <#-- SCIPIO: show application survey response QA list for this item -->
+                  <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                  <#if surveyResponses?has_content>
+                    <@orderItemSurvResList survResList=surveyResponses/>
                   </#if>
                 </@td>
                 <@td headers="editDescription"></@td>
@@ -311,6 +274,12 @@ under the License.
               <@tr>
                 <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderTotalSalesTax}</@td>
                 <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></@td>
+                <@td>&nbsp;</@td>
+              </@tr>
+              
+              <@tr>
+                <@td colspan="5" class="${styles.text_right!}">${uiLabelMap.OrderSalesTaxIncluded}</@td>
+                <@td nowrap="nowrap" class="${styles.text_right!}" id="cartTotalVATTax"><@ofbizCurrency amount=shoppingCart.getTotalVATTax() isoCode=shoppingCart.getCurrency()/></@td>
                 <@td>&nbsp;</@td>
               </@tr>
             

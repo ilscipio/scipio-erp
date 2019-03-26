@@ -49,16 +49,16 @@ import org.w3c.dom.Element;
 public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with top menu
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private final boolean anonName; // true if an anonymous name was generated for this menu
     private final String effectiveName;
-    
+
     private final List<ModelAction> actions;
     private final List<ModelMenuItem> menuItemList;
     private final Map<String, ModelMenuItem> menuItemMap;
     private final List<ModelMenuItem> extraMenuItemList;
     private final ModelMenuItem parentMenuItem; // SCIPIO: WARN: must be fixed-up after construct due to the way the items are merged
-    
+
     private final FlexibleStringExpander id;
     private final FlexibleStringExpander style;
     private final FlexibleStringExpander title;
@@ -66,31 +66,31 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     private final String modelScope;
     private transient ModelMenu styleModelMenu = null; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
     private transient ModelMenu funcModelMenu = null; // SCIPIO: records which model menu should be used for functional fields
-    
+
     private final String itemsSortMode;
 
-    private final FlexibleStringExpander shareScope; // SCIPIO: NOTE: 2016-11-02: default is now TRUE  
-    
+    private final FlexibleStringExpander shareScope; // SCIPIO: NOTE: 2016-11-02: default is now TRUE
+
     private final FlexibleStringExpander expanded; // 2016-11-11: expansion override
     private final FlexibleStringExpander selected; // 2016-11-11: selected override
     private final FlexibleStringExpander disabled; // 2016-11-11: disabled override
 
     private final Map<String, ModelMenuItemAlias> menuItemAliasMap;
     private final Map<String, String> menuItemNameAliasMap; // for optimized simple-hidden item alias lookups
-    
+
     private transient Set<String> simpleStyleNames = null;
-    
+
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
         buildArgs.genBuildArgs.totalSubMenuCount++;
         ModelMenu topMenu = parentMenuItem.getTopMenu();
         List<? extends Element> extraMenuItems = buildArgs.extraMenuItems;
         this.parentMenuItem = parentMenuItem;
-        
+
         String modelAddress = subMenuElement.getAttribute("model");
         String modelScope = subMenuElement.getAttribute("model-scope");
         ModelMenu model = null;
-        
+
         // check the helper include attribute
         String includeAddress = subMenuElement.getAttribute("include");
         Element includeElement = null;
@@ -106,7 +106,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
                     modelScope = "full";
                 }
             }
-            
+
             ModelLocation menuLoc = ModelLocation.fromAddress(includeAddress);
 
             // create an extra include element
@@ -119,13 +119,13 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             includeElement.setAttribute("is-sub-menu-model-entry", "true"); // special flag to distinguish this entry
             includeName = menuLoc.getName();
         }
-        
+
         if (!modelAddress.isEmpty()) {
             ModelLocation menuLoc = ModelLocation.fromAddress(modelAddress);
-            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(), 
+            model = ModelMenu.getMenuDefinition(menuLoc.getResource(), menuLoc.getName(),
                     subMenuElement, buildArgs.genBuildArgs); // topModelMenu.getMenuLocation()
         }
-        
+
         // figure out our name
         String effectiveName = getName();
         boolean anonName = false;
@@ -142,34 +142,34 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         this.anonName = anonName;
         this.effectiveName = effectiveName;
-        
+
         if (modelScope == null || modelScope.isEmpty()) {
             modelScope = buildArgs.currentMenuDefBuildArgs.codeBehavior.defaultSubMenuModelScope;
             if (modelScope == null || modelScope.isEmpty()) {
                 modelScope = "full";
             }
         }
-        
+
         // override
         if (buildArgs.forceSubMenuModelScope != null && !buildArgs.forceSubMenuModelScope.isEmpty()) {
             modelScope = buildArgs.forceSubMenuModelScope;
         }
-        
+
         // set these early
         this.model = model;
         this.modelScope = modelScope;
-        
+
         // support included sub-menu items
         List<Element> preInclElements = null;
         if (includeElement != null) {
             preInclElements = new ArrayList<>();
             preInclElements.add(includeElement);
         }
-        
+
         // include actions
         ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
-        topMenu.processIncludeActions(subMenuElement, preInclElements, null, actions, 
-                currResource, true, 
+        topMenu.processIncludeActions(subMenuElement, preInclElements, null, actions,
+                currResource, true,
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
@@ -178,25 +178,25 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<>();
         Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
-        topMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
+        topMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap,
                 menuItemAliasMap, true,
                 currResource, true, null, null, buildArgs.forceSubMenuModelScope, this,
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
-        
+
         // extra items: replaces the legacy menu-item load originally in ModelMenuItem constructor
         if (extraMenuItems != null && !extraMenuItems.isEmpty()) {
             // extra maps just to record the originals
             ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<ModelMenuItem>();
             Map<String, ModelMenuItem> extraMenuItemMap = new HashMap<String, ModelMenuItem>();
-            
+
             ModelMenuItem.BuildArgs itemBuildArgs = new ModelMenuItem.BuildArgs(buildArgs);
-            
+
             for (Element itemElement : extraMenuItems) {
                 ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
                 topMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, itemBuildArgs);
                 topMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap, itemBuildArgs);
             }
-            
+
             extraMenuItemList.trimToSize();
             this.extraMenuItemList = Collections.unmodifiableList(extraMenuItemList);
         } else {
@@ -206,14 +206,14 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
-        
+
         this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
         this.menuItemNameAliasMap = ModelMenu.makeMenuItemNameAliasMap(menuItemAliasMap);
-        
+
         this.id = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("id"));
         this.style = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("style"));
         this.title = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("title"));
-        
+
         this.itemsSortMode = subMenuElement.getAttribute("items-sort-mode");
         this.shareScope = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("share-scope"));
         this.expanded = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("expanded"));
@@ -222,7 +222,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     }
 
     // SCIPIO: copy constructor
-    private ModelSubMenu(ModelSubMenu existing, 
+    private ModelSubMenu(ModelSubMenu existing,
             ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(existing.getName());
         buildArgs.genBuildArgs.totalSubMenuCount++;
@@ -233,45 +233,45 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             this.effectiveName = existing.effectiveName;
         }
         this.parentMenuItem = parentMenuItem != null ? parentMenuItem : existing.parentMenuItem;
-        
+
         ArrayList<ModelAction> actions = new ArrayList<>(existing.actions);
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<>();
-        ModelMenuItem.cloneModelMenuItems(existing.getMenuItemList(), 
+        ModelMenuItem.cloneModelMenuItems(existing.getMenuItemList(),
                 menuItemList, menuItemMap, getTopMenu(), this,
                 new ModelMenuItem.BuildArgs(buildArgs));
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
-        
+
         ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<>();
         for(ModelMenuItem menuItem : existing.extraMenuItemList) {
             extraMenuItemList.add(menuItemMap.get(menuItem.getName()));
         }
         extraMenuItemList.trimToSize();
         this.extraMenuItemList = Collections.unmodifiableList(extraMenuItemList);
-        
+
         this.id = existing.id;
         this.style = existing.style;
         this.title = existing.title;
         this.model = existing.model;
         this.modelScope = UtilValidate.isNotEmpty(buildArgs.forceSubMenuModelScope) ? buildArgs.forceSubMenuModelScope : existing.modelScope;
-        
+
         this.itemsSortMode = existing.itemsSortMode;
         this.shareScope = existing.shareScope;
         this.expanded = existing.expanded;
         this.selected = existing.selected;
         this.disabled = existing.disabled;
-        
+
         Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
         ModelMenuItemAlias.cloneModelMenuItemAliases(existing.menuItemAliasMap, menuItemAliasMap, getTopMenu(), this,
                 new ModelMenuItem.BuildArgs(buildArgs));
         this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
         this.menuItemNameAliasMap = ModelMenu.makeMenuItemNameAliasMap(menuItemAliasMap);
     }
-    
+
     public static Map<String, String> makeSpecialMenuItemNameMap(Set<String> menuItemNamesAsParent, Set<String> menuItemNamesAsParentNoSub) {
         Map<String, String> map = new HashMap<>();
         if (UtilValidate.isNotEmpty(menuItemNamesAsParent)) {
@@ -286,24 +286,24 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         return map;
     }
-    
+
     String makeAnonName(BuildArgs buildArgs) {
         String defaultName;
         defaultName = "_submenu_" + buildArgs.genBuildArgs.totalSubMenuCount;
         return defaultName;
     }
-    
+
     /**
      * SCIPIO: Clones item.
      * <p>
-     * NOTE: if modelMenu/parentMenuItem are null, they are taken from the current item. 
+     * NOTE: if modelMenu/parentMenuItem are null, they are taken from the current item.
      */
     public ModelSubMenu cloneModelSubMenu(ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         return new ModelSubMenu(this, modelMenu, parentMenuItem, buildArgs);
     }
-    
-    public static void cloneModelSubMenus(List<ModelSubMenu> subMenuList, 
-            List<ModelSubMenu> targetList, Map<String, ModelSubMenu> targetMap, 
+
+    public static void cloneModelSubMenus(List<ModelSubMenu> subMenuList,
+            List<ModelSubMenu> targetList, Map<String, ModelSubMenu> targetMap,
             ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         for(ModelSubMenu subMenu : subMenuList) {
             ModelSubMenu clonedSubMenu = subMenu.cloneModelSubMenu(modelMenu, parentMenuItem, buildArgs);
@@ -311,35 +311,35 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             targetMap.put(clonedSubMenu.getName(), clonedSubMenu);
         }
     }
-    
+
     /**
      * SCIPIO: Returns the alt model menu for this item's CHILDREN.
      */
     public ModelMenu getModel() {
         return this.model;
     }
-    
+
     public String getModelScope() {
         return this.modelScope;
     }
-    
+
     public boolean isModelStyleScope() {
         return "full".equals(modelScope) || (!"none".equals(modelScope) && !"func".equals(modelScope));
     }
-    
+
     public boolean isModelFuncScope() {
         return "full".equals(modelScope) || "func".equals(modelScope);
     }
-    
+
     public String getId(Map<String, Object> context) {
         return this.id.expandString(context);
     }
-    
+
     public String getStyle(Map<String, Object> context) {
         String style = getStyle();
         return FlexibleStringExpander.expandString(style, context).trim();
     }
-    
+
     public String getStyle() {
         String subMenuModelStyle = "";
         if (model != null && isModelStyleScope()) {
@@ -347,7 +347,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         return getStyle("subMenuStyle", this.style.getOriginal(), subMenuModelStyle);
     }
-    
+
     /**
      * WARN: returns unordered
      */
@@ -360,48 +360,48 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         return styleNames;
     }
-    
+
     public boolean hasSimpleStyleName(String name) {
         return getSimpleStyleNames().contains(name);
     }
-    
+
     public String getTitle(Map<String, Object> context) {
         return this.title.expandString(context);
     }
-    
+
     public List<ModelMenuItem> getMenuItemList() {
         return this.menuItemList;
     }
-    
+
     public Map<String, ModelMenuItem> getMenuItemMap() {
         return menuItemMap;
-    }    
-    
+    }
+
     public List<ModelMenuItem> getExtraMenuItemList() {
         return this.extraMenuItemList;
     }
-     
+
     public String getEffectiveName() {
         return this.effectiveName;
     }
-    
+
     public boolean isAnonName() {
         return this.anonName;
     }
-    
+
     public ModelMenuItem getMenuItemByName(String name) {
         return this.menuItemMap.get(name);
     }
-    
+
     public ModelMenuItem getMenuItemByNameMapped(String name) {
         return this.menuItemMap.get(getMappedMenuItemName(name));
     }
-    
+
     @Deprecated
     public MenuAndItemLookup resolveMenuAndItemByTrail(String[] nameList) {
         return resolveMenuAndItemByTrail(nameList[0], nameList, 1);
     }
-    
+
     @Deprecated
     public MenuAndItemLookup resolveMenuAndItemByTrail(String name, String[] nameList, int nextNameIndex) {
         ModelMenuItem currLevelItem = this.menuItemMap.get(name);
@@ -413,7 +413,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Gets style.
      * <p>
@@ -424,7 +424,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     String getStyle(String name, String style, String defaultStyle) {
         return ModelMenu.buildStyle(style, null, defaultStyle);
     }
-    
+
     public List<ModelAction> getActions() {
         return actions;
     }
@@ -440,7 +440,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     public ModelMenuItem getParentMenuItem() {
         return parentMenuItem;
     }
-    
+
     public ModelMenuItem getTopAncestorMenuItem() {
         return getParentMenuItem().getTopAncestorMenuItem();
     }
@@ -463,15 +463,15 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         return result;
     }
-    
+
     public ModelMenu getImmediateStyleModelMenu() {
         return isModelStyleScope() ? this.model : null;
     }
-    
+
     public boolean hasImmediateStyleModelMenu() {
         return getImmediateStyleModelMenu() != null;
     }
-    
+
     /**
      * SCIPIO: Returns THIS item's alt model menu for functional/logic fields.
      * <p>
@@ -490,15 +490,15 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
         return result;
     }
-    
+
     public ModelMenu getImmediateFuncModelMenu() {
         return isModelFuncScope() ? this.model : null;
     }
-    
+
     public boolean hasImmediateFuncModelMenu() {
         return getImmediateFuncModelMenu() != null;
     }
-    
+
     public String getItemsSortMode() {
         if (!this.itemsSortMode.isEmpty()) {
             return this.itemsSortMode;
@@ -508,31 +508,31 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return "";
         }
     }
-    
+
     public String getOrigItemsSortMode() {
         return this.itemsSortMode;
     }
-    
+
     public List<ModelMenuItem> getOrderedMenuItemList(final Map<String, Object> context) {
         return ModelMenu.getOrderedMenuItemList(context, getItemsSortMode(), getMenuItemList());
     }
-    
+
     public boolean shareScope(Map<String, Object> context) {
         String shareScopeString = this.shareScope.expandString(context);
         return "true".equals(shareScopeString); // NOTE: 2016-11-02: default is now TRUE
     }
-    
+
     public FlexibleStringExpander getExpandedExdr() {
         return expanded;
     }
-    
+
     public Boolean getExpand(Map<String, Object> context) {
         return UtilMisc.booleanValue(this.expanded.expandString(context));
     }
 
     public void renderSubMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
-        
+
         boolean protectScope = !shareScope(context);
         if (protectScope) {
             if (!(context instanceof MapStack<?>)) {
@@ -540,10 +540,10 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             }
             UtilGenerics.<MapStack<String>>cast(context).push();
         }
-        
+
         // NOTE: there is no stack push/pop here!
         AbstractModelAction.runSubActions(actions, context);
-        
+
         // render menu open
         menuStringRenderer.renderSubMenuOpen(writer, context, this);
 
@@ -554,30 +554,30 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
 
         // render menu close
         menuStringRenderer.renderSubMenuClose(writer, context, this);
-        
+
         if (protectScope) {
             UtilGenerics.<MapStack<String>>cast(context).pop();
         }
     }
-    
+
     /**
      * SCIPIO: NOTE: only valid if the sub-menus were part of the same ModelMenu instance.
      */
     public boolean isSame(ModelSubMenu subMenu) {
         return (this == subMenu); // SCIPIO: NOTE: this works because we know how the ModelMenu was built
     }
-    
+
     public boolean isParentOf(ModelMenuItem menuItem) {
         if (menuItem == null) {
             return false;
         }
         return menuItem.isSame(menuItemMap.get(menuItem.getName()));
     }
-    
+
     public boolean isChildOf(ModelMenuItem menuItem) {
         return getParentMenuItem().isSame(menuItem);
     }
-    
+
     public boolean isAncestorOf(ModelMenuItem menuItem) {
         if (menuItem == null) {
             return false;
@@ -585,7 +585,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return isSameOrAncestorOf(menuItem.getParentSubMenu());
         }
     }
-    
+
     public boolean isSameOrAncestorOf(ModelSubMenu subMenu) {
         if (subMenu == null) {
             return false;
@@ -596,11 +596,11 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return isSameOrAncestorOf(subMenu.getParentMenuItem().getParentSubMenu());
         }
     }
-    
+
     public Map<String, ModelMenuItemAlias> getMenuItemAliasMap() { // SCIPIO: new
         return menuItemAliasMap;
     }
-    
+
     public String getMappedMenuItemName(String menuItemName) {
         // translate null to NONE as first thing so it can be recognized in mappings (in theory; might not be used/usable or redundant)
         menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
@@ -617,7 +617,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             menuItem.addAllSubMenus(subMenuMap);
         }
     }
-    
+
     public String getDefaultMenuItemName() {
         if (model != null && isModelFuncScope()) {
             return model.getDefaultMenuItemName();
@@ -625,12 +625,12 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return null;
         }
     }
-    
+
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
     }
-    
+
     public static class BuildArgs {
         public final GeneralBuildArgs genBuildArgs;
         public final CurrentMenuDefBuildArgs currentMenuDefBuildArgs;
@@ -642,7 +642,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         /**
          * Specify-all-essentials constructor.
          */
-        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, 
+        public BuildArgs(GeneralBuildArgs genBuildArgs, CurrentMenuDefBuildArgs currentMenuDefBuildArgs,
                 String currResource, String forceSubMenuModelScope) {
             this.genBuildArgs = genBuildArgs;
             this.currentMenuDefBuildArgs = currentMenuDefBuildArgs;
@@ -650,7 +650,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             this.forceSubMenuModelScope = forceSubMenuModelScope;
             this.extraMenuItems = null;
         }
-        
+
         /**
          * Preserve-all-essentials constructor.
          */
@@ -662,20 +662,20 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             this.extraMenuItems = null;
         }
     }
-    
+
     @Override
     public String getContainerLocation() {
         // NOTE: this can be slightly indirecting, but it will allow user to find anything required
         return getTopMenu().getFullLocationAndName();
     }
-    
+
     @Override
     public String getWidgetType() {
         return "sub-menu";
     }
-        
+
     // SCIPIO: ModelMenuNode methods
-    
+
     @Override
     public ModelMenuItem getParentNode() {
         return getParentMenuItem();

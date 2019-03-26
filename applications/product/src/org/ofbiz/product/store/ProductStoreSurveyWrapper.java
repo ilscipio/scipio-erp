@@ -21,6 +21,7 @@ package org.ofbiz.product.store;
 import java.io.Writer;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.survey.SurveyWrapper;
 import org.ofbiz.entity.GenericValue;
@@ -29,8 +30,7 @@ import org.ofbiz.entity.GenericValue;
  * Product Store Survey Wrapper
  */
 public class ProductStoreSurveyWrapper extends SurveyWrapper {
-
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericValue productStoreSurveyAppl = null;
     protected String surveyTemplate = null;
@@ -72,10 +72,14 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
     public Writer render(Map<String, Object> parentContext) throws SurveyWrapperException {
         if (canRespond() && !callResult) {
             return renderSurvey(parentContext);
-        } else if (!UtilValidate.isEmpty(resultTemplate)) {
+        } else if (UtilValidate.isNotEmpty(resultTemplate)) {
             return renderResult(parentContext);
         } else {
-            throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");
+            // SCIPIO: 2019-03-06: Template can't safely catch this, so this can't be safely handled
+            Debug.logWarning("Cannot render survey result: no result template defined [productStoreSurveyId="
+                    + productStoreSurveyAppl.get("productStoreSurveyId") + ", callResult=" + callResult + "]", module);
+            //throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");
+            return null;
         }
     }
 
@@ -85,5 +89,13 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
 
     public Writer renderResult(Map<String, Object> parentContext) throws SurveyWrapperException {
         return this.render(resultTemplate, parentContext);
+    }
+
+    public GenericValue getProductStoreSurveyAppl() { // SCIPIO
+        return productStoreSurveyAppl;
+    }
+
+    public String getResultTemplate() { // SCIPIO
+        return resultTemplate;
     }
 }

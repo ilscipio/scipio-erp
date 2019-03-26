@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- looping macro -->
@@ -25,21 +12,21 @@ under the License.
   <#if curCategoryId?? && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">
         <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")?has_content>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")} [${category.productCategoryId}]</a>
         <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION")?has_content>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybuttondisabled">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")} [${category.productCategoryId}]</a>
         <#else>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.categoryName?default(category.description)!} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybuttondisabled">${category.categoryName?default(category.description)!} [${category.productCategoryId}]</a>
        </#if>
     </div>
   <#else>
     <div class="browsecategorytext">
         <#if catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")?has_content>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("CATEGORY_NAME")} [${category.productCategoryId}]</a>
         <#elseif catContentWrappers?? && catContentWrappers[category.productCategoryId]?? && catContentWrappers[category.productCategoryId].get("DESCRIPTION")?has_content>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybutton">${catContentWrappers[category.productCategoryId].get("DESCRIPTION")} [${category.productCategoryId}]</a>
         <#else>
-          <a href="<@ofbizUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@ofbizUrl>" class="browsecategorybutton">${category.categoryName?default(category.description)!} [${category.productCategoryId}]</a>
+          <a href="<@pageUrl>EditCategory?productCategoryId=${category.productCategoryId}${pStr!}</@pageUrl>" class="browsecategorybutton">${category.categoryName?default(category.description)!} [${category.productCategoryId}]</a>
        </#if>
     </div>
   </#if>
@@ -56,13 +43,13 @@ under the License.
   </#if>
 </#macro>
 
-<div><a href="<@ofbizUrl>ChooseTopCategory</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!} ${styles.action_scope_session!}">${uiLabelMap.ProductChooseTopCategory}</a></div>
+<div><a href="<@pageUrl>ChooseTopCategory</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!} ${styles.action_scope_session!}">${uiLabelMap.ProductChooseTopCategory}</a></div>
 <div class="browsecategorylist">
 <#if currentTopCategory??>
   <#if curCategoryId?? && curCategoryId == currentTopCategory.productCategoryId>
     <div style="text-indent: -10px;"><b>${currentTopCategory.categoryName?default("No Name")} [${currentTopCategory.productCategoryId}]</b></div>
   <#else>
-    <div class="browsecategorytext"><a href="<@ofbizUrl>EditCategory?productCategoryId=${currentTopCategory.productCategoryId}</@ofbizUrl>" class="browsecategorybutton">${currentTopCategory.categoryName?default(currentTopCategory.description)!} [${currentTopCategory.productCategoryId}]</a></div>
+    <div class="browsecategorytext"><a href="<@pageUrl>EditCategory?productCategoryId=${currentTopCategory.productCategoryId}</@pageUrl>" class="browsecategorybutton">${currentTopCategory.categoryName?default(currentTopCategory.description)!} [${currentTopCategory.productCategoryId}]</a></div>
   </#if>
 </#if>
   <div class="browsecategorylist">

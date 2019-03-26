@@ -36,7 +36,6 @@ import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
-import org.ofbiz.webapp.ftl.OfbizCurrencyTransform
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
@@ -81,6 +80,7 @@ cart = ShoppingCartEvents.getCartObject(request);
 currencyUomId = null;
 if (cart) currencyUomId = cart.getCurrency();
 if (!currencyUomId) currencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
+context.currencyUomId = currencyUomId; // SCIPIO: 2018-07-18: make available to ftl
 
 // get the shopping lists for the user (if logged in)
 if (userLogin) {
@@ -110,15 +110,23 @@ if (product) {
 
     // set this as a last viewed
     LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
+    // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
+    // The synchronized block locks on the _previous_ list instance, and then changes the instance.
     lastViewedProducts = session.getAttribute("lastViewedProducts");
+    synchronized(lastViewedProducts != null ? lastViewedProducts : UtilHttp.getSessionSyncObject(session)) {
+    lastViewedProducts = session.getAttribute("lastViewedProducts"); // SCIPIO: Re-read because other thread changed it
     if (!lastViewedProducts) {
         lastViewedProducts = [];
-        session.setAttribute("lastViewedProducts", lastViewedProducts);
+        //session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Moved below
+    } else {
+        lastViewedProducts = new ArrayList(lastViewedProducts); // SCIPIO: Make local copy
     }
     lastViewedProducts.remove(productId);
     lastViewedProducts.add(0, productId);
     while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) {
         lastViewedProducts.remove(lastViewedProducts.size() - 1);
+    }
+    session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Safe publish
     }
 
     // make the productContentWrapper
@@ -160,7 +168,13 @@ if (product) {
         productStore = ProductStoreWorker.getProductStore(request);
         productStoreId = productStore.productStoreId;
         context.productStoreId = productStoreId;
+        if (productStore != null) { 
+            context.productStore = productStore; // SCIPIO: This may be missing in orderentry
+        }
     }
+    
+    /* SCIPIO: 2019-03: This is already done by ShoppingCartEvents.addToCart and this is the wrong groovy file for this;
+     * the stashParameterMap call creates a memory leak
     // get a defined survey
     productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
     if (productSurvey) {
@@ -171,6 +185,7 @@ if (product) {
         wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
         context.surveyWrapper = wrapper;
     }
+    */
 
     // get the product price
     catalogId = CatalogWorker.getCurrentCatalogId(request);
@@ -187,12 +202,14 @@ if (product) {
         priceContext.agreementId = cart.getAgreementId();
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
         priceMap = runService('calculateProductPrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
         context.priceMap = priceMap;
     } else {
         // purchase order: run the "calculatePurchasePrice" service
         priceContext = [product : product, currencyUomId : cart.getCurrency(),
                 partyId : cart.getPartyId(), userLogin : userLogin];
         priceMap = runService('calculatePurchasePrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
         context.priceMap = priceMap;
     }
 

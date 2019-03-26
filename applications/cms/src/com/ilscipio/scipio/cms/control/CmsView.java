@@ -15,31 +15,31 @@ import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
  * but used in similar way, namely caching.
  */
 public class CmsView extends CmsObject {
-    
+
     private static final long serialVersionUID = 1591804709705152250L;
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final CmsObjectCache<CmsView> nameCache = CmsObjectCache.getGlobalCache("cms.control.view.name");
 
 //    private static final Set<String> logicalPkFieldNames = Collections.unmodifiableSet(new HashSet<String>(
 //            Arrays.asList(new String[] { "webSiteId", "viewName" })
 //            ));
-    
+
     protected final Delegator delegator;
     protected final String viewName;
     protected final String webSiteId;
-    
+
     public CmsView(Delegator delegator, String viewName, String webSiteId) {
         this.delegator = delegator;
         this.viewName = viewName;
         this.webSiteId = webSiteId;
     }
-    
+
     /**
      * 2016: Loads ALL this page's content and products into the current instance.
      * <p>
-     * WARN: IMPORTANT: AFTER THIS CALL, 
+     * WARN: IMPORTANT: AFTER THIS CALL,
      * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY
      * (EVEN if the instance is not physically made immutable!).
      * Essential for thread safety!!!
@@ -53,12 +53,12 @@ public class CmsView extends CmsObject {
     public boolean isPreloaded() {
         return true;
     }
-    
+
     @Override
     public boolean isImmutable() {
         return true;
     }
-    
+
     public String getViewName() {
         return viewName;
     }
@@ -73,18 +73,18 @@ public class CmsView extends CmsObject {
         if (useGlobalCache) {
             cache = getNameCache();
         }
-        
+
         String key = delegator.getDelegatorName() + "::" + webSiteId + "::" + name;
         CmsView view = null;
         CacheEntry<CmsView> viewEntry = null;
-        
+
         if (useGlobalCache) {
             viewEntry = cache.getEntry(key);
         }
 
         if (viewEntry == null) {
             view = new CmsView(delegator, name, webSiteId);
-            
+
             if (useGlobalCache) {
                 cache.put(key, view);
             }
@@ -100,21 +100,21 @@ public class CmsView extends CmsObject {
         return view;
 
     }
-    
+
     @Override
     public Delegator getDelegator() {
         return delegator;
     }
-    
+
     public String getLogIdRepr() {
         return getLogIdRepr(webSiteId, viewName);
     }
-    
+
     private static CmsObjectCache<CmsView> getNameCache() {
         return nameCache;
     }
 
-    
+
     static String getLogIdRepr(String webSiteId, String viewName) {
         return "[view name: " + viewName + "; website: " + webSiteId + "]";
     }
@@ -122,20 +122,20 @@ public class CmsView extends CmsObject {
     public ViewWorker getWorkerInst() {
         return ViewWorker.worker;
     }
-    
+
     public static ViewWorker getWorker() {
         return ViewWorker.worker;
     }
 
     public static class ViewWorker extends ObjectWorker<CmsView> {
         private static final ViewWorker worker = new ViewWorker();
-        
+
         protected ViewWorker() {
         }
-        
+
         @Override
         public void clearMemoryCaches() {
-            getNameCache().clear(); 
+            getNameCache().clear();
         }
 
     }

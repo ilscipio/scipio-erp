@@ -1,30 +1,17 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text=uiLabelMap.PageTitleAddressMatchMap class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makePageUrl("addressMatchMap") text=uiLabelMap.PageTitleAddressMatchMap class="+${styles.action_nav!}" />
   </@menu>
 </#macro>
 <@section id="address-match-map" menuContent=menuContent>
 
-      <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
+      <form name="matchform" method="post" action="<@pageUrl>findAddressMatch?match=true</@pageUrl>">
         <@field type="input" name="lastName" label=uiLabelMap.PartyLastName value=(parameters.lastName!) required=true />
         <@field type="input" name="firstName" label=uiLabelMap.PartyFirstName value=(parameters.firstName!) required=true />
         <@field type="input" name="address1" label=uiLabelMap.CommonAddress1 value=(parameters.address1!) required=true />
@@ -52,7 +39,7 @@ under the License.
       
           <#if match?has_content>
             <#if matches?has_content>
-              <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+              <@table type="data-list">
                 <@thead>
                 <@tr>
                   <@td colspan="7">${uiLabelMap.PartyAddressMatching} ${lastName} / ${firstName} @ ${addressString}</@td>
@@ -84,7 +71,7 @@ under the License.
                     <@td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2!(uiLabelMap.CommonNA))}</@td>
                     <@td>${match.city}</@td>
                     <@td>${match.postalCode}</@td>
-                    <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${match.partyId}</a></@td>
+                    <@td class="button-col"><a href="<@pageUrl>viewprofile?partyId=${match.partyId}</@pageUrl>" class="${styles.link_nav_info_id!}">${match.partyId}</a></@td>
                   </@tr>
                 </#list>
                 </@tbody>

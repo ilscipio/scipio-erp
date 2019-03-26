@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- SCIPIO: 2017-09-29: this can be set to show non-interactive details info; and title -->
@@ -26,14 +13,14 @@ under the License.
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-      <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", request) || userLogin.partyId == partyId>
+      <@menuitem type="link" href=makePageUrl("editcontactmech?partyId=${partyId}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>
     </@menu>
   </#macro>-->
   <@section id="partyContactInfo" title=partyContactInfoTitle open=partyContactInfoUseSection close=partyContactInfoUseSection>
       <#if contactMeches?has_content>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr>
             <@th>${uiLabelMap.PartyContactType}</@th>
@@ -74,7 +61,7 @@ under the License.
                       <#if contactMechPurposeType?has_content>
                         <#assign popUptitle = contactMechPurposeType.get("description", locale) + uiLabelMap.CommonGeoLocation>
                       </#if>
-                      <a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
+                      <a href="javascript:popUp('<@pageUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@pageUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
                     </#if>
                   </#if>
                 <#elseif "TELECOM_NUMBER" == contactMech.contactMechTypeId>
@@ -95,7 +82,7 @@ under the License.
                     ${contactMech.infoString!}
                   <#if !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
                     <#assign emailFormName = 'createEmail${contactMech.infoString?replace("&#64;","")?replace("&#x40;","")?replace(".","")?replace("@","")}'>
-                    <form method="post" action="<@ofbizUrl>NewDraftCommunicationEvent</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${emailFormName}">
+                    <form method="post" action="<@pageUrl>NewDraftCommunicationEvent</@pageUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${emailFormName}">
                       <#if userLogin.partyId?has_content>
                       <input name="partyIdFrom" value="${userLogin.partyId}" type="hidden"/>
                       </#if>
@@ -121,7 +108,7 @@ under the License.
                 <#if partyContactMech.thruDate?has_content><div><b>${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${partyContactMech.thruDate}</b></div></#if>
                 <#-- create cust request -->
                 <#if custRequestTypes?? && !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
-                  <form name="createCustRequestForm" action="<@ofbizUrl>createCustRequest</@ofbizUrl>" method="post" onsubmit="javascript:submitFormDisableSubmits(this)">
+                  <form name="createCustRequestForm" action="<@pageUrl>createCustRequest</@pageUrl>" method="post" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input type="hidden" name="partyId" value="${partyId}"/>
                     <input type="hidden" name="fromPartyId" value="${partyId}"/>
                     <input type="hidden" name="fulfillContactMechId" value="${contactMech.contactMechId}"/>
@@ -136,11 +123,11 @@ under the License.
               </@td>
               <@td><b>(${partyContactMech.allowSolicitation!})</b></@td>
               <@td class="button-col">
-                <#if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
-                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                <#if (security.hasEntityPermission("PARTYMGR", "_UPDATE", request) || userLogin.partyId == partyId) && !partyInfoViewOnly>
+                  <a href="<@pageUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
-                <#if (security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
-                  <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
+                <#if (security.hasEntityPermission("PARTYMGR", "_DELETE", request) || userLogin.partyId == partyId) && !partyInfoViewOnly>
+                  <form name="partyDeleteContact" method="post" action="<@pageUrl>deleteContactMech</@pageUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>
                     <input type="submit" class="${styles.link_run_sys!} ${styles.action_terminate!}" value="${uiLabelMap.CommonExpire}"/>

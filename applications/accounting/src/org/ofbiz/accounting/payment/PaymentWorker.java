@@ -20,6 +20,7 @@ package org.ofbiz.accounting.payment;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,9 +29,11 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -45,11 +48,22 @@ import org.ofbiz.entity.util.EntityUtil;
 /**
  * Worker methods for Payments
  */
-public class PaymentWorker {
+public final class PaymentWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+
+    private static final Character NUMBER_MASK_CHAR; // SCIPIO
+    static {
+        String maskCharStr = UtilProperties.getPropertyValue("payment", "payment.general.number.maskChar");
+        NUMBER_MASK_CHAR = maskCharStr.isEmpty() ? null : maskCharStr.charAt(0);
+        Debug.logInfo("payment.general.number.maskChar: " + NUMBER_MASK_CHAR, module);
+    }
+    private static final int NUMBER_MASK_LENGTH = UtilProperties.getPropertyAsInteger("payment",
+            "payment.general.number.maskLength", -4); // SCIPIO
+
+    private PaymentWorker() {}
 
     // to be able to use in minilanguage where Boolean cannot be used
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId) {
@@ -57,26 +71,34 @@ public class PaymentWorker {
     }
 
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId, Boolean showOld) {
-        List<Map<String, GenericValue>> paymentMethodValueMaps = new LinkedList<Map<String, GenericValue>>();
+        List<Map<String, GenericValue>> paymentMethodValueMaps = new LinkedList<>();
         try {
             List<GenericValue> paymentMethods = EntityQuery.use(delegator).from("PaymentMethod").where("partyId", partyId).queryList();
 
-            if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
+            if (!showOld) {
+                paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
+            }
 
             for (GenericValue paymentMethod : paymentMethods) {
-                Map<String, GenericValue> valueMap = new HashMap<String, GenericValue>();
+                Map<String, GenericValue> valueMap = new HashMap<>();
 
                 paymentMethodValueMaps.add(valueMap);
                 valueMap.put("paymentMethod", paymentMethod);
                 if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard", false);
-                    if (creditCard != null) valueMap.put("creditCard", creditCard);
+                    if (creditCard != null) {
+                        valueMap.put("creditCard", creditCard);
+                    }
                 } else if ("GIFT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue giftCard = paymentMethod.getRelatedOne("GiftCard", false);
-                    if (giftCard != null) valueMap.put("giftCard", giftCard);
+                    if (giftCard != null) {
+                        valueMap.put("giftCard", giftCard);
+                    }
                 } else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount", false);
-                    if (eftAccount != null) valueMap.put("eftAccount", eftAccount);
+                    if (eftAccount != null) {
+                        valueMap.put("eftAccount", eftAccount);
+                    }
                 }
             }
         } catch (GenericEntityException e) {
@@ -87,14 +109,17 @@ public class PaymentWorker {
 
     public static Map<String, Object> getPaymentMethodAndRelated(ServletRequest request, String partyId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = new HashMap<String, Object>();
+        Map<String, Object> results = new HashMap<>();
 
         Boolean tryEntity = true;
-        if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
+        if (request.getAttribute("_ERROR_MESSAGE_") != null) {
+            tryEntity = false;
+        }
 
         String donePage = request.getParameter("DONE_PAGE");
-        if (donePage == null || donePage.length() <= 0)
+        if (UtilValidate.isEmpty(donePage)) {
             donePage = "viewprofile";
+        }
         results.put("donePage", donePage);
 
         String paymentMethodId = request.getParameter("paymentMethodId");
@@ -297,9 +322,9 @@ public class PaymentWorker {
     }
 
     public static BigDecimal getPaymentNotApplied(GenericValue payment) {
-        if (payment != null) { 
+        if (payment != null) {
             return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
-        } 
+        }
         return BigDecimal.ZERO;
     }
 
@@ -307,7 +332,7 @@ public class PaymentWorker {
         if (actual.equals(Boolean.TRUE) && UtilValidate.isNotEmpty(payment.getBigDecimal("actualCurrencyAmount"))) {
             return payment.getBigDecimal("actualCurrencyAmount").subtract(getPaymentApplied(payment, actual)).setScale(decimals,rounding);
         }
-            return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
+        return payment.getBigDecimal("amount").subtract(getPaymentApplied(payment)).setScale(decimals,rounding);
     }
 
     public static BigDecimal getPaymentNotApplied(Delegator delegator, String paymentId) {
@@ -330,5 +355,57 @@ public class PaymentWorker {
             throw new IllegalArgumentException("The paymentId passed does not match an existing payment");
         }
         return payment.getBigDecimal("amount").subtract(getPaymentApplied(delegator,paymentId, actual)).setScale(decimals,rounding);
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking character, as configured in
+     * payment.properties#payment.general.number.maskChar.
+     * NOTE: This may return null for testing purposes, in which case there should be no masking.
+     */
+    public static Character getNumberMaskChar(Delegator delegator) {
+        return NUMBER_MASK_CHAR;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking character, as configured in
+     * payment.properties#payment.general.number.maskChar.
+     * NOTE: This may return null for testing purposes, in which case there should be no masking.
+     * NOTE: If a delegator is available, please call {@link #getNumberMaskChar(Delegator)} instead.
+     */
+    public static Character getNumberMaskChar() {
+        return NUMBER_MASK_CHAR;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking length, as configured in
+     * payment.properties#payment.general.number.maskLength,
+     * as the number of characters to mask (negative value means how many to leave unmasked).
+     */
+    public static int getNumberMaskLength(Delegator delelegator) {
+        return NUMBER_MASK_LENGTH;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking length, as configured in
+     * payment.properties#payment.general.number.maskLength,
+     * as the number of characters to mask (negative value means how many to leave unmasked).
+     * NOTE: If a delegator is available, please call {@link #getNumberMaskLength(Delegator)} instead.
+     */
+    public static int getNumberMaskLength() {
+        return NUMBER_MASK_LENGTH;
+    }
+
+    /**
+     * SCIPIO: Applies the default number mask for general card numbers as defined in
+     * payment.properties#payment.general.number.*.
+     * <p>
+     * NOTE: This method should generally not be used for UI display as-is; added mainly for logging
+     * purposes. For UI display examples, see: component://accounting/webapp/accounting/common/acctlib.ftl.
+     * <p>
+     * TODO?: This could support unhardcoding the left- vs right- masking via properties, but it's almost always
+     * left-masking that are used...
+     */
+    public static String applyGeneralNumberMask(CharSequence number, Delegator delegator) {
+        return StringUtil.maskLeft(number, getNumberMaskLength(delegator), getNumberMaskChar(delegator));
     }
 }

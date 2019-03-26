@@ -1,31 +1,18 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://widget/templates/htmlFormMacroLibrary.ftl"> 
 
 <@row>
 <@cell columns=6>
        <@heading relLevel=+1>${uiLabelMap.CommonGroup}</@heading>
-       <form action="<@ofbizUrl>entitymaint</@ofbizUrl>">
+       <form action="<@pageUrl>entitymaint</@pageUrl>">
         <@field type="select" name="filterByGroupName" label=uiLabelMap.WebtoolsGroupName>
              <option value="">${uiLabelMap.CommonAll}</option>
              <#list entityGroups as group>
-                <option value="${group}" <#if filterByGroupName??><#if group == filterByGroupName>selected="selected"</#if></#if>>${group}</option>
+                <option value="${group}"<#if filterByGroupName??><#if group == filterByGroupName> selected="selected"</#if></#if>>${group}</option>
              </#list>
         </@field>
         <@field type="input" name= "filterByEntityName" value=(parameters.filterByEntityName!) label=uiLabelMap.WebtoolsEntityName/>
@@ -50,7 +37,7 @@ under the License.
       </#list>
          </@nav>
         <#assign firstChar = "*">
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEntityName}</@th>
@@ -86,18 +73,18 @@ under the License.
             <@td class="button-col">
               <#if entity.viewEntity == 'Y'>
                 <#if entity.entityPermissionView == 'Y'>
-                  <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsReln}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@pageUrl>ViewRelations?entityName=${entity.entityName}</@pageUrl>">${uiLabelMap.WebtoolsReln}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}</@pageUrl>">${uiLabelMap.WebtoolsFind}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               <#else>
                 <#if entity.entityPermissionCreate == 'Y'>
-                  <a href="<@ofbizUrl>ViewGeneric?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.CommonCreateNew}">${uiLabelMap.WebtoolsCreate}</a>
+                  <a href="<@pageUrl>ViewGeneric?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.CommonCreateNew}">${uiLabelMap.WebtoolsCreate}</a>
                 </#if>
                 <#if entity.entityPermissionView == 'Y'>
-                  <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsViewRelations}">${uiLabelMap.WebtoolsReln}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindRecord}">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@pageUrl>ViewRelations?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.WebtoolsViewRelations}">${uiLabelMap.WebtoolsReln}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.WebtoolsFindRecord}">${uiLabelMap.WebtoolsFind}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               </#if>
             </@td>

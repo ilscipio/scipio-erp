@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
@@ -30,6 +17,7 @@ under the License.
     <Uom abbreviation="Mb" description="Megabit of Data" uomId="DATA_Mb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Gb" description="Gigabit of Data" uomId="DATA_Gb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Tb" description="Terabit of Data" uomId="DATA_Tb" uomTypeId="DATA_MEASURE"/>
+    <Uom abbreviation="Pb" description="Petabit of Data" uomId="DATA_Pb" uomTypeId="DATA_MEASURE"/>
 
     <Uom abbreviation="B" description="Byte of Data" uomId="DATA_B" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="KB" description="Kilobyte of Data" uomId="DATA_KB" uomTypeId="DATA_MEASURE"/>
@@ -42,6 +30,7 @@ under the License.
     <UomConversion uomId="DATA_Mb" uomIdTo="DATA_Kb" conversionFactor="1024"/>
     <UomConversion uomId="DATA_Gb" uomIdTo="DATA_Mb" conversionFactor="1024"/>
     <UomConversion uomId="DATA_Tb" uomIdTo="DATA_Gb" conversionFactor="1024"/>
+    <UomConversion uomId="DATA_Pb" uomIdTo="DATA_Tb" conversionFactor="1024"/>
 
     <UomConversion uomId="DATA_B" uomIdTo="DATA_b" conversionFactor="8"/>
     <UomConversion uomId="DATA_KB" uomIdTo="DATA_B" conversionFactor="1024"/>

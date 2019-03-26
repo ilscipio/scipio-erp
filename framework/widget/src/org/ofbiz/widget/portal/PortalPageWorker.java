@@ -113,7 +113,7 @@ public class PortalPageWorker {
                 if (UtilValidate.isNotEmpty(context.get("userLogin"))) { // check if a user is logged in
                     userLoginId = ((GenericValue)context.get("userLogin")).getString("userLoginId");
                 }
-                
+
                 // Get the PortalPage ensuring that it is either owned by the user or a system page
                 EntityCondition cond = EntityCondition.makeCondition(UtilMisc.toList(
                     EntityCondition.makeCondition("portalPageId", EntityOperator.EQUALS, portalPageId),
@@ -126,7 +126,7 @@ public class PortalPageWorker {
                 if (UtilValidate.isNotEmpty(portalPages)) {
                     portalPage = EntityUtil.getFirst(portalPages);
                 }
-                
+
                 // If a derived PortalPage private to the user exists, returns this instead of the system one
                 cond = EntityCondition.makeCondition(UtilMisc.toList(
                         EntityCondition.makeCondition("originalPortalPageId", EntityOperator.EQUALS, portalPageId),
@@ -146,13 +146,13 @@ public class PortalPageWorker {
     /**
     * Checks if the user is allowed to configure the PortalPage.
     * PortalPage configuration is allowed if he is the PortalPage owner or he has got the PORTALPAGE_ADMIN permission
-    */   
+    */
     public static Boolean userIsAllowedToConfigure(String portalPageId, Map<String, Object> context) {
         Boolean userIsAllowed = false;
 
         if (UtilValidate.isNotEmpty(portalPageId)) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            if (UtilValidate.isNotEmpty(userLogin)) {
+            if (userLogin != null) {
                 String userLoginId = (String) userLogin.get("userLoginId");
                 Security security = (Security) context.get("security");
 
@@ -160,7 +160,7 @@ public class PortalPageWorker {
                 try {
                     Delegator delegator = WidgetWorker.getDelegator(context);
                     GenericValue portalPage = EntityQuery.use(delegator).from("PortalPage").where("portalPageId", portalPageId).queryOne();
-                    if (UtilValidate.isNotEmpty(portalPage)) {
+                    if (portalPage != null) {
                         String ownerUserLoginId = (String) portalPage.get("ownerUserLoginId");
                         // Users with PORTALPAGE_ADMIN permission can configure every Portal Page
                         userIsAllowed = (ownerUserLoginId.equals(userLoginId) || hasPortalAdminPermission);
@@ -171,7 +171,7 @@ public class PortalPageWorker {
             }
         }
 
-        return userIsAllowed;       
+        return userIsAllowed;
     }
-    
+
 }

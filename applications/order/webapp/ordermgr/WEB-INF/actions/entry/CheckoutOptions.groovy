@@ -23,9 +23,16 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-shoppingCart = session.getAttribute("shoppingCart");
+// SCIPIO: FIXME: Having cart updates in a groovy script is very inefficient and not proper
+// and this probably triggers cart updates for no reason
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO
+//shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = cartUpdate.getCartForUpdate();
+    
 currencyUomId = shoppingCart.getCurrency();
 partyId = shoppingCart.getPartyId();
 party = from("Party").where("partyId", partyId).cache(true).queryOne();
@@ -43,7 +50,7 @@ if (shoppingCart) {
 profiledefs = from("PartyProfileDefault").where("partyId", userLogin.partyId, "productStoreId", productStoreId).queryOne();
 context.profiledefs = profiledefs;
 
-context.shoppingCart = shoppingCart;
+//context.shoppingCart = shoppingCart; // SCIPIO: done below
 context.userLogin = userLogin;
 context.productStoreId = productStore.get("productStoreId");
 context.productStore = productStore;
@@ -95,3 +102,10 @@ if (salesReps) {
     }
 }
 context.cartParties = cartParties;
+
+shoppingCart = cartUpdate.commit(shoppingCart); // SCIPIO
+context.shoppingCart = shoppingCart;
+
+} finally {
+    cartUpdate.close();
+}

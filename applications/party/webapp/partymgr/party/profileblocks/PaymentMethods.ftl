@@ -1,61 +1,38 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#macro maskSensitiveNumber cardNumber>
-  <#assign cardNumberDisplay = "">
-  <#if cardNumber?has_content>
-    <#assign size = cardNumber?length - 4>
-    <#if (size > 0)>
-      <#list 0 .. size-1 as foo>
-        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-      </#list>
-      <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-    <#else>
-      <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
-    </#if>
-  </#if>
-  ${cardNumberDisplay!}
-</#macro>
+<#include "component://party/webapp/partymgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+
+<#-- SCIPIO: MOVED TO: component://accounting/webapp/accounting/common/acctlib.ftl
+<#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
+</#macro>-->
 
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewEftAccount class="+${styles.action_nav!} ${styles.action_add!}"/>
-      <@menuitem type="link" href=makeOfbizUrl("editgiftcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewGiftCard class="+${styles.action_nav!} ${styles.action_add!}"/>
-      <@menuitem type="link" href=makeOfbizUrl("editcreditcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewCreditCard class="+${styles.action_nav!} ${styles.action_add!}"/>
+    <#if security.hasEntityPermission("PAY_INFO", "_CREATE", request) || security.hasEntityPermission("ACCOUNTING", "_CREATE", request)>
+      <@menuitem type="link" href=makePageUrl("editeftaccount?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewEftAccount class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makePageUrl("editgiftcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewGiftCard class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makePageUrl("editcreditcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewCreditCard class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>  
     </@menu>
   </#macro>
   -->
   <@section id="partyPaymentMethod" title=uiLabelMap.PartyPaymentMethodInformation>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
         <@tbody>
         <#if paymentMethodValueMaps?has_content>
           <#list paymentMethodValueMaps as paymentMethodValueMap>
             <#assign paymentMethod = paymentMethodValueMap.paymentMethod/>
             <@tr>
               <#macro deleteButton>
-                <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session) || security.hasEntityPermission("ACCOUNTING", "_DELETE", session)>
-                  <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonExpire}</a>
+                <#if security.hasEntityPermission("PAY_INFO", "_DELETE", request) || security.hasEntityPermission("ACCOUNTING", "_DELETE", request)>
+                  <a href="<@pageUrl>deletePaymentMethod/viewprofile?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonExpire}</a>
                 <#else>
                   &nbsp;
                 </#if>
@@ -73,12 +50,13 @@ under the License.
                   ${creditCard.lastNameOnCard}
                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                   &nbsp;-&nbsp;
-                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                    ${creditCard.cardType}
-                    <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
-                    ${creditCard.expireDate}
-                  <#else>
+                  <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
+                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                  <#else>
+                    ${creditCard.cardType}
+                    <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                    ${creditCard.expireDate}
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
@@ -86,11 +64,11 @@ under the License.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate})</#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
-                    <a href="<@ofbizInterWebappUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.PartyManualTx}</a>
+                  <#if security.hasEntityPermission("MANUAL", "_PAYMENT", request)>
+                    <a href="<@serverUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${raw(externalKeyParam)}</@serverUrl>">${uiLabelMap.PartyManualTx}</a>
                   </#if>
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
+                    <a href="<@pageUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />
                 </@td>
@@ -100,10 +78,10 @@ under the License.
                   ${uiLabelMap.AccountingGiftCard}
                 </@td>
                 <@td>
-                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
-                    <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
+                    <@acctlib.maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
@@ -112,8 +90,8 @@ under the License.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
+                    <a href="<@pageUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />
                 </@td>
@@ -129,8 +107,8 @@ under the License.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
-                    <a href="<@ofbizUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
+                    <a href="<@pageUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />
                 </@td>
@@ -172,8 +150,8 @@ under the License.
                   <#if billing.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${billing.thruDate.toString()}</b></#if>
               </@td>
               <@td class="button-col">
-                <a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${billing.billingAccountId}&amp;partyId=${partyId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                <a href="<@ofbizUrl>deleteBillingAccount?partyId=${partyId}&amp;billingAccountId=${billing.billingAccountId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
+                <a href="<@pageUrl>EditBillingAccount?billingAccountId=${billing.billingAccountId}&amp;partyId=${partyId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                <a href="<@pageUrl>deleteBillingAccount?partyId=${partyId}&amp;billingAccountId=${billing.billingAccountId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
               </@td>
           </@tr>
           </#list>

@@ -146,14 +146,14 @@ public class Classpath {
      * Native library class loader. This class is necessary because the
      * bootstrap ClassLoader caches the native library path - so any
      * changes to the library path are ignored (changes that might have
-     * been made by loading OFBiz components). 
+     * been made by loading OFBiz components).
      */
     private class NativeLibClassLoader extends URLClassLoader {
 
         private NativeLibClassLoader(URL[] urls, ClassLoader parent) {
             super(urls, parent);
         }
-        
+
         @Override
         protected String findLibrary(String libname) {
             String[] libPaths = System.getProperty("java.library.path").split(File.pathSeparator);

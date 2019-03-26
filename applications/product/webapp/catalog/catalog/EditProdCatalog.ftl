@@ -5,7 +5,7 @@
         <#assign actionUri = "updateProdCatalog" />
         <#assign actionLabel = uiLabelMap.CommonUpdate />
     </#if>
-        <form method="post" action="<@ofbizUrl>${actionUri}</@ofbizUrl>" name="addProductCategoryMemberForm">        
+        <form method="post" action="<@pageUrl>${actionUri}</@pageUrl>" name="addProductCategoryMemberForm">        
             <#if !prodCatalog?has_content>
               <input type="hidden" name="isCreate" value="true" />
             </#if>
@@ -19,7 +19,7 @@
                         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}"/>      
                     <#else>                        
                         <#if parameters.prodCatalogId?has_content>
-                            <#assign tooltip>${rawLabel('ProductCouldNotFindProductCatalogWithId')} [${rawString(prodCatalogId)}]</#assign>
+                            <#assign tooltip>${rawLabel('ProductCouldNotFindProductCatalogWithId')} [${raw(prodCatalogId)}]</#assign>
                         </#if>
                         <@field type="input" name="prodCatalogId" label=uiLabelMap.CommonId tooltip=((tooltip)!) />
                     </#if>

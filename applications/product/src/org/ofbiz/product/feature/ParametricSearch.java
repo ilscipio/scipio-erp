@@ -48,20 +48,18 @@ public class ParametricSearch {
 
     public static final int DEFAULT_PER_TYPE_MAX_SIZE = 1000;
 
-    // DEJ20060427 not used right now, could be removed if that circumstance persists
-    //public static UtilCache featureAllCache = UtilCache.createUtilCache("custom.FeaturePerTypeAll", 0, 600000, true);
-    //public static UtilCache featureByCategoryCache = UtilCache.createUtilCache("custom.FeaturePerTypeByCategory", 0, 600000, true);
-
-    /** Gets all features associated with the specified category through:
-     * ProductCategory -> ProductFeatureCategoryAppl -> ProductFeatureCategory -> ProductFeature.
-     * Returns a Map of Lists of ProductFeature GenericValue objects organized by productFeatureTypeId.
+    /**
+     * Gets all features associated with the specified category through:<br>
+     * ProductCategory -&gt; ProductFeatureCategoryAppl -&gt; ProductFeatureCategory -&gt; ProductFeature.
+     *
+     * @return a Map of Lists of ProductFeature GenericValue objects organized by productFeatureTypeId.
      */
     public static Map<String, List<GenericValue>> makeCategoryFeatureLists(String productCategoryId, Delegator delegator) {
         return makeCategoryFeatureLists(productCategoryId, delegator, DEFAULT_PER_TYPE_MAX_SIZE);
     }
 
     public static Map<String, List<GenericValue>> makeCategoryFeatureLists(String productCategoryId, Delegator delegator, int perTypeMaxSize) {
-        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = new HashMap<String, Map<String, GenericValue>>();
+        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = new HashMap<String, Map<String,GenericValue>>();
         try {
             List<GenericValue> productFeatureCategoryAppls = EntityQuery.use(delegator).from("ProductFeatureCategoryAppl").where("productCategoryId", productCategoryId).cache(true).queryList();
             productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
@@ -125,9 +123,8 @@ public class ParametricSearch {
     }
     public static Map<String, List<GenericValue>> getAllFeaturesByType(Delegator delegator, int perTypeMaxSize) {
         Map<String, List<GenericValue>> productFeaturesByTypeMap = new HashMap<String, List<GenericValue>>();
-        try {
-            Set<String> typesWithOverflowMessages = new HashSet<String>();
-            EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator();
+        Set<String> typesWithOverflowMessages = new HashSet<String>();
+        try (EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator()) {
             GenericValue productFeature = null;
             while ((productFeature = productFeatureEli.next()) != null) {
                 String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
@@ -145,7 +142,6 @@ public class ParametricSearch {
                     featuresByType.add(productFeature);
                 }
             }
-            productFeatureEli.close();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting all features", module);
         }

@@ -17,14 +17,14 @@
  * under the License.
  */
 
+import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactHelper;
 
-if (party) {
+if (context.party) {
     address = EntityUtil.getFirst(ContactHelper.getContactMech(party, "GENERAL_LOCATION", "POSTAL_ADDRESS", false));
     if (address) {
         toPostalAddress = address.getRelatedOne("PostalAddress", false);
         context.toPostalAddress = toPostalAddress;
     }
 }
-

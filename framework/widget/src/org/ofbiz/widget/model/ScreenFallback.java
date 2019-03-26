@@ -17,9 +17,9 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 public abstract class ScreenFallback {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private static final ScreenFallbackSettings defaultFallbackSettings = new SimpleScreenFallbackSettings("", "", null);
-    
+
     private ScreenFallback() {
     }
 
@@ -28,11 +28,11 @@ public abstract class ScreenFallback {
     }
 
     public interface ScreenFallbackSettings {
-        
+
         String getName();
         String getLocation();
         Boolean getFallbackIfEmpty();
-        
+
         boolean isEnabled();
         boolean isEnabledForEmptyLocation();
 
@@ -44,13 +44,13 @@ public abstract class ScreenFallback {
          */
         ScreenFallbackSettings getResolved();
     }
-    
+
     public static class SimpleScreenFallbackSettings implements ScreenFallbackSettings {
-        
+
         protected final String name;
         protected final String location;
         protected final Boolean fallbackIfEmpty;
-        
+
         public SimpleScreenFallbackSettings(String name, String location, Boolean fallbackIfEmpty) {
             this.name = name;
             this.location = location;
@@ -90,20 +90,20 @@ public abstract class ScreenFallback {
     }
 
     public interface FlexibleScreenFallbackSettings extends ScreenFallbackSettings {
-        
+
         FlexibleStringExpander getNameExdr();
         FlexibleStringExpander getLocationExdr();
 
         String getName(Map<String, Object> context);
         String getLocation(Map<String, Object> context);
 
-       
+
         /**
          * Returns settings with ALL fields resolved (dumb, not appropriate for screen logic unless
          * doing everything manually using the returned settings).
          */
         ScreenFallbackSettings getResolvedAll(Map<String, Object> context);
-        
+
         /**
          * Returns settings where fields are resolved in a smart manner appropriate for screen logic.
          * <p>
@@ -112,30 +112,30 @@ public abstract class ScreenFallback {
          * May delay resolution for performance reasons.
          */
         ScreenFallbackSettings getResolvedForScreenLogic(Map<String, Object> context);
-        
+
     }
-    
+
     @SuppressWarnings("serial")
     public static class SimpleFlexibleScreenFallbackSettings implements FlexibleScreenFallbackSettings, Serializable {
-        
+
         protected final FlexibleStringExpander nameExdr;
         protected final FlexibleStringExpander locationExdr;
         protected final Boolean fallbackIfEmpty;
-        
+
         public SimpleFlexibleScreenFallbackSettings(String nameExpr,
                 String locationExpr, Boolean fallbackIfEmpty) {
             this.nameExdr = FlexibleStringExpander.getInstance(nameExpr);
             this.locationExdr = FlexibleStringExpander.getInstance(locationExpr);
             this.fallbackIfEmpty = fallbackIfEmpty;
         }
-        
+
         public SimpleFlexibleScreenFallbackSettings(FlexibleStringExpander nameExdr,
                 FlexibleStringExpander locationExdr, Boolean fallbackIfEmpty) {
             this.nameExdr = nameExdr;
             this.locationExdr = locationExdr;
             this.fallbackIfEmpty = fallbackIfEmpty;
         }
-        
+
         /**
          * Copy constructor that uses existing defaults for any values that are null or empty (as appropriate).
          */
@@ -143,7 +143,7 @@ public abstract class ScreenFallback {
                 FlexibleStringExpander locationExdr, Boolean fallbackIfEmpty) {
             this(existing, new SimpleFlexibleScreenFallbackSettings(nameExdr, locationExdr, fallbackIfEmpty));
         }
-        
+
         /**
          * Merge constructor that uses existing defaults for any values that are null or empty (as appropriate).
          */
@@ -169,12 +169,12 @@ public abstract class ScreenFallback {
         public String getName() {
             return getNameExdr().getOriginal();
         }
-        
+
         @Override
         public String getLocation() {
             return getLocationExdr().getOriginal();
         }
-        
+
         @Override
         public Boolean getFallbackIfEmpty() {
             return fallbackIfEmpty;
@@ -189,7 +189,7 @@ public abstract class ScreenFallback {
         public boolean isEnabledForEmptyLocation() {
             return Boolean.TRUE.equals(this.fallbackIfEmpty) && isEnabled();
         }
-        
+
         @Override
         public FlexibleStringExpander getNameExdr() {
             return nameExdr;
@@ -199,7 +199,7 @@ public abstract class ScreenFallback {
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
         }
-        
+
         @Override
         public String getName(Map<String, Object> context) {
             return nameExdr.expandString(context);
@@ -217,7 +217,7 @@ public abstract class ScreenFallback {
                     fallbackIfEmpty
                     );
         }
-        
+
         @Override
         public ScreenFallbackSettings getResolvedAll(Map<String, Object> context) {
             // TODO Auto-generated method stub
@@ -226,31 +226,31 @@ public abstract class ScreenFallback {
                     fallbackIfEmpty
                     );
         }
-        
+
         @Override
         public ScreenFallbackSettings getResolvedForScreenLogic(Map<String, Object> context) {
             return new SmartResolvedFlexibleScreenFallbackSettings(this, context);
         }
 
     }
-    
+
     /**
      * Special smart delayed-resolving implementation for screen logic.
      * <p>
      * isEnabled* calls check if name/location strings are empty BEFORE flexible string resolution.
      */
     public static class SmartResolvedFlexibleScreenFallbackSettings implements FlexibleScreenFallbackSettings {
-        
+
         protected final FlexibleScreenFallbackSettings srcSettings;
         protected final Map<String, Object> context;
         protected ScreenFallbackSettings resolvedSettings = null;
-        
+
         protected SmartResolvedFlexibleScreenFallbackSettings(FlexibleScreenFallbackSettings srcSettings,
                 Map<String, Object> context) {
             this.srcSettings = srcSettings;
             this.context = context;
         }
-        
+
         @Override
         public ScreenFallbackSettings getResolved() {
             // usually won't reuse the local, so no need to save it
@@ -258,7 +258,7 @@ public abstract class ScreenFallback {
             //return resolvedSettings;
             return getResolvedAll(context);
         }
-        
+
         @Override
         public ScreenFallbackSettings getResolvedAll(Map<String, Object> context) {
             return new SimpleScreenFallbackSettings(
@@ -267,12 +267,12 @@ public abstract class ScreenFallback {
                     srcSettings.getFallbackIfEmpty()
                     );
         }
-        
+
         @Override
         public ScreenFallbackSettings getResolvedForScreenLogic(Map<String, Object> context) {
             return new SmartResolvedFlexibleScreenFallbackSettings(this.srcSettings, context);
         }
-        
+
         protected void resolve() {
             resolvedSettings = getResolvedAll(context);
         }
@@ -290,7 +290,7 @@ public abstract class ScreenFallback {
             // (fallbackIfEmpty does not support flexible expansion; not expected to change)
             return srcSettings.isEnabledForEmptyLocation();
         }
-        
+
         @Override
         public String getName() {
             if (resolvedSettings == null) {
@@ -335,7 +335,7 @@ public abstract class ScreenFallback {
         public String getLocation(Map<String, Object> context) {
             return srcSettings.getLocation(context);
         }
-        
+
     }
-    
+
 }

@@ -525,8 +525,13 @@ function ajaxAutoCompleter(areaCsvString, showDescription, defaultMinLength, def
                         }
                     },
                     error: function(xhr, reason, exception) {
-                        if(exception != 'abort') {
-                            alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
+                        // SCIPIO: Removed: abort detection is wrong here (would be: reason != 'abort', if that were portable; not reliable either),
+                        // and there is little need to show error message for this
+                        //if(exception != 'abort') {
+                        //    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
+                        //}
+                        if (reason != 'abort' && console && console.error) {
+                            console.error("Field lookup: An error occurred while communicating with the server: reason=" + reason + ", exception=" + exception);
                         }
                     }
                 });

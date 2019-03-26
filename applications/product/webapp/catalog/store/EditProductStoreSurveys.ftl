@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@section title=uiLabelMap.PageTitleEditProductStoreSurveys>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.CommonType}</@th>
@@ -36,13 +23,13 @@ under the License.
               <@tr valign="middle">
                 <@td>${surveyType.get("description",locale)}</@td>
                 <@td>${storeSurvey.groupName!}</@td>
-                <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
+                <@td><a href="<@serverUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@serverUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
                 <@td>${storeSurvey.productId!(uiLabelMap.CommonNA)}</@td>
                 <@td>${storeSurvey.productCategoryId!(uiLabelMap.CommonNA)}</@td>
                 <@td>${storeSurvey.fromDate!?string}</@td>
                 <@td>${storeSurvey.sequenceNum!}</@td>
                 <@td>
-                  <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
+                  <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@pageUrl>deleteProductStoreSurveyAppl</@pageUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
                     <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
@@ -54,7 +41,7 @@ under the License.
 </@section>
 
 <@section title=uiLabelMap.PageTitleAddProductStoreSurveys>
-        <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
+        <form name="addSurvey" action="<@pageUrl>createProductStoreSurveyAppl</@pageUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
               <@field type="select" label=uiLabelMap.CommonType name="surveyApplTypeId">
                     <#list surveyApplTypes as type>

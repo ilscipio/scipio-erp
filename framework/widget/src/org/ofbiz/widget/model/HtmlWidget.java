@@ -19,7 +19,6 @@
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +39,6 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
-import org.ofbiz.webapp.ftl.ExtendedWrapper;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
@@ -72,7 +70,7 @@ public class HtmlWidget extends ModelScreenWidget {
     // SCIPIO: NOTE: 2016-10-17: Exceptionally, the Ofbiz ExtendedWrapper that was present here
     // was so generic and needed elsewhere, that it has been MOVED to:
     // org.ofbiz.webapp.ftl.ExtendedWrapper
-    
+
     // End Static, begin class section
 
     private final List<ModelScreenWidget> subWidgets;
@@ -83,7 +81,7 @@ public class HtmlWidget extends ModelScreenWidget {
         if (childElementList.isEmpty()) {
             this.subWidgets = Collections.emptyList();
         } else {
-            List<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(childElementList.size());
+            List<ModelScreenWidget> subWidgets = new ArrayList<>(childElementList.size());
             for (Element childElement : childElementList) {
                 if ("html-template".equals(childElement.getNodeName())) {
                     subWidgets.add(HtmlTemplate.getInstance(modelScreen, childElement)); // SCIPIO: now uses factory
@@ -106,7 +104,7 @@ public class HtmlWidget extends ModelScreenWidget {
     public static Configuration getFtlConfig() {
         return specialConfig;
     }
-    
+
     public List<ModelScreenWidget> getSubWidgets() {
         return subWidgets;
     }
@@ -120,10 +118,9 @@ public class HtmlWidget extends ModelScreenWidget {
 
     public static void renderHtmlTemplate(Appendable writer, FlexibleStringExpander locationExdr, Map<String, Object> context) {
         String location = locationExdr.expandString(context);
-        //Debug.logInfo("Rendering template at location [" + location + "] with context: \n" + context, module);
 
         if (UtilValidate.isEmpty(location)) {
-            throw new IllegalArgumentException("Template location is empty");
+            throw new IllegalArgumentException("Template location is empty with search string location " + locationExdr.getOriginal());
         }
 
         if (location.endsWith(".ftl")) {
@@ -134,7 +131,6 @@ public class HtmlWidget extends ModelScreenWidget {
                     writer.append(HtmlWidgetRenderer.formatBoundaryComment("Begin", "Template", location));
                 }
 
-                //FreeMarkerWorker.renderTemplateAtLocation(location, context, writer);
                 Template template = null;
                 if (location.endsWith(".fo.ftl")) { // FOP can't render correctly escaped characters
                     template = FreeMarkerWorker.getTemplate(location);
@@ -146,19 +142,7 @@ public class HtmlWidget extends ModelScreenWidget {
                 if (insertWidgetBoundaryComments) {
                     writer.append(HtmlWidgetRenderer.formatBoundaryComment("End", "Template", location));
                 }
-            } catch (IllegalArgumentException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (MalformedURLException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (TemplateException e) {
-                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg, e, context);
-            } catch (IOException e) {
+            } catch (IllegalArgumentException | TemplateException | IOException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 writeError(writer, errMsg, e, context);
@@ -167,7 +151,7 @@ public class HtmlWidget extends ModelScreenWidget {
             throw new IllegalArgumentException("Rendering not yet supported for the template at location: " + location);
         }
     }
-    
+
     /**
      * SCIPIO: Renders an inlined template of given type.
      */
@@ -192,19 +176,7 @@ public class HtmlWidget extends ModelScreenWidget {
             if (insertWidgetBoundaryComments) {
                 writer.append(HtmlWidgetRenderer.formatBoundaryComment("End", "Inline Template", templateId));
             }
-        } catch (IllegalArgumentException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (MalformedURLException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (TemplateException e) {
-            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg, e, context);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | TemplateException | IOException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
             writeError(writer, errMsg, e, context);
@@ -232,13 +204,13 @@ public class HtmlWidget extends ModelScreenWidget {
      * SCIPIO: this is turned abstract and the implementation moved to FileHtmlTemplate.
      */
     public static abstract class HtmlTemplate extends ModelScreenWidget {
-        
+
         private static final Set<String> supportedTypes = Collections.unmodifiableSet(UtilMisc.toSet("ftl", "fo-ftl"));
-        
+
         protected HtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
         }
-        
+
         public static HtmlTemplate getInstance(ModelScreen modelScreen, Element htmlTemplateElement) { // SCIPIO: made into factory
             if (!htmlTemplateElement.getAttribute("location").isEmpty()) {
                 return new FileHtmlTemplate(modelScreen, htmlTemplateElement);
@@ -264,7 +236,7 @@ public class HtmlWidget extends ModelScreenWidget {
             return "html-template";
         }
     }
-    
+
     /**
      * File-/Location-based HTML template.
      * <p>
@@ -297,7 +269,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
     }
-    
+
     /**
      * SCIPIO: Inlined HTML template.
      * <p>
@@ -307,7 +279,7 @@ public class HtmlWidget extends ModelScreenWidget {
         protected final String templateBody;
         protected final String lang;
         protected final String templateId;
-        
+
         public InlineHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
             String lang = htmlTemplateElement.getAttribute("lang");
@@ -349,14 +321,14 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     public static class HtmlTemplateDecorator extends ModelScreenWidget {
-        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added for thread-safety
         protected final Map<String, ModelScreenWidget> sectionMap;
 
         public HtmlTemplateDecorator(ModelScreen modelScreen, Element htmlTemplateDecoratorElement) {
             super(modelScreen, htmlTemplateDecoratorElement);
             this.locationExdr = FlexibleStringExpander.getInstance(htmlTemplateDecoratorElement.getAttribute("location"));
 
-            Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
+            Map<String, ModelScreenWidget> sectionMap = new HashMap<>();
             List<? extends Element> htmlTemplateDecoratorSectionElementList = UtilXml.childElementList(htmlTemplateDecoratorElement, "html-template-decorator-section");
             for (Element htmlTemplateDecoratorSectionElement: htmlTemplateDecoratorSectionElementList) {
                 String name = htmlTemplateDecoratorSectionElement.getAttribute("name");

@@ -22,10 +22,10 @@ import org.ofbiz.entity.GenericValue;
 public abstract class CmsWebappUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private CmsWebappUtil() {}
 
-    
+
     /**
      * Gets a system-wide unique ID for the current request. WARNING: We cheat and use current thread ID for now!
      * Note the name: "current".
@@ -33,9 +33,9 @@ public abstract class CmsWebappUtil {
     public static long getCurrentRequestUniqueId(HttpServletRequest request) {
         return Thread.currentThread().getId();
     }
-    
+
     private static final Pattern charsetPat = Pattern.compile("((^|;)\\s*charset=).*?(;|$)", Pattern.CASE_INSENSITIVE);
-    
+
     public static String replaceHttpContentTypeCharset(String prevContentType, String newCharset) {
         if (prevContentType == null || prevContentType.trim().length() == 0) {
             return "charset=" + newCharset;
@@ -48,25 +48,25 @@ public abstract class CmsWebappUtil {
             }
         }
     }
-    
+
     private static final Pattern splitPairsRawQueryPat = Pattern.compile("&");
-    
+
     public static class QueryParam {
         public final String name;
         public final String value;
-        
+
         public QueryParam(String name, String value) {
             this.name = name;
             this.value = value;
         }
     }
-    
+
     public static List<QueryParam> splitRawQueryString(String queryString) {
         List<QueryParam> params = new ArrayList<>();
         if (queryString == null) {
             return params;
         }
-        
+
         boolean startsWithDelim = (queryString.startsWith("?") || queryString.startsWith("&"));
 
         // Do it in two splits so malformed URLs don't cause haywire results
@@ -82,7 +82,7 @@ public abstract class CmsWebappUtil {
 
         return params;
     }
-    
+
     /**
      * URL-encodes arbitrary URL parts.
      * <p>
@@ -99,7 +99,7 @@ public abstract class CmsWebappUtil {
         }
         return out;
     }
-    
+
     public static String urlEncode(String urlPart) throws IllegalArgumentException {
         try {
             return UtilCodec.getUrlEncoder().encode(urlPart);
@@ -108,7 +108,7 @@ public abstract class CmsWebappUtil {
             throw new IllegalArgumentException("Error URL-encoding string: " + urlPart, e);
         }
     }
-    
+
     public static String urlDecode(String urlPart) throws IllegalArgumentException {
         try {
             return UtilCodec.getUrlDecoder().decode(urlPart);
@@ -117,27 +117,27 @@ public abstract class CmsWebappUtil {
             throw new IllegalArgumentException("Error URL-decoding string: " + urlPart, e);
         }
     }
-    
-    public static String restrictQueryStringParams(String queryString, Collection<String> paramNames, 
+
+    public static String restrictQueryStringParams(String queryString, Collection<String> paramNames,
             boolean paramNamesEncoded) throws IllegalArgumentException {
         return restrictRemoveQueryStringParams(queryString, paramNames, paramNamesEncoded, true);
     }
-    
-    public static String removeQueryStringParams(String queryString, Collection<String> paramNames, 
+
+    public static String removeQueryStringParams(String queryString, Collection<String> paramNames,
             boolean paramNamesEncoded) throws IllegalArgumentException {
         return restrictRemoveQueryStringParams(queryString, paramNames, paramNamesEncoded, false);
     }
-    
-    private static String restrictRemoveQueryStringParams(String queryString, Collection<String> paramNames, 
+
+    private static String restrictRemoveQueryStringParams(String queryString, Collection<String> paramNames,
             boolean paramNamesEncoded, boolean restrictMode) throws IllegalArgumentException {
         if (queryString == null) {
             return null;
         }
-        
+
         StringBuilder newQuery = new StringBuilder("");
-        
+
         Collection<String> properNames = paramNamesEncoded ? paramNames : urlEncode(paramNames, new HashSet<String>());
-        
+
         List<QueryParam> params = splitRawQueryString(queryString);
         if (!params.isEmpty()) {
             for(QueryParam param : params) {
@@ -150,7 +150,7 @@ public abstract class CmsWebappUtil {
                 }
             }
         }
-        
+
         boolean startsWithDelim = (queryString.startsWith("?") || queryString.startsWith("&"));
         if (startsWithDelim) {
             if (newQuery.length() > 0) {
@@ -163,11 +163,11 @@ public abstract class CmsWebappUtil {
                 newQuery.deleteCharAt(0);
             }
         }
-        
+
         return newQuery.toString();
     }
-    
-    
+
+
     public static List<GenericValue> getWebSiteList(Delegator delegator, Set<String> webSiteIdSet) throws GenericEntityException {
         List<GenericValue> cmsWebSiteList = new ArrayList<>();
         final List<String> orderBy = Arrays.asList(new String[] {"siteName"});
@@ -178,5 +178,5 @@ public abstract class CmsWebappUtil {
         }
         return cmsWebSiteList;
     }
-    
+
 }

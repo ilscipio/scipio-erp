@@ -20,6 +20,7 @@ package org.ofbiz.service.mail;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -74,7 +75,7 @@ public class JavaMailContainer implements Container {
     /**
      * Initialize the container
      *
-     * @param args       args from calling class
+     * @param ofbizCommands command line arguments
      * @param configFile Location of master OFBiz configuration file
      * @throws org.ofbiz.base.container.ContainerException
      *
@@ -83,7 +84,7 @@ public class JavaMailContainer implements Container {
     public void init(String[] args, String name, String configFile) throws ContainerException {
         this.name = name;
         this.configFile = configFile;
-        this.stores = new LinkedHashMap<Store, Session>();
+        this.stores = new LinkedHashMap<>();
         this.pollTimer = Executors.newScheduledThreadPool(1);
     }
 
@@ -123,14 +124,12 @@ public class JavaMailContainer implements Container {
         for (ContainerConfig.Container.Property prop: configs) {
             Session session = this.makeSession(prop);
             Store store = this.getStore(session);
-            if (store != null) {
-                stores.put(store, session);
-                store.addStoreListener(new LoggingStoreListener());
-            }
+            stores.put(store, session);
+            store.addStoreListener(new LoggingStoreListener());
         }
 
         // start the polling timer
-        if (UtilValidate.isNotEmpty(stores)) {
+        if (stores != null) {
             pollTimer.scheduleAtFixedRate(new PollerTask(dispatcher, userLogin), timerDelay, timerDelay, TimeUnit.MILLISECONDS);
         } else {
             Debug.logWarning("No JavaMail Store(s) configured; poller disabled.", module);
@@ -163,7 +162,7 @@ public class JavaMailContainer implements Container {
         Map<String, ContainerConfig.Container.Property> clientProps = client.properties;
         if (clientProps != null) {
             for (ContainerConfig.Container.Property p: clientProps.values()) {
-                props.setProperty(p.name.toLowerCase(), p.value);
+                props.setProperty(p.name.toLowerCase(Locale.getDefault()), p.value);
             }
         }
         return Session.getInstance(props);
@@ -181,7 +180,9 @@ public class JavaMailContainer implements Container {
         // re-write the URLName including the password for this store
         if (store != null && store.getURLName() != null) {
             URLName urlName = this.updateUrlName(store.getURLName(), session.getProperties());
-            if (Debug.verboseOn()) Debug.logVerbose("URLName - " + urlName.toString(), module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("URLName - " + urlName.toString(), module);
+            }
             try {
                 store = session.getStore(urlName);
             } catch (NoSuchProviderException e) {
@@ -235,22 +236,22 @@ public class JavaMailContainer implements Container {
                 host = props.getProperty("mail.host");
             }
         }
-        
+
         // check the port
         int portProps = 0;
         String portStr = props.getProperty("mail." + protocol + ".port");
-        if (!UtilValidate.isEmpty(portStr)) {
+        if (UtilValidate.isNotEmpty(portStr)) {
             try {
-                portProps = Integer.valueOf(portStr);
+                portProps = Integer.parseInt(portStr);
             } catch (NumberFormatException e) {
                 Debug.logError("The port given in property mail." + protocol + ".port is wrong, please check", module);
             }
         }
         if (portProps == 0) {
             portStr = props.getProperty("mail.port");
-            if (!UtilValidate.isEmpty(portStr)) {
+            if (UtilValidate.isNotEmpty(portStr)) {
                 try {
-                    portProps = Integer.valueOf(props.getProperty("mail.port"));
+                    portProps = Integer.parseInt(props.getProperty("mail.port"));
                 } catch (NumberFormatException e) {
                     Debug.logError("The port given in property mail.port is wrong, please check", module);
                 }
@@ -260,12 +261,14 @@ public class JavaMailContainer implements Container {
         if (portProps != 0) {
             port = portProps;
         }
- 
-        if (Debug.verboseOn()) Debug.logVerbose("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
+
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
+        }
         return new URLName(protocol, host, port, file, userName, password);
     }
 
-    class LoggingStoreListener implements StoreListener {
+    static class LoggingStoreListener implements StoreListener {
 
         @Override
         public void notification(StoreEvent event) {
@@ -277,9 +280,13 @@ public class JavaMailContainer implements Container {
                 case StoreEvent.NOTICE:
                     typeString = "NOTICE: ";
                     break;
+                default:
+                    Debug.logWarning("There was a case error in LoggingStoreListener.notification", module);
             }
 
-            if (Debug.verboseOn()) Debug.logVerbose("JavaMail " + typeString + event.getMessage(), module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("JavaMail " + typeString + event.getMessage(), module);
+            }
         }
     }
 
@@ -295,7 +302,7 @@ public class JavaMailContainer implements Container {
 
         @Override
         public void run() {
-            if (UtilValidate.isNotEmpty(stores)) {
+            if (stores != null) {
                 for (Map.Entry<Store, Session> entry: stores.entrySet()) {
                     Store store = entry.getKey();
                     Session session = entry.getValue();
@@ -359,13 +366,19 @@ public class JavaMailContainer implements Container {
                         message.setFlag(Flags.Flag.SEEN, true);
                     } else {
                         this.processMessage(message, session);
-                        if (Debug.verboseOn()) Debug.logVerbose("Message from " + UtilMisc.toListArray(message.getFrom()) + " with subject [" + message.getSubject() + "]  has been processed." , module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Message from " + UtilMisc.toListArray(message.getFrom()) + " with subject [" + message.getSubject() + "]  has been processed." , module);
+                        }
                         message.setFlag(Flags.Flag.SEEN, true);
-                        if (Debug.verboseOn()) Debug.logVerbose("Message [" + message.getSubject() + "] is marked seen", module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Message [" + message.getSubject() + "] is marked seen", module);
+                        }
 
                         // delete the message after processing
                         if (deleteMail) {
-                            if (Debug.verboseOn()) Debug.logVerbose("Message [" + message.getSubject() + "] is being deleted", module);
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("Message [" + message.getSubject() + "] is being deleted", module);
+                            }
                             message.setFlag(Flags.Flag.DELETED, true);
                         }
                     }

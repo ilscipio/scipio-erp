@@ -16,13 +16,13 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/elrte.min.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/elrte-1.3/js/elrte.min.js") />
 <#if language?has_content && language != "en">
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!'en'}.js") /><#rt/>
+<@script src=makeContentUrl("/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!'en'}.js") /><#rt/>
 </#if>
 
-<link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
+<link href="<@contentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@contentUrl>" rel="stylesheet" type="text/css">
 
 <@script>
     jQuery(document).ready(loadTrees);
@@ -30,9 +30,9 @@
 
     var contentRoot = '${contentRoot!}';
     var webSiteId = '${webSiteId!}';
-    var editorUrl = '<@ofbizUrl>views/WebSiteCMSContent</@ofbizUrl>';
-    var aliasUrl = '<@ofbizUrl>views/WebSiteCMSPathAlias</@ofbizUrl>';
-    var metaUrl = '<@ofbizUrl>views/WebSiteCMSMetaInfo</@ofbizUrl>';
+    var editorUrl = '<@pageUrl>views/WebSiteCMSContent</@pageUrl>';
+    var aliasUrl = '<@pageUrl>views/WebSiteCMSPathAlias</@pageUrl>';
+    var metaUrl = '<@pageUrl>views/WebSiteCMSMetaInfo</@pageUrl>';
 
     function loadTrees() {
         createSubsitesTree();
@@ -459,7 +459,7 @@ function callMetaInfo(contentId) {
 
 <#-------------------------------------------------------------------------------------pathRemove function-->
     function pathRemove(websiteId, pathAlias, contentId) {
-        var remAliasUrl = '<@ofbizUrl>removeWebSitePathAliasJson</@ofbizUrl>';
+        var remAliasUrl = '<@pageUrl>removeWebSitePathAliasJson</@pageUrl>';
 
         jQuery.ajax({
                 url: remAliasUrl,

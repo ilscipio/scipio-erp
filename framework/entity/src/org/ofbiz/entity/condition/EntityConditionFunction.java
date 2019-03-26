@@ -69,10 +69,10 @@ public abstract class EntityConditionFunction extends EntityCondition {
     }
 
     public String getCode() {
-        if (codeString == null)
+        if (codeString == null) {
             return "null";
-        else
-            return codeString;
+        }
+        return codeString;
     }
 
     public int getId() {
@@ -86,9 +86,11 @@ public abstract class EntityConditionFunction extends EntityCondition {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EntityConditionFunction)) return false;
+        if (!(obj instanceof EntityConditionFunction)) {
+            return false;
+        }
         EntityConditionFunction otherFunc = (EntityConditionFunction) obj;
-        return this.idInt == otherFunc.idInt && (this.condition != null ? condition.equals(otherFunc.condition) : otherFunc.condition != null);
+        return this.idInt.equals(otherFunc.idInt) && (this.condition != null ? condition.equals(otherFunc.condition) : otherFunc.condition != null);
     }
 
     @Override

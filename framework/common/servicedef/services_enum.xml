@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>OFBiz Enum Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <service name="createEnumerationType" engine="entity-auto" invoke="create" default-entity-name="EnumerationType" auth="true">
+        <description>Create a EnumerationType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateEnumerationType" engine="entity-auto" invoke="update" default-entity-name="EnumerationType" auth="true">
+        <description>Update a EnumerationType</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteEnumerationType" engine="entity-auto" invoke="delete" default-entity-name="EnumerationType" auth="true">
+        <description>Delete a EnumerationType</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    
+</services>

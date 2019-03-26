@@ -20,25 +20,24 @@ package org.ofbiz.base.start;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.Runtime;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public final class InstrumenterWorker {
 
@@ -59,8 +58,10 @@ public final class InstrumenterWorker {
             for (File file: srcPaths) {
                 tmpUrls.add(file.toURI().toURL());
             }
-            ClassLoader tmpLoader = new URLClassLoader(tmpUrls.toArray(new URL[tmpUrls.size()]), InstrumenterWorker.class.getClassLoader());
-            instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).newInstance();
+            // SCIPIO: 2018-09-06: Added try-with-resources to ensure the URLClassLoader get closed
+            try (URLClassLoader tmpLoader = new URLClassLoader(tmpUrls.toArray(new URL[tmpUrls.size()]), InstrumenterWorker.class.getClassLoader())) {
+                instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).newInstance();
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return srcPaths;
@@ -149,7 +150,7 @@ public final class InstrumenterWorker {
         public File call() throws IOException {
             System.err.println(Thread.currentThread() + ":instrumenting " + path);
             String prefix = path.substring(0, path.length() - 4);
-            int slash = prefix.lastIndexOf("/");
+            int slash = prefix.lastIndexOf('/');
             if (slash != -1) prefix = prefix.substring(slash + 1);
             prefix += "-";
             File zipTmp = File.createTempFile("instrumented-" + prefix, path.substring(path.length() - 4));

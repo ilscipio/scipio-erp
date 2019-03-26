@@ -21,6 +21,7 @@ package org.ofbiz.shipment.thirdparty.dhl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -91,25 +93,25 @@ public class DhlServices {
      * @return XML string response from DHL
      * @throws DhlConnectException
      */
-    public static String sendDhlRequest(String xmlString, Delegator delegator, String shipmentGatewayConfigId, 
+    public static String sendDhlRequest(String xmlString, Delegator delegator, String shipmentGatewayConfigId,
             String resource, Locale locale) throws DhlConnectException {
         String conStr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "connectUrl", resource, "shipment.dhl.connect.url");
-        if (conStr == null) {
-            throw new DhlConnectException(UtilProperties.getMessage(resourceError, 
+        if (conStr.isEmpty()) {
+            throw new DhlConnectException(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlConnectUrlIncomplete", locale));
         }
 
         // xmlString should contain the auth document at the beginning
         // all documents require an <?xml version="1.0"?> header
         if (xmlString == null) {
-            throw new DhlConnectException(UtilProperties.getMessage(resourceError, 
+            throw new DhlConnectException(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlXmlCannotBeNull", locale));
         }
 
         // prepare the connect string
         conStr = conStr.trim();
 
-        String timeOutStr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "connectTimeout", 
+        String timeOutStr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "connectTimeout",
                 resource, "shipment.dhl.connect.timeout", "60");
         int timeout = 60;
         try {
@@ -130,12 +132,12 @@ public class DhlServices {
             response = http.post(xmlString);
         } catch (HttpClientException e) {
             Debug.logError(e, "Problem connecting with DHL server", module);
-            throw new DhlConnectException(UtilProperties.getMessage(resourceError, 
+            throw new DhlConnectException(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlConnectUrlProblem", UtilMisc.toMap("errorString", e), locale), e);
         }
 
         if (response == null) {
-            throw new DhlConnectException(UtilProperties.getMessage(resourceError, 
+            throw new DhlConnectException(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlReceivedNullResponse", locale));
         }
         if (Debug.verboseOn()) {
@@ -161,7 +163,7 @@ public class DhlServices {
         String shippingContactMechId = (String) context.get("shippingContactMechId");
         BigDecimal shippableWeight = (BigDecimal) context.get("shippableWeight");
 
-        if (shipmentMethodTypeId.equals("NO_SHIPPING")) {
+        if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("shippingEstimateAmount", null);
             return result;
@@ -174,7 +176,7 @@ public class DhlServices {
                     .where("shipmentMethodTypeId", shipmentMethodTypeId, "partyId", carrierPartyId, "roleTypeId", "CARRIER")
                     .queryOne();
             if (carrierShipmentMethod == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "FacilityShipmentDhlNoCarrierShipmentMethod",
                         UtilMisc.toMap("carrierPartyId", carrierPartyId, "shipmentMethodTypeId", shipmentMethodTypeId), locale));
             }
@@ -185,14 +187,14 @@ public class DhlServices {
 
         String resource = (String) context.get("serviceConfigProps");
         String shipmentGatewayConfigId = (String) context.get("shipmentGatewayConfigId");
-        
+
         // shipping credentials (configured in properties)
         String userid = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessUserId", resource, "shipment.dhl.access.userid");
         String password = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessPassword", resource, "shipment.dhl.access.password");
         String shippingKey = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessShippingKey", resource, "shipment.dhl.access.shippingKey");
         String accountNbr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr", resource, "shipment.dhl.access.accountNbr");
-        if ((shippingKey == null) || (accountNbr == null) || (shippingKey.length() == 0) || (accountNbr.length() == 0)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+        if ((shippingKey.length() == 0) || (accountNbr.length() == 0)) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlGatewayNotAvailable", locale));
         }
 
@@ -202,7 +204,7 @@ public class DhlServices {
             try {
                 shipToAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", shippingContactMechId).queryOne();
                 if (shipToAddress == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "FacilityShipmentUnableFoundShipToAddresss", locale));
                 }
             }
@@ -217,7 +219,7 @@ public class DhlServices {
                 try {
                     shippableWeight = new BigDecimal(tmpValue);
                 } catch (Exception e) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "FacilityShipmentDhlDefaultShippableWeightNotConfigured", locale));
                 }
             }
@@ -228,16 +230,16 @@ public class DhlServices {
             Debug.logWarning("DHL Estimate: Weight is less than 1 lb, submitting DHL minimum of 1 lb for estimate.", module);
             shippableWeight = BigDecimal.ONE;
         }
-        if ((dhlShipmentDetailCode.equals("G") && shippableWeight.compareTo(new BigDecimal("999")) > 0) || (shippableWeight.compareTo(new BigDecimal("150")) > 0)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+        if (("G".equals(dhlShipmentDetailCode) && shippableWeight.compareTo(new BigDecimal("999")) > 0) || (shippableWeight.compareTo(new BigDecimal("150")) > 0)) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlShippableWeightExceed", locale));
         }
-        String weight = (Integer.valueOf((int) shippableWeight.longValue())).toString();
+        String weight = (Integer.valueOf((int) shippableWeight.longValue())).toString(); // SCIPIO: 2018-10-09: TODO: REVIEW: Kept integer parsing, because removal of decimals is significant...
 
         // create AccessRequest XML doc using FreeMarker template
         String templateName = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "rateEstimateTemplate", resource, "shipment.dhl.template.rate.estimate");
-        if ((templateName == null) || (templateName.trim().length() == 0)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+        if (templateName.trim().length() == 0) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlShipmentTemplateLocationNotFound", locale));
         }
         StringWriter outWriter = new StringWriter();
@@ -261,7 +263,7 @@ public class DhlServices {
             ContentWorker.renderContentAsText(dispatcher, delegator, templateName, outWriter, inContext, locale, "text/plain", null, null, false);
         } catch (Exception e) {
             Debug.logError(e, "Cannot get DHL Estimate: Failed to render DHL XML Request.", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlShipmentTemplateError", locale));
         }
         String requestString = outWriter.toString();
@@ -280,8 +282,8 @@ public class DhlServices {
         catch (DhlConnectException e) {
             String uceErrMsg = "Error sending DHL request for DHL Service Rate: " + e.toString();
             Debug.logError(e, uceErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlShipmentTemplateSendingError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlShipmentTemplateSendingError",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
@@ -293,22 +295,22 @@ public class DhlServices {
         catch (SAXException e2) {
             String excErrMsg = "Error parsing the RatingServiceResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentFedexShipmentTemplateParsingError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentFedexShipmentTemplateParsingError",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         }
         catch (ParserConfigurationException e2) {
             String excErrMsg = "Error parsing the RatingServiceResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentFedexShipmentTemplateParsingError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentFedexShipmentTemplateParsingError",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         }
         catch (IOException e2) {
             String excErrMsg = "Error parsing the RatingServiceResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentFedexShipmentTemplateParsingError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentFedexShipmentTemplateParsingError",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         }
     }
@@ -327,18 +329,12 @@ public class DhlServices {
         }
         // handle Response element info
         Element responseElement = UtilXml.firstChildElement(rateResponseElement, "Shipment");
-        //Element responseResultElement = UtilXml.firstChildElement(responseElement, "Result");
         Element responseEstimateDetailElement = UtilXml.firstChildElement(responseElement, "EstimateDetail");
 
         DhlServices.handleErrors(responseElement, errorList, locale);
         if (UtilValidate.isNotEmpty(errorList)) {
             return ServiceUtil.returnError(errorList);
         }
-        
-        /*
-        String responseStatusCode = UtilXml.childElementValue(responseResultElement, "Code");
-        String responseStatusDescription = UtilXml.childElementValue(responseResultElement, "Desc");
-        */
 
         String dateGenerated = UtilXml.childElementValue(
                 responseEstimateDetailElement, "DateGenerated");
@@ -359,7 +355,7 @@ public class DhlServices {
         List<? extends Element> chargeNodeList = UtilXml.childElementList(responseChargesElement,
                 "Charge");
 
-        List<Map<String, String>> chargeList = new LinkedList<Map<String, String>>();
+        List<Map<String, String>> chargeList = new LinkedList<Map<String,String>>();
         if (UtilValidate.isNotEmpty(chargeNodeList)) {
             for (Element responseChargeElement: chargeNodeList) {
                 Map<String, String> charge = new HashMap<String, String>();
@@ -401,12 +397,12 @@ public class DhlServices {
         String resource = (String) context.get("serviceConfigProps");
         String shipmentGatewayConfigId = (String) context.get("shipmentGatewayConfigId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result;
         String postalCode = (String) context.get("postalCode");
         String accountNbr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr",
                 resource, "shipment.dhl.access.accountNbr");
-        if (accountNbr == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+        if (accountNbr.isEmpty()) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlAccessAccountNbrMandotoryForRegisterAccount", locale));
         }
         // create AccessRequest XML doc
@@ -426,8 +422,8 @@ public class DhlServices {
         } catch (IOException e) {
             String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
             Debug.logError(e, ioeErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlErrorAccessRequestXmlToString", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlErrorAccessRequestXmlToString",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
         // send the request
@@ -438,8 +434,8 @@ public class DhlServices {
         } catch (DhlConnectException e) {
             String uceErrMsg = "Error sending DHL request for DHL Register Account: " + e.toString();
             Debug.logError(e, uceErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlErrorSendingRequestRegisterAccount", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlErrorSendingRequestRegisterAccount",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
@@ -451,20 +447,20 @@ public class DhlServices {
         } catch (SAXException e2) {
             String excErrMsg = "Error parsing the RegisterAccountServiceSelectionResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         } catch (ParserConfigurationException e2) {
             String excErrMsg = "Error parsing the RegisterAccountServiceSelectionResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         } catch (IOException e2) {
             String excErrMsg = "Error parsing the RegisterAccountServiceSelectionResponse: " + e2.toString();
             Debug.logError(e2, excErrMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlErrorParsingRegisterAccountResponse",
                     UtilMisc.toMap("errorString", e2.toString()), locale));
         }
 
@@ -484,18 +480,11 @@ public class DhlServices {
         }
         // handle Response element info
         Element responseElement = UtilXml.firstChildElement(registerResponseElement, "Register");
-        //Element responseResultElement = UtilXml.firstChildElement(responseElement, "Result");
-
         DhlServices.handleErrors(responseElement, errorList, locale);
         if (UtilValidate.isNotEmpty(errorList)) {
             return ServiceUtil.returnError(errorList);
         }
-        //String responseStatusCode = UtilXml.childElementValue(responseResultElement, "Code");
-        //String responseStatusDescription = UtilXml.childElementValue(responseResultElement, "Desc");
-
         String responseShippingKey = UtilXml.childElementValue(responseElement,"ShippingKey");
-        //String responsePostalCode = UtilXml.childElementValue(responseElement,"PostalCode");
-
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("shippingKey", responseShippingKey);
         return result;
@@ -513,54 +502,53 @@ public class DhlServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
-        
+
         Map<String, Object> shipmentGatewayConfig = ShipmentServices.getShipmentGatewayConfigFromShipment(delegator, shipmentId, locale);
         String shipmentGatewayConfigId = (String) shipmentGatewayConfig.get("shipmentGatewayConfigId");
         String resource = (String) shipmentGatewayConfig.get("configProps");
         if (UtilValidate.isEmpty(shipmentGatewayConfigId) && UtilValidate.isEmpty(resource)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "FacilityShipmentDhlGatewayNotAvailable", locale));
         }
-        
-        String shipmentConfirmResponseString = null;
+
         try {
             GenericValue shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
             if (shipment == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "ProductShipmentNotFoundId", locale) + shipmentId);
             }
             GenericValue shipmentRouteSegment = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId).queryOne();
             if (shipmentRouteSegment == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "ProductShipmentRouteSegmentNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "ProductShipmentRouteSegmentNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
 
             if (!"DHL".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentDhlNotRouteSegmentCarrier", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentDhlNotRouteSegmentCarrier",
                         UtilMisc.toMap("shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentId", shipmentId), locale));
             }
 
             // add ShipmentRouteSegment carrierServiceStatusId, check before all DHL services
             if (UtilValidate.isNotEmpty(shipmentRouteSegment.getString("carrierServiceStatusId")) && !"SHRSCS_NOT_STARTED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentDhlRouteSegmentStatusNotStarted", 
-                        UtilMisc.toMap("shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentId", shipmentId, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentDhlRouteSegmentStatusNotStarted",
+                        UtilMisc.toMap("shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentId", shipmentId,
                                 "shipmentRouteSegmentStatus", shipmentRouteSegment.getString("carrierServiceStatusId")), locale));
             }
 
             // Get Origin Info
             GenericValue originPostalAddress = shipmentRouteSegment.getRelatedOne("OriginPostalAddress", false);
             if (originPostalAddress == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentRouteSegmentOriginPostalAddressNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentRouteSegmentOriginPostalAddressNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
             GenericValue originTelecomNumber = shipmentRouteSegment.getRelatedOne("OriginTelecomNumber", false);
             if (originTelecomNumber == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentRouteSegmentOriginTelecomNumberNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentRouteSegmentOriginTelecomNumberNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
             String originPhoneNumber = originTelecomNumber.getString("areaCode") + originTelecomNumber.getString("contactNumber");
@@ -574,16 +562,16 @@ public class DhlServices {
             // lookup the two letter country code (in the geoCode field)
             GenericValue originCountryGeo = originPostalAddress.getRelatedOne("CountryGeo", false);
             if (originCountryGeo == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentRouteSegmentOriginCountryGeoNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentRouteSegmentOriginCountryGeoNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
 
             // Get Dest Info
             GenericValue destPostalAddress = shipmentRouteSegment.getRelatedOne("DestPostalAddress", false);
             if (destPostalAddress == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentRouteSegmentDestPostalAddressNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentRouteSegmentDestPostalAddressNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
 
@@ -602,6 +590,9 @@ public class DhlServices {
 
             String recipientEmail = null;
             Map<String, Object> results = dispatcher.runSync("getPartyEmail", UtilMisc.toMap("partyId", shipment.get("partyIdTo"), "userLogin", userLogin));
+            if (ServiceUtil.isError(results)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
+            }
             if (results.get("emailAddress") != null) {
                 recipientEmail = (String) results.get("emailAddress");
             }
@@ -609,19 +600,19 @@ public class DhlServices {
             // lookup the two letter country code (in the geoCode field)
             GenericValue destCountryGeo = destPostalAddress.getRelatedOne("CountryGeo", false);
             if (destCountryGeo == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentRouteSegmentDestCountryGeoNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentRouteSegmentDestCountryGeoNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
 
             List<GenericValue> shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg", null, UtilMisc.toList("+shipmentPackageSeqId"), false);
             if (UtilValidate.isEmpty(shipmentPackageRouteSegs)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentPackageRouteSegsNotFound", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentPackageRouteSegsNotFound",
                         UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId), locale));
             }
             if (shipmentPackageRouteSegs.size() != 1) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "FacilityShipmentDhlMultiplePackagesNotSupported", locale));
             }
 
@@ -651,22 +642,9 @@ public class DhlServices {
             for (GenericValue shipmentPackageRouteSeg: shipmentPackageRouteSegs) {
                 GenericValue shipmentPackage = shipmentPackageRouteSeg.getRelatedOne("ShipmentPackage", false);
                 GenericValue shipmentBoxType = shipmentPackage.getRelatedOne("ShipmentBoxType", false);
-                /*
-                List<GenericValue> carrierShipmentBoxTypes = shipmentPackage.getRelated("CarrierShipmentBoxType", UtilMisc.toMap("partyId", "DHL"), null, false);
-                GenericValue carrierShipmentBoxType = null;
-                if (carrierShipmentBoxTypes.size() > 0) {
-                    carrierShipmentBoxType = carrierShipmentBoxTypes.get(0);
-                }
-                */
 
-                // TODO: determine what default UoM is (assuming inches) - there should be a defaultDimensionUomId in Facility
                 if (shipmentBoxType != null) {
-                    /*
-                    GenericValue dimensionUom = shipmentBoxType.getRelatedOne("DimensionUom", false);
-                    String length = shipmentBoxType.get("boxLength").toString();
-                    String width = shipmentBoxType.get("boxWidth").toString();
-                    String height = shipmentBoxType.get("boxHeight").toString();
-                     */
+                    // TODO: determine what default UoM is (assuming inches) - there should be a defaultDimensionUomId in Facility
                 }
 
                 // next step is weight determination, so skip if we have a billing weight
@@ -678,7 +656,7 @@ public class DhlServices {
                 } else {
                     // use default weight if available
                     try {
-                        packageWeight = new BigDecimal(EntityUtilProperties.getPropertyValue(shipmentPropertiesFile, "shipment.default.weight.value", delegator));
+                        packageWeight = EntityUtilProperties.getPropertyAsBigDecimal(shipmentPropertiesFile, "shipment.default.weight.value", BigDecimal.ZERO);
                     } catch (NumberFormatException ne) {
                         Debug.logWarning("Default shippable weight not configured (shipment.default.weight.value)", module);
                         packageWeight = BigDecimal.ONE;
@@ -691,6 +669,9 @@ public class DhlServices {
                     weightUomId = "WT_lb"; // TODO: this should be specified in a properties file
                 }
                 results = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", DHL_WEIGHT_UOM_ID, "originalValue", packageWeight));
+                if (ServiceUtil.isError(results)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
+                }
                 if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) || (results.get("convertedValue") == null)) {
                     Debug.logWarning("Unable to convert weights for shipmentId " + shipmentId , module);
                     packageWeight = BigDecimal.ONE;
@@ -707,7 +688,7 @@ public class DhlServices {
                 weight = packageWeight;
             }
             // want the rounded weight as a string, so we use the "" + int shortcut
-            String roundedWeight = weight.setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString();
+            String roundedWeight = weight.setScale(0, RoundingMode.HALF_UP).toPlainString();
 
             // translate shipmentMethodTypeId to DHL service code
             String shipmentMethodTypeId = shipmentRouteSegment.getString("shipmentMethodTypeId");
@@ -716,8 +697,8 @@ public class DhlServices {
                     .where("shipmentMethodTypeId", shipmentMethodTypeId, "partyId", "DHL", "roleTypeId", "CARRIER")
                     .queryOne();
             if (carrierShipmentMethod == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentDhlNoCarrierShipmentMethod", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentDhlNoCarrierShipmentMethod",
                         UtilMisc.toMap("carrierPartyId", "DHL", "shipmentMethodTypeId", shipmentMethodTypeId), locale));
             }
             dhlShipmentDetailCode = carrierShipmentMethod.getString("carrierServiceCode");
@@ -727,27 +708,27 @@ public class DhlServices {
             String password = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessPassword", resource, "shipment.dhl.access.password");
             String shippingKey = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessShippingKey", resource, "shipment.dhl.access.shippingKey");
             String accountNbr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr", resource, "shipment.dhl.access.accountNbr");
-            if ((shippingKey == null) || (accountNbr == null) || (shippingKey.length() == 0) || (accountNbr.length() == 0)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            if ((shippingKey.length() == 0) || (accountNbr.length() == 0)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "FacilityShipmentDhlGatewayNotAvailable", locale));
             }
 
             // label image preference (PNG or GIF)
             String labelImagePreference = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "labelImageFormat", resource, "shipment.dhl.label.image.format");
-            if (labelImagePreference == null) {
+            if (labelImagePreference.isEmpty()) {
                 Debug.logInfo("shipment.dhl.label.image.format not specified, assuming PNG", module);
                 labelImagePreference="PNG";
-            } else if (!(labelImagePreference.equals("PNG") || labelImagePreference.equals("GIF"))) {
+            } else if (!("PNG".equals(labelImagePreference) || "GIF".equals(labelImagePreference))) {
                 Debug.logError("Illegal shipment.dhl.label.image.format: " + labelImagePreference, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentDhlUnknownLabelImageFormat", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentDhlUnknownLabelImageFormat",
                         UtilMisc.toMap("labelImagePreference", labelImagePreference), locale));
             }
 
             // create AccessRequest XML doc using FreeMarker template
             String templateName = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "rateEstimateTemplate", resource, "shipment.dhl.template.rate.estimate");
-            if ((templateName == null) || (templateName.trim().length() == 0)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            if ((templateName.trim().length() == 0)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "FacilityShipmentDhlRateEstimateTemplateNotConfigured", locale));
             }
             StringWriter outWriter = new StringWriter();
@@ -767,7 +748,7 @@ public class DhlServices {
             inContext.put("streetLine2", destPostalAddress.getString("address2"));
             inContext.put("city", destPostalAddress.getString("city"));
             inContext.put("state", destPostalAddress.getString("stateProvinceGeoId"));
-            
+
             // DHL ShipIT API does not accept ZIP+4
             if ((destPostalAddress.getString("postalCode") != null) && (destPostalAddress.getString("postalCode").length() > 5)) {
                 inContext.put("postalCode", destPostalAddress.getString("postalCode").substring(0,5));
@@ -783,7 +764,7 @@ public class DhlServices {
                 ContentWorker.renderContentAsText(dispatcher, delegator, templateName, outWriter, inContext, locale, "text/plain", null, null, false);
             } catch (Exception e) {
                 Debug.logError(e, "Cannot confirm DHL shipment: Failed to render DHL XML Request.", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "FacilityShipmentFedexRateTemplateRenderingError", locale));
             }
             String requestString = outWriter.toString();
@@ -801,32 +782,21 @@ public class DhlServices {
             } catch (DhlConnectException e) {
                 String uceErrMsg = "Error sending DHL request for DHL Service Rate: " + e.toString();
                 Debug.logError(e, uceErrMsg, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentFedexRateTemplateSendingError", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "FacilityShipmentFedexRateTemplateSendingError",
                         UtilMisc.toMap("errorString", e.toString()), locale));
             }
             // pass to handler method
             return handleDhlShipmentConfirmResponse(responseString, shipmentRouteSegment, shipmentPackageRouteSegs, locale);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            if (shipmentConfirmResponseString != null) {
-                Debug.logError("Got XML ShipmentConfirmRespose: " + shipmentConfirmResponseString, module);
-                return ServiceUtil.returnError(UtilMisc.toList(
-                        UtilProperties.getMessage(resourceError, 
-                                "FacilityShipmentFedexRateTemplateReadingError", 
-                                UtilMisc.toMap("errorString", e.toString()), locale),
-                        UtilProperties.getMessage(resourceError, 
-                                "FacilityShipmentFedexShipmentConfirmResponse", 
-                                UtilMisc.toMap("shipmentConfirmResponseString", shipmentConfirmResponseString), locale)));
-            } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                        "FacilityShipmentFedexRateTemplateReadingError", 
-                        UtilMisc.toMap("errorString", e.toString()), locale));
-            }
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentFedexRateTemplateReadingError",
+                    UtilMisc.toMap("errorString", e.toString()), locale));
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentFedexRateTemplateReadingError", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentFedexRateTemplateReadingError",
                     UtilMisc.toMap("errorString", e.toString()), locale));
         }
     }
@@ -866,9 +836,9 @@ public class DhlServices {
         String encodedImageString = UtilXml.childElementValue(labelElement, "Image");
         if (encodedImageString == null) {
             Debug.logError("Cannot find response DHL shipment label.  Rate response document is: " + rateResponseString, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "FacilityShipmentDhlShipmentLabelError", 
-                    UtilMisc.toMap("shipmentPackageRouteSeg", shipmentPackageRouteSeg, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "FacilityShipmentDhlShipmentLabelError",
+                    UtilMisc.toMap("shipmentPackageRouteSeg", shipmentPackageRouteSeg,
                             "rateResponseString", rateResponseString), locale));
         }
 
@@ -880,7 +850,7 @@ public class DhlServices {
                 continue;
             sb.append(encodedImageString.charAt(i));
         }
-        byte[] labelBytes = Base64.base64Decode(sb.toString().getBytes());
+        byte[] labelBytes = Base64.base64Decode(sb.toString().getBytes(UtilIO.getUtf8()));
 
         if (labelBytes != null) {
             // store in db blob
@@ -898,22 +868,10 @@ public class DhlServices {
         shipmentRouteSegment.put("carrierServiceStatusId", "SHRSCS_CONFIRMED");
         shipmentRouteSegment.store();
 
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resourceError, 
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resourceError,
                 "FacilityShipmentDhlShipmentConfirmed", locale));
     }
 
-    /*
-    private static BigDecimal getWeight(List<Map<String, Object>> shippableItemInfo) {
-        BigDecimal totalWeight = BigDecimal.ZERO;
-        if (shippableItemInfo != null) {
-            for (Map<String, Object> itemInfo: shippableItemInfo) {
-                BigDecimal weight = ((BigDecimal) itemInfo.get("weight"));
-                totalWeight = totalWeight.add(weight);
-            }
-        }
-        return totalWeight;
-    }
-    */
 
     public static Document createAccessRequestDocument(Delegator delegator, String shipmentGatewayConfigId, String resource) {
         Document eCommerceRequestDocument = UtilXml.makeEmptyXmlDocument("eCommerce");
@@ -927,7 +885,7 @@ public class DhlServices {
                 eCommerceRequestDocument);
         return eCommerceRequestDocument;
     }
-    
+
     public static void handleErrors(Element responseElement, List<Object> errorList, Locale locale) {
         Element faultsElement = UtilXml.firstChildElement(responseElement,
                 "Faults");
@@ -942,18 +900,18 @@ public class DhlServices {
                 if (UtilValidate.isEmpty(errorSource)) {
                     errorSource = UtilXml.childElementValue(errorElement, "Context");
                 }
-                errorMessageBuf.append(UtilProperties.getMessage(resourceError, "FacilityShipmentDhlErrorMessage", 
+                errorMessageBuf.append(UtilProperties.getMessage(resourceError, "FacilityShipmentDhlErrorMessage",
                         UtilMisc.toMap("errorCode", errorCode, "errorDescription", errorDescription), locale));
                 if (UtilValidate.isNotEmpty(errorSource)) {
-                    errorMessageBuf.append(UtilProperties.getMessage(resourceError, 
-                            "FacilityShipmentDhlErrorMessageElement", 
+                    errorMessageBuf.append(UtilProperties.getMessage(resourceError,
+                            "FacilityShipmentDhlErrorMessageElement",
                             UtilMisc.toMap("errorSource", errorSource), locale));
                 }
                 errorList.add(errorMessageBuf.toString());
             }
         }
     }
-    
+
     private static String getShipmentGatewayConfigValue(Delegator delegator, String shipmentGatewayConfigId, String shipmentGatewayConfigParameterName,
                                                         String resource, String parameterName) {
         String returnValue = "";
@@ -977,7 +935,7 @@ public class DhlServices {
         }
         return returnValue;
     }
-    
+
     private static String getShipmentGatewayConfigValue(Delegator delegator, String shipmentGatewayConfigId, String shipmentGatewayConfigParameterName,
                                                         String resource, String parameterName, String defaultValue) {
         String returnValue = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, shipmentGatewayConfigParameterName, resource, parameterName);

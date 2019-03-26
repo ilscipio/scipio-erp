@@ -1,35 +1,22 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
   <@section title=uiLabelMap.OrderReceiveOfflinePayments>
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
+      <a href="<@pageUrl>authview/${donePage}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
       <a href="javascript:document.paysetupform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
 
-      <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">
+      <form method="post" action="<@pageUrl>receiveOfflinePayments/${donePage}</@pageUrl>" name="paysetupform">
         <#if requestParameters.workEffortId??>
             <input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}" />
         </#if>
         <input type="hidden" name="partyId" value="${orderRoles[0].partyId}" />
 
         <#if paymentMethods?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.PaymentMethod}</@th>
@@ -52,7 +39,7 @@ under the License.
         </#if>
         
         <#if paymentMethodTypes?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th width="30%" align="right">${uiLabelMap.OrderPaymentType}</@th>
@@ -75,7 +62,7 @@ under the License.
         </#if>
       </form>
 
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
+      <a href="<@pageUrl>authview/${donePage}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
       <a href="javascript:document.paysetupform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
   
   </@section>

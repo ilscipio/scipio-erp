@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -31,14 +18,14 @@ under the License.
 </#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editpersonform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <#-- SCIPIO: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
     but the view override is inconsistent with the other edit*.ftl pages. -->
-  <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editpersonform">    
+  <form id="editpersonform1" method="post" action="<@pageUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@pageUrl>" name="editpersonform">    
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   

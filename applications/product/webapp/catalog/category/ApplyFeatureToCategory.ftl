@@ -1,7 +1,7 @@
 <#-- TODO: License -->
 
     <@section title=uiLabelMap.ProductApplyFeatureGroupToCategory>
-        <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" name="addNewCategoryForm">
+        <form method="post" action="<@pageUrl>createProductFeatureCategoryAppl</@pageUrl>" name="addNewCategoryForm">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@row>

@@ -12,6 +12,12 @@
 <#function rawString vals...>
   <#return vals?join("")>
 </#function>
+<#function raw vals...>
+  <#return vals?join("")>
+</#function>
+<#function toRawString vals...>
+  <#return vals?join("")>
+</#function>
 
 <#-- WARN: DUPLICATION -->
 <#function escapeVal value lang opts={}>
@@ -20,9 +26,9 @@
   </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+    <#local value = raw(value)><#-- performs coercion to string if needed -->
   <#else>
-    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local value = raw(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
   <#switch lang?lower_case>
@@ -105,9 +111,9 @@
   </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+    <#local value = raw(value)><#-- performs coercion to string if needed -->
   <#else>
-    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local value = raw(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
   <#if !(opts.strict!false)>

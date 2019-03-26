@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -144,7 +143,7 @@ public class ServerHitBin {
         if (delegator == null) {
             throw new IllegalArgumentException("In countHit could not find a delegator or delegatorName to work from");
         }
-        
+
         String id = makeIdTenantAware(baseId, delegator);
 
         ServerHitBin bin = null;
@@ -220,10 +219,10 @@ public class ServerHitBin {
                     serverHitBin.set("hitTypeId", ServerHitBin.typeIds[bin.type]);
                     serverHitBin.set("binStartDateTime", new java.sql.Timestamp(bin.startTime));
                     serverHitBin.set("binEndDateTime", new java.sql.Timestamp(bin.endTime));
-                    serverHitBin.set("numberHits", Long.valueOf(bin.getNumberHits()));
-                    serverHitBin.set("totalTimeMillis", Long.valueOf(bin.getTotalRunningTime()));
-                    serverHitBin.set("minTimeMillis", Long.valueOf(bin.getMinTime()));
-                    serverHitBin.set("maxTimeMillis", Long.valueOf(bin.getMaxTime()));
+                    serverHitBin.set("numberHits", bin.getNumberHits());
+                    serverHitBin.set("totalTimeMillis", bin.getTotalRunningTime());
+                    serverHitBin.set("minTimeMillis", bin.getMinTime());
+                    serverHitBin.set("maxTimeMillis", bin.getMaxTime());
                     // get localhost ip address and hostname to store
                     if (VisitHandler.address != null) {
                         serverHitBin.set("serverIpAddress", VisitHandler.address.getHostAddress());
@@ -497,9 +496,9 @@ public class ServerHitBin {
                 Debug.logInfo("The Visit GenericValue stored in the client session does not exist in the database, not storing server hit.", module);
                 return;
             }
-            
+
             Debug.logInfo("Visit delegatorName=" + visit.getDelegator().getDelegatorName() + ", ServerHitBin delegatorName=" + this.delegator.getDelegatorName(), module);
-            
+
             GenericValue serverHit = delegator.makeValue("ServerHit");
 
             serverHit.set("visitId", visitId);
@@ -513,14 +512,14 @@ public class ServerHitBin {
                 }
             }
             serverHit.set("contentId", this.id);
-            serverHit.set("runningTimeMillis", Long.valueOf(runningTime));
+            serverHit.set("runningTimeMillis", runningTime);
 
             String fullRequestUrl = UtilHttp.getFullRequestUrl(request);
 
-            serverHit.set("requestUrl", fullRequestUrl.length() > 250 ? fullRequestUrl.substring(0, 250) : fullRequestUrl);
+            serverHit.set("requestUrl", fullRequestUrl);
             String referrerUrl = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
 
-            serverHit.set("referrerUrl", referrerUrl.length() > 250 ? referrerUrl.substring(0, 250) : referrerUrl);
+            serverHit.set("referrerUrl", referrerUrl);
 
             // get localhost ip address and hostname to store
             if (VisitHandler.address != null) {
@@ -544,7 +543,22 @@ public class ServerHitBin {
             // every server hit even with equal startTimes but that could be
             // solved adding a counter to the ServerHit's PK (a counter
             // counting multiple hits at the same startTime).
-            serverHit.create();
+            
+            // SCIPIO: 2018-10-12: Create often fails with duplicate PK due to entitymodel design despite comments above,
+            // due to AJAX requests on pages.
+            // So prevent entity engine from logging errors; it throws GenericEntityException anyway.
+            // TODO?: in future this should be optimized/replaced using Delegator/GenericValue/SqlProcessor logging options. 
+            //serverHit.create();
+            if (Debug.verboseOn()) {
+                serverHit.create();
+            } else {
+                try {
+                    Debug.setThreadLevelDisableWarningError();
+                    serverHit.create();
+                } finally {
+                    Debug.restoreThreadLevelAllow();
+                }
+            }
         }
     }
 }

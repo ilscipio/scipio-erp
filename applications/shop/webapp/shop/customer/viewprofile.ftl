@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -41,12 +28,12 @@ under the License.
 <@menu type="button">
   <#-- SCIPIO: No store in the world will encourage to view expired records. Use direct link for testing. WARN: SHOW_OLD still implemented by screen.
   <#if showOld>
-    <@menuitem type="link" href=makeOfbizUrl("viewprofile") class="+${styles.action_run_sys!} ${styles.action_hide!}" text=uiLabelMap.PartyHideOld />
+    <@menuitem type="link" href=makePageUrl("viewprofile") class="+${styles.action_run_sys!} ${styles.action_hide!}" text=uiLabelMap.PartyHideOld />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("viewprofile?SHOW_OLD=true") class="+${styles.action_run_sys!} ${styles.action_show!}" text=uiLabelMap.PartyShowOld />
+    <@menuitem type="link" href=makePageUrl("viewprofile?SHOW_OLD=true") class="+${styles.action_run_sys!} ${styles.action_show!}" text=uiLabelMap.PartyShowOld />
   </#if>-->
   <#if ((productStore.enableDigProdUpload)!) == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("digitalproductlist") class="${styles.link_nav!} ${styles.action_import!}" text=uiLabelMap.EcommerceDigitalProductUpload />
+    <@menuitem type="link" href=makePageUrl("digitalproductlist") class="${styles.link_nav!} ${styles.action_import!}" text=uiLabelMap.EcommerceDigitalProductUpload />
   </#if>
 </@menu>
 <#-- ============================================================= -->
@@ -66,7 +53,7 @@ under the License.
                 <#else>
                   <#assign itemText = uiLabelMap.CommonCreate>
                 </#if>
-                <@menuitem type="link" href=makeOfbizUrl("editperson") text=itemText />
+                <@menuitem type="link" href=makePageUrl("editperson") text=itemText />
             </@menu>
         </#macro>
         <@section title=uiLabelMap.PartyPersonalInformation menuContent=menuContent>
@@ -95,7 +82,7 @@ under the License.
     <@tab title=uiLabelMap.EcommerceAccountInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
-                <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
+                <@menuitem type="link" href=makePageUrl("changepassword") text=uiLabelMap.PartyChangePassword />
             </@menu>
         </#macro>
         <@section title=uiLabelMap.EcommerceAccountInformation menuContent=menuContent><#-- title="${rawLabel('CommonUsername')} & ${rawLabel('CommonPassword')}" -->
@@ -116,12 +103,12 @@ under the License.
     <@tab title=uiLabelMap.PartyContactInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
-                <@menuitem type="link" href=makeOfbizUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
+                <@menuitem type="link" href=makePageUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
             </@menu>
         </#macro>
         <@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>
           <#if partyContactMechValueMaps?has_content>
-            <@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="0" -->
+            <@table type="data-complex">
               <@thead>
                 <@tr valign="bottom">
                   <@th>${uiLabelMap.PartyContactType}</@th>
@@ -203,7 +190,7 @@ under the License.
                       </#if>
                       <#-- SCIPIO: needless information
                       <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>-->
-                      <#if partyContactMech.thruDate??><div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div></#if>
+                      <#if partyContactMech.thruDate??><div><em>${uiLabelMap.CommonDeleted}:&nbsp;${partyContactMech.thruDate.toString()}</em></div></#if>
                     </@td>
                     <@td>
                       <#if (partyContactMech.allowSolicitation!) == "Y">
@@ -223,7 +210,7 @@ under the License.
                           <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)! />
                           <#if !partyContactMechPurpose.thruDate?? && ((contactMechPurposeType.contactMechPurposeTypeId)!) == "SHIPPING_LOCATION" && (((profiledefs.defaultShipAddr)!"") != contactMech.contactMechId)>
                             <@menuitem type="generic"> 
-                              <form name="defaultShippingAddressForm" style="display:inline;" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                              <form name="defaultShippingAddressForm" style="display:inline;" method="post" action="<@pageUrl>setprofiledefault/viewprofile</@pageUrl>">
                                 <input type="hidden" name="productStoreId" value="${productStoreId}" />
                                 <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                                 <input type="hidden" name="partyId" value="${party.partyId}" />
@@ -232,9 +219,9 @@ under the License.
                             </@menuitem>
                           </#if>
                         </#list>
-                        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?contactMechId=${contactMech.contactMechId}") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
+                        <@menuitem type="link" href=makePageUrl("editcontactmech?contactMechId=${contactMech.contactMechId}") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
                         <@menuitem type="link" href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire>
-                          <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
+                          <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@pageUrl>deleteContactMech</@pageUrl>">
                             <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
                           </form>
                         </@menuitem>
@@ -254,14 +241,14 @@ under the License.
     <@tab title=uiLabelMap.AccountingPaymentMethodInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
-                <@menuitem type="link" href=makeOfbizUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
-                <@menuitem type="link" href=makeOfbizUrl("editgiftcard") text=uiLabelMap.PartyCreateNewGiftCard />
-                <@menuitem type="link" href=makeOfbizUrl("editeftaccount") text=uiLabelMap.PartyCreateNewEftAccount />
+                <@menuitem type="link" href=makePageUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
+                <@menuitem type="link" href=makePageUrl("editgiftcard") text=uiLabelMap.PartyCreateNewGiftCard />
+                <@menuitem type="link" href=makePageUrl("editeftaccount") text=uiLabelMap.PartyCreateNewEftAccount />
             </@menu>
         </#macro>
         <@section title=uiLabelMap.AccountingPaymentMethodInformation menuContent=menuContent>
           <#if paymentMethodValueMaps?has_content>
-              <@table type="data-complex"> <#-- orig: width="100%" cellpadding="2" cellspacing="0" border="0" -->
+              <@table type="data-complex">
                 <#list paymentMethodValueMaps as paymentMethodValueMap>
                   <#assign paymentMethod = paymentMethodValueMap.paymentMethod! />
                   <#assign creditCard = paymentMethodValueMap.creditCard! />
@@ -276,17 +263,17 @@ under the License.
                         ${uiLabelMap.AccountingCreditCard}:
                         <@formattedCreditCardDetail creditCard=creditCard paymentMethod=paymentMethod />
                         <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
-                        <#assign updateLink = makeOfbizUrl("editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
+                        <#assign updateLink = makePageUrl("editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
                     <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
                         ${uiLabelMap.AccountingGiftCard}: 
                         <@formattedGiftCardDetail giftCard=giftCard paymentMethod=paymentMethod />
                         <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
-                        <#assign updateLink = makeOfbizUrl("editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
+                        <#assign updateLink = makePageUrl("editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}")>
                     <#elseif (paymentMethod.paymentMethodTypeId!) == "EFT_ACCOUNT">
                         ${uiLabelMap.AccountingEFTAccount}: 
                         <@formattedEftAccountDetail eftAccount=eftAccount paymentMethod=paymentMethod />
                         <@formattedPayMethGeneralDetail paymentMethod=paymentMethod />
-                      <#assign updateLink = makeOfbizUrl("editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}")>
+                      <#assign updateLink = makePageUrl("editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}")>
                     </#if>
                         <#if ((profiledefs.defaultPayMeth)!"") == paymentMethod.paymentMethodId>
                           <br/><strong>[${uiLabelMap.EcommerceIsDefault}]</strong>
@@ -299,7 +286,7 @@ under the License.
                         <#else>-->
                         <#if ((profiledefs.defaultPayMeth)!"") != paymentMethod.paymentMethodId>
                           <@menuitem type="generic" class="+${styles.action_run_sys!} ${styles.action_updatestatus!}">
-                            <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
+                            <form name="defaultPaymentMethodForm" method="post" action="<@pageUrl>setprofiledefault/viewprofile</@pageUrl>">
                               <input type="hidden" name="productStoreId" value="${productStoreId}" />
                               <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
                               <input type="hidden" name="partyId" value="${party.partyId}" />
@@ -310,7 +297,7 @@ under the License.
                         <#if updateLink?has_content>
                           <@menuitem type="link" href=updateLink  class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.CommonUpdate />
                         </#if>
-                        <@menuitem type="link" href=makeOfbizUrl("deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}") class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire />
+                        <@menuitem type="link" href=makePageUrl("deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}") class="+${styles.action_run_sys!} ${styles.action_terminate!}" text=uiLabelMap.CommonExpire />
                       </@menu>
                     </@td>
                   </@tr>
@@ -335,15 +322,15 @@ under the License.
             </@menu>
         </#macro>
         <@section title=uiLabelMap.EcommerceDefaultShipmentMethod><#--menuContent=menuContent-->
-          <form name="setdefaultshipmeth" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>" method="post">
+          <form name="setdefaultshipmeth" action="<@pageUrl>setprofiledefault/viewprofile</@pageUrl>" method="post">
           <@fields type="default-compact">
             <input type="hidden" name="productStoreId" value="${productStoreId!}" />
             <input type="hidden" name="partyId" value="${(userLogin.partyId)!}" />
             <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
               <#list carrierShipMethods as shipMeth>
-                <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
+                <#assign shippingMethod = raw(shipMeth.shipmentMethodTypeId!) + "@" + raw(shipMeth.partyId) />
                 <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
-                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((raw(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
               </#list>
               <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
             <#else>
@@ -360,7 +347,7 @@ under the License.
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?
 <@section title=uiLabelMap.EcommerceFileManager>
-    <@table type="fields"> <#-orig: width="100%" border="0" cellpadding="1"->
+    <@table type="fields">
       <#if partyContent?has_content>
         <#list partyContent as contentRole>
         <#assign content = contentRole.getRelatedOne("Content", false) />
@@ -368,7 +355,7 @@ under the License.
         <#assign mimeType = content.getRelatedOne("MimeType", true)! />
         <#assign status = content.getRelatedOne("StatusItem", true) />
           <@tr>
-            <@td><a href="<@ofbizUrl>img?imgId=${content.dataResourceId!}</@ofbizUrl>" class="${link_nav_info_id!}">${content.contentId}</a></@td>
+            <@td><a href="<@pageUrl>img?imgId=${content.dataResourceId!}</@pageUrl>" class="${link_nav_info_id!}">${content.contentId}</a></@td>
             <@td>${content.contentName!}</@td>
             <@td>${(contentType.get("description",locale))!}</@td>
             <@td>${(mimeType.description)!}</@td>
@@ -380,7 +367,7 @@ under the License.
                 <input name="contentId" type="hidden" value="${contentRole.contentId}"/>
                 <input name="roleTypeId" type="hidden" value="${contentRole.roleTypeId}"/>
               </form>
-              <a href="<@ofbizUrl>img?imgId=${content.dataResourceId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+              <a href="<@pageUrl>img?imgId=${content.dataResourceId!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
               <a href="javascript:document.removeContent_${contentRole.contentId}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
             </@td>
           </@tr>
@@ -392,7 +379,7 @@ under the License.
     <div>&nbsp;</div>
     <@heading>${uiLabelMap.EcommerceUploadNewFile}</@heading>
     <div>
-      <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
+      <form method="post" enctype="multipart/form-data" action="<@pageUrl>uploadPartyContent</@pageUrl>">
       <div>
         <input type="hidden" name="partyId" value="${party.partyId}"/>
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
@@ -421,7 +408,7 @@ under the License.
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?
 <@section title=uiLabelMap.PartyContactLists>
-    <@table type="data-complex"> <#-orig: width="100%" border="0" cellpadding="1" cellspacing="0"->
+    <@table type="data-complex">
       <@tr>
         <@th>${uiLabelMap.EcommerceListName}</@th>
         <#-<@th>${uiLabelMap.OrderListType}</@th>->
@@ -448,7 +435,7 @@ under the License.
         <@td>&nbsp;</@td>
         <@td>
           <#if ((contactListParty.statusId!) == "CLPT_ACCEPTED")>            
-            <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistRejectForm${contactListParty_index}">
+            <form method="post" action="<@pageUrl>updateContactListParty</@pageUrl>" name="clistRejectForm${contactListParty_index}">
             <div>
               <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
               <input type="hidden" name="productStoreId" value="${productStoreId!}" />
@@ -461,7 +448,7 @@ under the License.
               </div>
             </form>
           <#elseif ((contactListParty.statusId!) == "CLPT_PENDING")>
-            <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
+            <form method="post" action="<@pageUrl>updateContactListParty</@pageUrl>" name="clistAcceptForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>
               <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
@@ -473,7 +460,7 @@ under the License.
               </div>
             </form>
           <#elseif ((contactListParty.statusId!) == "CLPT_REJECTED")>
-            <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistPendForm${contactListParty_index}">
+            <form method="post" action="<@pageUrl>updateContactListParty</@pageUrl>" name="clistPendForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>
               <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
@@ -489,7 +476,7 @@ under the License.
       </#list>
     </@table>
     <div>
-      <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="clistPendingForm">
+      <form method="post" action="<@pageUrl>createContactListParty</@pageUrl>" name="clistPendingForm">
         <div>
         <input type="hidden" name="partyId" value="${party.partyId}"/>
         <input type="hidden" name="statusId" value="CLPT_PENDING"/>
@@ -534,7 +521,7 @@ under the License.
             <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
               <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey />
             </#if>
-            <@td class="+${styles.text_right!}"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="${styles.link_nav!}">${surveyLabel}</a></@td>
+            <@td class="+${styles.text_right!}"><a href="<@pageUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@pageUrl>" class="${styles.link_nav!}">${surveyLabel}</a></@td>
           <#else>
           &nbsp;
           </#if>

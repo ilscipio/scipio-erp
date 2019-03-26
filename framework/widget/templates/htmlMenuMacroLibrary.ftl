@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
@@ -395,6 +382,24 @@ Only those not marked DEPRECATED should still be used.
     <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
     <#local dummy = setRequestVar("renderMenuHiddenFormContent", renderMenuHiddenFormContent+hiddenFormContent)>
   </#if>
+  <#-- 2018-09-04: TODO: 
+  <#if uniqueItemName?has_content && "layered-modal" == linkType>
+    <#local params = "{\"presentation\":\"layer\" ">
+    <#if parameterList?has_content>
+      <#list parameterList as parameter>
+        <#local params += ",\"${parameter.name}\": \"${parameter.value}\"">
+      </#list>
+    </#if>
+    <#local params += "}">
+    <a href="javascript:void(0);" id="${uniqueItemName}_link"
+       data-dialog-params='${params}'
+       data-dialog-width="${width}"
+       data-dialog-height="${height}"
+       data-dialog-url="${linkUrl}"
+       <#if text?has_content>data-dialog-title="${text}"</#if>
+       <#if style?has_content>class="${style}"</#if>>
+    <#if text?has_content>${text}</#if></a>
+  -->
   <#local innerContent> <#-- SCIPIO: WARN: this capture is only safe because nested sub-menus are outside link (outside this call) -->
     <#if imgArgs?has_content>
       <@renderImage src=imgArgs.src id=imgArgs.id style=imgArgs.style width=imgArgs.width height=imgArgs.height 
@@ -500,7 +505,7 @@ Only those not marked DEPRECATED should still be used.
     </#if>
         <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
             <#- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
-            <#local dashboardLink><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
+            <#local dashboardLink><a href="<@pageUrl>main</@pageUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
             <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=(dashboardLink!) /><@renderMenuItemEnd/>->
   </#if>
    <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#- pushing info to stack, so that this can be used by subsequently -> 

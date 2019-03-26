@@ -31,9 +31,9 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;field-to-list&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cfieldtolist%3E}}">Mini-language Reference</a>
-*/
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
+ */
 public final class FieldToList extends MethodOperation {
 
     private final FlexibleMapAccessor<Object> fieldFma;
@@ -42,7 +42,9 @@ public final class FieldToList extends MethodOperation {
     public FieldToList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<field-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<field-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "list");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field", "list");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field", "list");

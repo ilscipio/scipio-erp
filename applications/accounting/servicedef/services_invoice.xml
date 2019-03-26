@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -134,6 +121,12 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
+    <service name="createInvoiceStatus" engine="entity-auto" default-entity-name="InvoiceStatus" invoke="create" auth="true">
+        <description>Create a Invoice Status Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <override name="statusDate" mode="IN" optional="true"/>
+    </service>
+
     <service name="createInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
         <description>Create a new Invoice Role Record</description>
@@ -153,6 +146,17 @@ under the License.
         <permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
         <auto-attributes mode="OUT" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateInvoiceTerm" engine="entity-auto" default-entity-name="InvoiceTerm" invoke="update">
+        <description>Update Invoice (Item) Term Record</description>
+        <permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="deleteInvoiceTerm" engine="entity-auto" default-entity-name="InvoiceTerm" invoke="delete">
+        <description>Delete Invoice (Item) Term Record</description>
+        <permission-service service-name="acctgInvoicePermissionCheck" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <service name="createInvoiceForOrderAllItems" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForOrderAllItems">
@@ -291,6 +295,11 @@ under the License.
         <auto-attributes entity-name="InvoiceContactMech" include="pk" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="deleteInvoiceContactMech" engine="entity-auto" invoke="delete" default-entity-name="InvoiceContactMech">
+        <description>Delete a ContactMech for an invoice</description>
+        <permission-service service-name="acctgInvoicePermissionCheck" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="calculateInvoicedAdjustmentTotal" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="calculateInvoicedAdjustmentTotal">
         <description>Calculate the previously invoiced amount for an OrderAdjustment</description>
@@ -404,7 +413,6 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceContent" auth="true">
         <description>Remove Content From Invoice</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     
     <service name="createSimpleTextContentForInvoice" default-entity-name="InvoiceContent" engine="simple"
@@ -437,5 +445,151 @@ under the License.
         <attribute mode="INOUT" name="organizationPartyId" type="String" optional="false"/>
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="true" />
     </service>
+    <service name="createInvoiceItemAttribute" default-entity-name="InvoiceItemAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceItemAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInvoiceItemAttribute" default-entity-name="InvoiceItemAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceItemAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceItemAttribute" default-entity-name="InvoiceItemAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceItemAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createInvoiceTermAttribute" default-entity-name="InvoiceTermAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInvoiceTermAttribute" default-entity-name="InvoiceTermAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceTermAttribute" default-entity-name="InvoiceTermAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceTermAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
     
+    <service name="createInvoiceTypeAttr" default-entity-name="InvoiceTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInvoiceTypeAttr" default-entity-name="InvoiceTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceTypeAttr" default-entity-name="InvoiceTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <!-- InvoiceAttribute services -->
+    <service name="createInvoiceAttribute" default-entity-name="InvoiceAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceAttribute</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateInvoiceAttribute" default-entity-name="InvoiceAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceAttribute" default-entity-name="InvoiceAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceAttribute</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- InvoiceItemAssocType services -->
+    <service name="createInvoiceItemAssocType" default-entity-name="InvoiceItemAssocType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceItemAssocType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateInvoiceItemAssocType" default-entity-name="InvoiceItemAssocType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceItemAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceItemAssocType" default-entity-name="InvoiceItemAssocType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceItemAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- InvoiceNote services -->
+    <service name="createInvoiceNote" default-entity-name="InvoiceNote" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceNote</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="deleteInvoiceNote" default-entity-name="InvoiceNote" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceNote</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createInvoiceContentType" default-entity-name="InvoiceContentType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceContentType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateInvoiceContentType" default-entity-name="InvoiceContentType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceContentType" default-entity-name="InvoiceContentType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceContentType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- InvoiceItemTypeAttr services -->
+    <service name="createInvoiceItemTypeAttr" default-entity-name="InvoiceItemTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create InvoiceItemTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInvoiceItemTypeAttr" default-entity-name="InvoiceItemTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update InvoiceItemTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceItemTypeAttr" default-entity-name="InvoiceItemTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete InvoiceItemTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createInvoiceItemTypeMap" default-entity-name="InvoiceItemTypeMap" engine="entity-auto" invoke="create" auth="true">
+        <description>Create InvoiceItemTypeMap</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInvoiceItemTypeMap" default-entity-name="InvoiceItemTypeMap" engine="entity-auto" invoke="update" auth="true">
+        <description>Update InvoiceItemTypeMap</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceItemTypeMap" default-entity-name="InvoiceItemTypeMap" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete InvoiceItemTypeMap</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createInvoiceType" default-entity-name="InvoiceType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a InvoiceType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateInvoiceType" default-entity-name="InvoiceType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a InvoiceType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInvoiceType" default-entity-name="InvoiceType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a InvoiceType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

@@ -38,11 +38,6 @@
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://commonext/widget/ofbizsetup/CommonScreens.xml</param-value>
     </context-param>
-    <context-param>
-        <description>BeanShell Script Location</description>
-        <param-name>scriptLocationPath</param-name>
-        <param-value>/WEB-INF/bsh</param-value>
-    </context-param>
     
     <filter>
         <display-name>ContextFilter</display-name>
@@ -88,7 +83,7 @@
     </servlet-mapping>
     
     <session-config>
-        <session-timeout>60</session-timeout>    <!-- in minutes -->
+        <session-timeout>60</session-timeout> <!-- in minutes -->
         <cookie-config>
             <http-only>true</http-only>
             <secure>true</secure>

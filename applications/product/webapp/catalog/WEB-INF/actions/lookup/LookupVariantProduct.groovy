@@ -70,7 +70,7 @@ variants.each { variantId ->
 }
 context.variantProducts = variantProducts;
 
-if (security.hasEntityPermission("CATALOG", "_CREATE", session)) {
+if (security.hasEntityPermission("CATALOG", "_CREATE", request)) {
     if (selectedFeatureTypeValues.size() == featureTypes.size() && variants.size() == 0) {
         context.productFeatureIds = productFeatureIds;
         context.productVariantId = productVariantId;

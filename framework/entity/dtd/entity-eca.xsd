@@ -31,6 +31,7 @@ under the License.
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="condition"/>
                     <xs:element ref="condition-field"/>
+                    <xs:element ref="condition-service"/>
                 </xs:choice>
                 <xs:choice minOccurs="1" maxOccurs="unbounded">
                     <xs:element ref="set"/>
@@ -69,14 +70,8 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="run-on-error" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="run-on-error" type="xs:boolean" default="false"/>
+        <xs:attribute name="enabled" type="xs:boolean" default="true"/>
     </xs:attributeGroup>
     <xs:element name="condition">
         <xs:complexType>
@@ -188,6 +183,14 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="condition-service">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-service"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-service">
+        <xs:attribute type="xs:string" name="service-name"/>
+    </xs:attributeGroup>
     <xs:element name="action">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.action"/>
@@ -203,38 +206,10 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="result-to-value" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="abort-on-error" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="rollback-on-error" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="persist" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="result-to-value" type="xs:boolean" default="true"/>
+        <xs:attribute name="abort-on-error" type="xs:boolean" default="false"/>
+        <xs:attribute name="rollback-on-error" type="xs:boolean" default="false"/>
+        <xs:attribute name="persist" type="xs:boolean" default="false"/>
         <xs:attribute type="xs:string" name="run-as-user" default="system"/>
         <xs:attribute type="xs:string" name="value-attr">
             <xs:annotation>
@@ -246,12 +221,3 @@ under the License.
         </xs:attribute>
     </xs:attributeGroup>
 </xs:schema>
-<!--
-    <entity-eca>
-        <eca entity="Product" operation="create" event="return">
-          <condition field-name="foo" operator="equals" rhs="1"/>
-          <action service="testScv" mode="sync"/>
-          <action service="testScv2" mode="sync"/>
-        </eca>
-    </entity-eca>
--->

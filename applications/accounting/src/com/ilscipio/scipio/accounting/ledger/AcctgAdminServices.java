@@ -40,7 +40,7 @@ public class AcctgAdminServices {
      * Custom update PartyAcctgPreference only meant to be used during setup.
      * Allows fields not allowed in the stock service to be safely updated when
      * no related data exist in the system
-     * 
+     *
      * @param dctx
      * @param context
      * @return

@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section title=uiLabelMap.ProductPicklistManage>
   
   <#if picklistInfoList?has_content>
-    <@paginate mode="content" url=makeOfbizUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>
+    <@paginate mode="content" url=makePageUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>
 
       <#list picklistInfoList as picklistInfo>
         <#assign picklist = picklistInfo.picklist>
@@ -29,7 +16,7 @@ under the License.
         <div>
           <span>${uiLabelMap.ProductPickList}</span> ${picklist.picklistId}
           <span>${uiLabelMap.CommonDate}</span> ${picklist.picklistDate}
-          <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
+          <form method="post" action="<@pageUrl>updatePicklist</@pageUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
             <select name="statusId">
@@ -42,7 +29,7 @@ under the License.
             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
+          <a href="<@pageUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
@@ -62,7 +49,7 @@ under the License.
         </#list>
         <div style="margin-left: 15px;">
           <span>${uiLabelMap.ProductAssignPicker}</span>
-          <form method="post" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
+          <form method="post" action="<@pageUrl>createPicklistRole</@pageUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
             <input type="hidden" name="roleTypeId" value="PICKER"/>
@@ -94,14 +81,14 @@ under the License.
               <#if picklistBinInfo.primaryOrderHeader??><span>${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
               <#if picklistBinInfo.primaryOrderItemShipGroup??><span>${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
               <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></#if>
-              <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@ofbizUrl>deletePicklistBin</@ofbizUrl>">
+              <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@pageUrl>deletePicklistBin</@pageUrl>">
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
               </form>
             </div>
             <div style="margin-left: 30px;">
               <span>${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}</span>
-              <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
+              <form method="post" action="<@pageUrl>updatePicklistBin</@pageUrl>" style="display: inline;">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <span>${uiLabelMap.ProductLocation} ${uiLabelMap.CommonNbr}</span>
@@ -118,7 +105,7 @@ under the License.
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
               <div style="margin-left: 30px;">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                  <@thead>
                   <@tr class="header-row">
                     <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -145,7 +132,7 @@ under the License.
                       <@td>${picklistItem.quantity}</@td>
                       <#if !picklistItemInfo.itemIssuanceList?has_content>
                         <@td>
-                          <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>deletePicklistItem</@ofbizUrl>">
+                          <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@pageUrl>deletePicklistItem</@pageUrl>">
                             <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
                             <input type="hidden" name="orderId" value="${picklistItemInfo.picklistItem.orderId}"/>
                             <input type="hidden" name="orderItemSeqId" value="${picklistItemInfo.picklistItem.orderItemSeqId}"/>
@@ -171,7 +158,7 @@ under the License.
               </div>
               <#if picklistBinInfo.productStore.managedByLot?? && picklistBinInfo.productStore.managedByLot == "Y">
                 <div style="margin-left: 30px;">
-                  <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                  <@table type="data-list" autoAltRows=true>
                     <@thead>
                     <@tr class="header-row">                   
                           <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -188,7 +175,7 @@ under the License.
                         <#assign picklistItem = picklistItemInfo.picklistItem>
                         <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
                         <#if !picklistItemInfo.product.lotIdFilledIn?has_content || picklistItemInfo.product.lotIdFilledIn != "Forbidden">
-                          <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>editPicklistItem</@ofbizUrl>">
+                          <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@pageUrl>editPicklistItem</@pageUrl>">
                             <@tr valign="middle">
                               <@td>${picklistItem.orderId}</@td>
                               <@td>${picklistItem.shipGroupSeqId}</@td>

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if !eftAccount??>
@@ -26,8 +13,8 @@ under the License.
     <#macro saveCancelMenu>
       <@menu type="button">
         <#-- this was used at bottom in original FTL, is an error?
-        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text=uiLabelMap.CommonCancelDone />
+        <a href="<@pageUrl>backHome</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
+        <@menuitem type="link" href=makePageUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text=uiLabelMap.CommonCancelDone />
         <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
@@ -35,9 +22,9 @@ under the License.
     <#--<@saveCancelMenu />-->
         
     <#if !eftAccount??>
-      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
+      <form method="post" action="<@pageUrl>createEftAccount?DONE_PAGE=${donePage}</@pageUrl>" name="editeftaccountform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
+      <form method="post" action="<@pageUrl>updateEftAccount?DONE_PAGE=${donePage}</@pageUrl>" name="editeftaccountform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
@@ -57,10 +44,10 @@ under the License.
         <@field type="generic" label=(uiLabelMap.PartyBillingAddress!)>
           <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+            <a href="<@pageUrl>editcontactmech</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
-            <@table type="data-list" autoAltRows=true> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
             <@tbody>
             <#if curPostalAddress??>
               <@tr>

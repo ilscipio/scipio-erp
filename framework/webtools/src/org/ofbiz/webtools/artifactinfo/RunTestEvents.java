@@ -20,9 +20,9 @@ package org.ofbiz.webtools.artifactinfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ofbiz.base.container.ContainerException;
 
-import org.ofbiz.testtools.*;
+import org.ofbiz.base.container.ContainerException;
+import org.ofbiz.testtools.TestRunContainer;
 
 /**
  * Event used to run a Junit test
@@ -32,7 +32,7 @@ public class RunTestEvents {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String runTest(HttpServletRequest request, HttpServletResponse response) throws ContainerException {
-        
+
         String component = request.getParameter("compName");
         String suiteName = request.getParameter("suiteName");
         String caseName = request.getParameter("caseName");
@@ -56,4 +56,3 @@ public class RunTestEvents {
         return result;
     }
 }
-

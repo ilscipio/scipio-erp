@@ -30,15 +30,15 @@ import org.ofbiz.base.util.template.FtlScriptFormatter;
 class OneShotMacro {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private final boolean enabled;
     private State state;
-    
+
     private final Map<String, OneShotMacro.Entry> macroNameMap;
-    
+
     private final String macroName;
     private final FtlScriptFormatter ftlFmt;
-    
+
     public OneShotMacro(boolean enabled, String macroName, Map<String, Entry> macroNameMap, FtlScriptFormatter ftlFmt) {
         this.enabled = enabled;
         this.macroName = macroName;
@@ -46,11 +46,11 @@ class OneShotMacro {
         this.state = new State(macroName, ftlFmt);
         this.ftlFmt = (ftlFmt != null) ? ftlFmt : new FtlScriptFormatter();
     }
-    
+
     public OneShotMacro(boolean enabled, String macroName, Map<String, Entry> macroNameMap) {
         this(enabled, macroName, macroNameMap, null);
     }
-    
+
 //    /**
 //     * Deep copy constructor.
 //     */
@@ -61,15 +61,15 @@ class OneShotMacro {
 //        this.state = new State(macroName, ftlFmt);
 //        this.ftlFmt = other.ftlFmt;
 //    }
-    
+
     public boolean isEnabled() {
         return enabled;
     }
-    
+
     public void resetState() {
         state = new State(macroName, ftlFmt);
     }
-    
+
     /**
      * Returns true if ready to produce macro invocation - enabled and returned to root level.
      */
@@ -85,12 +85,12 @@ class OneShotMacro {
     public StringBuffer getBuffer() {
         return state.sb;
     }
-    
+
     @Override
     public String toString() {
         return state.sb.toString();
     }
-    
+
     public void setMarker() {
         state.setMarker();
     }
@@ -137,7 +137,7 @@ class OneShotMacro {
         }
         entry.appendData(state, macroParameters, origWriter);
     }
-    
+
     static class State {
         public StringBuffer sb = new StringBuffer();
         public String macroName;
@@ -145,77 +145,77 @@ class OneShotMacro {
         private Map<String, VarTextValuePair> substituteVarMap = new HashMap<>();
         private int subsituteVarCounter = 0;
         public FtlScriptFormatter ftlFmt;
-        
+
         // SPECIAL: these try to remember the state at a marked location, very hackish for now...
-        // TODO: REVIEW: NOT making copy of substituteVarMap for now... we need to leave it as is for our purposes... 
+        // TODO: REVIEW: NOT making copy of substituteVarMap for now... we need to leave it as is for our purposes...
         private int markerIndex = -1;
         private List<LevelInfo> markerLevelStack = null;
         private int firstValueSinceMarkerIndex = -1;
-        
+
         // this is added just before the final "/>"
         private StringBuffer extraRootMacroArgStr = new StringBuffer();
-        
+
         public State(String macroName, FtlScriptFormatter ftlFmt) {
             this.macroName = macroName;
             this.levelStack = LevelInfo.makeStack();
             this.ftlFmt = ftlFmt;
         }
-        
+
         public LevelInfo getLevelInfo() {
             return levelStack.get(levelStack.size() - 1);
         }
-        
+
         public void pushLevelInfo(LevelInfo levelInfo) {
             levelStack.add(levelInfo);
         }
-        
+
         public LevelInfo popLevelInfo() {
             return levelStack.remove(levelStack.size() - 1);
         }
-        
+
         public boolean isRootLevel() {
             return (levelStack.size() <= 1);
         }
-        
+
         public boolean isParentRootLevel() {
             return (levelStack.size() == 2);
         }
-        
+
         public boolean isHasItems() {
             return (levelStack.get(levelStack.size() - 1)).hasItems;
         }
-        
+
         public boolean isList() {
             return (levelStack.get(levelStack.size() - 1)).currListVarName != null;
         }
-        
+
         public String addSubstituteVarText(String varName, String text) {
             final String identifier = "##SCIPIO_SUBS_" + subsituteVarCounter;
             subsituteVarCounter++;
             substituteVarMap.put(identifier, new VarTextValuePair(varName, text));
             return identifier;
         }
-        
+
         public VarTextValuePair getSubsituteTextForId(String identifier) {
             return substituteVarMap.get(identifier);
         }
-        
+
         public void setMarker() {
             this.markerIndex = sb.length();
             this.markerLevelStack = LevelInfo.cloneStack(levelStack);
             this.firstValueSinceMarkerIndex = -1;
         }
-        
+
         public String getBufferFromMarker() {
             if (markerIndex < 0) throw new IllegalStateException("no marker present");
             return sb.substring(markerIndex);
         }
-        
+
         public String getBufferFromFirstValueSinceMarker() {
             if (firstValueSinceMarkerIndex < 0) throw new IllegalStateException("no marker present");
             return sb.substring(firstValueSinceMarkerIndex);
         }
-        
+
         /**
          * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
          */
@@ -224,7 +224,7 @@ class OneShotMacro {
             sb.setLength(markerIndex);
             this.levelStack = LevelInfo.cloneStack(markerLevelStack);
         }
-        
+
         /**
          * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
          */
@@ -233,7 +233,7 @@ class OneShotMacro {
             this.markerLevelStack = null;
             this.firstValueSinceMarkerIndex = -1;
         }
-        
+
         /**
          * WARN: NO ESCAPING - CALLER ESCAPES
          */
@@ -244,7 +244,7 @@ class OneShotMacro {
             extraRootMacroArgStr.append(valueStr);
         }
     }
-    
+
     private static class VarTextValuePair {
         public final String varName;
         public final String text;
@@ -254,7 +254,7 @@ class OneShotMacro {
             this.text = text;
         }
     }
-    
+
 
     static class LevelInfo {
         public boolean hasItems;    // needed for proper adding of commas
@@ -276,7 +276,7 @@ class OneShotMacro {
             this.hasItems = other.hasItems;
             this.currListVarName = other.currListVarName;
         }
-        
+
         public static List<LevelInfo> makeStack() {
             List<LevelInfo> newStack = new ArrayList<>();
             newStack.add(new LevelInfo());
@@ -290,7 +290,7 @@ class OneShotMacro {
             return newStack;
         }
     }
-    
+
     public static enum VarType {
         LIST,
         SINGLE
@@ -304,7 +304,7 @@ class OneShotMacro {
 
         protected final VarType varType;
         protected final String varName;
-        
+
         public Entry(VarType varType, String varName) {
             this.varType = varType;
             this.varName = varName;
@@ -315,9 +315,9 @@ class OneShotMacro {
         }
 
         public abstract void appendData(OneShotMacro.State state, Map<String, Object> macroParameters, Appendable origWriter);
-        
+
     }
-    
+
     /**
      * Translation for "open" sub-macro invocations (with nested content).
      * <p>
@@ -327,7 +327,7 @@ class OneShotMacro {
         public BeginEntry(VarType varType, String varName) {
             super(varType, varName);
         }
-    
+
         @Override
         public void appendData(State state, Map<String, Object> macroParameters, Appendable origWriter) {
             StringBuffer sb = state.sb;
@@ -379,7 +379,7 @@ class OneShotMacro {
         public SingleEntry(VarType varType, String varName) {
             super(varType, varName);
         }
-    
+
         @Override
         public void appendData(State state, Map<String, Object> macroParameters, Appendable origWriter) {
             if (origWriter instanceof StringWriter) {
@@ -411,7 +411,7 @@ class OneShotMacro {
                 sb.append(' ');
                 String name = parameter.getKey();
                 Object value = parameter.getValue();
-                
+
                 // WARNING: SPECIAL CASE for substitute vars...
                 if ((value instanceof String) && ((String) value).startsWith("##") && state.getSubsituteTextForId((String) value) != null) {
                     VarTextValuePair substituteVar = state.getSubsituteTextForId((String) value);
@@ -434,8 +434,8 @@ class OneShotMacro {
         }
         return hasItems;
     }
-    
-    
+
+
     static boolean appendMacroMapArg(StringBuffer sb, State state, Map<String, Object> map, boolean close) {
         sb.append('{');
         boolean hasItems = false;
@@ -446,7 +446,7 @@ class OneShotMacro {
                 }
                 String name = parameter.getKey();
                 Object value = parameter.getValue();
-                
+
                 // WARNING: SPECIAL CASE for substitute vars...
                 if ((value instanceof String) && ((String) value).startsWith("##") && state.getSubsituteTextForId((String) value) != null) {
                     VarTextValuePair substituteVar = state.getSubsituteTextForId((String) value);
@@ -503,7 +503,7 @@ class OneShotMacro {
             }
         }
     }
-    
+
     static void appendArgName(State state, VarType varType, String varName) {
         StringBuffer sb = state.sb;
         if (state.isParentRootLevel()) {
@@ -522,15 +522,15 @@ class OneShotMacro {
             sb.append("\":");
         }
     }
-    
+
     static void appendListOpen(State state, VarType varType, String varName) {
         state.sb.append("[");
         state.pushLevelInfo(new LevelInfo(false, varName));
     }
-    
+
     static void appendListClose(State state, VarType varType, String varName) {
         state.sb.append("]");
         state.popLevelInfo();
     }
-    
+
 }

@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.payment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -81,20 +82,12 @@ public class PaymentGatewayServices {
     public static final String REFUND_SERVICE_TYPE = "PRDS_PAY_REFUND";
     public static final String CREDIT_SERVICE_TYPE = "PRDS_PAY_CREDIT";
     private static final int TX_TIME = 300;
-    private static BigDecimal ZERO = BigDecimal.ZERO;
-    private static int decimals;
-    private static int rounding;
-    public final static String resource = "AccountingUiLabels";
+    public static final int decimals = UtilNumber.getBigDecimalScale("order.decimals");
+    public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
+    public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
+    public static final String resource = "AccountingUiLabels";
     public static final String resourceError = "AccountingErrorUiLabels";
     public static final String resourceOrder = "OrderUiLabels";
-    
-    static {
-        decimals = UtilNumber.getBigDecimalScale("order.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
-
-        // set zero to the proper scale
-        if (decimals != -1) ZERO = ZERO.setScale(decimals);
-    }
 
     /**
      * Authorizes a single order preference with an option to specify an amount. The result map has the Booleans
@@ -115,12 +108,12 @@ public class PaymentGatewayServices {
         // validate overrideAmount if its available
         if (overrideAmount != null) {
             if (overrideAmount.compareTo(BigDecimal.ZERO) < 0) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingPaymentAmountIsNegative",
                         UtilMisc.toMap("overrideAmount", overrideAmount), locale));
             }
             if (overrideAmount.compareTo(BigDecimal.ZERO) == 0) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingPaymentAmountIsZero",
                         UtilMisc.toMap("overrideAmount", overrideAmount), locale));
             }
@@ -133,8 +126,8 @@ public class PaymentGatewayServices {
             orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -145,17 +138,17 @@ public class PaymentGatewayServices {
         // get the process attempts so far
         Long procAttempt = orderPaymentPreference.getLong("processAttempt");
         if (procAttempt == null) {
-            procAttempt = Long.valueOf(0);
+            procAttempt = 0L;
         }
 
         // update the process attempt count
-        orderPaymentPreference.set("processAttempt", Long.valueOf(procAttempt.longValue() + 1));
+        orderPaymentPreference.set("processAttempt", procAttempt + 1);
         try {
             orderPaymentPreference.store();
             orderPaymentPreference.refresh();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingProblemGettingOrderPaymentPreferences", locale));
         }
 
@@ -241,7 +234,7 @@ public class PaymentGatewayServices {
                                             orderPaymentPreference.set("paymentMethodId", otherPaymentMethodAndCreditCard.getString("paymentMethodId"));
                                             Map<String, Object> authRetryResult = authPayment(dispatcher, userLogin, orh, orderPaymentPreference, totalRemaining, reAuth, transAmount);
                                             try {
-                                                boolean processRetryResult = processResult(dctx, authPaymentResult, userLogin, 
+                                                boolean processRetryResult = processResult(dctx, authPaymentResult, userLogin,
                                                         orderPaymentPreference, locale);
 
                                                 if (processRetryResult) {
@@ -306,8 +299,8 @@ public class PaymentGatewayServices {
             }
         } catch (GeneralException e) {
             Debug.logError(e, "Error processing payment authorization", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingPaymentCannotBeAuthorized", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingPaymentCannotBeAuthorized",
                     UtilMisc.toMap("errroString", e.toString()), locale));
         }
     }
@@ -321,10 +314,10 @@ public class PaymentGatewayServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         boolean reAuth = false;
         if (context.get("reAuth") != null) {
-            reAuth = ((Boolean)context.get("reAuth")).booleanValue();
+            reAuth = (Boolean) context.get("reAuth");
         }
         // get the order header and payment preferences
         GenericValue orderHeader = null;
@@ -352,7 +345,7 @@ public class PaymentGatewayServices {
 
         // make sure we have a OrderHeader
         if (orderHeader == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -363,7 +356,7 @@ public class PaymentGatewayServices {
         // loop through and auth each order payment preference
         int finished = 0;
         int hadError = 0;
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
         for (GenericValue paymentPref : paymentPrefs) {
             if (reAuth && "PAYMENT_AUTHORIZED".equals(paymentPref.getString("statusId"))) {
                 String paymentConfig = null;
@@ -381,13 +374,16 @@ public class PaymentGatewayServices {
                     continue;
                 }
             }
-            Map<String, Object> authContext = new HashMap<String, Object>();
+            Map<String, Object> authContext = new HashMap<>();
             authContext.put("orderPaymentPreferenceId", paymentPref.getString("orderPaymentPreferenceId"));
             authContext.put("userLogin", context.get("userLogin"));
 
             Map<String, Object> results = null;
             try {
                 results = dispatcher.runSync("authOrderPaymentPreference", authContext);
+                if (ServiceUtil.isError(results)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
+                }
             } catch (GenericServiceException se) {
                 Debug.logError(se, "Error in calling authOrderPaymentPreference from authOrderPayments", module);
                 hadError += 1;
@@ -403,10 +399,10 @@ public class PaymentGatewayServices {
                 messages.add("Could not authorize OrderPaymentPreference [" + paymentPref.getString("orderPaymentPreferenceId") + "] for order [" + orderId + "]: " + results.get(ModelService.ERROR_MESSAGE));
                 continue;
             }
-            if (((Boolean) results.get("finished")).booleanValue()) {
+            if ((Boolean) results.get("finished")) {
                 finished += 1;
             }
-            if (((Boolean) results.get("errors")).booleanValue()) {
+            if ((Boolean) results.get("errors")) {
                 hadError += 1;
             }
             if (results.get("messages") != null) {
@@ -474,12 +470,10 @@ public class PaymentGatewayServices {
         }
 
         // make the process context
-        Map<String, Object> processContext = new HashMap<String, Object>();
+        Map<String, Object> processContext = new HashMap<>();
 
         // get the visit record to obtain the client's IP address
         GenericValue orderHeader = orh.getOrderHeader();
-        //if (orderHeader == null) {}
-
         String visitId = orderHeader.getString("visitId");
         GenericValue visit = null;
         if (visitId != null) {
@@ -532,7 +526,9 @@ public class PaymentGatewayServices {
         // format the decimal
         processAmount = processAmount.setScale(decimals, rounding);
 
-        if (Debug.verboseOn()) Debug.logVerbose("Charging amount: " + processAmount, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Charging amount: " + processAmount, module);
+        }
         processContext.put("processAmount", processAmount);
 
         // invoke the processor
@@ -548,13 +544,16 @@ public class PaymentGatewayServices {
             // if we are not trying other expire dates OR if we are and the date is after today, then run the service
             if (!tryOtherExpDates || UtilValidate.isDateAfterToday(creditCard.getString("expireDate"))) {
                 processorResult = dispatcher.runSync(serviceName, processContext, TX_TIME, true);
+                if (ServiceUtil.isError(processorResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(processorResult));
+                }
             }
 
             // try other expire dates if the expireDate is not after today, or if we called the auth service and resultBadExpire = true
             if (tryOtherExpDates && (!UtilValidate.isDateAfterToday(creditCard.getString("expireDate")) || (processorResult != null && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))))) {
                 // try adding 2, 3, 4 years later with the same month
                 String expireDate = creditCard.getString("expireDate");
-                int dateSlash1 = expireDate.indexOf("/");
+                int dateSlash1 = expireDate.indexOf('/');
                 String month = expireDate.substring(0, dateSlash1);
                 String year = expireDate.substring(dateSlash1 + 1);
 
@@ -564,24 +563,33 @@ public class PaymentGatewayServices {
                 creditCard.set("expireDate", month + "/" + year);
                 // don't need to set back in the processContext, it's already there: processContext.put("creditCard", creditCard);
                 processorResult = dispatcher.runSync(serviceName, processContext, TX_TIME, true);
+                if (ServiceUtil.isError(processorResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(processorResult));
+                }
 
                 // note that these additional tries will only be done if the service return is not an error, in that case we let it pass through to the normal error handling
-                if (!ServiceUtil.isError(processorResult) && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))) {
+                if (ServiceUtil.isSuccess(processorResult) && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))) {
                     // okay, try one more year...
                     year = StringUtil.addToNumberString(year, 1);
                     creditCard.set("expireDate", month + "/" + year);
                     processorResult = dispatcher.runSync(serviceName, processContext, TX_TIME, true);
+                    if (ServiceUtil.isError(processorResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(processorResult));
+                    }
                 }
 
-                if (!ServiceUtil.isError(processorResult) && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))) {
+                if (ServiceUtil.isSuccess(processorResult) && Boolean.TRUE.equals(processorResult.get("resultBadExpire"))) {
                     // okay, try one more year... and this is the last try
                     year = StringUtil.addToNumberString(year, 1);
                     creditCard.set("expireDate", month + "/" + year);
                     processorResult = dispatcher.runSync(serviceName, processContext, TX_TIME, true);
+                    if (ServiceUtil.isError(processorResult)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(processorResult));
+                    }
                 }
 
                 // at this point if we have a successful result, let's save the new creditCard expireDate
-                if (!ServiceUtil.isError(processorResult) && Boolean.TRUE.equals(processorResult.get("authResult"))) {
+                if (ServiceUtil.isSuccess(processorResult) && Boolean.TRUE.equals(processorResult.get("authResult"))) {
                     // TODO: this is bad; we should be expiring the old card and creating a new one instead of editing it
                     creditCard.store();
                 }
@@ -722,8 +730,8 @@ public class PaymentGatewayServices {
                 orderId =  (String) context.get("orderId");
             }
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
 
@@ -758,16 +766,16 @@ public class PaymentGatewayServices {
         }
 
         // iterate over the prefs and release each one
-        List<GenericValue> finished = new LinkedList<GenericValue>();
+        List<GenericValue> finished = new LinkedList<>();
         for (GenericValue pPref : paymentPrefs) {
             Map<String, Object> releaseContext = UtilMisc.toMap("userLogin", userLogin, "orderPaymentPreferenceId", pPref.getString("orderPaymentPreferenceId"));
             Map<String, Object> releaseResult = null;
             try {
                 releaseResult = dispatcher.runSync("releaseOrderPaymentPreference", releaseContext);
             } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem calling releaseOrderPaymentPreference service for orderPaymentPreferenceId" + 
+                Debug.logError(e, "Problem calling releaseOrderPaymentPreference service for orderPaymentPreferenceId" +
                         paymentPref.getString("orderPaymentPreferenceId"), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " +
                         paymentPref.getString("orderPaymentPreferenceId"));
             }
@@ -815,7 +823,7 @@ public class PaymentGatewayServices {
         pgCredit.set("transactionDate", UtilDateTime.nowTimestamp());
         pgCredit.set("currencyUomId", currencyUomId);
         // create the internal messages
-        List<GenericValue> messageEntities = new LinkedList<GenericValue>();
+        List<GenericValue> messageEntities = new LinkedList<>();
         List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
         if (UtilValidate.isNotEmpty(messages)) {
             for (String message : messages) {
@@ -831,7 +839,7 @@ public class PaymentGatewayServices {
         // save the response and respective messages
         savePgrAndMsgs(dctx, pgCredit, messageEntities);
 
-        if (creditResponse != null && creditResponse.booleanValue()) {
+        if (creditResponse != null && creditResponse) {
             paymentPref.set("statusId", "PAYMENT_CANCELLED");
             try {
                 paymentPref.store();
@@ -861,8 +869,8 @@ public class PaymentGatewayServices {
             }
         } else {
             Debug.logError("Credit failed for pref : " + paymentPref, module);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
-                    "AccountingTroubleCallingCreditOrderPaymentPreferenceService", 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "AccountingTroubleCallingCreditOrderPaymentPreferenceService",
                     UtilMisc.toMap("paymentPref", paymentPref), locale));
         }
         return ServiceUtil.returnSuccess();
@@ -885,18 +893,18 @@ public class PaymentGatewayServices {
         try {
             paymentPref = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceId).queryOne();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problem getting OrderPaymentPreference for orderPaymentPreferenceId " + 
+            Debug.logWarning(e, "Problem getting OrderPaymentPreference for orderPaymentPreferenceId " +
                     orderPaymentPreferenceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
         // Error if no OrderPaymentPreference was found
         if (paymentPref == null) {
-            Debug.logWarning("Could not find OrderPaymentPreference with orderPaymentPreferenceId: " + 
+            Debug.logWarning("Could not find OrderPaymentPreference with orderPaymentPreferenceId: " +
                     orderPaymentPreferenceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
         // Get the OrderHeader
@@ -906,14 +914,14 @@ public class PaymentGatewayServices {
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problem getting OrderHeader for orderId " + orderId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
         // Error if no OrderHeader was found
         if (orderHeader == null) {
-            Debug.logWarning("Could not find OrderHeader with orderId: " + 
+            Debug.logWarning("Could not find OrderHeader with orderId: " +
                     orderId + "; not processing payments.", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -936,21 +944,21 @@ public class PaymentGatewayServices {
             paymentGatewayConfigId = paymentSettings.getString("paymentGatewayConfigId");
             if (serviceName == null) {
                 Debug.logWarning("No payment release service for - " + paymentPref.getString("paymentMethodTypeId"), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
-                        "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " + 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
+                        "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " +
                         paymentPref.getString("paymentMethodTypeId"));
             }
         } else {
             Debug.logWarning("No payment release settings found for - " + paymentPref.getString("paymentMethodTypeId"), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
-                    "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " + 
-                    paymentPref.getString("paymentMethodTypeId"));            
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
+                    "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " +
+                    paymentPref.getString("paymentMethodTypeId"));
         }
         if (UtilValidate.isEmpty(paymentConfig)) {
             paymentConfig = "payment.properties";
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
-        Map<String, Object> releaseContext = new HashMap<String, Object>();
+        Map<String, Object> releaseContext = new HashMap<>();
         releaseContext.put("orderPaymentPreference", paymentPref);
         releaseContext.put("releaseAmount", authTransaction.getBigDecimal("amount"));
         releaseContext.put("currency", currency);
@@ -963,12 +971,11 @@ public class PaymentGatewayServices {
             releaseResult = dispatcher.runSync(serviceName, releaseContext, TX_TIME, true);
         } catch (GenericServiceException e) {
             Debug.logError(e,"Problem releasing payment", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
-                    "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale));    
-            
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
+                    "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale));
         }
         // get the release result code
-        if (releaseResult != null && !ServiceUtil.isError(releaseResult)) {
+        if (releaseResult != null && ServiceUtil.isSuccess(releaseResult)) {
             Map<String, Object> releaseResRes;
             try {
                 ModelService model = dctx.getModelService("processReleaseResult");
@@ -978,7 +985,7 @@ public class PaymentGatewayServices {
                 releaseResRes = dispatcher.runSync(model.name,  resCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble processing the release results", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                         "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " +
                         e.getMessage());
             }
@@ -1036,7 +1043,7 @@ public class PaymentGatewayServices {
             }
         }
 
-        if (releaseResponse != null && releaseResponse.booleanValue()) {
+        if (releaseResponse != null && releaseResponse) {
             paymentPref.set("statusId", "PAYMENT_CANCELLED");
             try {
                 paymentPref.store();
@@ -1066,7 +1073,7 @@ public class PaymentGatewayServices {
             }
         } else {
             Debug.logError("Release failed for pref : " + paymentPref, module);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceOrder,
                     "AccountingTroubleCallingReleaseOrderPaymentPreferenceService", locale) + " " +
                     paymentPref);
         }
@@ -1090,13 +1097,13 @@ public class PaymentGatewayServices {
             invoice = EntityQuery.use(delegator).from("Invoice").where("invoiceId", invoiceId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble looking up Invoice #" + invoiceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingInvoiceNotFound", UtilMisc.toMap("invoiceId", invoiceId), locale));
         }
 
         if (invoice == null) {
             Debug.logError("Could not locate invoice #" + invoiceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingInvoiceNotFound", UtilMisc.toMap("invoiceId", invoiceId), locale));
         }
 
@@ -1106,8 +1113,8 @@ public class PaymentGatewayServices {
             orderItemBillings = invoice.getRelated("OrderItemBilling", null, null, false);
         } catch (GenericEntityException e) {
             Debug.logError("Trouble getting OrderItemBilling(s) from Invoice #" + invoiceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemLookingUpOrderItemBilling", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemLookingUpOrderItemBilling",
                     UtilMisc.toMap("billFields", invoiceId), locale));
         }
 
@@ -1135,14 +1142,16 @@ public class PaymentGatewayServices {
 
         if (testOrderId == null || !allSameOrder) {
             Debug.logWarning("Attempt to settle Invoice #" + invoiceId + " which contained none/multiple orders", module);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
-                    "AccountingInvoiceCannotBeSettle", 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                    "AccountingInvoiceCannotBeSettle",
                     UtilMisc.toMap("invoiceId", invoiceId), locale));
         }
 
         // get the invoice amount (amount to bill)
         BigDecimal invoiceTotal = InvoiceWorker.getInvoiceNotApplied(invoice);
-        if (Debug.infoOn()) Debug.logInfo("(Capture) Invoice [#" + invoiceId + "] total: " + invoiceTotal, module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("(Capture) Invoice [#" + invoiceId + "] total: " + invoiceTotal, module);
+        }
 
         // now capture the order
         Map<String, Object> serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", invoiceTotal);
@@ -1150,10 +1159,14 @@ public class PaymentGatewayServices {
             serviceContext.put("billingAccountId", billingAccountId);
         }
         try {
-            return dispatcher.runSync("captureOrderPayments", serviceContext);
+            Map<String, Object> result = dispatcher.runSync("captureOrderPayments", serviceContext);
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+            return result;
         } catch (GenericServiceException e) {
             Debug.logError(e, "Trouble running captureOrderPayments service", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentCannotBeCaptured", locale));
         }
     }
@@ -1192,13 +1205,13 @@ public class PaymentGatewayServices {
             }
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale) + " " + gee.toString());
         }
 
         // error if no order was found
         if (orderHeader == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -1225,7 +1238,9 @@ public class PaymentGatewayServices {
                 GenericValue paymentPref = paymentsBa.next();
 
                 BigDecimal authAmount = paymentPref.getBigDecimal("maxAmount");
-                if (authAmount == null) authAmount = ZERO;
+                if (authAmount == null) {
+                    authAmount = ZERO;
+                }
                 authAmount = authAmount.setScale(decimals, rounding);
 
                 if (authAmount.compareTo(ZERO) == 0) {
@@ -1250,7 +1265,7 @@ public class PaymentGatewayServices {
                                                                                                           "orderId", orderId,
                                                                                                           "userLogin", userLogin));
                         if (ServiceUtil.isError(captureResult)) {
-                            return captureResult;
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(captureResult));
                         }
                     } catch (GenericServiceException ex) {
                         return ServiceUtil.returnError(ex.getMessage());
@@ -1258,7 +1273,9 @@ public class PaymentGatewayServices {
                     if (captureResult != null) {
 
                         BigDecimal amountCaptured = (BigDecimal) captureResult.get("captureAmount");
-                        if (Debug.infoOn()) Debug.logInfo("Amount captured for order [" + orderId + "] from unapplied payments associated to billing account [" + billingAccountId + "] is: " + amountCaptured, module);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Amount captured for order [" + orderId + "] from unapplied payments associated to billing account [" + billingAccountId + "] is: " + amountCaptured, module);
+                        }
 
                         amountCaptured = amountCaptured.setScale(decimals, rounding);
 
@@ -1271,7 +1288,7 @@ public class PaymentGatewayServices {
                         captureResult.put("orderPaymentPreference", paymentPref);
                         if (context.get("captureRefNum") == null) {
                             captureResult.put("captureRefNum", ""); // FIXME: this is an hack to avoid a service validation error for processCaptureResult (captureRefNum is mandatory, but it is not used for billing accounts)
-                        }                                                
+                        }
 
                         // process the capture's results
                         try {
@@ -1281,7 +1298,7 @@ public class PaymentGatewayServices {
                             processResult(dctx, captureResult, userLogin, paymentPref, locale);
                         } catch (GeneralException e) {
                             Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                                     "AccountingPaymentCannotBeCaptured", locale) + " " + captureResult);
                         }
 
@@ -1294,7 +1311,9 @@ public class PaymentGatewayServices {
                             } catch (GenericServiceException e) {
                                 Debug.logWarning(e, "Problem processing the capture split payment", module);
                             }
-                            if (Debug.infoOn()) Debug.logInfo("Captured: " + amountThisCapture + " Remaining (re-auth): " + splitAmount, module);
+                            if (Debug.infoOn()) {
+                                Debug.logInfo("Captured: " + amountThisCapture + " Remaining (re-auth): " + splitAmount, module);
+                            }
                         }
                     } else {
                         Debug.logError("Payment not captured for order [" + orderId + "] from billing account [" + billingAccountId + "]", module);
@@ -1323,7 +1342,9 @@ public class PaymentGatewayServices {
                 }
 
                 BigDecimal authAmount = authTrans.getBigDecimal("amount");
-                if (authAmount == null) authAmount = ZERO;
+                if (authAmount == null) {
+                    authAmount = ZERO;
+                }
                 authAmount = authAmount.setScale(decimals, rounding);
 
                 if (authAmount.compareTo(ZERO) == 0) {
@@ -1355,7 +1376,7 @@ public class PaymentGatewayServices {
                 }
 
                 Map<String, Object> captureResult = capturePayment(dctx, userLogin, orh, paymentPref, amountThisCapture, locale);
-                if (captureResult != null && !ServiceUtil.isError(captureResult)) {
+                if (captureResult != null && ServiceUtil.isSuccess(captureResult)) {
                     // credit card processors return captureAmount, but gift certificate processors return processAmount
                     BigDecimal amountCaptured = (BigDecimal) captureResult.get("captureAmount");
                     if (amountCaptured == null) {
@@ -1377,7 +1398,7 @@ public class PaymentGatewayServices {
                         processResult(dctx, captureResult, userLogin, paymentPref, locale);
                     } catch (GeneralException e) {
                         Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                                 "AccountingPaymentCannotBeCaptured", locale) + " " + captureResult);
                     }
 
@@ -1390,7 +1411,9 @@ public class PaymentGatewayServices {
                         } catch (GenericServiceException e) {
                             Debug.logWarning(e, "Problem processing the capture split payment", module);
                         }
-                        if (Debug.infoOn()) Debug.logInfo("Captured: " + amountThisCapture + " Remaining (re-auth): " + splitAmount, module);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Captured: " + amountThisCapture + " Remaining (re-auth): " + splitAmount, module);
+                        }
                     }
                 } else {
                     Debug.logError("Payment not captured", module);
@@ -1400,10 +1423,10 @@ public class PaymentGatewayServices {
 
         if (amountToCapture.compareTo(ZERO) > 0) {
             GenericValue productStore = orh.getProductStore();
-            if (!UtilValidate.isEmpty(productStore)) {
+            if (UtilValidate.isNotEmpty(productStore)) {
                 boolean shipIfCaptureFails = UtilValidate.isEmpty(productStore.get("shipIfCaptureFails")) || "Y".equalsIgnoreCase(productStore.getString("shipIfCaptureFails"));
                 if (! shipIfCaptureFails) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                             "AccountingPaymentCannotBeCaptured", locale));
                 } else {
                     Debug.logWarning("Payment capture failed, shipping order anyway as per ProductStore setting (shipIfCaptureFails)", module);
@@ -1449,7 +1472,9 @@ public class PaymentGatewayServices {
         if (userLogin != null) {
             newPref.set("createdByUserLogin", userLogin.getString("userLoginId"));
         }
-        if (Debug.verboseOn()) Debug.logVerbose("New preference : " + newPref, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("New preference : " + newPref, module);
+        }
 
         Map<String, Object> processorResult = null;
         try {
@@ -1476,7 +1501,7 @@ public class PaymentGatewayServices {
                         Debug.logError("Authorization failed : " + newPref + " : " + processorResult, module);
                     }
                 } else {
-                    Debug.logError("Payment not authorized : " + newPref + " : " + processorResult, module);
+                    Debug.logError("Payment not authorized : " + newPref + " (no process result)", module);
                 }
             }
         } catch (GenericEntityException e) {
@@ -1514,18 +1539,18 @@ public class PaymentGatewayServices {
             paymentParams.put("userLogin", userLogin);
             Map<String, Object> tmpResult = dispatcher.runSync("createPayment", paymentParams);
             if (ServiceUtil.isError(tmpResult)) {
-                return tmpResult;
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
             }
 
             String paymentId = (String) tmpResult.get("paymentId");
             tmpResult = dispatcher.runSync("createPaymentApplication", UtilMisc.<String, Object>toMap("paymentId", paymentId, "invoiceId", invoiceId, "billingAccountId", billingAccountId,
                     "amountApplied", captureAmount, "userLogin", userLogin));
             if (ServiceUtil.isError(tmpResult)) {
-                return tmpResult;
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));
             }
             if (paymentId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "AccountingNoPaymentCreatedForInvoice", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "AccountingNoPaymentCreatedForInvoice",
                         UtilMisc.toMap("invoiceId", invoiceId, "billingAccountId", billingAccountId), locale));
             }
             results.put("paymentId", paymentId);
@@ -1534,8 +1559,8 @@ public class PaymentGatewayServices {
                 // Create a paymentGatewayResponse, if necessary
                 GenericValue order = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
                 if (order == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                            "AccountingNoPaymentGatewayResponseCreatedForInvoice", 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                            "AccountingNoPaymentGatewayResponseCreatedForInvoice",
                             UtilMisc.toMap("invoiceId", invoiceId, "billingAccountId", billingAccountId,
                                     "orderId", orderId), locale));
                 }
@@ -1545,7 +1570,7 @@ public class PaymentGatewayServices {
 
                     // Check the productStore setting to see if we need to do this explicitly
                     GenericValue productStore = order.getRelatedOne("ProductStore", false);
-                    if (productStore.getString("manualAuthIsCapture") == null || (! productStore.getString("manualAuthIsCapture").equalsIgnoreCase("Y"))) {
+                    if (productStore.getString("manualAuthIsCapture") == null || (! "Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture")))) {
                         String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
                         GenericValue pgResponse = delegator.makeValue("PaymentGatewayResponse");
                         pgResponse.set("paymentGatewayResponseId", responseId);
@@ -1571,9 +1596,7 @@ public class PaymentGatewayServices {
                     }
                 }
             }
-        } catch (GenericEntityException ex) {
-            return ServiceUtil.returnError(ex.getMessage());
-        } catch (GenericServiceException ex) {
+        } catch (GenericEntityException | GenericServiceException ex) {
             return ServiceUtil.returnError(ex.getMessage());
         }
 
@@ -1639,12 +1662,12 @@ public class PaymentGatewayServices {
         return results;
     }
 
-    private static Map<String, Object> capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, 
+    private static Map<String, Object> capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh,
             GenericValue paymentPref, BigDecimal amount, Locale locale) {
         return capturePayment(dctx, userLogin, orh, paymentPref, amount, null, locale);
     }
 
-    private static Map<String, Object> capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, 
+    private static Map<String, Object> capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh,
             GenericValue paymentPref, BigDecimal amount, GenericValue authTrans, Locale locale) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         // look up the payment configuration settings
@@ -1696,7 +1719,7 @@ public class PaymentGatewayServices {
                         Debug.logError(e, "Trouble processing the re-auth result : " + paymentPref + " : " + processorResult, module);
                     }
                 } else {
-                    Debug.logError("Payment not re-authorized : " + paymentPref + " : " + processorResult, module);
+                    Debug.logError("Payment not re-authorized : " + paymentPref + " (no process result)", module);
                 }
 
                 if (!authResult) {
@@ -1708,12 +1731,12 @@ public class PaymentGatewayServices {
                 authTrans = getAuthTransaction(paymentPref);
             } catch (GeneralException e) {
                 Debug.logError(e, "Error re-authorizing payment", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingPaymentReauthorizingError", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingPaymentReauthorizingError", locale));
             }
         }
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
-        Map<String, Object> captureContext = new HashMap<String, Object>();
+        Map<String, Object> captureContext = new HashMap<>();
         captureContext.put("userLogin", userLogin);
         captureContext.put("orderPaymentPreference", paymentPref);
         captureContext.put("paymentConfig", paymentConfig);
@@ -1729,13 +1752,13 @@ public class PaymentGatewayServices {
             } else if (inParams.contains("processAmount")) {
                 captureContext.put("processAmount", amount);
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "AccountingPaymentServiceMissingAmount", 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "AccountingPaymentServiceMissingAmount",
                         UtilMisc.toMap("serviceName", serviceName, "inParams", inParams), locale));
             }
         } catch (GenericServiceException ex) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingPaymentServiceCannotGetModel", 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingPaymentServiceCannotGetModel",
                     UtilMisc.toMap("serviceName", serviceName), locale));
         }
 
@@ -1744,7 +1767,9 @@ public class PaymentGatewayServices {
             captureContext.put("authTrans", authTrans);
         }
 
-        if (Debug.infoOn()) Debug.logInfo("Capture [" + serviceName + "] : " + captureContext, module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Capture [" + serviceName + "] : " + captureContext, module);
+        }
         try {
             String paymentMethodTypeId = paymentPref.getString("paymentMethodTypeId");
             if (paymentMethodTypeId != null && "GIFT_CARD".equals(paymentMethodTypeId)) {
@@ -1763,6 +1788,9 @@ public class PaymentGatewayServices {
             // NOTE HOW TO FIX: don't call in separate transaction from here; individual services can have require-new-transaction
             //set to true if they want to behave that way (had: [, TX_TIME, true])
             captureResult = dispatcher.runSync(serviceName, captureContext);
+            if (ServiceUtil.isError(captureResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(captureResult));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Could not capture payment ... serviceName: " + serviceName + " ... context: " + captureContext, module);
             return null;
@@ -1787,7 +1815,7 @@ public class PaymentGatewayServices {
     }
 
     private static void saveError(LocalDispatcher dispatcher, GenericValue userLogin, GenericValue paymentPref, Map<String, Object> result, String serviceType, String transactionCode) {
-        Map<String, Object> serviceContext = new HashMap<String, Object>();
+        Map<String, Object> serviceContext = new HashMap<>();
         serviceContext.put("paymentServiceTypeEnumId", serviceType);
         serviceContext.put("orderPaymentPreference", paymentPref);
         serviceContext.put("transCodeEnumId", transactionCode);
@@ -1828,7 +1856,7 @@ public class PaymentGatewayServices {
             delegator.create(response);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingNoPaymentGatewayResponseCreatedForFailedService", locale));
         }
 
@@ -1836,7 +1864,7 @@ public class PaymentGatewayServices {
         return ServiceUtil.returnSuccess();
     }
 
-    private static boolean processResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin, 
+    private static boolean processResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin,
             GenericValue paymentPreference, Locale locale) throws GeneralException {
         Boolean authResult = (Boolean) result.get("authResult");
         Boolean captureResult = (Boolean) result.get("captureResult");
@@ -1846,13 +1874,14 @@ public class PaymentGatewayServices {
 
         if (authResult != null) {
             processAuthResult(dctx, result, userLogin, paymentPreference);
-            resultPassed = authResult.booleanValue();
+            resultPassed = authResult;
             authServiceType = ("PAYMENT_NOT_AUTH".equals(initialStatus)) ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
         }
         if (captureResult != null) {
             processCaptureResult(dctx, result, userLogin, paymentPreference, authServiceType, locale);
-            if (!resultPassed)
-                resultPassed = captureResult.booleanValue();
+            if (!resultPassed) {
+                resultPassed = captureResult;
+            }
         }
         return resultPassed;
     }
@@ -1888,6 +1917,12 @@ public class PaymentGatewayServices {
         String currencyUomId = (String) context.get("currencyUomId");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         Locale locale = (Locale) context.get("locale");
+
+        if(authResult == null) {
+            Debug.logError("No authentification result available. Payment preference can't be checked.", module);
+            return ServiceUtil
+                    .returnError(UtilProperties.getMessage(resourceError, "AccountingProcessingAuthResultEmpty", locale)); // SCIPIO: 2018-09-26: fixed resource
+        }
 
         // refresh the payment preference
         try {
@@ -1936,13 +1971,21 @@ public class PaymentGatewayServices {
             response.set("gatewayMessage", context.get("authMessage"));
             response.set("transactionDate", UtilDateTime.nowTimestamp());
 
-            if (Boolean.TRUE.equals(context.get("resultDeclined"))) response.set("resultDeclined", "Y");
-            if (Boolean.TRUE.equals(context.get("resultNsf"))) response.set("resultNsf", "Y");
-            if (Boolean.TRUE.equals(context.get("resultBadExpire"))) response.set("resultBadExpire", "Y");
-            if (Boolean.TRUE.equals(context.get("resultBadCardNumber"))) response.set("resultBadCardNumber", "Y");
+            if (Boolean.TRUE.equals(context.get("resultDeclined"))) {
+                response.set("resultDeclined", "Y");
+            }
+            if (Boolean.TRUE.equals(context.get("resultNsf"))) {
+                response.set("resultNsf", "Y");
+            }
+            if (Boolean.TRUE.equals(context.get("resultBadExpire"))) {
+                response.set("resultBadExpire", "Y");
+            }
+            if (Boolean.TRUE.equals(context.get("resultBadCardNumber"))) {
+                response.set("resultBadCardNumber", "Y");
+            }
 
             // create the internal messages
-            List<GenericValue> messageEntities = new LinkedList<GenericValue>();
+            List<GenericValue> messageEntities = new LinkedList<>();
             List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
             if (UtilValidate.isNotEmpty(messages)) {
                 Iterator<String> i = messages.iterator();
@@ -1965,12 +2008,12 @@ public class PaymentGatewayServices {
             }
 
             // set the status of the OrderPaymentPreference
-            if (authResult.booleanValue()) {
+            boolean authResultOk = authResult;
+
+            if (authResultOk) {
                 orderPaymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
-            } else if (!authResult.booleanValue()) {
-                orderPaymentPreference.set("statusId", "PAYMENT_DECLINED");
             } else {
-                orderPaymentPreference.set("statusId", "PAYMENT_ERROR");
+                orderPaymentPreference.set("statusId", "PAYMENT_DECLINED");
             }
 
             // remove sensitive credit card data regardless of outcome
@@ -1987,22 +2030,22 @@ public class PaymentGatewayServices {
             orderPaymentPreference.store();
 
             // if the payment was declined and this is a CreditCard, save that information on the CreditCard entity
-            if (!authResult.booleanValue()) {
+            if (!authResultOk) {
                 if (creditCard != null) {
                     Long consecutiveFailedAuths = creditCard.getLong("consecutiveFailedAuths");
                     if (consecutiveFailedAuths == null) {
-                        creditCard.set("consecutiveFailedAuths", Long.valueOf(1));
+                        creditCard.set("consecutiveFailedAuths", 1L);
                     } else {
-                        creditCard.set("consecutiveFailedAuths", Long.valueOf(consecutiveFailedAuths.longValue() + 1));
+                        creditCard.set("consecutiveFailedAuths", consecutiveFailedAuths + 1);
                     }
                     creditCard.set("lastFailedAuthDate", nowTimestamp);
 
                     if (Boolean.TRUE.equals(context.get("resultNsf"))) {
                         Long consecutiveFailedNsf = creditCard.getLong("consecutiveFailedNsf");
                         if (consecutiveFailedNsf == null) {
-                            creditCard.set("consecutiveFailedNsf", Long.valueOf(1));
+                            creditCard.set("consecutiveFailedNsf", 1L);
                         } else {
-                            creditCard.set("consecutiveFailedNsf", Long.valueOf(consecutiveFailedNsf.longValue() + 1));
+                            creditCard.set("consecutiveFailedNsf", consecutiveFailedNsf + 1);
                         }
                         creditCard.set("lastFailedNsfDate", nowTimestamp);
                     }
@@ -2011,18 +2054,18 @@ public class PaymentGatewayServices {
             }
 
             // auth was successful, to clear out any failed auth or nsf info
-            if (authResult.booleanValue()) {
+            if (authResultOk) {
                 if ((creditCard != null) && (creditCard.get("lastFailedAuthDate") != null)) {
-                    creditCard.set("consecutiveFailedAuths", Long.valueOf(0));
+                    creditCard.set("consecutiveFailedAuths", 0L);
                     creditCard.set("lastFailedAuthDate", null);
-                    creditCard.set("consecutiveFailedNsf", Long.valueOf(0));
+                    creditCard.set("consecutiveFailedNsf", 0L);
                     creditCard.set("lastFailedNsfDate", null);
                     creditCard.store();
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error updating payment status information", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingPaymentStatusUpdatingError", UtilMisc.toMap("errorString", e.toString()), locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingPaymentStatusUpdatingError", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
         return ServiceUtil.returnSuccess();
@@ -2046,7 +2089,7 @@ public class PaymentGatewayServices {
                                     "paymentMethodId", orderPaymentPreference.get("paymentMethodId"),
                                     "resultNsf", "Y")
                             .queryCount();
-                        if (failedTries < autoOrderCcTryLaterMax.longValue()) {
+                        if (failedTries < autoOrderCcTryLaterMax) {
                             needsNsfRetry = true;
                         }
                     } else {
@@ -2063,12 +2106,12 @@ public class PaymentGatewayServices {
         return getAuthTransaction(paymentPreference);
     }
 
-    private static void processCaptureResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin, 
+    private static void processCaptureResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin,
             GenericValue paymentPreference, Locale locale) throws GeneralException {
         processCaptureResult(dctx, result, userLogin, paymentPreference, null, locale);
     }
 
-    private static void processCaptureResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin, 
+    private static void processCaptureResult(DispatchContext dctx, Map<String, Object> result, GenericValue userLogin,
             GenericValue paymentPreference, String authServiceType, Locale locale) throws GeneralException {
         if (result == null) {
             throw new GeneralException("Null capture result sent to processCaptureResult; fatal error");
@@ -2107,7 +2150,7 @@ public class PaymentGatewayServices {
         if (capRes != null && ServiceUtil.isError(capRes)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(capRes));
         }
-        if (!captureResult.booleanValue()) {
+        if (!captureResult) {
             // capture returned false (error)
             try {
                 processReAuthFromCaptureFailure(dctx, result, amount, userLogin, paymentPreference, locale);
@@ -2118,7 +2161,7 @@ public class PaymentGatewayServices {
         }
     }
 
-    private static void processReAuthFromCaptureFailure(DispatchContext dctx, Map<String, Object> result, BigDecimal amount, 
+    private static void processReAuthFromCaptureFailure(DispatchContext dctx, Map<String, Object> result, BigDecimal amount,
             GenericValue userLogin, GenericValue paymentPreference, Locale locale) throws GeneralException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -2126,8 +2169,9 @@ public class PaymentGatewayServices {
         OrderReadHelper orh = null;
         try {
             GenericValue orderHeader = paymentPreference.getRelatedOne("OrderHeader", false);
-            if (orderHeader != null)
+            if (orderHeader != null) {
                 orh = new OrderReadHelper(orderHeader);
+            }
         } catch (GenericEntityException e) {
             throw new GeneralException("Problems getting OrderHeader; cannot re-auth the payment", e);
         }
@@ -2159,7 +2203,7 @@ public class PaymentGatewayServices {
         if (authResp != null && Boolean.TRUE.equals(authResp)) {
             GenericValue authTrans = processAuthRetryResult(dctx, authPayRes, userLogin, paymentPreference);
             // check if auto-capture was enabled; process if so
-            if (capResp != null && capResp.booleanValue()) {
+            if (capResp != null && capResp) {
                 processCaptureResult(dctx, result, userLogin, paymentPreference, locale);
             } else {
                 // no auto-capture; do manual capture now
@@ -2170,7 +2214,7 @@ public class PaymentGatewayServices {
 
                 // process the capture result
                 Boolean capPayResp = (Boolean) capPayRes.get("captureResult");
-                if (capPayResp != null && capPayResp.booleanValue()) {
+                if (capPayResp != null && capPayResp) {
                     // process the capture result
                     processCaptureResult(dctx, capPayRes, userLogin, paymentPreference, locale);
                 } else {
@@ -2193,7 +2237,7 @@ public class PaymentGatewayServices {
         BigDecimal amount = (BigDecimal) context.get("captureAmount");
         String serviceType = (String) context.get("serviceTypeEnum");
         String currencyUomId = (String) context.get("currencyUomId");
-        boolean captureSuccessful = ((Boolean) context.get("captureResult")).booleanValue();
+        boolean captureSuccessful = (Boolean) context.get("captureResult");
 
         String paymentMethodTypeId = paymentPreference.getString("paymentMethodTypeId");
 
@@ -2277,7 +2321,7 @@ public class PaymentGatewayServices {
                 try {
                     invoice = EntityQuery.use(delegator).from("Invoice").where("invoiceId", invoiceId).queryOne();
                 } catch (GenericEntityException e) {
-                    String message = "Failed to process capture result:  Could not find invoice ["+invoiceId+"] due to entity error: " + e.getMessage();
+                    String message = UtilProperties.getMessage(resourceError, "AccountingFailedToProcessCaptureResult", UtilMisc.toMap("invoiceId", invoiceId, "errorString", e.getMessage()), locale);
                     Debug.logError(e, message, module);
                     return ServiceUtil.returnError(message);
                 }
@@ -2304,15 +2348,15 @@ public class PaymentGatewayServices {
 
             // get the partyIdTo for the payment, which is who is receiving it
             String partyIdTo = null;
-            if (!UtilValidate.isEmpty(payTo)) {
+            if (UtilValidate.isNotEmpty(payTo)) {
                 // use input pay to party
                 partyIdTo = payTo;
             } else if (invoice != null) {
-                // ues the invoice partyIdFrom as the pay to party (which is who supplied the invoice)
+                // use the invoice partyIdFrom as the pay to party (which is who supplied the invoice)
                 partyIdTo = invoice.getString("partyIdFrom");
             } else {
                 // otherwise default to Company and print a big warning about this
-                partyIdTo = "Company";
+                partyIdTo = EntityUtilProperties.getPropertyValue("general", "ORGANIZATION_PARTY", "Company", delegator);
                 Debug.logWarning("Using default value of [" + partyIdTo + "] for payTo on invoice [" + invoiceId + "] and orderPaymentPreference [" +
                         paymentPreference.getString("orderPaymentPreferenceId") + "]", module);
             }
@@ -2336,7 +2380,7 @@ public class PaymentGatewayServices {
                 payRes = dispatcher.runSync("createPayment", paymentCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreationError", locale));
             }
             if (ServiceUtil.isError(payRes)) {
@@ -2356,7 +2400,7 @@ public class PaymentGatewayServices {
                     paRes = dispatcher.runSync("createPaymentApplication", paCtx);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "AccountingInvoiceApplicationCreationError", locale));
                 }
                 if (paRes != null && ServiceUtil.isError(paRes)) {
@@ -2379,24 +2423,28 @@ public class PaymentGatewayServices {
             orderPaymentPreference = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
         // call the service refundPayment
         Map<String, Object> refundResponse = null;
         try {
-            Map<String, Object> serviceContext = new HashMap<String, Object>();
+            Map<String, Object> serviceContext = new HashMap<>();
             serviceContext.put("orderPaymentPreference", orderPaymentPreference);
             serviceContext.put("refundAmount", amount);
             serviceContext.put("userLogin", userLogin);
             refundResponse = dispatcher.runSync("refundPayment", serviceContext, TX_TIME, true);
+            if (ServiceUtil.isError(refundResponse)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(refundResponse));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Problem refunding payment through processor", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentRefundError", locale));
         }
-        refundResponse.putAll(ServiceUtil.returnSuccess("Payment #" + refundResponse.get("paymentId") +" is refunded successfully with amount " + refundResponse.get("refundAmount") +" for manual transaction."));
+        // SCIPIO: 2018-09-26: fixed resource here
+        refundResponse.putAll(ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "AccountingPaymentRefundedSuccessfully", UtilMisc.toMap("paymentId", refundResponse.get("paymentId"), "refundAmount", refundResponse.get("refundAmount")), locale)));
         return refundResponse;
     }
 
@@ -2412,8 +2460,8 @@ public class PaymentGatewayServices {
             orderHeader = paymentPref.getRelatedOne("OrderHeader", false);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get OrderHeader from OrderPaymentPreference", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     e.toString());
         }
 
@@ -2439,7 +2487,7 @@ public class PaymentGatewayServices {
             paymentGatewayConfigId = paymentSettings.getString("paymentGatewayConfigId");
 
             if (serviceName != null) {
-                Map<String, Object> serviceContext = new HashMap<String, Object>();
+                Map<String, Object> serviceContext = new HashMap<>();
                 serviceContext.put("orderPaymentPreference", paymentPref);
                 serviceContext.put("paymentConfig", paymentConfig);
                 serviceContext.put("paymentGatewayConfigId", paymentGatewayConfigId);
@@ -2451,7 +2499,7 @@ public class PaymentGatewayServices {
                     payToPartyId = getBillingInformation(orh, paymentPref, new HashMap<String, Object>());
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting billing information", module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "AccountingBillingAccountNotFound", UtilMisc.toMap("billingAccountId", ""), locale));
                 }
 
@@ -2465,7 +2513,7 @@ public class PaymentGatewayServices {
                     refundResponse = dispatcher.runSync(serviceName, serviceContext, TX_TIME, true);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem refunding payment through processor", module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "AccountingPaymentRefundError", locale));
                 }
                 if (ServiceUtil.isError(refundResponse)) {
@@ -2496,19 +2544,22 @@ public class PaymentGatewayServices {
                         refundResCtx.put("refundAmount", refundResponse.get("refundAmount"));
                     }
                     refundResRes = dispatcher.runSync(model.name, refundResCtx);
+                    if (ServiceUtil.isError(refundResRes)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(refundResRes));
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                             "AccountingPaymentRefundError", locale) + " " + e.getMessage());
                 }
 
                 return refundResRes;
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentRefundServiceNotDefined", locale));
             }
         } else {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
                     "AccountingPaymentSettingNotFound",
                     UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId"),
                             "transactionType", REFUND_SERVICE_TYPE), locale));
@@ -2566,7 +2617,7 @@ public class PaymentGatewayServices {
         }
 
         Boolean refundResult = (Boolean) context.get("refundResult");
-        if (refundResult != null && refundResult.booleanValue()) {
+        if (refundResult != null && refundResult) {
 
             // mark the preference as refunded
             paymentPref.set("statusId", "PAYMENT_REFUNDED");
@@ -2594,20 +2645,19 @@ public class PaymentGatewayServices {
             String paymentId = null;
             try {
                 Map<String, Object> payRes = dispatcher.runSync("createPayment", paymentCtx);
-                if (ModelService.RESPOND_ERROR.equals(payRes.get(ModelService.RESPONSE_MESSAGE))) {
+                if (ServiceUtil.isError(payRes)) {
                     return ServiceUtil.returnError((String) payRes.get(ModelService.ERROR_MESSAGE));
                 } else {
                     paymentId = (String) payRes.get("paymentId");
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem creating Payment", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreationError", locale));
             }
-            //Debug.logInfo("Payment created : " + paymentId, module);
 
             if (paymentId == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreationError", locale));
             }
 
@@ -2616,8 +2666,8 @@ public class PaymentGatewayServices {
             result.put("refundAmount", context.get("refundAmount"));
             return result;
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingPaymentRefundError", locale));            
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingPaymentRefundError", locale));
         }
     }
 
@@ -2639,7 +2689,7 @@ public class PaymentGatewayServices {
 
         // make sure we have a valid order record
         if (orderHeader == null || orderHeader.get("statusId") == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
 
@@ -2691,18 +2741,14 @@ public class PaymentGatewayServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        EntityQuery eq = EntityQuery.use(delegator)
+                .from("OrderPaymentPreference")
+                .where(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
+                        EntityCondition.makeCondition("processAttempt",EntityOperator.GREATER_THAN, 0L))
+                .orderBy("orderId");
 
-        // get a list of all payment prefs still pending
-        List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
-                EntityCondition.makeCondition("processAttempt", EntityOperator.GREATER_THAN, Long.valueOf(0)));
-
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator).from("OrderPaymentPreference")
-                    .where(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
-                            EntityCondition.makeCondition("processAttempt", EntityOperator.GREATER_THAN, Long.valueOf(0)))
-                    .orderBy("orderId").queryIterator();
-            List<String> processList = new LinkedList<String>();
+        try (EntityListIterator eli = eq.queryIterator()) {
+            List<String> processList = new LinkedList<>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -2721,14 +2767,6 @@ public class PaymentGatewayServices {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-        } finally {
-            if (eli != null) {
-                try {
-                    eli.close();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                }
-            }
         }
 
         return ServiceUtil.returnSuccess();
@@ -2745,14 +2783,14 @@ public class PaymentGatewayServices {
         calcCal.add(Calendar.WEEK_OF_YEAR, -1);
         Timestamp oneWeekAgo = new Timestamp(calcCal.getTimeInMillis());
 
-        EntityListIterator eli = null;
-        try {
-            eli = EntityQuery.use(delegator).from("OrderPaymentPreference")
-                    .where(EntityCondition.makeCondition("needsNsfRetry", EntityOperator.EQUALS, "Y"), 
-                            EntityCondition.makeCondition(ModelEntity.STAMP_FIELD, EntityOperator.LESS_THAN_EQUAL_TO, oneWeekAgo))
-                    .orderBy("orderId").queryIterator();
+        EntityQuery eq = EntityQuery.use(delegator)
+                .from("OrderPaymentPreference")
+                .where(EntityCondition.makeCondition("needsNsfRetry", EntityOperator.EQUALS, "Y"),
+                        EntityCondition.makeCondition(ModelEntity.STAMP_FIELD, EntityOperator.LESS_THAN_EQUAL_TO, oneWeekAgo))
+                .orderBy("orderId");
 
-            List<String> processList = new LinkedList<String>();
+        try (EntityListIterator eli = eq.queryIterator()) {
+            List<String> processList = new LinkedList<>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -2771,14 +2809,6 @@ public class PaymentGatewayServices {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-        } finally {
-            if (eli != null) {
-                try {
-                    eli.close();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                }
-            }
         }
         return ServiceUtil.returnSuccess();
     }
@@ -2856,7 +2886,7 @@ public class PaymentGatewayServices {
             Debug.logError(e, module);
         }
 
-        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+        if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
             GenericValue creditCard = null;
             try {
                 creditCard = paymentMethod.getRelatedOne("CreditCard", false);
@@ -2906,8 +2936,6 @@ public class PaymentGatewayServices {
         return true;
     }
 
-    // safe payment gateway response store
-
     /**
      * Saves either a PaymentGatewayResponse or PaymentGatewayRespMsg value and ensures that the value
      * is persisted even in the event of a rollback.
@@ -2922,6 +2950,8 @@ public class PaymentGatewayServices {
         try {
             dispatcher.addRollbackService("savePaymentGatewayResponse", context, true);
             delegator.create(pgr);
+        } catch (GenericEntityException | GenericServiceException ge) {
+            Debug.logError(ge, module);
         } catch (Exception e) {
             Debug.logError(e, module);
         }
@@ -2938,6 +2968,8 @@ public class PaymentGatewayServices {
             for (GenericValue message : messages) {
                 delegator.create(message);
             }
+        } catch (GenericEntityException | GenericServiceException ge) {
+            Debug.logError(ge, module);
         } catch (Exception e) {
             Debug.logError(e, module);
         }
@@ -2995,7 +3027,7 @@ public class PaymentGatewayServices {
         // security check
         if (!security.hasEntityPermission("MANUAL", "_PAYMENT", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_CREATE", userLogin)) {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to run manual payment transaction!", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionNotAuthorized", locale));
         }
 
@@ -3013,7 +3045,7 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (paymentMethod == null || !"CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentManualAuthOnlyForCreditCard", locale));
         }
 
@@ -3035,7 +3067,7 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (UtilValidate.isEmpty(creditCard)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentCreditCardNotFound",
                     UtilMisc.toMap("paymentMethodId", paymentMethodId), locale));
         }
@@ -3047,7 +3079,7 @@ public class PaymentGatewayServices {
 
         GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "CREDIT_CARD", "PRDS_PAY_AUTH", false);
         if (paymentSettings == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentSettingNotFound",
                     UtilMisc.toMap("productStoreId", productStoreId, "transactionType", ""), locale));
         } else {
@@ -3082,9 +3114,9 @@ public class PaymentGatewayServices {
         String currency = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
 
         // prepare the auth context
-        Map<String, Object> authContext = new HashMap<String, Object>();
+        Map<String, Object> authContext = new HashMap<>();
         authContext.put("orderId", "_NA_");
-        authContext.put("orderItems", new LinkedList<GenericValue>());
+        authContext.put("orderItems", new LinkedList<>());
         authContext.put("orderPaymentPreference", orderPaymentPref);
         authContext.put("creditCard", creditCard);
         authContext.put("billToParty", billToParty);
@@ -3101,7 +3133,7 @@ public class PaymentGatewayServices {
             response = dispatcher.runSync(paymentService, authContext, TX_TIME, true);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentServiceError",
                     UtilMisc.toMap("paymentService", paymentService, "authContext", authContext),
                     locale));
@@ -3130,7 +3162,7 @@ public class PaymentGatewayServices {
         // security check
         if (!security.hasEntityPermission("MANUAL", "_PAYMENT", userLogin) && !security.hasEntityPermission("ACCOUNTING", "_CREATE", userLogin)) {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to run manual payment transaction!", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionNotAuthorized", locale));
         }
         String orderPaymentPreferenceId = (String) context.get("orderPaymentPreferenceId");
@@ -3146,19 +3178,19 @@ public class PaymentGatewayServices {
         try {
             paymentPref = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceId).queryOne();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problem getting OrderPaymentPreference for orderPaymentPreferenceId " + 
+            Debug.logWarning(e, "Problem getting OrderPaymentPreference for orderPaymentPreferenceId " +
                     orderPaymentPreferenceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
                     orderPaymentPreferenceId);
         }
         // Error if no OrderPaymentPreference was found
         if (paymentPref == null) {
-            Debug.logWarning("Could not find OrderPaymentPreference with orderPaymentPreferenceId: " + 
+            Debug.logWarning("Could not find OrderPaymentPreference with orderPaymentPreferenceId: " +
                     orderPaymentPreferenceId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " + 
-                    orderPaymentPreferenceId);            
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                    "AccountingProblemGettingOrderPaymentPreferences", locale) + " " +
+                    orderPaymentPreferenceId);
         }
         // Get the OrderHeader
         GenericValue orderHeader = null;
@@ -3167,13 +3199,13 @@ public class PaymentGatewayServices {
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problem getting OrderHeader for orderId " + orderId, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
         // Error if no OrderHeader was found
         if (orderHeader == null) {
             Debug.logWarning("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
         }
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -3183,14 +3215,14 @@ public class PaymentGatewayServices {
                     "AccountingPaymentTransactionNotYetSupported",    locale));
         }
         // transaction request context
-        Map<String, Object> requestContext = new HashMap<String, Object>();
+        Map<String, Object> requestContext = new HashMap<>();
         String paymentService = null;
         String paymentConfig = null;
         String paymentGatewayConfigId = null;
         // get the transaction settings
         GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, transactionType, false);
         if (paymentSettings == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentSettingNotFound",
                     UtilMisc.toMap("productStoreId", productStoreId, "transactionType", transactionType), locale));
         } else {
@@ -3211,15 +3243,15 @@ public class PaymentGatewayServices {
         }
         // check the service name
         if (paymentService == null || paymentGatewayConfigId == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentSettingNotValid", locale));
         }
 
-        if (paymentMethodTypeId.equals("CREDIT_CARD")) {
+        if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
             GenericValue creditCard = delegator.makeValue("CreditCard");
             creditCard.setAllFields(context, true, null, null);
             if (creditCard.get("firstNameOnCard") == null || creditCard.get("lastNameOnCard") == null || creditCard.get("cardType") == null || creditCard.get("cardNumber") == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreditCardMissingMandatoryFields", locale));
             }
             String expMonth = (String) context.get("expMonth");
@@ -3231,14 +3263,14 @@ public class PaymentGatewayServices {
             GenericValue billingAddress = delegator.makeValue("PostalAddress");
             billingAddress.setAllFields(context, true, null, null);
             if (billingAddress.get("address1") == null || billingAddress.get("city") == null || billingAddress.get("postalCode") == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreditCardBillingAddressMssingMandatoryFields", locale));
             }
             requestContext.put("billingAddress", billingAddress);
             GenericValue billToEmail = delegator.makeValue("ContactMech");
             billToEmail.set("infoString", context.get("infoString"));
             if (billToEmail.get("infoString") == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreditCardEmailAddressCannotBeEmpty", locale));
             }
             requestContext.put("billToParty", orh.getBillToParty());
@@ -3248,22 +3280,25 @@ public class PaymentGatewayServices {
             requestContext.put("currency", currency);
             requestContext.put("creditAmount", context.get("amount"));
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionNotYetSupported", locale) + " " + paymentMethodTypeId);
         }
         // process the transaction
         Map<String, Object> response = null;
         try {
             response = dispatcher.runSync(paymentService, requestContext, TX_TIME, true);
+            if (ServiceUtil.isError(response)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(response));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentServiceError",
                     UtilMisc.toMap("paymentService", paymentService, "authContext", requestContext),
                     locale));
         }
         // get the response result code
-        if (response != null && !ServiceUtil.isError(response)) {
+        if (response != null && ServiceUtil.isSuccess(response)) {
             Map<String, Object> responseRes;
             try {
                 ModelService model = dctx.getModelService("processCreditResult");
@@ -3273,7 +3308,7 @@ public class PaymentGatewayServices {
                 responseRes = dispatcher.runSync(model.name,  resCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                         "AccountingPaymentCreditError",
                         UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
@@ -3292,7 +3327,7 @@ public class PaymentGatewayServices {
         String refNum = (String) response.get("creditRefNum");
         String code = (String) response.get("creditCode");
         String msg = (String) response.get("creditMessage");
-        Map<String, Object> returnResults = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+        Map<String, Object> returnResults = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                 "AccountingPaymentTransactionManualResult",
                 UtilMisc.toMap("msg", msg, "code", code, "refNum", refNum), locale));
         returnResults.put("referenceNum", refNum);
@@ -3308,7 +3343,9 @@ public class PaymentGatewayServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        if (Debug.infoOn()) Debug.logInfo("Running verifyCreditCard [" + paymentMethodId + "] for store: " + productStoreId, module); // SCIPIO: typo fix
+        if (Debug.infoOn()) {
+            Debug.logInfo("Running verifyCreditCard [ " + paymentMethodId + "] for store: " + productStoreId, module);
+        }
 
         GenericValue productStore = null;
         productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
@@ -3319,17 +3356,19 @@ public class PaymentGatewayServices {
         }
 
         String amount = null;
-        if (mode.equalsIgnoreCase("CREATE")) {
+        if ("CREATE".equalsIgnoreCase(mode)) {
             amount = EntityUtilProperties.getPropertyValue(productStorePaymentProperties, "payment.general.cc_create.auth", delegator);
-        } else if (mode.equalsIgnoreCase("UPDATE")) {
+        } else if ("UPDATE".equalsIgnoreCase(mode)) {
             amount = EntityUtilProperties.getPropertyValue(productStorePaymentProperties, "payment.general.cc_update.auth", delegator);
         }
-        if (Debug.infoOn()) Debug.logInfo("Running credit card verification [" + paymentMethodId + "] (" + amount + ") : " + productStorePaymentProperties + " : " + mode, module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Running credit card verification [" + paymentMethodId + "] (" + amount + ") : " + productStorePaymentProperties + " : " + mode, module);
+        }
 
         if (UtilValidate.isNotEmpty(amount)) {
             BigDecimal authAmount = new BigDecimal(amount);
             if (authAmount.compareTo(BigDecimal.ZERO) > 0) {
-                Map<String, Object> ccAuthContext = new HashMap<String, Object>();
+                Map<String, Object> ccAuthContext = new HashMap<>();
                 ccAuthContext.put("paymentMethodId", paymentMethodId);
                 ccAuthContext.put("productStoreId", productStoreId);
                 ccAuthContext.put("amount", authAmount);
@@ -3344,7 +3383,7 @@ public class PaymentGatewayServices {
                 }
 
                 if (ServiceUtil.isError(results)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingCreditCardManualAuthFailedError", locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingCreditCardManualAuthFailedError", locale));
                 }
             }
         }
@@ -3358,21 +3397,24 @@ public class PaymentGatewayServices {
 
 
     /**
-     * Simple test processor; declines all orders < 100.00; approves all orders >= 100.00
+     * Simple test processor; declines all orders &lt; 100.00; approves all orders &gt;= 100.00
      */
     public static Map<String, Object> testProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
-        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
+        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0) {
             result.put("authResult", Boolean.TRUE);
-        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) < 0)
+        }
+        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) < 0) {
             result.put("authResult", Boolean.FALSE);
-            result.put("customerRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource, 
+        }
+            result.put("customerRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource,
                     "AccountingPaymentTestProcessorMinimumPurchase", locale)));
-        if (processAmount == null)
+        if (processAmount == null) {
             result.put("authResult", null);
+        }
 
         String refNum = UtilDateTime.nowAsString();
 
@@ -3381,30 +3423,33 @@ public class PaymentGatewayServices {
         result.put("authAltRefNum", refNum);
         result.put("authFlag", "X");
         result.put("authMessage", UtilProperties.getMessage(resource, "AccountingPaymentTestProcessor", locale));
-        result.put("internalRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource, 
+        result.put("internalRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource,
                 "AccountingPaymentTestProcessor", locale)));
         return result;
     }
 
 
     /**
-     * Simple test processor; declines all orders < 100.00; approves all orders > 100.00
+     * Simple test processor; declines all orders &lt; 100.00; approves all orders &gt; 100.00
      */
     public static Map<String, Object> testProcessorWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
-        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
+        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0) {
             result.put("authResult", Boolean.TRUE);
-            result.put("captureResult", Boolean.TRUE);
-        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) < 0)
+        }
+        result.put("captureResult", Boolean.TRUE);
+        if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) < 0) {
             result.put("authResult", Boolean.FALSE);
-            result.put("captureResult", Boolean.FALSE);
-            result.put("customerRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource, 
-                    "AccountingPaymentTestProcessorMinimumPurchase", locale)));
-        if (processAmount == null)
+        }
+        result.put("captureResult", Boolean.FALSE);
+        result.put("customerRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource,
+                "AccountingPaymentTestProcessorMinimumPurchase", locale)));
+        if (processAmount == null) {
             result.put("authResult", null);
+        }
 
         String refNum = UtilDateTime.nowAsString();
 
@@ -3416,9 +3461,9 @@ public class PaymentGatewayServices {
         result.put("authCode", "100");
         result.put("captureCode", "200");
         result.put("authFlag", "X");
-        result.put("authMessage", UtilMisc.toList(UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilMisc.toList(UtilProperties.getMessage(resource,
                 "AccountingPaymentTestCapture", locale)));
-        result.put("internalRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource, 
+        result.put("internalRespMsgs", UtilMisc.toList(UtilProperties.getMessage(resource,
                 "AccountingPaymentTestCapture", locale)));
         return result;
     }
@@ -3444,7 +3489,7 @@ public class PaymentGatewayServices {
         result.put("authRefNum", refNum);
         result.put("authAltRefNum", refNum);
         result.put("authCode", "100");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestCapture", locale));
 
         return result;
@@ -3455,7 +3500,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> alwaysApproveProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Debug.logInfo("Test Processor Approving Credit Card", module);
 
         String refNum = UtilDateTime.nowAsString();
@@ -3466,14 +3511,14 @@ public class PaymentGatewayServices {
         result.put("authAltRefNum", refNum);
         result.put("authCode", "100");
         result.put("authFlag", "A");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestProcessor", locale));
         return result;
     }
 
     public static Map<String, Object> alwaysApproveWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         String refNum = UtilDateTime.nowAsString();
         Debug.logInfo("Test Processor Approving Credit Card with Capture", module);
 
@@ -3487,7 +3532,7 @@ public class PaymentGatewayServices {
         result.put("authCode", "100");
         result.put("captureCode", "200");
         result.put("authFlag", "A");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestCapture", locale));
         return result;
     }
@@ -3509,7 +3554,7 @@ public class PaymentGatewayServices {
         result.put("authRefNum", refNum);
         result.put("authAltRefNum", refNum);
         result.put("authFlag", "D");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestProcessorDeclined", locale));
         return result;
     }
@@ -3531,7 +3576,7 @@ public class PaymentGatewayServices {
         result.put("authRefNum", refNum);
         result.put("authAltRefNum", refNum);
         result.put("authFlag", "N");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestProcessor", locale));
         return result;
     }
@@ -3553,7 +3598,7 @@ public class PaymentGatewayServices {
         result.put("authRefNum", refNum);
         result.put("authAltRefNum", refNum);
         result.put("authFlag", "E");
-        result.put("authMessage", UtilProperties.getMessage(resource, 
+        result.put("authMessage", UtilProperties.getMessage(resource,
                 "AccountingPaymentTestProcessor", locale));
         return result;
     }
@@ -3600,7 +3645,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> alwaysFailProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                 "AccountingPaymentTestAuthorizationAlwaysFailed", locale));
     }
 
@@ -3669,7 +3714,7 @@ public class PaymentGatewayServices {
         }
 
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentCannotBeCaptured", locale));
         }
         Timestamp txStamp = authTransaction.getTimestamp("transactionDate");
@@ -3683,7 +3728,9 @@ public class PaymentGatewayServices {
         cal.setTimeInMillis(txStamp.getTime());
         cal.add(Calendar.MINUTE, 2);
         Timestamp twoMinAfter = new Timestamp(cal.getTimeInMillis());
-        if (Debug.infoOn()) Debug.logInfo("Re-Auth Capture Test : Tx Date - " + txStamp + " : 2 Min - " + twoMinAfter + " : Now - " + nowStamp, module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Re-Auth Capture Test : Tx Date - " + txStamp + " : 2 Min - " + twoMinAfter + " : Now - " + nowStamp, module);
+        }
 
         if (nowStamp.after(twoMinAfter)) {
             result.put("captureResult", Boolean.FALSE);
@@ -3709,7 +3756,7 @@ public class PaymentGatewayServices {
         result.put("refundRefNum", UtilDateTime.nowAsString());
         result.put("refundFlag", "R");
         result.put("refundMessage", UtilProperties.getMessage(resource, "AccountingPaymentTestRefund", locale));
-        
+
         return result;
     }
 
@@ -3723,7 +3770,7 @@ public class PaymentGatewayServices {
         result.put("refundRefNum", UtilDateTime.nowAsString());
         result.put("refundFlag", "R");
         result.put("refundMessage", UtilProperties.getMessage(resource, "AccountingPaymentTestRefundFailure", locale));
-        
+
         return result;
     }
 
@@ -3744,7 +3791,7 @@ public class PaymentGatewayServices {
     public static boolean isReplacementOrder(GenericValue orderHeader) {
         boolean replacementOrderFlag = false;
 
-        List<GenericValue> returnItemResponses = new LinkedList<GenericValue>();
+        List<GenericValue> returnItemResponses = new LinkedList<>();
         try {
             returnItemResponses = orderHeader.getRelated("ReplacementReturnItemResponse", null, null, false);
         } catch (GenericEntityException e) {

@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import org.ofbiz.widget.model.AbstractModelAction.ClearField;
+
 /**
  *  A <code>ModelAction</code> visitor.
  */
@@ -47,7 +49,7 @@ public interface ModelActionVisitor {
 
     void visit(ModelFormAction.Service service) throws Exception;
 
-    void visit(ModelMenuAction.SetField setField) throws Exception;
+    void visit(@SuppressWarnings("deprecation") ModelMenuAction.SetField setField) throws Exception; // SCIPIO: Deprecated
 
     void visit(ModelTreeAction.Script script) throws Exception;
 
@@ -56,4 +58,6 @@ public interface ModelActionVisitor {
     void visit(ModelTreeAction.EntityAnd entityAnd) throws Exception;
 
     void visit(ModelTreeAction.EntityCondition entityCondition) throws Exception;
+
+    void visit(ClearField clearField) throws Exception; // SCIPIO: Added 2019-02-04
 }

@@ -1,26 +1,15 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-<#-- SCIPIO: ToDo: Rewrite the following javascript -->
+<#include "component://shop/webapp/shop/cart/cartcommon.ftl">
+
+<#-- SCIPIO: TODO: Rewrite the following javascript -->
 <@script>
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@pageUrl>addBulkToShoppingList</@pageUrl>";
     cform.submit();
 }
 function gwAll(e) {
@@ -70,10 +59,11 @@ function setAlternateGwp(field) {
 
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
-<#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0)) rawParams=true/></#assign>
+<#assign lastViewedProducts = lastViewedProducts!sessionAttributes.lastViewedProducts!><#-- SCIPIO: Access session only once -->
+<#if ((lastViewedProducts)?has_content && (lastViewedProducts?size > 0))>
+  <#assign continueLink><@catalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(lastViewedProducts.get(0)) rawParams=true/></#assign>
 <#else>
-  <#assign continueLink = makeOfbizUrl("main")>
+  <#assign continueLink = makePageUrl("main")>
 </#if>
 
 
@@ -81,7 +71,7 @@ function setAlternateGwp(field) {
     <@menu args=menuArgs>
         <#if shoppingCart.items()?has_content>
             <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
-            <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
+            <@menuitem type="link" href=makePageUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
             <@menuitem type="link" href="javascript:removeSelected('cartform');" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
         </#if>
     </@menu>
@@ -92,10 +82,10 @@ function setAlternateGwp(field) {
   <#if (shoppingCartSize > 0)>
     <#assign itemsFromList = false />
     <#assign promoItems = false />
-    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
+    <form method="post" action="<@pageUrl>modifycart</@pageUrl>" name="cartform">
     <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- TODO: type="..." -->
       <input type="hidden" name="removeSelected" value="false" />
-        <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" role="grid">
             <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="25%">${uiLabelMap.ProductProduct}</@th>
@@ -107,6 +97,31 @@ function setAlternateGwp(field) {
                     <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value=(uiLabelMap.CommonY) onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
                 </@tr>
             </@thead>
+            
+            <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+            <#macro orderItemAttrInfo cartLine>
+                <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+                <#if cartLine.getConfigWrapper()??>
+                  <#local selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+                  <#if selectedOptions?has_content>
+                    <ul class="order-item-attrib-list">
+                      <#list selectedOptions as option>
+                        <li>${option.getDescription()}</li>
+                      </#list>
+                    </ul>
+                  </#if>
+                </#if>
+                <#local attrs = cartLine.getOrderItemAttributes()/>
+                <#if attrs?has_content>
+                    <#assign attrEntries = attrs.entrySet()/>
+                    <ul class="order-item-attrib-list">
+                      <#list attrEntries as attrEntry>
+                        <li>${attrEntry.getKey()}: ${attrEntry.getValue()}</li>
+                      </#list>
+                    </ul>
+                </#if>
+            </#macro>
+            
             <@tbody>
                 <#assign itemClass = "2">
                 <#list shoppingCart.items() as cartLine>
@@ -129,43 +144,12 @@ function setAlternateGwp(field) {
                             <#else>
                                 <#assign parentProductId = cartLine.getProductId() />
                             </#if>
-                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()} - ${cartLine.getName()!}</a>
-                            <#-- For configurable products, the selected options are shown -->
-                            <#if cartLine.getConfigWrapper()??>
-                              <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
-                              <#if selectedOptions??>
-                                <ul class="order-item-attrib-list">
-                                <#list selectedOptions as option>
-                                    <li>${option.getDescription()}</li>
-                                </#list>
-                                </ul>
-                              </#if>
-                            </#if>
-                            <#assign attrs = cartLine.getOrderItemAttributes()/>
-                            <#if attrs?has_content>
-                                <#assign attrEntries = attrs.entrySet()/>
-                                <ul class="order-item-attrib-list">
-                                <#list attrEntries as attrEntry>
-                                    <li>
-                                        ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                                    </li>
-                                </#list>
-                                </ul>
-                            </#if>
+                            <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()} - ${cartLine.getName()!}</a>
+                            <@orderItemAttrInfo cartLine=cartLine/>
                         <#else>
                             <#-- non-product item -->
-                            ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}                            
-                            <#assign attrs = cartLine.getOrderItemAttributes()/>
-                            <#if attrs?has_content>
-                                <#assign attrEntries = attrs.entrySet()/>
-                                <ul class="order-item-attrib-list">
-                                <#list attrEntries as attrEntry>
-                                    <li>
-                                        ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                                    </li>
-                                </#list>
-                                </ul>
-                            </#if>
+                            ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}
+                            <@orderItemAttrInfo cartLine=cartLine/>                        
                             <#-- 
                             <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                               Show alternate gifts if there are any...
@@ -174,18 +158,24 @@ function setAlternateGwp(field) {
                               <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                               <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                                 <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(dispatcher, delegator, alternativeOptionProductId, requestAttributes.locale) />
-                                <option value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">${alternativeOptionName!alternativeOptionProductId}</option>
+                                <option value="<@pageUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@pageUrl>">${alternativeOptionName!alternativeOptionProductId}</option>
                               </#list>
                               </select>
                             </#if>
                             -->
                         </#if>
+                        <#-- SCIPIO: show application survey response QA list for this item -->
+                        <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                        <#if surveyResponses?has_content>
+                          <@orderItemSurvResList survResList=surveyResponses/>
+                        </#if>
+                   
                         </@td>
                         <#-- giftWrap & promotion info -->
                         <@td>
                              <#if cartLine.getShoppingListId()??>
                               <#assign itemsFromList = true />
-                              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>
+                              <a href="<@pageUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>
                             </#if>
                             <#if cartLine.getIsPromo()>
                               <#assign promoItems = true />
@@ -198,7 +188,7 @@ function setAlternateGwp(field) {
                               <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
                                 <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                                 <#list giftWrapOption as option>
-                                  <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>selected="selected"</#if>>${option.description} : ${option.amount!0}</option>
+                                  <option value="${option.productFeatureId}"<#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)> selected="selected"</#if>>${option.description} : ${option.amount!0}</option>
                                 </#list>
                               </select>
                             <#elseif showNoGiftWrapOptions>
@@ -214,7 +204,7 @@ function setAlternateGwp(field) {
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
                                   <#-- SCIPIO: NOTE: stock bugfixes applied here -->
-                                  <@modal id="${rawString(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
+                                  <@modal id="${raw(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
                                     <@fields type="default-compact"> 
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
                                       <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
@@ -260,45 +250,45 @@ function setAlternateGwp(field) {
                     </@tr>
 
                     <#-- now show adjustment details per line item -->
-			        <#assign itemAdjustments = cartLine.getAdjustments()>
-			        <#if showDetailed && showDetailedAdjustments>
-			          <#list itemAdjustments as orderItemAdjustment>
-			            <#-- SCIPIO: tax adjustments are especially confusing, so have their own option to hide -->
-			            <#if showDetailedTax || !["SALES_TAX"]?seq_contains(orderItemAdjustment.orderAdjustmentTypeId)>
-			            <@tr>
-			              <@td colspan="4">
-			                <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
-			                ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
-			                <#if orderItemAdjustment.description?has_content>: ${escapeVal(orderItemAdjustment.get("description",locale), 'htmlmarkup', {"allow":"internal"})}</#if>
-			                <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
-			                  <#if orderItemAdjustment.primaryGeoId?has_content>
-			                    <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
-			                    <#if primaryGeo.geoName?has_content>
-			                      ${uiLabelMap.OrderJurisdiction}: ${primaryGeo.geoName!primaryGeo.abbreviation!}<#-- [${primaryGeo.abbreviation!}]-->
-			                    </#if>
-			                    <#if orderItemAdjustment.secondaryGeoId?has_content>
-			                      <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
-			                      (${uiLabelMap.CommonIn}: ${secondaryGeo.geoName!secondaryGeo.abbreviation!}<#--  [${secondaryGeo.abbreviation!}])-->
-			                    </#if>
-			                  </#if>
-			                  <#if orderItemAdjustment.sourcePercentage??>${uiLabelMap.EcommerceRate}: ${orderItemAdjustment.sourcePercentage}</#if>
-			                  <#if orderItemAdjustment.customerReferenceId?has_content>${uiLabelMap.OrderCustomerTaxId}: ${orderItemAdjustment.customerReferenceId}</#if>
-			                  <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
-			                </#if>
-			                <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
-			                    <#if orderItemAdjustment.amountAlreadyIncluded?has_content && !orderItemAdjustment.exemptAmount?has_content><#-- TODO: Check for missing label. -->
-			                      : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded.setScale(taxFinalScale, taxRounding) isoCode=currencyUomId/>
-			                    </#if>
-			                </#if>
-			              </@td>
-			              <@td class="text-right">
-			              	<@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/>
-			              </@td>
-			              <@td></@td>
-			            </@tr>
-			            </#if>
-			          </#list>
-			       </#if>
+                    <#assign itemAdjustments = cartLine.getAdjustments()>
+                    <#if showDetailed && showDetailedAdjustments>
+                      <#list itemAdjustments as orderItemAdjustment>
+                        <#-- SCIPIO: tax adjustments are especially confusing, so have their own option to hide -->
+                        <#if showDetailedTax || !["SALES_TAX"]?seq_contains(orderItemAdjustment.orderAdjustmentTypeId)>
+                        <@tr>
+                          <@td colspan="4">
+                            <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
+                            ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
+                            <#if orderItemAdjustment.description?has_content>: ${escapeVal(orderItemAdjustment.get("description",locale), 'htmlmarkup', {"allow":"internal"})}</#if>
+                            <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
+                              <#if orderItemAdjustment.primaryGeoId?has_content>
+                                <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
+                                <#if primaryGeo.geoName?has_content>
+                                  ${uiLabelMap.OrderJurisdiction}: ${primaryGeo.geoName!primaryGeo.abbreviation!}<#-- [${primaryGeo.abbreviation!}]-->
+                                </#if>
+                                <#if orderItemAdjustment.secondaryGeoId?has_content>
+                                  <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
+                                  (${uiLabelMap.CommonIn}: ${secondaryGeo.geoName!secondaryGeo.abbreviation!}<#--  [${secondaryGeo.abbreviation!}])-->
+                                </#if>
+                              </#if>
+                              <#if orderItemAdjustment.sourcePercentage??>${uiLabelMap.EcommerceRate}: ${orderItemAdjustment.sourcePercentage}</#if>
+                              <#if orderItemAdjustment.customerReferenceId?has_content>${uiLabelMap.OrderCustomerTaxId}: ${orderItemAdjustment.customerReferenceId}</#if>
+                              <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
+                            </#if>
+                            <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
+                                <#if orderItemAdjustment.amountAlreadyIncluded?has_content && !orderItemAdjustment.exemptAmount?has_content><#-- TODO: Check for missing label. -->
+                                  : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded.setScale(taxFinalScale, taxRounding) isoCode=currencyUomId/>
+                                </#if>
+                            </#if>
+                          </@td>
+                          <@td class="text-right">
+                              <@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/>
+                          </@td>
+                          <@td></@td>
+                        </@tr>
+                        </#if>
+                      </#list>
+                   </#if>
                 </#list>
             <#-- SCIPIO: styling issues: 
             </@tbody>
@@ -372,9 +362,9 @@ function setAlternateGwp(field) {
         </@cell>
         <@cell columns=9 class="${styles.text_right!}">
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl("checkoutoptionslogin") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
-                <#--<@menuitem type="link" href=makeOfbizUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
-                <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
+                <@menuitem type="link" href=makePageUrl("checkoutoptionslogin") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
+                <#--<@menuitem type="link" href=makePageUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
+                <@menuitem type="link" href=makePageUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
             </@menu>
         </@cell>
     </@row>    
@@ -395,7 +385,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>
-                <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
+                <form method="post" action="<@pageUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="addpromocodeform">
                     <input type="text" size="15" name="productPromoCodeId" value="" />
                     <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
                     <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
@@ -418,11 +408,11 @@ function setAlternateGwp(field) {
                       <#list productPromos as productPromo>
                         <li>${productPromo.promoName!}
                            <#--${productPromo.promoText!}<br/>--><#-- Enable for further promotion information -->
-                           <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
+                           <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                         </li>
                       </#list>
                     </ol>
-                    <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
+                    <a href="<@pageUrl>showAllPromotions</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
                   </@section>
                 </@panel>
             </#if>
@@ -449,7 +439,7 @@ function setAlternateGwp(field) {
 <#-- SCIPIO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
 <#--
 <@section title=uiLabelMap.CommonQuickAdd>
-    <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
+    <form method="post" action="<@pageUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="quickaddform">
         <fieldset>
         ${uiLabelMap.EcommerceProductNumber}<input type="text" name="add_product_id" value="${requestParameters.add_product_id!}" />
          // check if rental data present  insert extra fields in Quick Add

@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import java.io.IOException;
 import java.io.FilterWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 import org.ofbiz.base.lang.SourceMonitored;
@@ -47,7 +47,9 @@ public class IndentingWriter extends FilterWriter {
 
     public IndentingWriter newline() throws IOException {
         lastWasNewline = true;
-        if (doNewline) super.write('\n');
+        if (doNewline) {
+            super.write('\n');
+        }
         return this;
     }
 
@@ -76,7 +78,9 @@ public class IndentingWriter extends FilterWriter {
 
     public IndentingWriter space() throws IOException {
         checkAfterNewline();
-        if (doSpace) super.write(' ');
+        if (doSpace) {
+            super.write(' ');
+        }
         return this;
     }
 

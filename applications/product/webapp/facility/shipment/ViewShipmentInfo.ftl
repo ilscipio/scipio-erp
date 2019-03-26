@@ -1,24 +1,11 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if shipment??>
 <@section title=uiLabelMap.PageTitleViewShipment>
-        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
+        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductShipmentId}</@td>
             <@td width="80%">${shipment.shipmentId}</@td>
@@ -33,11 +20,11 @@ under the License.
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryOrderId}</@td>
-            <@td width="80%"><#if shipment.primaryOrderId??><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryOrderId}</a></#if></@td>
+            <@td width="80%"><#if shipment.primaryOrderId??><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryOrderId}</a></#if></@td>
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryReturnId}</@td>
-            <@td width="80%"><#if shipment.primaryReturnId??><a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${shipment.primaryReturnId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryReturnId}</a></#if></@td>
+            <@td width="80%"><#if shipment.primaryReturnId??><a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${shipment.primaryReturnId}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryReturnId}</a></#if></@td>
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryShipGroupSeqId}</@td>

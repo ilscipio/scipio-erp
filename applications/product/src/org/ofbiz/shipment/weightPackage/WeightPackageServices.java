@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -35,9 +34,12 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * WeightPackageServices.
+ * <p>
+ * SCIPIO: 2018-11-28: All composed operations are now synchronized.
+ */
 public class WeightPackageServices {
-
-    private static BigDecimal ZERO = BigDecimal.ZERO;
 
     public static Map<String, Object> setPackageInfo(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -60,21 +62,23 @@ public class WeightPackageServices {
             }
         }
         // Check package weight, it must be greater than ZERO
-        if (UtilValidate.isEmpty(packageWeight) || packageWeight.compareTo(ZERO) <= 0) {
+        if (UtilValidate.isEmpty(packageWeight) || packageWeight.compareTo(BigDecimal.ZERO) <= 0) {
             return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorPackageWeightCannotBeNullOrZero", locale));
         }
         try {
             // Checked no of packages, it should not be greater than ordered quantity
             List<GenericValue> orderItems = EntityQuery.use(delegator).from("OrderItem").where("orderId", orderId, "statusId", "ITEM_APPROVED").queryList();
-            BigDecimal orderedItemQty = ZERO;
+            BigDecimal orderedItemQty = BigDecimal.ZERO;
             for (GenericValue orderItem : orderItems) {
                 orderedItemQty = orderedItemQty.add(orderItem.getBigDecimal("quantity"));
             }
+            synchronized (weightPackageSession) { // SCIPIO
             int packageQuantity = weightPackageSession.getPackedLines(orderId).size();
             if ((orderedItemQty.intValue() - packageQuantity) > 0) {
                 weightPackageSession.createWeightPackageLine(orderId, packageWeight, packageLength, packageWidth, packageHeight, shipmentBoxTypeId);
             } else {
                 return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorNumberOfPackageCannotBeGreaterThanTheNumberOfOrderedQuantity", locale));
+            }
             }
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -93,6 +97,8 @@ public class WeightPackageServices {
         String shipmentBoxTypeId = (String) context.get("shipmentBoxTypeId");
         Integer weightPackageSeqId = (Integer) context.get("weightPackageSeqId");
 
+        synchronized (weightPackageSession) { // SCIPIO
+
         // User can either enter all the dimensions or shipment box type, but not both
         if (UtilValidate.isNotEmpty(packageLength) || UtilValidate.isNotEmpty(packageWidth) || UtilValidate.isNotEmpty(packageHeight)) { // Check if user entered any dimensions
             if (UtilValidate.isNotEmpty(shipmentBoxTypeId)) { // check also if user entered shipment box type
@@ -105,7 +111,7 @@ public class WeightPackageServices {
         }
 
         // Check package weight, it must be greater than ZERO
-        if (UtilValidate.isEmpty(packageWeight) || packageWeight.compareTo(ZERO) <= 0) {
+        if (UtilValidate.isEmpty(packageWeight) || packageWeight.compareTo(BigDecimal.ZERO) <= 0) {
             return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorPackageWeightCannotBeNullOrZero", locale));
         }
 
@@ -114,6 +120,8 @@ public class WeightPackageServices {
         weightPackageSession.setPackageWidth(packageWidth, weightPackageSeqId);
         weightPackageSession.setPackageHeight(packageHeight, weightPackageSeqId);
         weightPackageSession.setShipmentBoxTypeId(shipmentBoxTypeId, weightPackageSeqId);
+
+        }
 
         return ServiceUtil.returnSuccess();
     }
@@ -140,8 +148,10 @@ public class WeightPackageServices {
         BigDecimal newEstimatedShippingCost = (BigDecimal) context.get("newEstimatedShippingCost");
 
         if (UtilValidate.isEmpty(newEstimatedShippingCost)) {
-            newEstimatedShippingCost = ZERO;
+            newEstimatedShippingCost = BigDecimal.ZERO;
         }
+
+        synchronized (weightPackageSession) { // SCIPIO
 
         weightPackageSession.setDimensionUomId(dimensionUomId);
         weightPackageSession.setWeightUomId(weightUomId);
@@ -164,7 +174,10 @@ public class WeightPackageServices {
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
         }
+        
         return response;
+
+        }
     }
 
     public static Map<String, Object> completeShipment(DispatchContext dctx, Map<String, ? extends Object> context) {

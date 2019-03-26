@@ -11,9 +11,9 @@ import org.ofbiz.base.util.UtilValidate;
 /**
  * Provides several utilities for handling jsTree objects (data, settings,
  * etc.). Compatible with jsTree version 3.x.x
- * 
+ *
  * @author jsoto
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
@@ -67,7 +67,7 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
     }
 
     /**
-     * 
+     *
      * @author jsoto
      *
      */
@@ -80,26 +80,35 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
             String[] plugins = p.split(",");
             for (String plugin : plugins) {
                 plugin = plugin.trim();
-                if (Arrays.asList(VALID_PLUGINS).contains(plugin) && !this.contains(plugin)) {
+                if (Arrays.asList(VALID_PLUGINS).contains(plugin) && !this.containsPlugin(plugin)) {
                     add(JsTreePlugin.newInstance(plugin));
                 }
             }
-
         }
 
         public boolean addPlugin(String plugin) {
-            if (Arrays.asList(VALID_PLUGINS).contains(plugin) && !this.contains(plugin)) {
+            if (Arrays.asList(VALID_PLUGINS).contains(plugin) && !this.containsPlugin(plugin)) {
                 return add(JsTreePlugin.newInstance(plugin));
             }
             return false;
         }
 
+        public boolean containsPlugin(String pluginName) {
+            if (UtilValidate.isNotEmpty(pluginName)) {
+                for(JsTreePlugin plugin : this) {
+                    if (pluginName.equals(plugin.pluginName())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     /**
      * Updates the dataItemids that matches the id passed and as well as all the
      * parent references
-     * 
+     *
      * @param id
      */
     private void updateTreeDataItemsIdAndParentReference(String id) {

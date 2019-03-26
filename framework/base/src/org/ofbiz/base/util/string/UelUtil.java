@@ -50,8 +50,8 @@ import org.ofbiz.base.util.collections.LocalizedMap;
 public class UelUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String localizedMapLocaleKey = LocalizedMap.class.getName() + "_locale".replace(".", "_");
-    protected static final ExpressionFactory exprFactory = JuelConnector.newExpressionFactory();
-    protected static final ELResolver defaultResolver = new ExtendedCompositeResolver() {
+    private static final ExpressionFactory exprFactory = JuelConnector.newExpressionFactory();
+    private static final ELResolver defaultResolver = new ExtendedCompositeResolver() {
         {
             add(new ExtendedMapResolver(false));
             add(new ExtendedListResolver(false));
@@ -62,11 +62,16 @@ public class UelUtil {
         }
     };
 
+    private UelUtil () {}
+
+    public static String getLocalizedMapLocaleKey() {
+        return localizedMapLocaleKey;
+    }
+
     /** Evaluates a Unified Expression Language expression and returns the result.
      * @param context Evaluation context (variables)
      * @param expression UEL expression
      * @return Result object
-     * @throws <code>javax.el.*</code> exceptions
      */
     public static Object evaluate(Map<String, ? extends Object> context, String expression) {
         return evaluate(context, expression, Object.class);
@@ -77,10 +82,8 @@ public class UelUtil {
      * @param expression UEL expression
      * @param expectedType The expected object Class to return
      * @return Result object
-     * @throws <code>javax.el.*</code> exceptions
      */
-    @SuppressWarnings("unchecked")
-    public static Object evaluate(Map<String, ? extends Object> context, String expression, Class expectedType) {
+    public static Object evaluate(Map<String, ? extends Object> context, String expression, Class<?> expectedType) {
         ELContext elContext = new ReadOnlyContext(context);
         ValueExpression ve = exprFactory.createValueExpression(elContext, expression, expectedType);
         return ve.getValue(elContext);
@@ -91,10 +94,8 @@ public class UelUtil {
      * @param context Evaluation context (variables)
      * @param expression UEL expression
      * @param expectedType The expected object Class to set
-     * @throws <code>javax.el.*</code> exceptions
      */
-    @SuppressWarnings("unchecked")
-    public static void setValue(Map<String, Object> context, String expression, Class expectedType, Object value) {
+    public static void setValue(Map<String, Object> context, String expression, Class<?> expectedType, Object value) {
         if (Debug.verboseOn()) {
             Debug.logVerbose("UelUtil.setValue invoked, expression = " + expression + ", value = " + value, module);
         }
@@ -107,7 +108,6 @@ public class UelUtil {
      * to null.
      * @param context Evaluation context (variables)
      * @param expression UEL expression
-     * @throws <code>javax.el.*</code> exceptions
      */
     public static void removeValue(Map<String, Object> context, String expression) {
         if (Debug.verboseOn()) {
@@ -118,10 +118,10 @@ public class UelUtil {
         ve.setValue(elContext, null);
     }
 
-    protected static class BasicContext extends ELContext {
-        protected final Map<String, Object> variables;
-        protected final VariableMapper variableMapper;
-        public BasicContext(Map<String, Object> context) {
+    private static class BasicContext extends ELContext {
+        private final Map<String, Object> variables;
+        private final VariableMapper variableMapper;
+        private BasicContext(Map<String, Object> context) {
             this.variableMapper = new BasicVariableMapper(this);
             this.variables = context;
         }
@@ -139,10 +139,10 @@ public class UelUtil {
         }
     }
 
-    protected static class ReadOnlyContext extends ELContext {
-        protected final Map<String, ? extends Object> variables;
-        protected final VariableMapper variableMapper;
-        public ReadOnlyContext(Map<String, ? extends Object> context) {
+    private static class ReadOnlyContext extends ELContext {
+        private final Map<String, ? extends Object> variables;
+        private final VariableMapper variableMapper;
+        private ReadOnlyContext(Map<String, ? extends Object> context) {
             this.variableMapper = new ReadOnlyVariableMapper(this);
             this.variables = UtilGenerics.cast(context);
         }
@@ -158,9 +158,9 @@ public class UelUtil {
         public VariableMapper getVariableMapper() {
             return this.variableMapper;
         }
-        protected static class ReadOnlyVariableMapper extends VariableMapper {
-            protected final ReadOnlyContext elContext;
-            protected ReadOnlyVariableMapper(ReadOnlyContext elContext) {
+        private static class ReadOnlyVariableMapper extends VariableMapper {
+            private final ReadOnlyContext elContext;
+            private ReadOnlyVariableMapper(ReadOnlyContext elContext) {
                 this.elContext = elContext;
             }
             @Override
@@ -178,9 +178,9 @@ public class UelUtil {
         }
     }
 
-    protected static class BasicVariableMapper extends VariableMapper {
-        protected final BasicContext elContext;
-        protected BasicVariableMapper(BasicContext elContext) {
+    private static class BasicVariableMapper extends VariableMapper {
+        private final BasicContext elContext;
+        private BasicVariableMapper(BasicContext elContext) {
             this.elContext = elContext;
         }
 
@@ -209,9 +209,9 @@ public class UelUtil {
     }
 
     @SuppressWarnings("serial")
-    protected static class ReadOnlyExpression extends ValueExpression {
-        protected final Object object;
-        protected ReadOnlyExpression(Object object) {
+    private static class ReadOnlyExpression extends ValueExpression {
+        private final Object object;
+        private ReadOnlyExpression(Object object) {
             this.object = object;
         }
 
@@ -242,13 +242,13 @@ public class UelUtil {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) {
+            if (obj == this) {
                 return true;
             }
-            try {
+            if (obj instanceof ReadOnlyExpression) {
                 ReadOnlyExpression other = (ReadOnlyExpression) obj;
                 return this.object.equals(other.object);
-            } catch (ClassCastException e) {}
+            }
             return false;
         }
 
@@ -266,26 +266,26 @@ public class UelUtil {
         public boolean isLiteralText() {
             return false;
         }
-        
+
     }
 
     @SuppressWarnings("serial")
-    protected static class BasicValueExpression extends ValueExpression {
-        protected final BasicContext elContext;
-        protected final String varName;
-        public BasicValueExpression(String varName, BasicContext elContext) {
+    private static class BasicValueExpression extends ValueExpression {
+        private final BasicContext elContext;
+        private final String varName;
+        private BasicValueExpression(String varName, BasicContext elContext) {
             this.elContext = elContext;
             this.varName = varName;
         }
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) {
+            if (obj == this) {
                 return true;
             }
-            try {
+            if (obj instanceof BasicValueExpression) {
                 BasicValueExpression other = (BasicValueExpression) obj;
                 return this.varName.equals(other.varName);
-            } catch (ClassCastException e) {}
+            }
             return false;
         }
         @Override
@@ -330,7 +330,7 @@ public class UelUtil {
     /** Custom <code>CompositeELResolver</code> used to handle variable
      * auto-vivify.
      */
-    protected static class ExtendedCompositeResolver extends CompositeELResolver {
+    private static class ExtendedCompositeResolver extends CompositeELResolver {
         @Override
         public void setValue(ELContext context, Object base, Object property, Object val) {
             super.setValue(context, base, property, val);
@@ -342,7 +342,9 @@ public class UelUtil {
                     BasicContext elContext = (BasicContext) context;
                     elContext.variables.put(property.toString(), val);
                     context.setPropertyResolved(true);
-                } catch (ClassCastException e) {}
+                } catch (ClassCastException e) {
+                    Debug.logInfo(e.getMessage(), module);
+                }
             }
         }
     }
@@ -350,9 +352,9 @@ public class UelUtil {
     /** Custom <code>ListELResolver</code> used to handle OFBiz
      * <code>List</code> syntax.
      */
-    protected static class ExtendedListResolver extends ListELResolver {
-        protected boolean isReadOnly;
-        public ExtendedListResolver(boolean isReadOnly) {
+    private static class ExtendedListResolver extends ListELResolver {
+        private boolean isReadOnly;
+        private ExtendedListResolver(boolean isReadOnly) {
             super(isReadOnly);
             this.isReadOnly = isReadOnly;
         }
@@ -372,7 +374,7 @@ public class UelUtil {
                         Debug.logVerbose("ExtendedListResolver.setValue adding List element: base = " + base + ", property = " + property + ", value = " + val, module);
                     }
                     context.setPropertyResolved(true);
-                    List list = (List) base;
+                    List<Object> list = (List<Object>) base;
                     list.add(val);
                 } else if (str.startsWith("insert@")) {
                     if (Debug.verboseOn()) {
@@ -381,7 +383,7 @@ public class UelUtil {
                     context.setPropertyResolved(true);
                     String indexStr = str.replace("insert@", "");
                     int index = Integer.parseInt(indexStr);
-                    List list = (List) base;
+                    List<Object> list = (List<Object>) base;
                     try {
                         list.add(index, val);
                     } catch (UnsupportedOperationException ex) {
@@ -399,8 +401,8 @@ public class UelUtil {
     /** Custom <code>MapELResolver</code> class used to accommodate
      * <code>LocalizedMap</code> instances.
      */
-    protected static class ExtendedMapResolver extends MapELResolver {
-        public ExtendedMapResolver(boolean isReadOnly) {
+    private static class ExtendedMapResolver extends MapELResolver {
+        private ExtendedMapResolver(boolean isReadOnly) {
             super(isReadOnly);
         }
         @Override
@@ -411,7 +413,7 @@ public class UelUtil {
             }
             if (base != null && base instanceof LocalizedMap) {
                 context.setPropertyResolved(true);
-                LocalizedMap map = (LocalizedMap) base;
+                LocalizedMap<?> map = (LocalizedMap<?>) base;
                 Locale locale = null;
                 try {
                     VariableMapper vm = context.getVariableMapper();
@@ -434,11 +436,11 @@ public class UelUtil {
                     }
                     locale = Locale.getDefault();
                 }
-                return resolveVariable(property.toString(), (Map) map, locale);
+                return resolveVariable(property.toString(), (Map<String, ?>) map, locale);
             }
             if (base != null && base instanceof Map && property instanceof String) {
                 context.setPropertyResolved(true);
-                return resolveVariable(property.toString(), (Map) base, null);
+                return resolveVariable(property.toString(), (Map<String, ?>) base, null);
             }
             return super.getValue(context, base, property);
         }
@@ -541,11 +543,11 @@ public class UelUtil {
             } else if ("boolean".equals(createObjectType)) {
                 return Boolean.FALSE;
             } else if ("integer".equals(createObjectType)) {
-                return Integer.valueOf(0);
+                return 0;
             } else if ("long".equals(createObjectType)) {
-                return Long.valueOf(0);
+                return 0L;
             } else if ("double".equals(createObjectType)) {
-                return Double.valueOf(0);
+                return (double) 0;
             } else if ("bigDecimal".equals(createObjectType)) {
                 return BigDecimal.ZERO;
             }

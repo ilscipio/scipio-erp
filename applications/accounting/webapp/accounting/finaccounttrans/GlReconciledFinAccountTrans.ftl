@@ -1,30 +1,17 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<form id="glReconciledFinAccountTrans" name="glReconciledFinAccountTransForm" method="post" action="<@ofbizUrl>callReconcileFinAccountTrans?clearAll=Y</@ofbizUrl>">
+<form id="glReconciledFinAccountTrans" name="glReconciledFinAccountTransForm" method="post" action="<@pageUrl>callReconcileFinAccountTrans?clearAll=Y</@pageUrl>">
     <input name="_useRowSubmit" type="hidden" value="Y"/>
     <input name="finAccountId" type="hidden" value="${finAccountId}"/>
     <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
   
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&glReconciliationId=${glReconciliationId}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}"/>
+            <@menuitem type="link" href=makePageUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&glReconciliationId=${glReconciliationId}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}"/>
             <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
             <#if finAcctTransCondList?has_content>
                 <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text=uiLabelMap.AccountingCancelBankReconciliation class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
@@ -37,7 +24,7 @@ under the License.
     
     <@section title=uiLabelMap.AccountingPreviousBankReconciliation>
         <#if previousGlReconciliation?has_content>
-            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                 <@tr>
                     <@td>${uiLabelMap.FormFieldTitle_glReconciliationName}</@td>
                     <@td>${previousGlReconciliation.glReconciliationName!}</@td>
@@ -55,12 +42,12 @@ under the License.
                 </@tr>
                 <@tr>
                     <@td>${uiLabelMap.AccountingOpeningBalance}</@td>
-                    <@td><@ofbizCurrency amount=previousGlReconciliation.openingBalance?default('0')/></@td>
+                    <@td><@ofbizCurrency amount=(previousGlReconciliation.openingBalance!'0')/></@td>
                 </@tr>
                 <#if previousGlReconciliation.reconciledBalance??>
                     <@tr>
                         <@td>${uiLabelMap.FormFieldTitle_reconciledBalance}</@td>
-                        <@td><@ofbizCurrency amount=previousGlReconciliation.reconciledBalance?default('0')/></@td>
+                        <@td><@ofbizCurrency amount=(previousGlReconciliation.reconciledBalance!'0')/></@td>
                     </@tr>
                 </#if>
                 <#if previousClosingBalance??>
@@ -75,7 +62,7 @@ under the License.
 
     <@section title=uiLabelMap.AccountingFinAcctTransAssociatedToGlReconciliation>
         <#if finAccountTransList?has_content>
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
+            <@table type="data-list" autoAltRows=true>
                 <@thead>   
                     <@tr class="header-row-2">
                         <@th>${uiLabelMap.FormFieldTitle_finAccountTransId}</@th>
@@ -126,13 +113,13 @@ under the License.
                             ${finAccountTrans.finAccountTransId!}
                         </@td>
                         <@td>${finAccountTransType.description!}</@td>
-                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@ofbizInterWebappUrl>">[${(partyName.partyId)!}]</a></#if></@td>
+                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@serverUrl>">[${(partyName.partyId)!}]</a></#if></@td>
                         <@td>${finAccountTrans.transactionDate!}</@td>
                         <@td>${finAccountTrans.entryDate!}</@td>
                         <@td><@ofbizCurrency amount=finAccountTrans.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
                         <@td>
                             <#if finAccountTrans.paymentId?has_content>
-                                <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>">${finAccountTrans.paymentId}</a>
+                                <a href="<@pageUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@pageUrl>">${finAccountTrans.paymentId}</a>
                             </#if>
                         </@td>
                         <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
@@ -164,12 +151,12 @@ under the License.
     </@section>
 </form>
 
-<form name="CancelBankReconciliationForm" method="post" action="<@ofbizUrl>cancelBankReconciliation</@ofbizUrl>">
+<form name="CancelBankReconciliationForm" method="post" action="<@pageUrl>cancelBankReconciliation</@pageUrl>">
     <input name="finAccountId" type="hidden" value="${finAccountId}"/>
     <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
 </form>
 <#list finAccountTransList as finAccountTrans>
-    <form name="removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>removeFinAccountTransAssociation</@ofbizUrl>">
+    <form name="removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@pageUrl>removeFinAccountTransAssociation</@pageUrl>">
         <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
         <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
         <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>

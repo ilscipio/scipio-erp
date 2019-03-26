@@ -21,15 +21,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.WebAppUtil;
 
 import com.ilscipio.scipio.cms.CmsUtil;
 
@@ -43,53 +42,60 @@ public class CmsMediaServlet extends HttpServlet {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    protected static final String USE_CACHE_PARAM_DEFAULT = "cache";
+
     private static final String FN_SOURCE = UtilProperties.getPropertyValue("cms", "media.serve.filename.source", "name");
     private static final String fnSrcFieldName = "origfn".equals(FN_SOURCE) ? "objectInfo" : "dataResourceName";
     private static final String fnSrcFieldNameFallback = "origfn".equals(FN_SOURCE) ? "dataResourceName" : "objectInfo";
     private static final boolean variantsEnabled = UtilProperties.getPropertyAsBoolean("cms", "media.variants.enabled", true);
-    
-    public CmsMediaServlet() {
-        super();
-    }
 
-    /**
-     * @see javax.servlet.http.HttpServlet#init(javax.servlet.ServletConfig)
-     */
+    private boolean useCacheDefault = true;
+    private String useCacheParam = USE_CACHE_PARAM_DEFAULT;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        this.useCacheDefault = UtilMisc.booleanValue(config.getInitParameter("useCache"), true);
+        String useCacheParam = config.getInitParameter("useCacheParam");
+        if (useCacheParam != null && !"true".equals(useCacheParam)) {
+            if (useCacheParam.isEmpty() || "false".equals(useCacheParam)) {
+                this.useCacheParam = null;
+            } else {
+                this.useCacheParam = useCacheParam;
+            }
+        }
+        if (Debug.infoOn()) {
+            Debug.logInfo("Cms: Media servlet settings for servlet '" + config.getServletName() + "' of webapp '"
+                    + config.getServletContext().getContextPath() + "': [" 
+                    + "useCache=" + this.useCacheDefault + ", useCacheParam="
+                    + (this.useCacheParam != null ? this.useCacheParam : "(disabled)")+ "]", module);
+        }
     }
 
-    /**
-     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse)
-     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
     /**
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse)
-     *      
      * reference: {@link org.ofbiz.content.data.DataEvents#serveImage}
-     * 
+     * <p>
      * TODO: still missing an "auto" best-size selection based on width and height
      * TODO: this isn't looking at the global debug flag yet for the error msgs
      * WARN: autoVariant logic has severe limitations - see {@link CmsMediaWorker#selectBestImageVariant}
+     * TODO: REVIEW: Should this method be enclosed in a transaction? Mitigated for now using useCache.
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // SPECIAL: getDelegator/getDispatcher methods required so tenant db doesn't break (or breaks less)
-        Delegator delegator = getDelegator(request);
-        LocalDispatcher dispatcher = getDispatcher(request);
+        Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
+        LocalDispatcher dispatcher = WebAppUtil.getDispatcherFilterSafe(request, delegator);
         Locale locale = UtilHttp.getLocale(request);
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        
+        GenericValue userLogin = WebAppUtil.getUserLogin(request);
+
         String contentId = request.getParameter("contentId");
         String dataResourceId = request.getParameter("dataResourceId");
-        
+
         String variant = null; // this specifies an exact variant to use, by name
         ImageVariantConfig.FitMode autoVariantMode = null; // this tries to find a best-fit variant
         String widthStr = null;
@@ -103,11 +109,13 @@ public class CmsMediaServlet extends HttpServlet {
                 autoVariantMode = ImageVariantConfig.FitMode.DEFAULT;
             }
         }
-        
+
+        final boolean useCache = isUseCache(request);
+
         GenericValue dataResource;
         try {
             String isPublic;
-            
+
             // AUTO VARIANT MODE - more difficult
             if (autoVariantMode != null) {
                 /**
@@ -122,8 +130,8 @@ public class CmsMediaServlet extends HttpServlet {
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Auto-selecting image variant [contentId: " + contentId + ", mode: " + autoVariantMode.getStrName() + "]", module);
                     }
-                    ImageVariantConfig.VariantInfo variantInfo = imgVariantCfg.getCanvasBestFitVariant(autoVariantMode, 
-                            UtilValidate.isNotEmpty(widthStr) ? Integer.parseInt(widthStr) : null, 
+                    ImageVariantConfig.VariantInfo variantInfo = imgVariantCfg.getCanvasBestFitVariant(autoVariantMode,
+                            UtilValidate.isNotEmpty(widthStr) ? Integer.parseInt(widthStr) : null,
                             UtilValidate.isNotEmpty(heightStr) ? Integer.parseInt(heightStr) : null);
                     if (variantInfo != null) {
                         variant = variantInfo.getName();
@@ -141,18 +149,18 @@ public class CmsMediaServlet extends HttpServlet {
                     }
                 }
             }
-            
+
             if ((UtilValidate.isEmpty(variant) || "original".equals(variant))) {
                 // STANDARD CASE
                 if (UtilValidate.isNotEmpty(dataResourceId)) {
-                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).queryList());
+                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryList());
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with dataResourceId [" + dataResourceId + "]");
                         return;
                     }
                 } else if (UtilValidate.isNotEmpty(contentId)) {
-                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentId).queryList());
+                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryList());
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with contentId [" + contentId + "]");
@@ -162,16 +170,16 @@ public class CmsMediaServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
                 }
-                
+
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Serving media (original) [contentId: " + contentId + "]", module);
                 }
-                
+
                 isPublic = dataResource.getString("isPublic");
             } else {
                 GenericValue origDataResource = null;
                 if (UtilValidate.isNotEmpty(dataResourceId)) {
-                    origDataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).queryList());
+                    origDataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryList());
                     if (origDataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with dataResourceId [" + dataResourceId + "]");
@@ -186,19 +194,20 @@ public class CmsMediaServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
                 }
-                
+
                 // this implies we're getting IMAGE_OBJECT type
-                GenericValue contentAssoc = EntityUtil.getFirst(EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId, 
-                        "contentAssocTypeId", "IMGSZ_" + variant.toUpperCase()).queryList());
-                
+                GenericValue contentAssoc = EntityUtil.getFirst(EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId,
+                        "contentAssocTypeId", "IMGSZ_" + variant.toUpperCase()).cache(useCache).queryList());
+
                 if (contentAssoc != null) {
-                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentAssoc.getString("contentIdTo")).queryList());
+                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView")
+                            .where("coContentId", contentAssoc.getString("contentIdTo")).cache(useCache).queryList());
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with contentId [" + contentId + "]");
                         return;
                     }
-                    
+
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Serving image variant [contentId: " + contentId + ", variant: " + variant + ", variant contentId: " + dataResource.getString("coContentId") + "]", module);
                     }
@@ -209,7 +218,7 @@ public class CmsMediaServlet extends HttpServlet {
                     if (origDataResource != null) {
                         dataResource = origDataResource;
                     } else {
-                        dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentId).queryList());
+                        dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryList());
                         if (dataResource == null) {
                             response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                     "Media not found with contentId [" + contentId + "]");
@@ -217,19 +226,19 @@ public class CmsMediaServlet extends HttpServlet {
                         }
                     }
                 }
-                
+
                 // WARN: we are getting the isPublic from the RESIZED image here, NOT the original; this may allow
-                // faster lookup (and more exact), but it relies on the media services properly updating the resized 
+                // faster lookup (and more exact), but it relies on the media services properly updating the resized
                 // images!!
                 isPublic = dataResource.getString("isPublic");
             }
-            
+
             // SECURITY: absolutely must deny anything not marked as CMS media, otherwise this could be used to read sensitive internal documents!
             if (dataResource.getString("coContentTypeId") == null || !dataResource.getString("coContentTypeId").startsWith("SCP_MEDIA")) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Media not found");
                 return;
             }
-            
+
             // SECURITY: 2017-08-02: isPublic check; borrowed from DataEvents.serveObjectData
             String permissionService = EntityUtilProperties.getPropertyValue("content", "stream.permission.service", "genericContentPermission", delegator);
             // see if data resource is public or not
@@ -271,17 +280,17 @@ public class CmsMediaServlet extends HttpServlet {
                     return;
                 }
             }
-            
+
             String fileName = (UtilValidate.isNotEmpty(dataResource.getString(fnSrcFieldName))) ? dataResource.getString(fnSrcFieldName)
                     : dataResource.getString(fnSrcFieldNameFallback);
-            
+
             // see org.ofbiz.content.data.DataEvents#serveImage for reference code
             ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-            Map<String, Object> streamResult = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), locale, application.getRealPath("/"), false);
+            Map<String, Object> streamResult = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), locale, application.getRealPath("/"), useCache);
             byte[] mediaData = (byte[]) streamResult.get("streamBytes");
             InputStream mediaStream = (InputStream) streamResult.get("stream");
             long mediaLength = (long) streamResult.get("length");
-            
+
             response.setContentType(dataResource.getString("mimeTypeId"));
             response.setHeader("Content-Disposition", "inline; filename= " + fileName);
             response.setContentLengthLong(mediaLength);
@@ -301,38 +310,19 @@ public class CmsMediaServlet extends HttpServlet {
         }
     }
 
-    /**
-     * @see javax.servlet.http.HttpServlet#destroy()
-     */
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    /**
-     * SPECIAL: needed to not break tenant dbs.
-     */
-    private Delegator getDelegator(HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator != null) return delegator;
-        delegator = (Delegator) request.getSession().getAttribute("delegator");
-        if (delegator != null) return delegator;
-        delegator = (Delegator) request.getServletContext().getAttribute("delegator");
-        if (delegator != null) return delegator;
-        return DelegatorFactory.getDelegator("default");
-    }
-    
-    /**
-     * SPECIAL: needed to not break tenant dbs.
-     */
-    private LocalDispatcher getDispatcher(HttpServletRequest request) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        dispatcher = (LocalDispatcher) request.getSession().getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        dispatcher = (LocalDispatcher) request.getServletContext().getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        Delegator delegator = getDelegator(request);
-        return ServiceDispatcher.getLocalDispatcher(delegator.getDelegatorName(), delegator);
+    protected boolean isUseCache(HttpServletRequest request) {
+        if (useCacheParam != null) {
+            String value = request.getParameter(useCacheParam);
+            if (value != null) {
+                if ("Y".equals(value)) {
+                    return true;
+                } else if ("N".equals(value)) {
+                    return false;
+                } else {
+                    ; // ignore.
+                }
+            }
+        }
+        return useCacheDefault;
     }
 }

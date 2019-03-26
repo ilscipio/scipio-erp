@@ -18,46 +18,44 @@
  *******************************************************************************/
 package org.ofbiz.product.store;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 
 public class ProductStoreEvents {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
-    @SuppressWarnings("unchecked")
     public static String getChildProductStoreGroupTree(HttpServletRequest request, HttpServletResponse response){
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String parentGroupId = request.getParameter("parentGroupId");
         String onclickFunction = request.getParameter("onclickFunction");
 
-        List productStoreGroupList = new LinkedList<Object>();
+        List<Map<Object, Object>> productStoreGroupList = new ArrayList<>();
         List<GenericValue> children;
         List<String> sortList = UtilMisc.toList("sequenceNum");
 
         try {
             GenericValue productStoreGroup = EntityQuery.use(delegator).from("ProductStoreGroup").where("productStoreGroupId", parentGroupId).cache(true).queryOne();
-            if (UtilValidate.isNotEmpty(productStoreGroup)) {
+            if (productStoreGroup != null) {
                 children = EntityQuery.use(delegator).from("ProductStoreGroupRollupAndChild").where("parentGroupId", parentGroupId).cache(true).filterByDate().queryList();
                 if (UtilValidate.isNotEmpty(children)) {
                     for (GenericValue child : children ) {
                         String productStoreGroupId = child.getString("productStoreGroupId");
-                        Map josonMap = new HashMap<String, Object>();
+                        Map<Object, Object> josonMap = new HashMap<>();
                         List<GenericValue> childList = null;
                         // Get the child list of chosen category
                         childList = EntityQuery.use(delegator).from("ProductStoreGroupRollupAndChild").where("parentGroupId", productStoreGroupId).cache(true).filterByDate().queryList();
@@ -65,17 +63,17 @@ public class ProductStoreEvents {
                         if (UtilValidate.isNotEmpty(childList)) {
                             josonMap.put("state", "closed");
                         }
-                        Map dataMap = new HashMap<String, Object>();
-                        Map dataAttrMap = new HashMap<String, Object>();
+                        Map<String, Object> dataMap = new HashMap<>();
+                        Map<String, Object> dataAttrMap = new HashMap<>();
 
                         dataAttrMap.put("onClick", onclickFunction + "('" + productStoreGroupId + "')");
-                        String hrefStr = "EditProductStoreGroupAndAssoc"; 
+                        String hrefStr = "EditProductStoreGroupAndAssoc";
                         dataAttrMap.put("href", hrefStr);
 
                         dataMap.put("attr", dataAttrMap);
                         dataMap.put("title", child.get("productStoreGroupName") + " [" + child.get("productStoreGroupId") + "]");
                         josonMap.put("data", dataMap);
-                        Map attrMap = new HashMap<String, Object>();
+                        Map<String, Object> attrMap = new HashMap<>();
                         attrMap.put("parentGroupId", productStoreGroupId);
                         josonMap.put("attr",attrMap);
                         josonMap.put("sequenceNum",child.get("sequenceNum"));
@@ -88,7 +86,7 @@ public class ProductStoreEvents {
                 }
             }
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
             return "error";
         }
         return "success";

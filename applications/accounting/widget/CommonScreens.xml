@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -167,7 +154,10 @@ under the License.
     <screen name="CommonBillingAccountDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccountSideBar"/>
+                <!-- SCIPIO: This submenu is empty, this can't work... 
+                    so force activeSubMenuItem to the entry in the top menu.
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccountSideBar"/>-->
+                <set field="activeSubMenuItem" value="billingaccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -259,8 +249,9 @@ under the License.
                                                 </not>
                                             </condition>
                                             <widgets>
+                                                <!--
                                                 <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                    name="AgreementItemTabBar" />
+                                                    name="AgreementItemTabBar" />-->
                                                 <container style="button-bar">
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
                                                         style="${styles.link_nav} ${styles.action_add}" />
@@ -273,7 +264,7 @@ under the License.
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
                                                         style="${styles.link_nav} ${styles.action_add}" />
                                                     <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                        name="AgreementSubTabBar" />
+                                                        name="AgreementTabBar" />
                                                 </container>
                                             </fail-widgets>
                                         </section>
@@ -287,6 +278,18 @@ under the License.
                             </fail-widgets>
                         </section>
                     </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="AgreementSubDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="AgreementItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>
@@ -315,7 +318,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ListBudgets"/>
                 <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
-                <entity-and list="budgetStatus" entity-name="BudgetStatus">
+                <entity-and entity-name="BudgetStatus" list="budgetStatus">
                     <field-map field-name="budgetId" from-field="budgetId"/>
                     <order-by field-name="-statusDate"/>
                 </entity-and>
@@ -352,7 +355,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
-                <entity-one value-field="finAccount" entity-name="FinAccount"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 
                 <!-- sidebar additional condition -->
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.finAccountId}"/>
@@ -452,23 +455,53 @@ under the License.
         </section>
     </screen>
     
-    <!-- Potentially remove? -->
+    
     <screen name="CommonOrganizationAccountingReportsDecorator">
         <section>
             <actions>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="organizationPartyId"/>
-                </entity-one>
-                <!-- sidebar additional condition -->
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+                <if>
+                    <condition><not><if-empty field="organizationPartyId" /></not></condition>
+                    <then>
+                        <service service-name="getPartyAccountingPreferences" result-map="result">
+                        <field-map field-name="organizationPartyId"/>
+                        </service>
+                        
+                        <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
+                        <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                        
+                        <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                            <field-map field-name="partyId" from-field="organizationPartyId"/>
+                        </entity-one>
+                        <!-- sidebar additional condition -->
+                        <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+                    </then>
+                    <else>
+                        <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
+                        <set field="labelTitleProperty" value="" />
+                        <entity-condition entity-name="PartyAcctgPreference" list="parties"/>
+                    </else>
+                </if>
+                
+                               
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
-                        <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <not><if-empty field="organizationPartyId" /></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} Select organization</label>
+                                <platform-specific><html><html-template location="component://accounting/webapp/accounting/reports/SelectOrganization.ftl"></html-template></html></platform-specific>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -533,17 +566,37 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <!--
     *************** 
-    * Journals
+    * Transactions
     ***************
      -->
-    <screen name="CommonJournalsDecorator">
+    <screen name="CommonTransactionsDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#JournalsSideBar" />
+                <!--  <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Transactions"/> -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#TransactionsSideBar" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!--
+    *************** 
+    * Reports
+    ***************
+     -->
+    <screen name="CommonReportsDecorator">
+        <section>
+            <actions>
+                <!-- <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="TransactionReports"/> -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#TransactionReportsSideBar" />
+                <!-- <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#JournalsSideBar" /> -->
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
             <widgets>
@@ -562,7 +615,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -610,7 +663,7 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentSideBar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

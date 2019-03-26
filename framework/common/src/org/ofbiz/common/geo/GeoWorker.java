@@ -35,9 +35,11 @@ import org.ofbiz.entity.util.EntityUtil;
 /**
  * Worker methods for Geos
  */
-public class GeoWorker {
+public final class GeoWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private GeoWorker() {}
 
     public static List<GenericValue> expandGeoGroup(String geoId, Delegator delegator) {
         GenericValue geo = null;
@@ -57,8 +59,6 @@ public class GeoWorker {
             return UtilMisc.toList(geo);
         }
 
-        //Debug.logInfo("Expanding geo : " + geo, module);
-
         List<GenericValue> geoList = new LinkedList<GenericValue>();
         List<GenericValue> thisGeoAssoc = null;
         try {
@@ -76,12 +76,7 @@ public class GeoWorker {
                 }
                 geoList.addAll(expandGeoGroup(nextGeo));
             }
-        } else {
-            //Debug.logInfo("No associated geos with this group", module);
         }
-
-        //Debug.logInfo("Expanded to : " + geoList, module);
-
         return geoList;
     }
 
@@ -123,7 +118,6 @@ public class GeoWorker {
         if (geoList == null || geo == null) {
             return false;
         }
-        //Debug.logInfo("Contains Geo : " + geoList.contains(geo));
         return geoList.contains(geo);
     }
 

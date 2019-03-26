@@ -1,4 +1,4 @@
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- Scipio Template Editor  -->
 
@@ -11,7 +11,7 @@
 
 <#-- EDIT TEMPLATE -->
 <#if pageTemplate?has_content>
-    <#assign editTemplateUrl = makeOfbizUrl("editTemplate?pageTemplateId=${pageTemplate.pageTemplateId!''}")>
+    <#assign editTemplateUrl = makePageUrl("editTemplate?pageTemplateId=${pageTemplate.pageTemplateId!''}")>
 
     <#-- Javascript functions -->
     <@script>
@@ -22,7 +22,7 @@
             var pageTemplateId = $("#pageTemplateId").val();
             $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>activateTemplateVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>activateTemplateVersion</@pageUrl>",
                   data: {pageTemplateId:pageTemplateId,versionId:versionId},
                   cache:false,
                   async:true,
@@ -39,7 +39,7 @@
         function addVersion(form, activate) {
             return $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>addTemplateVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>addTemplateVersion</@pageUrl>",
                   data: getFormData(),
                   cache:false,
                   async:true,
@@ -81,7 +81,16 @@
                     indentWithTabs: ${indentWithTabs?string},
                     foldGutter: true,
                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                    extraKeys: {
+                     Tab: function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                      },
+                      "Shift-Tab": function (cm) {
+                        cm.indentSelection("subtract");
+                      },
+                      "Ctrl-Space": "autocomplete"
+                    },
                     }).on('change', function(cMirror){
                         $('textarea#templateBody')[0].value = cMirror.getValue();
                         setTemplateSource('Body');
@@ -109,7 +118,7 @@
 
         function updateTemplateInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updateTemplateInfo</@ofbizUrl>", 'settingsForm',
+            updateCmsElement("<@pageUrl escapeAs='js'>updateTemplateInfo</@pageUrl>", 'settingsForm',
                 function(eventMsgs) {
                     doCmsSuccessRedirect("${escapeFullUrl(editTemplateUrl, 'js')}", eventMsgs);
                 }
@@ -117,10 +126,10 @@
         }
 
         function deleteTemplate() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteTemplate</@ofbizUrl>",
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteTemplate</@pageUrl>",
                 { pageTemplateId : "${(pageTemplate.pageTemplateId)!}" },
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>templates</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>templates</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -136,7 +145,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editTemplate") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateTemplate/>
+            <@menuitem type="link" href=makePageUrl("editTemplate") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewTemplate/>
             <@cmsCopyMenuItem target="copyTemplate" title=uiLabelMap.CmsCopyTemplate>
                 <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -148,7 +157,7 @@
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAttribute}</@heading>
-                    <form method="post" action="<@ofbizUrl>addAttributeToTemplate</@ofbizUrl>" id="new-attribute-form">
+                    <form method="post" action="<@pageUrl>addAttributeToTemplate</@pageUrl>" id="new-attribute-form">
                     <@fields type="default-compact">
                       <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                       <@attributeFields />
@@ -160,7 +169,7 @@
             <@menuitem type="generic">
                 <@modal id="modal_new_asset" label=uiLabelMap.CmsAddAsset linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAsset}</@heading>
-                     <form method="post" action="<@ofbizUrl>addAssetToTemplate</@ofbizUrl>">
+                     <form method="post" action="<@pageUrl>addAssetToTemplate</@pageUrl>">
                         <@fields type="default-compact">
                           <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                           <@assetAssocFields/>
@@ -174,7 +183,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToTemplate")>
+                        <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToTemplate") webSiteId=((pageTemplate.webSiteId)!)>
                             <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -184,7 +193,7 @@
             <#-- NOTE: void(0) MUST be at the end to prevent browser failure -->
             <@menuitem type="link" href="javascript:addVersion($('form#editorForm'),false); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:activateVersion($('#versionId').val()); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsPublish/>
-            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsSaveAndPublish/>
+            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
 
             <@menuitem type="link" href="javascript:deleteTemplate(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
 
@@ -286,7 +295,7 @@
                         <#list attrTemplates as attrTmpl>
                           <@modal id="edit_attr_${attrTmpl_index}">
                             <@heading>${uiLabelMap.CmsEditAttribute}</@heading>
-                            <form method="post" action="<@ofbizUrl>updateTemplateAttribute</@ofbizUrl>" id="edit-attribute-form-${attrTmpl_index}">
+                            <form method="post" action="<@pageUrl>updateTemplateAttribute</@pageUrl>" id="edit-attribute-form-${attrTmpl_index}">
                             <@fields type="default-compact">
                               <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                               <@attributeFields attrTmpl=attrTmpl/>
@@ -320,8 +329,8 @@
                                     <@td>${assetTmpl.inputPosition!0}</@td>
                                     <@td>${assetTmpl.importName!}</@td>
                                     <@td>${(assetTmpl.assoc.displayName)!assetTmpl.name!}</@td>
-                                    <@td><a href="<@ofbizUrl>editAsset?assetTemplateId=${assetTmpl.id}</@ofbizUrl>">${assetTmpl.name!}</a></@td>
-                                    <#assign assetTmplBody = rawString(assetTmpl.templateBody!"")>
+                                    <@td><a href="<@pageUrl>editAsset?assetTemplateId=${assetTmpl.id}</@pageUrl>">${assetTmpl.name!}</a></@td>
+                                    <#assign assetTmplBody = raw(assetTmpl.templateBody!"")>
                                     <#if (assetTmplBody?length > maxAssetTemplateDisplayLength)>
                                         <#assign assetTmplBody = assetTmplBody?substring(0, maxAssetTemplateDisplayLength)>
                                     </#if>
@@ -342,9 +351,9 @@
                         <#-- FIXME: this hast to be rendered outside table and section because of an issue
                             with styles (.row .row?) -->
                         <#list assetTemplates as assetTmpl>
-                          <@modal id="edit_asset_${rawString(assetTmpl.assocId)}">
+                          <@modal id="edit_asset_${raw(assetTmpl.assocId)}">
                             <@heading>${uiLabelMap.CmsEditAsset}</@heading>
-                            <form method="post" action="<@ofbizUrl>updateTemplateAsset</@ofbizUrl>" id="edit-attribute-form-${escapeVal(assetTmpl.assocId, 'html')}">
+                            <form method="post" action="<@pageUrl>updateTemplateAsset</@pageUrl>" id="edit-attribute-form-${escapeVal(assetTmpl.assocId, 'html')}">
                             <@fields type="default-compact">
                               <input type="hidden" name="pageAssetTemplateAssocId" value="${(assetTmpl.assoc.id)!""}" />
                               <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
@@ -380,12 +389,12 @@
                                 <#assign rowSelected = (version.versionId == (pageTemplate.versionId!""))>
                                 <#-- FIXME?: remove the alt and style using selected only? -->
                                 <@tr alt=rowSelected selected=rowSelected>
-                                   <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
+                                   <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
                                    <@td>${version.createdBy!"Anonymous"}</@td>
-                                   <@td><a href="<@ofbizUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@ofbizUrl>">${version.lastUpdatedStamp}</a></@td>
+                                   <@td><a href="<@pageUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@pageUrl>">${version.lastUpdatedStamp}</a></@td>
                                    <@td><#if version.versionComment?has_content>${version.versionComment!""}</#if></@td>
-                                   <@td><a href="<@ofbizUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@ofbizUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
-                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>
+                                   <@td><a href="<@pageUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@pageUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
+                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
                                 </@tr>
                             </#list>
                             </@table>
@@ -395,7 +404,7 @@
 
 
                 <@cell columns=3>
-                  <@form method="post" id="settingsForm" action=makeOfbizUrl('updateTemplateInfo')>
+                  <@form method="post" id="settingsForm" action=makePageUrl('updateTemplateInfo')>
                     <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!"")/>
 
                     <#-- Template Information -->
@@ -405,8 +414,7 @@
 
                         <@field type="textarea" name="description_visible" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(pageTemplate.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
 
@@ -418,6 +426,8 @@
                             </#if></@compress_single_line>
                         </#assign>
                         <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
+
+                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(pageTemplate.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
 
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateTemplateInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
@@ -437,13 +447,13 @@
                 same as the one further above that was escaped as 'js-html' (so we must do the 'html' part
                 with the exact same encoder - in other words the Freemarker one, and not the
                 aggressive ofbiz screen auto encoder) - to be sure the JS call doesn't fail to find this form -->
-            <form id="remove_attr_${escapeVal(attrTmpl.id, 'html')}" method="post" action="<@ofbizUrl>deleteAttributeFromTemplate</@ofbizUrl>">
+            <form id="remove_attr_${escapeVal(attrTmpl.id, 'html')}" method="post" action="<@pageUrl>deleteAttributeFromTemplate</@pageUrl>">
                 <input type="hidden" name="attributeTemplateId" value="${attrTmpl.id!}"/>
                 <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}"/>
             </form>
         </#list>
         <#list assetTemplates as assetTmpl>
-            <form id="remove_asset_${escapeVal(assetTmpl.assocId, 'html')}" method="post" action="<@ofbizUrl>deleteAssetFromTemplate</@ofbizUrl>">
+            <form id="remove_asset_${escapeVal(assetTmpl.assocId, 'html')}" method="post" action="<@pageUrl>deleteAssetFromTemplate</@pageUrl>">
                 <input type="hidden" name="pageAssetTemplateAssocId" value="${assetTmpl.assocId}"/>
                 <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}"/>
             </form>
@@ -455,17 +465,16 @@
         <#--<@alert type="info"><strong>General Info:</strong> Templates are the foundation for every webpage. For a tutorial on template-editing, head over to the <a href="http://www.scipioerp.com/community/developer/views-requests/Templates">template documentation</a>.</@alert>-->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createTemplate")>
-                    <@section title=uiLabelMap.CmsCreateTemplate>
+                <@form method="post" id="editorForm" action=makePageUrl("createTemplate")>
+                    <@section title=uiLabelMap.CmsNewTemplate>
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder="My Template Name" required=true/>
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
-                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                       </@fields>
                     </@section>
                 </@form>

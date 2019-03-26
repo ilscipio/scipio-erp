@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.ideal;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -64,10 +65,14 @@ public class IdealEvents {
 
     public static final String resource = "AccountingUiLabels";
     public static final String resourceErr = "AccountingErrorUiLabels";
+    /**
+     * @deprecated SCIPIO: 2018-09-26: Here for backward-compat only; do not use.
+     */
+    @Deprecated
     public static final String commonResource = "CommonUiLabels";
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
     /** Initiate iDEAL Request */
     public static String callIdeal(HttpServletRequest request, HttpServletResponse response) {
@@ -136,19 +141,19 @@ public class IdealEvents {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resourceErr, "idealEvents.problemsGettingMerchantConfiguration", locale));
             return "error";
         }
-        
+
         List<String> descriptionList = new LinkedList<String>();
         for (GenericValue orderItem : orderItemList) {
             if (UtilValidate.isNotEmpty(orderItem.get("itemDescription"))){
                 descriptionList.add((String) orderItem.get("itemDescription"));
             }
         }
-        
+
         String orderDescription = StringUtil.join(descriptionList, ",");
         String amount = orderTotal.setScale(decimals, rounding).movePointRight(2).toPlainString();
-        
+
         String redirectString = null;
-        
+
         try {
             IdealConnector connector = new IdealConnector("payment");
             Transaction transaction = new Transaction();
@@ -171,7 +176,7 @@ public class IdealEvents {
             request.setAttribute("_ERROR_MESSAGE_", ex.getConsumerMessage());
             return "error";
         }
-        
+
         // redirect to iDEAL
         try {
             response.sendRedirect(redirectString);
@@ -196,7 +201,7 @@ public class IdealEvents {
             String value = request.getParameter(name);
             Debug.logError("### Param: " + name + " => " + value, module);
         }
-        
+
         String orderId = null;
         String paymentStatus = null;
         try {
@@ -294,6 +299,7 @@ public class IdealEvents {
         if (okay) {
             request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "IdealSuccessful", locale));
             // attempt to release the offline hold on the order (workflow)
+            // SCIPIO: 2018-09-26: TODO: REVIEW: this release call removed upstream...
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
             // call the email confirm service
             Map<String, String> emailContext = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
@@ -307,7 +313,7 @@ public class IdealEvents {
     }
 
     private static boolean setPaymentPreferences(Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, String orderId, HttpServletRequest request) {
-        Debug.logVerbose("Setting payment prefrences..", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Setting payment prefrences..", module);
         List <GenericValue> paymentPrefs = null;
         try {
             paymentPrefs = EntityQuery.use(delegator).from("OrderPaymentPreference")
@@ -405,7 +411,7 @@ public class IdealEvents {
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
                 GenericValue ideal = EntityQuery.use(delegator).from("PaymentGatewayiDEAL").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
-                if (UtilValidate.isNotEmpty(ideal)) {
+                if (ideal != null) {
                     Object idealField = ideal.get(paymentGatewayConfigParameterName);
                     if (idealField != null) {
                         returnValue = idealField.toString().trim();

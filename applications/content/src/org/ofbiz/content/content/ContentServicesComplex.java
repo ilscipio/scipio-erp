@@ -74,7 +74,6 @@ public class ContentServicesComplex {
         String contentId = (String)context.get("contentId");
         String direction = (String)context.get("direction");
         String mapKey = (String)context.get("mapKey");
-        // Boolean nullThruDatesOnly = (Boolean)context.get("nullThruDatesOnly");
         Map<String, Object> results = getAssocAndContentAndDataResourceMethod(delegator, contentId, mapKey, direction, fromDate, thruDate, fromDateStr, thruDateStr, assocTypes, contentTypes);
         return results;
     }
@@ -87,7 +86,7 @@ public class ContentServicesComplex {
             EntityExpr mapKeyExpr = EntityCondition.makeCondition("caMapKey", EntityOperator.EQUALS, mapKey);
             exprList.add(mapKeyExpr);
         }
-        if (direction != null && direction.equalsIgnoreCase("From")) {
+        if (direction != null && "From".equalsIgnoreCase(direction)) {
             joinExpr = EntityCondition.makeCondition("caContentIdTo", EntityOperator.EQUALS, contentId);
             viewName = "ContentAssocDataResourceViewFrom";
         } else {
@@ -115,7 +114,6 @@ public class ContentServicesComplex {
         }
         if (thruDate != null) {
             List<EntityExpr> thruList = new LinkedList<EntityExpr>();
-            //thruDate = UtilDateTime.getDayStart(thruDate, daysLater);
 
             EntityExpr thruExpr = EntityCondition.makeCondition("caThruDate", EntityOperator.LESS_THAN, thruDate);
             thruList.add(thruExpr);
@@ -142,7 +140,7 @@ public class ContentServicesComplex {
         }
         for (int i=0; i < relatedAssocs.size(); i++) {
             GenericValue a = relatedAssocs.get(i);
-            Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), module);
+            if (Debug.verboseOn()) Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), module);
         }
         Map<String, Object> results = new HashMap<String, Object>();
         results.put("entityList", relatedAssocs);
@@ -200,14 +198,14 @@ public class ContentServicesComplex {
         EntityExpr joinExpr = null;
         String viewName = null;
         String contentFieldName = null;
-        if (direction != null && direction.equalsIgnoreCase("From")) {
+        if (direction != null && "From".equalsIgnoreCase(direction)) {
             contentFieldName = "caContentIdTo";
             joinExpr = EntityCondition.makeCondition("caContentIdTo", EntityOperator.EQUALS, contentId);
         } else {
             contentFieldName = "caContentId";
             joinExpr = EntityCondition.makeCondition("contentId", EntityOperator.EQUALS, contentId);
         }
-        if (direction != null && direction.equalsIgnoreCase("From")) {
+        if (direction != null && "From".equalsIgnoreCase(direction)) {
             viewName = "ContentAssocDataResourceViewFrom";
         } else {
             viewName = "ContentAssocDataResourceViewTo";
@@ -238,7 +236,7 @@ public class ContentServicesComplex {
                 .where(conditionList).orderBy("caSequenceNum", "-caFromDate").cache().queryList();
 
         String assocRelationName = null;
-        if (direction != null && direction.equalsIgnoreCase("To")) {
+        if (direction != null && "To".equalsIgnoreCase(direction)) {
             assocRelationName = "ToContent";
         } else {
             assocRelationName = "FromContent";
@@ -252,7 +250,7 @@ public class ContentServicesComplex {
         try{
         for (GenericValue contentAssocView : contentAssocsTypeFiltered) {
             GenericValue contentAssoc = EntityQuery.use(delegator).from("ContentAssoc").where(UtilMisc.toMap("contentId", contentAssocView.getString("contentId"),
-                    "contentIdTo", contentAssocView.getString(contentFieldName), "contentAssocTypeId", contentAssocView.getString("caContentAssocTypeId"), 
+                    "contentIdTo", contentAssocView.getString(contentFieldName), "contentAssocTypeId", contentAssocView.getString("caContentAssocTypeId"),
                     "fromDate", contentAssocView.getTimestamp("caFromDate"))).queryOne();
             content = contentAssoc.getRelatedOne(assocRelationName, true);
             if (UtilValidate.isNotEmpty(contentTypes)) {
@@ -278,7 +276,7 @@ public class ContentServicesComplex {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        
+
         if (UtilValidate.isNotEmpty(orderBy)) {
             List<String> orderByList = StringUtil.split(orderBy, "|");
            contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);

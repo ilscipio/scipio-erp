@@ -5,24 +5,26 @@
     <vendor></vendor>
     <version>1.0</version>
 
-    <!--
+    
     <service name="createOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/OrderData.groovy" 
         invoke="" transaction-timeout="7200" >
         <description>Creates a number of Order demo data</description>
         <implements service="demoDataGenerator"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="true" default-value="DemoCatalog"/>
-        <attribute name="productStoreId" type="String" mode="IN" optional="true"/> default is inferred from catalog
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyCustomerId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 
         invoke="" transaction-timeout="7200">
-        <description>Creates a number of Acctg Transaction demo data</description>
+        <description>Creates a number of Acctg Transaction demo data (WIP)</description>
         <implements service="demoDataGenerator"/>       
     </service>
 
     <service name="createWorkEffortData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/WorkEffortData.groovy" 
         invoke="" transaction-timeout="7200">
-        <description>Creates a number of WorkEffort demo data</description>
+        <description>Creates a number of WorkEffort demo data (WIP)</description>
         <implements service="demoDataGenerator"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="autoCreatePartyRoles" type="Boolean" mode="IN" optional="true" default-value="true"/>
@@ -37,10 +39,10 @@
         <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="productCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
-        SCIPIO: Let's comment this out for now
-        <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/>
+<!--         SCIPIO: Let's comment this out for now
+        <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/> -->
     </service> 
-    -->
+    
     
     <service name="createPartyData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/PartyData.groovy" 
         invoke="" transaction-timeout="7200">
@@ -50,7 +52,8 @@
         <attribute name="generateAddress" type="Boolean" mode="IN" optional="false" default-value="false"/>                
     </service>
     
-    <!-- 
+    
+    <!-- SCIPIO (10/17/2018: Commenting this out for now)
     <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeVisitData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeVisit demo data</description>
@@ -62,5 +65,6 @@
         <description>Creates a number of TrackingCodeOrder demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
-     -->
+    -->
+     
 </services>

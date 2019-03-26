@@ -32,11 +32,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
@@ -44,6 +47,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
@@ -81,9 +85,9 @@ public class SurveyWrapper {
         this.checkParameters();
     }
 
-     public SurveyWrapper(Delegator delegator, String responseId, String partyId, String surveyId, Map<String, Object> passThru) {
-         this(delegator, responseId, partyId, surveyId, passThru, null);
-     }
+    public SurveyWrapper(Delegator delegator, String responseId, String partyId, String surveyId, Map<String, Object> passThru) {
+        this(delegator, responseId, partyId, surveyId, passThru, null);
+    }
 
     public SurveyWrapper(Delegator delegator, String surveyId) {
         this(delegator, null, null, surveyId, null);
@@ -101,7 +105,7 @@ public class SurveyWrapper {
      */
     public void setPassThru(Map<String, Object> passThru) {
         if (passThru != null) {
-            this.passThru = new HashMap<String, Object>();
+            this.passThru = new HashMap<>();
             this.passThru.putAll(passThru);
         }
     }
@@ -112,7 +116,7 @@ public class SurveyWrapper {
      */
     public void setDefaultValues(Map<String, Object> defaultValues) {
         if (defaultValues != null) {
-            this.defaultValues = new HashMap<String, Object>();
+            this.defaultValues = new HashMap<>();
             this.defaultValues.putAll(defaultValues);
         }
     }
@@ -124,7 +128,7 @@ public class SurveyWrapper {
      */
     public void addToTemplateContext(String name, Object value) {
         if (templateContext == null) {
-            templateContext = new HashMap<String, Object>();
+            templateContext = new HashMap<>();
         }
         templateContext.put(name, value);
     }
@@ -134,8 +138,9 @@ public class SurveyWrapper {
      * @param name
      */
     public void removeFromTemplateContext(String name) {
-        if (templateContext != null)
+        if (templateContext != null) {
             templateContext.remove(name);
+        }
     }
 
     /**
@@ -180,7 +185,7 @@ public class SurveyWrapper {
             currentAnswers = this.getResponseAnswers(null);
         }
 
-        Map<String, Object> sqaaWithColIdListByMultiRespId = new LinkedHashMap<String, Object>();
+        Map<String, Object> sqaaWithColIdListByMultiRespId = new LinkedHashMap<>();
         for (GenericValue surveyQuestionAndAppl : surveyQuestionAndAppls) {
             String surveyMultiRespColId = surveyQuestionAndAppl.getString("surveyMultiRespColId");
             if (UtilValidate.isNotEmpty(surveyMultiRespColId)) {
@@ -190,9 +195,9 @@ public class SurveyWrapper {
         }
 
         if (this.templateContext == null) {
-            this.templateContext = new HashMap<String, Object>();
+            this.templateContext = new HashMap<>();
         }
-        
+
         // SCIPIO: create local context that includes parent context.
         Map<String, Object> templateContext = new HashMap<String, Object>();
         if (parentContext != null) {
@@ -205,21 +210,31 @@ public class SurveyWrapper {
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
         templateContext.put("sqaaWithColIdListByMultiRespId", sqaaWithColIdListByMultiRespId);
-        templateContext.put("alreadyShownSqaaPkWithColId", new HashSet());
+        templateContext.put("alreadyShownSqaaPkWithColId", new HashSet<>());
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
         templateContext.put("additionalFields", passThru);
         templateContext.put("defaultValues", defaultValues);
         templateContext.put("delegator", this.delegator);
-        templateContext.put("locale", Locale.getDefault());
+        // SCIPIO: 2019-03-11: Stock error: only put locale if it's not already there
+        //templateContext.put("locale", Locale.getDefault());
+        Locale locale = (Locale) templateContext.get("locale");
+        if (locale == null) {
+            locale = Locale.getDefault();
+            Debug.logWarning("Survey render context has no locale; using system default", module);
+            templateContext.put("locale", locale);
+        }
+        
+        // SCIPIO: 2019-03-11: If it's not already there, add uiLabelMap
+        if (templateContext.get("uiLabelMap") == null) {
+            templateContext.put("uiLabelMap", UtilProperties.getResourceBundle("CommonUiLabels", locale));
+        }
 
         Template template = this.getTemplate(templateUrl);
         try {
             FreeMarkerWorker.renderTemplate(template, templateContext, writer);
-        } catch (TemplateException e) {
-            Debug.logError(e, "Error rendering Survey with template at [" + templateUrl.toExternalForm() + "]", module);
-        } catch (IOException e) {
+        } catch (TemplateException | IOException e) {
             Debug.logError(e, "Error rendering Survey with template at [" + templateUrl.toExternalForm() + "]", module);
         }
     }
@@ -230,9 +245,10 @@ public class SurveyWrapper {
         Configuration config = FreeMarkerWorker.getDefaultOfbizConfig();
 
         Template template = null;
-        try {
+        try (
             InputStream templateStream = templateUrl.openStream();
-            InputStreamReader templateReader = new InputStreamReader(templateStream);
+            InputStreamReader templateReader = new InputStreamReader(templateStream,UtilIO.getUtf8());
+                ){
             template = new Template(templateUrl.toExternalForm(), templateReader, config);
         } catch (IOException e) {
             Debug.logError(e, "Unable to get template from URL :" + templateUrl.toExternalForm(), module);
@@ -270,28 +286,21 @@ public class SurveyWrapper {
         }
 
         GenericValue survey = this.getSurvey();
-        if (!"Y".equals(survey.getString("allowMultiple")) && !"Y".equals(survey.getString("allowUpdate"))) {
-            return false;
-        }
-        return true;
+        return !(!"Y".equals(survey.getString("allowMultiple")) && !"Y".equals(survey.getString("allowUpdate")));
     }
 
     public boolean canRespond() {
         String responseId = this.getThisResponseId();
         if (responseId == null) {
             return true;
-        } else {
-            GenericValue survey = this.getSurvey();
-            if ("Y".equals(survey.getString("allowMultiple"))) {
-                return true;
-            }
         }
-        return false;
+        GenericValue survey = this.getSurvey();
+        return "Y".equals(survey.getString("allowMultiple"));
     }
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
     public List<GenericValue> getSurveyQuestionAndAppls() {
-        List<GenericValue> questions = new LinkedList<GenericValue>();
+        List<GenericValue> questions = new LinkedList<>();
 
         try {
             questions = EntityQuery.use(delegator).from("SurveyQuestionAndAppl")
@@ -337,10 +346,35 @@ public class SurveyWrapper {
         return responseId;
     }
 
-    protected void setThisResponseId(String responseId) {
-        this.responseId = responseId;
+    public String getCurrentResponseId() { // SCIPIO: new method
+        return responseId;
+    }
+    
+    /**
+     * Sets the response ID.
+     * <p>
+     * SCIPIO: 2019-03-11: This is now verified to make sure it exists, and is now public
+     * because it was exposed in CustomerSurvey.groovy.
+     */
+    public void setThisResponseId(String responseId) { // SCIPIO: protected
+        try {
+            if (EntityQuery.use(delegator).from("SurveyResponse")
+                    .where("surveyId", surveyId, "surveyResponseId", responseId, "partyId", partyId)
+                    .queryCount() > 0) {
+                setThisResponseIdOnly(responseId);
+            } else {
+                Debug.logError("Cannot set response '" + responseId + "' for survey '" + surveyId + "'"
+                        + " and party '" + partyId + "'; there is no SurveyResponse association record", module);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
     }
 
+    protected void setThisResponseIdOnly(String responseId) { // SCIPIO
+        this.responseId = responseId;
+    }
+    
     public long getNumberResponses() throws SurveyWrapperException {
         long responses = 0;
         try {
@@ -363,7 +397,7 @@ public class SurveyWrapper {
 
     // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
     public Map<String, Object> getResponseAnswers(String responseId) throws SurveyWrapperException {
-        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> answerMap = new LinkedHashMap<>();
 
         if (responseId != null) {
             List<GenericValue> answers = null;
@@ -383,10 +417,10 @@ public class SurveyWrapper {
         // get the pass-thru (posted form data)
         if (UtilValidate.isNotEmpty(passThru)) {
             for (String key : passThru.keySet()) {
-                if (key.toUpperCase().startsWith("ANSWERS_")) {
+                if (key.toUpperCase(Locale.getDefault()).startsWith("ANSWERS_")) {
                     int splitIndex = key.indexOf('_');
                     String questionId = key.substring(splitIndex+1);
-                    Map<String, Object> thisAnswer = new HashMap<String, Object>();
+                    Map<String, Object> thisAnswer = new HashMap<>();
                     String answer = (String) passThru.remove(key);
                     thisAnswer.put("booleanResponse", answer);
                     thisAnswer.put("currencyResponse", answer);
@@ -406,18 +440,18 @@ public class SurveyWrapper {
     public List<GenericValue> getQuestionResponses(GenericValue question, int startIndex, int number) throws SurveyWrapperException {
         List<GenericValue> resp = null;
         boolean beganTransaction = false;
+        int maxRows = startIndex + number;
         try {
             beganTransaction = TransactionUtil.begin();
-
-            int maxRows = startIndex + number;
-            EntityListIterator eli = this.getEli(question, maxRows);
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }
+        try (EntityListIterator eli = this.getEli(question, maxRows)) {
             if (startIndex > 0 && number > 0) {
                 resp = eli.getPartialList(startIndex, number);
             } else {
                 resp = eli.getCompleteList();
             }
-
-            eli.close();
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
@@ -433,14 +467,13 @@ public class SurveyWrapper {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
                 throw new SurveyWrapperException(e);
-                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
         return resp;
     }
 
     public Map<String, Object> getResults(List<GenericValue> questions) throws SurveyWrapperException {
-        Map<String, Object> questionResults = new LinkedHashMap<String, Object>();
+        Map<String, Object> questionResults = new LinkedHashMap<>();
         if (questions != null) {
             for (GenericValue question : questions) {
                 Map<String, Object> results = getResultInfo(question);
@@ -454,7 +487,7 @@ public class SurveyWrapper {
 
     // returns a map of question reqsults
     public Map<String, Object> getResultInfo(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
 
         // special keys in the result:
         // "_q_type"      - question type (SurveyQuestionTypeId)
@@ -475,63 +508,62 @@ public class SurveyWrapper {
         // note this will need to be updated as new types are added
         if ("OPTION".equals(questionType)) {
             Map<String, Object> thisResult = getOptionResult(question);
-            if (thisResult != null) {
                 Long questionTotal = (Long) thisResult.remove("_total");
                 if (questionTotal == null) {
-                    questionTotal = Long.valueOf(0);
+                    questionTotal = 0L;
                 }
                 // set the total responses
                 resultMap.put("_total", questionTotal);
 
                 // create the map of option info ("_total", "_percent")
-                for (String optId : thisResult.keySet()) {
-                    Map<String, Object> optMap = new HashMap<String, Object>();
-                    Long optTotal = (Long) thisResult.get(optId);
+                for (Entry<String, Object> entry : thisResult.entrySet()) {
+                    Map<String, Object> optMap = new HashMap<>();
+                    Long optTotal = (Long) entry.getValue();
+                    String optId = entry.getKey();
                     if (optTotal == null) {
-                        optTotal = Long.valueOf(0);
+                        optTotal = 0L;
                     }
-                    Long percent = Long.valueOf((long)(((double)optTotal.longValue() / (double)questionTotal.longValue()) * 100));
+                    Long percent = (long) (((double) optTotal / (double) questionTotal) * 100);
                     optMap.put("_total", optTotal);
                     optMap.put("_percent", percent);
                     resultMap.put(optId, optMap);
                 }
                 resultMap.put("_a_type", "option");
-            }
         } else if ("BOOLEAN".equals(questionType)) {
             long[] thisResult = getBooleanResult(question);
             long yesPercent = thisResult[1] > 0 ? (long)(((double)thisResult[1] / (double)thisResult[0]) * 100) : 0;
             long noPercent = thisResult[2] > 0 ? (long)(((double)thisResult[2] / (double)thisResult[0]) * 100) : 0;
 
-            resultMap.put("_total", Long.valueOf(thisResult[0]));
-            resultMap.put("_yes_total", Long.valueOf(thisResult[1]));
-            resultMap.put("_no_total", Long.valueOf(thisResult[2]));
-            resultMap.put("_yes_percent", Long.valueOf(yesPercent));
-            resultMap.put("_no_percent", Long.valueOf(noPercent));
+            resultMap.put("_total", thisResult[0]);
+            resultMap.put("_yes_total", thisResult[1]);
+            resultMap.put("_no_total", thisResult[2]);
+            resultMap.put("_yes_percent", yesPercent);
+            resultMap.put("_no_percent", noPercent);
             resultMap.put("_a_type", "boolean");
         } else if ("NUMBER_LONG".equals(questionType)) {
             double[] thisResult = getNumberResult(question, 1);
-            resultMap.put("_total", Long.valueOf((long)thisResult[0]));
-            resultMap.put("_tally", Long.valueOf((long)thisResult[1]));
-            resultMap.put("_average", Long.valueOf((long)thisResult[2]));
+            resultMap.put("_total", (long) thisResult[0]);
+            resultMap.put("_tally", (long) thisResult[1]);
+            resultMap.put("_average", (long) thisResult[2]);
             resultMap.put("_a_type", "long");
         } else if ("NUMBER_CURRENCY".equals(questionType)) {
             double[] thisResult = getNumberResult(question, 2);
-            resultMap.put("_total", Long.valueOf((long)thisResult[0]));
-            resultMap.put("_tally", Double.valueOf(thisResult[1]));
-            resultMap.put("_average", Double.valueOf(thisResult[2]));
+            resultMap.put("_total", (long) thisResult[0]);
+            resultMap.put("_tally", thisResult[1]);
+            resultMap.put("_average", thisResult[2]);
             resultMap.put("_a_type", "double");
         } else if ("NUMBER_FLOAT".equals(questionType)) {
             double[] thisResult = getNumberResult(question, 3);
-            resultMap.put("_total", Long.valueOf((long)thisResult[0]));
-            resultMap.put("_tally", Double.valueOf(thisResult[1]));
-            resultMap.put("_average", Double.valueOf(thisResult[2]));
+            resultMap.put("_total", (long) thisResult[0]);
+            resultMap.put("_tally", thisResult[1]);
+            resultMap.put("_average", thisResult[2]);
             resultMap.put("_a_type", "double");
         } else if ("SEPERATOR_LINE".equals(questionType) || "SEPERATOR_TEXT".equals(questionType)) {
             // not really a question; ingore completely
             return null;
         } else {
             // default is text
-            resultMap.put("_total", Long.valueOf(getTextResult(question)));
+            resultMap.put("_total", getTextResult(question));
             resultMap.put("_a_type", "text");
         }
 
@@ -548,22 +580,19 @@ public class SurveyWrapper {
             // index 1 = total yes
             // index 2 = total no
 
-            EntityListIterator eli = this.getEli(question, -1);
-
-            if (eli != null) {
-                GenericValue value;
-                while (((value = eli.next()) != null)) {
-                    if ("Y".equalsIgnoreCase(value.getString("booleanResponse"))) {
-                        result[1]++;
-                    } else {
-                        result[2]++;
+            try (EntityListIterator eli = this.getEli(question, -1)) {
+                if (eli != null) {
+                    GenericValue value;
+                    while (((value = eli.next()) != null)) {
+                        if ("Y".equalsIgnoreCase(value.getString("booleanResponse"))) {
+                            result[1]++;
+                        } else {
+                            result[2]++;
+                        }
+                        result[0]++; // increment the count
                     }
-                    result[0]++; // increment the count
                 }
-
-                eli.close();
             }
-
             return result;
         } catch (GenericEntityException e) {
             try {
@@ -580,7 +609,6 @@ public class SurveyWrapper {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
                 throw new SurveyWrapperException(e);
-                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
     }
@@ -594,9 +622,11 @@ public class SurveyWrapper {
         boolean beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }
 
-            EntityListIterator eli = this.getEli(question, -1);
-
+        try (EntityListIterator eli = this.getEli(question, -1)) {
             if (eli != null) {
                 GenericValue value;
                 while (((value = eli.next()) != null)) {
@@ -604,26 +634,26 @@ public class SurveyWrapper {
                         case 1:
                             Long n = value.getLong("numericResponse");
                             if (UtilValidate.isNotEmpty(n)) {
-                                result[1] += n.longValue();
+                                result[1] += n;
                             }
                             break;
                         case 2:
                             Double c = value.getDouble("currencyResponse");
                             if (UtilValidate.isNotEmpty(c)) {
-                                result[1] += (((double) Math.round((c.doubleValue() - c.doubleValue()) * 100)) / 100);
+                                // SCIPIO: 2018-09-26: this gave always zero
+                                //result[1] += (((double) Math.round((c - c) * 100)) / 100);
+                                result[1] += (((double) Math.round(c * 100)) / 100);
                             }
                             break;
                         case 3:
                             Double f = value.getDouble("floatResponse");
                             if (UtilValidate.isNotEmpty(f)) {
-                                result[1] += f.doubleValue();
+                                result[1] += f;
                             }
                             break;
                     }
                     result[0]++; // increment the count
                 }
-
-                eli.close();
             }
         } catch (GenericEntityException e) {
             try {
@@ -640,23 +670,29 @@ public class SurveyWrapper {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
                 throw new SurveyWrapperException(e);
-                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
 
         // average
         switch (type) {
             case 1:
-                if (result[0] > 0)
+                if (result[0] > 0) {
+                    // SCIPIO: TODO: REVIEW: only one of these is right...
+                    //result[2] = result[1] / ((long) result[0]);
                     result[2] = ((long) result[1]) / ((long) result[0]);
+                }
                 break;
             case 2:
-                if (result[0] > 0)
+                if (result[0] > 0) {
                     result[2] = (((double) Math.round((result[1] / result[0]) * 100)) / 100);
+                }
                 break;
             case 3:
-                if (result[0] > 0)
+                if (result[0] > 0) {
+                    // SCIPIO: TODO: REVIEW: only one of these is right...
+                    //result[2] = result[1] / (long) result[0];
                     result[2] = result[1] / result[0];
+                }
                 break;
         }
 
@@ -679,14 +715,17 @@ public class SurveyWrapper {
     }
 
     private Map<String, Object> getOptionResult(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         long total = 0;
 
         boolean beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }
 
-            EntityListIterator eli = this.getEli(question, -1);
+        try (EntityListIterator eli = this.getEli(question, -1)) {
             if (eli != null) {
                 GenericValue value;
                 while (((value = eli.next()) != null)) {
@@ -694,16 +733,14 @@ public class SurveyWrapper {
                     if (UtilValidate.isNotEmpty(optionId)) {
                         Long optCount = (Long) result.remove(optionId);
                         if (optCount == null) {
-                            optCount = Long.valueOf(1);
+                            optCount = 1L;
                         } else {
-                            optCount = Long.valueOf(1 + optCount.longValue());
+                            optCount = 1 + optCount;
                         }
                         result.put(optionId, optCount);
                         total++; // increment the count
                     }
                 }
-
-                eli.close();
             }
         } catch (GenericEntityException e) {
             try {
@@ -720,11 +757,10 @@ public class SurveyWrapper {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
                 throw new SurveyWrapperException(e);
-                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
 
-        result.put("_total", Long.valueOf(total));
+        result.put("_total", total);
         return result;
     }
 

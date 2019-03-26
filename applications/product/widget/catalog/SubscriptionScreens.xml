@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -30,12 +17,11 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleFindSubscription"/>
+                <set field="activeSubMenuItem" value="Subscription"/>
+                <set field="isSpecificSubscription" type="Boolean" value="false"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>                    
+                <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">            
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -43,12 +29,6 @@ under the License.
                             </condition>
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/>
-                                            <link target="FindSubscriptionResource" text="${uiLabelMap.PageTitleFindSubscriptionResource}" style="${styles.link_nav} ${styles.action_find}"/>
-                                        </container>
-                                    </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindSubscription" location="component://product/widget/catalog/SubscriptionForms.xml"/>
                                     </decorator-section>
@@ -75,6 +55,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditSubscription"/>
                 <set field="subscriptionId" from-field="parameters.subscriptionId"/>
                 <entity-one entity-name="Subscription" value-field="subscription"/>
+                <set field="isCreateSubscription" type="Boolean" value="${groovy: !(context.subscription || (parameters.subscriptionId &amp;&amp; parameters.isCreate != 'true'))}"/>
             </actions>
             <widgets>
                 <section>

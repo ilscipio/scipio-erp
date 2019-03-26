@@ -1,30 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="createFacilityContactMech" short-description="Create a FacilityContactMech">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
         <make-value entity-name="FacilityContactMech" value-field="newValue"/>
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
         <log level="info" message="contactMechId is ${parameters.contactMechId}"/>
@@ -49,26 +32,18 @@ under the License.
         <now-timestamp field="newValue.fromDate"/>
 
         <create-value value-field="newValue"/>
-        
+
         <!-- now create the FacilityContactMechPurpose record -->
-        <if-not-empty field="parameters.contactMechPurposeTypeId">        
-            <make-value value-field="facilityContactMechPurpose" entity-name="FacilityContactMechPurpose"/>
+        <if-not-empty field="parameters.contactMechPurposeTypeId">
+            <make-value entity-name="FacilityContactMechPurpose" value-field="facilityContactMechPurpose"/>
             <set-pk-fields map="newValue" value-field="facilityContactMechPurpose"/>
             <set field="facilityContactMechPurpose.contactMechPurposeTypeId" from-field="parameters.contactMechPurposeTypeId"/>
             <create-value value-field="facilityContactMechPurpose"/>
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-
-        <!-- Find old value -->
-
+    <!-- SCIPIO: 2018-11-02: Code factored out from updateFacilityContactMech -->
+    <simple-method method-name="lookupFacilityContactMech" short-description="Lookup a FacilityContactMech (logic from updateFacilityContactMech)">
         <entity-and entity-name="FacilityContactMech" list="facilityContactMechs"><!-- filter-by-date="true" -->
             <field-map field-name="facilityId" from-field="parameters.facilityId"/>
             <field-map field-name="contactMechId" from-field="parameters.contactMechId"/>
@@ -79,7 +54,7 @@ under the License.
         </if-empty>
         <check-errors/>
         <filter-list-by-date list="facilityContactMechs" to-list="validFacilityContactMechs"/>
-        <first-from-list entry="facilityContactMech" list="validFacilityContactMechs"/>
+        <first-from-list list="validFacilityContactMechs" entry="facilityContactMech"/>
         <if-empty field="facilityContactMech">
             <!-- SCIPIO: new message with info for expired contact edit attempts -->
             <add-error>
@@ -87,10 +62,26 @@ under the License.
             </add-error>
         </if-empty>
         <check-errors/>
+    </simple-method>
 
-        <log message="parameters: ${parameters}" level="info"/>
+    <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
+
+        <if-not-empty field="parameters.facilityContactMech">
+            <!-- SCIPIO: 2018-11-02: support service interface that accepts already looked-up FacilityContactMech -->
+            <set field="facilityContactMech" from-field="parameters.facilityContactMech"/>
+            <else>
+                <!-- SCIPIO: 2018-11-02: Code factored out -->
+                <call-simple-method method-name="lookupFacilityContactMech"/>
+                <check-errors/>
+            </else>
+        </if-not-empty>
+
+        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
+
+        <!--<log message="parameters: ${parameters}" level="info"/> SCIPIO: not appropriate -->
         <clone-value value-field="facilityContactMech" new-value-field="newFacilityContactMech"/>
-        <log message="parameters: ${parameters}" level="info"/>
+        <!--<log message="parameters: ${parameters}" level="info"/> SCIPIO: not appropriate -->
+
         <!-- If we already have a new contactMechId don't update ContactMech -->
         <if-empty field="parameters.newContactMechId">
             <set-service-fields service-name="updateContactMech" map="parameters" to-map="updateContactMechMap"/>
@@ -105,20 +96,21 @@ under the License.
             </else>
         </if-empty>
 
-        <set-nonpk-fields value-field="newFacilityContactMech" map="parameters" set-if-null="false"/>
-
-        <now-timestamp field="newFacilityContactMech.fromDate"/>
-        <now-timestamp field="facilityContactMech.thruDate"/>
-
-        <store-value value-field="facilityContactMech"/>
-        <create-value value-field="newFacilityContactMech"/>
-
         <if-compare-field to-field="newFacilityContactMech.contactMechId" field="parameters.contactMechId" operator="not-equals">
+            <!-- SCIPIO: 2018-10-31: The following code up to create-value is moved inside condition -->
+            <set-nonpk-fields map="parameters" value-field="newFacilityContactMech"/>
+
+            <now-timestamp field="newFacilityContactMech.fromDate"/>
+            <now-timestamp field="facilityContactMech.thruDate"/>
+
+            <store-value value-field="facilityContactMech"/>
+            <create-value value-field="newFacilityContactMech"/>
+
             <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
             <!-- SCIPIO: 2017-10-10: MAJOR BUGFIX: the following filter-list-by-date line is missing in stock ofbiz,
                 results in expired purposes being carried over and extreme confusion (replicated from PartyContactMechServices.xml#updatePartyContactMech) -->
             <filter-list-by-date list="facilityContactMechPurposes"/>
-            <iterate entry="facilityContactMechPurposeOld" list="facilityContactMechPurposes">
+            <iterate list="facilityContactMechPurposes" entry="facilityContactMechPurposeOld">
                 <clone-value value-field="facilityContactMechPurposeOld" new-value-field="facilityContactMechPurpose"/>
 
                 <now-timestamp field="facilityContactMechPurposeOld.thruDate"/>
@@ -131,47 +123,76 @@ under the License.
                 <find-by-and entity-name="FacilityContactMechPurpose" list="purposeResult" map="purposeMap"/>
 
                 <if-empty field="purposeResult">
-
                     <create-value value-field="facilityContactMechPurpose"/>
                 </if-empty>
             </iterate>
+            
+            <!-- SCIPIO: 2018-10-31: Moved result code to here from outside condition -->
+            <log level="info" message="Setting id to result: ${newFacilityContactMech.contactMechId}"/>
+            <field-to-result field="newFacilityContactMech.contactMechId" result-name="contactMechId"/>
+            <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
+            <else>
+                <!-- SCIPIO: 2018-10-31: Logic from updatePartyContactMech for extension changes -->
+                <!-- SCIPIO: 2018-11-02: This extension check to set thruDate is doubtful and probably never worked
+                    anyway because the set statement was missing set-if-null="true", so just remove it;
+                    extension is now handled in updateFacilityTelecomNumber instead
+                <set field="extension" from-field="facilityContactMech.extension"/>-->
+                <set-nonpk-fields map="parameters" value-field="facilityContactMech"/>
+                <!--<if-compare-field field="parameters.extension" operator="not-equals" to-field="extension">
+                    <set field="facilityContactMech.thruDate" value="" set-if-null="true"/><!- - SCIPIO: 2018-11-02: set-if-null="true" required to set null - ->
+                </if-compare-field>-->
+                <store-value value-field="facilityContactMech"/>
+                <log level="info" message="Setting id to result: ${facilityContactMech.contactMechId}"/>
+                <field-to-result field="facilityContactMech.contactMechId" result-name="contactMechId"/>
+                <field-to-request field="facilityContactMech.contactMechId" request-name="contactMechId"/>
+            </else>
         </if-compare-field>
-
-        <log level="info" message="Setting id to result: ${newFacilityContactMech.contactMechId}"/>
-        <field-to-result field="newFacilityContactMech.contactMechId" result-name="contactMechId"/>
-        <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
     </simple-method>
 
-    <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech">
+    <simple-method method-name="deleteFacilityContactMechOnly" short-description="Delete a FacilityContactMech Only"><!-- SCIPIO: 2018-10-30: renamed to Only -->
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_DELETE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityDeletePermissionError"/>
-        </check-permission>
-        <check-errors/>
 
         <make-value entity-name="FacilityContactMech" value-field="facilityContactMechMap"/>
         <set-pk-fields value-field="facilityContactMechMap" map="parameters"/>
         <find-by-and entity-name="FacilityContactMech" list="facilityContactMechs" map="facilityContactMechMap"/>
         <filter-list-by-date list="facilityContactMechs" to-list="validFacilityContactMechs"/>
 
-        <first-from-list entry="facilityContactMech" list="validFacilityContactMechs"/>
+        <first-from-list list="validFacilityContactMechs" entry="facilityContactMech"/>
         <if-empty field="facilityContactMech">
             <add-error>
                 <fail-property resource="PartyUiLabels" property="PartyContactMechNotFoundCannotDelete"/>
             </add-error>
             <return/>
         </if-empty>
-        <now-timestamp field="facilityContactMech.thruDate"/>
+        <!-- SCIPIO: reuse timestamp if possible
+        <now-timestamp field="facilityContactMech.thruDate"/>-->
+        <if-not-empty field="nowTimestamp">
+            <set field="facilityContactMech.thruDate" from-field="nowTimestamp"/>
+            <else>
+                <now-timestamp field="facilityContactMech.thruDate"/>
+            </else>
+        </if-not-empty>
         <store-value value-field="facilityContactMech"/>
+    </simple-method>
 
+    <simple-method method-name="deleteFacilityContactMechAndPurposes" short-description="Delete a FacilityContactMech And Purposes"><!-- SCIPIO: 2018-10-30 -->
+        <now-timestamp field="nowTimestamp"/><!-- We'll use this same date for all the thruDates to make expiries easier to track -->
+        <call-simple-method method-name="deleteFacilityContactMechOnly"/>
+        <check-errors/>
+        <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
+        <filter-list-by-date list="facilityContactMechPurposes" valid-date="nowTimestamp"/>
+        <iterate list="facilityContactMechPurposes" entry="facilityContactMechPurposeOld">
+            <set field="facilityContactMechPurposeOld.thruDate" from-field="nowTimestamp"/>
+            <store-value value-field="facilityContactMechPurposeOld"/>
+        </iterate>
+        <check-errors/>
+    </simple-method>
+    <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech And Purposes"><!-- SCIPIO: 2018-10-30: backward-compat alias -->
+        <call-simple-method method-name="deleteFacilityContactMechAndPurposes"/>
+        <check-errors/>
     </simple-method>
 
     <simple-method method-name="createFacilityPostalAddress" short-description="Create a PostalAddress for facility">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set-service-fields service-name="createPostalAddress" map="parameters" to-map="createPostalAddressMap"/>
         <call-service in-map-name="createPostalAddressMap" service-name="createPostalAddress">
             <default-message resource="PartyUiLabels" property="PartyPostalAddressSuccessfullyCreated"/>
@@ -192,11 +213,6 @@ under the License.
 
     <simple-method method-name="updateFacilityPostalAddress" short-description="Update a PostalAddress for facility">
         <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set-service-fields service-name="updatePostalAddress" map="parameters" to-map="updatePostalAddressMap"/>
         <call-service in-map-name="updatePostalAddressMap" service-name="updatePostalAddress">
             <default-message resource="PartyUiLabels" property="PartyContactMechanismSuccessfullyUpdated"/>
@@ -216,11 +232,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityTelecomNumber" short-description="Create a TelecomNumber for facility">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <log level="info" message="Creating telecom number"/>
         <set-service-fields service-name="createTelecomNumber" map="parameters" to-map="createTelecomNumberMap"/>
         <call-service in-map-name="createTelecomNumberMap" service-name="createTelecomNumber">
@@ -240,39 +251,45 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateFacilityTelecomNumber" short-description="Update a TelecomNumber for facility">
-        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
 
+        <!-- SCIPIO: 2018-11-02: code refactored out from updateFacilityContactMech -->
+        <call-simple-method method-name="lookupFacilityContactMech"/>
+        <check-errors/>
+        <set field="updateFacilityContactMechMap.facilityContactMech" from-field="facilityContactMech"/>
+
+        <!-- SCIPIO: 2018-11-02: If extension has changed, force clone the whole number which will create
+            a new ContactMech and FacilityContactMech (FacilityContactMech contains the extension field) to preserve
+            history, while avoiding sharing contactMechIds to prevent issues in buggy code -->
+        <set field="extensionPresent" type="Boolean" value="${groovy:parameters.containsKey('extension')}"/>
+        <if-compare field="extensionPresent" operator="equals" type="Boolean" value="true">
+            <if-compare-field field="parameters.extension" operator="not-equals" to-field="facilityContactMech.extension">
+                <set field="updateTelecomNumberMap.forceNewRecord" type="Boolean" value="true"/>
+            </if-compare-field>
+        </if-compare>
+
+        <make-value entity-name="FacilityContactMech" value-field="newFacilityContactMech"/>
         <set-service-fields service-name="updateTelecomNumber" map="parameters" to-map="updateTelecomNumberMap"/>
         <call-service service-name="updateTelecomNumber" in-map-name="updateTelecomNumberMap">
             <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyUpdated"/>
             <result-to-field result-name="contactMechId" field="newFacilityContactMech.contactMechId"/>
         </call-service>
 
-        <set-service-fields service-name="updateFacilityContactMech" map="parameters" to-map="updateFacilityContactMechMap"/>
+        <!-- SCIPIO: 2018-11-01: Switched to updateFacilityContactMechGiven -->
+        <set-service-fields service-name="updateFacilityContactMechGiven" map="parameters" to-map="updateFacilityContactMechMap"/>
         <set field="updateFacilityContactMechMap.newContactMechId" from-field="newFacilityContactMech.contactMechId"/>
 
         <set field="updateFacilityContactMechMap.contactMechTypeId" value="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to updateFacilityContactMechMap: ${updateFacilityContactMechMap.newContactMechId}"/>
 
-        <call-service in-map-name="updateFacilityContactMechMap" service-name="updateFacilityContactMech">
+        <call-service in-map-name="updateFacilityContactMechMap" service-name="updateFacilityContactMechGiven">
             <default-message resource="PartyUiLabels" property="PartyContactMechanismSuccessfullyUpdated"/>
         </call-service>
         <log level="info" message="Setting result id: ${newFacilityContactMech.contactMechId}"/>
         <field-to-request field="newFacilityContactMech.contactMechId" request-name="contactMechId"/>
         <field-to-result field="newFacilityContactMech.contactMechId" result-name="contactMechId"/>
-
     </simple-method>
 
     <simple-method method-name="createFacilityEmailAddress" short-description="Create an email address for facility">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <if-validate-method field="parameters.emailAddress" method="isEmail">
         <else>
             <add-error>
@@ -293,11 +310,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateFacilityEmailAddress" short-description="Update an email address for facility">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityUpdatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <if-validate-method field="parameters.emailAddress" method="isEmail">
         <else>
             <add-error>
@@ -318,12 +330,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createFacilityContactMechPurpose" short-description="Create a facility/contact mech purpose">
-        <check-permission permission="FACILITY" action="_CREATE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityCreatePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value value-field="lookUpMap" entity-name="FacilityContactMechPurpose"/>
+        <make-value entity-name="FacilityContactMechPurpose" value-field="lookUpMap"/>
         <set field="lookUpMap.facilityId" from-field="parameters.facilityId"/>
         <set field="lookUpMap.contactMechId" from-field="parameters.contactMechId"/>
         <set field="lookUpMap.contactMechPurposeTypeId" from-field="parameters.contactMechPurposeTypeId"/>
@@ -338,7 +345,7 @@ under the License.
         </if-not-empty>
 
         <now-timestamp field="nowTimestamp"/>
-        <make-value value-field="newEntity" entity-name="FacilityContactMechPurpose"/>
+        <make-value entity-name="FacilityContactMechPurpose" value-field="newEntity"/>
         <set field="newEntity.facilityId" from-field="parameters.facilityId"/>
         <set field="newEntity.contactMechId" from-field="parameters.contactMechId"/>
         <set field="newEntity.contactMechPurposeTypeId" from-field="parameters.contactMechPurposeTypeId"/>
@@ -350,12 +357,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="deleteFacilityContactMechPurpose" short-description="Delete a facility/contact mech purpose">
-        <check-permission permission="FACILITY" action="_DELETE">
-            <fail-property resource="ProductUiLabels" property="ProductFacilityDeletePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value value-field="lookUpMap" entity-name="FacilityContactMechPurpose"/>
+        <make-value entity-name="FacilityContactMechPurpose" value-field="lookUpMap"/>
 
         <set-pk-fields map="parameters" value-field="lookUpMap"/>
         <find-by-primary-key value-field="purposeEntity" entity-name="FacilityContactMechPurpose" map="lookUpMap"/>

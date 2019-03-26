@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -42,7 +29,7 @@ under the License.
 
     <entity entity-name="ProductManufacturingRule"
             package-name="org.ofbiz.manufacturing.bom"
-            title="Product To Part Rule Entity">
+            title="Product To Part Rule">
       <field name="ruleId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="productIdFor" type="id"></field>
@@ -80,7 +67,7 @@ under the License.
     <entity entity-name="TechDataCalendar"
             package-name="org.ofbiz.manufacturing.techdata"
             default-resource-name="ManufacturingEntityLabels"
-            title="Calendar entity">
+            title="Calendar">
       <description>Used to defined the availability of the machines, this entity define the Id and the week definition.
       The Id is used in the exception calendar table as reference
       </description>
@@ -94,7 +81,7 @@ under the License.
     </entity>
     <entity entity-name="TechDataCalendarExcDay"
             package-name="org.ofbiz.manufacturing.techdata"
-            title="Calendar Exception Day entity">
+            title="Calendar Exception Day">
       <description>Used to defined some days which differ from the normal day definition in the weekId associated in the calendar.
       </description>
       <field name="calendarId" type="id-ne"></field>
@@ -110,7 +97,7 @@ under the License.
     </entity>
     <entity entity-name="TechDataCalendarExcWeek"
             package-name="org.ofbiz.manufacturing.techdata"
-            title="Calendar Exception Week entity">
+            title="Calendar Exception Week">
       <description>Used to defined some weeks which differ from the normal week defined in the calendar.</description>
       <field name="calendarId" type="id-ne"></field>
       <field name="exceptionDateStart" type="date"></field>
@@ -128,7 +115,7 @@ under the License.
     <entity entity-name="TechDataCalendarWeek"
             package-name="org.ofbiz.manufacturing.techdata"
             default-resource-name="ManufacturingEntityLabels"
-            title="Week definition entity">
+            title="Week definition">
       <description>Used to defined the week definition disponibility for machine</description>
       <field name="calendarWeekId" type="id-ne"></field>
       <field name="description" type="description"></field>

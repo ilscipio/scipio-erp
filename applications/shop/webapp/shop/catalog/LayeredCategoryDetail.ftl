@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
@@ -26,18 +13,18 @@ under the License.
             <select name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
                 <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax + 1}</option>
                 <#list 0..viewIndexMax as curViewNum>
-                     <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
+                     <option value="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@pageUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
                 </#list>
             </select>
             <#-- End Page Select Drop-Down -->
             <#if (0 < viewIndex?int)>
-                <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
+                <a href="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
             </#if>
             <#if ((listSize?int - viewSize?int) > 0)>
                 <span>${lowIndex + 1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
             </#if>
             <#if highIndex?int < listSize?int>
-             | <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
+             | <a href="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}/~clearSearch=N</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
             </#if>
         </div>
     </#if>
@@ -59,7 +46,7 @@ under the License.
       <div>
         <#if categoryImageUrl?string?has_content>
           <#assign height=100/>
-          <img src="<@ofbizContentUrl ctxPrefix=true>${categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
+          <img src="<@contentUrl ctxPrefix=true>${categoryImageUrl}</@contentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
         </#if>
         <#if longDescription?has_content>
           ${longDescription}

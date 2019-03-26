@@ -28,14 +28,14 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 context.cart = cart;
 
 orderItems = cart.makeOrderItems();
 orderAdjustments = cart.makeAllAdjustments();
 
 // SCIPIO: Instancing here the OrderReadHelper so it is available for the entire script 
-orh = new OrderReadHelper(orderAdjustments, orderItems);
+orh = new OrderReadHelper(dispatcher, context.locale, orderAdjustments, orderItems); // SCIPIO: Added dispatcher
 orderItemShipGroupInfo = cart.makeAllShipGroupInfos();
 if (orderItemShipGroupInfo) {
     orderItemShipGroupInfo.each { valueObj ->
@@ -56,7 +56,7 @@ context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsO
 
 
 List<GenericValue> allSubscriptionAdjustments = [];
-if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {	
+if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {    
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = [:];
     subscriptionItems = context.subscriptionItems.keySet();
     for (Iterator<GenericValue> iterSubscription; iterSubscription = subscriptionItems.iterator(); iterSubscription.hasNext()) {

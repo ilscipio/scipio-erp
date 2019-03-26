@@ -18,16 +18,19 @@
  *******************************************************************************/
 package org.ofbiz.webapp.ftl;
 
-import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
-import freemarker.template.*;
-
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+
+import freemarker.core.Environment;
+import freemarker.ext.beans.BeanModel;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 
 /**
  * SetRequestAttributeMethod - Freemarker Method for setting context fields
@@ -40,7 +43,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
     @SuppressWarnings("unchecked")
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
@@ -51,7 +54,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
 
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = (BeanModel)env.getVariable("context");
-        Map context = (Map) req.getWrappedObject();
+        Map<String, Object> context = (Map<String, Object>) req.getWrappedObject();
 
         // SCIPIO: name should not be escaped
         //String name = ((TemplateScalarModel) args.get(0)).getAsString();
@@ -65,7 +68,7 @@ public class SetContextFieldTransform implements TemplateMethodModelEx {
         //    value = ((BeanModel) args.get(1)).getWrappedObject();
         // SCIPIO: NOTE: Unlike this above, this call will avoid the auto-escaping as implemented by Ofbiz (sensitive to DeepUnwrap implementation)
         value = LangFtlUtil.unwrapAlwaysUnlessNull(valueModel);
-                
+
         context.put(name, value);
         return new SimpleScalar("");
     }

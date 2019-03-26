@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
@@ -603,12 +590,15 @@ under the License.
     
     <menu name="QuoteItemsSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <!-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+        <!--
         <menu-item name="AddAllToCart" title="${uiLabelMap.OrderAddAllToCart}" widget-style="+${styles.action_run_session} ${styles.action_add}">
             <condition>
                 <if-compare field="maySelectItems" operator="not-equals" value="N" />
             </condition>
             <link target="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" url-mode="plain"/>
         </menu-item>
+        -->
     </menu>
     
     <menu name="RequestTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

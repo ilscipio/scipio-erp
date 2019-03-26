@@ -1,7 +1,7 @@
 <@section title=sectionTitle>
     <#if shipmentList?has_content>
-            <@paginate mode="content" url=makeOfbizUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
-                <@table type="data-list" role="grid" autoAltRows=true id="${rawString(currentShipmentType.shipmentTypeId)}_shipments">
+            <@paginate mode="content" url=makePageUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
+                <@table type="data-list" role="grid" autoAltRows=true id="${raw(currentShipmentType.shipmentTypeId)}_shipments">
                     <@thead>
                         <@tr valign="bottom" class="header-row">
                             <@th>${uiLabelMap.CommonId}</@th>
@@ -20,11 +20,11 @@
                                 <#assign facilityName = facility.facilityName />
                             </#if>
                             <@tr>   
-                                <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId!}</@ofbizUrl>">${shipment.shipmentId!}</a></@td>
+                                <@td><a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId!}</@pageUrl>">${shipment.shipmentId!}</a></@td>
                                 <@td>${facilityName!}</@td>
                                 <@td>${shipmentType.description!}</@td>
                                 <@td>${statusItem.description!}</@td>
-                                <@td>${shipment.createdDate?string('yyyy-MM-dd HH:mm')!}</@td>
+                                <@td><#if shipment.createdDate??>${shipment.createdDate?string('yyyy-MM-dd HH:mm')}</#if></@td>
                             </@tr>
                         </#list>
                     </@tbody>

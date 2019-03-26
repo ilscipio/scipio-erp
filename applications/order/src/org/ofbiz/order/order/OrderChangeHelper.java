@@ -31,15 +31,16 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 /**
  * Order Helper - Helper Methods For Non-Read Actions
  */
-public class OrderChangeHelper {
+public final class OrderChangeHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private OrderChangeHelper() {}
 
     public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
         return approveOrder(dispatcher, userLogin, orderId, false);
@@ -71,16 +72,6 @@ public class OrderChangeHelper {
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS, DIGITAL_ITEM_STATUS);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
-
-            /*
-            // call the service to check/run digital fulfillment
-            Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-            // this service will return a message with success if there were any problems. Get this message and return it to the user
-            String message = (String) checkDigi.get(ModelService.SUCCESS_MESSAGE);
-            if (UtilValidate.isNotEmpty(message)) {
-                throw new GeneralRuntimeException(message);
-            }
-            */
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -117,9 +108,6 @@ public class OrderChangeHelper {
             OrderChangeHelper.createReceivedPayments(dispatcher, userLogin, orderId);
             OrderChangeHelper.createOrderInvoice(dispatcher, userLogin, orderId);
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, "ORDER_COMPLETED", "ITEM_APPROVED", "ITEM_COMPLETED", null);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return false;
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return false;
@@ -154,8 +142,10 @@ public class OrderChangeHelper {
         // set the status on the order header
         Map<String, Object> statusFields = UtilMisc.<String, Object>toMap("orderId", orderId, "statusId", orderStatus, "userLogin", userLogin);
         Map<String, Object> statusResult = dispatcher.runSync("changeOrderStatus", statusFields);
-        if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-            Debug.logError("Problems adjusting order header status for order #" + orderId, module);
+        if (ServiceUtil.isError(statusResult)) {
+            String errorMessage = ServiceUtil.getErrorMessage(statusResult);
+            Debug.logError("Problems adjusting order header status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            throw new GenericServiceException(errorMessage);
         }
 
         // set the status on the order item(s)
@@ -164,8 +154,10 @@ public class OrderChangeHelper {
             itemStatusFields.put("fromStatusId", fromItemStatus);
         }
         Map<String, Object> itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);
-        if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-            Debug.logError("Problems adjusting order item status for order #" + orderId, module);
+        if (ServiceUtil.isError(itemStatusResult)) {
+            String errorMessage = ServiceUtil.getErrorMessage(itemStatusResult);
+            Debug.logError("Problems adjusting order item status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            throw new GenericServiceException(errorMessage);
         }
 
         // now set the status for digital items
@@ -207,8 +199,10 @@ public class OrderChangeHelper {
                                     // update the status
                                     Map<String, Object> digitalStatusFields = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
                                     Map<String, Object> digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
-                                    if (ModelService.RESPOND_ERROR.equals(digitalStatusChange.get(ModelService.RESPONSE_MESSAGE))) {
-                                        Debug.logError("Problems with digital product status change : " + product, module);
+                                    if (ServiceUtil.isError(digitalStatusChange)) {
+                                        String errorMessage = ServiceUtil.getErrorMessage(digitalStatusChange);
+                                        Debug.logError("Problems with digital product status change: " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+                                        throw new GenericServiceException(errorMessage);
                                     }
                                 }
                             }
@@ -218,8 +212,10 @@ public class OrderChangeHelper {
                                 // non-product items don't ship; treat as a digital item
                                 Map<String, Object> digitalStatusFields = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
                                 Map<String, Object> digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
-                                if (ModelService.RESPOND_ERROR.equals(digitalStatusChange.get(ModelService.RESPONSE_MESSAGE))) {
-                                    Debug.logError("Problems with digital product status change : " + product, module);
+                                if (ServiceUtil.isError(digitalStatusChange)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(digitalStatusChange);
+                                    Debug.logError("Problems with digital product status change: " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+                                    throw new GenericServiceException(errorMessage);
                                 }
                             }
                         }
@@ -233,20 +229,24 @@ public class OrderChangeHelper {
         // cancel the inventory reservations
         Map<String, Object> cancelInvFields = UtilMisc.<String, Object>toMap("orderId", orderId, "userLogin", userLogin);
         Map<String, Object> cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
-        if (ModelService.RESPOND_ERROR.equals(cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
-            Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
+        if (ServiceUtil.isError(cancelInvResult)) {
+            String errorMessage = ServiceUtil.getErrorMessage(cancelInvResult);
+            Debug.logError("Problems reversing inventory reservations for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            throw new GenericServiceException(errorMessage);
         }
     }
 
     public static void releasePaymentAuthorizations(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
         Map<String, Object> releaseFields = UtilMisc.<String, Object>toMap("orderId", orderId, "userLogin", userLogin);
         Map<String, Object> releaseResult = dispatcher.runSync("releaseOrderPayments", releaseFields);
-        if (ModelService.RESPOND_ERROR.equals(releaseResult.get(ModelService.RESPONSE_MESSAGE))) {
-            Debug.logError("Problems releasing payment authorizations for order #" + orderId, module);
+        if (ServiceUtil.isError(releaseResult)) {
+            String errorMessage = ServiceUtil.getErrorMessage(releaseResult);
+            Debug.logError("Problems releasing payment authorizations for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            throw new GenericServiceException(errorMessage);
         }
     }
 
-    public static void createReceivedPayments(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericEntityException, GenericServiceException {
+    public static void createReceivedPayments(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
         GenericValue orderHeader = null;
         try {
             orderHeader = dispatcher.getDelegator().findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -270,8 +270,10 @@ public class OrderChangeHelper {
                         Map<String, Object> results = dispatcher.runSync("createPaymentFromPreference",
                                 UtilMisc.<String, Object>toMap("userLogin", userLogin, "orderPaymentPreferenceId", opp.getString("orderPaymentPreferenceId"),
                                 "paymentRefNum",  UtilDateTime.nowTimestamp().toString(), "paymentFromId", partyId));
-                        if (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
-                            Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
+                        if (ServiceUtil.isError(results)) {
+                            String errorMessage = ServiceUtil.getErrorMessage(results);
+                            Debug.logError(errorMessage, module);
+                            throw new GenericServiceException(errorMessage);
                         }
                     }
                 }
@@ -293,88 +295,19 @@ public class OrderChangeHelper {
             Map<String, Object> serviceParam = UtilMisc.<String, Object>toMap("orderId", orderId, "billItems", items, "userLogin", userLogin);
             Map<String, Object> serviceRes = dispatcher.runSync("createInvoiceForOrder", serviceParam);
             if (ServiceUtil.isError(serviceRes)) {
-                throw new GenericServiceException(ServiceUtil.getErrorMessage(serviceRes));
+                String errorMessage = ServiceUtil.getErrorMessage(serviceRes);
+                Debug.logError(errorMessage, module);
+                throw new GenericServiceException(errorMessage);
             }
         }
     }
 
 
     public static boolean releaseInitialOrderHold(LocalDispatcher dispatcher, String orderId) {
-        /* NOTE DEJ20080609 commenting out this code because the old OFBiz Workflow Engine is being deprecated and this was only for that
-        // get the delegator from the dispatcher
-        Delegator delegator = dispatcher.getDelegator();
-
-        // find the workEffortId for this order
-        List workEfforts = null;
-        try {
-            workEfforts = EntityQuery.use(delegator).from("WorkEffort").where("currentStatusId", "WF_SUSPENDED", sourceReferenceId", orderId).queryList();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
-            return false;
-        }
-
-        if (workEfforts != null) {
-            // attempt to release the order workflow from 'Hold' status (resume workflow)
-            boolean allPass = true;
-            Iterator wei = workEfforts.iterator();
-            while (wei.hasNext()) {
-                GenericValue workEffort = (GenericValue) wei.next();
-                String workEffortId = workEffort.getString("workEffortId");
-                try {
-                    if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {
-                        WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
-                        client.resume(workEffortId);
-                    } else {
-                        Debug.logVerbose("Current : --{" + workEffort + "}-- not resuming", module);
-                    }
-                } catch (WfException e) {
-                    Debug.logError(e, "Problem resuming activity : " + workEffortId, module);
-                    allPass = false;
-                }
-            }
-            return allPass;
-        } else {
-            Debug.logWarning("No WF found for order ID : " + orderId, module);
-        }
-        return false;
-        */
         return true;
     }
 
     public static boolean abortOrderProcessing(LocalDispatcher dispatcher, String orderId) {
-        /* NOTE DEJ20080609 commenting out this code because the old OFBiz Workflow Engine is being deprecated and this was only for that
-        Debug.logInfo("Aborting workflow for order " + orderId, module);
-        Delegator delegator = dispatcher.getDelegator();
-
-        // find the workEffortId for this order
-        GenericValue workEffort = null;
-        try {
-            List workEfforts = EntityQuery.use(delegator).from("WorkEffort").where("workEffortTypeId", "WORK_FLOW", "sourceReferenceId", orderId).queryList();
-            if (workEfforts != null && workEfforts.size() > 1) {
-                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);
-            }
-            workEffort = EntityUtil.getFirst(workEfforts);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
-            return false;
-        }
-
-        if (workEffort != null) {
-            String workEffortId = workEffort.getString("workEffortId");
-            if (workEffort.getString("currentStatusId").equals("WF_RUNNING")) {
-                Debug.logInfo("WF is running; trying to abort", module);
-                WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
-                try {
-                    client.abortProcess(workEffortId);
-                } catch (WfException e) {
-                    Debug.logError(e, "Problem aborting workflow", module);
-                    return false;
-                }
-                return true;
-            }
-        }
-        return false;
-        */
         return true;
     }
 }

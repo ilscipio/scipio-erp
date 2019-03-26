@@ -1,6 +1,6 @@
 <#-- SCIPIO: common macros for catalog tree and forms -->
 
-<#include "component://product/webapp/catalog/catalog/catalogcommon.ftl">
+<#include "component://product/webapp/catalog/common/common.ftl">
 
 <#macro ectMarkupOut dir args={}>
   <#if dir?is_directive>

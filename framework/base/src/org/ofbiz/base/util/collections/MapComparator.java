@@ -48,7 +48,14 @@ public class MapComparator implements Comparator<Map<Object, Object>> {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj==null) {
+            return false;
+        }
         return obj.equals(this);
+    }
+
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /**
@@ -70,8 +77,6 @@ public class MapComparator implements Comparator<Map<Object, Object>> {
             if (key instanceof FlexibleMapAccessor<?>) {
                 FlexibleMapAccessor<Object> fmaKey = UtilGenerics.cast(key);
                 ascending = fmaKey.getIsAscending();
-
-                //Debug.logInfo("Doing compare with a FlexibleMapAccessor [" + fmaKey.getOriginalName() + "] ascending [" + ascending + "]", module);
 
                 o1 = fmaKey.get(UtilGenerics.<String, Object>checkMap(map1));
                 o2 = fmaKey.get(UtilGenerics.<String, Object>checkMap(map2));
@@ -119,9 +124,8 @@ public class MapComparator implements Comparator<Map<Object, Object>> {
             if (compareResult != 0) {
                 if (ascending) {
                     return compareResult;
-                } else {
-                    return -compareResult;
                 }
+                return -compareResult;
             }
         }
 

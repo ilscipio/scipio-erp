@@ -27,18 +27,18 @@ partyId = request.getParameter("partyId");
 facilityId = request.getParameter("facilityId");
 
 state = OrderListState.getInstance(request);
-state.update(request);
+state = state.update(request); // SCIPIO: 2018-11-28: now returns the instance to be used
 context.state = state;
 
 // check permission for each order type
 hasPermission = false;
-if (security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {
+if (security.hasEntityPermission("ORDERMGR", "_VIEW", request)) {
     if (state.hasType("view_SALES_ORDER") || (!(state.hasType("view_SALES_ORDER")) && !(state.hasType("view_PURCHASE_ORDER")))) {
         hasPermission = true;
         salesOrdersCondition = EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER");
     }
 }
-if (security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", session)) {
+if (security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", request)) {
     if (state.hasType("view_PURCHASE_ORDER") || (!(state.hasType("view_SALES_ORDER")) && !(state.hasType("view_PURCHASE_ORDER")))) {
         hasPermission = true;
         purchaseOrdersCondition = EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER");

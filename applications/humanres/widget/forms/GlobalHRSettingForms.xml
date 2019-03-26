@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -138,14 +125,14 @@ under the License.
             <set field="nowDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd HH:mm:ss.S&quot;)}" type="String"/>
             <entity-condition entity-name="EmplPositionTypeRateAndAmount" filter-by-date="true">
                 <condition-list combine="and">
-                    <condition-expr field-name="emplPositionTypeId" from-field="parameters.emplPositionTypeId" operator="equals"/>
+                    <condition-expr field-name="emplPositionTypeId" operator="equals" from-field="parameters.emplPositionTypeId"/>
                     <condition-list combine="or">
-                        <condition-expr field-name="rateAmountFromDate" from-field="null" operator="equals"/>
-                        <condition-expr field-name="rateAmountFromDate" from-field="nowDate" operator="less"/>
+                        <condition-expr field-name="rateAmountFromDate" operator="equals" from-field="null"/>
+                        <condition-expr field-name="rateAmountFromDate" operator="less" from-field="nowDate"/>
                     </condition-list>
                     <condition-list combine="or">
-                        <condition-expr field-name="rateAmountThruDate" from-field="null" operator="equals"/>
-                        <condition-expr field-name="rateAmountThruDate" from-field="nowDate" operator="greater"/>
+                        <condition-expr field-name="rateAmountThruDate" operator="equals" from-field="null"/>
+                        <condition-expr field-name="rateAmountThruDate" operator="greater" from-field="nowDate"/>
                     </condition-list>
                 </condition-list>
                 <order-by field-name="rateTypeId"/>

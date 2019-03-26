@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -81,8 +68,8 @@ under the License.
             </service>
         </actions>
         <row-actions>
-            <entity-one value-field="product" entity-name="Product"/>
-            <entity-one value-field="uom" entity-name="Uom">
+            <entity-one entity-name="Product" value-field="product"/>
+            <entity-one entity-name="Uom" value-field="uom">
                 <field-map field-name="uomId" from-field="product.quantityUomId"/>
             </entity-one>
         </row-actions>
@@ -476,6 +463,12 @@ under the License.
 
      <form name="EditProductionRunDeclRoutingTask" type="single" target="updateProductionRunTask" title="" default-map-name="routingTaskData"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <script lang="groovy"><![CDATA[
+                routingTaskData.comments = org.ofbiz.manufacturing.jobshopmgt.ProductionRun.getCommentsFromProductionRunTask(delegator, routingTaskId);
+            ]]>
+            </script>
+        </actions>
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -537,11 +530,21 @@ under the License.
         <field name="addQuantityRejected" title="${uiLabelMap.ManufacturingAddQuantityRejected}">
             <text/>
         </field>
+        
         <field name="comments" title="${uiLabelMap.ManufacturingComments}">
-            <text/>
+            <text />
         </field>
         <field name="partyId" title="${uiLabelMap.ManufacturingWorker}">
-            <text/>
+            <lookup target-form-name="LookupPerson"/>
+        </field>
+        <!-- SCIPIO (2019-02-11): Added role type because it's necessary for the WorkEffortPartyAssignment -->
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="_NA_" >
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-constraint name="parentTypeId" operator="equals" value="EMPLOYEE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>

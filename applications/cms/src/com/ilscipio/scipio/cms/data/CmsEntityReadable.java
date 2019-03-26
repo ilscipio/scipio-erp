@@ -11,6 +11,6 @@ public interface CmsEntityReadable {
     public GenericValue getEntity();
 
     public String getEntityName();
-    
+
     public Delegator getDelegator();
 }

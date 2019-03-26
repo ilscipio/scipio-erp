@@ -19,10 +19,10 @@
 package org.ofbiz.service.calendar;
 
 import java.util.Arrays;
-import com.ibm.icu.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -30,6 +30,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+
+import com.ibm.icu.util.Calendar;
 
 /**
  * Recurrence Rule Object
@@ -104,8 +106,9 @@ public class RecurrenceRule {
      */
     public RecurrenceRule(GenericValue rule) throws RecurrenceRuleException {
         this.rule = rule;
-        if (!rule.getEntityName().equals("RecurrenceRule"))
+        if (!"RecurrenceRule".equals(rule.getEntityName())) {
             throw new RecurrenceRuleException("Invalid RecurrenceRule Value object.");
+        }
         init();
     }
 
@@ -117,10 +120,12 @@ public class RecurrenceRule {
         // Check the validity of the rule
         String freq = rule.getString("frequency");
 
-        if (!checkFreq(freq))
+        if (!checkFreq(freq)) {
             throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");
-        if (rule.getLong("intervalNumber").longValue() < 1)
+        }
+        if (rule.getLong("intervalNumber") < 1) {
             throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");
+        }
 
         // Initialize the byXXX lists
         bySecondList = StringUtil.split(rule.getString("bySecondList"), ",");
@@ -136,22 +141,30 @@ public class RecurrenceRule {
 
     // Checks for a valid frequency property.
     private boolean checkFreq(String freq) {
-        if (freq == null)
+        if (freq == null) {
             return false;
-        if (freq.equalsIgnoreCase("SECONDLY"))
+        }
+        if ("SECONDLY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("MINUTELY"))
+        }
+        if ("MINUTELY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("HOURLY"))
+        }
+        if ("HOURLY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("DAILY"))
+        }
+        if ("DAILY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("WEEKLY"))
+        }
+        if ("WEEKLY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("MONTHLY"))
+        }
+        if ("MONTHLY".equalsIgnoreCase(freq)) {
             return true;
-        if (freq.equalsIgnoreCase("YEARLY"))
+        }
+        if ("YEARLY".equalsIgnoreCase(freq)) {
             return true;
+        }
         return false;
     }
 
@@ -161,21 +174,21 @@ public class RecurrenceRule {
      */
     public long getEndTime() {
         if (rule == null) {
-            Debug.logVerbose("Rule is null.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Rule is null.", module);
             return -1;
         }
         long time = 0;
         java.sql.Timestamp stamp = null;
 
         stamp = rule.getTimestamp("untilDateTime");
-        Debug.logVerbose("Stamp value: " + stamp, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Stamp value: " + stamp, module);
 
         if (stamp != null) {
             long nanos = stamp.getNanos();
             time = stamp.getTime();
             time += (nanos / 1000000);
         }
-        Debug.logVerbose("Returning time: " + time, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Returning time: " + time, module);
         return time;
     }
 
@@ -184,8 +197,9 @@ public class RecurrenceRule {
      *@return long The number of time this recurrence will run.
      */
     public long getCount() {
-        if (rule.get("countNumber") != null)
-            return rule.getLong("countNumber").longValue();
+        if (rule.get("countNumber") != null) {
+            return rule.getLong("countNumber");
+        }
         return 0;
     }
 
@@ -194,7 +208,7 @@ public class RecurrenceRule {
      *@return String The name of this frequency.
      */
     public String getFrequencyName() {
-        return rule.getString("frequency").toUpperCase();
+        return rule.getString("frequency").toUpperCase(Locale.getDefault());
     }
 
     /**
@@ -204,22 +218,30 @@ public class RecurrenceRule {
     public int getFrequency() {
         String freq = rule.getString("frequency");
 
-        if (freq == null)
+        if (freq == null) {
             return 0;
-        if (freq.equalsIgnoreCase("SECONDLY"))
+        }
+        if ("SECONDLY".equalsIgnoreCase(freq)) {
             return SECONDLY;
-        if (freq.equalsIgnoreCase("MINUTELY"))
+        }
+        if ("MINUTELY".equalsIgnoreCase(freq)) {
             return MINUTELY;
-        if (freq.equalsIgnoreCase("HOURLY"))
+        }
+        if ("HOURLY".equalsIgnoreCase(freq)) {
             return HOURLY;
-        if (freq.equalsIgnoreCase("DAILY"))
+        }
+        if ("DAILY".equalsIgnoreCase(freq)) {
             return DAILY;
-        if (freq.equalsIgnoreCase("WEEKLY"))
+        }
+        if ("WEEKLY".equalsIgnoreCase(freq)) {
             return WEEKLY;
-        if (freq.equalsIgnoreCase("MONTHLY"))
+        }
+        if ("MONTHLY".equalsIgnoreCase(freq)) {
             return MONTHLY;
-        if (freq.equalsIgnoreCase("YEARLY"))
+        }
+        if ("YEARLY".equalsIgnoreCase(freq)) {
             return YEARLY;
+        }
         return 0;
     }
 
@@ -228,9 +250,10 @@ public class RecurrenceRule {
      *@return long Interval value
      */
     public long getInterval() {
-        if (rule.get("intervalNumber") == null)
+        if (rule.get("intervalNumber") == null) {
             return 1;
-        return rule.getLong("intervalNumber").longValue();
+        }
+        return rule.getLong("intervalNumber");
     }
 
     /**
@@ -238,7 +261,6 @@ public class RecurrenceRule {
      *@return The interval of this frequency as an integer.
      */
     public int getIntervalInt() {
-        // if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval(), module);
         return (int) getInterval();
     }
 
@@ -251,20 +273,28 @@ public class RecurrenceRule {
      */
     public long next(long startTime, long fromTime, long currentCount) {
         // Set up the values
-        if (startTime == 0)
+        if (startTime == 0) {
             startTime = RecurrenceUtil.now();
-        if (fromTime == 0)
+        }
+        if (fromTime == 0) {
             fromTime = startTime;
+        }
 
         // Test the end time of the recurrence.
-        if (getEndTime() != 0 && getEndTime() <= RecurrenceUtil.now())
+        if (getEndTime() != 0 && getEndTime() <= RecurrenceUtil.now()) {
             return 0;
-        Debug.logVerbose("Rule NOT expired by end time.", module);
+        }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Rule NOT expired by end time.", module);
+        }
 
         // Test the recurrence limit.
-        if (getCount() != -1 && currentCount >= getCount())
+        if (getCount() != -1 && currentCount >= getCount()) {
             return 0;
-        Debug.logVerbose("Rule NOT expired by max count.", module);
+        }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Rule NOT expired by max count.", module);
+        }
 
         boolean isSeeking = true;
         long nextRuntime = 0;
@@ -411,12 +441,14 @@ public class RecurrenceRule {
     public boolean isValid(long startTime, long dateTime) {
         long testTime = startTime;
 
-        if (testTime == dateTime)
+        if (testTime == dateTime) {
             return true;
+        }
         while (testTime < dateTime) {
             testTime = next(startTime, testTime, 1);
-            if (testTime == dateTime)
+            if (testTime == dateTime) {
                 return true;
+            }
         }
         return false;
     }
@@ -443,7 +475,6 @@ public class RecurrenceRule {
         long nextStartTime = startTime;
 
         while (nextStartTime < fromTime) {
-            // if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency(), module);
             switch (getFrequency()) {
             case SECONDLY:
                 cal.add(Calendar.SECOND, getIntervalInt());
@@ -490,16 +521,19 @@ public class RecurrenceRule {
 
         // Test each byXXX rule.
         if (UtilValidate.isNotEmpty(bySecondList)) {
-            if (!bySecondList.contains(String.valueOf(cal.get(Calendar.SECOND))))
+            if (!bySecondList.contains(String.valueOf(cal.get(Calendar.SECOND)))) {
                 return false;
+            }
         }
         if (UtilValidate.isNotEmpty(byMinuteList)) {
-            if (!byMinuteList.contains(String.valueOf(cal.get(Calendar.MINUTE))))
+            if (!byMinuteList.contains(String.valueOf(cal.get(Calendar.MINUTE)))) {
                 return false;
+            }
         }
         if (UtilValidate.isNotEmpty(byHourList)) {
-            if (!byHourList.contains(String.valueOf(cal.get(Calendar.HOUR_OF_DAY))))
+            if (!byHourList.contains(String.valueOf(cal.get(Calendar.HOUR_OF_DAY)))) {
                 return false;
+            }
         }
         if (UtilValidate.isNotEmpty(byDayList)) {
             Iterator<String> iter = byDayList.iterator();
@@ -513,16 +547,18 @@ public class RecurrenceRule {
                     if ((hasNumber(dayRule)) && (getFrequency() == MONTHLY || getFrequency() == YEARLY)) {
                         int modifier = getDailyNumber(dayRule);
 
-                        if (modifier == 0)
+                        if (modifier == 0) {
                             foundDay = true;
+                        }
 
                         if (getFrequency() == MONTHLY) {
                             // figure if we are the nth xDAY if this month
                             int currentPos = cal.get(Calendar.WEEK_OF_MONTH);
                             int dayPosCalc = cal.get(Calendar.DAY_OF_MONTH) - ((currentPos - 1) * 7);
 
-                            if (dayPosCalc < 1)
+                            if (dayPosCalc < 1) {
                                 currentPos--;
+                            }
                             if (modifier > 0) {
                                 if (currentPos == modifier) {
                                     foundDay = true;
@@ -613,13 +649,16 @@ public class RecurrenceRule {
                 int maxDay = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
                 int currentDay = cal.get(Calendar.DAY_OF_YEAR);
 
-                if (day > 0 && day == currentDay)
+                if (day > 0 && day == currentDay) {
                     foundDay = true;
-                if (day < 0 && day == ((currentDay - maxDay) - 1))
+                }
+                if (day < 0 && day == ((currentDay - maxDay) - 1)) {
                     foundDay = true;
+                }
             }
-            if (!foundDay)
+            if (!foundDay) {
                 return false;
+            }
         }
         if (UtilValidate.isNotEmpty(byWeekNoList)) {
             Iterator<String> iter = byWeekNoList.iterator();
@@ -637,13 +676,16 @@ public class RecurrenceRule {
                 int maxWeek = cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
                 int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
 
-                if (week > 0 && week == currentWeek)
+                if (week > 0 && week == currentWeek) {
                     foundWeek = true;
-                if (week < 0 && week == ((currentWeek - maxWeek) - 1))
+                }
+                if (week < 0 && week == ((currentWeek - maxWeek) - 1)) {
                     foundWeek = true;
+                }
             }
-            if (!foundWeek)
+            if (!foundWeek) {
                 return false;
+            }
         }
         if (UtilValidate.isNotEmpty(byMonthList)) {
             Iterator<String> iter = byMonthList.iterator();
@@ -662,8 +704,9 @@ public class RecurrenceRule {
                     foundMonth = true;
                 }
             }
-            if (!foundMonth)
+            if (!foundMonth) {
                 return false;
+            }
         }
 
         return true;
@@ -675,8 +718,9 @@ public class RecurrenceRule {
         List<String> numberList = Arrays.asList(list);
         String firstChar = str.substring(0, 1);
 
-        if (numberList.contains(firstChar))
+        if (numberList.contains(firstChar)) {
             return true;
+        }
         return false;
     }
 
@@ -688,8 +732,9 @@ public class RecurrenceRule {
         for (int i = 0; i < str.length(); i++) {
             String thisChar = str.substring(i, i);
 
-            if (hasNumber(thisChar))
+            if (hasNumber(thisChar)) {
                 numberBuf.append(thisChar);
+            }
         }
         String numberStr = numberBuf.toString();
 
@@ -720,21 +765,30 @@ public class RecurrenceRule {
 
     // Returns the Calendar day of the rule day string
     private int getCalendarDay(String day) {
-        if (day != null) day = day.trim();
-        if (day.equalsIgnoreCase("MO"))
-            return Calendar.MONDAY;
-        if (day.equalsIgnoreCase("TU"))
-            return Calendar.TUESDAY;
-        if (day.equalsIgnoreCase("WE"))
-            return Calendar.WEDNESDAY;
-        if (day.equalsIgnoreCase("TH"))
-            return Calendar.THURSDAY;
-        if (day.equalsIgnoreCase("FR"))
-            return Calendar.FRIDAY;
-        if (day.equalsIgnoreCase("SA"))
-            return Calendar.SATURDAY;
-        if (day.equalsIgnoreCase("SU"))
-            return Calendar.SUNDAY;
+        if (day != null) {
+            day = day.trim();
+            if ("MO".equalsIgnoreCase(day)) {
+                return Calendar.MONDAY;
+            }
+            if ("TU".equalsIgnoreCase(day)) {
+                return Calendar.TUESDAY;
+            }
+            if ("WE".equalsIgnoreCase(day)) {
+                return Calendar.WEDNESDAY;
+            }
+            if ("TH".equalsIgnoreCase(day)) {
+                return Calendar.THURSDAY;
+            }
+            if ("FR".equalsIgnoreCase(day)) {
+                return Calendar.FRIDAY;
+            }
+            if ("SA".equalsIgnoreCase(day)) {
+                return Calendar.SATURDAY;
+            }
+            if ("SU".equalsIgnoreCase(day)) {
+                return Calendar.SUNDAY;
+            }
+        }
         return 0;
     }
 
@@ -756,10 +810,12 @@ public class RecurrenceRule {
             throws RecurrenceRuleException {
         String freq[] = {"", "SECONDLY", "MINUTELY", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"};
 
-        if (frequency < 1 || frequency > 7)
+        if (frequency < 1 || frequency > 7) {
             throw new RecurrenceRuleException("Invalid frequency");
-        if (interval < 0)
+        }
+        if (interval < 0) {
             throw new RecurrenceRuleException("Invalid interval");
+        }
 
         String freqStr = freq[frequency];
 
@@ -767,8 +823,8 @@ public class RecurrenceRule {
             GenericValue value = delegator.makeValue("RecurrenceRule");
 
             value.set("frequency", freqStr);
-            value.set("intervalNumber", Long.valueOf(interval));
-            value.set("countNumber", Long.valueOf(count));
+            value.set("intervalNumber", (long) interval);
+            value.set("countNumber", (long) count);
             if (endTime > 0) {
                 value.set("untilDateTime", new java.sql.Timestamp(endTime));
             }

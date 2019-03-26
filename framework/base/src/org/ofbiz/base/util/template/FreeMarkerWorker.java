@@ -48,23 +48,23 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicBeansWrapperImpl;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicDefaultObjectWrapperImpl;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
@@ -77,17 +77,19 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 import freemarker.template.utility.DeepUnwrap;
 
-/** 
+/**
  * FreeMarkerWorker - Freemarker Template Engine Utilities.
  * <p>
  * SCIPIO: 2017-04-03: All ObjectWrappers are now made from custom types in ScipioFtlWrappers and
  * they support custom plugin wrapping logic.
  */
-public class FreeMarkerWorker {
+public final class FreeMarkerWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Version version = Configuration.VERSION_2_3_28;
+
+    private FreeMarkerWorker () {}
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
@@ -95,58 +97,58 @@ public class FreeMarkerWorker {
     //private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
     private static final BeansWrapper defaultOfbizWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizWrapper(version);
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
-    
+
     /**
      * SCIPIO: The default escaping charset for the Freemarker <code>?url</code> built-in.
      * <p>
      * NOTE: This is hardcoded here because it is also already hardcoded in <code>UrlCodec</code>.
      */
     private static final String defaultUrlEscapingCharset = "UTF-8";
-    
+
     /**
      * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
      * FIXME: should not force BeansWrapper in the future...
      */
     private static final BeansWrapper defaultOfbizSimpleMapWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizSimpleMapWrapper(version);
-    
+
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types,
      * using adapters for collections.
      * FIXME: should not force DefaultObjectWrapper in the future...
      */
     private static final DefaultObjectWrapper defaultSimpleTypeWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeWrapper(version);
-    
+
     /**
-     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
+     * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types,
      * using copies for collections.
      * FIXME: should not force DefaultObjectWrapper in the future...
      */
     private static final DefaultObjectWrapper defaultSimpleTypeCopyingWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeCopyingWrapper(version);
-    
+
     /**
      * SCIPIO: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
      */
     private static final ThreadLocal<Environment> threadEnv = new ThreadLocal<Environment>();
-    
+
     public static BeansWrapper getDefaultOfbizWrapper() {
         return defaultOfbizWrapper;
     }
-    
+
     /**
      * SCIPIO: Get version of getDefaultOfbizWrapper that is the same but produces simple maps.
      */
     public static ObjectWrapper getDefaultOfbizSimpleMapWrapper() {
         return defaultOfbizSimpleMapWrapper;
     }
-    
+
     /**
      * SCIPIO: Get a Freemarker simple type wrapper.
      */
     public static ObjectWrapper getDefaultSimpleTypeWrapper() {
         return defaultSimpleTypeWrapper;
     }
-    
+
     /**
      * SCIPIO: Get a Freemarker simple type copying wrapper.
      */
@@ -165,25 +167,38 @@ public class FreeMarkerWorker {
         TemplateHashModel staticModels = wrapper.getStaticModels();
         newConfig.setSharedVariable("Static", staticModels);
         try {
-            newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuery"));
+            // SCIPIO: 2019-02-16: Use EntityQuerySafe to avoid exceptions in FreeMarker files
+            //newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuery"));
+            newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuerySafe"));
         } catch (TemplateModelException e) {
             Debug.logError(e, module);
         }
         newConfig.setLocalizedLookup(false);
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
+        
+        // SCIPIO: 2019-01-31: New shared variables, to simplify templates
+        newConfig.setSharedVariable("Debug", new BeanModel(Debug.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilDateTime", new BeanModel(UtilDateTime.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilFormatOut", new BeanModel(UtilFormatOut.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilHttp", new BeanModel(UtilHttp.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilMisc", new BeanModel(UtilMisc.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilNumber", new BeanModel(UtilNumber.getStaticInstance(), wrapper));
+
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
-        newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
+        // SCIPIO: Load it from ALL components, like freemarkerTransforms:
+        //newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
+        newConfig.setAutoImports(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerImports"));
         
         // SCIPIO: New code for includes and shared vars...
-        Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
-        Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
+        Map<String, String> includeProperties = UtilProperties.asSortedMap(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerIncludes"));
+        Properties sharedVarsProperties = UtilProperties.getMergedPropertiesFromAllComponents("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
-        List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values()); 
+        List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values());
         if (includeFreemarkerTemplates.size() > 0) {
             newConfig.setAutoIncludes(includeFreemarkerTemplates);
         }
         // ... end.
-        
+
         newConfig.setTemplateExceptionHandler(new FreeMarkerWorker.OFBizTemplateExceptionHandler());
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
@@ -196,7 +211,7 @@ public class FreeMarkerWorker {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {
-            resources = loader.getResources("freemarkerTransforms.properties"); 
+            resources = loader.getResources("freemarkerTransforms.properties");
         } catch (IOException e) {
             Debug.logError(e, "Could not load list of freemarkerTransforms.properties", module);
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
@@ -221,23 +236,34 @@ public class FreeMarkerWorker {
     public static String getDefaultUrlEscapingCharset() {
         return defaultUrlEscapingCharset;
     }
-    
-    /**
-     * Protected helper method.
-     */
-    protected static void loadTransforms(ClassLoader loader, Properties props, Configuration config) {
-        for (Iterator<Object> i = props.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
+
+    private static void loadTransforms(ClassLoader loader, Properties props, Configuration config) {
+        for (Object object : props.keySet()) {
+            String key = (String) object;
             String className = props.getProperty(key);
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Adding FTL Transform " + key + " with class " + className, module);
             }
             try {
-                config.setSharedVariable(key, loader.loadClass(className).newInstance());
+                config.setSharedVariable(key, getTransformInstance(className, loader)); // SCIPIO: getTransformInstance
             } catch (Exception e) {
                 Debug.logError(e, "Could not pre-initialize dynamically loaded class: " + className + ": " + e, module);
             }
         }
+    }
+
+    public static TemplateModel getTransformInstance(String className, ClassLoader loader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
+        return getTransformInstance(loader.loadClass(className), loader);
+    }
+    
+    public static TemplateModel getTransformInstance(Class<?> cls, ClassLoader loader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
+        Object transform = cls.newInstance(); // SCIPIO
+        if (transform instanceof FtlTransformFactory) {
+            transform = ((FtlTransformFactory) transform).getTransform(loader);
+        }
+        return (TemplateModel) transform;
     }
     
     /**
@@ -411,7 +437,7 @@ public class FreeMarkerWorker {
      * call this method instead of creating its own <code>Configuration</code> instance. The instance
      * returned by this method includes the <code>component://</code> resolver and the OFBiz custom
      * transformations.
-     * 
+     *
      * @return A <code>Configuration</code> instance.
      */
     public static Configuration getDefaultOfbizConfig() {
@@ -440,7 +466,7 @@ public class FreeMarkerWorker {
         String locationProtocol = locationUrl.getProtocol();
         if ("file".equals(locationProtocol) && Debug.verboseOn()) {
             String locationFile = locationUrl.getFile();
-            int lastSlash = locationFile.lastIndexOf("/");
+            int lastSlash = locationFile.lastIndexOf('/');
             String locationDir = locationFile.substring(0, lastSlash);
             String filename = locationFile.substring(lastSlash + 1);
             Debug.logVerbose("FreeMarker render: filename=" + filename + ", locationDir=" + locationDir, module);
@@ -480,14 +506,14 @@ public class FreeMarkerWorker {
         }
         return template;
     }
-    
+
     /**
      * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
      */
     public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
         return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
     }
-    
+
     /**
      * SCIPIO: Gets template from string out of custom cache (new).
      * 2017-02-21: May now pass cache null to bypass caching.
@@ -514,7 +540,6 @@ public class FreeMarkerWorker {
     }
 
     public static String getArg(Map<String, ? extends Object> args, String key, Map<String, ? extends Object> templateContext) {
-        //SimpleScalar s = null;
         Object o = args.get(key);
         String returnVal = (String) unwrap(o);
         if (returnVal == null) {
@@ -523,14 +548,13 @@ public class FreeMarkerWorker {
                     returnVal = (String) templateContext.get(key);
                 }
             } catch (ClassCastException e2) {
-                //return null;
+                Debug.logInfo(e2.getMessage(), module);
             }
         }
         return returnVal;
     }
 
     public static Object getArgObject(Map<String, ? extends Object> args, String key, Map<String, ? extends Object> templateContext) {
-        //SimpleScalar s = null;
         Object o = args.get(key);
         Object returnVal = unwrap(o);
         if (returnVal == null) {
@@ -539,7 +563,7 @@ public class FreeMarkerWorker {
                     returnVal = templateContext.get(key);
                 }
             } catch (ClassCastException e2) {
-                //return null;
+                Debug.logInfo(e2.getMessage(), module);
             }
         }
         return returnVal;
@@ -572,9 +596,11 @@ public class FreeMarkerWorker {
 
    /**
     * Gets BeanModel from FreeMarker context and returns the object that it wraps.
+    * @deprecated SCIPIO: 2018-08-30: use ContextFtlUtil or LangFtlUtil instead
     * @param varName the name of the variable in the FreeMarker context.
     * @param env the FreeMarker Environment
     */
+    @Deprecated
     public static BeanModel getBeanModel(String varName, Environment env) {
         BeanModel bean = null;
         try {
@@ -585,6 +611,10 @@ public class FreeMarkerWorker {
         return bean;
     }
 
+   /**
+    * @deprecated SCIPIO: 2018-08-30: use ContextFtlUtil or LangFtlUtil instead
+    */
+    @Deprecated
     public static Object get(SimpleHash args, String key) {
         Object o = null;
         try {
@@ -609,16 +639,6 @@ public class FreeMarkerWorker {
                 ctx = UtilGenerics.cast(((BeanModel) ctxObj).getWrappedObject());
                 returnObj = ctx.get(key);
             }
-            /*
-            try {
-                Map templateContext = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-                if (templateContext != null) {
-                    returnObj = (String) templateContext.get(key);
-                }
-            } catch (ClassCastException e2) {
-                //return null;
-            }
-            */
         }
         return returnObj;
     }
@@ -652,7 +672,7 @@ public class FreeMarkerWorker {
     }
 
     public static Map<String, Object> createEnvironmentMap(Environment env) {
-        Map<String, Object> templateRoot = new HashMap<String, Object>();
+        Map<String, Object> templateRoot = new HashMap<>();
         Set<String> varNames = null;
         try {
             varNames = UtilGenerics.checkSet(env.getKnownVariableNames());
@@ -661,9 +681,6 @@ public class FreeMarkerWorker {
         }
         if (varNames != null) {
             for (String varName: varNames) {
-                //freemarker.ext.beans.StringModel varObj = (freemarker.ext.beans.StringModel) varNameIter.next();
-                //Object varObj =  varNameIter.next();
-                //String varName = varObj.toString();
                 templateRoot.put(varName, FreeMarkerWorker.getWrappedObject(varName, env));
             }
         }
@@ -671,7 +688,6 @@ public class FreeMarkerWorker {
     }
 
     public static void saveContextValues(Map<String, Object> context, String [] saveKeyNames, Map<String, Object> saveMap) {
-        //Map saveMap = new HashMap();
         for (String key: saveKeyNames) {
             Object o = context.get(key);
             if (o instanceof Map<?, ?>) {
@@ -684,7 +700,7 @@ public class FreeMarkerWorker {
     }
 
     public static Map<String, Object> saveValues(Map<String, Object> context, String [] saveKeyNames) {
-        Map<String, Object> saveMap = new HashMap<String, Object>();
+        Map<String, Object> saveMap = new HashMap<>();
         for (String key: saveKeyNames) {
             Object o = context.get(key);
             if (o instanceof Map<?, ?>) {
@@ -697,7 +713,6 @@ public class FreeMarkerWorker {
         return saveMap;
     }
 
-
     public static void reloadValues(Map<String, Object> context, Map<String, Object> saveValues, Environment env) {
         for (Map.Entry<String, Object> entry: saveValues.entrySet()) {
             String key = entry.getKey();
@@ -705,7 +720,7 @@ public class FreeMarkerWorker {
             if (o instanceof Map<?, ?>) {
                 context.put(key, UtilMisc.makeMapWritable(UtilGenerics.checkMap(o)));
             } else if (o instanceof List<?>) {
-                List<Object> list = new ArrayList<Object>();
+                List<Object> list = new ArrayList<>();
                 list.addAll(UtilGenerics.checkList(o));
                 context.put(key, list);
             } else {
@@ -725,7 +740,6 @@ public class FreeMarkerWorker {
         for (Map.Entry<String, Object> entry: args.entrySet()) {
             String key = entry.getKey();
             Object obj = entry.getValue();
-            //if (Debug.infoOn()) Debug.logInfo("in overrideWithArgs, key(3):" + key + " obj:" + obj + " class:" + obj.getClass().getName() , module);
             if (obj != null) {
                 if (obj == TemplateModel.NOTHING) {
                     ctx.put(key, null);
@@ -742,6 +756,10 @@ public class FreeMarkerWorker {
         }
     }
 
+   /**
+    * @deprecated SCIPIO: 2018-08-30: do not use
+    */
+    @Deprecated
     public static void convertContext(Map<String, Object> ctx) {
         for (Map.Entry<String, Object> entry: ctx.entrySet()) {
             Object obj = entry.getValue();
@@ -857,17 +875,19 @@ public class FreeMarkerWorker {
             UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(te, env);
             if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
                 handleTemplateExceptionDebug(te, env, out);
+            } else if (exMode == UtilRender.RenderExceptionMode.DEBUG_RETHROW) {
+                handleTemplateExceptionDebugRethrow(te, env, out);
             } else if (exMode == UtilRender.RenderExceptionMode.BLANK) {
                 handleTemplateExceptionBlank(te, env, out);
             } else {
                 handleTemplateExceptionRethrow(te, env, out);
             }
         }
-        
+
         protected void handleTemplateExceptionRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
             TemplateExceptionHandler.RETHROW_HANDLER.handleTemplateException(te, env, out);
         }
-        
+
         protected void handleTemplateExceptionDebug(TemplateException te, Environment env, Writer out) throws TemplateException {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);
@@ -884,16 +904,21 @@ public class FreeMarkerWorker {
                 Debug.logError(e, module);
             }
         }
-        
+
         protected void handleTemplateExceptionBlank(TemplateException te, Environment env, Writer out) throws TemplateException {
             ; // do nothing, should already be logged by Freemarker
+        }
+
+        protected void handleTemplateExceptionDebugRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
+            handleTemplateExceptionDebug(te, env, out);
+            handleTemplateExceptionRethrow(te, env, out);
         }
     }
 
     public static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");
     }
-    
+
     /**
      * SCIPIO: Returns the Freemarker environment associated with current thread, or null
      * if no rendering.
@@ -901,7 +926,7 @@ public class FreeMarkerWorker {
      * <p>
      * <strong>IMPORTANT</strong>: This exists as a workaround for quirks in Freemarker/Ofbiz rendering.
      * Normally calling <code>Environment.getCurrentEnvironment</code> should be enough,
-     * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to 
+     * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to
      * <code>Environment.process</code>, and in those cases the calls return null and inevitable crash.
      * So a patch to the renderer is required so the environment is accessible from macros, and
      * all transforms must use this method. This method uses a second local source for Environment.
@@ -915,7 +940,7 @@ public class FreeMarkerWorker {
      * On top, an extra fix is added to {@link #renderTemplate(Template, Map, Appendable)} to
      * try to make it so - as much as possible - at most one of threadEnv OR the Freemarker-saved env
      * is non-null at any given time. We cannot guarantee this but this should cover most cases in Ofbiz.
-     * 
+     *
      * @see #includeTemplate
      * @see #renderTemplate(Template, Map, Appendable)
      */
@@ -926,12 +951,12 @@ public class FreeMarkerWorker {
         }
         return env;
     }
-    
+
     /**
      * SCIPIO: Includes the given template with the given environment.
-     * <em>All macro renderer template include calls must be wrapped with this method! 
+     * <em>All macro renderer template include calls must be wrapped with this method!
      * See {@link #getCurrentEnvironment}.</em>
-     * 
+     *
      * @see #getCurrentEnvironment
      */
     public static void includeTemplate(Template template, Environment env) throws TemplateException, IOException {
@@ -944,12 +969,12 @@ public class FreeMarkerWorker {
             threadEnv.set(savedEnv);
         }
     }
-    
+
     /**
      * SCIPIO: Gets the render exception mode from the environment or more generic variables (best-effort).
      */
     public static UtilRender.RenderExceptionMode getRenderExceptionMode(Environment env) {
-        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // TODO: REVIEW SECURITY IMPLICATIONS
         // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
         if (env != null) {
             try {
@@ -973,7 +998,7 @@ public class FreeMarkerWorker {
         }
         return UtilRender.getGlobalRenderExceptionMode();
     }
-    
+
     /**
      * SCIPIO: Gets the render exception mode from the exception, environment or more generic variables (best-effort).
      * NOTE: the exception causes are consulted, but only the FIRST that implements RenderExceptionModeHolder is

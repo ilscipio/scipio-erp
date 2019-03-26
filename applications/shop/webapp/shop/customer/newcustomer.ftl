@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -85,14 +72,14 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonCancel/>
     <@menuitem type="link" href="javascript:document.getElementById('newuserform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
   </@menu>
 </#macro>
 <#--${uiLabelMap.PartyRequestNewAccount}-->
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#-- title=uiLabelMap.EcommerceRegister-->
   <@commonMsg type="info">
-    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonLoginHere}</a>.
+    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@pageUrl>checkLogin/main</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonLoginHere}</a>.
   </@commonMsg>
 
 
@@ -127,7 +114,7 @@ under the License.
   </#if>
 </#macro>
 
-<form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
+<form method="post" action="<@pageUrl>createcustomer${previousParams}</@pageUrl>" id="newuserform" name="newuserform">
   
   <@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 

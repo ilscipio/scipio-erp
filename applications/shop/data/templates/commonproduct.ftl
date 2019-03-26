@@ -58,12 +58,15 @@ NOTE: This template does not support globals as-is (#global)
     <#local quantityIncluded = (.node.@quantityIncluded[0])!"">
     <#local quantityUomId = (.node.@quantityUomId[0])!"">
     <#local piecesIncluded = (.node.@piecesIncluded[0])!"">
+    <#local isVirtual = (.node.@isVirtual[0])!"">
+    <#local isVariant = (.node.@isVariant[0])!"">
+    <#local virtualVariantMethodEnum = (.node.@virtualVariantMethodEnum[0])!"">
     <#local weight = (.node.@weight[0])!"">
 
-    <Product productId="${productId}" productTypeId="${productTypeId}" primaryProductCategoryId="${productCategoryId}" productName="${productName?xml}" 
-        internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}" 
-        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" 
-        createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" 
+    <Product productId="${productId}" productTypeId="${productTypeId}" primaryProductCategoryId="${productCategoryId}" productName="${productName?xml}"
+        internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}"
+        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="${isVirtual!"N"}" isVariant="${isVariant!"N"}" <#if virtualVariantMethodEnum?has_content>virtualVariantMethodEnum="${virtualVariantMethodEnum}"</#if>
+        createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0"
         lastModifiedByUserLogin="admin"
         <#if quantityIncluded?has_content> quantityIncluded="${quantityIncluded}"</#if>
         <#if quantityUomId?has_content> quantityUomId="${quantityUomId}"</#if>
@@ -107,7 +110,15 @@ NOTE: This template does not support globals as-is (#global)
     <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
         inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="${inventoryItemId}" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="${inventoryQuantity}" quantityOnHandDiff="${inventoryQuantity}" accountingQuantityDiff="${inventoryQuantity}"/>
-    
+
+    <#-- Product alt urls. Added 2018-11-07 -->
+    <DataResource dataResourceId="${productId}-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:26.907" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.337" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ElectronicText dataResourceId="${productId}-ALT" lastUpdatedStamp="2017-12-12 22:27:26.891" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.37" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[${productName}-${productId}]]></textData>
+    </ElectronicText>
+    <Content contentId="${productId}-ALT" contentTypeId="DOCUMENT" dataResourceId="${productId}-ALT" lastUpdatedStamp="2017-12-12 22:27:26.894" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.389" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="${productId}" contentId="${productId}-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:08.816" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:08.816" createdTxStamp="2017-12-12 22:25:07.512"/>
+
     <#-- Product child nodes, for image and others. Added 2017-07-07. -->
     <#if .node?children?has_content>
         <#recurse .node>
@@ -124,7 +135,7 @@ NOTE: This template does not support globals as-is (#global)
     <#-- not really needed
     <#local fileType = imageUrl?keep_after_last(".")/>
     <#local filenameToUse = "IMG_"+productId+"_"+imageNr+"."+fileType/> -->
-    <#local locale = Static["org.apache.commons.lang.LocaleUtils"].toLocale("en_US")>
+    <#local locale = Static["org.apache.commons.lang3.LocaleUtils"].toLocale("en_US")>
     <#local localeStr = locale>
     <#assign paramMap={
             "locale" : locale,
@@ -132,10 +143,10 @@ NOTE: This template does not support globals as-is (#global)
             "imageOrigUrl":imageUrl,
             "copyOrig":copyOrig
         }/>
-    
+
     <#-- printed by service
-    <#local dummy = Static["org.ofbiz.base.util.Debug"].logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
-    
+    <#local dummy = Debug.logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
+
     <#-- Update Product -->
     <#if (imageNr <= 0)>
         <#--
@@ -175,6 +186,16 @@ NOTE: This template does not support globals as-is (#global)
           </#list>
         </#if>
     </#if>
+</#macro>
+
+<#macro productFeatureAppl>
+    <#-- Scale images -->
+    <#local productId = .node?parent.@productId[0]?string/>
+    <#local productFeatureId = (.node.@productFeatureId[0])?string/>
+    <#local productFeatureApplTypeId = (.node.@productFeatureApplTypeId[0])?string/>
+    <#local sequenceNum = (.node.@sequenceNum[0])?string/>
+    <ProductFeatureAppl productId="${productId}" productFeatureId="${productFeatureId}"
+        productFeatureApplTypeId="${productFeatureApplTypeId}" fromDate="2001-05-13 12:00:00.0" sequenceNum="${sequenceNum}"/>
 </#macro>
 
 <#macro @element>

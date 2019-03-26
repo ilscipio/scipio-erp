@@ -1,5 +1,5 @@
 <#-- Scipio Asset Editor  -->
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 2016-12-02: TODO?: UI CURRENTLY DOES NOT SUPPORT VERSIONING ON ASSET TEMPLATES (BUT SCHEMA DOES)
@@ -8,7 +8,7 @@
 
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
-    <#assign editAssetUrl = makeOfbizUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
+    <#assign editAssetUrl = makePageUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
 
     <#-- Javascript functions -->
     <@script>
@@ -46,7 +46,7 @@
         
         function updateAssetInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updateAssetInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@pageUrl escapeAs='js'>updateAssetInfo</@pageUrl>", 'settingsForm', 
                 function(eventMsgs) {
                     doCmsSuccessRedirect("${escapeFullUrl(editAssetUrl, 'js')}", eventMsgs);
                 }
@@ -54,10 +54,10 @@
         }
         
         function deleteAsset() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteAsset</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteAsset</@pageUrl>", 
                 { assetTemplateId : "${(assetTemplateModel.id)!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>assets</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>assets</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -73,7 +73,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateAsset/>
+            <@menuitem type="link" href=makePageUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
@@ -83,11 +83,11 @@
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAttribute}</@heading>
-                    <form method="post" action="<@ofbizUrl>addAttributeToAsset</@ofbizUrl>" id="new-attribute-form">
+                    <form method="post" action="<@pageUrl>addAttributeToAsset</@pageUrl>" id="new-attribute-form">
                     <@fields type="default-compact">
-                      <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}" />
-                      <@attributeFields />
-                      <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
+                      <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
+                      <@attributeFields/>
+                      <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}"/>
                     </@fields>
                     </form>
                  </@modal>
@@ -97,8 +97,8 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToAsset")>
-                            <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!""}" />
+                        <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToAsset") webSiteId=((assetTemplateModel.webSiteId)!)>
+                            <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
                 </@modal>
@@ -107,7 +107,7 @@
             <@menuitem type="link" href="javascript:$('form#editorForm').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:deleteAsset(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
             
-            <@cmsObjectExportFormMenuItem presetConfigName="CmsAssetTemplates" pkField="CmsAssetTemplate" pkValue=assetTemplateModel.id! />
+            <@cmsObjectExportFormMenuItem presetConfigName="CmsAssetTemplates" pkField="CmsAssetTemplate" pkValue=(assetTemplateModel.id!)/>
         </@menu>  
     </#macro>
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-asset"><#-- FIXME: get these classes on <body> instead... -->
@@ -119,7 +119,7 @@
             </@row>
             <@row>
                 <@cell columns=9>
-                  <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateAsset")>
+                  <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
                     <@field type="hidden" name="assetTemplateId" id="assetTemplateId" value=assetTemplateModel.id!""/>
                 
                     <#-- General Content -->
@@ -196,7 +196,7 @@
                         <#list assetAttr as attrTmpl>
                           <@modal id="edit_attr_${attrTmpl_index}">
                             <@heading>${uiLabelMap.CmsEditAttribute}</@heading>
-                            <form method="post" action="<@ofbizUrl>updateAssetAttribute</@ofbizUrl>" id="edit-attribute-form-${attrTmpl_index}">
+                            <form method="post" action="<@pageUrl>updateAssetAttribute</@pageUrl>" id="edit-attribute-form-${attrTmpl_index}">
                             <@fields type="default-compact">
                               <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}" />
                               <@attributeFields attrTmpl=attrTmpl/>
@@ -215,7 +215,7 @@
                 </@cell>
               
                 <@cell columns=3>
-                  <@form method="post" id="settingsForm" action=makeOfbizUrl('updateAssetInfo')>
+                  <@form method="post" id="settingsForm" action=makePageUrl('updateAssetInfo')>
                     <@field type="hidden" name="assetTemplateId" value=assetTemplateModel.id!""/>
                     
                     <#-- Template Information -->
@@ -229,10 +229,13 @@
                         </@field>
                         <@field type="textarea" name="description_visible" value=(assetTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only 
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(assetTemplateModel.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+                        
+                        <#-- This will extremely rarely be used for assets, but could have impact in the future...
+                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(assetTemplateModel.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+                        -->
                         
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateAssetInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
@@ -246,7 +249,7 @@
         <#-- Workaround for OFBIZ-2330 -->
         <#if assetAttr?has_content>
             <#list assetAttr as attrTmpl>
-                <form id="remove_attr_${escapeVal(attrTmpl.id!, 'html')}" method="post" action="<@ofbizUrl>deleteAttributeFromAsset</@ofbizUrl>">
+                <form id="remove_attr_${escapeVal(attrTmpl.id!, 'html')}" method="post" action="<@pageUrl>deleteAttributeFromAsset</@pageUrl>">
                     <input type="hidden" name="attributeTemplateId" value="${attrTmpl.id!}"/>
                     <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                 </form>
@@ -258,13 +261,12 @@
         <#-- NEW Asset -->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateAsset")>
-                    <@section title=uiLabelMap.CmsCreateAsset>
+                <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
+                    <@section title=uiLabelMap.CmsNewAsset>
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder=uiLabelMap.CmsMyTemplateName required=true/>
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only 
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         <@field type="select" name="contentTypeId" label=uiLabelMap.ContentType>
@@ -274,7 +276,7 @@
                         </@field>
                             
                         <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
-                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                       </@fields>
                     </@section>
                 </@form>

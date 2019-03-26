@@ -1,7 +1,7 @@
 <#-- TODO: License -->
 
 <@section>
-    <form method="post" action="<@ofbizUrl>addCategoryProductMember</@ofbizUrl>" name="addProductCategoryMemberForm">
+    <form method="post" action="<@pageUrl>addCategoryProductMember</@pageUrl>" name="addProductCategoryMemberForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
         <@row>

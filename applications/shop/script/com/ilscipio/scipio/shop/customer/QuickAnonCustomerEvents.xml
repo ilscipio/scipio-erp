@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -85,12 +72,12 @@ under the License.
             <set field="newUserLogin.passwordHint" from-field="userLoginContext.passwordHint"/>
 
             <!-- Check the password, etc for validity -->
-            <call-bsh><![CDATA[
+            <script lang="groovy"><![CDATA[
                 String password = (String) userLoginContext.get("currentPassword");
                 String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
                 String passwordHint = (String) userLoginContext.get("passwordHint");
                 org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-            ]]></call-bsh>
+            ]]></script>
         <else>
             <if-compare field="require_login" operator="equals" value="true">
                 <add-error><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></add-error>
@@ -254,7 +241,7 @@ under the License.
             </if-compare>
         </if-compare>
 
-        <if-compare value="Y" field="parameters.useShippingPostalAddressForBilling" operator="not-equals">
+        <if-compare field="parameters.useShippingPostalAddressForBilling" operator="not-equals" value="Y">
         <!-- Check the flag if Second Postal address is not same as First So create Another Postal Address -->
             <if-compare field="billToPostalAddress" operator="equals" value="true">
                 <if-empty field="parameters.billToName">
@@ -348,10 +335,13 @@ under the License.
 
         <if-not-empty field="newUserLogin">
             <!-- If password encryption is enabled, encrpyt it now -->
-            <call-bsh><![CDATA[
-                boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security", "password.encrypt"));
-                if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
-            ]]></call-bsh>
+            <script lang="groovy"><![CDATA[
+                boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator)) // SCIPIO: use delegator
+                if (useEncryption) {
+                    String hashType = org.ofbiz.common.login.LoginServices.getHashType()
+                    newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword")))
+                }
+            ]]></script>
             <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
             <set field="userLoginContext.partyId" from-field="partyId"/>
             <create-value value-field="newUserLogin"/>
@@ -366,7 +356,7 @@ under the License.
                 <call-service service-name="createPartyPostalAddress" in-map-name="shippingAddressContext">
                     <result-to-field result-name="contactMechId" field="parameters.shippingContactMechId"/>
                 </call-service>
-                <if-compare value="Y" field="parameters.useShippingPostalAddressForBilling" operator="equals">
+                <if-compare field="parameters.useShippingPostalAddressForBilling" operator="equals" value="Y">
                     <set field="addressPurposeContext.partyId" from-field="partyId"/>
                     <set field="addressPurposeContext.contactMechPurposeTypeId" from-field="parameters.billingContactMechPurposeTypeId" default-value="BILLING_LOCATION"/>
                     <set field="addressPurposeContext.contactMechId" from-field="parameters.shippingContactMechId"/>
@@ -382,7 +372,7 @@ under the License.
             </if-empty>
         </if-compare>
 
-        <if-compare value="Y" field="parameters.useShippingPostalAddressForBilling" operator="not-equals">
+        <if-compare field="parameters.useShippingPostalAddressForBilling" operator="not-equals" value="Y">
             <if-empty field="parameters.billingContactMechId">
                 <!-- create the Billing location -->
                 <set field="billingAddressContext.contactMechPurposeTypeId" from-field="parameters.billingContactMechPurposeTypeId" default-value="BILLING_LOCATION"/>
@@ -491,8 +481,17 @@ under the License.
             </if-empty>
         </if-not-empty>
 
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+
         <!-- see if we should continue now... -->
-        <session-to-field field="cart" session-name="shoppingCart"/>
+
         <session-to-field field="userLogin"/>
         <if-empty field="userLogin">
             <call-object-method obj-field="session" method-name="removeAttribute">
@@ -504,14 +503,14 @@ under the License.
             </call-object-method>
             <check-errors/>
             <if-not-empty field="cart">
-                <call-bsh><![CDATA[
+                <script lang="groovy"><![CDATA[
                     // clear out the login fields from the cart
                     try {
                         if (cart!=null) cart.setAutoUserLogin(null, dispatcher);
-                    } catch (CartItemModifyException e) {
+                    } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                         Debug.logError(e, module);
                     }
-                ]]></call-bsh>
+                ]]></script>
             </if-not-empty>
             <if-not-empty field="partyId">
                 <set field="lookupKeyValue.userLoginId" value="anonymous"/>
@@ -523,14 +522,14 @@ under the License.
                         <call-object-method obj-field="cart" method-name="setOrderPartyId">
                             <field field="partyId"/>
                         </call-object-method>
-                        <call-bsh><![CDATA[
+                        <script lang="groovy"><![CDATA[
                             // clear out the login fields from the cart
                             try {
                                 if (cart!=null) cart.setUserLogin(userLogin, dispatcher);
-                            } catch (CartItemModifyException e) {
+                            } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                                 Debug.logError(e, module);
                             }
-                        ]]></call-bsh>
+                        ]]></script>
                     </if-not-empty>
                 </if-not-empty>
             </if-not-empty>
@@ -548,7 +547,7 @@ under the License.
         </if-not-empty>
 
 
-        <if-compare value="Y" field="parameters.useShippingPostalAddressForBilling" operator="not-equals">
+        <if-compare field="parameters.useShippingPostalAddressForBilling" operator="not-equals" value="Y">
            <field-to-session field="parameters.billingContactMechId" session-name="billingContactMechId"></field-to-session>
         <else>
         <if-not-empty field="cart">
@@ -559,18 +558,38 @@ under the License.
         </if-compare>
         <!-- set the partyId in the request -->
         <field-to-request field="partyId" request-name="partyId"/>
+        
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
-       <call-bsh><![CDATA[
+        <script lang="groovy"><![CDATA[
            shipmentMethod = parameters.get("shipping_method");
            if(shipmentMethod != null){
               parameters.put("shipmentMethodTypeId", shipmentMethod.substring(0, shipmentMethod.indexOf("@")));
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
-       ]]></call-bsh>
-       <session-to-field field="cart" session-name="shoppingCart"/>
-       <if-not-empty field="cart">
+        ]]></script>
+       
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+
+        <if-not-empty field="cart">       
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -611,7 +630,18 @@ under the License.
                    <field field="giftMessage" type="String"/>
                </call-object-method>
            </if-not-empty>
-       </if-not-empty>
+        </if-not-empty>
+
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
 </simple-methods>

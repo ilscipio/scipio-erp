@@ -19,13 +19,14 @@
 package org.ofbiz.service.calendar;
 
 import java.io.Serializable;
-import com.ibm.icu.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
+
+import com.ibm.icu.util.Calendar;
 
 /** A collection of TemporalExpression classes.
  * <p>For the most part, these classes are immutable - with the exception
@@ -34,7 +35,7 @@ import org.ofbiz.base.util.Debug;
  */
 @SuppressWarnings("serial")
 public class TemporalExpressions implements Serializable {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final TemporalExpression NullExpression = new Null();
     // Expressions are evaluated from smallest unit of time to largest.
     // When unit of time is the same, then they are evaluated from
@@ -57,6 +58,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a range of dates. */
     public static class DateRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final org.ofbiz.base.util.DateRange range;
 
         public DateRange(Date date) {
@@ -77,13 +79,26 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((range == null) ? 0 : range.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.range.equals(((DateRange) obj).range);
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                return this.range.equals(((DateRange) obj).range);
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -122,6 +137,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day in the month. */
     public static class DayInMonth extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int dayOfWeek;
         protected final int occurrence;
 
@@ -175,14 +191,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + dayOfWeek;
+            result = prime * result + occurrence;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayInMonth that = (DayInMonth) obj;
+                    return this.dayOfWeek == that.dayOfWeek && this.occurrence == that.occurrence;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                DayInMonth that = (DayInMonth) obj;
-                return this.dayOfWeek == that.dayOfWeek && this.occurrence == that.occurrence;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -261,6 +291,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day of month range. */
     public static class DayOfMonthRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int end;
         protected final int start;
 
@@ -293,14 +324,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + end;
+            result = prime * result + start;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayOfMonthRange that = (DayOfMonthRange) obj;
+                    return this.start == that.start && this.end == that.end;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                DayOfMonthRange that = (DayOfMonthRange) obj;
-                return this.start == that.start && this.end == that.end;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -364,6 +409,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a day of week range. */
     public static class DayOfWeekRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int end;
         protected final int start;
 
@@ -398,14 +444,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + end;
+            result = prime * result + start;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    DayOfWeekRange that = (DayOfWeekRange) obj;
+                    return this.start == that.start && this.end == that.end;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                DayOfWeekRange that = (DayOfWeekRange) obj;
-                return this.start == that.start && this.end == that.end;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -491,6 +551,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a difference of two temporal expressions. */
     public static class Difference extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final TemporalExpression excluded;
         protected final TemporalExpression included;
 
@@ -520,14 +581,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((excluded == null) ? 0 : excluded.hashCode());
+            result = prime * result + ((included == null) ? 0 : included.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Difference that = (Difference) obj;
+                    return this.included.equals(that.included) && this.excluded.equals(that.excluded);
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                Difference that = (Difference) obj;
-                return this.included.equals(that.included) && this.excluded.equals(that.excluded);
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -579,8 +654,9 @@ public class TemporalExpressions implements Serializable {
         }
     }
 
-    /** A temporal expression that represents a frequency. */
+    /* A temporal expression that represents a frequency. */
     public static class Frequency extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int freqCount;
         protected final int freqType;
         protected final Date start;
@@ -602,7 +678,7 @@ public class TemporalExpressions implements Serializable {
                 throw new IllegalArgumentException("freqCount argument must be a positive integer");
             }
             if (start != null) {
-                this.start = start;
+                this.start = (Date) start.clone();
             } else {
                 this.start = new Date();
             }
@@ -620,14 +696,29 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + freqCount;
+            result = prime * result + freqType;
+            result = prime * result + ((start == null) ? 0 : start.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Frequency that = (Frequency) obj;
+                    return this.start.equals(that.start) && this.freqType == that.freqType && this.freqCount == that.freqCount;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                Frequency that = (Frequency) obj;
-                return this.start.equals(that.start) && this.freqType == that.freqType && this.freqCount == that.freqCount;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -728,6 +819,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents an hour range. */
     public static class HourRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int end;
         protected final int start;
 
@@ -763,14 +855,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + end;
+            result = prime * result + start;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    HourRange that = (HourRange) obj;
+                    return this.start == that.start && this.end == that.end;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                HourRange that = (HourRange) obj;
-                return this.start == that.start && this.end == that.end;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -791,7 +897,7 @@ public class TemporalExpressions implements Serializable {
         }
 
         public Set<Integer> getHourRangeAsSet() {
-            Set<Integer> rangeSet = new TreeSet<Integer>();
+            Set<Integer> rangeSet = new TreeSet<>();
             if (this.start == this.end) {
                 rangeSet.add(this.start);
             } else {
@@ -869,6 +975,7 @@ public class TemporalExpressions implements Serializable {
     /** A temporal expression that represents a mathematical intersection of all of its
      * member expressions. */
     public static class Intersection extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final Set<TemporalExpression> expressionSet;
 
         public Intersection(Set<TemporalExpression> expressionSet) {
@@ -911,13 +1018,26 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((expressionSet == null) ? 0 : expressionSet.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.expressionSet.equals(((Intersection) obj).expressionSet);
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                return this.expressionSet.equals(((Intersection) obj).expressionSet);
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -932,9 +1052,8 @@ public class TemporalExpressions implements Serializable {
             }
             if (includesDate(first)) {
                 return first;
-            } else {
-                return null;
             }
+            return null;
         }
 
         /** Returns the member expression <code>Set</code>. The
@@ -985,6 +1104,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a minute range. */
     public static class MinuteRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int end;
         protected final int start;
 
@@ -1020,14 +1140,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + end;
+            result = prime * result + start;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    MinuteRange that = (MinuteRange) obj;
+                    return this.start == that.start && this.end == that.end;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                MinuteRange that = (MinuteRange) obj;
-                return this.start == that.start && this.end == that.end;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -1048,7 +1182,7 @@ public class TemporalExpressions implements Serializable {
         }
 
         public Set<Integer> getMinuteRangeAsSet() {
-            Set<Integer> rangeSet = new TreeSet<Integer>();
+            Set<Integer> rangeSet = new TreeSet<>();
             if (this.start == this.end) {
                 rangeSet.add(this.start);
             } else {
@@ -1122,6 +1256,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that represents a month range. */
     public static class MonthRange extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final int end;
         protected final int start;
 
@@ -1156,14 +1291,28 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + end;
+            result = prime * result + start;
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    MonthRange that = (MonthRange) obj;
+                    return this.start == that.start && this.end == that.end;
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                MonthRange that = (MonthRange) obj;
-                return this.start == that.start && this.end == that.end;
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -1266,6 +1415,7 @@ public class TemporalExpressions implements Serializable {
 
     /** A temporal expression that provides a substitution for an excluded temporal expression. */
     public static class Substitution extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final TemporalExpression excluded;
         protected final TemporalExpression included;
         protected final TemporalExpression substitute;
@@ -1303,14 +1453,29 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((excluded == null) ? 0 : excluded.hashCode());
+            result = prime * result + ((included == null) ? 0 : included.hashCode());
+            result = prime * result + ((substitute == null) ? 0 : substitute.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    Substitution that = (Substitution) obj;
+                    return this.included.equals(that.included) && this.excluded.equals(that.excluded) && this.substitute.equals(that.substitute);
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                Substitution that = (Substitution) obj;
-                return this.included.equals(that.included) && this.excluded.equals(that.excluded) && this.substitute.equals(that.substitute);
-            } catch (ClassCastException e) {}
             return false;
         }
 
@@ -1375,6 +1540,7 @@ public class TemporalExpressions implements Serializable {
     /** A temporal expression that represents a mathematical union of all of its
      * member expressions. */
     public static class Union extends TemporalExpression {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         protected final Set<TemporalExpression> expressionSet;
 
         public Union(Set<TemporalExpression> expressionSet) {
@@ -1410,13 +1576,26 @@ public class TemporalExpressions implements Serializable {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + ((expressionSet == null) ? 0 : expressionSet.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
+            if (obj != null) {
+                if (obj == this) {
+                    return true;
+                }
+                try {
+                    return this.expressionSet.equals(((Union) obj).expressionSet);
+                }
+                catch (ClassCastException e) {
+                    //Debug.logInfo(e.getMessage(), module); // SCIPIO: 2018-11-02: Unnecessarily verbose
+                }
             }
-            try {
-                return this.expressionSet.equals(((Union) obj).expressionSet);
-            } catch (ClassCastException e) {}
             return false;
         }
 

@@ -33,9 +33,18 @@ context.featureTypes = from("ProductFeatureType").queryList();
 // add/remove feature types
 addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
 if (addedFeatureTypes == null) {
-    addedFeatureTypes = [:];
-    session.setAttribute("addedFeatureTypes", addedFeatureTypes);
+    // SCIPIO: 2018-11-28: Thread-safety: synchronized block
+    synchronized (UtilHttp.getSessionSyncObject(session)) {
+        addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
+        if (addedFeatureTypes == null) {
+            addedFeatureTypes = [:];
+            session.setAttribute("addedFeatureTypes", addedFeatureTypes);
+        }
+    }
 }
+
+// SCIPIO: 2018-11-28: Thread-safety: synchronized block
+synchronized (addedFeatureTypes) {
 
 featuresByType = new HashMap();
 String[] addFeatureTypeId = request.getParameterValues("addFeatureTypeId");
@@ -70,8 +79,10 @@ while (iter) {
 }
 
 context.addedFeatureTypeIds = addedFeatureTypes.keySet();
-context.addedFeatureTypes = addedFeatureTypes;
+context.addedFeatureTypes = new HashMap(addedFeatureTypes); // SCIPIO: Thread safety: copy required for safe ftl render
 context.featuresByType = featuresByType;
+
+} // synchronized
 
 productId = parameters.get("productId");
 if (!productId) {

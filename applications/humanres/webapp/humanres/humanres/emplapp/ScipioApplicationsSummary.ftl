@@ -20,7 +20,7 @@
             </#if>
 
             <#if emplApp.applyingPartyId?has_content>
-              <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":emplApp.applyingPartyId, 
+              <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":emplApp.applyingPartyId, 
                 "compareDate":emplApp.applicationDate!nowTimestamp, "userLogin":userLogin})/>
               <#assign qualifications = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(delegator.findByAnd("PartyQual", {"partyId": emplApp.applyingPartyId}, [], false)!)!>  
             <#else>
@@ -30,12 +30,12 @@
 
             <@tr>
                 <@td class="${styles.text_right!}">
-                  <#if (emplPos.emplPositionId)?has_content><a href="<@ofbizUrl>EditEmplPosition?emplPositionId=${emplPos.emplPositionId?html}</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_view!}"></#if>
+                  <#if (emplPos.emplPositionId)?has_content><a href="<@pageUrl>EditEmplPosition?emplPositionId=${emplPos.emplPositionId?html}</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_view!}"></#if>
                     ${(emplPosType.get("description", locale))!}
                   <#if (emplPos.emplPositionId)?has_content></a></#if>
                 </@td>
                 <@td class="${styles.text_right!}">
-                  <#if emplApp.applyingPartyId?has_content><a href="<@ofbizUrl>FindEmploymentApps?applyingPartyId=${emplApp.applyingPartyId?html}&amp;noConditionFind=Y</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_view!}"></#if>
+                  <#if emplApp.applyingPartyId?has_content><a href="<@pageUrl>FindEmploymentApps?applyingPartyId=${emplApp.applyingPartyId?html}&amp;noConditionFind=Y</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_view!}"></#if>
                     ${displayPartyNameResult.fullName!getLabel("OrderPartyNameNotFound", "OrderUiLabels")}</@td>
                   <#if emplApp.applyingPartyId?has_content></a></#if>
                 <@td class="${styles.text_right!}">   

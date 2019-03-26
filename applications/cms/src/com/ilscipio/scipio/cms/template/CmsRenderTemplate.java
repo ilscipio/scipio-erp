@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -43,25 +44,31 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenViewHandler;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
+import com.ilscipio.scipio.cms.control.CmsControlState;
 import com.ilscipio.scipio.cms.data.Preloadable;
 import com.ilscipio.scipio.cms.data.Preloadable.AbstractPreloadable;
 
@@ -76,9 +83,9 @@ import freemarker.template.Template;
  * to templates such as script templates that execute instead of rendering).
  */
 public interface CmsRenderTemplate extends Serializable {
-  
+
     public TemplateRenderer<?> getRenderer();
-    
+
     /**
      * Template renderer nested (or inner) class base.
      * <p>
@@ -101,13 +108,13 @@ public interface CmsRenderTemplate extends Serializable {
 //            }
 //            screenStringRenderer = renderer;
 //        }
-        
+
         protected static final Configuration fmConfig = makeConfiguration((BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedWrapper(FreeMarkerWorker.version, "html"));
 
         public static final Set<String> cmsOfbizCtxSysVarNames = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String [] {
                 // stock ofbiz+scipio names
                 "screens", "globalContext", "nullField", "parameters", "delegator", "dispatcher",
-                "security", "locale", "userLogin", "nowTimestamp", 
+                "security", "locale", "userLogin", "nowTimestamp",
                 "delegator", "dispatcher", "security",
                 "org.apache.catalina.jsp_classpath",
                 "autoUserLogin",
@@ -129,7 +136,7 @@ public interface CmsRenderTemplate extends Serializable {
                 "isError",
                 "requestMethod",
         })));
-        
+
         public static final Set<String> cmsNewCtxSysVarNames = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String [] {
                 // new cms names
                 "cmsCtxSysVarNames",
@@ -139,9 +146,10 @@ public interface CmsRenderTemplate extends Serializable {
                 "cmsPageTemplate",
                 "cmsPage",
                 "cmsPageId",
-                "cmsIsPreview"
+                "cmsIsPreview",
+                CmsControlState.ATTR
         })));
-        
+
         // FIXME: 2016: we need to unhardcode this names list through an Ofbiz patch.
         // for now just hardcode because it's the best way unfortunately...
         // NOTE: this is NOT all... omits very reusable names like "partyGroup" and "person"...
@@ -152,27 +160,26 @@ public interface CmsRenderTemplate extends Serializable {
             names.addAll(cmsNewCtxSysVarNames);
             cmsCtxSysVarNames = Collections.unmodifiableSet(names);
         }
-        
+
         // NOTE: Template not serializable!
         protected transient Optional<Template> fmTemplate = null; // NOTE: 2016: Optional is required for thread safety (preload)
         protected final T template;
-        
+
         public TemplateRenderer(T template) {
-            super();
             this.template = template;
         }
 
         /**
          * 2016: Loads ALL this object's content into the current instance.
          * <p>
-         * WARN: IMPORTANT: AFTER THIS CALL, 
+         * WARN: IMPORTANT: AFTER THIS CALL,
          * NO FURTHER CALLS ARE ALLOWED TO MODIFY THE INSTANCE IN MEMORY.
          * Essential for thread safety!!!
          */
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
-            
+
             // NOTE: the Freemarker template can't really be made explicitly immutable, but it should be thread-safe anyway.
             this.getFreeMarkerTemplate();
         }
@@ -180,8 +187,18 @@ public interface CmsRenderTemplate extends Serializable {
         public static Configuration makeConfiguration(BeansWrapper wrapper) {
             Configuration cfg = FreeMarkerWorker.makeConfiguration(wrapper);
             cfg.setTemplateExceptionHandler(new CmsRenderUtil.CmsTemplateExceptionHandler());
-            
-            // Get CMS-specific directives
+
+            // CMS-specific imports
+            for(Map.Entry<Object, Object> entry : UtilProperties.getProperties("cmsFreemarkerImports").entrySet()) {
+                cfg.addAutoImport((String) entry.getKey(), (String) entry.getValue());
+            }
+
+            // CMS-specific includes
+            for(Map.Entry<String, String> entry : UtilProperties.asSortedMap(UtilProperties.getProperties("cmsFreemarkerIncludes")).entrySet()) {
+                cfg.addAutoInclude((String) entry.getValue());
+            }
+
+            // CMS-specific directives
             // SCIPIO: TODO: delegate to FreeMarkerWorker and remove license notice
             // Transforms properties file set up as key=transform name, property=transform class name
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -205,11 +222,11 @@ public interface CmsRenderTemplate extends Serializable {
 
             return cfg;
         }
-        
+
         public static Configuration getDefaultCmsConfig() {
             return fmConfig;
         }
-        
+
         /**
          * Protected helper method.
          * <p>
@@ -223,17 +240,21 @@ public interface CmsRenderTemplate extends Serializable {
                     Debug.logVerbose("Adding FTL Transform " + key + " with class " + className, module);
                 }
                 try {
-                    config.setSharedVariable(key, loader.loadClass(className).newInstance());
+                    config.setSharedVariable(key, FreeMarkerWorker.getTransformInstance(className, loader));
                 } catch (Exception e) {
                     Debug.logError(e, "Could not pre-initialize dynamically loaded class: " + className + ": " + e, module);
                 }
             }
         }
-        
+
+        public T getCmsTemplate() {
+            return template;
+        }
+
         public Template getTemplate() {
             return getFreeMarkerTemplate();
         }
-        
+
         protected Template getFreeMarkerTemplate() {
             Optional<Template> fmTemplate = this.fmTemplate;
             if (fmTemplate == null) {
@@ -256,24 +277,26 @@ public interface CmsRenderTemplate extends Serializable {
             private MapStack<String> context;
             private CmsPageContent content;
             private CmsPageContext pageContext;
-            
+
             private Map<String, Object> earlyCtxVars; // early ctx vars, similar to ofbiz widget-style context passing
             private Map<String, Object> ovrdCtxVars; // attribute-overriding ctx vars
-            
+
             private boolean skipSystemCtx;
             private boolean systemCtxCmsOnly = false;
             private boolean systemCtxNoPush = false;
             private boolean skipExtraCommonCtx;
             private boolean shareScope;
-            
+
             private boolean newCmsCtx = true; // high-level flag mainly used by subclasses
+
+            private FlexibleStringExpander txTimeoutExdr;
 
             public RenderArgs() {
                 this.skipSystemCtx = false;
                 this.skipExtraCommonCtx = false;
                 this.shareScope = false;
             }
-            
+
             public RenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
                     Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean shareScope) {
                 this.out = out;
@@ -288,7 +311,7 @@ public interface CmsRenderTemplate extends Serializable {
                 this.skipExtraCommonCtx = skipExtraCommonCtx;
                 this.shareScope = shareScope;
             }
-            
+
             public RenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
                     Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope) {
                 this(out, null, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, shareScope);
@@ -298,7 +321,7 @@ public interface CmsRenderTemplate extends Serializable {
                     CmsPageContext pageContext, boolean shareScope) {
                 this(out, null, context, content, pageContext, null, null, false, false, shareScope);
             }
-            
+
             public RenderArgs(Environment env, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
                     Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope) {
                 this(null, env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, shareScope);
@@ -308,7 +331,7 @@ public interface CmsRenderTemplate extends Serializable {
                     CmsPageContext pageContext, boolean shareScope) {
                 this(null, env, context, content, pageContext, null, null, false, false, shareScope);
             }
-            
+
             public Writer getOut() {
                 return out;
             }
@@ -394,8 +417,20 @@ public interface CmsRenderTemplate extends Serializable {
             public void setNewCmsCtx(boolean newCmsCtx) {
                 this.newCmsCtx = newCmsCtx;
             }
+            public FlexibleStringExpander getTxTimeoutExdr() {
+                return txTimeoutExdr;
+            }
+            public void setTxTimeoutExdr(FlexibleStringExpander txTimeout) {
+                this.txTimeoutExdr = txTimeout;
+            }
+            public boolean hasTxTimeout() {
+                return (txTimeoutExdr != null && !txTimeoutExdr.isEmpty());
+            }
+            public boolean isTxEnabled() { // NOTE: This is a pre-expansion check
+                return !(txTimeoutExdr != null && "0".equals(txTimeoutExdr.getOriginal()));
+            }
         }
-        
+
         /**
          * Merges the content with the template with consideration to the given
          * context information and renders to the passed writer.
@@ -405,27 +440,125 @@ public interface CmsRenderTemplate extends Serializable {
             if (protectScope) {
                 renderArgs.getContext().push();
             }
+
+            boolean useTransaction = renderArgs.isTxEnabled(); // NOTE: If txTimeout is exactly the string "0", prevents transaction, even if req attr was set
+
+            boolean beganTransaction = false;
             try {
+
                 // Populate context
-                populateRenderContext(renderArgs);
-                
+                // This does not work anymore, because the transaction has to be started in the middle:
+                //populateRenderContext(renderArgs);
+
+                if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
+                    throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");
+                }
+                try {
+                    // TODO: REVIEW: At current time (2019-02), we will have to emulate ModelScreen and start the
+                    // transaction after system context is populated but BEFORE screen scripts are run,
+                    // otherwise the txTimeout expression has no context to work with.
+                    if (!renderArgs.isSkipSystemCtx()) {
+                        populateSystemRenderContext(renderArgs);
+                    } else {
+                        // Emulates ModelScreen behavior...
+                        renderArgs.getContext().put("nullField", GenericEntity.NULL_FIELD);
+                    }
+                    // TODO: REVIEW: For now, leaving populateProcessorScript BEFORE transaction start, because otherwise
+                    // it will be inconsistent with the scripts invoked from populateSystemRenderContext, AND
+                    // it's possible the txTimeout expander needs to fetch something from the common processor.
+                    // We COULD split populateExtraCommonRenderContext into 2 and include the processor in the transaction,
+                    // but for the time being, we don't even supply a processor anymore, so it's unclear if there's any real need
+                    // for it to be wrapped in a transaction.
+                    if (!renderArgs.isSkipExtraCommonCtx()) {
+                        populateExtraCommonRenderContext(renderArgs);
+                    }
+                    if (useTransaction) {
+                        beganTransaction = beginRenderTx(renderArgs);
+                    }
+                    populateWidgetRenderContext(renderArgs);
+                } catch (Throwable t) {
+                    throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
+                }
+
                 // Render template
                 renderTemplate(renderArgs.getOut(), renderArgs.getContext());
-                
+
+                TransactionUtil.commit(beganTransaction);
                 return null;
+            } catch (Exception e) { // Implied: | CmsException e)
+                String errMsg = "Error rendering CMS template: " + e.toString();
+                try {
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
+                } catch (GenericEntityException e2) {
+                    Debug.logError("Cms: Could not rollback transaction: " + e2.toString(), module);
+                }
+                if (e instanceof CmsException) {
+                    throw (CmsException) e;
+                } else if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e; // TODO: REVIEW: Should this get wrapped in a CmsException or not?
+                } else {
+                    throw new CmsException(e);
+                }
             } finally {
                 if (protectScope) {
                     renderArgs.getContext().pop();
                 }
             }
         }
+
+        protected static boolean beginRenderTx(RenderArgs renderArgs) throws GenericTransactionException {
+            Integer transactionTimeout = getRenderTxTimeout(renderArgs);
+            // NOTE: Value zero (0) is the same as useTransaction==false
+            if (transactionTimeout == null || transactionTimeout < 0) {
+                return TransactionUtil.begin();
+            } else if (transactionTimeout > 0) {
+                return TransactionUtil.begin(transactionTimeout);
+            }
+            return false;
+        }
+        
+        protected static Integer getRenderTxTimeout(RenderArgs renderArgs) {
+            Integer transactionTimeout = null;
+
+            if (!TransactionUtil.isTransactionInPlaceSafe()) {
+                // TODO: Investigate if it's worth unhardcoding transactionTimeoutAttr and a transactionTimeoutParam like widgets
+                final String transactionTimeoutAttr = ModelScreen.TRANSACTION_TIMEOUT_ATTR;
+                Object transactionTimeoutObj = null;
+                // Check the "TRANSACTION_TIMEOUT" request attribute for consistency/compat with widget renderer (ModelScreen)
+                HttpServletRequest request = UtilGenerics.cast(renderArgs.getContext().get("request"));
+                if (request != null) {
+                    transactionTimeoutObj = UtilHttp.getAllAttr(request, ModelScreen.TRANSACTION_TIMEOUT_ATTR);
+                }
+                if (transactionTimeoutObj != null) {
+                    try {
+                        transactionTimeout = ModelScreen.parseTransactionTimeout(transactionTimeoutObj);
+                    } catch (NumberFormatException e) {
+                        String msg = "Cms: Transaction timeout attr/param '" + transactionTimeoutAttr + "' is invalid and"
+                                + "it will be ignored: " + e.toString();
+                        Debug.logWarning(msg, module);
+                    }
+                }
+                if (transactionTimeout == null && renderArgs.hasTxTimeout()) {
+                    transactionTimeoutObj = renderArgs.getTxTimeoutExdr().expand(renderArgs.getContext());
+                    try {
+                        transactionTimeout = ModelScreen.parseTransactionTimeout(transactionTimeoutObj);
+                    } catch (NumberFormatException e) {
+                        Debug.logWarning(e, "Cms: Could not parse transaction-timeout value, original=[" + renderArgs.getTxTimeoutExdr()
+                                + "], expanded=[" + transactionTimeoutObj + "]", module);
+                    }
+                }
+            }
+            return transactionTimeout;
+        }
         
         /**
          * Fully populates the render context as necessary, depending highly on the
          * template type.
+         * @deprecated 2019-02-11: This does not work anymore, because the transaction has to be started in the middle - see {@link #processAndRender(RenderArgs)}.
          * <p>
          * NOTE: subclass may need to override this (2017-02-20: using the flags instead for now).
          */
+        @Deprecated
         public void populateRenderContext(RenderArgs renderArgs) {
             if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
                 throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");
@@ -442,7 +575,7 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
             }
         }
-        
+
         /**
          * Invokes the actual template rendering as a standalone template.
          * Assumes context already prepared.
@@ -457,7 +590,7 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException("Error rendering template: " + t.getMessage(), t);
             }
         }
-        
+
         /**
          * Includes the template as if Freemarker <code>#include</code> directive had been used,
          * without running any context population.
@@ -470,7 +603,7 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException("Error rendering template: " + t.getMessage(), t);
             }
         }
-        
+
         /**
          * Imports the template as if Freemarker <code>#import</code> directive had been used,
          * without running any context population.
@@ -489,42 +622,42 @@ public interface CmsRenderTemplate extends Serializable {
          * to the core.
          * <p>
          * Includes all context population duties normally done in widget renderer
-         * by MacroScreenViewHandler.render, ScreenRenderer.populateContextForRequest, and 
+         * by MacroScreenViewHandler.render, ScreenRenderer.populateContextForRequest, and
          * CMS-specific additions.
          * <p>
          * Does NOT contain extras such as common UI label maps - see populateExtraCmsSystemRenderContext.
          */
         protected void populateSystemRenderContext(RenderArgs renderArgs) {
             if (renderArgs.isSystemCtxCmsOnly()) {
-                populateContextForRequestCmsOnly(renderArgs.getContext(), null, 
+                populateContextForRequestCmsOnly(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             } else {
-                populateContextForRequest(renderArgs.getContext(), null, 
+                populateContextForRequest(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             }
-            
+
             // IMPORTANT: here we undo the stack push done by populateContextForRequest, and re-do it at the end
             // to include more of our custom variables.
             // NOTE: the stock ofbiz MacroScreenViewHandler does NOT do this, but it can probably be considered a flaw.
             renderArgs.getContext().pop();
-                
+
             if (!renderArgs.isSystemCtxCmsOnly()) {
-                populateSystemViewHandlerRenderContext(renderArgs.getContext(), 
-                        renderArgs.getPageContext().getRequest(), renderArgs.getPageContext().getResponse(), 
+                populateSystemViewHandlerRenderContext(renderArgs.getContext(),
+                        renderArgs.getPageContext().getRequest(), renderArgs.getPageContext().getResponse(),
                         renderArgs.getOut());
             }
-            
+
             if (!renderArgs.isSystemCtxNoPush()) {
                 renderArgs.getContext().push();
             }
         }
-        
+
         /**
-         * Populates the system context with the extra context fields normally added by 
+         * Populates the system context with the extra context fields normally added by
          * {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#render},
          * which are not covered by {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest}
          */
-        public static void populateSystemViewHandlerRenderContext(MapStack<String> context, 
+        public static void populateSystemViewHandlerRenderContext(MapStack<String> context,
                 HttpServletRequest request, HttpServletResponse response, Writer writer) {
             // NOTE: 2017-02: we must emulate MacroScreenViewHandler and use dynamic renderer here,
             // because of theme-switchable support.
@@ -533,13 +666,13 @@ public interface CmsRenderTemplate extends Serializable {
             final String screenRendererName = "screen";
             ScreenStringRenderer screenStringRenderer;
             try {
-                screenStringRenderer = MacroScreenViewHandler.loadRenderers(request, response, 
+                screenStringRenderer = MacroScreenViewHandler.loadRenderers(request, response,
                         screenRendererName, context, writer);
             } catch (Exception e) {
                 throw new CmsException(e);
             }
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
-            
+
             context.put("screens", screens);
             // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
             // for some cases where only request is available
@@ -549,7 +682,7 @@ public interface CmsRenderTemplate extends Serializable {
             context.put("simpleEncoder", simpleEncoder);
             UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", screenRendererName + ".earlyEncoder"));
             context.put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
-            
+
             try {
                 // SPECIAL: 2017-03-09: must register initial context manually here because renderScreenBegin never called
                 // TODO?: registerContext should be a ScreenStringRenderer method (no cast)
@@ -558,18 +691,18 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException(e);
             }
         }
-        
+
         protected CmsPageTemplate getRenderPageTemplate(RenderArgs renderArgs) {
             if (this.template instanceof CmsPageTemplate) {
                 return (CmsPageTemplate) this.template;
             } else {
-                // here, probably rendering asset... 
+                // here, probably rendering asset...
                 return null;
             }
         }
-        
+
         /**
-         * Populates context for a new request. 
+         * Populates context for a new request.
          * <p>
          * Based on {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest}.
          * <p>
@@ -580,15 +713,15 @@ public interface CmsRenderTemplate extends Serializable {
         public static void populateContextForRequest(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             // top request-/page-level cms-specific variables
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
-            ScreenRenderer.populateContextForRequest(context, screens, 
+            ScreenRenderer.populateContextForRequest(context, screens,
                     pageContext.getRequest(), pageContext.getResponse(), pageContext.getServletContext());
         }
-        
+
         public static void populateContextForRequestCmsOnly(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
             context.push();
         }
-        
+
         public static void populateTopCmsContextVariables(MapStack<String> context, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             context.put("cmsPageContext", pageContext);
             context.put("cmsPageContent", pageContent);
@@ -599,6 +732,7 @@ public interface CmsRenderTemplate extends Serializable {
             context.put("cmsPageId", (page != null) ? page.getId() : null); // NOTE: mainly for debugging and such...
             context.put("cmsIsPreview", pageContext.isPreview());
             context.put("cmsCtxSysVarNames", cmsCtxSysVarNames);
+            context.put(CmsControlState.ATTR, pageContext.getControlState());
         }
 
         /**
@@ -612,10 +746,10 @@ public interface CmsRenderTemplate extends Serializable {
             // NOTE: 2017: we no longer run processor script at every asset invocation. only top page template does this. lessened in importance anyway.
             populateProcessorScript(renderArgs, contextSkipNames);
         }
-        
+
         /**
          * Populates widget-level context, or in other words things that would be found
-         * in actions section of a screen widget, such as scripts and page context. 
+         * in actions section of a screen widget, such as scripts and page context.
          * <p>
          * NOTE: widget is loose term; no relation to ofbiz widgets.
          * <p>
@@ -627,20 +761,20 @@ public interface CmsRenderTemplate extends Serializable {
             Set<String> contextSkipNames = CmsRenderUtil.getContextSystemVarNamesAlways(renderArgs.getContext());
             populateScriptsAndContent(renderArgs, contextSkipNames);
         }
-        
+
         protected void populateEarlyExtraCtxVars(RenderArgs renderArgs) {
             if (renderArgs.getEarlyCtxVars() != null) {
                 renderArgs.getContext().putAll(renderArgs.getEarlyCtxVars());
             }
         }
-        
+
         protected void populateOvrdExtraCtxVars(RenderArgs renderArgs) {
             if (renderArgs.getOvrdCtxVars() != null) {
                 // apply and consume
                 renderArgs.getContext().putAll(renderArgs.getOvrdCtxVars());
             }
         }
-        
+
         /**
          * TODO?: REMOVE? this should be covered by the templates themselves, and forcing this
          * might introduce ordering issues.
@@ -648,14 +782,14 @@ public interface CmsRenderTemplate extends Serializable {
         protected void populateDefaultLabelMaps(RenderArgs renderArgs, Set<String> contextSkipNames) {
             /* Add uiLabelMaps (this is screen-/page-specific, may be overwritten, so after push)*/
             try{
-                ResourceBundleMapWrapper uiLabelMap = UtilProperties.getResourceBundleMap("CommonUiLabels", 
+                ResourceBundleMapWrapper uiLabelMap = UtilProperties.getResourceBundleMap("CommonUiLabels",
                         UtilHttp.getLocale((HttpServletRequest) renderArgs.getContext().get("request")));
                 renderArgs.getContext().put("uiLabelMap", uiLabelMap);
             } catch(Exception e) {
                 Debug.logError(e, "Cms: Error loading CommonUiLabels: " + e.getMessage(), module);
             }
         }
-        
+
         /**
          * @deprecated too simplistic - no expansion timing control.
          */
@@ -665,7 +799,7 @@ public interface CmsRenderTemplate extends Serializable {
             content.transferToContext(renderArgs.getContext(), contextSkipNames);
             setUpdatePageContentInstance(renderArgs, content);
         }
-        
+
         /**
          * @deprecated too simplistic - no expansion timing control.
          */
@@ -674,7 +808,7 @@ public interface CmsRenderTemplate extends Serializable {
             renderArgs.setContent(content); // theoreticially needed, but in practice usually will end up being same instance...
             renderArgs.getContext().put("cmsContent", content);
         }
-        
+
         /**
          * @deprecated too simplistic - no expansion timing control.
          */
@@ -687,7 +821,7 @@ public interface CmsRenderTemplate extends Serializable {
             content.transferToContext(renderArgs.getContext(), contextSkipNames);
             setUpdatePageContentInstance(renderArgs, content);
         }
-        
+
         /**
          * NOTE: 2017: the CMS-specific processor script is no longer of major importance in Scipio,
          * because Scipio supports custom system-wide and webapp-specific global scripts.
@@ -700,7 +834,7 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException(e);
             }
         }
-        
+
         /**
          * NOTE: does not do attributes/content, only use this if not using those at all.
          * @see #populateScriptsAndContent
@@ -708,7 +842,7 @@ public interface CmsRenderTemplate extends Serializable {
         protected void populateScripts(RenderArgs renderArgs, Set<String> contextSkipNames) {
             populateScripts(getSortedScriptTemplates(), renderArgs, contextSkipNames);
         }
-        
+
         protected void populateScripts(List<CmsScriptTemplate> scriptTemplates, RenderArgs renderArgs, Set<String> contextSkipNames) {
             if (scriptTemplates != null) {
                 for (CmsScriptTemplate scriptTemplate : scriptTemplates) {
@@ -716,7 +850,7 @@ public interface CmsRenderTemplate extends Serializable {
                 }
             }
         }
-        
+
         protected void populateScript(CmsScriptTemplate scriptTemplate, RenderArgs renderArgs, Set<String> contextSkipNames) {
             try {
                 scriptTemplate.getExecutor().execute(renderArgs.getContext());
@@ -724,7 +858,7 @@ public interface CmsRenderTemplate extends Serializable {
                 throw new CmsException(e);
             }
         }
-        
+
         /**
          * Common script + attribute population code common to both assets and pages.
          * Does not include script processor.
@@ -748,7 +882,7 @@ public interface CmsRenderTemplate extends Serializable {
 //            populateExpandedPageContent(renderArgs, contextSkipNames);
 //            populateLateExtraCtxVars(renderArgs);
 //            populateScripts(renderArgs, contextSkipNames);
-            
+
             // read attribs and scripts
             List<CmsAttributeTemplate> attribs = orEmpty(getSortedAttributeTemplates());
             Iterator<CmsAttributeTemplate> attribIt = attribs.iterator();
@@ -757,10 +891,10 @@ public interface CmsRenderTemplate extends Serializable {
 
             // populate early context vars (usually passed through macro call such as @asset ctxVars={...})
             populateEarlyExtraCtxVars(renderArgs);
-            
+
             // TODO: review if needed, but seeing no need for this since handling attributes explicitly.
             //renderArgs.getContent().normalizeForAttributes(template.getExpansionSortedAttributeTemplates(), renderArgs.getPageContext());
-            
+
             // initial populate late context vars (usually passed through macro call such as @asset ovrdCtxVars={...})
             // NOTE: "overriding/late" extra context vars: these are meant to override attributes.
             // but there may be key names that don't match any attributes; those ones we will
@@ -768,7 +902,7 @@ public interface CmsRenderTemplate extends Serializable {
             // TODO: REVIEW: to simplify, for now just dump all the late vars, basically twice for
             // those that match attribs.
             populateOvrdExtraCtxVars(renderArgs);
-            
+
             // Expand & transfer attributes to context, and run scripts, in the global order
             // defined by CmsAttributeTemplate.expandPosition together with CmsScriptTemplate.inputPosition.
             CmsAttributeTemplate attrib = attribIt.hasNext() ? attribIt.next() : null;
@@ -791,7 +925,7 @@ public interface CmsRenderTemplate extends Serializable {
                 script = scriptIt.hasNext() ? scriptIt.next() : null;
             }
         }
-        
+
         /**
          * Expands (if applicable) the attribute and transfers it into context. If an ovrdCtxVar exists
          * for the same name, it replaces the attribute instead.
@@ -800,41 +934,41 @@ public interface CmsRenderTemplate extends Serializable {
             String name = attributeTemplate.getName();
             if (contextSkipNames.contains(name)) {
                 // this is not always fatal or a problem, but can cause serious issues in some cases
-                Debug.logWarning("Cms: Attribute template '" + name + "' (id: " + attributeTemplate.getId() 
+                Debug.logWarning("Cms: Attribute template '" + name + "' (id: " + attributeTemplate.getId()
                     + ") uses the name of a reserved system context variable (consider renaming)", module);
-            } 
+            }
             if (renderArgs.getOvrdCtxVars() != null && renderArgs.getOvrdCtxVars().containsKey(name)) {
                 // overriding var def
-                // NOTE: this should already be in context due to populateOvrdExtraCtxVars call, 
+                // NOTE: this should already be in context due to populateOvrdExtraCtxVars call,
                 // but put it again to be safe.
                 renderArgs.getContext().put(name, renderArgs.getOvrdCtxVars().get(name));
             } else {
-                // parse and expand the attribute. 
+                // parse and expand the attribute.
                 // NOTE: this both re-stores it in the CmsPageContent (cmsContent)
                 // and in the top-level context.
-                renderArgs.getContext().put(name, renderArgs.getContent().parseExpandAttribute(attributeTemplate, 
+                renderArgs.getContext().put(name, renderArgs.getContent().parseExpandAttribute(attributeTemplate,
                         renderArgs.getContext(), renderArgs.getPageContext(), true));
             }
         }
-        
+
         private static <T> List<T> orEmpty(List<T> list) {
             return list != null ? list : Collections.<T> emptyList();
         }
-        
+
         protected List<CmsScriptTemplate> getSortedScriptTemplates() { // sub-classes should override.
             return null;
         }
-        
+
         protected List<CmsAttributeTemplate> getSortedAttributeTemplates() {
             return template.getExpansionSortedAttributeTemplates();
         }
-        
+
         /**
          * Sets the standard Context variables dynamically
          * TODO: Check whether or not this is still being used - if it is, the returned object doesn't seem to be the correct one.
          * I think scriptContext must be added back to content somehow for it to work...
          */
-        public CmsPageContent populateBasicContextVariables(CmsPageContent content, CmsPageContext pageContext) {        
+        public CmsPageContent populateBasicContextVariables(CmsPageContent content, CmsPageContext pageContext) {
             try {
                 Map<String, Object> scriptContext = new HashMap<>();
                 HttpServletRequest request = pageContext.getRequest();

@@ -27,14 +27,14 @@ import org.ofbiz.entity.GenericValue;
 public abstract class SolrLocaleUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Name used as a special value in place of locale string to designate the default or "general"
      * field for content values not explicitly given a locale (in the original entities).
      * In other words the "*_i18n_general" fields in the solr schema.
      */
     public static final String I18N_GENERAL = "general";
-    
+
     private static final String spellcheckI18nDictBaseName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.spellcheck.localDictBaseName", "default");
 
     protected SolrLocaleUtil() {
@@ -55,7 +55,7 @@ public abstract class SolrLocaleUtil {
         Debug.logInfo("Solr: Configured content locales: " + joinLocales(locList, ","), module);
         configuredLocales = Collections.unmodifiableList(locList);
     }
-    
+
     static final Locale configuredFallbackDefaultLocale;
     static {
         Locale locale = getCompatiblePropertyLocaleValid(SolrUtil.solrConfigName, "solr.content.locales.default.fallback", null);
@@ -71,14 +71,14 @@ public abstract class SolrLocaleUtil {
         Debug.logInfo("Solr: Configured content locale default/fallback: " + locale, module);
         configuredFallbackDefaultLocale = locale;
     }
-    
+
     static final Locale configuredForceDefaultLocale;
     static {
         Locale locale = getCompatiblePropertyLocaleValid(SolrUtil.solrConfigName, "solr.content.locales.default.force", null);
         Debug.logInfo("Solr: Configured content locale force-default/fallback: " + (locale != null ? locale : "(none)"), module);
         configuredForceDefaultLocale = locale;
     }
-    
+
     // not currently useful
     //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
 
@@ -88,7 +88,7 @@ public abstract class SolrLocaleUtil {
      * pass the productStore anyway for future use.
      */
     public static List<Locale> getConfiguredLocales(Delegator delegator, GenericValue productStore) {
-        return configuredLocales; 
+        return configuredLocales;
     }
 
     /**
@@ -97,9 +97,9 @@ public abstract class SolrLocaleUtil {
      * pass the productStore anyway for future use.
      */
     public static List<Locale> getConfiguredLocales(GenericValue productStore) {
-        return getConfiguredLocales(null, productStore); 
+        return getConfiguredLocales(null, productStore);
     }
-    
+
     /**
      * Gets default content locale for the store.
      * This is the locale that the inline titles and descriptions that do have an explicit locale
@@ -112,9 +112,9 @@ public abstract class SolrLocaleUtil {
             Locale storeLocale = getCompatibleProductStoreLocaleStrictValid(productStore);
             if (storeLocale != null) return storeLocale;
         }
-        return configuredFallbackDefaultLocale; 
+        return configuredFallbackDefaultLocale;
     }
-    
+
     /**
      * Gets default content locale for the store.
      * This is the locale that the inline titles and descriptions that do have an explicit locale
@@ -124,45 +124,45 @@ public abstract class SolrLocaleUtil {
     public static Locale getConfiguredDefaultLocale(GenericValue productStore) {
         return getConfiguredDefaultLocale(null, productStore);
     }
-    
+
     /**
      * Gets the force default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredForceDefaultLocale(Delegator delegator, GenericValue productStore) {
-        return configuredForceDefaultLocale; 
+        return configuredForceDefaultLocale;
     }
-    
+
     /**
      * Gets the global force default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredForceDefaultLocale(Delegator delegator) {
-        return configuredForceDefaultLocale; 
+        return configuredForceDefaultLocale;
     }
-    
+
     /**
      * Gets the force default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredForceDefaultLocale(GenericValue productStore) {
-        return getConfiguredForceDefaultLocale(null, productStore); 
+        return getConfiguredForceDefaultLocale(null, productStore);
     }
-    
+
     /**
      * Gets the fallback default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredFallbackDefaultLocale(Delegator delegator, GenericValue productStore) {
-        return configuredFallbackDefaultLocale; 
+        return configuredFallbackDefaultLocale;
     }
-    
+
     /**
      * Gets the fallback default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredFallbackDefaultLocale(GenericValue productStore) {
-        return getConfiguredFallbackDefaultLocale(null, productStore); 
+        return getConfiguredFallbackDefaultLocale(null, productStore);
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class SolrLocaleUtil {
     public static Locale getCompatibleLocale(Locale locale) {
         return (locale == null) ? null : new Locale(getLangCode(locale));
     }
-    
+
     public static Locale getCompatibleLocale(String localeString) {
         // TODO: REVIEW: UtilMisc.parseLocale may not work with the 3-letter codes???
         // may need extra parse??
@@ -205,13 +205,13 @@ public abstract class SolrLocaleUtil {
         if (getConfiguredLocales(productStore).contains(res)) return res;
         else return null;
     }
-    
+
     public static Locale getCompatibleLocaleValid(String localeString, GenericValue productStore) {
         Locale res = getCompatibleLocale(localeString);
         if (getConfiguredLocales(productStore).contains(res)) return res;
         else return null;
     }
-    
+
     /**
      * Returns a solr-schema-compatible Locale that is also valid for the given store, or if not valid,
      * returns the store's configured default (convenience method).
@@ -219,14 +219,14 @@ public abstract class SolrLocaleUtil {
      */
     public static Locale getCompatibleLocaleValidOrDefault(Locale locale, GenericValue productStore) {
         Locale res = getCompatibleLocaleValid(locale, productStore);
-        return res != null ? res : getConfiguredDefaultLocale(productStore); 
+        return res != null ? res : getConfiguredDefaultLocale(productStore);
     }
 
     public static Locale getCompatibleLocaleValidOrDefault(Locale locale, Locale fallbackLocale, GenericValue productStore) {
         Locale res = getCompatibleLocaleValid(locale, productStore);
         if (res != null) return res;
         res = getCompatibleLocaleValid(fallbackLocale, productStore);
-        return res != null ? res : getConfiguredDefaultLocale(productStore); 
+        return res != null ? res : getConfiguredDefaultLocale(productStore);
     }
 
     /**
@@ -237,7 +237,7 @@ public abstract class SolrLocaleUtil {
         if (getConfiguredForceDefaultLocale(productStore) != null) return getConfiguredForceDefaultLocale(productStore);
         return getCompatibleProductStoreLocaleStrictValid(productStore);
     }
-    
+
     /**
      * Returns the product store locale itself, or null if store has none or not valid for solr schema.
      * Bypasses the force and fallback defaults.
@@ -247,16 +247,16 @@ public abstract class SolrLocaleUtil {
         if (productStore == null) return null;
         return getCompatibleLocaleValid(productStore.getString("defaultLocaleString"), productStore);
     }
-    
+
     /**
      * @deprecated use {@link #getConfiguredDefaultLocale(GenericValue)}.
      */
     @Deprecated
     public static Locale getCompatibleProductStoreLocaleValidOrDefault(GenericValue productStore) {
         Locale res = getCompatibleProductStoreLocaleValid(productStore);
-        return res != null ? res : getConfiguredDefaultLocale(productStore); 
+        return res != null ? res : getConfiguredDefaultLocale(productStore);
     }
-    
+
     /**
      * Returns the given locale if valid, or the default locale otherwise (convenience method).
      * @see #getConfiguredDefaultLocale(GenericValue)
@@ -266,7 +266,7 @@ public abstract class SolrLocaleUtil {
         if (res != null) return res;
         return getConfiguredDefaultLocale(productStore);
     }
-    
+
     public static Locale getCompatiblePropertyLocaleValid(String resource, String propName, GenericValue productStore) {
         Locale locale = null;
         try {
@@ -307,15 +307,15 @@ public abstract class SolrLocaleUtil {
         }
         return locList;
     }
-    
+
     public static List<Locale> parseCompatibleLocalesValid(String locStr) {
         return parseCompatibleLocalesValid(locStr, false);
     }
-    
+
     public static List<Locale> parseCompatibleLocalesValidSpecial(String locStr) {
         return parseCompatibleLocalesValid(locStr, true);
     }
-    
+
     /**
      * Joins locales.
      * WARN: Assumes locales are already compatible/valid.
@@ -328,21 +328,21 @@ public abstract class SolrLocaleUtil {
         }
         return (sb.length() > 0) ? sb.substring(delim.length()) : "";
     }
-    
+
     public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, boolean useStoreLocale,
             Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower) {
-        return determineI18nQueryFieldsForUserLocale(userLocale, productStore, useStoreLocale, forceLocales, fieldPrefix, userLocalePower, storeLocalePower, 
+        return determineI18nQueryFieldsForUserLocale(userLocale, productStore, useStoreLocale, forceLocales, fieldPrefix, userLocalePower, storeLocalePower,
                 forceLocalePower, null, null, null);
     }
-    
+
     public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, boolean useStoreLocale,
-            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower, 
+            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower,
             List<FlexibleStringExpander> extraLangFields, String extraUserLocalePower, String extraStoreLocalePower) {
         Set<String> fields = new LinkedHashSet<>();
- 
+
         Locale locale = getCompatibleLocaleValid(userLocale, productStore);
         Locale storeLocale = SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore);
-        
+
         if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
 
         if (locale == null) {
@@ -354,26 +354,26 @@ public abstract class SolrLocaleUtil {
         } else {
             // NOTE: 2017-09-14: no need to include the "*_i18n_general" field here anymore because
             // its content will have been merged into the proper locale already (if applicable)
-            
+
             if (userLocalePower == null) userLocalePower = "";
-            
+
             // add user locale
             fields.add(fieldPrefix + getLangCode(locale) + userLocalePower);
             addExpandedExtraFieldNames(fields, extraLangFields, getLangCode(locale), extraUserLocalePower);
-            
+
             if (useStoreLocale && storeLocale != null && !isSameLangCode(locale, storeLocale)) {
                 if (storeLocalePower == null) storeLocalePower = "";
- 
+
                 // add store locale
                 fields.add(fieldPrefix + getLangCode(storeLocale) + storeLocalePower);
                 addExpandedExtraFieldNames(fields, extraLangFields, getLangCode(storeLocale), extraStoreLocalePower);
             }
         }
-        
+
         addAllI18nValuePrefixSuffix(fields, forceLocales, fieldPrefix, forceLocalePower);
         return fields;
     }
-    
+
     private static void addExpandedExtraFieldNames(Set<String> fields, List<FlexibleStringExpander> extraFields, String langCode, String power) {
         if (extraFields != null) {
             Map<String, Object> ctx = new HashMap<>();
@@ -385,7 +385,7 @@ public abstract class SolrLocaleUtil {
             }
         }
     }
-    
+
     /**
      * WARN: assumes locales already compatible
      */
@@ -397,11 +397,11 @@ public abstract class SolrLocaleUtil {
             if (locale != null) out.add(fieldPrefix + getLangCode(locale));
         }
     }
-    
+
     public static String getSpellcheckI18nDictBaseName(GenericValue productStore) {
         return spellcheckI18nDictBaseName;
     }
-    
+
     /**
      * Determines the dictionary names should use for user locale.
      * Similar logic to {@link #determineI18nQueryFieldsForUserLocale} but implemented differently
@@ -409,12 +409,12 @@ public abstract class SolrLocaleUtil {
      */
     public static Set<String> determineSpellcheckI18nDictNames(Locale userLocale, GenericValue productStore, boolean useStoreLocale, String customDictBaseName) {
         if (UtilValidate.isEmpty(customDictBaseName)) customDictBaseName = getSpellcheckI18nDictBaseName(productStore);
-        
+
         Set<String> fields = new LinkedHashSet<>();
-        
+
         Locale locale = getCompatibleLocaleValid(userLocale, productStore);
         Locale storeLocale = SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore);
-        
+
         if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
 
         if (locale == null) {
@@ -426,5 +426,5 @@ public abstract class SolrLocaleUtil {
         }
         return fields;
     }
-    
+
 }

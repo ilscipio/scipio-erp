@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,7 +42,6 @@ import org.ofbiz.service.LocalDispatcher;
 import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;
 
-//import com.clarkware.profiler.Profiler;
 /**
  * EditRenderSubContentCacheTransform - Freemarker Transform for URLs (links)
  *
@@ -77,8 +77,9 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Map<String, Object> templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
@@ -103,7 +104,7 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         String dataResourceId = null;
         try {
             dataResourceId = (String) view.get("drDataResourceId");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             dataResourceId = (String) view.get("dataResourceId");
         }
         String subContentIdSub = (String) view.get("contentId");
@@ -112,7 +113,7 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
             try {
                 subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 // view may be "Content"
             }
             // TODO: If this value is still empty then it is probably necessary to get a value from
@@ -126,7 +127,7 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         templateCtx.put("dataResourceId", dataResourceId);
         templateCtx.put("subContentIdSub", subContentIdSub);
         templateCtx.put("subDataResourceTypeId", subDataResourceTypeId);
-        final Map<String, Object> savedValues = new HashMap<String, Object>();
+        final Map<String, Object> savedValues = new HashMap<>();
         FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
         return new Writer(out) {
@@ -145,13 +146,9 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
             public void close() throws IOException {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
                 String wrappedContent = buf.toString();
-                // String editTemplate = (String)templateCtx.get("editTemplate");
-                // if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                 String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                     templateCtx.put("wrappedContent", wrappedContent);
-
-                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
                     Map<String, Object> templateRoot = null;
                     Map<String, Object> templateRootTemplate = UtilGenerics.checkMap(templateCtx.get("templateRootTemplate"));
                     if (templateRootTemplate == null) {
@@ -164,24 +161,22 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
 
                     templateRoot.put("context", templateCtx);
                     if (Debug.verboseOn()) {
-                        for (Object ky : templateCtx.keySet()) {
-                            Object val = templateCtx.get(ky);
+                        for (Entry<String, Object> ky : templateCtx.entrySet()) {
+                            Object val = ky.getValue();;
                             Debug.logVerbose("context key: " + ky + " val: " + val, module);
                         }
                     }
 
                     String mimeTypeId = (String)templateCtx.get("mimeTypeId");
-                    Locale locale = null;
+                    Locale locale = (Locale) templateCtx.get("locale");
+                    if (locale == null) {
+                        locale = Locale.getDefault();
+                    }
                     try {
-                        //if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
                         ContentWorker.renderContentAsText(dispatcher, delegator, wrapTemplateId, out, templateRoot, locale, mimeTypeId, null, null, true);
-                        //if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
-                    } catch (IOException e) {
+                    } catch (IOException | GeneralException e) {
                         Debug.logError(e, "Error rendering content" + e.getMessage(), module);
                         throw new IOException("Error rendering content" + e.toString());
-                    } catch (GeneralException e2) {
-                        Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
-                        throw new IOException("Error rendering content" + e2.toString());
                     }
                 } else {
                     out.write(wrappedContent);

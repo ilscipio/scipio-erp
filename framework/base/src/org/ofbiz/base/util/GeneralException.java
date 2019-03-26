@@ -41,9 +41,15 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     }
 
     public static <T> T checkException(String message, Throwable t) throws GeneralException {
-        if (t instanceof Error) throw (Error) t;
-        if (t instanceof RuntimeException) throw (RuntimeException) t;
-        if (t instanceof GeneralException) throw (GeneralException) t;
+        if (t instanceof Error) {
+            throw (Error) t;
+        }
+        if (t instanceof RuntimeException) {
+            throw (RuntimeException) t;
+        }
+        if (t instanceof GeneralException) {
+            throw (GeneralException) t;
+        }
         throw (GeneralException) new GeneralException(message).initCause(t);
     }
 
@@ -135,7 +141,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
         super();
         this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
     }
-    
+
     /**
      * SCIPIO: Constructs an <code>GeneralException</code> with the specified property message,
      * also used as detail message.
@@ -145,7 +151,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
         super(propMsg.getDefExLocaleMessage());
         this.propertyMessage = propMsg;
     }
-    
+
     /**
      * SCIPIO: Constructs an <code>GeneralException</code> with the specified property message,
      * also used as detail message, and nested Exception.
@@ -156,7 +162,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
         super(propMsg.getDefExLocaleMessage(), nested);
         this.propertyMessage = propMsg;
     }
-    
+
     /**
      * SCIPIO: Setter for property message.
      * Workaround for massive constructor inheritance.
@@ -178,8 +184,8 @@ public class GeneralException extends Exception implements SettablePropertyMessa
         this.messages = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
         return this;
     }
-    
-    /** 
+
+    /**
      * Returns the detail message, including the message from the nested exception if there is one.
      * SCIPIO: modified to include the property message instead of the detail message IF it is set.
      */
@@ -214,16 +220,16 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     /**
      * Returns the list of messages attached to this exception.
      * <p>
-     * SCIPIO: Use of this is now discouraged (even if caller pre-localized); 
+     * SCIPIO: Use of this is now discouraged (even if caller pre-localized);
      * use {@link #getPropertyMessageList()} or {@link #getMessageList(Locale)} instead.
-     * This returns only non-localized messages, unless the exception sender 
-     * pre-localized them. It uses the default/fallback property locale ({@link UtilProperties#getFallbackLocale()}), 
+     * This returns only non-localized messages, unless the exception sender
+     * pre-localized them. It uses the default/fallback property locale ({@link UtilProperties#getFallbackLocale()}),
      * because this fits the majority use cases.
      */
     public List<String> getMessageList() {
         return PropertyMessage.getDefPropLocaleMessages(this.messages); // SCIPIO: property messages
     }
-    
+
     /**
      * SCIPIO: Returns the list of messages attached to this exception, localized if possible.
      * <p>
@@ -233,7 +239,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     public List<String> getMessageList(Locale locale) {
         return PropertyMessage.getMessages(this.messages, locale); // SCIPIO: property messages
     }
-    
+
     /**
      * SCIPIO: Returns the list of attached messages as PropertyMessage instances.
      * May be null.
@@ -275,12 +281,12 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     public void printStackTrace(PrintWriter pw) {
         super.printStackTrace(pw);
     }
-    
+
     /**
      * SCIPIO: Returns a PropertyMessage representation of the main exception message.
      * Never returns null - if exception message was null, it will
      * return a StaticPropertyMessage that wraps a null message.
-     * NOTE: unlike {@link #getMessage()} this may not return the cause error; however, 
+     * NOTE: unlike {@link #getMessage()} this may not return the cause error; however,
      * this makes it more appropriate for user-visible errors.
      */
     @Override
@@ -288,7 +294,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
         if (propertyMessage != null) return propertyMessage;
         else return PropertyMessage.makeFromStatic(getMessage());
     }
-    
+
     /**
      * SCIPIO: If propertyMessage is set, returns it formatted in the default exception locale;
      * if not set, returns the main exception detail message instead (which may be null).

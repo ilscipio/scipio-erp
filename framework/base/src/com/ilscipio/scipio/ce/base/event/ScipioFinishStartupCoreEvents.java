@@ -33,7 +33,7 @@ public class ScipioFinishStartupCoreEvents implements ExtendedStartupLoader {
     protected void initScriptEngine() throws StartupException {
         ScriptUtil.getScriptEngineManager();
     }
-    
+
     protected void initCodecs() throws StartupException {
         UtilCodec.getEncoder("html-default");
     }

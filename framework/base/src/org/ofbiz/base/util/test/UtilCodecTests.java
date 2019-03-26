@@ -18,12 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.base.util.test;
 
-import org.ofbiz.base.test.GenericTestCaseBase;
-import org.ofbiz.base.util.UtilCodec;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.ofbiz.base.test.GenericTestCaseBase;
+import org.ofbiz.base.util.UtilCodec;
 
 public class UtilCodecTests  extends GenericTestCaseBase {
     public UtilCodecTests(String name) {

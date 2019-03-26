@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -66,7 +53,7 @@ under the License.
         <attribute name="note" type="String" mode="IN" allow-html="any"/>
         <attribute name="noteId" type="String" mode="OUT"/>
     </service>
-    
+
     <service name="updateNote" engine="simple" default-entity-name="NoteData"
         location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="updateNote">
         <description>Update a note record</description>
@@ -74,7 +61,7 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="noteInfo" allow-html="any"/>
     </service>
-    
+
     <service name="adjustDebugLevels" engine="java"
              location="org.ofbiz.common.CommonServices" invoke="adjustDebugLevels" auth="true">
         <description>Sets/Updates cached debugging levels</description>
@@ -118,7 +105,7 @@ under the License.
         <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- DataSource Services -->
     <service name="interfaceDataSource" engine="interface" location="" invoke="">
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
@@ -214,6 +201,8 @@ under the License.
         <attribute name="noConditionFind" type="String" mode="IN" optional="true"><!-- find with no condition (empty entityConditionList) only done when this is Y --></attribute>
         <attribute name="filterByDate" type="String" mode="IN" optional="true"/>
         <attribute name="filterByDateValue" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="fromDateName" type="String" mode="IN" optional="true"/>
+        <attribute name="thruDateName" type="String" mode="IN" optional="true"/>
         <attribute name="queryString" type="String" mode="OUT" optional="true"/>
         <attribute name="queryStringMap" type="java.util.Map" mode="OUT" optional="true"/>
         <attribute name="orderByList" type="java.util.List" mode="OUT" optional="true"/>
@@ -243,6 +232,8 @@ under the License.
         <attribute name="distinct" type="String" mode="IN" optional="true"><!-- distinct find only done when this is Y --></attribute>
         <attribute name="filterByDate" type="String" mode="IN" optional="true"/>
         <attribute name="filterByDateValue" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="fromDateName" type="String" mode="IN" optional="true"/>
+        <attribute name="thruDateName" type="String" mode="IN" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="IN" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="IN" optional="true"/>
         <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
@@ -253,7 +244,9 @@ under the License.
 
     <service name="performFindList" auth="false" engine="java" invoke="performFindList" location="org.ofbiz.common.FindServices">
         <description>Generic service to return an partial list.  set filterByDate to Y to exclude expired records.
-            set noConditionFind to Y to find without conditions.  </description>
+            set noConditionFind to Y to find without conditions. 
+            SCIPIO: WARN: 2018-09-10: Some paging issues exist with this service, recommend
+            using performFind until resolved properly.</description>
         <attribute name="entityName" type="String" mode="IN" optional="false"/>
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="orderBy" type="String" mode="IN" optional="true"/>
@@ -381,6 +374,7 @@ under the License.
     <service name="userLogin" engine="java" location="org.ofbiz.common.login.LoginServices" invoke="userLogin">
         <description>Used to Automatically Authenticate a username/password; create a UserLogin object</description>
         <implements service="authenticationInterface"/>
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true"/>
     </service>
     <service name="createUserLogin" engine="java" auth="false"
         location="org.ofbiz.common.login.LoginServices" invoke="createUserLogin">
@@ -419,6 +413,7 @@ under the License.
         <attribute name="externalAuthId" type="String" mode="IN" optional="true"/>
         <attribute name="userLdapDn" type="String" mode="IN" optional="true"/>
         <attribute name="requirePasswordChange" type="String" mode="IN" optional="true"/>
+        <attribute name="disabledBy" type="String" mode="IN" optional="true"/>
     </service>
 
     <!-- common permission services -->
@@ -717,7 +712,7 @@ under the License.
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="geoName" optional="false"/>
-        <override name="geoTypeId" optional="false"/>        
+        <override name="geoTypeId" optional="false"/>
     </service>
     <service name="updateGeo" default-entity-name="Geo" engine="entity-auto" invoke="update" auth="true">
         <description>Update a Geo</description>
@@ -727,6 +722,11 @@ under the License.
     </service>
     <service name="deleteGeo" default-entity-name="Geo" engine="entity-auto" invoke="delete" auth="true">
         <description>Delete a Geo</description>
+        <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteGeoAssoc" default-entity-name="GeoAssoc" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a GeoAssoc</description>
         <permission-service service-name="commonGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
@@ -741,7 +741,7 @@ under the License.
     <service name="getRelatedGeos" engine="simple" auth="false"
         location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getRelatedGeos">
         <attribute name="geoId" mode="IN" type="String"/>
-        <attribute name="geoAssocTypeId" mode="IN" type="String"/>        
+        <attribute name="geoAssocTypeId" mode="IN" type="String"/>
         <attribute name="geoList" mode="OUT" type="java.util.List"/>
     </service>
     <service name="getCountryList" engine="simple" auth="false"
@@ -783,7 +783,7 @@ under the License.
     
     <service name="getServerTimestamp" engine="simple" auth="false"
         location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getServerTimestamp">
-        <attribute name="serverTimestamp" mode="OUT" type="TimeStamp"/>
+        <attribute name="serverTimestamp" mode="OUT" type="Timestamp"/>
     </service>
     
     <service name="getServerTimeZone" engine="simple" auth="false"
@@ -795,7 +795,15 @@ under the License.
         location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getServerTimestampAsLong">
         <attribute name="serverTimestamp" mode="OUT" type="Long"/>
     </service>
-    
+
+    <!-- SCIPIO: added 2018-08-28 -->
+    <service name="getServerTimestampAsString" engine="simple" auth="false"
+        location="component://common/script/org/ofbiz/common/CommonServices.xml" invoke="getServerTimestampAsString">
+        <attribute name="dateTimeFormat" mode="IN" type="String" optional="true"/>
+        <attribute name="useServerTz" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="serverTimestamp" mode="OUT" type="String"/>
+    </service>
+
     <service name="createJsLanguageFileMapping" engine="java" auth="false" use-transaction="false"
         location="org.ofbiz.common.JsLanguageFileMappingCreator" invoke="createJsLanguageFileMapping">
         <description>Create or update the JsLanguageFilesMapping.java. You still need to compile thereafter</description>
@@ -817,5 +825,127 @@ under the License.
         <description>Resets a metric. See org.ofbiz.base.metrics.Metrics.</description>
         <attribute name="name" mode="IN" type="String" optional="false"/>
     </service>
-    
+
+    <service name="createGeoAssocType" engine="entity-auto" default-entity-name="GeoAssocType" invoke="create" auth="true">
+        <description>Create GeoAssocType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateGeoAssocType" engine="entity-auto" default-entity-name="GeoAssocType" invoke="update" auth="true">
+        <description>Update GeoAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteGeoAssocType" engine="entity-auto" default-entity-name="GeoAssocType" invoke="delete" auth="true">
+        <description>Delete GeoAssocType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createGeoType" engine="entity-auto" default-entity-name="GeoType" invoke="create" auth="true">
+        <description>Create GeoType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="updateGeoType" engine="entity-auto" default-entity-name="GeoType" invoke="update" auth="true">
+        <description>Update GeoType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteGeoType" engine="entity-auto" default-entity-name="GeoType" invoke="delete" auth="true">
+        <description>Delete GeoType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createPeriodType" engine="entity-auto" invoke="create" default-entity-name="PeriodType" auth="true">
+        <description>Create a PeriodType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePeriodType" engine="entity-auto" invoke="update" default-entity-name="PeriodType" auth="true">
+        <description>Update a PeriodType</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePeriodType" engine="entity-auto" invoke="delete" default-entity-name="PeriodType" auth="true">
+        <description>Delete a PeriodType</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createUserPrefGroupType" engine="entity-auto" invoke="create" default-entity-name="UserPrefGroupType" auth="true">
+        <description>Create a UserPrefGroupType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateUserPrefGroupType" engine="entity-auto" invoke="update" default-entity-name="UserPrefGroupType" auth="true">
+        <description>Update a UserPrefGroupType</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteUserPrefGroupType" engine="entity-auto" invoke="delete" default-entity-name="UserPrefGroupType" auth="true">
+        <description>Delete a UserPrefGroupType</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createUomType" engine="entity-auto" invoke="create" default-entity-name="UomType" auth="true">
+        <description>Create UomType Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateUomType" engine="entity-auto" invoke="update" default-entity-name="UomType" auth="true">
+        <description>Update UomType Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteUomType" engine="entity-auto" invoke="delete" default-entity-name="UomType" auth="true">
+        <description>Delete UomType Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createUomGroup" engine="entity-auto" invoke="create" default-entity-name="UomGroup" auth="true">
+        <description>Create UomGroup record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteUomGroup" engine="entity-auto" invoke="delete" default-entity-name="UomGroup" auth="true">
+        <description>Delete UomGroup record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <!-- StatusValidChange services -->
+    <service name="createStatusValidChange" default-entity-name="StatusValidChange" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a StatusValidChange</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateStatusValidChange" default-entity-name="StatusValidChange" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a StatusValidChange</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteStatusValidChange" default-entity-name="StatusValidChange" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a StatusValidChange</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createUom" engine="entity-auto" invoke="create" default-entity-name="Uom" auth="true">
+        <description>Create Uom Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateUom" engine="entity-auto" invoke="update" default-entity-name="Uom" auth="true">
+        <description>Update Uom Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteUom" engine="entity-auto" invoke="delete" default-entity-name="Uom" auth="true">
+        <description>Delete Uom Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="SetTimeZoneFromBrowser" engine="groovy" location="component://common/script/org/ofbiz/common/SetTimeZoneFromBrowser.groovy" invoke="SetTimeZoneFromBrowser" auth="true">
+        <description>Set locale from browser.</description>
+        <attribute name="localeName" type="String" mode="IN" optional="true"/>
+    </service>
 </services>

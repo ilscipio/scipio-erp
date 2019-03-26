@@ -17,11 +17,11 @@ public abstract class ModelPageScript implements Serializable {
     }
 
     public abstract Object getScript(Map<String, ?> context);
-    
+
     public static ModelPageScript fromElement(Element element) {
         String preprocessor = element.getAttribute("preprocessor");
         String script = UtilXml.elementValue(element);
-        
+
         if ("ftl".equals(preprocessor)) {
             // TODO
             throw new UnsupportedOperationException("ftl preprocessor not implemented");
@@ -32,10 +32,10 @@ public abstract class ModelPageScript implements Serializable {
             return new PlainScript(script);
         }
     }
-    
+
     public static class PlainScript extends ModelPageScript {
         private final String script;
-        
+
         public PlainScript(String script) {
             this.script = script;
         }
@@ -45,14 +45,14 @@ public abstract class ModelPageScript implements Serializable {
             return script;
         }
     }
-    
+
     public static class FlexibleScript extends ModelPageScript {
         private final FlexibleStringExpander script;
 
         public FlexibleScript(FlexibleStringExpander script) {
             this.script = script;
         }
-        
+
         public FlexibleScript(String script) {
             this.script = FlexibleStringExpander.getInstance(script);
         }
@@ -62,20 +62,20 @@ public abstract class ModelPageScript implements Serializable {
             return script.expandString(context);
         }
     }
-    
+
     /* TODO
     public static class FtlScript extends ModelPageScript {
         private final String script;
-        
+
         public FtlScript(String script) {
             this.script = script;
         }
-        
+
         @Override
         public Object getScript(Map<String, ?> context) {
             return TemplateInvoker.getInvoker(TemplateSource., invokeOptions, preferredModel)
         }
     }
     */
-    
+
 }

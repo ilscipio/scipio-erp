@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,8 +32,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -53,17 +52,20 @@ public class ContentMapFacade implements Map<Object, Object> {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected static final Set<String> mapKeySet = new HashSet<String>();
+    protected static final Set<String> mapKeySet;
     static {
-        mapKeySet.add("fields");
-        mapKeySet.add("link");
-        mapKeySet.add("data");
-        mapKeySet.add("dataresource");
-        mapKeySet.add("subcontent");
-        mapKeySet.add("subcontent_all");
-        mapKeySet.add("metadata");
-        mapKeySet.add("content");
-        mapKeySet.add("render");
+        // SCIPIO: Fixed mapKeySet field init
+        Set<String> set = new HashSet<>();
+        set.add("fields");
+        set.add("link");
+        set.add("data");
+        set.add("dataresource");
+        set.add("subcontent");
+        set.add("subcontent_all");
+        set.add("metadata");
+        set.add("content");
+        set.add("render");
+        mapKeySet = Collections.unmodifiableSet(set);
     }
 
     protected final LocalDispatcher dispatcher;
@@ -111,9 +113,9 @@ public class ContentMapFacade implements Map<Object, Object> {
         this.cache = cache;
         try {
             if (cache) {
-                this.value = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache().queryOne();
+                this.value = EntityQuery.use(this.delegator).from("Content").where("contentId", contentId).cache().queryOne();
             } else {
-                this.value = EntityQuery.use(delegator).from("Content").where("contentId", contentId).queryOne();
+                this.value = EntityQuery.use(this.delegator).from("Content").where("contentId", contentId).queryOne();
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -173,7 +175,6 @@ public class ContentMapFacade implements Map<Object, Object> {
     }
 
     public Set<Object> keySet() {
-        // Debug.logWarning("This method [keySet()] is not completely implemented in ContentMapFacade", module);
         return UtilGenerics.checkSet(mapKeySet);
     }
 
@@ -251,17 +252,16 @@ public class ContentMapFacade implements Map<Object, Object> {
             if (rh != null && request != null && response != null) {
                 String webSiteId = WebSiteWorker.getWebSiteId(request);
                 Delegator delegator = (Delegator) request.getAttribute("delegator");
-                
+
                 String contentUri = this.contentId;
                 // Try and find a WebSitePathAlias record to use, it isn't very feasible to find an alias by (parent)contentId/mapKey
                 // so we're only looking for a direct alias using contentId
                 if (webSiteId != null && delegator != null) {
                     try {
                         GenericValue webSitePathAlias = EntityQuery.use(delegator).from("WebSitePathAlias")
-                                .where("mapKey", null,
-                                        "webSiteId", webSiteId,
-                                        "contentId", this.contentId)
-                                .cache().queryFirst();
+                                .where("mapKey", null, "webSiteId", webSiteId, "contentId", this.contentId)
+                                .cache()
+                                .queryFirst();
                         if (webSitePathAlias != null) {
                             contentUri = webSitePathAlias.getString("pathAlias");
                         }
@@ -269,8 +269,7 @@ public class ContentMapFacade implements Map<Object, Object> {
                         Debug.logError(e, module);
                     }
                 }
-                String contextLink = rh.makeLink(request, response, contentUri, true, false, true);
-                // Debug.logInfo("Made link to content with ID [" + this.contentId + "]: " + contextLink, module);
+                String contextLink = rh.makeLink(request, response, contentUri, true, null, true); // SCIPIO: 2018-07-09: changed secure to null
                 return contextLink;
             } else {
                 return this.contentId;
@@ -418,7 +417,7 @@ public class ContentMapFacade implements Map<Object, Object> {
                 return null;
             }
             String name = (String) key;
-            if (name.toLowerCase().startsWith("id_")) {
+            if (name.toLowerCase(Locale.getDefault()).startsWith("id_")) {
                 name = name.substring(3);
             }
 
@@ -451,7 +450,7 @@ public class ContentMapFacade implements Map<Object, Object> {
                 return null;
             }
             String name = (String) key;
-            if (name.toLowerCase().startsWith("id_")) {
+            if (name.toLowerCase(Locale.getDefault()).startsWith("id_")) {
                 name = name.substring(3);
             }
 

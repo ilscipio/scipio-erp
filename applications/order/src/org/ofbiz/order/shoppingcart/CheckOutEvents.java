@@ -55,6 +55,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.RequestVarScopes;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -70,47 +71,51 @@ public class CheckOutEvents {
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
 
-        if (cart != null && UtilValidate.isNotEmpty(cart.items())) {
+        // SCIPIO: 2018-11: better check
+        //if (UtilValidate.isNotEmpty(cart.items())) {
+        if (cart.size() > 0) {
             return "success";
-        } else {
-            String errMsg = UtilProperties.getMessage(resource_error, "checkevents.cart_empty", (cart != null ? cart.getLocale() : UtilHttp.getLocale(request)));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
         }
+        String errMsg = UtilProperties.getMessage(resource_error, "checkevents.cart_empty", cart.getLocale());
+        request.setAttribute("_ERROR_MESSAGE_", errMsg);
+        return "error";
     }
 
     public static String setCheckOutPages(HttpServletRequest request, HttpServletResponse response) {
-        if ("error".equals(CheckOutEvents.cartNotEmpty(request, response)) == true) {
+        if ("error".equals(CheckOutEvents.cartNotEmpty(request, response))) {
             return "error";
         }
 
         HttpSession session = request.getSession();
 
-        //Locale locale = UtilHttp.getLocale(request);
         // SCIPIO: Read the "checkoutpage" from attributes first, so events may modify
         //String curPage = request.getParameter("checkoutpage");
         String curPage = getRequestAttribOrParam(request, "checkoutpage");
         Debug.logInfo("CheckoutPage: " + curPage, module);
 
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         GenericValue userLogin = cart.getUserLogin();
-        if (userLogin == null) userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin == null) {
+            userLogin = (GenericValue) session.getAttribute("userLogin");
+        }
         if (curPage == null) {
             try {
                 cart.createDropShipGroups(dispatcher);
             } catch (CartItemModifyException e) {
                 Debug.logError(e, module);
             }
-        } else if ("shippingoptions".equals(curPage) == true) {
+        } else if ("shippingoptions".equals(curPage)) {
             //remove empty ship group
             cart.cleanUpShipGroups();
         }
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
-        if ("shippingaddress".equals(curPage) == true) {
+        if ("shippingaddress".equals(curPage)) {
             // Set the shipping address options
             // SCIPIO: Allow inlined address creation
             //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
@@ -121,7 +126,7 @@ public class CheckOutEvents {
                 if (ServiceUtil.isSuccess(contactMechResult)) {
                     shippingContactMechId = (String) contactMechResult.get("contactMechId");
                 } else {
-                    ServiceUtil.appendMessageLists(request, contactMechResult);
+                    ServiceUtil.appendRequestMessages(request, contactMechResult);
                     return "error";
                 }
             } catch (GeneralException e1) {
@@ -129,13 +134,13 @@ public class CheckOutEvents {
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
                 return "error";
             }
-            
+
             String taxAuthPartyGeoIds = request.getParameter("taxAuthPartyGeoIds");
             String partyTaxId = request.getParameter("partyTaxId");
             String isExempt = request.getParameter("isExempt");
 
-            List<String> errorMessages = new ArrayList<String>();
-            Map<String, Object> errorMaps = new HashMap<String, Object>();
+            List<String> errorMessages = new ArrayList<>();
+            Map<String, Object> errorMaps = new HashMap<>();
             for (int shipGroupIndex = 0; shipGroupIndex < cart.getShipGroupSize(); shipGroupIndex++) {
                 // set the shipping method
                 if (shippingContactMechId == null) {
@@ -169,7 +174,7 @@ public class CheckOutEvents {
                 // No errors so push the user onto the next page
                 curPage = "shippingoptions";
             }
-        } else if ("shippingoptions".equals(curPage) == true) {
+        } else if ("shippingoptions".equals(curPage)) {
             // Set the general shipping options
             String shippingMethod = request.getParameter("shipping_method");
             String shippingInstructions = request.getParameter("shipping_instructions");
@@ -190,7 +195,7 @@ public class CheckOutEvents {
                 // No errors so push the user onto the next page
                 curPage = "payment";
             }
-        } else if ("payment".equals(curPage) == true) {
+        } else if ("payment".equals(curPage)) {
             // Set the payment options
             // SCIPIO: Handle new error cases
             Map<String, Map<String, Object>> selectedPaymentMethods;
@@ -198,7 +203,7 @@ public class CheckOutEvents {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
             } catch (ServiceErrorException e) {
                 Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                ServiceUtil.appendRequestMessages(request, e.getServiceResult());
                 return "error";
             } catch (GeneralException e) {
                 Debug.logError(e, module); // unexpected error
@@ -217,29 +222,29 @@ public class CheckOutEvents {
                 selectedPaymentMethods.put("EXT_BILLACT", UtilMisc.<String, Object>toMap("amount", billingAccountAmt, "securityCode", null));
             }
 
-            List<String> singleUsePayments = new ArrayList<String>();
+            List<String> singleUsePayments = new ArrayList<>();
 
             // SCIPIO: Support single-use for arbitrary pay methods
             addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
-            
+
             // check for gift card not on file
             Map<String, Object> params = UtilHttp.getParameterMap(request);
             Map<String, Object> gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
             ServiceUtil.getMessages(request, gcResult, null);
             if (gcResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
                 return "error";
-            } else {
-                String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
-                BigDecimal gcAmount = (BigDecimal) gcResult.get("amount");
-                if (gcPaymentMethodId != null) {
-                    selectedPaymentMethods.put(gcPaymentMethodId, UtilMisc.<String, Object>toMap("amount", gcAmount, "securityCode", null));
-                    if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
-                        singleUsePayments.add(gcPaymentMethodId);
-                    }
-                    
-                    // SCIPIO: Save the info of which paymentMethodId was just created for the new card
-                    saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
+            }
+            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+            BigDecimal gcAmount = (BigDecimal) gcResult.get("amount");
+            if (gcPaymentMethodId != null) {
+                selectedPaymentMethods.put(gcPaymentMethodId, UtilMisc.<String, Object>toMap("amount", gcAmount,
+                        "securityCode", null));
+                if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
+                    singleUsePayments.add(gcPaymentMethodId);
                 }
+
+                // SCIPIO: Save the info of which paymentMethodId was just created for the new card
+                saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
             }
 
             // SCIPIO: 2016-05-09: This check moved AFTER gift card check so can use GC alone
@@ -255,7 +260,7 @@ public class CheckOutEvents {
                     return "error";
                 }
             }
-            
+
             Map<String, Object> callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId);
             ServiceUtil.getMessages(request, callResult, null);
 
@@ -265,6 +270,9 @@ public class CheckOutEvents {
             }
         } else {
             curPage = determineInitialCheckOutPage(cart);
+        }
+
+        cartUpdate.commit(cart); // SCIPIO
         }
 
         return curPage;
@@ -283,8 +291,8 @@ public class CheckOutEvents {
             }
         }
     }
-    
-    
+
+
     private static final String DEFAULT_INIT_CHECKOUT_PAGE = "shippingaddress";
 
     /**
@@ -294,7 +302,9 @@ public class CheckOutEvents {
      */
     public static String determineInitialCheckOutPage(ShoppingCart cart) {
         String page = DEFAULT_INIT_CHECKOUT_PAGE;
-        if (cart == null) return page;
+        if (cart == null) {
+            return page;
+        }
 
         // if no shipping applies, set the no shipment method and skip to payment
         if (!cart.shippingApplies()) {
@@ -312,9 +322,8 @@ public class CheckOutEvents {
         String currentPage = getRequestAttribOrParam(request, "checkoutpage");
         if (UtilValidate.isEmpty(currentPage)) {
             return "error";
-        } else {
-            return currentPage;
         }
+        return currentPage;
     }
 
     /**
@@ -323,7 +332,9 @@ public class CheckOutEvents {
      */
     public static String setQuickCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         String result = calcTax(request, response);
-        if ("error".equals(result)) return "error";
+        if ("error".equals(result)) {
+            return "error";
+        }
         return setCheckOutOptions(request, response);
     }
 
@@ -331,24 +342,28 @@ public class CheckOutEvents {
         // SCIPIO: We currently *may* run into additional problems if try to create new records during partial saves.
         // Also, note the fixme below is a stock fixme, not by us; it shouldn't be changed with current implementation (which is a "best-effort")...
         request.setAttribute("checkoutUseNewRecords", Boolean.FALSE);
-        
+
         // FIXME response need to be checked ?
-        // String resp = setCheckOutOptions(request, response);
         setCheckOutOptions(request, response);
         request.setAttribute("_ERROR_MESSAGE_", null);
         return "success";
     }
 
     public static String setCartShipToCustomerParty(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         String shipToCustomerPartyId = request.getParameter("shipToCustomerPartyId");
         cart.setShipToCustomerPartyId(shipToCustomerPartyId);
         cart.setAllShippingContactMechId(null);
+
+        cartUpdate.commit(cart); // SCIPIO
+        }
         return "success";
     }
 
     public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
@@ -359,7 +374,7 @@ public class CheckOutEvents {
         }
         return "success";
     }
-    
+
     /**
      * SCIPIO: Alternative event to {@link #checkPaymentMethods} that may be run <i>before</i> payment method
      * selection.
@@ -367,11 +382,12 @@ public class CheckOutEvents {
      * TODO?: Currently, this event does nothing. See comments.
      */
     public static String checkPaymentMethodsBeforePayment(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        /* SCIPIO: TODO?
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        
+        */
         // SCIPIO: TODO?: Currently, in this event we do nothing. This is because checkOutHelper.validatePaymentMethods()
         // performs mainly a total amount validation which causes errors when going backward in checkout due
         // to change shipping options which can affect totals and result a negative balance error.
@@ -387,10 +403,9 @@ public class CheckOutEvents {
     }
 
     public static Map<String, Map<String, Object>> getSelectedPaymentMethods(HttpServletRequest request) throws ServiceErrorException, GeneralException {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
-        //Locale locale = UtilHttp.getLocale(request);
-        Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<String, Map<String, Object>>();
-        
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        Map<String, Map<String, Object>> selectedPaymentMethods = new HashMap<>();
+
         // SCIPIO: Allow override via request attribs
         String[] paymentMethods;
         if (request.getAttribute("checkOutPaymentId") != null) {
@@ -407,20 +422,20 @@ public class CheckOutEvents {
         } else {
             paymentMethods = request.getParameterValues("checkOutPaymentId");
         }
-        
+
         if (UtilValidate.isNotEmpty(request.getParameter("issuerId"))) {
             request.setAttribute("issuerId", request.getParameter("issuerId"));
         }
 
-        String errMsg = null;
+        //String errMsg = null; // SCIPIO: now unused
 
         if (paymentMethods != null) {
-            for (int i = 0; i < paymentMethods.length; i++) {
-                Map<String, Object> paymentMethodInfo = new HashMap<String, Object>();
+            for (String paymentMethod : paymentMethods) {
+                Map<String, Object> paymentMethodInfo = new HashMap<>();
 
                 // SCIPIO: Allow inlined address creation
-                String paymentMethodId = paymentMethods[i];
-                String origPaymentMethodId = paymentMethods[i];
+                String paymentMethodId = paymentMethod;
+                String origPaymentMethodId = paymentMethod;
                 Map<String, Object> payMethResult = checkPaymentMethodIdForNew(request, paymentMethodId, "newCreditCard_", "newEftAccount_");
                 if (ServiceUtil.isSuccess(payMethResult)) {
                     paymentMethodId = (String) payMethResult.get("paymentMethodId");
@@ -432,7 +447,7 @@ public class CheckOutEvents {
                 } else {
                     throw new ServiceErrorException("Could not get pay method: " + ServiceUtil.getErrorMessage(payMethResult), payMethResult);
                 }
-                
+
                 String securityCode = request.getParameter("securityCode_" + origPaymentMethodId);
                 if (UtilValidate.isNotEmpty(securityCode)) {
                     paymentMethodInfo.put("securityCode", securityCode);
@@ -453,7 +468,7 @@ public class CheckOutEvents {
                     }
                 }
                 paymentMethodInfo.put("amount", amount);
-                
+
                 // SCIPIO: Get single-use flag
                 Boolean singleUseBool = null;
                 String singleUseFlag = request.getParameter("singleUsePayment_" + origPaymentMethodId);
@@ -463,7 +478,7 @@ public class CheckOutEvents {
                     singleUseBool = Boolean.FALSE;
                 }
                 paymentMethodInfo.put("singleUsePayment", singleUseBool);
-                
+
                 selectedPaymentMethods.put(paymentMethodId, paymentMethodInfo); // SCIPIO: edited
             }
         }
@@ -473,7 +488,9 @@ public class CheckOutEvents {
 
     // this servlet is used by quick checkout
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
@@ -484,14 +501,14 @@ public class CheckOutEvents {
             selectedPaymentMethods = getSelectedPaymentMethods(request);
         } catch (ServiceErrorException e) {
             Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-            ServiceUtil.appendMessageLists(request, e.getServiceResult());
+            ServiceUtil.appendRequestMessages(request, e.getServiceResult());
             return "error";
         } catch (GeneralException e) {
             Debug.logError(e, module); // unexpected error
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error, "OrderUnexpectedErrorHelp", (cart != null ? cart.getLocale() : Locale.getDefault())));
             return "error";
         }
-        
+
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         // get the billing account and amount
@@ -511,7 +528,7 @@ public class CheckOutEvents {
         }
 
         String shippingMethod = request.getParameter("shipping_method");
-        
+
         // SCIPIO: Allow inlined address creation
         //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shippingContactMechId;
@@ -521,7 +538,7 @@ public class CheckOutEvents {
             if (ServiceUtil.isSuccess(contactMechResult)) {
                 shippingContactMechId = (String) contactMechResult.get("contactMechId");
             } else {
-                ServiceUtil.appendMessageLists(request, contactMechResult);
+                ServiceUtil.appendRequestMessages(request, contactMechResult);
                 return "error";
             }
         } catch (GeneralException e1) {
@@ -543,11 +560,11 @@ public class CheckOutEvents {
         String shipBeforeDate = request.getParameter("shipBeforeDate");
         String shipAfterDate = request.getParameter("shipAfterDate");
 
-        List<String> singleUsePayments = new ArrayList<String>();
+        List<String> singleUsePayments = new ArrayList<>();
 
         // SCIPIO: Support single-use for arbitrary pay methods
         addSingleUsePayments(request, selectedPaymentMethods, singleUsePayments);
-        
+
         // get a request map of parameters
         Map<String, Object> params = UtilHttp.getParameterMap(request);
 
@@ -581,7 +598,7 @@ public class CheckOutEvents {
             if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
                 singleUsePayments.add(gcPaymentMethodId);
             }
-            
+
             // SCIPIO: Save the info of which paymentMethodId was just created for the new card
             saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
         }
@@ -589,24 +606,58 @@ public class CheckOutEvents {
         Map<String, Object> optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
                 singleUsePayments, billingAccountId, shippingInstructions,
                 orderAdditionalEmails, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate);
-
+        
+        // SCIPIO: TODO: REVIEW: for now we have to commit cart even if error,
+        // because setCheckOutOptions partial update with error is relied on by some screens;
+        // in theory it belongs below...
+        cartUpdate.commit(cart); // SCIPIO
+        
         ServiceUtil.getMessages(request, optResult, null);
         if (ServiceUtil.isError(optResult)) {
             return "error";
         }
 
+        //cartUpdate.commit(cart); // SCIPIO
+        }
         return "success";
     }
-
+    // Check for payment method and shipping method exist for checkout process of anonymous user
+    public static String checkoutValidation(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        if (cart.isSalesOrder()) {
+        List<GenericValue> paymentMethodTypes = cart.getPaymentMethodTypes();
+        if (UtilValidate.isEmpty(paymentMethodTypes)) {
+            String errMsg = UtilProperties.getMessage(resource_error, "OrderNoPaymentMethodTypeSelected", (cart != null ? cart.getLocale() : UtilHttp.getLocale(request)));
+            request.setAttribute("_ERROR_MESSAGE_",errMsg);
+            return "error";
+        }
+        String shipmentMethod = cart.getShipmentMethodTypeId();
+        if (UtilValidate.isEmpty(shipmentMethod)) {
+            String errMsg = UtilProperties.getMessage(resource_error, "OrderNoShipmentMethodSelected", (cart != null ? cart.getLocale() : UtilHttp.getLocale(request)));
+            request.setAttribute("_ERROR_MESSAGE_",errMsg);
+            return "error";
+        }
+        }
+        return "success";
+    }
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         HttpSession session = request.getSession();
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+
         Map<String, Object> callResult;
+        /* SCIPIO: 2018-10-09: TODO: REVIEW: added check from upstream...
+        String result = checkoutValidation(request,response);
+        if ("error".equals(result)) {
+            return "error";
+        }
+        */
 
         if (UtilValidate.isEmpty(userLogin)) {
             userLogin = cart.getUserLogin();
@@ -638,14 +689,16 @@ public class CheckOutEvents {
                 request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
             }
         }
-        
+
         String issuerId = request.getParameter("issuerId");
         if (UtilValidate.isNotEmpty(issuerId)) {
             request.setAttribute("issuerId", issuerId);
         }
-        
 
-        return cart.getOrderType().toLowerCase();
+        String orderType = cart.getOrderType().toLowerCase(Locale.getDefault());
+        cartUpdate.commit(cart); // SCIPIO
+        return orderType;
+        }
     }
 
     // Event wrapper for the tax calc.
@@ -663,20 +716,28 @@ public class CheckOutEvents {
     private static void calcTax(HttpServletRequest request) throws GeneralException {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         //Calculate and add the tax adjustments
         checkOutHelper.calcAndAddTax();
+        
+        cartUpdate.commit(cart); // SCIPIO
+        }
     }
 
     public static boolean explodeOrderItems(Delegator delegator, ShoppingCart cart) {
-        if (cart == null) return false;
+        if (cart == null) {
+            return false;
+        }
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         if (productStore == null || productStore.get("explodeOrderItems") == null) {
             return false;
         }
-        return productStore.getBoolean("explodeOrderItems").booleanValue();
+        return productStore.getBoolean("explodeOrderItems");
     }
 
     public static String checkShipmentNeeded(HttpServletRequest request, HttpServletResponse response) {
@@ -733,7 +794,11 @@ public class CheckOutEvents {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        Map<String, Object> callResult;
+
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
@@ -742,13 +807,17 @@ public class CheckOutEvents {
 
         // load the ProductStore settings
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
-        Map<String, Object> callResult = checkOutHelper.processPayment(productStore, userLogin, false, holdOrder);
+        
+        callResult = checkOutHelper.processPayment(productStore, userLogin, false, holdOrder);
 
         if (ServiceUtil.isError(callResult)) {
             // clear out the rejected payment methods (if any) from the cart, so they don't get re-authorized
             cart.clearDeclinedPaymentMethods(delegator);
             // null out the orderId for next pass
             cart.setOrderId(null);
+        }
+
+        cartUpdate.commit(cart); // SCIPIO
         }
 
         // generate any messages required
@@ -765,8 +834,8 @@ public class CheckOutEvents {
     }
 
     public static String checkOrderBlacklist(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        //HttpSession session = request.getSession();
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) session.getAttribute("shoppingCart");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         CheckOutHelper checkOutHelper = new CheckOutHelper(null, delegator, cart);
         String result;
@@ -787,7 +856,10 @@ public class CheckOutEvents {
 
     public static String failedBlacklistCheck(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String orderPartyId = cart.getOrderPartyId();
@@ -798,6 +870,7 @@ public class CheckOutEvents {
         // Load the properties store
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+
         Map<String, Object> callResult = checkOutHelper.failedBlacklistCheck(userLogin, productStore);
 
         //Generate any messages required
@@ -806,6 +879,7 @@ public class CheckOutEvents {
         // wipe the session
         if (("anonymous".equals(currentUser.getString("userLoginId"))) || (currentUser.getString("userLoginId")).equals(userLogin.getString("userLoginId"))) {
             session.invalidate();
+            ShoppingCartEvents.removeCartObject(request, RequestVarScopes.REQUEST); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
         }
         //Determine whether it was a success or not
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
@@ -817,7 +891,10 @@ public class CheckOutEvents {
             request.setAttribute("_ERROR_MESSAGE_", result);
             result = "success";
         }
+        
+        cartUpdate.commit(cart); // SCIPIO
         return result;
+        }
     }
 
     public static String checkExternalCheckout(HttpServletRequest request, HttpServletResponse response) {
@@ -860,23 +937,22 @@ public class CheckOutEvents {
     }
 
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         String shippingContactMechId = null;
         String shippingMethod = null;
-        BigDecimal shipEstimate = null; 
+        BigDecimal shipEstimate = null;
         String shippingInstructions = null;
         String maySplit = null;
         String giftMessage = null;
         String isGift = null;
         String internalCode = null;
         String methodType = null;
-        //FIXME can be removed ?
-        // String singleUsePayment = null;
-        // String appendPayment = null;
         String shipBeforeDate = null;
         String shipAfterDate = null;
         String internalOrderNotes = null;
@@ -916,17 +992,17 @@ public class CheckOutEvents {
         }
 
         // set the customer info
-        if (mode.equals("default")) {
+        if ("default".equals(mode)) {
             cart.setDefaultCheckoutOptions(dispatcher);
         }
 
         // remove the empty ship groups
-        if (mode.equals("removeEmptyShipGroups")) {
+        if ("removeEmptyShipGroups".equals(mode)) {
             cart.cleanUpShipGroups();
         }
 
         // set the customer info
-        if (mode.equals("cust")) {
+        if ("cust".equals(mode)) {
             String partyId = (String) request.getAttribute("partyId");
             if (partyId != null) {
                 cart.setOrderPartyId(partyId);
@@ -951,33 +1027,33 @@ public class CheckOutEvents {
             }
         }
 
-        if (mode.equals("addpty")) {
+        if ("addpty".equals(mode)) {
             cart.setAttribute("addpty", "Y");
         }
 
-        if (mode.equals("term")) {
+        if ("term".equals(mode)) {
            cart.setOrderTermSet(true);
         }
 
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
         // ====================================================================================
-        if (mode.equals("ship") || mode.equals("options")) {
+        if ("ship".equals(mode) || "options".equals(mode)) {
             Map<String, Object> callResult = ServiceUtil.returnSuccess();
-            List<String> errorMessages = new ArrayList<String>();
-            Map<String, Object> errorMaps = new HashMap<String, Object>();
+            List<String> errorMessages = new ArrayList<>();
+            Map<String, Object> errorMaps = new HashMap<>();
             for (int shipGroupIndex = 0; shipGroupIndex < cart.getShipGroupSize(); shipGroupIndex++) {
                 // set the shipping method
-                if (mode.equals("ship")) {
+                if ("ship".equals(mode)) {
                     shippingContactMechId = request.getParameter(shipGroupIndex + "_shipping_contact_mech_id");
                     String facilityId = request.getParameter(shipGroupIndex + "_shipGroupFacilityId");
                     if (shippingContactMechId == null) {
                         shippingContactMechId = (String) request.getAttribute("contactMechId");
-                    } else if(cart.getOrderType().equals("PURCHASE_ORDER")){
+                    } else if("PURCHASE_ORDER".equals(cart.getOrderType())){
                         String[] shipInfo = shippingContactMechId.split("_@_");
                         if(shipInfo.length > 1){
                             shippingContactMechId = shipInfo[0];
-                            facilityId = shipInfo[1];   
+                            facilityId = shipInfo[1];
                         }
                     }
                     String supplierPartyId = request.getParameter(shipGroupIndex + "_supplierPartyId");
@@ -995,17 +1071,19 @@ public class CheckOutEvents {
                     ServiceUtil.addErrors(errorMessages, errorMaps, callResult);
                 }
                 // set the options
-                if (mode.equals("options")) {
+                if ("options".equals(mode)) {
                     shippingMethod = request.getParameter(shipGroupIndex + "_shipping_method");
                     if (UtilValidate.isEmpty(shippingMethod)) {
                         shippingMethod = request.getParameter("shipping_method");
                     }
                     shippingInstructions = request.getParameter(shipGroupIndex + "_shipping_instructions");
-                    if (UtilValidate.isEmpty(shippingInstructions))
+                    if (UtilValidate.isEmpty(shippingInstructions)) {
                         shippingInstructions = request.getParameter("shipping_instructions");
+                    }
                     maySplit = request.getParameter(shipGroupIndex + "_may_split");
-                    if (UtilValidate.isEmpty(maySplit))
+                    if (UtilValidate.isEmpty(maySplit)) {
                         maySplit = request.getParameter("may_split");
+                    }
                     giftMessage = request.getParameter(shipGroupIndex + "_gift_message");
                     isGift = request.getParameter(shipGroupIndex + "_is_gift");
                     internalCode = request.getParameter("internalCode"); // FIXME
@@ -1040,8 +1118,12 @@ public class CheckOutEvents {
             ServiceUtil.getMessages(request, callResult, null);
             // determine whether it was a success or not
             if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
-                if (mode.equals("ship")) return "shipping";
-                if (mode.equals("options")) return "options";
+                if ("ship".equals(mode)) {
+                    return "shipping";
+                }
+                if ("options".equals(mode)) {
+                    return "options";
+                }
                 return "error";
             }
         }
@@ -1054,16 +1136,11 @@ public class CheckOutEvents {
             Debug.logInfo("Changing mode from->to: " + mode + "->payment", module);
             mode = "payment";
         }
-        //FIXME can be removed ?
-        // singleUsePayment = request.getParameter("singleUsePayment");
-        // appendPayment = request.getParameter("appendPayment");
-        // boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
-        // boolean doAppendPayment = appendPayment != null && "Y".equalsIgnoreCase(appendPayment) ? true : false;
 
-        if (mode.equals("payment")) {
+        if ("payment".equals(mode)) {
             Map<String, Object> callResult = ServiceUtil.returnSuccess();
-            List<String> errorMessages = new ArrayList<String>();
-            Map<String, Object> errorMaps = new HashMap<String, Object>();
+            List<String> errorMessages = new ArrayList<>();
+            Map<String, Object> errorMaps = new HashMap<>();
 
             // Set the payment options
             // SCIPIO: Handle new error cases
@@ -1072,7 +1149,7 @@ public class CheckOutEvents {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
             } catch (ServiceErrorException e) {
                 Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                ServiceUtil.appendRequestMessages(request, e.getServiceResult());
                 return "error";
             } catch (GeneralException e) {
                 Debug.logError(e, module); // unexpected error
@@ -1111,12 +1188,12 @@ public class CheckOutEvents {
             if (errorMessages.size() == 0 && errorMaps.size() == 0) {
                 String gcPaymentMethodId = (String) callResult.get("paymentMethodId");
                 BigDecimal giftCardAmount = (BigDecimal) callResult.get("amount");
-                
+
                 // SCIPIO: Save the info of which paymentMethodId was just created for the new card
                 if (gcPaymentMethodId != null) {
                     saveToNewPaymentMethodIdMap(request, "_NEW_GIFT_CARD_", gcPaymentMethodId);
                 }
-                
+
                 // WARNING: if gcPaymentMethodId is not empty, all the previously set payment methods will be removed
                 Map<String, Object> gcCallRes = checkOutHelper.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
                 ServiceUtil.addErrors(errorMessages, errorMaps, gcCallRes);
@@ -1138,13 +1215,17 @@ public class CheckOutEvents {
                 return "paymentError";
             }
         }
+
+        cartUpdate.commit(cart); // SCIPIO
+
         // determine where to direct the browser
         return determineNextFinalizeStep(request, response);
+        }
     }
 
     public static String determineNextFinalizeStep(HttpServletRequest request, HttpServletResponse response) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         // flag anoymous checkout to bypass additional party settings
         boolean isAnonymousCheckout = false;
         if (userLogin != null && "anonymous".equals(userLogin.getString("userLoginId"))) {
@@ -1158,7 +1239,7 @@ public class CheckOutEvents {
         boolean requireShipping = true;
         boolean requireOptions = true;
         boolean requireShipGroups = false;
-        boolean requirePayment = !cart.getOrderType().equals("PURCHASE_ORDER");
+        boolean requirePayment = !"PURCHASE_ORDER".equals(cart.getOrderType());
         boolean requireTerm = true;
         boolean requireAdditionalParty = isAnonymousCheckout;
         boolean isSingleUsePayment = true;
@@ -1173,18 +1254,18 @@ public class CheckOutEvents {
             String requireAdditionalPartyStr = request.getParameter("finalizeReqAdditionalParty");
             String requireShipGroupsStr = request.getParameter("finalizeReqShipGroups");
             String singleUsePaymentStr = request.getParameter("singleUsePayment");
-            requireCustomer = requireCustomerStr == null || requireCustomerStr.equalsIgnoreCase("true");
-            requireNewShippingAddress = requireNewShippingAddressStr != null && requireNewShippingAddressStr.equalsIgnoreCase("true");
-            requireShipping = requireShippingStr == null || requireShippingStr.equalsIgnoreCase("true");
-            requireOptions = requireOptionsStr == null || requireOptionsStr.equalsIgnoreCase("true");
-            requireShipGroups = requireShipGroupsStr != null && requireShipGroupsStr.equalsIgnoreCase("true");
+            requireCustomer = requireCustomerStr == null || "true".equalsIgnoreCase(requireCustomerStr);
+            requireNewShippingAddress = requireNewShippingAddressStr != null && "true".equalsIgnoreCase(requireNewShippingAddressStr);
+            requireShipping = requireShippingStr == null || "true".equalsIgnoreCase(requireShippingStr);
+            requireOptions = requireOptionsStr == null || "true".equalsIgnoreCase(requireOptionsStr);
+            requireShipGroups = requireShipGroupsStr != null && "true".equalsIgnoreCase(requireShipGroupsStr);
             if (requirePayment) {
-                requirePayment = requirePaymentStr == null || requirePaymentStr.equalsIgnoreCase("true");
+                requirePayment = requirePaymentStr == null || "true".equalsIgnoreCase(requirePaymentStr);
             }
             if (requireTerm) {
-                requireTerm = requireTermStr == null || requireTermStr.equalsIgnoreCase("true");
+                requireTerm = requireTermStr == null || "true".equalsIgnoreCase(requireTermStr);
             }
-            requireAdditionalParty = requireAdditionalPartyStr == null || requireAdditionalPartyStr.equalsIgnoreCase("true");
+            requireAdditionalParty = requireAdditionalPartyStr == null || "true".equalsIgnoreCase(requireAdditionalPartyStr);
             isSingleUsePayment = singleUsePaymentStr != null && "Y".equalsIgnoreCase(singleUsePaymentStr) ? true : false;
         }
 
@@ -1206,20 +1287,19 @@ public class CheckOutEvents {
         String[] processOrder = {"customer", "shipping", "shipGroups", "options", "term", "payment",
                                  "addparty", "paysplit"};
 
-        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+        if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
             // Force checks for the following
             requireCustomer = true; requireShipping = true; requireOptions = true;
             processOrder = new String[] {"customer", "term", "shipping", "shipGroups", "options", "payment",
                                          "addparty", "paysplit"};
         }
 
-        for (int i = 0; i < processOrder.length; i++) {
-            String currProcess = processOrder[i];
-            if (currProcess.equals("customer")) {
-                if (requireCustomer && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
+        for (String currProcess : processOrder) {
+            if ("customer".equals(currProcess)) {
+                if (requireCustomer && (customerPartyId == null || "_NA_".equals(customerPartyId))) {
                     return "customer";
                 }
-            } else if (currProcess.equals("shipping")) {
+            } else if ("shipping".equals(currProcess)) {
                 if (requireShipping) {
                     if (requireNewShippingAddress) {
                         return "shippingAddress";
@@ -1227,29 +1307,29 @@ public class CheckOutEvents {
                         return "shipping";
                     }
                 }
-            } else if (currProcess.equals("shipGroups")) {
+            } else if ("shipGroups".equals(currProcess)) {
                 if (requireShipGroups) {
                     return "shipGroups";
                 }
-            } else if (currProcess.equals("options")) {
+            } else if ("options".equals(currProcess)) {
                 if (requireOptions && !shippingOptionsSet) {
                     return "options";
                 }
-            } else if (currProcess.equals("term")) {
+            } else if ("term".equals(currProcess)) {
                 if (requireTerm && !cart.isOrderTermSet()) {
                     return "term";
                 }
-            } else if (currProcess.equals("payment")) {
+            } else if ("payment".equals(currProcess)) {
                 List<String> paymentMethodIds = cart.getPaymentMethodIds();
                 List<String> paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
                 if (requirePayment && UtilValidate.isEmpty(paymentMethodIds) && UtilValidate.isEmpty(paymentMethodTypeIds)) {
                     return "payment";
                 }
-            } else if (currProcess.equals("addparty")) {
+            } else if ("addparty".equals(currProcess)) {
                 if (requireAdditionalParty && cart.getAttribute("addpty") == null) {
                     return "addparty";
                 }
-            } else if (currProcess.equals("paysplit")) {
+            } else if ("paysplit".equals(currProcess)) {
                 if (isSingleUsePayment) {
                     return "paysplit";
                 }
@@ -1266,18 +1346,16 @@ public class CheckOutEvents {
 
         if ("SALES_ORDER".equals(cart.getOrderType())) {
             return "sales";
-        } else {
-            return "po";
         }
+        return "po";
     }
 
     public static String finalizeOrderEntryError(HttpServletRequest request, HttpServletResponse response) {
         String finalizePage = request.getParameter("finalizeMode");
         if (UtilValidate.isEmpty(finalizePage)) {
             return "error";
-        } else {
-            return finalizePage;
         }
+        return finalizePage;
     }
 
     /**
@@ -1321,9 +1399,8 @@ public class CheckOutEvents {
             }
 
             return chargeAmount;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /** Create a replacement order from an existing order against a lost shipment etc. **/
@@ -1332,7 +1409,9 @@ public class CheckOutEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         Map<String, Object> context = cart.makeCartMap(dispatcher, false);
         String originalOrderId = request.getParameter("orderId");
@@ -1360,7 +1439,7 @@ public class CheckOutEvents {
                                              .where("orderId", originalOrderId, "isPromo", sci.getIsPromo() ? "Y" : "N",
                                                      "productId", sci.getProductId(), "orderItemTypeId", sci.getItemType())
                                              .queryFirst();
-                if (UtilValidate.isNotEmpty(orderItem)) {
+                if (orderItem != null) {
                     sci.setAssociatedOrderId(orderItem.getString("orderId"));
                     sci.setAssociatedOrderItemSeqId(orderItem.getString("orderItemSeqId"));
                     sci.setOrderItemAssocTypeId("REPLACEMENT");
@@ -1376,11 +1455,13 @@ public class CheckOutEvents {
         String result = createOrder(request, response);
         if ("error".equals(result)) {
             return "error";
-        } else {
-            return "success";
         }
+
+        cartUpdate.commit(cart); // SCIPIO
+        }
+        return "success";
     }
-    
+
     /**
      * SCIPIO: Checks a ship contact meth ID; if it has the special value _NEW_, it will check other
      * params and try to create a new address before returning the new contact mech ID. This allows inlining
@@ -1396,7 +1477,7 @@ public class CheckOutEvents {
         String origContactMechId = contactMechId;
         if ("_NEW_".equals(contactMechId)) {
             // We need extra validation here because createPostalAddressAndPurposes is too generic and fails to do it and this is faster than making extra service
-            
+
             Collection<MapProcessor> paramValidators = null;
             String serviceName;
             String setShippingPurpose = getRequestAttribOrParam(request, paramPrefix + "setShippingPurpose");
@@ -1410,7 +1491,7 @@ public class CheckOutEvents {
                 overrideParams.put("setShippingPurpose", null);
                 overrideParams.put("contactMechPurposeTypeId", "SHIPPING_LOCATION");
             }
-            
+
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1418,28 +1499,28 @@ public class CheckOutEvents {
                 result.put("origContactMechId", origContactMechId);
                 return result;
             }
-            
-            paramValidators = UtilMisc.<MapProcessor>toList(getPostalAddressValidator(request));
+
+            paramValidators = UtilMisc.toList(getPostalAddressValidator(request));
             serviceName = "createPostalAddressAndPurposes";
-            
+
             Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
-            
+
             if (!ServiceUtil.isSuccess(servResult)) {
                 Debug.logInfo("Could not create new ship contact mech during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
                 return servResult;
             } else {
                 contactMechId = (String) servResult.get("contactMechId");
             }
-            
+
             Map<String, Object> newShipContactMechInfoMap = UtilGenerics.checkMap(request.getAttribute("newShipContactMechInfoMap"));
             if (newShipContactMechInfoMap == null) {
-                newShipContactMechInfoMap = new HashMap<String, Object>();
+                newShipContactMechInfoMap = new HashMap<>();
             }
-            Map<String, Object> info = new HashMap<String, Object>();
+            Map<String, Object> info = new HashMap<>();
             info.put("contactMechId", contactMechId);
             newShipContactMechInfoMap.put(origContactMechId, info);
             request.setAttribute("newShipContactMechInfoMap", newShipContactMechInfoMap);
-            
+
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("contactMechId", contactMechId);
             result.put("origContactMechId", origContactMechId);
@@ -1452,7 +1533,7 @@ public class CheckOutEvents {
             return result;
         }
     }
-    
+
     /**
      * SCIPIO: Checks a pay method contact meth ID; if it has the special value _NEW_CREDIT_CARD_ or _NEW_EFT_ACCOUNT_ as prefix, it will check other
      * params and try to create new records before returning the new contact mech ID. This allows inlining
@@ -1464,16 +1545,16 @@ public class CheckOutEvents {
      * <p>
      * NOTE: This also sets a newPaymentMethodInfoMap map in request attributes that screens may need.
      */
-    public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId, 
+    public static Map<String, Object> checkPaymentMethodIdForNew(HttpServletRequest request, String paymentMethodId,
             String ccParamPrefix, String eftParamPrefix) throws GeneralException {
-        
+
         String origPaymentMethodId = paymentMethodId;
         Collection<MapProcessor> paramValidators = null;
         String serviceName;
-        Map<String, Object> overrideParams = new HashMap<String, Object>();
+        Map<String, Object> overrideParams = new HashMap<>();
         String paramPrefix;
 
-        if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_CREDIT_CARD_")) {  
+        if (paymentMethodId != null && paymentMethodId.startsWith("_NEW_CREDIT_CARD_")) {
             // SPECIAL CASE: Events may request that new record creation be disabled. In this case, return nothing.
             if (Boolean.FALSE.equals(request.getAttribute("checkoutUseNewRecords"))) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -1481,7 +1562,7 @@ public class CheckOutEvents {
                 result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
-            
+
             paramPrefix = ccParamPrefix + paymentMethodId.substring("_NEW_CREDIT_CARD_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
@@ -1489,18 +1570,17 @@ public class CheckOutEvents {
                     // SCIPIO: NOTE: Unlike stock code elsewhere, here we assume the _NEW_ is accompanied with
                     // other inline stuff already (not delayed to another screen)
                     serviceName = "createCreditCardAndAddress";
-                    paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                    paramValidators = UtilMisc.toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                                     "createCreditCard"),
                             getPostalAddressValidator(request)
                             );
                     overrideParams.put("contactMechId", null);
                 } else {
                     serviceName = "createCreditCard";
-                    paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
-                            "createCreditCard")
-                            );
+                    paramValidators = UtilMisc.toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
+                            "createCreditCard"));
                 }
             } else {
                 // TODO: Localize
@@ -1515,24 +1595,22 @@ public class CheckOutEvents {
                 result.put("origPaymentMethodId", origPaymentMethodId);
                 return result;
             }
-            
+
             paramPrefix = eftParamPrefix + paymentMethodId.substring("_NEW_EFT_ACCOUNT_".length());
             String addrContactMechId = getRequestAttribOrParam(request, paramPrefix + "contactMechId");
             if (UtilValidate.isNotEmpty(addrContactMechId)) {
                 if ("_NEW_".equals(addrContactMechId)) {
                     serviceName = "createEftAccountAndAddress";
-                    paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
+                    paramValidators = UtilMisc.toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
                                     "createEftAccount"),
-                            getPostalAddressValidator(request)
-                            );
+                            getPostalAddressValidator(request));
                     overrideParams.put("contactMechId", null);
                 } else {
                     serviceName = "createEftAccount";
-                    paramValidators = UtilMisc.<MapProcessor>toList(
-                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml", 
-                            "createEftAccount")
-                            );
+                    paramValidators = UtilMisc.toList(
+                            SimpleMapProcessorProcessor.getInstance(request, "component://accounting/script/org/ofbiz/accounting/payment/PaymentMapProcs.xml",
+                            "createEftAccount"));
                 }
             } else {
                 // TODO: Localize
@@ -1545,55 +1623,55 @@ public class CheckOutEvents {
             result.put("origPaymentMethodId", origPaymentMethodId);
             return result;
         }
-        
+
         Map<String, Object> servResult = runServiceFromParams(request, paramPrefix, serviceName, overrideParams, paramValidators);
-        
+
         if (!ServiceUtil.isSuccess(servResult)) {
             Debug.logInfo("Could not create new pay method during checkout: " + ServiceUtil.getErrorMessage(servResult), module);
             return servResult;
         } else {
             paymentMethodId = (String) servResult.get("paymentMethodId");
         }
-        
+
         // UPDATED: If we successfully created a pay method during this request, set a map in request attributes
         // that maps the _NEW_xxxx to the new ID. Screens may need this to work around lack of global event transactions and param preselection issues.
         saveToNewPaymentMethodIdMap(request, origPaymentMethodId, paymentMethodId);
-        
+
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("paymentMethodId", paymentMethodId);
         result.put("origPaymentMethodId", origPaymentMethodId);
         result.put("paramPrefix", paramPrefix);
         return result;
     }
-    
+
     static void saveToNewPaymentMethodIdMap(HttpServletRequest request, String origId, String paymentMethodId)  {
         Map<String, Object> newPaymentMethodInfoMap = UtilGenerics.checkMap(request.getAttribute("newPaymentMethodIdMap"));
         if (newPaymentMethodInfoMap == null) {
-            newPaymentMethodInfoMap = new HashMap<String, Object>();
+            newPaymentMethodInfoMap = new HashMap<>();
         }
-        Map<String, Object> info = new HashMap<String, Object>();
+        Map<String, Object> info = new HashMap<>();
         info.put("paymentMethodId", paymentMethodId);
         newPaymentMethodInfoMap.put(origId, info);
         request.setAttribute("newPaymentMethodInfoMap", newPaymentMethodInfoMap);
-        
+
     }
 
     public static MapProcessor getPostalAddressValidator(HttpServletRequest request) {
-        return SimpleMapProcessorProcessor.getInstance(request, "component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml", 
+        return SimpleMapProcessorProcessor.getInstance(request, "component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml",
                 "postalAddress");
     }
-    
-    
+
+
     /**
      * SCIPIO: Service invocation helper; uses combine req attribs + params.
      * <p>
      * NOTE: This checks request attribs before request parameters so that other events may influence.
      */
-    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramPrefix, 
+    public static Map<String, Object> runServiceFromParams(HttpServletRequest request, String paramPrefix,
             String serviceName, Map<String, Object> overrideParams, Collection<MapProcessor> paramValidators) throws GeneralException {
-        
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        
+
         Map<String, Object> combinedMap = UtilHttp.getCombinedMap(request);
         Map<String, Object> context;
         if (paramPrefix.isEmpty()) {
@@ -1618,7 +1696,7 @@ public class CheckOutEvents {
         servCtx.put("locale", combinedMap.get("locale"));
         return dispatcher.runSync(serviceName, servCtx);
     }
-    
+
     /**
      * SCIPIO: Local util to get request attrib or param of same name. If request attrib is null, falls back
      * to params.
@@ -1634,7 +1712,7 @@ public class CheckOutEvents {
                 res = (String) resObj;
             } else {
                 res = resObj.toString();
-                Debug.logWarning("Scipio: WARNING: Reading non-string request attribute '" + name + 
+                Debug.logWarning("Scipio: WARNING: Reading non-string request attribute '" + name +
                         "' as string (value: '" + res + "')", module);
             }
         } else {
@@ -1642,7 +1720,7 @@ public class CheckOutEvents {
         }
         return res;
     }
-    
+
     static String getRequestAttribOrParamPrefix(HttpServletRequest request, String name) {
         if (name == null || name.isEmpty()) {
             return "";
@@ -1653,26 +1731,26 @@ public class CheckOutEvents {
         }
         return res;
     }
-    
+
     // SCIPIO: Alternative pattern meant for integration with setCheckoutError; not yet needed.
 //    /**
-//     * SCIPIO: This creates a note in the request of the type of error we ran into. 
+//     * SCIPIO: This creates a note in the request of the type of error we ran into.
 //     */
 //    static void registerCheckoutError(HttpServletRequest request, String errorType) {
 //        List<String> errors = getCheckoutErrors(request);
 //        errors.add(errorType);
 //        request.setAttribute("checkoutErrors", errors);
 //    }
-//    
+//
 //    /**
 //     * SCIPIO: Gets a list of checkout error types recorded during the request so far.
 //     */
 //    static List<String> getCheckoutErrors(HttpServletRequest request) {
 //        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));
 //        if (errors == null) {
-//            errors = new LinkedList<String>();
+//            errors = new ArrayList<>();
 //        }
 //        return errors;
 //    }
-    
+
 }

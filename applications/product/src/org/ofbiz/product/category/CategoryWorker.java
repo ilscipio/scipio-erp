@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -57,19 +56,20 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * CategoryWorker - Worker class to reduce code in JSPs.
  */
-public class CategoryWorker {
+public final class CategoryWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private CategoryWorker() {
-    }
+    public static final List<String> TOP_TRAIL = UtilMisc.unmodifiableArrayList("TOP"); // SCIPIO
+
+    private CategoryWorker () {}
 
     /**
      * Gets catalog top category.
      * <p>
      * SCIPIO: NOTE (2017-08-15): This stock method relies entirely on the session attribute and request parameter
      * <code>CATALOG_TOP_CATEGORY</code>; in stock ofbiz, it was intended to be used in backend.
-     * For store implementations, the method that you most likely want 
+     * For store implementations, the method that you most likely want
      * is {@link org.ofbiz.product.catalog.CatalogWorker#getCatalogTopCategoryId}.
      */
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
@@ -93,8 +93,7 @@ public class CategoryWorker {
             topCatName = "CATALOG1";
 
         if (!fromSession) {
-            if (Debug.infoOn())
-                Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName, module);
+            if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName, module);
             httpRequest.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
         }
         return topCatName;
@@ -107,11 +106,10 @@ public class CategoryWorker {
         try {
             Collection<GenericValue> allCategories = EntityQuery.use(delegator).from("ProductCategory").queryList();
 
-            for (GenericValue curCat : allCategories) {
+            for (GenericValue curCat: allCategories) {
                 Collection<GenericValue> parentCats = curCat.getRelated("CurrentProductCategoryRollup", null, null, true);
 
-                if (parentCats.isEmpty())
-                    results.add(curCat);
+                if (parentCats.isEmpty()) results.add(curCat);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -123,13 +121,12 @@ public class CategoryWorker {
         Map<String, Object> requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
         String requestId = null;
 
-        requestId = UtilFormatOut.checkNull((String) requestParameters.get("catalog_id"), (String) requestParameters.get("CATALOG_ID"),
-                (String) requestParameters.get("category_id"), (String) requestParameters.get("CATEGORY_ID"));
+        requestId = UtilFormatOut.checkNull((String)requestParameters.get("catalog_id"), (String)requestParameters.get("CATALOG_ID"),
+                (String)requestParameters.get("category_id"), (String)requestParameters.get("CATEGORY_ID"));
 
         if (requestId.equals(""))
             return;
-        if (Debug.infoOn())
-            Debug.logInfo("[CategoryWorker.getRelatedCategories] RequestID: " + requestId, module);
+        if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getRelatedCategories] RequestID: " + requestId, module);
         getRelatedCategories(request, attributeName, requestId, limitView);
     }
 
@@ -140,38 +137,32 @@ public class CategoryWorker {
     public static void getRelatedCategories(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty) {
         List<GenericValue> categories = getRelatedCategoriesRet(request, attributeName, parentId, limitView, excludeEmpty);
 
-        if (!categories.isEmpty())
-            request.setAttribute(attributeName, categories);
+        if (!categories.isEmpty())  request.setAttribute(attributeName, categories);
     }
 
     public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView) {
         return getRelatedCategoriesRet(request, attributeName, parentId, limitView, false);
     }
 
-    public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView,
-            boolean excludeEmpty) {
+    public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty) {
         return getRelatedCategoriesRet(request, attributeName, parentId, limitView, excludeEmpty, false);
     }
 
-    public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView,
-            boolean excludeEmpty, boolean recursive) {
+    public static List<GenericValue> getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty, boolean recursive) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         return getRelatedCategoriesRet(delegator, attributeName, parentId, limitView, excludeEmpty, recursive);
     }
 
-    public static List<GenericValue> getRelatedCategoriesRet(Delegator delegator, String attributeName, String parentId, boolean limitView,
-            boolean excludeEmpty, boolean recursive) {
+    public static List<GenericValue> getRelatedCategoriesRet(Delegator delegator, String attributeName, String parentId, boolean limitView, boolean excludeEmpty, boolean recursive) {
         List<GenericValue> categories = new LinkedList<GenericValue>();
 
-        if (Debug.verboseOn())
-            Debug.logVerbose("[CategoryWorker.getRelatedCategories] ParentID: " + parentId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[CategoryWorker.getRelatedCategories] ParentID: " + parentId, module);
 
         List<GenericValue> rollups = null;
 
         try {
-            rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", parentId).orderBy("sequenceNum").cache(true)
-                    .queryList();
+            rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", parentId).orderBy("sequenceNum").cache(true).queryList();
             if (limitView) {
                 rollups = EntityUtil.filterByDate(rollups, true);
             }
@@ -179,10 +170,7 @@ public class CategoryWorker {
             Debug.logWarning(e.getMessage(), module);
         }
         if (rollups != null) {
-            // Debug.logInfo("Rollup size: " + rollups.size(), module);
-            for (GenericValue parent : rollups) {
-                // Debug.logInfo("Adding child of: " +
-                // parent.getString("parentProductCategoryId"), module);
+            for (GenericValue parent: rollups) {
                 GenericValue cv = null;
 
                 try {
@@ -193,20 +181,15 @@ public class CategoryWorker {
                 if (cv != null) {
                     if (excludeEmpty) {
                         if (!isCategoryEmpty(cv)) {
-                            // Debug.logInfo("Child : " +
-                            // cv.getString("productCategoryId") + " is not
-                            // empty.", module);
                             categories.add(cv);
                             if (recursive) {
-                                categories.addAll(getRelatedCategoriesRet(delegator, attributeName, cv.getString("productCategoryId"), limitView, excludeEmpty,
-                                        recursive));
+                                categories.addAll(getRelatedCategoriesRet(delegator, attributeName, cv.getString("productCategoryId"), limitView, excludeEmpty, recursive));
                             }
                         }
                     } else {
                         categories.add(cv);
                         if (recursive) {
-                            categories.addAll(
-                                    getRelatedCategoriesRet(delegator, attributeName, cv.getString("productCategoryId"), limitView, excludeEmpty, recursive));
+                            categories.addAll(getRelatedCategoriesRet(delegator, attributeName, cv.getString("productCategoryId"), limitView, excludeEmpty, recursive));
                         }
                     }
                 }
@@ -218,16 +201,12 @@ public class CategoryWorker {
     public static boolean isCategoryEmpty(GenericValue category) {
         boolean empty = true;
         long members = categoryMemberCount(category);
-        // Debug.logInfo("Category : " + category.get("productCategoryId") + "
-        // has " + members + " members", module);
         if (members > 0) {
             empty = false;
         }
 
         if (empty) {
             long rollups = categoryRollupCount(category);
-            // Debug.logInfo("Category : " + category.get("productCategoryId") +
-            // " has " + rollups + " rollups", module);
             if (rollups > 0) {
                 empty = false;
             }
@@ -237,8 +216,7 @@ public class CategoryWorker {
     }
 
     public static long categoryMemberCount(GenericValue category) {
-        if (category == null)
-            return 0;
+        if (category == null) return 0;
         Delegator delegator = category.getDelegator();
         long count = 0;
         try {
@@ -250,19 +228,18 @@ public class CategoryWorker {
     }
 
     public static long categoryRollupCount(GenericValue category) {
-        if (category == null)
-            return 0;
+        if (category == null) return 0;
         Delegator delegator = category.getDelegator();
         long count = 0;
         try {
-            count = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", category.getString("productCategoryId"))
-                    .queryCount();
+            count = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", category.getString("productCategoryId")).queryCount();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
         return count;
     }
 
+    @SuppressWarnings("unused")
     private static EntityCondition buildCountCondition(String fieldName, String fieldValue) {
         List<EntityCondition> orCondList = new LinkedList<EntityCondition>();
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
@@ -285,11 +262,9 @@ public class CategoryWorker {
     }
 
     public static void setTrail(ServletRequest request, String currentCategory, String previousCategory) {
-        if (Debug.verboseOn())
-            Debug.logVerbose("[CategoryWorker.setTrail] Start: previousCategory=" + previousCategory + " currentCategory=" + currentCategory, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[CategoryWorker.setTrail] Start: previousCategory=" + previousCategory + " currentCategory=" + currentCategory, module);
 
-        // if there is no current category, just return and do nothing to that
-        // the last settings will stay
+        // if there is no current category, just return and do nothing to that the last settings will stay
         if (UtilValidate.isEmpty(currentCategory)) {
             return;
         }
@@ -300,81 +275,70 @@ public class CategoryWorker {
         setTrail(request, crumb);
     }
 
+    /**
+     * Adjust the category trail.
+     * <p>
+     * SCIPIO: NOTE: This method performs a copy of the trail, it does not try to modify it in-place.
+     */
     public static List<String> adjustTrail(List<String> origTrail, String currentCategoryId, String previousCategoryId) {
-        List<String> trail = new LinkedList<String>();
+        List<String> trail = new ArrayList<>();
         if (origTrail != null) {
             trail.addAll(origTrail);
         }
 
-        // if no previous category was specified, check to see if
-        // currentCategory is in the list
+        // if no previous category was specified, check to see if currentCategory is in the list
         if (UtilValidate.isEmpty(previousCategoryId)) {
             if (trail.contains(currentCategoryId)) {
-                // if cur category is in crumb, remove everything after it and
-                // return
+                // if cur category is in crumb, remove everything after it and return
                 int cindex = trail.lastIndexOf(currentCategoryId);
 
                 if (cindex < (trail.size() - 1)) {
                     for (int i = trail.size() - 1; i > cindex; i--) {
                         trail.remove(i);
-                        // FIXME can be removed ?
-                        // String deadCat = trail.remove(i);
-                        // if (Debug.infoOn())
-                        // Debug.logInfo("[CategoryWorker.setTrail] Removed
-                        // after current category index: " + i + " catname: " +
-                        // deadCat, module);
                     }
                 }
                 return trail;
             } else {
-                // current category is not in the list, and no previous category
-                // was specified, go back to the beginning
+                // current category is not in the list, and no previous category was specified, go back to the beginning
                 trail.clear();
                 trail.add("TOP");
                 if (UtilValidate.isNotEmpty(previousCategoryId)) {
                     trail.add(previousCategoryId);
                 }
-                // if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.setTrail]
-                // Starting new list, added TOP and previousCategory: " +
-                // previousCategoryId, module);
             }
         }
 
         if (!trail.contains(previousCategoryId)) {
             // previous category was NOT in the list, ERROR, start over
-            // if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.setTrail]
-            // previousCategory (" + previousCategoryId + ") was not in the
-            // crumb list, position is lost, starting over with TOP", module);
             trail.clear();
             trail.add("TOP");
             if (UtilValidate.isNotEmpty(previousCategoryId)) {
                 trail.add(previousCategoryId);
             }
         } else {
-            // remove all categories after the previous category, preparing for
-            // adding the current category
+            // remove all categories after the previous category, preparing for adding the current category
             int index = trail.indexOf(previousCategoryId);
             if (index < (trail.size() - 1)) {
                 for (int i = trail.size() - 1; i > index; i--) {
                     trail.remove(i);
-                    // FIXME can be removed ?
-                    // String deadCat = trail.remove(i);
-                    // if (Debug.infoOn())
-                    // Debug.logInfo("[CategoryWorker.setTrail] Removed after
-                    // current category index: " + i + " catname: " + deadCat,
-                    // module);
                 }
             }
         }
 
         // add the current category to the end of the list
         trail.add(currentCategoryId);
-        if (Debug.verboseOn())
-            Debug.logVerbose("[CategoryWorker.setTrail] Continuing list: Added currentCategory: " + currentCategoryId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[CategoryWorker.setTrail] Continuing list: Added currentCategory: " + currentCategoryId, module);
 
         return trail;
     }
 
+    /**
+     * Gets the breadcrumb trail.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-28: The returned list is now unmodifiable (make copy, as {@link #adjustTrail(List, String, String)} already does).
+     * <p>
+     * SCIPIO: NOTE: 2018-11-28: This no longer uses LinkedList.
+     */
     public static List<String> getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         // SCIPIO: 2016-13-22: Trail must also be checked in request attributes to ensure the request is consistent
@@ -387,13 +351,21 @@ public class CategoryWorker {
     }
     
     /**
+     * SCIPIO: Version that returns a modifiable copy of the trail (or null no trail).
+     */
+    public static List<String> getTrailCopy(ServletRequest request) {
+        List<String> crumb = getTrail(request);
+        return (crumb != null) ? new ArrayList<>(crumb) : null;
+    }
+
+    /**
      * SCIPIO: Version that returns a copy of the trail without the TOP category.
      */
     public static List<String> getTrailNoTop(ServletRequest request) {
         List<String> fullTrail = getTrail(request);
         List<String> res = null;
         if (fullTrail != null) {
-            res = new ArrayList<String>(fullTrail.size());
+            res = new ArrayList<>(fullTrail.size());
             Iterator<String> it = fullTrail.iterator();
             while (it.hasNext()) {
                 String next = it.next(); // check first
@@ -403,17 +375,22 @@ public class CategoryWorker {
             }
         }
         return res;
-    }    
+    }
 
     /**
      * Sets breadcrumbs trail to the exact given value.
      * <p>
      * SCIPIO: This is modified to accept a onlyIfNewInRequest boolean that will check to see
-     * if a breadcrumb was already set in the request. Default is false. 
+     * if a breadcrumb was already set in the request. Default is false.
      * This is needed in some places to prevent squashing breadcrumbs set in servlets and filters.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb, boolean onlyIfNewInRequest) {
         HttpSession session = ((HttpServletRequest) request).getSession();
+        // SCIPIO: 2018-11-28: Trail must never be modified in-place (thread safety)
+        if (crumb instanceof ArrayList || crumb instanceof LinkedList) {
+            crumb = Collections.unmodifiableList(crumb);
+        }
+        
         if (onlyIfNewInRequest) {
             // SCIPIO: Check if was already set
             if (request.getAttribute("_BREAD_CRUMB_TRAIL_") == null) {
@@ -421,8 +398,7 @@ public class CategoryWorker {
                 // SCIPIO: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
                 request.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
             }
-        }
-        else {
+        } else {
             // SCIPIO: stock case
             session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
             // SCIPIO: 2016-13-22: Trail must also be set in request attributes to ensure the request is consistent
@@ -430,20 +406,28 @@ public class CategoryWorker {
         }
         return crumb;
     }
-    
+
     /**
      * Sets breadcrumbs trail to the exact given value.
      */
     public static List<String> setTrail(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, false);
     }
-    
+
     /**
      * SCIPIO: Sets breadcrumbs trail to the exact given value but only if not yet set during request.
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
-    } 
+    }
+
+    /**
+     * SCIPIO: Resets the breadcrumb to the "TOP".
+     * Added 2019-01.
+     */
+    public static List<String> resetTrail(ServletRequest request) {
+        return setTrail(request, TOP_TRAIL, false);
+    }
 
     public static boolean checkTrailItem(ServletRequest request, String category) {
         List<String> crumb = getTrail(request);
@@ -466,22 +450,21 @@ public class CategoryWorker {
     }
 
     public static boolean isProductInCategory(Delegator delegator, String productId, String productCategoryId) throws GenericEntityException {
-        if (productCategoryId == null)
-            return false;
-        if (UtilValidate.isEmpty(productId))
-            return false;
+        if (productCategoryId == null) return false;
+        if (UtilValidate.isEmpty(productId)) return false;
 
         List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
-                .where("productCategoryId", productCategoryId, "productId", productId).cache(true).filterByDate().queryList();
+                .where("productCategoryId", productCategoryId, "productId", productId)
+                .cache(true)
+                .filterByDate()
+                .queryList();
         if (UtilValidate.isEmpty(productCategoryMembers)) {
-            // before giving up see if this is a variant product, and if so look
-            // up the virtual product and check it...
+            //before giving up see if this is a variant product, and if so look up the virtual product and check it...
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
             List<GenericValue> productAssocs = ProductWorker.getVariantVirtualAssocs(product);
-            // this does take into account that a product could be a variant of
-            // multiple products, but this shouldn't ever really happen...
+            //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
             if (productAssocs != null) {
-                for (GenericValue productAssoc : productAssocs) {
+                for (GenericValue productAssoc: productAssocs) {
                     if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId)) {
                         return true;
                     }
@@ -494,21 +477,17 @@ public class CategoryWorker {
         }
     }
 
-    public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId)
-            throws GenericEntityException {
+    public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId) throws GenericEntityException {
         return filterProductsInCategory(delegator, valueObjects, productCategoryId, "productId");
     }
 
-    public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId,
-            String productIdFieldName) throws GenericEntityException {
+    public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId, String productIdFieldName) throws GenericEntityException {
         List<GenericValue> newList = new LinkedList<GenericValue>();
 
-        if (productCategoryId == null)
-            return newList;
-        if (valueObjects == null)
-            return null;
+        if (productCategoryId == null) return newList;
+        if (valueObjects == null) return null;
 
-        for (GenericValue curValue : valueObjects) {
+        for (GenericValue curValue: valueObjects) {
             String productId = curValue.getString(productIdFieldName);
             if (isProductInCategory(delegator, productId, productCategoryId)) {
                 newList.add(curValue);
@@ -517,47 +496,40 @@ public class CategoryWorker {
         return newList;
     }
 
-    public static void getCategoryContentWrappers(Map<String, CategoryContentWrapper> catContentWrappers, List<GenericValue> categoryList,
-            HttpServletRequest request) throws GenericEntityException {
+    public static void getCategoryContentWrappers(Map<String, CategoryContentWrapper> catContentWrappers, List<GenericValue> categoryList, HttpServletRequest request) throws GenericEntityException {
         if (catContentWrappers == null || categoryList == null) {
             return;
         }
-        for (GenericValue cat : categoryList) {
+        for (GenericValue cat: categoryList) {
             String productCategoryId = (String) cat.get("productCategoryId");
 
             if (catContentWrappers.containsKey(productCategoryId)) {
-                // if this ID is already in the Map, skip it (avoids
-                // inefficiency, infinite recursion, etc.)
+                // if this ID is already in the Map, skip it (avoids inefficiency, infinite recursion, etc.)
                 continue;
             }
 
             CategoryContentWrapper catContentWrapper = new CategoryContentWrapper(cat, request);
             catContentWrappers.put(productCategoryId, catContentWrapper);
             List<GenericValue> subCat = getRelatedCategoriesRet(request, "subCatList", productCategoryId, true);
-            if (subCat != null) {
-                getCategoryContentWrappers(catContentWrappers, subCat, request);
-            }
+            getCategoryContentWrappers(catContentWrappers, subCat, request);
         }
     }
 
     /**
-     * Returns a complete category trail - can be used for exporting proper
-     * category trees. This is mostly useful when used in combination with
-     * bread-crumbs, for building a faceted index tree, or to export a category
-     * tree for migration to another system. Will create the tree from root
-     * point to categoryId.
-     * 
-     * This method is not meant to be run on every request. Its best use is to
-     * generate the trail every so often and store somewhere (a lucene/solr
-     * tree, entities, cache or so).
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
+     * Returns a complete category trail - can be used for exporting proper category trees. 
+     * This is mostly useful when used in combination with bread-crumbs,  for building a 
+     * faceted index tree, or to export a category tree for migration to another system.
+     * Will create the tree from root point to categoryId.
+     *
+     * This method is not meant to be run on every request.
+     * Its best use is to generate the trail every so often and store somewhere 
+     * (a lucene/solr tree, entities, cache or so). 
+     *
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
      * @return Map organized trail from root point to categoryId.
      */
-    public static Map getCategoryTrail(DispatchContext dctx, Map context) {
+    public static Map<String, Object> getCategoryTrail(DispatchContext dctx, Map<String, ?> context) {
         String productCategoryId = (String) context.get("productCategoryId");
         Map<String, Object> results = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -570,10 +542,9 @@ public class CategoryWorker {
                 List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum")
-                        .filterByDate().cache(true).queryList();
+                        .filterByDate().cache(true).queryList(); // SCIPIO: moved filterByDate into EntityQuery 
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                    // add only categories that belong to the top category to
-                    // trail
+                    // add only categories that belong to the top category to trail
                     for (GenericValue productCategoryRollup : productCategoryRollups) {
                         String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
                         parentProductCategoryId = trailCategoryId;
@@ -605,7 +576,7 @@ public class CategoryWorker {
      */
     public static boolean isCategoryChildOf(Delegator delegator, LocalDispatcher dispatcher, String parentProductCategoryId, String productCategoryId) {
         try {
-            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
+            List<EntityCondition> rolllupConds = new ArrayList<>();
             rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
@@ -615,17 +586,17 @@ public class CategoryWorker {
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryChildOf(ServletRequest request, String parentProductCategoryId, String productCategoryId) {
-        return isCategoryChildOf((Delegator) request.getAttribute("delegator"), (LocalDispatcher) request.getAttribute("dispatcher"), 
+        return isCategoryChildOf((Delegator) request.getAttribute("delegator"), (LocalDispatcher) request.getAttribute("dispatcher"),
                 parentProductCategoryId, productCategoryId);
-    }    
-    
+    }
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
@@ -636,26 +607,26 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
-            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
+            List<EntityCondition> rollupConds = new ArrayList<>();
+            rollupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rollupConds).filterByDate().cache().queryList();
             return rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
         return false; // can't tell, return false to play it safe
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryTop(ServletRequest request, String productCategoryId) {
-        return isCategoryTop((Delegator) request.getAttribute("delegator"), 
+        return isCategoryTop((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId);
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category ID is a top category.
      * <p>
@@ -666,7 +637,7 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> conds = new LinkedList<EntityCondition>();
+            List<EntityCondition> conds = new ArrayList<>();
             conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             conds.add(EntityCondition.makeCondition("productId", productId));
             List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
@@ -677,23 +648,23 @@ public class CategoryWorker {
         }
         return false; // can't tell, return false to play it safe
     }
-    
+
     /**
      * SCIPIO: Returns true only if the category contains the product, NON-recursive.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryContainsProduct(ServletRequest request, String productCategoryId, String productId) {
-        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"), 
+        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId, productId);
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * SCIPIO: Returns a valid category path/trail (as parts) from the given trail,
-     * starting with the top category (but without the fake "TOP" category). 
+     * starting with the top category (but without the fake "TOP" category).
      * If none could be determined, returns null.
      * <p>
      * In some circumstances, getTrailNoTop alone could work, but we need a method that guarantees
@@ -722,20 +693,20 @@ public class CategoryWorker {
         }
         /* TODO: should validate the path here
         if (path != null) {
-            
+
         }*/
         return path;
     }
-    
+
     /**
      * SCIPIO: Returns a valid category path/trail (as parts) from the current request trail in session,
-     * starting with the top category (but without the fake "TOP" category). 
+     * starting with the top category (but without the fake "TOP" category).
      * If none could be determined, returns null.
      */
     public static List<String> getCategoryPathFromTrailAsList(ServletRequest request) {
         return getCategoryPathFromTrailAsList(request, getTrail(request));
     }
-    
+
     /**
      * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
@@ -757,17 +728,17 @@ public class CategoryWorker {
         }
         return null;
     }
-    
-    
+
+
     /**
      * SCIPIO: Checks the given trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
      */
     public static String getTopCategoryFromTrail(ServletRequest request, List<String> trail) {
-        return getTopCategoryFromTrail((Delegator) request.getAttribute("delegator"), 
+        return getTopCategoryFromTrail((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), trail);
     }
-    
+
     /**
      * SCIPIO: Checks the current trail for the last recorded top category ID, if any.
      * This can be the catalog top category or a different one.
@@ -775,8 +746,8 @@ public class CategoryWorker {
     public static String getTopCategoryFromTrail(ServletRequest request) {
         return getTopCategoryFromTrail(request, getTrail(request));
     }
-    
-    
+
+
     /**
      * SCIPIO: Attempts to determine a suitable category for the given product from given trail.
      */
@@ -792,15 +763,15 @@ public class CategoryWorker {
             }
         }
         return null;
-    }   
-    
+    }
+
     /**
      * SCIPIO: Attempts to determine a suitable category for the given product from the trail in session.
      */
     public static String getCategoryForProductFromTrail(ServletRequest request, String productId) {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));
     }
-    
+
     /**
      * SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views,
      * where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any)
@@ -815,7 +786,7 @@ public class CategoryWorker {
     public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
             String productCategoryId, Collection<String> prodCatContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
         Map<String, List<GenericValue>> fieldMap = new HashMap<>();
-        
+
         List<EntityCondition> typeIdCondList = new ArrayList<>(prodCatContentTypeIdList.size());
         if (prodCatContentTypeIdList != null) {
             for(String prodCatContentTypeId : prodCatContentTypeIdList) {
@@ -828,7 +799,7 @@ public class CategoryWorker {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-        
+
         EntityQuery query = EntityQuery.use(delegator).from("ProductCategoryContentAndElectronicText")
                 .where(condList).orderBy("-fromDate").cache(useCache);
         if (filterByDate != null) {
@@ -844,7 +815,7 @@ public class CategoryWorker {
                 continue;
             }
             String contentIdStart = prodCatContent.getString("contentId");
-            
+
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
@@ -860,11 +831,11 @@ public class CategoryWorker {
             valueList.addAll(contentAssocList);
             fieldMap.put(prodCatContentTypeId, valueList);
         }
-        
+
         return fieldMap;
     }
 
-    
+
     /**
      * SCIPIO: Returns all rollups for a category.
      * Imported from SolrCategoryUtil, 2017-11-09.
@@ -897,13 +868,13 @@ public class CategoryWorker {
         }
         return trailElements;
     }
-    
+
     /**
      * SCIPIO: Returns all rollups for a category that have the given top categories.
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
      * Added 2017-11-09.
      */
-    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Collection<String> topCategoryIds, boolean useCache) {
         List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
         if (topCategoryIds == null) return trails;
         List<List<String>> filtered = new ArrayList<>(trails.size());

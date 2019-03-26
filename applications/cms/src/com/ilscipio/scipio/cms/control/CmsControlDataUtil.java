@@ -15,7 +15,7 @@ import com.ilscipio.scipio.cms.data.CmsDataObject;
 public abstract class CmsControlDataUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Names of all Cms mapping-related entities.
      * <p>
@@ -27,10 +27,10 @@ public abstract class CmsControlDataUtil {
             "CmsProcessViewMapping", "CmsProcessMapping", "CmsViewMapping" })));
 
     private CmsControlDataUtil() {}
-   
+
     public static int deleteAllMappingRecords(Delegator delegator, boolean includePrimary) throws CmsException {
         int rowsAffected = 0;
-        
+
         try {
             if (includePrimary) {
                 for(String entityName : cmsMappingEntities) {
@@ -45,24 +45,24 @@ public abstract class CmsControlDataUtil {
         catch(GenericEntityException e) {
             throw new CmsException(e);
         }
-        
+
         return rowsAffected;
     }
-    
+
     public static int deleteWebSiteMappingRecords(Delegator delegator, String webSiteId, boolean includePrimary) throws CmsException {
         // These remove operations automatically remove no-longer-needed CmsPage and related values intelligently
         int rowsAffected = 0;
-        
+
         if (includePrimary) {
             rowsAffected += CmsDataObject.removeAll(CmsViewMapping.getWorker().findByWebSiteId(delegator, webSiteId, false));
             rowsAffected += CmsDataObject.removeAll(CmsProcessMapping.getWorker().findByWebSiteId(delegator, webSiteId, false));
         } else {
             rowsAffected += CmsDataObject.removeAll(CmsViewMapping.getWorker().findByWebSiteId(delegator, webSiteId, false));
             rowsAffected += CmsDataObject.removeAll(
-                    CmsProcessMapping.getWorker().findAll(delegator, UtilMisc.toMap("sourceWebSiteId", webSiteId, "primaryForPageId", null), 
+                    CmsProcessMapping.getWorker().findAll(delegator, UtilMisc.toMap("sourceWebSiteId", webSiteId, "primaryForPageId", null),
                             null, false));
         }
-        
+
         return rowsAffected;
     }
 }

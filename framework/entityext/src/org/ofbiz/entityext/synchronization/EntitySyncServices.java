@@ -240,14 +240,14 @@ public class EntitySyncServices {
             }
 
             Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.put("toCreateInserted", Long.valueOf(toCreateInserted));
-            result.put("toCreateUpdated", Long.valueOf(toCreateUpdated));
-            result.put("toCreateNotUpdated", Long.valueOf(toCreateNotUpdated));
-            result.put("toStoreInserted", Long.valueOf(toStoreInserted));
-            result.put("toStoreUpdated", Long.valueOf(toStoreUpdated));
-            result.put("toStoreNotUpdated", Long.valueOf(toStoreNotUpdated));
-            result.put("toRemoveDeleted", Long.valueOf(toRemoveDeleted));
-            result.put("toRemoveAlreadyDeleted", Long.valueOf(toRemoveAlreadyDeleted));
+            result.put("toCreateInserted", toCreateInserted);
+            result.put("toCreateUpdated", toCreateUpdated);
+            result.put("toCreateNotUpdated", toCreateNotUpdated);
+            result.put("toStoreInserted", toStoreInserted);
+            result.put("toStoreUpdated", toStoreUpdated);
+            result.put("toStoreNotUpdated", toStoreNotUpdated);
+            result.put("toRemoveDeleted", toRemoveDeleted);
+            result.put("toRemoveAlreadyDeleted", toRemoveAlreadyDeleted);
             if (Debug.infoOn()) Debug.logInfo("Finisching storeEntitySyncData (" + entitySyncId + ") - [" + keysToRemove.size() + "] to remove. Actually removed: " + toRemoveDeleted  + " already removed: " + toRemoveAlreadyDeleted, module);
             return result;
         } catch (GenericEntityException e) {
@@ -317,9 +317,9 @@ public class EntitySyncServices {
                     // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
 
                     // anything to store locally?
-                    if (startDate != null && (!UtilValidate.isEmpty(result.get("valuesToCreate")) ||
-                            !UtilValidate.isEmpty(result.get("valuesToStore")) ||
-                            !UtilValidate.isEmpty(result.get("keysToRemove")))) {
+                    if (startDate != null && (UtilValidate.isNotEmpty(result.get("valuesToCreate")) ||
+                            UtilValidate.isNotEmpty(result.get("valuesToStore")) ||
+                            UtilValidate.isNotEmpty(result.get("keysToRemove")))) {
 
                         // yep, we got more data
                         gotMoreData = true;
@@ -571,6 +571,8 @@ public class EntitySyncServices {
                         }
 
                         // TODO create a response document to send back to the initial sync machine
+                    } catch (GenericServiceException gse) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtUnableToLoadXMLDocument", UtilMisc.toMap("entitySyncId", entitySyncId, "startTime", startTime, "errorString", gse.getMessage()), locale));
                     } catch (Exception e) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtUnableToLoadXMLDocument", UtilMisc.toMap("entitySyncId", entitySyncId, "startTime", startTime, "errorString", e.getMessage()), locale));
                     }
@@ -607,7 +609,7 @@ public class EntitySyncServices {
             for (GenericValue entitySyncRemove: entitySyncRemoveList) {
                 Double curKrih = entitySyncRemove.getDouble("keepRemoveInfoHours");
                 if (curKrih != null) {
-                    double curKrihVal = curKrih.doubleValue();
+                    double curKrihVal = curKrih;
                     if (curKrihVal > keepRemoveInfoHours) {
                         keepRemoveInfoHours = curKrihVal;
                     }

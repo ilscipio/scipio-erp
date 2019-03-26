@@ -41,14 +41,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -59,8 +59,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 
 /**
  * Common Services
@@ -80,7 +80,8 @@ public class CommonEvents {
         "targetRequestUri",
         "_SERVER_ROOT_URL_",
         "_CONTROL_PATH_",
-        "thisRequestUri"
+        "thisRequestUri",
+        "org.apache.tomcat.util.net.secure_protocol_version"
     };
 
     private static final UtilCache<String, Map<String, String>> appletSessions = UtilCache.createUtilCache("AppletSessions", 0, 600000, true);
@@ -291,15 +292,15 @@ public class CommonEvents {
         }
         try {
             JSON json = JSON.from(attrMap);
-            writeJSONtoResponse(json, request.getMethod(), response);
-        } catch (Exception e) {
+            writeJSONtoResponse(json, request, response);
+        } catch (IOException e) {
             return "error";
         }
         return "success";
     }
-    
+
     /**
-     * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that will only output 
+     * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that will only output
      * attributes specifically requested in "scpOutParams" map or "scpOutAttrNames" list,
      * or the names otherwise listed in AjaxRequestUtil.
      * NOTE: this is important for security reasons.
@@ -308,34 +309,34 @@ public class CommonEvents {
         Map<String, Object> attrMap = ViewAsJsonUtil.collectRenderOutAttributes(request);
         try {
             JSON json = JSON.from(attrMap);
-            writeJSONtoResponse(json, request.getMethod(), response);
-        } catch (Exception e) {
+            writeJSONtoResponse(json, request, response);
+        } catch (IOException e) {
             return "error";
         }
         return "success";
     }
 
-    private static void writeJSONtoResponse(JSON json, String httpMethod, HttpServletResponse response) throws UnsupportedEncodingException {
+    private static void writeJSONtoResponse(JSON json, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         String jsonStr = json.toString();
-        if (jsonStr == null) {
-            Debug.logError("JSON Object was empty; fatal error!", module);
-            return;
-        }
+        String httpMethod = request.getMethod();
 
         // This was added for security reason (OFBIZ-5409), you might need to remove the "//" prefix when handling the JSON response
         // Though normally you simply have to access the data you want, so should not be annoyed by the "//" prefix
         if ("GET".equalsIgnoreCase(httpMethod)) {
-            Debug.logWarning("for security reason (OFBIZ-5409) the the '//' prefix was added handling the JSON response.  "
+            Debug.logWarning("for security reason (OFBIZ-5409) the '//' prefix was added handling the JSON response.  "
                     + "Normally you simply have to access the data you want, so should not be annoyed by the '//' prefix."
                     + "You might need to remove it if you use Ajax GET responses (not recommended)."
-                    + "In case, the util.js scrpt is there to help you", module);
-            jsonStr = "//" + jsonStr;
+                    + "In case, the util.js scrpt is there to help you."
+                    + "This can be customized in general.properties with the http.json.xssi.prefix property", module);
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            String xssiPrefix =EntityUtilProperties.getPropertyValue("general", "http.json.xssi.prefix", delegator);
+            jsonStr = xssiPrefix + jsonStr;
         }
 
-        // set the X-JSON content type
-        response.setContentType("application/x-json");
+        // set the JSON content type
+        response.setContentType("application/json");
         // jsonStr.length is not reliable for unicode characters
-        response.setContentLength(jsonStr.getBytes("UTF8").length);
+        response.setContentLength(jsonStr.getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()
 
         // return the JSON String
         Writer out;
@@ -362,13 +363,13 @@ public class CommonEvents {
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, List<String>> uiLabelMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> uiLabelMap = new HashMap<>();
         Set<Map.Entry<String, List<String>>> entrySet = uiLabelObject.entrySet();
         for (Map.Entry<String, List<String>> entry : entrySet) {
             String resource = entry.getKey();
             List<String> resourceKeys = entry.getValue();
             if (resourceKeys != null) {
-                List<String> labels = new ArrayList<String>(resourceKeys.size());
+                List<String> labels = new ArrayList<>(resourceKeys.size());
                 for (String resourceKey : resourceKeys) {
                     String label = UtilProperties.getMessage(resource, resourceKey, locale);
                     labels.add(label);
@@ -376,7 +377,7 @@ public class CommonEvents {
                 uiLabelMap.put(resource, labels);
             }
         }
-        writeJSONtoResponse(JSON.from(uiLabelMap), request.getMethod(), response);
+        writeJSONtoResponse(JSON.from(uiLabelMap), request, response);
         return "success";
     }
 
@@ -396,7 +397,7 @@ public class CommonEvents {
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, String> uiLabelMap = new HashMap<String, String>();
+        Map<String, String> uiLabelMap = new HashMap<>();
         Set<Map.Entry<String, String>> entrySet = uiLabelObject.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
             String resource = entry.getKey();
@@ -406,7 +407,7 @@ public class CommonEvents {
                 uiLabelMap.put(resource, label);
             }
         }
-        writeJSONtoResponse(JSON.from(uiLabelMap), request.getMethod(), response);
+        writeJSONtoResponse(JSON.from(uiLabelMap), request, response);
         return "success";
     }
 
@@ -497,11 +498,11 @@ public class CommonEvents {
             HttpSession session = request.getSession();
             Map<String, String> captchaCodeMap = UtilGenerics.checkMap(session.getAttribute("_CAPTCHA_CODE_"));
             if (captchaCodeMap == null) {
-                captchaCodeMap = new HashMap<String, String>();
+                captchaCodeMap = new HashMap<>();
                 session.setAttribute("_CAPTCHA_CODE_", captchaCodeMap);
             }
             captchaCodeMap.put(captchaCodeId, captchaCode);
-        } catch (Exception ioe) {
+        } catch (IOException | IllegalArgumentException | IllegalStateException ioe) {
             Debug.logError(ioe.getMessage(), module);
         }
         return "success";
@@ -512,8 +513,8 @@ public class CommonEvents {
      * The targetPage is re-saved in request attributes as "targetPage". targetPage must be a controller
      * request URI within current controller that supports direct (public) requests.
      * <p>
-     * Prepares a redirects to the controller URI named in the "targetPage" 
-     * request attribute or parameter, where parameter also supports "TARGET_PAGE". This is used if 
+     * Prepares a redirects to the controller URI named in the "targetPage"
+     * request attribute or parameter, where parameter also supports "TARGET_PAGE". This is used if
      * targetPageResponse is "redirect-target". In this case the result is "redirect".
      * <p>
      * If targetPageResponse is "forward-target", then it does a forward to targetPage, and result is "forward".
@@ -536,7 +537,7 @@ public class CommonEvents {
      * The event response "error" can point to another event which sets an error.
      */
     public static String processTargetPage(HttpServletRequest request, HttpServletResponse response) {
-        
+
         String targetPageResponse = (String) request.getAttribute("targetPageResponse");
         if (targetPageResponse == null) {
             targetPageResponse = request.getParameter("targetPageResponse");
@@ -564,7 +565,7 @@ public class CommonEvents {
                         }
                     }
                 }
-                
+
                 if (UtilValidate.isEmpty(targetPage)) {
                     Debug.logError("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module);
                     return "error";

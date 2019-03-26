@@ -10,7 +10,7 @@ import org.ofbiz.base.util.Debug;
 public class OfbizDebugMsgHandler implements MsgHandler {
 
     protected final String targetModule;
-    
+
     public OfbizDebugMsgHandler(String targetModule) {
         this.targetModule = targetModule;
     }

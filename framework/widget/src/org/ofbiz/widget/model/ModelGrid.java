@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 
 /**
  * Models the &lt;grid&gt; element.
- * 
+ *
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -38,14 +38,14 @@ public class ModelGrid extends ModelForm {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors. All behavior should be contained in model visitors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -76,12 +76,17 @@ public class ModelGrid extends ModelForm {
             } else if (!parentGrid.equals(gridElement.getAttribute("name"))) {
                 // try to find a grid definition in the same file
                 Element rootElement = gridElement.getOwnerDocument().getDocumentElement();
+                /* SCIPIO: More forgiving version
                 List<? extends Element> gridElements = UtilXml.childElementList(rootElement, "grid");
                 if (gridElements.isEmpty()) {
                     // Backwards compatibility - look for form definitions
                     gridElements = UtilXml.childElementList(rootElement, "form");
-                }
+                }*/
+                List<? extends Element> gridElements = UtilXml.childElementList(rootElement);
                 for (Element parentElement : gridElements) {
+                    if (!("grid".equals(parentElement.getTagName()) || "form".equals(parentElement.getTagName()))) { // SCIPIO
+                        continue;
+                    }
                     if (parentElement.getAttribute("name").equals(parentGrid)) {
                         parentModel = GridFactory.createModelGrid(parentElement, entityModelReader, dispatchContext,
                                 parentResource, parentGrid);
@@ -99,7 +104,7 @@ public class ModelGrid extends ModelForm {
     }
 
     @Override
-    public String getWidgetType() {
+    public String getWidgetType() { // SCIPIO
         return "grid";
     }
 }

@@ -40,7 +40,7 @@ public class ServiceGroupReader {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // using a cache is dangerous here because if someone clears it the groups won't work at all: public static UtilCache groupsCache = new UtilCache("service.ServiceGroups", 0, 0, false);
-    public static Map<String, GroupModel> groupsCache = new ConcurrentHashMap<String, GroupModel>();
+    private static final Map<String, GroupModel> groupsCache = new ConcurrentHashMap<>();
 
     public static void readConfig() {
         List<ServiceGroups> serviceGroupsList = null;
@@ -52,7 +52,7 @@ public class ServiceGroupReader {
             throw new RuntimeException(e.getMessage());
         }
         for (ServiceGroups serviceGroup : serviceGroupsList) {
-            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceGroup.getLoader(), serviceGroup.getLocation());
+            ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.getServiceEngineXmlFileName(), serviceGroup.getLoader(), serviceGroup.getLocation());
             addGroupDefinitions(handler);
         }
 
@@ -75,6 +75,10 @@ public class ServiceGroupReader {
 
         for (Element group: UtilXml.childElementList(rootElement, "group")) {
             String groupName = group.getAttribute("name");
+            if (groupName.isEmpty()) {
+                Debug.logError("XML Parsing error: <group> element 'name' attribute null or empty", module);
+                continue;
+            }
             groupsCache.put(groupName, new GroupModel(group));
             numDefs++;
         }

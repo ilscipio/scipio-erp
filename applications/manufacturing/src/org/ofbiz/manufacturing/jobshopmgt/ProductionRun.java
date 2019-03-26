@@ -20,6 +20,7 @@
 package org.ofbiz.manufacturing.jobshopmgt;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,11 +33,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
+import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ProductionRun Object used by the Jobshop management OFBiz components,
@@ -112,11 +116,13 @@ public class ProductionRun {
         return productionRun;
     }
     /**
-     * store  the modified ProductionRun object in the database.
-     *     <li>store the the productionRun header
-     *     <li> the productProduced related data
-     *     <li> the listRoutingTask related data
-     *     <li> the productComponent list related data
+     * Store the modified ProductionRun object in the database.
+     * <ul>
+     *     <li>store the the productionRun header</li>
+     *     <li> the productProduced related data</li>
+     *     <li> the listRoutingTask related data</li>
+     *     <li> the productComponent list related data</li>
+     * </ul>
      * @return true if success false otherwise
      **/
     public boolean store() {
@@ -204,7 +210,7 @@ public class ProductionRun {
         for (Iterator<GenericValue> iter = productionRunComponents.iterator(); iter.hasNext();) {
             GenericValue component = iter.next();
             componentQuantity = component.getBigDecimal("estimatedQuantity");
-            component.set("estimatedQuantity", componentQuantity.divide(previousQuantity, 10, BigDecimal.ROUND_HALF_UP).multiply(newQuantity).doubleValue());
+            component.set("estimatedQuantity", componentQuantity.divide(previousQuantity, 10, RoundingMode.HALF_UP).multiply(newQuantity).doubleValue());
         }
     }
     /**
@@ -244,10 +250,10 @@ public class ProductionRun {
         this.estimatedCompletionDate = estimatedCompletionDate;
     }
     /**
-     * recalculated  the estimatedCompletionDate property.
-     *     Use the quantity and the estimatedStartDate properties as entries parameters.
-     *     <br/>read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
-     *     <br/> no store in the database is done.
+     * Recalculate the estimatedCompletionDate property.
+     * Use the quantity and the estimatedStartDate properties as entries parameters.
+     * Read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
+     * No store in the database is done.
      * @param priority give the routingTask start point to recalculated
      * @return the estimatedCompletionDate calculated
      **/
@@ -278,7 +284,7 @@ public class ProductionRun {
      */
     public Timestamp recalculateEstimatedCompletionDate() {
         this.updateCompletionDate = false;
-        return recalculateEstimatedCompletionDate(Long.valueOf(0), estimatedStartDate);
+        return recalculateEstimatedCompletionDate(0L, estimatedStartDate);
     }
     /**
      * get the productionRunName property.
@@ -404,13 +410,13 @@ public class ProductionRun {
         double taskTime = 1;
         double totalTaskTime = 0;
         if (task.get("estimatedSetupMillis") != null) {
-            setupTime = task.getDouble("estimatedSetupMillis").doubleValue();
+            setupTime = task.getDouble("estimatedSetupMillis");
         }
         if (task.get("estimatedMilliSeconds") != null) {
-            taskTime = task.getDouble("estimatedMilliSeconds").doubleValue();
+            taskTime = task.getDouble("estimatedMilliSeconds");
         }
         totalTaskTime = (setupTime + taskTime * quantity.doubleValue());
-        // TODO
+        
         if (task.get("estimateCalcMethod") != null) {
             String serviceName = null;
             try {
@@ -421,10 +427,15 @@ public class ProductionRun {
                     // and put the value in totalTaskTime
                     Map<String, Object> estimateCalcServiceMap = UtilMisc.<String, Object>toMap("workEffort", task, "quantity", quantity, "productId", productId, "routingId", routingId);
                     Map<String, Object> serviceContext = UtilMisc.<String, Object>toMap("arguments", estimateCalcServiceMap);
-                    // serviceContext.put("userLogin", userLogin);
-                    Map<String, Object> resultService = dispatcher.runSync(serviceName, serviceContext);
-                    totalTaskTime = ((BigDecimal)resultService.get("totalTime")).doubleValue();
+                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceContext);
+                    if (ServiceUtil.isError(serviceResult)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(serviceResult);
+                        Debug.logError(errorMessage, module);
+                    }
+                    totalTaskTime = ((BigDecimal)serviceResult.get("totalTime")).doubleValue();
                 }
+            } catch (GenericServiceException exc) {
+                Debug.logError(exc, "Problem calling the customMethod service " + serviceName);
             } catch (Exception exc) {
                 Debug.logError(exc, "Problem calling the customMethod service " + serviceName);
             }
@@ -436,4 +447,51 @@ public class ProductionRun {
     public boolean isUpdateCompletionDate() {
         return updateCompletionDate;
     }
+
+    /**
+     * Utility method to easily retrieve the note content out of a production run task
+     * @param delegator
+     * @param routingTask
+     * @return
+     */
+    public static String getCommentsFromProductionRunTask(Delegator delegator, GenericValue routingTask) {
+        String comment = null;
+        try {
+            if (UtilValidate.isNotEmpty(routingTask)) {
+                GenericValue productionRunComment = EntityUtil.getFirst(routingTask.getRelated("WorkEffortNote", null, UtilMisc.toList("createdStamp DESC"), true));
+                if (UtilValidate.isNotEmpty(productionRunComment)) {
+                    GenericValue noteData = productionRunComment.getRelatedOne("NoteData", false);
+                    if (UtilValidate.isNotEmpty(noteData)) {
+                        return noteData.getString("noteInfo");
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.log(e);
+        }
+        return comment;
+    }
+
+    public static String getCommentsFromProductionRunTask(Delegator delegator, String routingTaskId) throws GenericEntityException {
+        GenericValue productionRunTask = EntityUtil.getFirst(delegator.findList("WorkEffort",
+                EntityCondition.makeCondition(UtilMisc.toMap("workEffortId", routingTaskId, "workEffortTypeId", "PROD_ORDER_TASK")), null, null, null, true));
+        return getCommentsFromProductionRunTask(delegator, productionRunTask);
+    }
+    
+    
+    /**
+     * Utility method to easily retrieve the worker (party) out of a production run task
+     * @param delegator
+     * @param routingTaskId
+     * @return
+     * @throws GenericEntityException
+     */
+    public static String getWorkerFromProductionRunTask(Delegator delegator, GenericValue routingTask) throws GenericEntityException {
+        GenericValue partyAssignment = EntityUtil.getFirst(EntityUtil.filterByDate(routingTask.getRelated("WorkEffortPartyAssignment", null, null, false)));
+        if (UtilValidate.isNotEmpty(partyAssignment)) {
+            return PartyHelper.getPartyName(delegator, partyAssignment.getString("partyId"), false);
+        }
+        return null;
+    }
+
 }

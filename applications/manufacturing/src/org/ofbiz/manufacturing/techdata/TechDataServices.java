@@ -35,7 +35,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
@@ -60,7 +59,7 @@ public class TechDataServices {
      *
      * @param ctx the dispatch context
      * @param context a map containing workEffortName (routingTaskName) and fixedAssetId (MachineGroup or ANY)
-     * @return result a map containing lookupResult (list of RoutingTask <=> workEffortId with currentStatusId = "ROU_ACTIVE" and workEffortTypeId = "ROU_TASK"
+     * @return result a map containing lookupResult (list of RoutingTask &lt;=&gt; workEffortId with currentStatusId = "ROU_ACTIVE" and workEffortTypeId = "ROU_TASK"
      */
     public static Map<String, Object> lookupRoutingTask(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
@@ -100,7 +99,7 @@ public class TechDataServices {
         result.put("lookupResult", listRoutingTask);
         return result;
     }
-    
+
     /**
      *
      * Used to check if there is not two routing task with the same SeqId valid at the same period
@@ -118,11 +117,11 @@ public class TechDataServices {
         String workEffortIdTo = (String) context.get("workEffortIdTo");
         String workEffortAssocTypeId = (String) context.get("workEffortAssocTypeId");
         Long sequenceNum =  (Long) context.get("sequenceNum");
-        Timestamp  fromDate =  (Timestamp) context.get("fromDate");
-        Timestamp  thruDate =  (Timestamp) context.get("thruDate");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
         String create = (String) context.get("create");
 
-        boolean createProcess = (create !=null && create.equals("Y")) ? true : false;
+        boolean createProcess = (create !=null && "Y".equals(create)) ? true : false;
         List<GenericValue> listRoutingTaskAssoc = null;
 
         try {
@@ -221,7 +220,7 @@ public class TechDataServices {
         int moveDay = 0;
         Double capacity = null;
         Time startTime = null;
-        while (capacity == null || capacity.doubleValue()==0) {
+        while (capacity == null || capacity ==0) {
             switch (dayStart) {
                 case Calendar.MONDAY:
                     capacity =  techDataCalendarWeek.getDouble("mondayCapacity");
@@ -252,15 +251,14 @@ public class TechDataServices {
                     startTime =  techDataCalendarWeek.getTime("sundayStartTime");
                     break;
             }
-            if (capacity == null || capacity.doubleValue() == 0) {
+            if (capacity == null || capacity == 0) {
                 moveDay +=1;
                 dayStart = (dayStart==7) ? 1 : dayStart +1;
             }
-            //                Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
         }
         result.put("capacity",capacity);
         result.put("startTime",startTime);
-        result.put("moveDay",Integer.valueOf(moveDay));
+        result.put("moveDay", moveDay);
         return result;
     }
     /** Used to to request the remain capacity available for dateFrom in a TechDataCalenda,
@@ -283,7 +281,7 @@ public class TechDataServices {
         Calendar cDateTrav =  Calendar.getInstance();
         cDateTrav.setTime(dateFrom);
         Map<String, Object> position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        int moveDay = ((Integer) position.get("moveDay")).intValue();
+        int moveDay = (Integer) position.get("moveDay");
         if (moveDay != 0) return 0;
         Time startTime = (Time) position.get("startTime");
         Double capacity = (Double) position.get("capacity");
@@ -316,7 +314,7 @@ public class TechDataServices {
         cDateTrav.setTime(dateFrom);
         Map<String, Object> position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
         Time startTime = (Time) position.get("startTime");
-        int moveDay = ((Integer) position.get("moveDay")).intValue();
+        int moveDay = (Integer) position.get("moveDay");
         dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayStart(dateFrom,moveDay);
         Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateTo).getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
         if (dateTo.before(startAvailablePeriod)) {
@@ -327,7 +325,7 @@ public class TechDataServices {
             cDateTrav.setTime(dateTo);
             position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
             startTime = (Time) position.get("startTime");
-            moveDay = ((Integer) position.get("moveDay")).intValue();
+            moveDay = (Integer) position.get("moveDay");
             if (moveDay != 0) dateTo = UtilDateTime.getDayStart(dateTo,moveDay);
             dateTo.setTime(dateTo.getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
         }
@@ -376,7 +374,7 @@ public class TechDataServices {
         int moveDay = 0;
         Double capacity = null;
         Time startTime = null;
-        while (capacity == null || capacity.doubleValue() == 0) {
+        while (capacity == null || capacity == 0) {
             switch (dayEnd) {
                 case Calendar.MONDAY:
                     capacity =  techDataCalendarWeek.getDouble("mondayCapacity");
@@ -407,14 +405,14 @@ public class TechDataServices {
                     startTime =  techDataCalendarWeek.getTime("sundayStartTime");
                     break;
             }
-            if (capacity == null || capacity.doubleValue() == 0) {
+            if (capacity == null || capacity == 0) {
                 moveDay -=1;
                 dayEnd = (dayEnd==1) ? 7 : dayEnd - 1;
             }
         }
         result.put("capacity",capacity);
         result.put("startTime",startTime);
-        result.put("moveDay",Integer.valueOf(moveDay));
+        result.put("moveDay", moveDay);
         return result;
     }
     /** Used to request the remaining capacity available for dateFrom in a TechDataCalenda,
@@ -437,7 +435,7 @@ public class TechDataServices {
         Calendar cDateTrav =  Calendar.getInstance();
         cDateTrav.setTime(dateFrom);
         Map<String, Object> position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        int moveDay = ((Integer) position.get("moveDay")).intValue();
+        int moveDay = (Integer) position.get("moveDay");
         if (moveDay != 0) return 0;
         Time startTime = (Time) position.get("startTime");
         Double capacity = (Double) position.get("capacity");
@@ -470,9 +468,9 @@ public class TechDataServices {
         cDateTrav.setTime(dateFrom);
         Map<String, Object> position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
         Time startTime = (Time) position.get("startTime");
-        int moveDay = ((Integer) position.get("moveDay")).intValue();
+        int moveDay = (Integer) position.get("moveDay");
         Double capacity = (Double) position.get("capacity");
-        dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayEnd(dateFrom, Long.valueOf(moveDay));
+        dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayEnd(dateFrom, (long) moveDay);
         Timestamp endAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateTo).getTime() + startTime.getTime() + capacity.longValue() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
         if (dateTo.after(endAvailablePeriod)) {
             dateTo = endAvailablePeriod;
@@ -482,7 +480,7 @@ public class TechDataServices {
             cDateTrav.setTime(dateTo);
             position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
             startTime = (Time) position.get("startTime");
-            moveDay = ((Integer) position.get("moveDay")).intValue();
+            moveDay = (Integer) position.get("moveDay");
             capacity = (Double) position.get("capacity");
             if (moveDay != 0) dateTo = UtilDateTime.getDayStart(dateTo,moveDay);
             dateTo.setTime(dateTo.getTime() + startTime.getTime() + capacity.longValue() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));

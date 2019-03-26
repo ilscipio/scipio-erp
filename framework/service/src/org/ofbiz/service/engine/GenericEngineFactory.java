@@ -19,6 +19,7 @@
 package org.ofbiz.service.engine;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,12 +34,14 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  */
 public class GenericEngineFactory {
 
-    protected ServiceDispatcher dispatcher = null;
-    protected Map<String, GenericEngine> engines = null;
+    protected final ServiceDispatcher dispatcher; // SCIPIO: 2018-10-16: final
+    protected Map<String, GenericEngine> engines;
 
     public GenericEngineFactory(ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;
-        engines = new HashMap<String, GenericEngine>();
+        // SCIPIO: 2018-10-16: use unmodifiable for read thread safety
+        //engines = new HashMap<>();
+        engines = Collections.emptyMap();
     }
 
     /**
@@ -47,18 +50,26 @@ public class GenericEngineFactory {
      *@return GenericEngine that corresponds to the engineName
      */
     public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {
-        String className = null;
-        try {
-            className = ServiceConfigUtil.getServiceEngine().getEngine(engineName).getClassName();
-        } catch (GenericConfigException e) {
-            throw new GenericServiceException(e);
-        }
+        // SCIPIO: 2018-10-16: this is absurd, only need to do this below...
+        //String className = null;
+        //try {
+        //    className = ServiceConfigUtil.getServiceEngine().getEngine(engineName).getClassName();
+        //} catch (GenericConfigException e) {
+        //    throw new GenericServiceException(e);
+        //}
 
         GenericEngine engine = engines.get(engineName);
         if (engine == null) {
             synchronized (GenericEngineFactory.class) {
                 engine = engines.get(engineName);
                 if (engine == null) {
+                    // SCIPIO: 2018-10-16: className read moved here from above
+                    String className = null;
+                    try {
+                        className = ServiceConfigUtil.getServiceEngine().getEngine(engineName).getClassName();
+                    } catch (GenericConfigException e) {
+                        throw new GenericServiceException(e);
+                    }
                     try {
                         ClassLoader loader = Thread.currentThread().getContextClassLoader();
                         Class<?> c = loader.loadClass(className);
@@ -67,9 +78,13 @@ public class GenericEngineFactory {
                     } catch (Exception e) {
                         throw new GenericServiceException(e.getMessage(), e);
                     }
-                    if (engine != null) {
-                        engines.put(engineName, engine);
-                    }
+                    // SCIPIO: 2018-10-16: this is not thread-safe for reads; make map copy and unmodifiable
+                    //if (engine != null) {
+                    //    engines.put(engineName, engine);
+                    //}
+                    Map<String, GenericEngine> newEngines = new HashMap<>(this.engines);
+                    newEngines.put(engineName, engine);
+                    this.engines = Collections.unmodifiableMap(newEngines);
                 }
             }
         }

@@ -43,7 +43,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
@@ -234,7 +233,7 @@ public class EntityPermissionChecker {
         if (modelEntity.getField("privilegeEnumId") != null)
             hasPrivilegeField = true;
 
-        
+
         ModelEntity modelOperationEntity = delegator.getModelEntity(entityName + "PurposeOperation");
         if (modelOperationEntity == null) {
             modelOperationEntity = delegator.getModelEntity(entityName + "Operation");
@@ -321,7 +320,7 @@ public class EntityPermissionChecker {
         // check permission for each id in passed list until success.
         // Note that "quickCheck" id come first in the list
         // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
-        
+
         Map<String, List<String>> purposes = new HashMap<String, List<String>>();
         Map<String, List<String>> roles = new HashMap<String, List<String>>();
         //List purposeList = null;
@@ -520,20 +519,21 @@ public class EntityPermissionChecker {
         // Note that "quickCheck" id come first in the list
         // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
         String pkFieldName = modelEntity.getFirstPkFieldName();
-        if (Debug.infoOn()) {
-        String entityIdString = "ENTITIES: ";
-        for (Object obj: entityIdList) {
-            if (obj instanceof GenericValue) {
-                String s = ((GenericValue)obj).getString(pkFieldName);
-                entityIdString += s + "  ";
-            } else {
-                entityIdString += obj + "  ";
-            }
-        }
-            //if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
-        }
+        // SCIPIO: unused
+//        if (Debug.infoOn()) {
+//            String entityIdString = "ENTITIES: ";
+//            for (Object obj: entityIdList) {
+//                if (obj instanceof GenericValue) {
+//                    String s = ((GenericValue)obj).getString(pkFieldName);
+//                    entityIdString += s + "  ";
+//                } else {
+//                    entityIdString += obj + "  ";
+//                }
+//            }
+//            //if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
+//        }
 
-        
+
         Map<String, GenericValue> entities = new HashMap<String, GenericValue>();
         //List purposeList = null;
         //List roleList = null;
@@ -639,7 +639,7 @@ public class EntityPermissionChecker {
             if (idx1 == 0) {
                 String roleOp1 = roleOp.substring(4); // lop off "HAS_"
                 int idx2 = roleOp1.indexOf("_ROLE");
-                if (idx2 == (roleOp1.length() - 5)) {
+                if (idx2 == roleOp1.length() - 5) {
                     String roleOp2 = roleOp1.substring(0, roleOp1.indexOf("_ROLE") - 1); // lop off "_ROLE"
                     //if (Debug.infoOn()) Debug.logInfo("roleOp2:" + roleOp2, module);
                     newHasRoleList.add(roleOp2);
@@ -674,7 +674,7 @@ public class EntityPermissionChecker {
 
     public static boolean hasMatch(String entityName, List<GenericValue> targetOperations, List<String> roles, boolean hasPurposeOp, List<String> purposes, boolean hasStatusOp, String targStatusId) {
         boolean isMatch = false;
-        
+
     //    if (UtilValidate.isNotEmpty(targPrivilegeEnumId) && !targPrivilegeEnumId.equals("_NA_") && !targPrivilegeEnumId.equals("_00_")) {
             // need to do a lookup here to find the seq value of targPrivilegeEnumId.
             // The lookup could be a static store or it could be done on Enumeration entity.
@@ -1055,7 +1055,7 @@ public class EntityPermissionChecker {
 
         public String dumpAsText() {
              List<String> fieldNames = UtilMisc.toList("roleFieldName",  "auxiliaryFieldName",  "statusFieldName");
-             Map<String, Integer> widths = UtilMisc.toMap("roleFieldName", Integer.valueOf(24), "auxiliaryFieldName", Integer.valueOf(24), "statusFieldName", Integer.valueOf(24));
+             Map<String, Integer> widths = UtilMisc.toMap("roleFieldName", 24, "auxiliaryFieldName", 24, "statusFieldName", 24);
              StringBuilder buf = new StringBuilder();
              Integer wid = null;
 
@@ -1067,13 +1067,13 @@ public class EntityPermissionChecker {
              for (String fld: fieldNames) {
                  wid = widths.get(fld);
                  buf.append(fld);
-                 for (int i=0; i < (wid.intValue() - fld.length()); i++) buf.append("^");
+                 for (int i = 0; i < (wid - fld.length()); i++) buf.append("^");
                  buf.append("  ");
              }
                      buf.append("\n");
              for (String fld: fieldNames) {
                  wid = widths.get(fld);
-                 for (int i=0; i < wid.intValue(); i++) buf.append("-");
+                 for (int i = 0; i < wid; i++) buf.append("-");
                  buf.append("  ");
              }
                      buf.append("\n");
@@ -1096,7 +1096,7 @@ public class EntityPermissionChecker {
                      }
                      wid = widths.get("roleFieldName");
                      buf.append(roleTypeId);
-                     for (int i=0; i < (wid.intValue() - roleTypeId.length()); i++) buf.append("^");
+                     for (int i = 0; i < (wid - roleTypeId.length()); i++) buf.append("^");
                      buf.append("  ");
 
                      String  auxiliaryFieldValue = contentPurposeOperation.getString(this.auxiliaryFieldName);
@@ -1105,7 +1105,7 @@ public class EntityPermissionChecker {
                      }
                      wid = widths.get("auxiliaryFieldName");
                      buf.append(auxiliaryFieldValue);
-                     for (int i=0; i < (wid.intValue() - auxiliaryFieldValue.length()); i++) buf.append("^");
+                     for (int i = 0; i < (wid - auxiliaryFieldValue.length()); i++) buf.append("^");
                      buf.append("  ");
 
                      String statusId = contentPurposeOperation.getString(this.statusFieldName);

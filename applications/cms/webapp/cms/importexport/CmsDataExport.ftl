@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- SCIPIO: based on component://webtools/webapp/webtools/entity/xmldsdump.ftl -->
 <#assign entityPresetMap = rewrapMap(entityPresetMap!{}, "raw-simple")>
@@ -41,9 +28,9 @@ under the License.
   <@section><#-- title=uiLabelMap.PageTitleEntityExport -->
     <p>${uiLabelMap.CmsExportFuncInfo}</p>
     <#--<hr />-->
-    <#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", session)>
+    <#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", request)>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("CmsDataExportRaw.xml") target="_blank" text=uiLabelMap.CmsClickHereToGetData class="+${styles.action_run_sys!} ${styles.action_export!}" />
+        <@menuitem type="link" href=makePageUrl("CmsDataExportRaw.xml") target="_blank" text=uiLabelMap.CmsClickHereToGetData class="+${styles.action_run_sys!} ${styles.action_export!}" />
       </@menu>
       <#-- SCIPIO: show options that were requested; screen looks deserted and gets confusing without -->
       <@section title=uiLabelMap.CommonOptions>
@@ -76,7 +63,7 @@ under the License.
 <p>${uiLabelMap.CmsExportFuncInfo}</p>
 <#--<hr />-->
 
-<#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", session)>
+<#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", request)>
 
   <@script>
     jQuery(document).ready(function() {
@@ -253,7 +240,7 @@ under the License.
     </form>
   </#if>
 
-  <form method="post" action="<@ofbizUrl>CmsDataExport</@ofbizUrl>" name="entityExport" id="entityExportForm">
+  <form method="post" action="<@pageUrl>CmsDataExport</@pageUrl>" name="entityExport" id="entityExportForm">
     <input type="hidden" name="doExport" value="Y"/>
     <input type="hidden" name="showAdvanced" value="${showAdvanced?string}"/>
   <@section title=uiLabelMap.WebtoolsExport>
@@ -391,12 +378,12 @@ under the License.
       <#assign entityNamesByPkg = toSimpleMap(entityNamesByPkg)>
       <#assign passedEntityNames = passedEntityNames![]>
       <#list entityNamesByPkg?keys as subPkg>
-        <#assign subEntities = entityNamesByPkg[rawString(subPkg)]>
+        <#assign subEntities = entityNamesByPkg[raw(subPkg)]>
         <#if (subPkg_index > 0)><hr/></#if>
         <@heading relLevel=+1>${subPkg}</@heading>
         <@grid>
           <#list subEntities as entityName>
-            <#assign curEntityName = rawString(entityName)>
+            <#assign curEntityName = raw(entityName)>
             <#assign entCount = entCount + 1>
             <#assign check = checkAll/>
             <#if passedEntityNames?seq_contains(curEntityName)>

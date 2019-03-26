@@ -48,8 +48,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;call-service&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Ccallservice%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class CallService extends MethodOperation {
 
@@ -311,7 +311,9 @@ public final class CallService extends MethodOperation {
                 }
             } else {
                 ServiceUtil.addErrors(UtilMisc.<String, String> getListFromMap(methodContext.getEnvMap(), this.simpleMethod.getServiceErrorMessageListName()), UtilMisc.<String, String, Object> getMapFromMap(methodContext.getEnvMap(), this.simpleMethod.getServiceErrorMessageMapName()), result);
-                Debug.logError(new Exception(errorMessage), module);
+                // SCIPIO: Also put as the message
+                //Debug.logError(new Exception(errorMessage), module);
+                Debug.logError(new Exception(errorMessage), errorMessage, module);
             }
         }
         String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
@@ -358,7 +360,7 @@ public final class CallService extends MethodOperation {
             // SCIPIO: 2018-03-01: DO NOT set the responseMessage in the caller context on service success here!!
             // The method SimpleMethod.exec gives the context field responseMessage the priority over the presence
             // of error messages, which means if we do this here, then when a successful call-service finishes but an
-            // operation after it causes an error (most of which do NOT update responseMessage but only set error messages), 
+            // operation after it causes an error (most of which do NOT update responseMessage but only set error messages),
             // the whole simple-method service will return "success" as its response code!
             //if (methodContext.getMethodType() == MethodContext.EVENT) {
             //    methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);

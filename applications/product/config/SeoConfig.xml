@@ -34,7 +34,10 @@
         <state>enable</state>
         <!-- If state is enabled, only context paths listed here will be allowed to use the new seo transformers 
             If set to a single "*", no restriction by context path. -->
-        <allowed-context-paths>/:/shop</allowed-context-paths>
+        <!-- 2018-11-05: There is little reason to filter here anymore; with *, any webapp having
+            SeoCatalogUrlFilter in web.xml should automatically register itself as seo-enabled.
+        <allowed-context-paths>/:/shop</allowed-context-paths>-->
+        <allowed-context-paths>*</allowed-context-paths>
 
         <!-- Suffix to add to all SEO URLs. e.g.: 
         <seo-url-suffix>.html</seo-url-suffix>-->

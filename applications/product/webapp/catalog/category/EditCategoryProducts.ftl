@@ -1,30 +1,17 @@
 <#-- TODO: License -->
 
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#--macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if activeOnly>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=false") text=uiLabelMap.ProductActiveAndInactive class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=false") text=uiLabelMap.ProductActiveAndInactive class="+${styles.action_run_sys!} ${styles.action_show!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=true") text=uiLabelMap.ProductActiveOnly class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=true") text=uiLabelMap.ProductActiveOnly class="+${styles.action_run_sys!} ${styles.action_show!}" />
   </#if>
   </@menu>
 </#macro-->
@@ -32,14 +19,14 @@ under the License.
 <#if (listSize > 0)>
 <@section title=uiLabelMap.ProductCategoryProductList menuContent=menuContent>
       
-        <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-            <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
+        <@paginate mode="content" url=makePageUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
+            <form method="post" action="<@pageUrl>updateCategoryProductMember</@pageUrl>" name="updateCategoryProductForm">
               <@fields type="default-manual">
                 <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
                 <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
                 <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
                 <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-complex" autoAltRows=true>
                     <@thead>
                      <@tr class="header-row">
                         <@th>#</@th>
@@ -64,11 +51,11 @@ under the License.
                       <@tr valign="middle">
                         <@td>
                           <#if (product.smallImageUrl)??>
-                             <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
+                             <a href="<@pageUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@pageUrl>"><img alt="Small Image" src="<@contentUrl>${product.smallImageUrl}</@contentUrl>" class="cssImgSmall" align="middle" /></a>
                           </#if>
                         </@td>
                         <@td>
-                          <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>                          
+                          <a href="<@pageUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@pageUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>                          
                         </@td>
                         <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
                         <@td class=cellClass>${(productCategoryMember.fromDate?date?string.short)!}</@td>
@@ -103,7 +90,7 @@ under the License.
             </form>
             <#assign rowCount = 0>
             <#list productCategoryMembers as productCategoryMember>
-                <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@ofbizUrl>removeCategoryProductMember</@ofbizUrl>">
+                <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@pageUrl>removeCategoryProductMember</@pageUrl>">
                   <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
                   <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
                   <input type="hidden" name="productId" value="${(productCategoryMember.productId)!}" />

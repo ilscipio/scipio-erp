@@ -1,22 +1,9 @@
 <?xml version="1.0"?>
 
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <web-app version="3.0">
@@ -45,19 +32,16 @@ under the License.
         <param-value>component://shop/widget/CommonScreens.xml</param-value>
     </context-param>
     <context-param>
-        <description>
-            Forces the JSESSIONID cookie to be sent via http rather https, helps prevent lost sessions in web apps that
-            frequently switch between http and https.
-        </description>
-        <param-name>forceHttpSession</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <description>
-            SCIPIO: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
-        </description>
+        <description>SCIPIO: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. 
+            Default: true (enabled - stock behavior).</description>
         <param-name>allowOverrideViewUri</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>SCIPIO: Name of a *.properties file on classpath from which to read search settings (shop.search.*), notably for KeywordSearch.groovy.
+            Default: shop (added 2018-07-18)</description>
+        <param-name>shopSearchCfgRes</param-name>
+        <param-value></param-value>
     </context-param>
 
     <!-- HTML Compression - enable this in production (disable for debugging)
@@ -87,6 +71,32 @@ under the License.
         <param-value>true</param-value>
     </context-param>
 
+    <!-- SCIPIO: URL settings -->
+    <context-param>
+        <description>SCIPIO: If true, the Scipio webappPathPrefix (extra prefix before contextPath) is
+            appended during link-building code; if false, it is left to urlrewrite.xml (or other) to append.
+            Default: url.properties#webapp.url.path.prefix.urlBuild (added 2018-08-08)</description>
+        <param-name>urlWebappPathPrefixUrlBuild</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>SCIPIO: If set to "auto" (default), and the webapp does not have a UrlRewriteFilter filter,
+            inter-webapp links will be sent through their target webapp's urlrewrite.xml using a manual
+            filter. Normally, this is delegated through this webapp's urlrewrite.xml file, but it is not
+            available if UrlRewriteFilter is not present in the filter chain. Setting "true" force-enables this, 
+            while "false" force-disables it. The manual filter rewrites the inter-webapp links as if it were the 
+            very first filter (wraps all others). Default: auto (added 2018-08-08)</description>
+        <param-name>urlManualInterWebappFilter</param-name>
+        <param-value></param-value>
+    </context-param>
+
+    <!-- SCIPIO: Order (interface) settings -->
+    <context-param>
+        <description>SCIPIO: Whether shipping estimate selection should be allowed in the interface even if no estimate could be determined ("Calculated Offline") (default: false)</description>
+        <param-name>orderAllowMissingShipEstimates</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
         NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>
@@ -103,7 +113,7 @@ under the License.
         </init-param>
         <init-param>
             <param-name>statusEnabled</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
     </filter>
     <filter>
@@ -112,7 +122,7 @@ under the License.
         <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
         <init-param>
             <description>If true, enables advanced SEO URL handling+generation following SEO configuration in SeoConfig.xml* (/applications/product/config/SeoConfig.xml),
-                intercepting both old-style (@ofbizCatalogUrl) and alternative URLs (@ofbizCatalogAltUrl) and generating a single format; 
+                intercepting both old-style (@catalogUrl) and alternative URLs (@catalogAltUrl) and generating a single format; 
                 if false, delegates to the regular CatalogUrlFilter implementation. 
                 NOTE: 2017-11-26: Now enabled by default in Scipio (master). 
                 NOTE(*): The default Scipio SeoConfig.xml allows handling incoming stock CatalogUrlFilter-generated ALT URLs (*-c, *-p);
@@ -123,7 +133,7 @@ under the License.
         </init-param>
         <init-param>
             <description>If true, attempts to rewrite outbound /control/product and /control/category requests to SEO URLs.
-                In other words, [@ofbizUrl]product?productId=FA-001[/@ofbizUrl] appears as if had written [@ofbizCatalogAltUrl productId="FA-001"/].
+                In other words, [@pageUrl]product?productId=FA-001[/@pageUrl] appears as if had written [@catalogAltUrl productId="FA-001"/].
                 Notably, this applies to controller redirects that follow a compatible URL generation pattern (only some special cases may not cover).
                 WARN: 2017-11-21: This is currently best-effort; reliability is about on par as the outbound-rules in urlrewrite.xml.</description>
             <param-name>rewriteOutboundUrls</param-name>
@@ -153,8 +163,17 @@ under the License.
             <param-name>defaultLocaleString</param-name>
             <param-value>en_US</param-value>
         </init-param>
-        <!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
-        <init-param><param-name>viewRequest</param-name><param-value>ViewBlogArticle</param-value></init-param>
+        <init-param>
+            <param-name>viewRequest</param-name>
+            <param-value>ViewBlogArticle</param-value><!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
+        </init-param>
+        <init-param>
+            <description>SCIPIO: The URL suffix appended to content alt URLs (default: "-content") (added 2018-07-31)
+                NOTE: In Scipio, this suffix no longer should be hardcoded into the alt URL DataResource.drObjectInfo
+                    field of the ALTERNATIVE_URL record; it is automatically appended by the URL generation code.</description>
+            <param-name>urlSuffix</param-name>
+            <param-value></param-value>
+        </init-param>
     </filter>
     <!-- SCIPIO: CMS Process filter -->
     <filter>
@@ -301,9 +320,7 @@ under the License.
         <session-timeout>1440</session-timeout>
         <cookie-config>
           <http-only>true</http-only>
-          <!-- SCIPIO: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
-              causing a new session to be recreated at every non-HTTPS request
-          <secure>true</secure>-->
+          <secure>true</secure>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

@@ -18,12 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.base.test;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
+
+import junit.framework.TestCase;
 
 public class BaseUnitTests extends TestCase {
 

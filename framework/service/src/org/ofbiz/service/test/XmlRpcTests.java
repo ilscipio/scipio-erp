@@ -29,6 +29,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -38,7 +39,7 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
-    public static String url = "http://localhost:8080/admin/control/xmlrpc";
+    private static String url = "http://localhost:8080/admin/control/xmlrpc";
 
     public XmlRpcTests(String name) {
         super(name);
@@ -58,7 +59,7 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
         Map<String, Object> result = UtilGenerics.cast(client.execute("testScv", params));
         assertEquals("XML-RPC Service result success", "service done", result.get("resp"));
     }
-    
+
     /**
      * Service to receive information from xml-rpc call
      */
@@ -77,14 +78,14 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
 
     /**
      * Service to send information to xml-rpc service
-     */    
+     */
     public static Map<String, Object> testXmlRpcClientAdd(DispatchContext dctx, Map<String, ?> context) {
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> result = null;
         Integer num1 = 125;
         Integer num2 = 365;
         try {
-            Map<String, Object> localMap = dctx.makeValidContext("testXmlRpcLocalEngine", "IN", context);
+            Map<String, Object> localMap = dctx.makeValidContext("testXmlRpcLocalEngine", ModelService.IN_PARAM, context);
             localMap.put("num1", num1);
             localMap.put("num2", num2);
             result = dctx.getDispatcher().runSync("testXmlRpcLocalEngine", localMap);
@@ -92,9 +93,11 @@ public class XmlRpcTests extends AbstractXmlRpcTestCase {
         catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getLocalizedMessage());
         }
-        if (ServiceUtil.isError(result)) return result;
+        if (ServiceUtil.isError(result)) {
+            return result;
+        }
         Integer res = (Integer) result.get("resulting");
-        if (res == (num1 + num2)) { 
+        if (res == (num1 + num2)) {
             result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "ServiceTestXmlRpcCalculationOK", locale) + res);
         } else {
             result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceTestXmlRpcCalculationKO", locale));

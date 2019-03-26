@@ -8,7 +8,7 @@ import org.ofbiz.base.util.cache.UtilCache
 
 final module = "UserRequestCount.groovy";
 
-contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 1800000, true, false);
+contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 1800000, true);
 cacheId = "webtools_user_requestcount";
 
 Map<Date, Map<String, BigDecimal>> processResults() {

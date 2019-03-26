@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -24,30 +11,30 @@ under the License.
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; payment info
-        form.action="<@ofbizUrl>updateShippingOptions/checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateShippingOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@pageUrl>";
         form.submit();
     } else if (mode == "SV") {
         // save option; return to current screen
-        form.action="<@ofbizUrl>updateShippingOptions/splitship</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/splitship</@pageUrl>";
         form.submit();
     } else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>updateShippingAddress/splitship</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingAddress/splitship</@pageUrl>";
         form.submit();
     }
 }
 </@script>
 
 <@section title=uiLabelMap.OrderItemGroups>
-    <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+    <@table type="data-complex">
       <#assign shipGroups = cart.getShipGroups()>
       <#if (shipGroups.size() > 0)>
         <#assign groupIdx = 0>
@@ -76,7 +63,7 @@ function submitForm(form, mode, value) {
                     <option value="">${uiLabelMap.OrderSelectShippingAddress}</option>
                     <#list shippingContactMechList as shippingContactMech>
                       <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
-                      <option value="${shippingAddress.contactMechId}" <#if (shippingAddress.contactMechId == selectedContactMechId)>selected="selected"</#if>>${shippingAddress.address1}</option>
+                      <option value="${shippingAddress.contactMechId}"<#if (shippingAddress.contactMechId == selectedContactMechId)> selected="selected"</#if>>${shippingAddress.address1}</option>
                     </#list>
                   </select>
                 </div>
@@ -90,17 +77,16 @@ function submitForm(form, mode, value) {
                   <#list carrierShipmentMethods as carrierShipmentMethod>
                     <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-                    <option value="${shippingMethod}" <#if (shippingMethod == selectedShippingMethod)>selected="selected"</#if>>
+                    <option value="${shippingMethod}"<#if (shippingMethod == selectedShippingMethod)> selected="selected"</#if>>
                       <#if carrierShipmentMethod.partyId != "_NA_">
                         ${carrierShipmentMethod.partyId!}&nbsp;
                       </#if>
                       ${carrierShipmentMethod.description!}
                       <#if shippingEst?has_content>
-                        &nbsp;-&nbsp;
                         <#if (shippingEst > -1)>
-                          <@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
-                        <#else>
-                          ${uiLabelMap.OrderCalculatedOffline}
+                          &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
+                        <#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                          &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                         </#if>
                       </#if>
                     </option>
@@ -115,16 +101,16 @@ function submitForm(form, mode, value) {
                   <select name="maySplit">
                     <#assign maySplitStr = cart.getMaySplit(groupIdx)?default("")>
                     <option value="">${uiLabelMap.OrderSplittingPreference}</option>
-                    <option value="false" <#if maySplitStr == "N">selected="selected"</#if>>${uiLabelMap.OrderShipAllItemsTogether}</option>
-                    <option value="true" <#if maySplitStr == "Y">selected="selected"</#if>>${uiLabelMap.OrderShipItemsWhenAvailable}</option>
+                    <option value="false"<#if maySplitStr == "N"> selected="selected"</#if>>${uiLabelMap.OrderShipAllItemsTogether}</option>
+                    <option value="true"<#if maySplitStr == "Y"> selected="selected"</#if>>${uiLabelMap.OrderShipItemsWhenAvailable}</option>
                   </select>
                 </div>
                 <div>
                   <select name="isGift">
                     <#assign isGiftStr = cart.getIsGift(groupIdx)?default("")>
                     <option value="">${uiLabelMap.OrderIsGift} ?</option>
-                    <option value="false" <#if isGiftStr == "N">selected="selected"</#if>>${uiLabelMap.OrderNotAGift}</option>
-                    <option value="true" <#if isGiftStr == "Y">selected="selected"</#if>>${uiLabelMap.OrderYesIsAGift}</option>
+                    <option value="false"<#if isGiftStr == "N"> selected="selected"</#if>>${uiLabelMap.OrderNotAGift}</option>
+                    <option value="true"<#if isGiftStr == "Y"> selected="selected"</#if>>${uiLabelMap.OrderYesIsAGift}</option>
                   </select>
                 </div>
 
@@ -148,7 +134,7 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@section title=uiLabelMap.EcommerceAssignItems>
-  <@table type="data-complex"> <#-- orig: width="100%" cellspacing="0" cellpadding="1" border="0" -->
+  <@table type="data-complex">
     <@thead>
       <@tr>
         <@td>${uiLabelMap.OrderProduct}</@td>
@@ -165,7 +151,7 @@ function submitForm(form, mode, value) {
       <#list cart.items() as cartLine>
         <#assign cartLineIndex = cart.getItemIndex(cartLine)>
         <@tr>
-          <form method="post" action="<@ofbizUrl>updatesplit</@ofbizUrl>" name="editgroupform">
+          <form method="post" action="<@pageUrl>updatesplit</@pageUrl>" name="editgroupform">
             <input type="hidden" name="itemIndex" value="${cartLineIndex}"/>
             <@td>
               <div>
@@ -176,13 +162,13 @@ function submitForm(form, mode, value) {
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")!>
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                   <#if smallImageUrl?string?has_content>
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
-                      <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
+                    <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>">
+                      <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" class="cssImgSmall" alt="" />
                     </a>
                   </#if>
                   -->
                   <#-- end code to display a small image of the product -->
-                  <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${cartLine.getProductId()} -
+                  <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>" class="${styles.link_nav_info_desc!}">${cartLine.getProductId()} -
                   ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
 
                   <#-- display the registered ship groups and quantity -->
@@ -243,5 +229,5 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@checkoutActionsMenu directLinks=true >
-  <@menuitem type="link" href=makeOfbizUrl("checkoutpayment") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+  <@menuitem type="link" href=makePageUrl("checkoutpayment") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
 </@checkoutActionsMenu>

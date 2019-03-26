@@ -51,23 +51,27 @@ public abstract class ModelMenuAction implements Serializable {
 
     public static List<ModelAction> readSubActions(ModelMenu modelMenu, Element parentElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
-        List<ModelAction> actions = new ArrayList<ModelAction>(actionElementList.size());
+        List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : actionElementList) {
-            if ("set".equals(actionElement.getNodeName())) {
-                actions.add(new SetField(modelMenu, actionElement));
-            } else {
-                actions.add(AbstractModelAction.newInstance(modelMenu, actionElement));
-            }
+            // SCIPIO: 2019-02-04: The SetField element below appears completely deprecated and buggy,
+            // and provides nothing over org.ofbiz.widget.model.AbstractModelAction.SetField.
+            //if ("set".equals(actionElement.getNodeName())) {
+            //    actions.add(new SetField(modelMenu, actionElement));
+            //} else {
+            actions.add(AbstractModelAction.newInstance(modelMenu, actionElement));
+            //}
         }
         return Collections.unmodifiableList(actions);
     }
 
     /**
      * Models the &lt;set&gt; element.
-     * 
+     * @deprecated SCIPIO: 2019-02-04: This appears poorly maintained, deprecated and buggy, and appeared
+     * to do nothing useful over what {@link org.ofbiz.widget.model.AbstractModelAction.SetField} does.
+     *
      * @see <code>widget-common.xsd</code>
      */
-    @SuppressWarnings("serial")
+    @Deprecated
     public static class SetField extends AbstractModelAction {
         private final FlexibleMapAccessor<Object> field;
         private final FlexibleMapAccessor<Object> fromField;
@@ -101,26 +105,30 @@ public abstract class ModelMenuAction implements Serializable {
             boolean global = "true".equals(globalStr);
 
             Object newValue = null;
-            if (this.fromScope != null && this.fromScope.equals("user")) {
+            if (this.fromScope != null && "user".equals(this.fromScope)) {
                 if (!this.fromField.isEmpty()) {
                     String originalName = this.fromField.getOriginalName();
                     String currentWidgetTrail = (String)context.get("_WIDGETTRAIL_");
                     String newKey = currentWidgetTrail + "|" + originalName;
                     HttpSession session = (HttpSession)context.get("session");
                     newValue = session.getAttribute(newKey);
-                    if (Debug.verboseOn()) Debug.logVerbose("In user getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In user getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    }
                 } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
 
-            } else if (this.fromScope != null && this.fromScope.equals("application")) {
+            } else if (this.fromScope != null && "application".equals(this.fromScope)) {
                 if (!this.fromField.isEmpty()) {
                     String originalName = this.fromField.getOriginalName();
                     String currentWidgetTrail = (String)context.get("_WIDGETTRAIL_");
                     String newKey = currentWidgetTrail + "|" + originalName;
                     ServletContext servletContext = (ServletContext)context.get("application");
                     newValue = servletContext.getAttribute(newKey);
-                    if (Debug.verboseOn()) Debug.logVerbose("In application getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In application getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    }
                 } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
@@ -128,7 +136,9 @@ public abstract class ModelMenuAction implements Serializable {
             } else {
                 if (!this.fromField.isEmpty()) {
                     newValue = this.fromField.get(context);
-                    if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                    }
                 } else if (!this.valueExdr.isEmpty()) {
                     newValue = this.valueExdr.expandString(context);
                 }
@@ -156,24 +166,30 @@ public abstract class ModelMenuAction implements Serializable {
                     }
                 }
             }
-            if (this.toScope != null && this.toScope.equals("user")) {
+            if (this.toScope != null && "user".equals(this.toScope)) {
                     String originalName = this.field.getOriginalName();
                     String currentWidgetTrail = (String)context.get("_WIDGETTRAIL_");
                     String newKey = currentWidgetTrail + "|" + originalName;
                     HttpSession session = (HttpSession)context.get("session");
                     session.setAttribute(newKey, newValue);
-                    if (Debug.verboseOn()) Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                    }
 
-            } else if (this.toScope != null && this.toScope.equals("application")) {
+            } else if (this.toScope != null && "application".equals(this.toScope)) {
                     String originalName = this.field.getOriginalName();
                     String currentWidgetTrail = (String)context.get("_WIDGETTRAIL_");
                     String newKey = currentWidgetTrail + "|" + originalName;
                     ServletContext servletContext = (ServletContext)context.get("application");
                     servletContext.setAttribute(newKey, newValue);
-                    if (Debug.verboseOn()) Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                    }
 
             } else {
-                if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                }
                 this.field.put(context, newValue);
             }
 
@@ -182,12 +198,6 @@ public abstract class ModelMenuAction implements Serializable {
                 if (globalCtx != null) {
                     this.field.put(globalCtx, newValue);
                 }
-            }
-
-            // this is a hack for backward compatibility with the JPublish page object
-            Map<String, Object> page = UtilGenerics.checkMap(context.get("page"));
-            if (page != null) {
-                this.field.put(page, newValue);
             }
         }
 
@@ -229,6 +239,3 @@ public abstract class ModelMenuAction implements Serializable {
         }
     }
 }
-
-
-

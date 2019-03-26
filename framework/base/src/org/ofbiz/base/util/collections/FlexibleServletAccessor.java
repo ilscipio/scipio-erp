@@ -33,7 +33,10 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
  * accessing sub-map values and the "[]" (square bracket) syntax for accessing
  * list elements. See individual Map operations for more information.
- *
+ * <p>
+ * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+ * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+ * It does not provide any form of thread safety or atomicity.
  */
 @SuppressWarnings("serial")
 public class FlexibleServletAccessor<T> implements Serializable {
@@ -66,7 +69,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
         } else {
             empty = false;
             int openPos = name.indexOf("${");
-            if (openPos != -1 && name.indexOf("}", openPos) != -1) {
+            if (openPos != -1 && name.indexOf('}', openPos) != -1) {
                 fma = null;
                 attributeName = null;
                 needsExpand = true;
@@ -95,7 +98,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @return the object corresponding to this getter class
      */
     public T get(ServletRequest request, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(request);
     }
 
@@ -105,7 +108,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @return the found value
      */
     public T get(HttpSession session, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(session);
     }
 
@@ -119,7 +122,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @param expandContext
      */
     public void put(ServletRequest request, T value, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         aa.put(request, value);
     }
 
@@ -133,7 +136,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @param expandContext
      */
     public void put(HttpSession session, T value, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         aa.put(session, value);
     }
 
@@ -143,7 +146,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @return the removed value
      */
     public T remove(ServletRequest request, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(request);
     }
 
@@ -153,11 +156,11 @@ public class FlexibleServletAccessor<T> implements Serializable {
      * @return the removed value
      */
     public T remove(HttpSession session, Map<String, Object> expandContext) {
-        AttributeAccessor<T> aa = new AttributeAccessor<T>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
+        AttributeAccessor<T> aa = new AttributeAccessor<>(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(session);
     }
 
-    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key *
+    /** The equals and hashCode methods are implemented just case this object is ever accidently used as a Map key *
      * @return the hashcode
      */
     @Override
@@ -165,7 +168,7 @@ public class FlexibleServletAccessor<T> implements Serializable {
         return this.name.hashCode();
     }
 
-    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key
+    /** The equals and hashCode methods are implemented just case this object is ever accidently used as a Map key
      * @param obj
      * @return whether this object is equal to the passed object
      */
@@ -177,13 +180,14 @@ public class FlexibleServletAccessor<T> implements Serializable {
                 return flexibleServletAccessor.name == null;
             }
             return this.name.equals(flexibleServletAccessor.name);
-        } else {
-            String str = (String) obj;
-            if (this.name == null) {
-                return str == null;
-            }
-            return this.name.equals(str);
         }
+        if (this.name == null) {
+            return obj == null;
+        }
+        if (!(obj instanceof String)) {
+            return false;
+        }
+        return this.name.equals(obj);
     }
 
     /** To be used for a string representation of the accessor, returns the original name.
@@ -258,9 +262,8 @@ public class FlexibleServletAccessor<T> implements Serializable {
 
             if (fma != null) {
                 return fma.get(UtilGenerics.<String, Object>checkMap(theValue));
-            } else {
-                return UtilGenerics.<T>cast(theValue);
             }
+            return UtilGenerics.<T>cast(theValue);
         }
 
         public T get(HttpSession session) {
@@ -274,9 +277,8 @@ public class FlexibleServletAccessor<T> implements Serializable {
 
             if (fma != null) {
                 return fma.get(UtilGenerics.<String, Object>checkMap(theValue));
-            } else {
-                return UtilGenerics.<T>cast(theValue);
             }
+            return UtilGenerics.<T>cast(theValue);
         }
 
         protected void putInList(List<T> lst, T value) {
@@ -311,6 +313,13 @@ public class FlexibleServletAccessor<T> implements Serializable {
             }
         }
 
+        /**
+         * Session attribute put operation.
+         * <p>
+         * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+         * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+         * It does not provide any form of thread safety or atomicity.
+         */
         public void put(HttpSession session, T value) {
             if (fma == null) {
                 if (isListReference) {
@@ -336,40 +345,41 @@ public class FlexibleServletAccessor<T> implements Serializable {
                 if (isListReference) {
                     List<Object> lst = UtilGenerics.checkList(theObj);
                     return fma.remove(UtilGenerics.checkMap(lst.get(listIndex), String.class, Object.class));
-                } else {
-                    return fma.remove(UtilGenerics.checkMap(theObj, String.class, Object.class));
                 }
-            } else {
-                if (isListReference) {
-                    List<Object> lst = UtilGenerics.checkList(request.getAttribute(attributeName));
-                    return UtilGenerics.<T>cast(lst.remove(listIndex));
-                } else {
-                    Object theValue = request.getAttribute(attributeName);
-                    request.removeAttribute(attributeName);
-                    return UtilGenerics.<T>cast(theValue);
-                }
+                return fma.remove(UtilGenerics.checkMap(theObj, String.class, Object.class));
             }
+            if (isListReference) {
+                List<Object> lst = UtilGenerics.checkList(request.getAttribute(attributeName));
+                return UtilGenerics.<T>cast(lst.remove(listIndex));
+            }
+            Object theValue = request.getAttribute(attributeName);
+            request.removeAttribute(attributeName);
+            return UtilGenerics.<T>cast(theValue);
         }
 
+        /**
+         * Session attribute remove operation.
+         * <p>
+         * SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+         * to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+         * It does not provide any form of thread safety or atomicity.
+         */
         public T remove(HttpSession session) {
             if (fma != null) {
                 Object theObj = session.getAttribute(attributeName);
                 if (isListReference) {
                     List<Object> lst = UtilGenerics.checkList(theObj);
                     return fma.remove(UtilGenerics.checkMap(lst.get(listIndex), String.class, Object.class));
-                } else {
-                    return fma.remove(UtilGenerics.checkMap(theObj, String.class, Object.class));
                 }
-            } else {
-                if (isListReference) {
-                    List<Object> lst = UtilGenerics.checkList(session.getAttribute(attributeName));
-                    return UtilGenerics.<T>cast(lst.remove(listIndex));
-                } else {
-                    Object theValue = session.getAttribute(attributeName);
-                    session.removeAttribute(attributeName);
-                    return UtilGenerics.<T>cast(theValue);
-                }
+                return fma.remove(UtilGenerics.checkMap(theObj, String.class, Object.class));
             }
+            if (isListReference) {
+                List<Object> lst = UtilGenerics.checkList(session.getAttribute(attributeName));
+                return UtilGenerics.<T>cast(lst.remove(listIndex));
+            }
+            Object theValue = session.getAttribute(attributeName);
+            session.removeAttribute(attributeName);
+            return UtilGenerics.<T>cast(theValue);
         }
     }
 }

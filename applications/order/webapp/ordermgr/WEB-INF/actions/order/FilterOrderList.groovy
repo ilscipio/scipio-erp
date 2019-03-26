@@ -43,7 +43,8 @@ filterPOsOpenPastTheirETA = [];
 filterPOsWithRejectedItems = [];
 filterPartiallyReceivedPOs = [];
 
-state = OrderListState.getInstance(request);
+// SCIPIO: 2018-11-28: Removed this getInstance call: why was this here? It can only ruin threading...
+//state = OrderListState.getInstance(request);
 //print("### " + state.toString());
 
 if ((state.hasFilter("filterPartiallyReceivedPOs") ||

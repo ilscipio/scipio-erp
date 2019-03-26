@@ -14,7 +14,7 @@
 -->
 
 <#if !ectTreeId?has_content>
-  <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
+  <#assign ectTreeId = "ectTree_" + raw(productStoreId!)>
 </#if>
 <#assign ectActionProps = toSimpleMap(ectActionProps!{})>
 
@@ -89,7 +89,7 @@
             
             <#local props = actionMap["removeassoc"]!{}>
             <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-removeassoc" class="+ect-dialogmodal">
+                <@modal id="${args.idPrefix}${raw(objectType)}-removeassoc" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
                     <@ectDefActionInnerContent props=props/>
                     <div class="modal-footer ${styles.text_right!}">
@@ -102,7 +102,7 @@
             
             <#local props = actionMap["remove"]!{}>
             <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-remove" class="+ect-dialogmodal">
+                <@modal id="${args.idPrefix}${raw(objectType)}-remove" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
                     <@ectDefActionInnerContent props=props/>
                     <@ectDefActionConfirmMsgBtn/>
@@ -111,7 +111,7 @@
         
             <#local props = actionMap["copymoveassoc"]!{}>
             <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-copymoveassoc" class="+ect-dialogmodal">
+                <@modal id="${args.idPrefix}${raw(objectType)}-copymoveassoc" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
                     <@ectDefActionInnerContent props=props/>
                     <div class="modal-footer ${styles.text_right!}">
@@ -191,8 +191,8 @@
         },
         markupSelectors: <@objectAsScript object=ectDefMarkupSelectors lang='js'/>,
         links: {
-            getProductCategoryExtendedData: '<@ofbizUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
-            getProductExtendedData: '<@ofbizUrl uri="getProductExtendedData" escapeAs="js"/>'
+            getProductCategoryExtendedData: '<@pageUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
+            getProductExtendedData: '<@pageUrl uri="getProductExtendedData" escapeAs="js"/>'
         },
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,
@@ -240,7 +240,7 @@
       <@section title=uiLabelMap.ProductBrowseCatalogeAndCategories>
         <@treemenu id=ectTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
             <#list treeMenuData as node>
-                <#switch rawString(node.type)>
+                <#switch raw(node.type)>
                     <#case "product">
                         <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
                             attribs={"data":{
@@ -254,7 +254,7 @@
                             icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}file"/>
                     <#break>
                     <#case "category">
-                        <#assign text = rawString(node.text!"")>
+                        <#assign text = raw(node.text!"")>
                         <#assign sequenceNum = (node.productCategoryRollupEntity.sequenceNum)!(node.prodCatalogCategoryEntity.sequenceNum)!false>
                         <#if sequenceNum?is_number>
                           <#assign text = text + " #" + sequenceNum>
@@ -273,7 +273,7 @@
                             icon=("${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}"+(node.state.opened?string("folder-open","folder")))/>
                     <#break>
                     <#case "catalog">
-                        <#assign text = rawString(node.text!"")>
+                        <#assign text = raw(node.text!"")>
                         <#assign sequenceNum = (node.productStoreCatalogEntity.sequenceNum)!false>
                         <#if sequenceNum?is_number>
                           <#assign text = text + " #" + sequenceNum>

@@ -40,8 +40,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;create-object&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{<createobject>}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class CreateObject extends MethodOperation {
 
@@ -55,7 +55,9 @@ public final class CreateObject extends MethodOperation {
     public CreateObject(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<create-object> element is deprecated (use <script>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<create-object> element is deprecated (use <script>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "class-name", "field");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "field");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "class-name", "field");

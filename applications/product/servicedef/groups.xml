@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<service-group xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-group.xsd">
+
+    <group name="createSalesAgreement" send-mode="all">
+        <invoke name="createAgreement" mode="sync" result-to-context="true"/>
+        <invoke name="createAgreementItem" mode="sync" result-to-context="true"/>
+        <invoke name="createAgreementProductAppl" mode="sync"/>
+    </group>
+</service-group>

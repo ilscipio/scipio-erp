@@ -21,6 +21,7 @@ package org.ofbiz.minilang.method.callops;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangRuntimeException;
@@ -33,8 +34,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;script&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cscript%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class CallScript extends MethodOperation {
 
@@ -49,7 +50,7 @@ public final class CallScript extends MethodOperation {
         }
         return false;
     }
-    
+
     /*
      * Developers - the location attribute is a constant for security reasons.
      * Script invocations should always be hard-coded.
@@ -60,11 +61,15 @@ public final class CallScript extends MethodOperation {
 
     public CallScript(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
+        String lang = element.getAttribute("lang"); // SCIPIO
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.attributeNames(simpleMethod, element, "location", "script");
-            MiniLangValidate.requireAnyAttribute(simpleMethod, element, "location", "script");
+            MiniLangValidate.attributeNames(simpleMethod, element, "location", "script", "lang", "trim-lines"); // SCIPIO: "lang", "trim-lines"
+            
+            //MiniLangValidate.requireAnyAttribute(simpleMethod, element, "location", "script");
             MiniLangValidate.constantAttributes(simpleMethod, element, "location");
-            MiniLangValidate.scriptAttributes(simpleMethod, element, "script");
+            MiniLangValidate.scriptLangAttributes(simpleMethod, element, "lang"); // SCIPIO: new
+            MiniLangValidate.scriptAttributes(simpleMethod, lang, element, "script"); // SCIPIO: modified for lang
+            MiniLangValidate.scriptBody(simpleMethod, lang, element); // SCIPIO: modified for lang
             MiniLangValidate.noChildElements(simpleMethod, element);
         }
         boolean elementModified = autoCorrect(element);
@@ -86,11 +91,33 @@ public final class CallScript extends MethodOperation {
             }
         }
         String inlineScript = element.getAttribute("script");
+        boolean bodyScript = false; // SCIPIO: detect attrib or body
         if (inlineScript.isEmpty()) {
             inlineScript = UtilXml.elementValue(element);
+            bodyScript = true;
         }
-        if (inlineScript != null && MiniLangUtil.containsScript(inlineScript)) {
-            this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(inlineScript));
+        // SCIPIO
+        //if (inlineScript != null && MiniLangUtil.containsScript(inlineScript)) {
+        if (UtilValidate.isNotEmpty(inlineScript)) {
+            String scriptText = null;
+            if (MiniLangUtil.startsWithScriptPrefix(inlineScript)) {
+                scriptText = inlineScript;
+            } else if (!lang.isEmpty()) {
+                scriptText = lang + ":" + inlineScript;
+            }
+            if (scriptText != null) {
+                // SCIPIO: trim the script for better caching
+                if (bodyScript) {
+                    boolean trimLines = "true".equals(element.getAttribute("trim-lines"));
+                    if (trimLines) {
+                        inlineScript = ScriptUtil.trimScriptLines(inlineScript);
+                    }
+                }
+                // SCIPIO: 2018-09-21: stock bugfix: body block should NOT use old operator substitutions!
+                this.scriptlet = new Scriptlet(bodyScript ? scriptText : StringUtil.convertOperatorSubstitutions(scriptText));
+            } else {
+                this.scriptlet = null;
+            }
         } else {
             this.scriptlet = null;
         }

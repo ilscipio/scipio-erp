@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -78,7 +65,7 @@ under the License.
             <set field="parameters.needsInventoryReceive" value="N"/>
         </if-empty>
 
-        <make-value value-field="newEntity" entity-name="ReturnHeader"/>
+        <make-value entity-name="ReturnHeader" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <!-- If PartyAcctgPreference.useInvoiceIdForReturns is Y, get the ID from the getNextInvoiceId service -->
@@ -138,9 +125,6 @@ under the License.
         <field-to-result field="successMsg" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="ReturnHeader" value-field="returnHeader"/>
 
         <!-- test the total return amount vs the total order amount -->
@@ -156,10 +140,10 @@ under the License.
             <entity-condition entity-name="ReturnAdjustment" list="returnAdjustments" distinct="true">
                 <condition-expr field-name="returnId" operator="equals" from-field="returnHeader.returnId"/>
             </entity-condition>
-            <iterate entry="returnItem" list="returnItems">
+            <iterate list="returnItems" entry="returnItem">
                 <log level="verbose" message="item: ${returnItem.returnItemSeqId} ${returnItem.returnItemTypeId} [${returnItem.description}] ${returnItem.productId} ${returnItem.returnQuantity} ${returnItem.returnPrice}"/>
             </iterate>
-            <iterate entry="returnAdjustment" list="returnAdjustments">
+            <iterate list="returnAdjustments" entry="returnAdjustment">
                 <log level="verbose" message="adjustment: ${returnAdjustment.returnItemSeqId} ${returnAdjustment.returnAdjustmentTypeId} [${returnAdjustment.description}] ${returnAdjustment.amount}"/>
             </iterate>
             -->
@@ -169,7 +153,7 @@ under the License.
             <calculate field="returnTotalAmount"><number value="0.0"/></calculate>
 
             <!-- check them all to make sure that the return total does not exceed order total.  -->
-            <iterate entry="returnItem" list="returnItems">
+            <iterate list="returnItems" entry="returnItem">
               <!-- check, for cross-ship returns, if a payment method is set to guarantee the cross-shipped item(s)..  -->
               <if>
                   <condition>
@@ -189,7 +173,7 @@ under the License.
               <check-errors/>
                <!-- tally up the return total amount -->
                <calculate field="returnTotalAmount">
-                   <calcop field="returnTotalAmount" operator="add">
+                   <calcop operator="add" field="returnTotalAmount">
                        <calcop operator="multiply">
                            <calcop operator="get" field="returnItem.returnPrice"/>
                            <calcop operator="get" field="returnItem.returnQuantity"/>
@@ -239,9 +223,9 @@ under the License.
             <entity-and entity-name="ReturnAdjustment" list="returnAdjustments">
                 <field-map field-name="returnId" from-field="returnHeader.returnId"/>
             </entity-and>
-            <iterate entry="returnAdjustment" list="returnAdjustments">
+            <iterate list="returnAdjustments" entry="returnAdjustment">
                 <calculate field="returnTotalAmount">
-                    <calcop field="returnTotalAmount" operator="add">
+                    <calcop operator="add" field="returnTotalAmount">
                         <calcop operator="get" field="returnAdjustment.amount"/>
                     </calcop>
                 </calculate>
@@ -320,7 +304,7 @@ under the License.
 
         <!-- if an orderItemSeqId is provided, then find the corresponding orderItem  -->
         <if-not-empty field="parameters.orderItemSeqId">
-            <make-value value-field="itemLookup" entity-name="OrderItem"/>
+            <make-value entity-name="OrderItem" value-field="itemLookup"/>
             <set-pk-fields map="parameters" value-field="itemLookup"/>
             <if-not-empty field="parameters.orderItemSeqId">
                 <find-by-primary-key entity-name="OrderItem" value-field="orderItem" map="itemLookup"/>
@@ -383,7 +367,7 @@ under the License.
             </else>
         </if-compare>
 
-        <make-value value-field="newEntity" entity-name="ReturnItem"/>
+        <make-value entity-name="ReturnItem" value-field="newEntity"/>
         <set from-field="parameters.returnId" field="newEntity.returnId"/>
         <make-next-seq-id seq-field-name="returnItemSeqId" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -403,7 +387,7 @@ under the License.
                 <!-- create return adjustments for all adjustments associated with the order item -->
                 <if-not-empty field="orderItem">
                     <get-related value-field="orderItem" relation-name="OrderAdjustment" list="orderAdjustments"/>
-                    <iterate entry="orderAdjustment" list="orderAdjustments">
+                    <iterate list="orderAdjustments" entry="orderAdjustment">
                         <clear-field field="returnAdjCtx"/>
                         <set field="returnAdjCtx.returnId" from-field="parameters.returnId"/>
                         <set field="returnAdjCtx.returnItemSeqId" from-field="newEntity.returnItemSeqId"/>
@@ -418,9 +402,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
-        <check-errors/>
-
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <set from-field="parameters.returnItemSeqId" field="lookupPKMap.returnItemSeqId"/>
         <find-by-primary-key entity-name="ReturnItem" map="lookupPKMap" value-field="returnItem"/>
@@ -437,7 +418,7 @@ under the License.
             <field-map field-name="returnId" from-field="returnItem.returnId"/>
             <field-map field-name="returnItemSeqId" from-field="returnItem.returnItemSeqId"/>
         </entity-and>
-        <iterate entry="returnAdjustment" list="returnAdjustments">
+        <iterate list="returnAdjustments" entry="returnAdjustment">
             <log level="info" message="updating returnAdjustment with Id:[${returnAdjustment.returnAdjustmentId}]"/>
             <set-service-fields service-name="updateReturnAdjustment" map="returnAdjustment" to-map="ctx"/>
             <set field="ctx.originalReturnPrice" from-field="originalReturnPrice"/>
@@ -448,12 +429,9 @@ under the License.
 
     </simple-method>
     <simple-method method-name="updateReturnItemsStatus" short-description="Update Return Items Status">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
-        <check-errors/>
-
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <find-by-and entity-name="ReturnItem" map="lookupPKMap" list="returnItems"/>
-        <iterate entry="item" list="returnItems">
+        <iterate list="returnItems" entry="item">
             <set field="item.statusId" from-field="parameters.statusId"/>
             <set-service-fields service-name="updateReturnItem" map="item" to-map="serviceInMap"/>
             <call-service service-name="updateReturnItem" in-map-name="serviceInMap"/>
@@ -462,9 +440,6 @@ under the License.
         </iterate>
     </simple-method>
     <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
-        <check-permission permission="ORDERMGR" action="_DELETE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveQuoteItem"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="ReturnHeader" value-field="returnHeader"/>
         <if-compare field="returnHeader.returnHeaderTypeId" operator="equals" value="CUSTOMER_RETURN">
             <if-compare field="returnHeader.statusId" operator="not-equals" type="String" value="RETURN_REQUESTED">
@@ -486,7 +461,7 @@ under the License.
             <field-map field-name="returnItemSeqId" from-field="returnItem.returnItemSeqId"/>
             <field-map field-name="returnId" from-field="returnItem.returnId"/>
         </entity-and>
-        <iterate entry="returnAdjustment" list="returnAdjustments">
+        <iterate list="returnAdjustments" entry="returnAdjustment">
             <set field="removeCtx.returnAdjustmentId" from-field="returnAdjustment.returnAdjustmentId"/>
             <call-service service-name="removeReturnAdjustment" in-map-name="removeCtx"/>
         </iterate>
@@ -506,7 +481,7 @@ under the License.
         </if>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ReturnAdjustment"/>
+        <make-value entity-name="ReturnAdjustment" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <sequenced-id sequence-name="ReturnAdjustment" field="newEntity.returnAdjustmentId"/>
         <field-to-result field="newEntity.returnAdjustmentId" result-name="returnAdjustmentId"/>
@@ -518,11 +493,6 @@ under the License.
         <field-to-result field="successMsg" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="removeReturnAdjustment" short-description="Remove Return Adjustment">
-        <check-permission permission="ORDERMGR" action="_DELETE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderErrorDeletePermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <set from-field="parameters.returnAdjustmentId" field="lookupPKMap.returnAdjustmentId"/>
         <find-by-primary-key entity-name="ReturnAdjustment" map="lookupPKMap" value-field="returnAdjustment"/>
         <if-not-empty field="returnAdjustment">
@@ -531,9 +501,6 @@ under the License.
     </simple-method>
     <!-- note that this service is designed to be called once for each shipment receipt that is created -->
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
-        <check-errors/>
-
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map="lookupPKMap" value-field="returnHeader"/>
         <find-by-and entity-name="ShipmentReceipt" map="lookupPKMap" list="shipmentReceipts"/>
@@ -547,7 +514,7 @@ under the License.
         <iterate-map key="returnItemSeqId" value="value" map="totalsMap">
             <set field="filterMap.returnItemSeqId" from="returnItemSeqId"/>
             <filter-list-by-and list="returnItems" map="filterMap" to-list="items"/>
-            <first-from-list entry="item" list="items"/>
+            <first-from-list list="items" entry="item"/>
             <set field="item.receivedQuantity" from="value" type="BigDecimal"/>
             <set-service-fields service-name="updateReturnItem" map="item" to-map="serviceInMap"/>
             <if-compare-field field="value" to-field="item.returnQuantity" operator="greater-equals" type="BigDecimal">
@@ -599,7 +566,7 @@ under the License.
         <field-to-result field="returnHeader.statusId" result-name="returnHeaderStatus"/>
     </simple-method>
     <simple-method method-name="createReturnItemResponse" short-description="Create a ReturnItemResponse">
-        <make-value value-field="newEntity" entity-name="ReturnItemResponse"/>
+        <make-value entity-name="ReturnItemResponse" value-field="newEntity"/>
         <sequenced-id sequence-name="ReturnItemResponse" field="newEntity.returnItemResponseId"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
@@ -622,7 +589,7 @@ under the License.
 
         <!-- get primary information from the order header -->
         <entity-one entity-name="OrderHeader" value-field="orderHeader">
-            <field-map from-field="parameters.orderId" field-name="orderId"/>
+            <field-map field-name="orderId" from-field="parameters.orderId"/>
         </entity-one>
         <set field="returnHeaderTypeId" from-field="parameters.returnHeaderTypeId"/>
         <if-compare field="returnHeaderTypeId" operator="equals" value="CUSTOMER_RETURN">
@@ -639,7 +606,7 @@ under the License.
                 <condition-expr field-name="roleTypeId" operator="equals" from-field="roleTypeId"/>
             </condition-list>
         </entity-condition>
-        <first-from-list entry="orderRole" list="orderRoles"/>
+        <first-from-list list="orderRoles" entry="orderRole"/>
         <!-- create the return header -->
         <set from-field="orderHeader.originFacilityId" field="createHeaderCtx.destinationFacilityId"/>
         <set value="Y" field="updateHeaderCtx.needsInventoryReceive"/>
@@ -681,7 +648,7 @@ under the License.
         </if-empty>
 
         <!-- create the return items -->
-        <iterate entry="orderItem" list="orderItems">
+        <iterate list="orderItems" entry="orderItem">
             <set from-field="returnId" field="newItemCtx.returnId"/>
             <set from-field="parameters.returnReasonId" field="newItemCtx.returnReasonId"/>
             <set from-field="parameters.returnTypeId" field="newItemCtx.returnTypeId"/>
@@ -711,15 +678,15 @@ under the License.
                     <select-field field-name="productTypeId"/>
                 </entity-one>
                 <entity-one entity-name="ReturnItemTypeMap" value-field="returnItemTypeMapping">
-                    <field-map from-field="product.productTypeId" field-name="returnItemMapKey"/>
-                    <field-map from-field="returnHeaderTypeId" field-name="returnHeaderTypeId"/>
+                    <field-map field-name="returnItemMapKey" from-field="product.productTypeId"/>
+                    <field-map field-name="returnHeaderTypeId" from-field="returnHeaderTypeId"/>
                 </entity-one>
             <else>
             <!-- if not, try the ReturnItemTypeMap, but this may not actually work, so log a warning -->
                 <log level="warning" message="Trying to find returnItemtype from ReturnItemTypeMap with orderItemtypeId [${orderItem.orderItemTypeId}] for order item [${orderItem}]"/>
                 <entity-one entity-name="ReturnItemTypeMap" value-field="returnItemTypeMapping">
-                   <field-map from-field="orderItemTypeId" field-name="returnItemMapKey"/>
-                   <field-map from-field="returnHeaderTypeId" field-name="returnHeaderTypeId"/>
+                   <field-map field-name="returnItemMapKey" from-field="orderItemTypeId"/>
+                   <field-map field-name="returnHeaderTypeId" from-field="returnHeaderTypeId"/>
                 </entity-one>
             </else>
             </if-compare>
@@ -755,7 +722,7 @@ under the License.
                 <condition-expr field-name="orderItemSeqId" operator="equals" value="_NA_"/>
             </condition-list>
         </entity-condition>
-        <iterate entry="orderAdjustment" list="orderAdjustments">
+        <iterate list="orderAdjustments" entry="orderAdjustment">
             <clear-field field="returnAdjCtx"/>
             <set from-field="orderAdjustment.orderAdjustmentId" field="returnAdjCtx.orderAdjustmentId"/>
             <set from-field="returnId" field="returnAdjCtx.returnId"/>
@@ -843,12 +810,10 @@ under the License.
     </simple-method>
 
     <simple-method method-name="cancelReturnItems" short-description="Update a ReturnItems">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCancelReturnItems"/></check-permission>
-        <check-errors/>
         <entity-condition entity-name="ReturnItem" list="returnItems" distinct="true">
             <condition-expr field-name="returnId" operator="equals" from-field="parameters.returnId"/>
         </entity-condition>
-        <iterate entry="returnItem" list="returnItems">
+        <iterate list="returnItems" entry="returnItem">
             <set field="returnItemMap.returnId" from-field="parameters.returnId"/>
             <set field="returnItemMap.returnItemSeqId" from-field="returnItem.returnItemSeqId"/>
             <set field="returnItemMap.statusId" value="RETURN_CANCELLED"/>
@@ -857,8 +822,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="cancelReplacementOrderItems" short-description="Cancel the associated OrderItems of the replacement order, if any.">
-        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCancelReturnItems"/></check-permission>
-        <check-errors/>
         <entity-one entity-name="ReturnItem" value-field="returnItem"/>
         <if>
             <condition>
@@ -929,31 +892,29 @@ under the License.
                         <set field="createOrderMap.returnTypeId" value="RTN_WAIT_REPLACE_RES"/>
                         <call-service service-name="processReplacementReturn" in-map-name="createOrderMap"/>
                     </if-compare>
-                </if-not-empty>                                
+                </if-not-empty>
             </if-not-empty>
         </if-compare>
     </simple-method>
-   
+
     <simple-method method-name="processReplaceImmediatelyReturn" short-description="Process the replacements in a immediate return">
         <set field="inMap.returnId" from-field="parameters.returnId"/>
         <set field="inMap.returnTypeId" value="RTN_REPLACE_IMMEDIAT"/>
         <call-service service-name="processReplacementReturn" in-map-name="inMap"/>
-    </simple-method> 
+    </simple-method>
     <simple-method method-name="processRefundOnlyReturn" short-description="Process the refund in a return">
         <set field="inMap.returnId" from-field="parameters.returnId"/>
         <set field="inMap.returnTypeId" value="RTN_REFUND"/>
         <call-service service-name="processRefundReturn" in-map-name="inMap"/>
-    </simple-method> 
+    </simple-method>
     <simple-method method-name="processRefundImmediatelyReturn" short-description="Process the Immediate refund in a return">
         <set field="inMap.returnId" from-field="parameters.returnId"/>
         <set field="inMap.returnTypeId" value="RTN_REFUND_IMMEDIATE"/>
         <call-service service-name="processRefundReturn" in-map-name="inMap"/>
-    </simple-method> 
+    </simple-method>
 
     <simple-method method-name="createReturnItemShipment" short-description="Create a ReturnItemShipment">
-        <check-permission permission="ORDERMGR" action="_CREATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunCreateReturnItemShipment"/></check-permission>
-        <check-errors/>
-        <make-value value-field="newEntity" entity-name="ReturnItemShipment"/>
+        <make-value entity-name="ReturnItemShipment" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
@@ -1116,7 +1077,7 @@ under the License.
         </else>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="createReturnStatus" short-description="Create ReturnHeader and ReturnItem Status">
         <make-value entity-name="ReturnStatus" value-field="newEntity"/>
         <if-empty field="parameters.returnItemSeqId">
@@ -1134,25 +1095,20 @@ under the License.
         <now-timestamp field="newEntity.statusDatetime"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
-    <simple-method method-name="updateReturnContactMech" short-description="Update ReturnContactMech">
-        <check-permission permission="ORDERMGR" action="_UPDATE">
-           <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateOrderContactMech"/>
-        </check-permission>
-        <check-errors/>
 
-        <make-value value-field="returnContactMechMap" entity-name="ReturnContactMech"/>
+    <simple-method method-name="updateReturnContactMech" short-description="Update ReturnContactMech">
+        <make-value entity-name="ReturnContactMech" value-field="returnContactMechMap"/>
 
         <set-pk-fields map="parameters" value-field="returnContactMechMap"/>
-        <entity-one value-field="returnHeader" entity-name="ReturnHeader"/>
+        <entity-one entity-name="ReturnHeader" value-field="returnHeader"/>
         <set from-field="parameters.returnId" field="createReturnContactMechMap.returnId"/>
         <set from-field="parameters.contactMechPurposeTypeId" field="createReturnContactMechMap.contactMechPurposeTypeId"/>
         <set from-field="parameters.contactMechId" field="createReturnContactMechMap.contactMechId"/>
-  
+
         <find-by-and entity-name="ReturnContactMech" map="createReturnContactMechMap" list="returnContactMechList"/>
         <!-- If returnContactMechList value is null then create new entry in ReturnContactMech entity-->
         <if-empty field="returnContactMechList">
-            <if-compare value="SHIPPING_LOCATION" field="parameters.contactMechPurposeTypeId" operator="equals">
+            <if-compare field="parameters.contactMechPurposeTypeId" operator="equals" value="SHIPPING_LOCATION">
                 <set field="returnHeader.originContactMechId" from-field="createReturnContactMechMap.contactMechId"/>
                 <store-value value-field="returnHeader"/>
             </if-compare>
@@ -1177,7 +1133,7 @@ under the License.
                     <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
                 </condition-list>
             </entity-condition>
-            <first-from-list entry="orderRole" list="orderRoles"/>
+            <first-from-list list="orderRoles" entry="orderRole"/>
 
             <get-related-one relation-name="ProductStore" value-field="orderHeader" to-value-field="productStore"/>
 
@@ -1210,7 +1166,7 @@ under the License.
                     <condition-expr field-name="productTypeId" operator="equals" value="ASSET_USAGE_OUT_IN"/>
                 </condition-list>
             </entity-condition>
-            <iterate entry="orderItem" list="orderItems">
+            <iterate list="orderItems" entry="orderItem">
                 <set field="createReturnCtx.productId" from-field="orderItem.productId"/>
                 <set field="createReturnCtx.orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                 <set field="createReturnCtx.description" from-field="orderItem.itemDescription"/>

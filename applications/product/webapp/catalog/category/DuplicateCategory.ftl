@@ -3,7 +3,7 @@
 <@modal id="duplicateProductCategory">
 <#if productCategoryId?has_content>
     <@section title=uiLabelMap.ProductDuplicateCategory>
-        <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post">
+        <form action="<@pageUrl>DuplicateProductCategory</@pageUrl>" method="post">
             <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
             <@field type="input" label=uiLabelMap.ProductDuplicateProductCategorySelected size="20" maxlength="20" name="productCategoryId"/>
                      
@@ -25,6 +25,14 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#modal_duplicateProductCategory').foundation('reveal','open');
+        try {
+            $('#modal_duplicateProductCategory').foundation('reveal','open');
+        } catch(err) {
+            try {
+                $('#modal_duplicateProductCategory').modal('show');
+            } catch(err) {
+                //t.dispatchEvent(event);
+            }
+        }
     });
 </@script>

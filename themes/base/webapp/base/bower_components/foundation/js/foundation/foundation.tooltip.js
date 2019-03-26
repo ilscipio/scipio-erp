@@ -305,7 +305,10 @@
           settings = $.extend({}, self.settings, self.data_options($target));
 
       if ($tip.find('.tap-to-close').length === 0) {
-        $tip.append('<span class="tap-to-close">' + settings.touch_close_text + '</span>');
+        // Scipio ERP fix
+        // $tip.append('<span class="tap-to-close">' + settings.touch_close_text + '</span>');
+        $tip.append($('<span>').addClass('tap-to-close').text(settings.touch_close_text));
+
         $tip.on('click.fndtn.tooltip.tapclose touchstart.fndtn.tooltip.tapclose MSPointerDown.fndtn.tooltip.tapclose', function (e) {
           self.hide($target);
         });

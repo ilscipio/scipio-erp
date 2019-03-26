@@ -36,3 +36,8 @@ if (job) {
         context.runtimeInfoList = runtimeInfoList
     }
 }
+
+// SCIPIO: 2018-08-28: this triggers the "No records found" message.
+if (context.runtimeInfoList == null) {
+    context.runtimeInfoList = []
+}

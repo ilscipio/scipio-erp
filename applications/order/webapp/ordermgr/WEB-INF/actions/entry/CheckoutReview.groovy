@@ -123,7 +123,7 @@ context.shipAfterDate = cart.getShipAfterDate();
 shipmentMethodType = from("ShipmentMethodType").where("shipmentMethodTypeId", cart.getShipmentMethodTypeId()).queryOne();
 if (shipmentMethodType) context.shipMethDescription = shipmentMethodType.description;
 
-orh = new OrderReadHelper(orderAdjustments, orderItems);
+orh = new OrderReadHelper(dispatcher, locale, orderAdjustments, orderItems); // SCIPIO: Added dispatcher
 context.localOrderReadHelper = orh;
 
 shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
@@ -157,3 +157,11 @@ if (orderTerms) {
 
 orderType = cart.getOrderType();
 context.orderType = orderType;
+
+// SCIPIO: OrderItemAttributes and ProductConfigWrappers
+orderItemAttrMap = cart.makeAllOrderItemAttributesByOrderItemSeqId();
+context.orderItemAttrMap = orderItemAttrMap;
+orderItemProdCfgMap = cart.getProductConfigWrappersByOrderItemSeqId();
+context.orderItemProdCfgMap = orderItemProdCfgMap;
+orderItemSurvResMap = cart.makeAllOrderItemSurveyResponsesByOrderItemSeqId();
+context.orderItemSurvResMap = orderItemSurvResMap;

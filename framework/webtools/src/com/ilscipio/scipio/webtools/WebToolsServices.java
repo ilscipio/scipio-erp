@@ -19,14 +19,17 @@
 package com.ilscipio.scipio.webtools;
 
 import java.io.BufferedWriter;
-
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,10 +37,12 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
 import org.apache.commons.io.IOUtils;
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -53,22 +58,18 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 
-/**
- * WebTools Services
- */
-
 public class WebToolsServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Generates an entity export based on a list of entity-names and optional fromDate. Creates a zip and stores in EntityExport
-     * entity. Afterwards returns the generated downloadLink
-     * @return String of generated filedownloadlink
-     * */
-    public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map result = ServiceUtil.returnSuccess();
-        List<String> entityNames = (List) context.get("entityList");
+     * entity. Afterwards returns the generated download link.
+     * @return String of generated file download link
+     */
+    public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ?> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List<String> entityNames = UtilGenerics.checkList(context.get("entityList"));
         EntityCondition entityFromCond = null;
         EntityCondition entityThruCond = null;
         EntityCondition entityDateCond = null;
@@ -79,7 +80,7 @@ public class WebToolsServices {
         List<File> srcFiles = new LinkedList<File>();
         Timestamp createdDate = UtilDateTime.nowTimestamp();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         if (UtilValidate.isNotEmpty(entityFrom)) {
             entityFromCond = EntityCondition.makeCondition("lastUpdatedTxStamp", EntityComparisonOperator.GREATER_THAN, entityFrom);
         }
@@ -94,10 +95,9 @@ public class WebToolsServices {
             entityDateCond = entityThruCond;
         }
 
-
         try {
             // Generate temporary export files
-            for(String curEntityName : entityNames){
+            for(String curEntityName : entityNames) {
                 long numberWritten = 0;
                 ModelEntity me = delegator.getModelEntity(curEntityName);
                 List<GenericValue> values = new LinkedList<GenericValue>();
@@ -105,18 +105,16 @@ public class WebToolsServices {
                     Debug.logInfo(curEntityName + " is a view entity. Skipping...",module);
                     continue;
                 }
-        
+
                 boolean beganTx = TransactionUtil.begin();
-                
+
                 try {
-                    
                     values = EntityQuery.use(delegator).from(curEntityName).where(entityDateCond).orderBy(me.getPkFieldNames()).queryList();
                 } catch (Exception entityEx) {
                     Debug.logInfo("Error when looking up "+curEntityName + " "+entityEx,module);
                     continue;
                 }
-        
-                
+
                 // Iterate over all values
                 if (values != null) {
                     File outFile = new File(PathUtil.getTempFileDir(), curEntityName +".xml");
@@ -124,25 +122,23 @@ public class WebToolsServices {
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
 
-                   for(GenericValue value : values){
+                    for(GenericValue value : values) {
                         value.writeXmlText(writer, "");
                         numberWritten++;
                         if (numberWritten % 500 == 0) {
                             TransactionUtil.commit(beganTx);
                             beganTx = TransactionUtil.begin();
-                            }
                         }
-                   writer.println("</entity-engine-xml>");
-                   writer.close();
-                   srcFiles.add(outFile);
-                   
+                    }
+                    writer.println("</entity-engine-xml>");
+                    writer.close();
+                    srcFiles.add(outFile);
                 } else {
                     Debug.logInfo(curEntityName + " has no records, not writing file",module);
                 }
                 TransactionUtil.commit(beganTx);
-               
             }
-            
+
             // Zip Files
             String fileSuffix = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
             String fileName = "Entityexport_"+fileSuffix+".zip";
@@ -156,48 +152,116 @@ public class WebToolsServices {
                  byte[] bytes = new byte[1024];
                  int length;
                  while((length = fis.read(bytes)) >= 0) {
-                 zipOut.write(bytes, 0, length);
+                     zipOut.write(bytes, 0, length);
                  }
                  fis.close();
-                 }
-            
+             }
+
              zipOut.close();
              fos.close();
-             
-             //Upload to database
+
+             // Upload to database
              GenericValue dataResource = delegator.makeValue("EntityExport");
              String seqId = delegator.getNextSeqId("EntityExport");
              dataResource.put("exportId", seqId);
-             if(UtilValidate.isNotEmpty(description)){
+             if (UtilValidate.isNotEmpty(description)) {
                  dataResource.put("description", description);
-             }else{
+             } else {
                  dataResource.put("description", "Generated on "+createdDate);
              }
-             
+
              if(UtilValidate.isNotEmpty(userLogin)){
-                 dataResource.put("createdBy", userLogin.getString("userLoginId"));                     
+                 dataResource.put("createdBy", userLogin.getString("userLoginId"));
              }
 
              FileInputStream fileInputStream = new FileInputStream(outZipFile);
              byte[] zipFile = IOUtils.toByteArray(fileInputStream);
-             dataResource.put("file", zipFile);
+             dataResource.put("fileData", zipFile);
              dataResource.put("fileSize", new Long(zipFile.length));
              delegator.createOrStore(dataResource);
-             
-             //Return fileId
+
+             // Return fileId
              result.put("exportId", dataResource.getPrimaryKey().getString("exportId"));
-             
-             
-             //Cleanup 
+
+             // Cleanup
              for(File srcFile : srcFiles){
                  srcFile.delete();
              }
              // outZipFile.delete();
-        }catch(Exception e){
+        } catch(Exception e) {
             Debug.logError("Error while generating Entity Export "+e, module);
             result = ServiceUtil.returnError("Error while generating Entity Export");
         }
         return result;
     }
-    
+
+    public static Map<String, Object> validateSystemLocations(DispatchContext dctx, Map<String, ? extends Object> context) {
+        List<String> pathList = UtilGenerics.checkList(context.get("pathList"));
+        String paths = (String) context.get("paths");
+        if (UtilValidate.isNotEmpty(paths)) {
+            pathList = (pathList != null) ? new ArrayList<>(pathList) : new ArrayList<>();
+            pathList.addAll(Arrays.asList(paths.split("[\\s\\n,;]+")));
+        }
+        boolean success = true;
+        List<Map<String, Object>> pathResults = null;
+        if (pathList != null) {
+            pathResults = new ArrayList<>();
+            for(String path : pathList) {
+                path = path.trim();
+                int dollarSign = path.indexOf('#');
+                if (dollarSign >= 0) {
+                    path = path.substring(0, dollarSign);
+                }
+                if (path.length() == 0) {
+                    continue;
+                }
+                URL resolvedLocation = null;
+                try {
+                    resolvedLocation = FlexibleLocation.resolveLocation(path);
+                    if (resolvedLocation == null) {
+                        throw new NullPointerException();
+                    }
+                    if (!new java.io.File(resolvedLocation.toURI()).exists()) {
+                        throw new FileNotFoundException();
+                    }
+                    pathResults.add(UtilMisc.toMap("value", path, "valid", true));
+                } catch (Exception e) {
+                    pathResults.add(UtilMisc.toMap("value", path, "valid", false,
+                            "errMsg", e.toString()));
+                    success = false;
+                }
+            }
+        }
+
+        List<String> classNameList = UtilGenerics.checkList(context.get("classNameList"));
+        String classNames = (String) context.get("classNames");
+        if (UtilValidate.isNotEmpty(classNames)) {
+            classNameList = (classNameList != null) ? new ArrayList<>(classNameList) : new ArrayList<>();
+            classNameList.addAll(Arrays.asList(classNames.split("[\\s\\n,;]+")));
+        }
+        List<Map<String, Object>> classNameResults = null;
+        if (classNameList != null) {
+            classNameResults = new ArrayList<>();
+            for(String className : classNameList) {
+                className = className.trim();
+                if (className.length() == 0) {
+                    continue;
+                }
+                try {
+                    ClassLoader cl = dctx.getClassLoader();
+                    cl.loadClass(className);
+                    classNameResults.add(UtilMisc.toMap("value", className, "valid", true));
+                } catch(Exception e) {
+                    classNameResults.add(UtilMisc.toMap("value", className, "valid", false,
+                            "errMsg", e.toString()));
+                    success = false;
+                }
+            }
+        }
+
+        Map<String, Object> results = success ? ServiceUtil.returnSuccess() : ServiceUtil.returnFailure("Invalid locations found");
+        results.put("pathResults", pathResults);
+        results.put("classNameResults", classNameResults);
+        return results;
+    }
 }

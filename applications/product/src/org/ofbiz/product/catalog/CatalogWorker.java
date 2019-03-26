@@ -35,27 +35,25 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * CatalogWorker - Worker class for catalog related functionality
  */
-public class CatalogWorker {
+public final class CatalogWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CatalogWorker () {}
 
-    
+
     /**
      * @deprecated - Use WebSiteWorker.getWebSiteId(ServletRequest) instead
      */
@@ -184,15 +182,15 @@ public class CatalogWorker {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             if (saveTrail) {
-                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request,
                 // otherwise may lose work done by servlets and filters
-                //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
-                CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
+                //CategoryWorker.setTrail(request, new ArrayList<>());
+                CategoryWorker.setTrailIfFirstInRequest(request, new ArrayList<>()); // SCIPIO: use ArrayList
             }
         }
         return prodCatalogId;
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
@@ -204,7 +202,7 @@ public class CatalogWorker {
     public static String getCurrentCatalogId(ServletRequest request, boolean save) {
         return getCurrentCatalogId(request, save, save);
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
@@ -216,13 +214,13 @@ public class CatalogWorker {
     public static String getCurrentCatalogId(ServletRequest request) {
         return getCurrentCatalogId(request, true, true);
     }
-    
+
     /**
      * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
      * get the first catalog from the database as specified in getCatalogIdsAvailable().
      * If this behavior is undesired, give the user a selectable list of catalogs.
-     * SCIPIO: This variant only reads and does not store the catalogId (or anything else) 
+     * SCIPIO: This variant only reads and does not store the catalogId (or anything else)
      * back in session; intended for special purposes.
      * Added 2017-08-15.
      */
@@ -261,7 +259,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogName(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -300,7 +298,7 @@ public class CatalogWorker {
     }
 
     public static GenericValue getProdCatalog(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -316,7 +314,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogTopCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_BROWSE_ROOT");
 
@@ -328,7 +326,7 @@ public class CatalogWorker {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: new overload that works with delegator instead of request.
      * Added 2017-11-09.
@@ -355,7 +353,7 @@ public class CatalogWorker {
         return getCatalogSearchCategoryId((Delegator) request.getAttribute("delegator"), prodCatalogId);
     }
     public static String getCatalogSearchCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_SEARCH");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -367,7 +365,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogViewAllowCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_VIEW_ALLW");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -379,7 +377,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogPurchaseAllowCategoryId(Delegator delegator, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_PURCH_ALLW");
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
@@ -395,7 +393,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogPromotionsCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_PROMOTIONS");
 
@@ -413,7 +411,7 @@ public class CatalogWorker {
     }
 
     public static boolean getCatalogQuickaddUse(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return false;
+        if (UtilValidate.isEmpty(prodCatalogId)) return false;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         try {
@@ -433,7 +431,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogQuickaddCategoryPrimary(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 
@@ -451,7 +449,7 @@ public class CatalogWorker {
     }
 
     public static Collection<String> getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         Collection<String> categoryIds = new LinkedList<String>();
 
@@ -467,7 +465,7 @@ public class CatalogWorker {
     }
 
     public static String getCatalogTopEbayCategoryId(ServletRequest request, String prodCatalogId) {
-        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        if (UtilValidate.isEmpty(prodCatalogId)) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_EBAY_ROOT");
 
@@ -479,8 +477,7 @@ public class CatalogWorker {
             return null;
         }
     }
-    
-    
+
     /**
      * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
@@ -494,8 +491,8 @@ public class CatalogWorker {
     public static String getCatalogBestSellCategoryId(ServletRequest request, String prodCatalogId) {
         return getCatalogFirstCategoryId(request, "PCCT_BEST_SELL", prodCatalogId);
     }
-    
-    
+
+
     /**
      * SCIPIO: Returns the first root best-sell category for the current catalog.
      */
@@ -519,7 +516,7 @@ public class CatalogWorker {
             return null;
         }
     }
-    
+
     /**
      * SCIPIO: Imported from SolrCategoryUtil.
      * Added 2017-11-09.

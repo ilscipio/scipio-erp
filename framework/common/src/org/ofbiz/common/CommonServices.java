@@ -22,7 +22,6 @@ import static org.ofbiz.base.util.UtilGenerics.checkList;
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,6 +50,7 @@ import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -93,17 +93,17 @@ public class CommonServices {
                 Object cKey = entry.getKey();
                 Object value = entry.getValue();
 
-                System.out.println("---- SVC-CONTEXT: " + cKey + " => " + value);
+                Debug.logInfo("---- SVC-CONTEXT: " + cKey + " => " + value, module);
             }
         }
         if (!context.containsKey("message")) {
             response.put("resp", "no message found");
         } else {
-            System.out.println("-----SERVICE TEST----- : " + (String) context.get("message"));
+            Debug.logInfo("-----SERVICE TEST----- : " + (String) context.get("message"), module);
             response.put("resp", "service done");
         }
 
-        System.out.println("----- SVC: " + dctx.getName() + " -----");
+        Debug.logInfo("----- SVC: " + dctx.getName() + " -----", module);
         return response;
     }
 
@@ -117,7 +117,7 @@ public class CommonServices {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> response = ServiceUtil.returnSuccess();
 
-        List<GenericValue> testingNodes = new LinkedList<GenericValue>();
+        List<GenericValue> testingNodes = new LinkedList<>();
         for (int i = 0; i < 3; i ++) {
             GenericValue testingNode = delegator.makeValue("TestingNode");
             testingNode.put("testingNodeId", "TESTING_NODE" + i);
@@ -134,7 +134,7 @@ public class CommonServices {
         if (duration == null) {
             duration = 30000l;
         }
-        System.out.println("-----SERVICE BLOCKING----- : " + duration/1000d +" seconds");
+        Debug.logInfo("-----SERVICE BLOCKING----- : " + duration/1000d +" seconds", module);
         try {
             Thread.sleep(duration);
         } catch (InterruptedException e) {
@@ -183,8 +183,9 @@ public class CommonServices {
 
         // check for a party id
         if (partyId == null) {
-            if (userLogin != null && userLogin.get("partyId") != null)
+            if (userLogin != null && userLogin.get("partyId") != null) {
                 partyId = userLogin.getString("partyId");
+            }
         }
 
         Map<String, Object> fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note,
@@ -218,6 +219,16 @@ public class CommonServices {
         Debug.set(Debug.INFO, "Y".equalsIgnoreCase((String) context.get("info")));
         Debug.set(Debug.TIMING, "Y".equalsIgnoreCase((String) context.get("timing")));
         Debug.set(Debug.VERBOSE, "Y".equalsIgnoreCase((String) context.get("verbose")));
+        
+        // SCIPIO (2019-03-22): This serves as a way to test active logging levels after adjusting
+        Debug.logFatal("Logging a fatal log", module);
+        Debug.logError("Logging an error log", module);
+        Debug.logWarning("Logging a warning log", module);
+        Debug.logImportant("Logging an important log", module);
+        Debug.logInfo("Logging an info log", module);
+        Debug.logTiming("Logging an timming log", module);
+        Debug.logVerbose("Logging an verbose log", module);
+        Debug.log("Logging a debug log", module);
 
         return ServiceUtil.returnSuccess();
     }
@@ -232,7 +243,7 @@ public class CommonServices {
      * This service does not have required parameters and does not validate
      */
      public static Map<String, Object> echoService(DispatchContext dctx, Map<String, ?> context) {
-         Map<String, Object> result =  new LinkedHashMap<String, Object>();
+         Map<String, Object> result =  new LinkedHashMap<>();
          result.putAll(context);
          result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
          return result;
@@ -281,21 +292,13 @@ public class CommonServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEntityTestFailure", locale));
         }
 
-        /*
-        try {
-            newEntity.remove();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-        */
-
         return ServiceUtil.returnSuccess();
     }
 
     /** Test entity sorting */
     public static Map<String, Object> entitySortTest(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
-        Set<ModelEntity> set = new TreeSet<ModelEntity>();
+        Set<ModelEntity> set = new TreeSet<>();
 
         set.add(delegator.getModelEntity("Person"));
         set.add(delegator.getModelEntity("PartyRole"));
@@ -317,7 +320,7 @@ public class CommonServices {
 
     public static Map<String, Object> makeALotOfVisits(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
-        int count = ((Integer) context.get("count")).intValue();
+        int count = (Integer) context.get("count");
 
         // SCIPIO: 2018-02-15: patch to add random userLoginId/partyId combo
         Integer randomUserCount = (Integer) context.get("randomUserCount");
@@ -327,14 +330,14 @@ public class CommonServices {
             efo.setMaxRows(randomUserCount);
             EntityCondition cond = EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null);
             try {
-                userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"), 
+                userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"),
                         null, efo, false);
                 userLoginList = new ArrayList<>(userLoginList);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not get UserLogins for dummy visit creation", module);
             }
         }
-        
+
         for (int i = 0; i < count; i++) {
             GenericValue v = delegator.makeValue("Visit");
             String seqId = delegator.getNextSeqId("Visit");
@@ -346,8 +349,8 @@ public class CommonServices {
             v.set("serverHostName", "localhost");
             v.set("webappName", "webtools");
             v.set("initialLocale", "en_US");
-            v.set("initialRequest", "http://localhost:8080/admin/control/main");
-            v.set("initialReferrer", "http://localhost:8080/admin/control/main");
+            v.set("initialRequest", "https://localhost:8443/admin/control/main");
+            v.set("initialReferrer", "https://localhost:8443/admin/control/main");
             v.set("initialUserAgent", "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-us) AppleWebKit/124 (KHTML, like Gecko) Safari/125.1");
             v.set("clientIpAddress", "127.0.0.1");
             v.set("clientHostName", "localhost");
@@ -359,7 +362,7 @@ public class CommonServices {
                 v.set("userLoginId", randUserLogin.get("userLoginId"));
                 v.set("partyId", randUserLogin.get("partyId"));
             }
-            
+
             try {
                 delegator.create(v);
             } catch (GenericEntityException e) {
@@ -392,16 +395,22 @@ public class CommonServices {
         String ofbizHome = System.getProperty("ofbiz.home");
         String outputPath1 = ofbizHome + (fileName1.startsWith("/") ? fileName1 : "/" + fileName1);
         String outputPath2 = ofbizHome + (fileName2.startsWith("/") ? fileName2 : "/" + fileName2);
+        RandomAccessFile file1 = null, file2 = null;
 
         try {
-            RandomAccessFile file1 = new RandomAccessFile(outputPath1, "rw");
-            RandomAccessFile file2 = new RandomAccessFile(outputPath2, "rw");
+            file1 = new RandomAccessFile(outputPath1, "rw");
+            file2 = new RandomAccessFile(outputPath2, "rw");
             file1.write(buffer1.array());
             file2.write(buffer2.array());
-        } catch (FileNotFoundException e) {
-            Debug.logError(e, module);
         } catch (IOException e) {
             Debug.logError(e, module);
+        } finally {
+            try {
+                file1.close();
+                file2.close();
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
         }
 
         return ServiceUtil.returnSuccess();
@@ -415,7 +424,7 @@ public class CommonServices {
         String fileName = (String) context.get("_uploadFile_fileName");
         String contentType = (String) context.get("_uploadFile_contentType");
 
-        Map<String, Object> createCtx =  new LinkedHashMap<String, Object>();
+        Map<String, Object> createCtx =  new LinkedHashMap<>();
         createCtx.put("binData", array);
         createCtx.put("dataResourceTypeId", "OFBIZ_FILE");
         createCtx.put("dataResourceName", fileName);
@@ -437,7 +446,7 @@ public class CommonServices {
 
         GenericValue dataResource = (GenericValue) createResp.get("dataResource");
         if (dataResource != null) {
-            Map<String, Object> contentCtx =  new LinkedHashMap<String, Object>();
+            Map<String, Object> contentCtx =  new LinkedHashMap<>();
             contentCtx.put("dataResourceId", dataResource.getString("dataResourceId"));
             contentCtx.put("localeString", ((Locale) context.get("locale")).toString());
             contentCtx.put("contentTypeId", "DOCUMENT");
@@ -500,11 +509,10 @@ public class CommonServices {
         InputStream in = (InputStream) context.get("inputStream");
         OutputStream out = (OutputStream) context.get("outputStream");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        Writer writer = new OutputStreamWriter(out);
         String line;
 
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, UtilIO.getUtf8()));
+                Writer writer = new OutputStreamWriter(out, UtilIO.getUtf8())) {
             while ((line = reader.readLine()) != null) {
                 Debug.logInfo("Read line: " + line, module);
                 writer.write(line);
@@ -512,12 +520,6 @@ public class CommonServices {
         } catch (IOException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
         }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -533,7 +535,7 @@ public class CommonServices {
             message = "PONG";
         }
 
-        long count = -1;
+        long count;
         try {
             count = EntityQuery.use(delegator).from("SequenceValueItem").queryCount();
         } catch (GenericEntityException e) {
@@ -541,20 +543,19 @@ public class CommonServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonPingDatasourceCannotConnect", locale));
         }
 
-        if (count > 0) {
+        if (count != 0L) {
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("message", message);
             return result;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonPingDatasourceInvalidCount", locale));
         }
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonPingDatasourceInvalidCount", locale));
     }
 
     public static Map<String, Object> getAllMetrics(DispatchContext dctx, Map<String, ?> context) {
-        List<Map<String, Object>> metricsMapList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> metricsMapList = new LinkedList<>();
         Collection<Metrics> metricsList = MetricsFactory.getMetrics();
         for (Metrics metrics : metricsList) {
-            Map<String, Object> metricsMap =  new LinkedHashMap<String, Object>();
+            Map<String, Object> metricsMap =  new LinkedHashMap<>();
             metricsMap.put("name", metrics.getName());
             metricsMap.put("serviceRate", metrics.getServiceRate());
             metricsMap.put("threshold", metrics.getThreshold());
@@ -568,15 +569,16 @@ public class CommonServices {
 
     public static Map<String, Object> resetMetric(DispatchContext dctx, Map<String, ?> context) {
         String originalName = (String) context.get("name");
+        Locale locale = (Locale)context.get("locale");
         String name = UtilCodec.getDecoder("url").decode(originalName);
         if (name == null) {
-            return ServiceUtil.returnError("Exception thrown while decoding metric name \"" + originalName + "\"");
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonExceptionThrownWhileDecodingMetric", UtilMisc.toMap("originalName", originalName), locale));
         }
         Metrics metric = MetricsFactory.getMetric(name);
         if (metric != null) {
             metric.reset();
             return ServiceUtil.returnSuccess();
         }
-        return ServiceUtil.returnError("Metric \"" + name + "\" not found.");
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonMetricNotFound", UtilMisc.toMap("name", name), locale));
     }
 }

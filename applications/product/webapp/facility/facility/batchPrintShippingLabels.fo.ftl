@@ -1,26 +1,19 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- FOP may require a library called JIMI to print certain graphical formats such as GIFs.  Jimi is a Sun library which cannot
 be included in OFBIZ due to licensing incompatibility, but you can download it yourself at: http://java.sun.com/products/jimi/
 and rename the ZIP file that comes with it as jimi-xxx.jar, then copy it into the same directory as fop.jar, which at this time
 is ${ofbiz.home}/framework/webapp/lib/ -->
+
+<#-- SCIPIO: WARN: 2018-10-17: This FTL can currently only be called if a HttpServletRequest is available, due to accessToken;
+    the accessToken here is scoped to the request with weak keys; it is lost as soon as the rendering is over. -->
+<#if !viewShipAccessToken?? && request??>
+  <#assign viewShipAccessToken = Static["org.ofbiz.shipment.shipment.ShipmentEvents"].getShipmentViewRequestAccessTokenString(request)>
+</#if>
 
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -36,10 +29,11 @@ is ${ofbiz.home}/framework/webapp/lib/ -->
 
   <fo:page-sequence master-reference="main-page">
        <fo:flow flow-name="xsl-region-body">
-       <#assign segments = Static["org.ofbiz.base.util.UtilHttp"].parseMultiFormData(parameters)>
+       <#assign segments = UtilHttp.parseMultiFormData(parameters)>
        <#list segments as segment>
          <fo:block break-before="page"> <#-- this tells fop to put a page break before this content TODO: content-type must be dynamic -->
-           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@ofbizUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}</@ofbizUrl>"></fo:external-graphic>
+           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@pageUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}<#t/>
+             <#lt/>&amp;accessToken=${viewShipAccessToken!}</@pageUrl>"></fo:external-graphic><#-- SCIPIO: 2018-10-17: access token -->
          </fo:block>
       </#list>
       <#if segments.size() == 0>

@@ -26,15 +26,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.webapp.stats.VisitHandler;
-import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 import org.ofbiz.content.content.ContentSearch.ContentSearchContext;
+import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearchSession.ContentSearchOptions;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.stats.VisitHandler;
 
 
 public class ContentSearchEvents {
@@ -56,17 +55,17 @@ public class ContentSearchEvents {
         ContentSearchOptions contentSearchOptions = ContentSearchSession.getContentSearchOptions(session);
 
         Integer viewIndexInteger = contentSearchOptions.getViewIndex();
-        if (viewIndexInteger != null) viewIndex = viewIndexInteger.intValue();
+        if (viewIndexInteger != null) viewIndex = viewIndexInteger;
         Integer viewSizeInteger = contentSearchOptions.getViewSize();
-        if (viewSizeInteger != null) viewSize = viewSizeInteger.intValue();
+        if (viewSizeInteger != null) viewSize = viewSizeInteger;
 
         lowIndex = viewIndex * viewSize;
         highIndex = (viewIndex + 1) * viewSize;
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
-        Integer resultOffset = Integer.valueOf(lowIndex + 1);
+        Integer resultOffset = lowIndex + 1;
         // SCIPIO: FIXME: maxResults of viewSize ensures pagination is disabled. The whole thing needs rewriting to support pagination.
-        Integer maxResults = Integer.valueOf(viewSize);
+        Integer maxResults = viewSize;
 
         // ========== Do the actual search
         ArrayList<String> contentIds = null;
@@ -90,7 +89,7 @@ public class ContentSearchEvents {
 
             Integer totalResults = contentSearchContext.getTotalResults();
             if (totalResults != null) {
-                listSize = totalResults.intValue();
+                listSize = totalResults;
             }
         }
 
@@ -106,11 +105,11 @@ public class ContentSearchEvents {
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("contentIds", contentIds);
-        result.put("viewIndex", Integer.valueOf(viewIndex));
-        result.put("viewSize", Integer.valueOf(viewSize));
-        result.put("listSize", Integer.valueOf(listSize));
-        result.put("lowIndex", Integer.valueOf(lowIndex));
-        result.put("highIndex", Integer.valueOf(highIndex));
+        result.put("viewIndex", viewIndex);
+        result.put("viewSize", viewSize);
+        result.put("listSize", listSize);
+        result.put("lowIndex", lowIndex);
+        result.put("highIndex", highIndex);
         result.put("searchConstraintStrings", searchConstraintStrings);
         result.put("searchSortOrderString", searchSortOrderString);
 

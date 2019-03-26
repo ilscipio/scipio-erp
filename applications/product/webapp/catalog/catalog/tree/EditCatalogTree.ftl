@@ -5,4 +5,4 @@
 <#-- TODO -->
     
 <#-- CORE INCLUDE - everything above this can be customized in a duplicated file -->
-<#include "component://product/webapp/catalog/catalog/tree/EditCatalogTreeCommon.ftl">
+<#include "component://product/webapp/catalog/catalog/tree/EditCatalogTreeCore.ftl">

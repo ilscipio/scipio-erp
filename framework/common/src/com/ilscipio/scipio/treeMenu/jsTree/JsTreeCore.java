@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
- * 
+ *
  * @author jsoto
  *
  */

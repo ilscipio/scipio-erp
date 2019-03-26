@@ -1,13 +1,14 @@
 <#include "component://common/webcommon/includes/listLocalesMacros.ftl">
 <#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://product/webapp/catalog/store/storelib.ftl">
 
 <@section>
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
             <@defaultWizardFormFields exclude=[
                 "productStoreId", <#-- ProductStore excludes -->
                 "partyId", "webSiteId"  <#-- WebSite excludes -->
                 ]/>
-    
+
     <#-- 
       ProductStore parameters
     -->
@@ -67,9 +68,11 @@
         "orderNumberPrefix": "WS",
         "defaultLocaleString": defaultDefaultLocaleString!,
         "showOutOfStockProducts": "Y",
-        "authDeclinedMessage": "There has been a problem with your method of payment. Please try a different method or call customer service.",
-        "authFraudMessage": "Your order has been rejected and your account has been disabled due to fraud.",
-        "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email.",
+        
+        <!-- SCIPIO: 2017-03-07: These messages now defaults to OrderEntityLabels#ProductStore...: -->
+        "authDeclinedMessage": "", <#-- "There has been a problem with your method of payment. Please try a different method or call customer service.", -->
+        "authFraudMessage": "", <#-- "Your order has been rejected and your account has been disabled due to fraud.", -->
+        "authErrorMessage": "", <#-- "Problem connecting to payment processor; we will continue to retry and notify you by email.", -->
         
         <#--"paymentList": paymentList![]-->
         
@@ -91,7 +94,7 @@
             
           <#if productStore??>
             <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore><#rt/>
-                <@setupExtAppLink uri="/catalog/control/EditProductStore?productStoreId=${rawString(params.productStoreId!)}" text=(params.productStoreId!)/><#t/>
+                <@setupExtAppLink uri="/catalog/control/EditProductStore?productStoreId=${raw(params.productStoreId!)}" text=(params.productStoreId!)/><#t/>
             </@field><#lt/>
             <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> 
           <#else>
@@ -124,7 +127,7 @@
                 </#if>
                 <#if facilities?has_content>
                   <#list (facilities![]) as currFacility>
-                    <#assign selected = rawString(currFacility.facilityId) == rawString(params.inventoryFacilityId!)>
+                    <#assign selected = raw(currFacility.facilityId) == raw(params.inventoryFacilityId!)>
                     <@facilityOption facility=currFacility selected=selected/>
                   </#list>
                 </#if>
@@ -146,7 +149,7 @@
               <@field type="option" value=""></@field>
               <#list (currencyUomList!) as currencyUom>
                 <@field type="option" value=currencyUom.uomId
-                    selected=(rawString(params.defaultCurrencyUomId!)==rawString(currencyUom.uomId))
+                    selected=(raw(params.defaultCurrencyUomId!)==raw(currencyUom.uomId))
                     >${currencyUom.get("description", locale)!} (${currencyUom.abbreviation!})</@field>
               </#list>
             </@field>
@@ -155,7 +158,7 @@
               <@field type="option" value=""></@field>
               <#list (visualThemeList!) as visualTheme>
                 <@field type="option" value=visualTheme.visualThemeId
-                    selected=(rawString(params.visualThemeId!)==rawString(visualTheme.visualThemeId))
+                    selected=(raw(params.visualThemeId!)==raw(visualTheme.visualThemeId))
                     >${visualTheme.get("description", locale)!} [${visualTheme.visualThemeId!}]</@field>
               </#list>
             </@field>
@@ -228,6 +231,8 @@
             <#--<@field type="hidden" name="defaultLocaleString" value=(fixedParams.defaultLocaleString!)/> configurable -->
             <@field type="hidden" name="enableAutoSuggestionList" value=(params.enableAutoSuggestionList!)/>
             <@field type="hidden" name="showOutOfStockProducts" value=(fixedParams.showOutOfStockProducts!)/>
+            <#-- SCIPIO: NOTE: If ever show these message fields, they should have the default value from OrderEntityLabels
+                here as placeholder... -->
             <@field type="hidden" name="authDeclinedMessage" value=(fixedParams.authDeclinedMessage!)/>
             <@field type="hidden" name="authFraudMessage" value=(fixedParams.authFraudMessage!)/>
             <@field type="hidden" name="authErrorMessage" value=(fixedParams.authErrorMessage!)/>
@@ -253,7 +258,8 @@
     <#assign defaultParams = {
         "visualThemeSetId": defaultVisualThemeSetId!,
         "visualThemeSelectorScript": defaultVisualThemeSelectorScript!,
-        "webSiteId": defaultWebSiteId!
+        "webSiteId": defaultSetupWebSiteId!,
+        "isStoreDefault": "Y"
     }>
     <#assign paramMaps = getWizardFormFieldValueMaps({
         "record":webSite!true, <#-- NOTE: must fallback with boolean true -->
@@ -268,6 +274,12 @@
         <@script>
             jQuery(document).ready(function() {
                 <#assign submitFormIdJs = escapeVal(submitFormId, 'js')>
+                
+                var webappWebsite = [];
+                <#list webappWebsiteMap.keySet() as webappInfo>
+                     webappWebsite['${webappWebsiteMap.get(webappInfo)}'] = '${webappInfo.getName()}';                    
+                </#list>
+                
                 
                 var storeNameVirgin = <#if storeParams.storeName?has_content>false<#else>true</#if>;
                 var siteNameVirgin = <#if websiteParams.siteName?has_content>false<#else>true</#if>;
@@ -298,6 +310,11 @@
                     siteNameUpdate();
                     siteNameVirgin = false;
                 });
+                
+                jQuery('#${submitFormIdJs} select[name=webSiteId]').change(function () {                    
+                    var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
+                    siteNameElem.val(webappWebsite[$(this).val()]);
+                });
               
             });
         </@script>
@@ -307,6 +324,7 @@
             <#if webSiteCount?? && (webSiteCount >= 2)>
               <@alert type="warning">${uiLabelMap.SetupMultipleWebSitesForProductStore}</@alert>
             </#if>
+            <@webSiteWarnings webSiteList=(webSiteList!)/>
     
             <@field type="hidden" name="isCreateWebsite" value=(webSite??)?string("N", "Y")/>
     
@@ -316,14 +334,89 @@
             -->
           <#if webSite??>
             <@field type="display" label=uiLabelMap.FormFieldTitle_webSiteId><#rt/>
-                <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${rawString(params.webSiteId!)}&productStoreId=${rawString(params.productStoreId!)}" text=(params.webSiteId!)/><#t/>
+                <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${raw(params.webSiteId!)}&productStoreId=${raw(params.productStoreId!)}" text=(params.webSiteId!)/><#t/>
             </@field><#lt/>
             <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
           <#else>
-            <@field type="input" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId value=(params.webSiteId!) required=true/>
+               <#-- SCIPIO: Dropdown will be rendered only when we got webSiteIds defined in shop web.xml that do not exist in DB yet. 
+                    Alternatively, we provide a text input so user can add a new one that doesn't exist in DB and web.xml -->
+               <#if webappWebsiteMap?has_content || existingDBWebsiteIds?has_content>
+                   <@menu type="button">
+                       <@menuitem contentId="showHideNewWebSiteId" type="link" href="#" text=uiLabelMap.SetupNewWebSiteId class="+${styles.action_run_sys!} ${styles.action_create!}"/>
+                   </@menu>
+                   <@script>
+                        $(document).ready(function() {
+                            var existingDBWebsiteIds = [<#list existingDBWebsiteIds as dbWebSiteId>'${dbWebSiteId}'<#sep>,</#list>];
+                            $('#showHideNewWebSiteId').click(function() {
+                                if ($('#availableWebSiteId').is(':visible')) {
+                                    $('#availableWebSiteId').hide();
+                                    $('#newWebSiteId').show();
+                                    $('input[name=isCreateWebsite]').val('Y');
+                                    $('#showHideNewWebSiteId').text('${uiLabelMap.SetupNewWebSiteId}');
+                                    $('select[name=webSiteId]').prop('disabled', true);
+                                    $('input[name=webSiteId]').prop('disabled', false);
+                                } else {
+                                    $('#availableWebSiteId').show();
+                                    $('#newWebSiteId').hide();
+                                    $('input[name=isCreateWebsite]').val('N');
+                                    $('#showHideNewWebSiteId').text('${uiLabelMap.SetupUseExistingWebSiteId}');
+                                    $('select[name=webSiteId]').prop('disabled', false);
+                                    $('input[name=webSiteId]').prop('disabled', true);
+                                }
+                            });
+                            $('#${submitFormId}').submit(function(e) {
+                                   webSiteIdVal = $('#availableWebSiteId').val();
+                                   if (webSiteIdVal) {
+                                       webSiteExists = $.inArray(webSiteIdVal, existingDBWebsiteIds);
+                                       if (!webSiteExists) {
+                                           $('input[name=isCreateWebsite]').val('Y');
+                                       }
+                                   }
+                            });
+                        });
+                   </@script>
+               </#if>
+               <#if webappWebsiteMap?has_content>
+                    <@field containerId="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                        <#list webappWebsiteMap.keySet() as webappInfo>
+                            <#assign websiteId = webappWebsiteMap.get(webappInfo)>
+                            <#assign selected = "">
+                            <#if params.webSiteId?has_content>
+                                <#if params.webSiteId == websiteId>
+                                    <#assign selected = "selected=selected"/>
+                                </#if>
+                            <#elseif defaultInitialWebSiteId?has_content && websiteId == defaultInitialWebSiteId>
+                                <#assign selected = "selected=selected"/>
+                            </#if>
+                             <option value="${websiteId}" ${selected}>${websiteId}</option>
+                        </#list>
+                    </@field>
+                <#elseif existingDBWebsiteIds?has_content>
+                    <@field containerId="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                        <#list existingDBWebsiteIds as websiteId>
+                            <#assign selected = "">
+                            <#if params.webSiteId?has_content>
+                                <#if params.webSiteId == websiteId>
+                                    <#assign selected = "selected=selected"/>
+                                </#if>
+                            <#elseif defaultInitialWebSiteId?has_content && websiteId == defaultInitialWebSiteId>
+                                <#assign selected = "selected=selected"/>
+                            </#if>
+                             <option value="${websiteId}" ${selected}>${websiteId}</option>
+                        </#list>
+                    </@field>
+               </#if>
+               <@field containerId="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) containerStyle="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true disabled=true/>
           </#if>
             
-            <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}") required=true size="30" maxlength="60"/>
+          <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}")  required=true size="30" maxlength="60"/>
+          
+            <@field type="select" name="isStoreDefault" label=uiLabelMap.FormFieldTitle_isStoreDefault>
+                <@field type="option" value=""></@field>
+                <@field type="option" value="Y" selected=("Y" == params.isStoreDefault!)>Y</@field>
+                <@field type="option" value="N" selected=("N" == params.isStoreDefault!)>N</@field>
+            </@field>
+            
             <@field type="hidden" name="visualThemeSetId" value=(fixedParams.visualThemeSetId!)/>
     
             <#--<@field type="hidden" name="partyId" value=(partyId!)/> // already set above -->
@@ -353,6 +446,7 @@
             <@field type="input" name="standardContentPrefix" label=uiLabelMap.FormFieldTitle_standardContentPrefix value=(params.standardContentPrefix!)/>
             <@field type="input" name="secureContentPrefix" label=uiLabelMap.FormFieldTitle_secureContentPrefix value=(params.secureContentPrefix!)/>
             <@field type="input" name="cookieDomain" label=uiLabelMap.FormFieldTitle_cookieDomain value=(params.cookieDomain!)/>
+            <@field type="input" name="webappPathPrefix" label=uiLabelMap.FormFieldTitle_webappPathPrefix value=(params.webappPathPrefix!) tooltip=uiLabelMap.ContentWebSiteWebappPathPrefixDesc/>
           </@fieldset>
             
             <#--<@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> // already set above -->

@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject;
 
-public class DemoDataAddress implements DemoDataObject {
+public class DemoDataAddress implements AbstractDataObject {
 
     private String country;
     private String state;

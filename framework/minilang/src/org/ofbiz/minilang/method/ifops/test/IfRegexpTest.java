@@ -19,6 +19,7 @@
 package org.ofbiz.minilang.method.ifops.test;
 
 import java.util.Locale;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.minilang.MiniLangException;

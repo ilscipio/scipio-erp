@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.group;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,8 @@ import org.w3c.dom.Element;
 /**
  * GroupServiceModel.java
  */
-public class GroupServiceModel {
+@SuppressWarnings("serial")
+public class GroupServiceModel implements Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -47,8 +49,8 @@ public class GroupServiceModel {
     public GroupServiceModel(Element service) {
         this.serviceName = service.getAttribute("name");
         this.serviceMode = service.getAttribute("mode");
-        this.resultToContext = service.getAttribute("result-to-context").equalsIgnoreCase("true");
-        this.optionalParams = service.getAttribute("parameters").equalsIgnoreCase("optional");
+        this.resultToContext = "true".equalsIgnoreCase(service.getAttribute("result-to-context"));
+        this.optionalParams = "optional".equalsIgnoreCase(service.getAttribute("parameters"));
     }
 
     /**
@@ -104,23 +106,19 @@ public class GroupServiceModel {
     public Map<String, Object> invoke(ServiceDispatcher dispatcher, String localName, Map<String, Object> context) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         ModelService model = dctx.getModelService(getName());
-        if (model == null)
-            throw new GenericServiceException("Group defined service (" + getName() + ") is not a defined service.");
 
         Map<String, Object> thisContext = model.makeValid(context, ModelService.IN_PARAM);
         Debug.logInfo("Running grouped service [" + serviceName + "]", module);
-        if (getMode().equals("async")) {
+        if ("async".equals(getMode())) {
             List<String> requiredOut = model.getParameterNames(ModelService.OUT_PARAM, false);
             if (requiredOut.size() > 0) {
                 Debug.logWarning("Grouped service (" + getName() + ") requested 'async' invocation; running sync because of required OUT parameters.", module);
                 return dispatcher.runSync(localName, model, thisContext);
-            } else {
-                dispatcher.runAsync(localName, model, thisContext, false);
-                return new HashMap<String, Object>();
             }
-        } else {
-            return dispatcher.runSync(localName, model, thisContext);
+            dispatcher.runAsync(localName, model, thisContext, false);
+            return new HashMap<>();
         }
+        return dispatcher.runSync(localName, model, thisContext);
     }
 
     /**

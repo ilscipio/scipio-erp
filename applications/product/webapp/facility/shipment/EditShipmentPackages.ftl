@@ -1,27 +1,14 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if shipment??>
     
 
     <@section>
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
             <@thead>
                 <@tr>
                     <@th>${uiLabelMap.ProductPackage}</@th>
@@ -41,7 +28,7 @@ under the License.
                 <#assign shipmentPackageContents = shipmentPackageData.shipmentPackageContents!>
                 <#assign shipmentPackageRouteSegs = shipmentPackageData.shipmentPackageRouteSegs!>
                 <#assign weightUom = shipmentPackageData.weightUom!>
-                <form method="post" action="<@ofbizUrl>updateShipmentPackage</@ofbizUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
+                <form method="post" action="<@pageUrl>updateShipmentPackage</@pageUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                     <@tr>
@@ -66,7 +53,7 @@ under the License.
                             <@field type="select" name="shipmentBoxTypeId">
                                 <option value="">&nbsp;</option>
                                 <#list boxTypes as boxType>
-                                    <option value="${boxType.shipmentBoxTypeId}" <#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId>selected="selected"</#if>>${boxType.get("description",locale)}</option>
+                                    <option value="${boxType.shipmentBoxTypeId}"<#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId> selected="selected"</#if>>${boxType.get("description",locale)}</option>
                                 </#list>
                             </@field>
                         </@td>
@@ -79,14 +66,14 @@ under the License.
                         <@td><a href="javascript:document.deleteShipmentPackage_${shipmentPackageData_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                     </@tr>
                 </form>
-                <form name="deleteShipmentPackage_${shipmentPackageData_index}" method="post" action="<@ofbizUrl>deleteShipmentPackage</@ofbizUrl>">
+                <form name="deleteShipmentPackage_${shipmentPackageData_index}" method="post" action="<@pageUrl>deleteShipmentPackage</@pageUrl>">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                 </form>
                 <#-- 
                
                 <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-                    <form action="<@ofbizUrl>updateShipmentPackageRouteSeg</@ofbizUrl>" method="post" name="updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}">
+                    <form action="<@pageUrl>updateShipmentPackageRouteSeg</@pageUrl>" method="post" name="updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
                     <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
@@ -103,7 +90,7 @@ under the License.
                         <@td>&nbsp;</@td>
                     </@tr>
                     </form>
-                    <form name="deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>deleteShipmentPackageRouteSeg</@ofbizUrl>">
+                    <form name="deleteShipmentPackageRouteSeg${shipmentPackageData_index}${shipmentPackageRouteSeg_index}" method="post" action="<@pageUrl>deleteShipmentPackageRouteSeg</@pageUrl>">
                         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
                         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
@@ -121,7 +108,7 @@ under the License.
             <@section title=sectionTitle>
                 <#-- Scipio FIXME: Does makes sense to show this if all items have been packed already? -->
                 <@section>
-                    <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@ofbizUrl>createShipmentPackageContent</@ofbizUrl>">
+                    <form name="createShipmentPackageContentForm${shipmentPackageData_index}" method="post" action="<@pageUrl>createShipmentPackageContent</@pageUrl>">
                         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>            
                         <@field type="select" name="shipmentItemSeqId" label=uiLabelMap.ProductAddFromItem>
@@ -135,7 +122,7 @@ under the License.
                 </@section>
                 <#-- -->
 
-                <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-complex" autoAltRows=true>
                     <@thead>
                         <@tr>
                             <@th>${uiLabelMap.ProductItem}</@th>
@@ -149,7 +136,7 @@ under the License.
                             <@td>${shipmentPackageContent.quantity!}</@td>
                             <@td><a href="javascript:document.deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>                        
                         </@tr>
-                        <form name="deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}" method="post" action="<@ofbizUrl>deleteShipmentPackageContent</@ofbizUrl>">
+                        <form name="deleteShipmentPackageContent${shipmentPackageData_index}${shipmentPackageContent_index}" method="post" action="<@pageUrl>deleteShipmentPackageContent</@pageUrl>">
                             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageContent.shipmentPackageSeqId}"/>
                             <input type="hidden" name="shipmentItemSeqId" value="${shipmentPackageContent.shipmentItemSeqId}"/>
@@ -161,7 +148,15 @@ under the License.
         <@script>
             $(document).ready(function() {
                 $('#shipmentPackageContent_${shipmentPackageData_index}').click(function() {
-                    $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
+                    try {
+                        $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
+                    } catch(err) {
+                        try {
+                            $('#modal_shipmentPackageContent_${shipmentPackageData_index}').modal('show');
+                        } catch(err) {
+                            //t.dispatchEvent(event);
+                        }
+                    }
                 });
             });
         </@script>
@@ -176,7 +171,7 @@ under the License.
   
 <#--
 <@tr valign="middle" alt=alt_row>
-    <form action="<@ofbizUrl>createShipmentPackageRouteSeg</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
+    <form action="<@pageUrl>createShipmentPackageRouteSeg</@pageUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
     <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
     <@td>&nbsp;</@td>
@@ -195,7 +190,7 @@ under the License.
 </@tr>
 -->
   <#--
-        <form action="<@ofbizUrl>createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
+        <form action="<@pageUrl>createShipmentPackage</@pageUrl>" name="createShipmentPackageForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <@tr>
                 <@td>${uiLabelMap.ProductNewPackage}</@td>

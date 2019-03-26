@@ -19,7 +19,6 @@
 package org.ofbiz.service.engine;
 
 import static org.ofbiz.base.util.UtilGenerics.cast;
-import groovy.lang.Script;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,17 +40,19 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+import groovy.lang.Script;
+
 /**
  * Groovy Script Service Engine
  */
-public final class GroovyEngine extends GenericAsyncEngine {
+public class GroovyEngine extends GenericAsyncEngine { // SCIPIO: removed final for bsh backward-compat support
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    protected static final Object[] EMPTY_ARGS = {};
+    private static final Object[] EMPTY_ARGS = {};
     private static final Set<String> protectedKeys = createProtectedKeys();
 
     private static Set<String> createProtectedKeys() {
-        Set<String> newSet = new HashSet<String>();
+        Set<String> newSet = new HashSet<>();
         /* Commenting out for now because some scripts write to the parameters Map - which should not be allowed.
         newSet.add(ScriptUtil.PARAMETERS_KEY);
         */
@@ -85,15 +86,16 @@ public final class GroovyEngine extends GenericAsyncEngine {
         if (UtilValidate.isEmpty(modelService.location)) {
             throw new GenericServiceException("Cannot run Groovy service with empty location");
         }
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.putAll(context);
 
-        Map<String, Object> gContext = new HashMap<String, Object>();
+        Map<String, Object> gContext = new HashMap<>();
         gContext.putAll(context);
         gContext.put(ScriptUtil.PARAMETERS_KEY, params);
 
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         gContext.put("dctx", dctx);
+        gContext.put("security", dctx.getSecurity());
         gContext.put("dispatcher", dctx.getDispatcher());
         gContext.put("delegator", dispatcher.getDelegator());
         try {
@@ -116,14 +118,13 @@ public final class GroovyEngine extends GenericAsyncEngine {
                 return cast(resultObj);
             }
             Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.putAll(modelService.makeValid(scriptContext.getBindings(ScriptContext.ENGINE_SCOPE), "OUT"));
+            result.putAll(modelService.makeValid(scriptContext.getBindings(ScriptContext.ENGINE_SCOPE), ModelService.OUT_PARAM));
             return result;
         } catch (GeneralException ge) {
             throw new GenericServiceException(ge);
         } catch (Exception e) {
             // detailMessage can be null.  If it is null, the exception won't be properly returned and logged, and that will
             // make spotting problems very difficult.  Disabling this for now in favor of returning a proper exception.
-            // return ServiceUtil.returnError(e.getMessage());
             throw new GenericServiceException("Error running Groovy method [" + modelService.invoke + "] in Groovy file [" + modelService.location + "]: ", e);
         }
     }

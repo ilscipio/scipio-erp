@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UtilTimer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    protected static ConcurrentHashMap<String, UtilTimer> staticTimers = new ConcurrentHashMap<String, UtilTimer>();
+    protected static ConcurrentHashMap<String, UtilTimer> staticTimers = new ConcurrentHashMap<>();
 
     protected String timerName = null;
     protected String lastMessage = null;
@@ -107,7 +107,9 @@ public class UtilTimer {
 
         lastMessage = message;
         String retString = retBuf.toString();
-        if (log) Debug.log(Debug.TIMING, null, retString, module != null ? module : Debug.getOfbizLogger(), "org.ofbiz.base.util.UtilTimer"); // SCIPIO: 2018-05-25: handle null module
+        if (log) {
+            Debug.log(Debug.TIMING, null, retString, module != null ? module : Debug.getOfbizLogger(), "org.ofbiz.base.util.UtilTimer"); // SCIPIO: 2018-05-25: handle null module
+        }
 
         // have lastMessageTime come as late as possible to just time what happens between calls
         lastMessageTime = System.currentTimeMillis();
@@ -190,15 +192,9 @@ public class UtilTimer {
         retStringBuf.append("(");
 
         String timeSinceStartStr = String.valueOf(timeSinceStart());
-
-        // int spacecount = 5 - timeSinceStartStr.length();
-        // for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
         retStringBuf.append(timeSinceStartStr + ",");
 
         String timeSinceLastStr = String.valueOf(timeSinceLast());
-
-        // spacecount = 4 - timeSinceLastStr.length();
-        // for (int i=0; i < spacecount; i++) { retStringBuf.append(' '); }
         retStringBuf.append(timeSinceLastStr);
 
         retStringBuf.append(")");
@@ -209,14 +205,12 @@ public class UtilTimer {
         }
         retStringBuf.append(message);
 
-        // lastMessageTime = (new Date()).getTime();
         lastMessageTime = System.currentTimeMillis();
-        // lastMessage = message;
-
         String retString = retStringBuf.toString();
 
-        // if (!quiet) Debug.logInfo(retString, module);
-        if (log && Debug.timingOn()) Debug.logTiming(retString, module);
+        if (log && Debug.timingOn()) {
+            Debug.logTiming(retString, module);
+        }
         return retString;
     }
 

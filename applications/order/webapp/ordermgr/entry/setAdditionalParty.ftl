@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- ==================== Party Selection dialog box ========================= -->
@@ -22,11 +9,11 @@ under the License.
   <@row>
     <@cell columns=6 last=true>
 
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
     <input type="hidden" name="finalizeMode" value="addpty"/>
   </form>
-  <form method="post" action="<@ofbizUrl>setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
+  <form method="post" action="<@pageUrl>setAdditionalParty</@pageUrl>" name="quickAddPartyForm">
 
   <#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":false})>
   <#macro partyCheckRow label id>
@@ -77,7 +64,7 @@ under the License.
     <@section>
       <@heading>3) ${uiLabelMap.OrderPartySelectRoleForParty}</@heading>
       
-        <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
+        <form method="post" action="<@pageUrl>addAdditionalParty</@pageUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
           <@fields type="default-nolabelarea">
           <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
           <@field type="select" label=uiLabelMap.CommonRole name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>

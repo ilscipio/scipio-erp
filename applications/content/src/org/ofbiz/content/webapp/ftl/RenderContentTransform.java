@@ -52,8 +52,9 @@ public class RenderContentTransform implements TemplateTransformModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    @Override
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
@@ -61,7 +62,7 @@ public class RenderContentTransform implements TemplateTransformModel {
         final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
 
         final Map<String, Object> templateRoot = MapStack.create(FreeMarkerWorker.createEnvironmentMap(env));
-        ((MapStack)templateRoot).push(args);
+        ((MapStack<String>)templateRoot).push(args);
         final String xmlEscape =  (String)templateRoot.get("xmlEscape");
         final String thisContentId = (String)templateRoot.get("contentId");
 
@@ -130,7 +131,6 @@ public class RenderContentTransform implements TemplateTransformModel {
             }
 
             public void closeEditWrap(Writer out, String editRequestName) throws IOException {
-                // StringBuilder sb = new StringBuilder();
                 String fullRequest = editRequestName;
                 String delim = "?";
                 if (UtilValidate.isNotEmpty(thisContentId)) {
@@ -141,7 +141,7 @@ public class RenderContentTransform implements TemplateTransformModel {
                 out.write("<a href=\"");
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
+                out.append(rh.makeLink(request, response, "/" + fullRequest, false, null, true)); // SCIPIO: 2018-07-09: changed secure to null
                 out.write("\">Edit</a>");
                 out.write("</div>");
             }

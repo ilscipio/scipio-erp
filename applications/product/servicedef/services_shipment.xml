@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>Common Application Components Shipment Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
@@ -58,6 +45,14 @@ under the License.
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentMethodType" auth="true">
         <description>Deletes A ShipmentMethodType</description>
         <auto-attributes entity-name="ShipmentMethodType" include="pk" mode="IN" optional="false"/>
+    </service>    
+    <!-- SCIPIO (12/10/2018): New service for carrier creation -->
+    <service name="createCarrier" engine="group">
+        <description>Create a carrier PartyGroup</description>
+        <group>
+            <invoke name="createPartyGroup" result-to-context="true"/>
+            <invoke name="createPartyRole"/>
+        </group>
     </service>
 
     <service name="createOrderShipmentPlan" engine="simple"
@@ -161,6 +156,12 @@ under the License.
         <description>Delete Shipment</description>
         <permission-service service-name="facilityGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createShipmentStatus" default-entity-name="ShipmentStatus" engine="entity-auto" invoke="create" auth="true">
+        <description>Create Shipment Status</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="statusDate" mode="IN" optional="true"/>
     </service>
     <service name="setShipmentSettingsFromPrimaryOrder" engine="simple"
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="setShipmentSettingsFromPrimaryOrder" auth="true">
@@ -702,7 +703,7 @@ under the License.
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="false"/>
-        <override name="shipmentItemSeqId" mode="IN" optional="true"/>
+        <override name="shipmentItemSeqId" mode="INOUT" optional="true"/>
     </service>
     <service name="removeOrderShipmentFromShipment" engine="simple"
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="removeOrderShipmentFromShipment" auth="true">
@@ -880,6 +881,9 @@ under the License.
             location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="calcShipmentCostEstimate" auth="false" use-transaction="false">
         <description>Generic Shipment Cost Estimate Calc Service - Use ShipmentCostEstimate Entities</description>
         <implements service="calcShipmentEstimateInterface"/>
+        <!-- SCIPIO: 2018-11-09: It is normal for there no be no entity-based estimates, not a failure,
+            so shippingEstimateAmount must be optional for this service so it may return null. -->
+        <override name="shippingEstimateAmount" optional="true"/>
     </service>
 
     <service name="cancelReceivedItems" engine="simple"
@@ -970,5 +974,176 @@ under the License.
         <attribute name="shipmentItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="unitCost" type="String" mode="IN" optional="true"/>
         <attribute name="orderCurrencyUnitPrice" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createCarrierShipmentBoxType" default-entity-name="CarrierShipmentBoxType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new Carrier Shipment Box Type Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="updateCarrierShipmentBoxType" default-entity-name="CarrierShipmentBoxType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Carrier Shipment Box Type</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCarrierShipmentBoxType" default-entity-name="CarrierShipmentBoxType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete an existing Carrier Shipment Box Type Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+    <!-- Shipment services -->
+    <service name="createDelivery" engine="entity-auto" invoke="create" default-entity-name="Delivery" auth="true">
+        <description>Create a Delivery record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDelivery" engine="entity-auto" invoke="update" default-entity-name="Delivery" auth="true">
+        <description>Update a Delivery record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDelivery" engine="entity-auto" invoke="delete" default-entity-name="Delivery" auth="true">
+        <description>Delete a Delivery record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createRejectionReason" engine="entity-auto" invoke="create" default-entity-name="RejectionReason" auth="true">
+        <description>Create a RejectionReason record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateRejectionReason" engine="entity-auto" invoke="update" default-entity-name="RejectionReason" auth="true">
+        <description>Update a RejectionReason record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteRejectionReason" engine="entity-auto" invoke="delete" default-entity-name="RejectionReason" auth="true">
+        <description>Delete a RejectionReason record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <!-- ShipmentItemFeature services -->
+    <service name="createShipmentItemFeature" default-entity-name="ShipmentItemFeature" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ShipmentItemFeature</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="deleteShipmentItemFeature" default-entity-name="ShipmentItemFeature" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ShipmentItemFeature</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createShipmentAttribute" engine="entity-auto" invoke="create" default-entity-name="ShipmentAttribute" auth="true">
+        <description>Create a ShipmentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentAttribute" engine="entity-auto" invoke="update" default-entity-name="ShipmentAttribute" auth="true">
+        <description>Update a ShipmentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentAttribute" engine="entity-auto" invoke="delete" default-entity-name="ShipmentAttribute" auth="true">
+        <description>Delete a ShipmentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createShipmentBoxType" engine="entity-auto" invoke="create" default-entity-name="ShipmentBoxType" auth="true">
+        <description>Create a ShipmentBoxType record</description>
+        <auto-attributes include="pk" mode="INOUT"  optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentBoxType" engine="entity-auto" invoke="update" default-entity-name="ShipmentBoxType" auth="true">
+        <description>Update a ShipmentBoxType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentBoxType" engine="entity-auto" invoke="delete" default-entity-name="ShipmentBoxType" auth="true">
+        <description>Delete a ShipmentBoxType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createShipmentContactMechType" engine="entity-auto" invoke="create" default-entity-name="ShipmentContactMechType" auth="true">
+        <description>Create a ShipmentContactMechType record</description>
+        <auto-attributes include="pk" mode="INOUT"  optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentContactMechType" engine="entity-auto" invoke="update" default-entity-name="ShipmentContactMechType" auth="true">
+        <description>Update a ShipmentContactMechType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentContactMechType" engine="entity-auto" invoke="delete" default-entity-name="ShipmentContactMechType" auth="true">
+        <description>Delete a ShipmentContactMechType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createShipmentCostEstimate" engine="entity-auto" invoke="create" default-entity-name="ShipmentCostEstimate" auth="true">
+        <description>Create a ShipmentCostEstimate record</description>
+        <auto-attributes include="pk" mode="INOUT"  optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentCostEstimate" engine="entity-auto" invoke="update" default-entity-name="ShipmentCostEstimate" auth="true">
+        <description>Update a ShipmentCostEstimate record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentCostEstimate" engine="entity-auto" invoke="delete" default-entity-name="ShipmentCostEstimate" auth="true">
+        <description>Delete a ShipmentCostEstimate record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="updateShipmentReceipt" engine="entity-auto" invoke="update" default-entity-name="ShipmentReceipt" auth="true">
+        <description>Update a ShipmentReceipt record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentReceipt" engine="entity-auto" invoke="delete" default-entity-name="ShipmentReceipt" auth="true">
+        <description>Delete a ShipmentReceipt record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createShipmentTypeAttr" default-entity-name="ShipmentTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ShipmentTypeAttr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentTypeAttr" default-entity-name="ShipmentTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ShipmentTypeAttr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentTypeAttr" default-entity-name="ShipmentTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ShipmentTypeAttr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createShippingDocument" default-entity-name="ShippingDocument" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ShippingDocument</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShippingDocument" default-entity-name="ShippingDocument" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ShippingDocument</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShippingDocument" default-entity-name="ShippingDocument" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ShippingDocument</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createShipmentItemBilling" default-entity-name="ShipmentItemBilling" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ShipmentItemBilling</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentItemBilling" default-entity-name="ShipmentItemBilling" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ShipmentItemBilling</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentItemBilling" default-entity-name="ShipmentItemBilling" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ShipmentItemBilling</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

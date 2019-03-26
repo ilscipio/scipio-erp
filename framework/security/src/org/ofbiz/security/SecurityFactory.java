@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Assert;
@@ -83,12 +84,11 @@ public final class SecurityFactory {
 
     private SecurityFactory() {}
 
-    @SuppressWarnings("deprecation")
     private static final class OFBizSecurity implements Security {
 
         private Delegator delegator = null;
 
-        protected static final Map<String, Map<String, String>> simpleRoleEntity = UtilMisc.toMap(
+        private static final Map<String, Map<String, String>> simpleRoleEntity = UtilMisc.toMap(
             "ORDERMGR", UtilMisc.<String, String>toMap("name", "OrderRole", "pkey", "orderId"),
             "FACILITY", UtilMisc.<String, String>toMap("name", "FacilityParty", "pkey", "facilityId"),
             "MARKETING", UtilMisc.<String, String>toMap("name", "MarketingCampaignRole", "pkey", "marketingCampaignId"));
@@ -102,7 +102,7 @@ public final class SecurityFactory {
             }
         }
 
-        @Override
+        @Deprecated
         public Iterator<GenericValue> findUserLoginSecurityGroupByUserLoginId(String userLoginId) {
             try {
                 List<GenericValue> collection = EntityUtil.filterByDate(EntityQuery.use(delegator).from("UserLoginSecurityGroup").where("userLoginId", userLoginId).cache(true).queryList());
@@ -113,7 +113,7 @@ public final class SecurityFactory {
             }
         }
 
-        @Override
+        @Deprecated
         public Delegator getDelegator() {
             return this.delegator;
         }
@@ -133,6 +133,15 @@ public final class SecurityFactory {
             }
 
             return false;
+        }
+
+        @Override
+        public boolean hasEntityPermission(String entity, String action, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasEntityPermission(entity, action, userLogin);
+            }
+            return hasEntityPermission(entity, action, request.getSession(false));
         }
 
         @Override
@@ -162,7 +171,19 @@ public final class SecurityFactory {
         }
 
         @Override
+        public boolean hasPermission(String permission, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasPermission(permission, userLogin);
+            }
+            return hasPermission(permission, request.getSession(false));
+        }
+        
+        @Override
         public boolean hasPermission(String permission, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             if (userLogin == null) {
                 return false;
@@ -226,7 +247,7 @@ public final class SecurityFactory {
                 entityName = simpleRoleMap.get("name");
                 String pkey = simpleRoleMap.get("pkey");
                 if (pkey != null) {
-                    List<EntityExpr> expressions = new ArrayList<EntityExpr>();
+                    List<EntityExpr> expressions = new ArrayList<>();
                     for (String role: roles) {
                         expressions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, role));
                     }
@@ -241,7 +262,19 @@ public final class SecurityFactory {
         }
 
         @Override
+        public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasRolePermission(application, action, primaryKey, roles, userLogin);
+            }
+            return hasRolePermission(application, action, primaryKey, roles, request.getSession(false));
+        }
+        
+        @Override
         public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             return hasRolePermission(application, action, primaryKey, roles, userLogin);
         }
@@ -256,12 +289,24 @@ public final class SecurityFactory {
         }
 
         @Override
+        public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasRolePermission(application, action, primaryKey, role, userLogin);
+            }
+            return hasRolePermission(application, action, primaryKey, role, request.getSession(false));
+        }
+
+        @Override
         public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             return hasRolePermission(application, action, primaryKey, role, userLogin);
         }
 
-        @Override
+        @Deprecated
         public boolean securityGroupPermissionExists(String groupId, String permission) {
             try {
                 return EntityQuery.use(delegator).from("SecurityGroupPermission").where("groupId", groupId, "permissionId", permission).cache(true).queryOne() != null;
@@ -271,13 +316,19 @@ public final class SecurityFactory {
             }
         }
 
-        @Override
+        @Deprecated
         public void setDelegator(Delegator delegator) {
             if (this.delegator != null) {
                 throw new IllegalStateException("This object has been initialized already.");
             }
             Assert.notNull("delegator", delegator);
             this.delegator = delegator;
+        }
+
+        protected GenericValue getUserLoginForRequest(HttpServletRequest request) { // SCIPIO
+            // SCIPIO: TODO: for now this always returns null, leaving it to the session login,
+            // but this should check request attribute in the future, for request consistency/atomicity
+            return null;
         }
     }
 }

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section title=uiLabelMap.CommonOverview>
@@ -23,7 +10,7 @@ under the License.
   </#if>
   <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
     
-  <@table type="fields"> <#-- orig: class="basic-table" -->
+  <@table type="fields">
   
   <#if orderHeader.orderName?has_content>
     <@tr>
@@ -33,6 +20,13 @@ under the License.
     </@tr>
   </#if>
   
+    <#-- SCIPIO: Order type -->
+    <@tr>
+      <@td class="${styles.grid_large!}2">${uiLabelMap.OrderOrderType}
+      </@td>
+      <@td colspan="3">${(orderHeader.getRelatedOne("OrderType").get("description", locale))!}</@td>
+    </@tr>
+
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
       <@td colspan="3">
@@ -42,7 +36,7 @@ under the License.
           <ul class="no-bullet">
             <#list orderHeaderStatuses as orderHeaderStatus>
               <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem", false)>
-              <#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin", false)>
+              <#--<#assign userlogin = orderHeaderStatus.getRelatedOne("UserLogin", false)>-->
             
               <li>${loopStatusItem.get("description",locale)} <#if orderHeaderStatus.statusDatetime?has_content>- <@formattedDateTime date=orderHeaderStatus.statusDatetime defaultVal="0000-00-00 00:00:00"/></#if>
                       &nbsp;
@@ -80,12 +74,12 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
         <#-- SCIPIO: FIXME: no ViewProductStore available
-        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
+        <a href="<@serverUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${raw(externalKeyParam)}</@serverUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
         ${productStore.storeName!(productStore.productStoreId!)}
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
           <#if channel.get("description",locale)?has_content && channel.get("enumId")!= "UNKNWN_SALES_CHANNEL">
-            (${(channel.get("description",locale))!})
+            (${(channel.get("description",locale))!}<#if orderHeader.webSiteId?has_content> - ${orderHeader.webSiteId}</#if>)
           </#if>
         </#if>
       </@td>
@@ -96,7 +90,7 @@ under the License.
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
           <@td colspan="3">
-            <a href="<@ofbizInterWebappUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
+            <a href="<@serverUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${raw(externalKeyParam)}</@serverUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
           </@td>
         </@tr>
     </#if>
@@ -106,7 +100,7 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCreatedBy}</@td>
       <@td colspan="3">
       <#if orderHeader.createdBy?has_content>
-        <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
+        <a href="<@serverUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${raw(externalKeyParam)}</@serverUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
       <#else>
         ${uiLabelMap.CommonNotSet}
       </#if>
@@ -122,21 +116,21 @@ under the License.
     </@tr>
   </#if>
 
-  <#if distributorId??>
+  <#if distributorId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
       <@td colspan="3">
-         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+         <#assign distPartyNameResult = runService("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
          ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>
   </#if>
 
-  <#if affiliateId??>
+  <#if affiliateId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
     <@tr>
       <@td>${uiLabelMap.OrderAffiliate}</@td>
       <@td colspan="3">
-        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+        <#assign affPartyNameResult = runService("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
         ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>
@@ -146,7 +140,7 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
-        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
+        <a href="<@pageUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@pageUrl>" target="_orderImage" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
       </@td>
     </@tr>
   </#if>
@@ -164,7 +158,7 @@ under the License.
             <#default><#assign priorityLabel = uiLabelMap.CommonNormal>
          </#switch>
          <@modal id="${orderId}_priority" label=priorityLabel>
-             <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
+             <form name="setOrderReservationPriority" method="post" action="<@pageUrl>setOrderReservationPriority</@pageUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
             <@row>
                 <@cell columns=6>
@@ -193,7 +187,7 @@ under the License.
             <#default><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes>
          </#switch>
          <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel>
-             <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
+             <form name="setInvoicePerShipment" method="post" action="<@pageUrl>setInvoicePerShipment</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <@row>
                     <@cell columns=6>

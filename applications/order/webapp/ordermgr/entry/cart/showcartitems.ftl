@@ -1,35 +1,24 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <#-- Continuation of showcart.ftl:  List of order items and forms to modify them. -->
 <#macro showAssoc productAssoc>
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
-    <@td><a href="<@ofbizUrl>product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
+    <@td><a href="<@pageUrl>product?product_id=${productAssoc.productIdTo}</@pageUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
     <@td>- ${(assocProduct.productName)!} <i>(${(productAssocType.description)!"Unknown"})</i></@td>
   </#if>
 </#macro>
 
 <@section title=uiLabelMap.OrderOrderItems>
   <#if (shoppingCartSize > 0)>
-    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
+    <form method="post" action="<@pageUrl>modifycart</@pageUrl>" name="cartform">
       <input type="hidden" name="removeSelected" value="false"/>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false"/>
@@ -37,7 +26,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
+      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true>
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>
@@ -63,6 +52,29 @@ under the License.
         </@tr>
         </@thead>
 
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo cartLine>
+            <#if cartLine.getConfigWrapper()??>
+              <#local selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+              <#if selectedOptions?has_content>
+                <ul class="order-item-attrib-list">
+                  <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                  </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#assign attrs = cartLine.getOrderItemAttributes()!/>
+            <#if attrs?has_content>
+                <#local attrEntries = attrs.entrySet()/>
+                <ul class="order-item-attrib-list">
+                  <#list attrEntries as attrEntry>
+                    <li>${attrEntry.getKey()}: ${attrEntry.getValue()}</li>
+                  </#list>
+                </ul>
+            </#if>
+        </#macro>
+
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
@@ -73,13 +85,13 @@ under the License.
             <@td>
 
           <@fields type="default-manual-widgetonly">
-          <@table type="fields" inheritAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: border="0" -->
+          <@table type="fields" inheritAltRows=true>
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
-                    <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=(cartLine.getName()!"")/><br />
-                    <i>${cartLine.getDescription()!}</i>
+                    <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
+                    <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=(cartLine.getName()!"")/> <i>${cartLine.getDescription()!}</i><br />
+                    <@orderItemAttrInfo cartLine=cartLine/>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders -->
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
@@ -92,6 +104,7 @@ under the License.
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()!}</b> : ${cartLine.getName()!}
+                    <@orderItemAttrInfo cartLine=cartLine/>
                   </#if>
                     <#-- display the item's features -->
                    <#assign features = "">
@@ -103,13 +116,11 @@ under the License.
                    <#if features?has_content>
                      <br /><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description!""} </#list></i>
                    </#if>
-                    <#-- show links to survey response for this item -->
-                    <#if cartLine.getAttribute("surveyResponses")?has_content>
-                        <br />Surveys:
-                       <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
-                       </#list>
-                    </#if>
+                   <#-- show links to survey response for this item (SCIPIO: Improved) -->
+                   <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                   <#if surveyResponses?has_content>
+                     <@orderlib.orderItemSurvResList survResList=surveyResponses/>
+                   </#if>
             </@td></@tr>
             <#if cartLine.getRequirementId()?has_content>
                 <@tr>
@@ -143,9 +154,9 @@ under the License.
               <#assign product = cartLine.getProduct()>
               <@tr>
                 <@td colspan="2">
-                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
+                    <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
-                    <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
+                    <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId!, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
                     <#if (mktgPkgATPMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER')>
                       <#assign backOrdered = cartLine.getQuantity() - mktgPkgATPMap.get(cartLine.getProductId())/>
@@ -156,7 +167,7 @@ under the License.
                     <#if (availableToPromiseMap.get(cartLine.getProductId()) <= 0) && (shoppingCart.getOrderType() == 'SALES_ORDER') && (product.productTypeId!) != "MARKETING_PKG_AUTO" && (product.productTypeId!) != "MARKETING_PKG_PICK" && isPhysical>
                       <span class="${styles.text_color_alert!}">[${cartLine.getQuantity()}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                     <#else>
-                      <#if (availableToPromiseMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER') && product.productTypeId != "MARKETING_PKG_AUTO" && product.productTypeId != "MARKETING_PKG_PICK" && isPhysical>
+                      <#if (availableToPromiseMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER') && (product.productTypeId!) != "MARKETING_PKG_AUTO" && (product.productTypeId!) != "MARKETING_PKG_PICK" && isPhysical>
                         <#assign backOrdered = cartLine.getQuantity() - availableToPromiseMap.get(cartLine.getProductId())/>
                         <span class="${styles.text_color_alert!}">[${backOrdered!}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                       </#if>
@@ -195,13 +206,13 @@ under the License.
 
             <#-- Show Associated Products (not for Variants) -->
             <#if cartLine.getProductId()??>
-              <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, Static["org.ofbiz.base.util.UtilMisc"].toList("productAssocTypeId", "sequenceNum"), false)!/>
+              <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, UtilMisc.toList("productAssocTypeId", "sequenceNum"), false)!/>
             </#if>
             <#if itemProductAssocList?? && itemProductAssocList?has_content>
               <#--<@tr type="util"><@td colspan="8"><hr /></@td></@tr>-->
               <@tr>
                 <@td>${uiLabelMap.OrderAssociatedProducts}</@td>
-                <@td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.OrderQuickLookup}</a></@td>
+                <@td><a href="<@pageUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.OrderQuickLookup}</a></@td>
               </@tr>
               <#assign relatedProdCount = 0/>
               <#list itemProductAssocList! as itemProductAssoc>
@@ -223,7 +234,7 @@ under the License.
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", {"productId":alternativeOptionProductId}, true)>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "raw")!>
-                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
+                    <div><a href="<@pageUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@pageUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </@td>
@@ -237,7 +248,7 @@ under the License.
                 <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                   <#list giftWrapOption as option>
-                    <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>selected="selected"</#if>>${option.description} : <@ofbizCurrency amount=option.amount?default(0) isoCode=currencyUomId/></option>
+                    <option value="${option.productFeatureId}"<#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)> selected="selected"</#if>>${option.description} : <@ofbizCurrency amount=option.amount?default(0) isoCode=currencyUomId/></option>
                   </#list>
                 </select>
               <#elseif showNoGiftWrapOptions>
@@ -260,7 +271,7 @@ under the License.
                 </#if>
             </@td>
             <@td nowrap="nowrap" align="right">
-                <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
+                <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", request))>
                   <@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=currencyUomId/>
                 <#else>
                     <#if (cartLine.getSelectedAmount() > 0) >
@@ -291,7 +302,7 @@ under the License.
                 <@tr>
                   <@td colspan="6" nowrap="nowrap" align="right">
                       <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@pageUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
                   </@td>
                   <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></@td>
                   <@td>&nbsp;</@td>

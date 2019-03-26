@@ -21,7 +21,7 @@ package org.ofbiz.minilang;
 import org.w3c.dom.Element;
 
 /**
- * Thrown to indicate that a Mini-language element is invalid. 
+ * Thrown to indicate that a Mini-language element is invalid.
  */
 @SuppressWarnings("serial")
 public class ValidationException extends MiniLangException {

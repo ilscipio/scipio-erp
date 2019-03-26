@@ -54,7 +54,7 @@ public class NamingServiceContainer implements Container {
         ContainerConfig.Container cfg = ContainerConfig.getContainer(name, configFileLocation);
 
         // get the naming (JNDI) port
-        
+
         ContainerConfig.Container.Property port = cfg.getProperty("port");
         if (port.value != null) {
             try {

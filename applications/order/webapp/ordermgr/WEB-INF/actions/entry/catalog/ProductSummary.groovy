@@ -60,8 +60,8 @@ if (!facilityId) {
     }
 }
 
-autoUserLogin = session.getAttribute("autoUserLogin");
-userLogin = session.getAttribute("userLogin");
+autoUserLogin = context.autoUserLogin; // SCIPIO: use context login instead: session.getAttribute("autoUserLogin");
+userLogin = context.userLogin; // SCIPIO: use context login instead: session.getAttribute("userLogin");
 
 context.remove("daysToShip");
 context.remove("averageRating");

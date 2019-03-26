@@ -42,15 +42,13 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         return execPutAll(args, new LangFtlUtil.CurrentFtlVarHandler(env), env);
     }
-    
-    @SuppressWarnings("unchecked")
-    protected Object execPutAll(List args, LangFtlUtil.FtlVarHandler varHandler, Environment env) throws TemplateModelException {
+
+    protected Object execPutAll(@SuppressWarnings("rawtypes") List args, LangFtlUtil.FtlVarHandler varHandler, Environment env) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 3) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
         }
@@ -64,12 +62,12 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
         if (args.size() >= 2) {
             mode = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         }
-        
+
         TemplateModel keysModel = null;
         if (args.size() >= 3) {
             keysModel = (TemplateModel) args.get(2);
         }
-        
+
         Boolean include = null;
         if (mode != null && !mode.isEmpty()) {
             if (mode.contains("i")) {
@@ -79,9 +77,9 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
                 include = Boolean.FALSE;
             }
         }
-        
+
         LangFtlUtil.varsPutAll(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, varHandler, env);
-        
+
         return new SimpleScalar("");
     }
 

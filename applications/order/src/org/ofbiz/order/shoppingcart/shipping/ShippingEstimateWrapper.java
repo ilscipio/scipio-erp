@@ -19,12 +19,14 @@
 package org.ofbiz.order.shoppingcart.shipping;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
@@ -36,22 +38,29 @@ public class ShippingEstimateWrapper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected Delegator delegator = null;
-    protected LocalDispatcher dispatcher = null;
+    // SCIPIO: WARN: do not store a ShoppingCart reference in this object.
 
-    protected Map<GenericValue, BigDecimal> shippingEstimates = null;
-    protected List<GenericValue> shippingMethods = null;
+    // SCIPIO: 2018-11-09: All fields now final.
+    protected final Delegator delegator;
+    protected final LocalDispatcher dispatcher;
 
-    protected GenericValue shippingAddress = null;
-    protected Map<String, BigDecimal> shippableItemFeatures = null;
-    protected List<BigDecimal> shippableItemSizes = null;
-    protected List<Map<String, Object>> shippableItemInfo = null;
-    protected String productStoreId = null;
-    protected BigDecimal shippableQuantity = BigDecimal.ZERO;
-    protected BigDecimal shippableWeight = BigDecimal.ZERO;
-    protected BigDecimal shippableTotal = BigDecimal.ZERO;
-    protected String partyId = null;
-    protected String supplierPartyId = null;
+    protected final Map<GenericValue, BigDecimal> shippingEstimates;
+    protected final List<GenericValue> shippingMethods;
+
+    protected final GenericValue shippingAddress;
+    protected final Map<String, BigDecimal> shippableItemFeatures;
+    protected final List<BigDecimal> shippableItemSizes;
+    protected final List<Map<String, Object>> shippableItemInfo;
+    protected final String productStoreId;
+    protected final BigDecimal shippableQuantity;
+    protected final BigDecimal shippableWeight;
+    protected final BigDecimal shippableTotal;
+    protected final String partyId;
+    protected final String supplierPartyId;
+
+    protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
+    protected final List<GenericValue> validShippingMethods; // SCIPIO: 2018-11-09
+    protected final boolean allowMissingShipEstimates; // SCIPIO
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -71,22 +80,38 @@ public class ShippingEstimateWrapper {
         this.productStoreId = cart.getProductStoreId();
         this.partyId = cart.getPartyId();
         this.supplierPartyId = cart.getSupplierPartyId(shipGroup);
+        
+        this.locale = cart.getLocale();
+        this.allowMissingShipEstimates = cart.isAllowMissingShipEstimates();
 
-        this.loadShippingMethods();
-        this.loadEstimates();
+        List<GenericValue> shippingMethods = this.loadShippingMethods(); // SCIPIO: Locals
+        Map<GenericValue, BigDecimal> shippingEstimates = this.loadEstimates(shippingMethods);
+        this.shippingMethods = shippingMethods;
+        this.shippingEstimates = shippingEstimates;
+        
+        List<GenericValue> validShippingMethods = new ArrayList<>(shippingMethods.size());
+        for(GenericValue shipMethod : shippingMethods) {
+            if (isValidShippingMethodInternal(shipMethod)) {
+                validShippingMethods.add(shipMethod);
+            }
+        }
+        this.validShippingMethods = validShippingMethods;
     }
 
-    protected void loadShippingMethods() {
+    protected List<GenericValue> loadShippingMethods() { // SCIPIO: Added return value
         try {
-            this.shippingMethods = ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId,
+            return ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId,
                     shippingAddress, shippableItemSizes, shippableItemFeatures, shippableWeight, shippableTotal);
         } catch (Throwable t) {
             Debug.logError(t, module);
         }
+        // SCIPIO: code will crash on this
+        //return null;
+        return Collections.emptyList();
     }
 
-    protected void loadEstimates() {
-        this.shippingEstimates = new HashMap<GenericValue, BigDecimal>();
+    protected Map<GenericValue, BigDecimal> loadEstimates(List<GenericValue> shippingMethods) { // SCIPIO: Added return value
+        Map<GenericValue, BigDecimal> shippingEstimates = new HashMap<>();
         if (shippingMethods != null) {
             for (GenericValue shipMethod : shippingMethods) {
                 String shippingMethodTypeId = shipMethod.getString("shipmentMethodTypeId");
@@ -95,19 +120,57 @@ public class ShippingEstimateWrapper {
                 String productStoreShipMethId = shipMethod.getString("productStoreShipMethId");
                 String shippingCmId = shippingAddress != null ? shippingAddress.getString("contactMechId") : null;
 
-                Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, "SALES_ORDER",
+                // SCIPIO: 2018-11-09: Added locale, allowMissingEstimates
+                Map<String, Object> estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, locale, "SALES_ORDER",
                         shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
-                        supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId);
+                        supplierPartyId, shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal, partyId, productStoreShipMethId,
+                        allowMissingShipEstimates);
 
-                if (!ServiceUtil.isError(estimateMap)) {
+                if (ServiceUtil.isSuccess(estimateMap)) {
                     BigDecimal shippingTotal = (BigDecimal) estimateMap.get("shippingTotal");
                     shippingEstimates.put(shipMethod, shippingTotal);
                 }
             }
         }
+        return shippingEstimates;
     }
 
+    /**
+     * SCIPIO: Returns only valid shipping methods for selection for the current process.
+     * ALIAS for {@link #getValidShippingMethods()}.
+     * <p>
+     * <strong>NOTE:</strong> As of 2018-11-09, this method only returns shipping methods
+     * deemed "valid" for the current process. Prior to this, this used to return methods
+     * even if they missed estimates and this is not allowed; to get that behavior again,
+     * use {@link #getAllShippingMethods()}.
+     * <p>
+     * Largely depends on {@link #isAllowMissingShipEstimates()}.
+     * <p>
+     * Modified 2018-11-09.
+     */
     public List<GenericValue> getShippingMethods() {
+        //return shippingMethods;
+        return validShippingMethods;
+    }
+
+    /**
+     * SCIPIO: Returns only valid shipping methods for selection for the current process.
+     * ALIAS for {@link #getShippingMethods()}.
+     * <p>
+     * Added 2018-11-09.
+     */
+    public List<GenericValue> getValidShippingMethods() {
+        return validShippingMethods;
+    }
+
+    /**
+     * SCIPIO: Returns all shipping methods for the store even if invalid for selection (e.g. bad estimates).
+     * <p>
+     * This implements the old behavior of {@link #getShippingMethods()} prior to 2018-11-09.
+     * <p>
+     * Added 2018-11-09.
+     */
+    public List<GenericValue> getAllShippingMethods() {
         return shippingMethods;
     }
 
@@ -119,4 +182,52 @@ public class ShippingEstimateWrapper {
         return shippingEstimates.get(storeCarrierShipMethod);
     }
 
+    /**
+     * SCIPIO: If true, {@link #getShippingMethods()} will return methods
+     * even if they returned no valid estimates.
+     */
+    public boolean isAllowMissingShipEstimates() {
+        return allowMissingShipEstimates;
+    }
+
+    /**
+     * SCIPIO: Returns true if the shipping method is valid for selection.
+     * Added 2018-11-09.
+     */
+    public boolean isValidShippingMethod(GenericValue storeCarrierShipMethod) {
+        if (isAllowMissingShipEstimates()) {
+            return shippingMethods.contains(storeCarrierShipMethod);
+        } else {
+            return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+        }
+    }
+
+    protected boolean isValidShippingMethodInternal(GenericValue storeCarrierShipMethod) { // same as isValidShippingMethod but assumes storeCarrierShipMethod part of store methods
+        if (isAllowMissingShipEstimates()) {
+            return true;
+        } else {
+            return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+        }
+    }    
+    
+    /**
+     * SCIPIO: Checks if the given ship method has a valid estimate.
+     * NOTE: Does NOT necessarily imply the whole shipping method is valid for usage;
+     * use {@link #isValidShippingMethod} for that.
+     * Added 2018-11-09.
+     */
+    public boolean isValidEstimate(GenericValue storeCarrierShipMethod) {
+        return isValidEstimate(getShippingEstimate(storeCarrierShipMethod), storeCarrierShipMethod);
+    }
+
+    /**
+     * SCIPIO: isValidShippingEstimate.
+     * Added 2018-11-09.
+     */
+    protected boolean isValidEstimate(BigDecimal estimate, GenericValue storeCarrierShipMethod) {
+        if (!(estimate == null || estimate.compareTo(BigDecimal.ZERO) < 0)) { // Same logic as PayPalServices.payPalCheckoutUpdate
+            return true;
+        }
+        return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))) && shippingEstimates.containsKey(storeCarrierShipMethod); // Special case
+    }
 }

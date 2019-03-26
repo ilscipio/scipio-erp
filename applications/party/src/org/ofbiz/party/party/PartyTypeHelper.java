@@ -20,8 +20,6 @@
 package org.ofbiz.party.party;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -31,9 +29,11 @@ import org.ofbiz.entity.util.EntityTypeUtil;
 /**
  * PartyTypeHelper
  */
-public class PartyTypeHelper {
+public final class PartyTypeHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private PartyTypeHelper () {}
 
     /** Check if a related party is of the right party type (PERSON or PARTY_GROUP)
      *@param delegator needed Delegator
@@ -47,7 +47,7 @@ public class PartyTypeHelper {
         GenericValue checkedTypeOfParty = null;
         try {
             party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
-            if (UtilValidate.isNotEmpty(party)) {
+            if (party != null) {
                 partyType = party.getRelatedOne("PartyType", true);
                 checkedTypeOfParty = EntityQuery.use(delegator).from("PartyType").where("partyTypeId", checkedPartyType).cache().queryOne();
             } else {

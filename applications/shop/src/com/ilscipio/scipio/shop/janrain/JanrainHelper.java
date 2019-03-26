@@ -68,8 +68,8 @@ public class JanrainHelper {
     public JanrainHelper(String apiKey, String baseUrl) {
         while (baseUrl.endsWith("/"))
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        this.apiKey = apiKey;
-        this.baseUrl = baseUrl;
+        JanrainHelper.apiKey = apiKey; // SCIPIO: fixed static through object assign
+        JanrainHelper.baseUrl = baseUrl; // SCIPIO: fixed static through object assign
     }
     public String getApiKey() { return apiKey; }
     public String getBaseUrl() { return baseUrl; }
@@ -80,7 +80,7 @@ public class JanrainHelper {
     }
     public HashMap<String, List<String>> allMappings() {
         Element rsp = apiCall("all_mappings", null);
-        Element mappings_node = (Element)rsp.getFirstChild();
+        //Element mappings_node = (Element)rsp.getFirstChild(); // SCIPIO: unused
         HashMap<String, List<String>> result = new HashMap<String, List<String>>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
@@ -141,10 +141,10 @@ public class JanrainHelper {
         query.put("format", "xml");
         query.put("apiKey", apiKey);
         StringBuffer sb = new StringBuffer();
-        for (Iterator it = query.entrySet().iterator(); it.hasNext();) {
+        for (Iterator<Map.Entry<String, Object>> it = query.entrySet().iterator(); it.hasNext();) {
             if (sb.length() > 0) sb.append('&');
             try {
-                Map.Entry e = (Map.Entry)it.next();
+                Map.Entry<String, Object> e = it.next();
                 sb.append(URLEncoder.encode(e.getKey().toString(), "UTF-8"));
                 sb.append('=');
                 sb.append(URLEncoder.encode(e.getValue().toString(), "UTF-8"));
@@ -163,7 +163,7 @@ public class JanrainHelper {
                 conn.getOutputStream(), "UTF-8");
             osw.write(data);
             osw.close();
-            
+
             BufferedReader post = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             StringBuilder buf = new StringBuilder();
@@ -173,7 +173,7 @@ public class JanrainHelper {
             post.close();
             Document tagXml = UtilXml.readXmlDocument(buf.toString());
             Element response = tagXml.getDocumentElement();
-            if (!response.getAttribute("stat").equals("ok")) {
+            if (!"ok".equals(response.getAttribute("stat"))) {
                 throw new RuntimeException("Unexpected API error");
             }
             return response;
@@ -193,11 +193,11 @@ public class JanrainHelper {
         String token =  request.getParameter("token");
         String errMsg = "";
         if (UtilValidate.isNotEmpty(token)) {
-            JanrainHelper janrainHelper = new JanrainHelper(apiKey, baseUrl);
-            Element authInfo = janrainHelper.authInfo(token);
+            //JanrainHelper janrainHelper = new JanrainHelper(apiKey, baseUrl);
+            Element authInfo = JanrainHelper.authInfo(token); // SCIPIO: fixed static call through object
             Element profileElement = UtilXml.firstChildElement(authInfo, "profile");
             Element nameElement = UtilXml.firstChildElement(profileElement, "name");
-            
+
             // profile element
             String displayName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "displayName"));
             String email = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "email"));
@@ -205,18 +205,18 @@ public class JanrainHelper {
             String preferredUsername = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "preferredUsername"));
             String providerName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "providerName"));
             String url = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "url"));
-            
+
             // name element
             String givenName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "givenName"));
             String familyName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "familyName"));
             String formatted = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "formatted"));
-            
+
             if (UtilValidate.isEmpty("preferredUsername")) {
                 errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             Map<String, String> result = new HashMap<String, String>();
             result.put("displayName", displayName);
             result.put("email", email);
@@ -228,10 +228,10 @@ public class JanrainHelper {
             result.put("familyName", familyName);
             result.put("formatted", formatted);
             request.setAttribute("userInfoMap", result);
-            
+
             try {
                 GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", preferredUsername).cache().queryOne();
-                if (UtilValidate.isNotEmpty(userLogin)) {
+                if (userLogin != null) {
                     LoginWorker.doBasicLogin(userLogin, request);
                     LoginWorker.autoLoginSet(request, response);
                     return "success";

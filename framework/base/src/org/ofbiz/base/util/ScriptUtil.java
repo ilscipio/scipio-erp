@@ -19,8 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -49,6 +48,7 @@ import javax.script.SimpleScriptContext;
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
+import org.ofbiz.base.util.GroovyUtil.GroovyLangVariant;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /**
@@ -75,12 +75,14 @@ public final class ScriptUtil {
     private static ScriptHelperFactory helperFactory = null;
     /** A set of script names - derived from the JSR-223 scripting engines. */
     public static final Set<String> SCRIPT_NAMES;
-    /** 
+    /** SCIPIO: Extra script names for backward-compatibility, mapping to which they're now implemented with (added 2018-09-19). */
+    private static final Map<String, String> LEGACY_SCRIPT_NAMES_IMPLMAP = UtilMisc.toMap("bsh", "groovy");
+    /**
      * SCIPIO: New (2017-01-30) static ScriptEnginerManager instance, instead of recreating at every invocation.
      * NOTE: For this to be safe, we MUST use the static ClassLoader, and NOT the thread context classloader,
      * because the latter may be a Tomcat webapp classloader for an arbitrary webapp.
      * NOTE: This singleton means it is not possible for a webapp to provide its own script engines, but generally
-     * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances, 
+     * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances,
      * there would probably have to be a ScriptEngineManager cached in every ServletContext as attribute (TODO?).
      */
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(ScriptUtil.class.getClassLoader());
@@ -88,8 +90,8 @@ public final class ScriptUtil {
     static {
         // SCIPIO: sanity check
         Debug.logInfo("ScriptUtil engine manager class loader: " + ScriptUtil.class.getClassLoader().getClass().getName(), module);
-        
-        Set<String> writableScriptNames = new HashSet<String>();
+
+        Set<String> writableScriptNames = new HashSet<>();
         ScriptEngineManager manager = getScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
         if (engines.isEmpty()) {
@@ -116,9 +118,18 @@ public final class ScriptUtil {
                     }
                 }
             }
-            // SCIPIO: Print out all script names in succinct list to help with script maintenance
-            Debug.logInfo("All supported script names: " + writableScriptNames.toString(), module);
         }
+        // SCIPIO: 2018-09-19: These needed for transient backward-compat
+        Debug.logInfo("The following deprecated/compatibility/legacy script language names are recognized by Scipio:", module);
+        for(Map.Entry<String, String> entry : LEGACY_SCRIPT_NAMES_IMPLMAP.entrySet()) {
+            if (!writableScriptNames.contains(entry.getKey())) {
+                Debug.logInfo("    " + entry.getKey() 
+                    + (entry.getValue() != null ? " (implemented with: " + entry.getValue() + ")" : ""), module);
+                writableScriptNames.add(entry.getKey());
+            }
+        }
+        // SCIPIO: Print out all script names in succinct list to help with script maintenance
+        Debug.logInfo("All supported script names: " + writableScriptNames.toString(), module);
         SCRIPT_NAMES = Collections.unmodifiableSet(writableScriptNames);
         Iterator<ScriptHelperFactory> iter = ServiceLoader.load(ScriptHelperFactory.class).iterator();
         if (iter.hasNext()) {
@@ -133,7 +144,7 @@ public final class ScriptUtil {
 
     /**
      * Returns a compiled script.
-     * 
+     *
      * @param filePath Script path and file name.
      * @return The compiled script, or <code>null</code> if the script engine does not support compilation.
      * @throws IllegalArgumentException
@@ -145,27 +156,27 @@ public final class ScriptUtil {
         CompiledScript script = parsedScripts.get(filePath);
         if (script == null) {
             ScriptEngineManager manager = getScriptEngineManager();
-            ScriptEngine engine = manager.getEngineByExtension(getFileExtension(filePath));
+            String fileExtension = getFileExtension(filePath); // SCIPIO: slight refactor
+            if ("bsh".equalsIgnoreCase(fileExtension)) { // SCIPIO: 2018-09-19: Warn here, there's nowhere else we can do it...
+                Debug.logWarning("Deprecated Beanshell script file invoked (" + filePath + "); "
+                        + "this is a compatibility mode only (runs as Groovy); please convert to Groovy script", module);
+                fileExtension = "groovy";
+            }
+            ScriptEngine engine = manager.getEngineByExtension(fileExtension);
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
             }
             engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
-            // SCIPIO: 2018-03-22: beanshell-xxx-scipio: special check for bsh to avoid extra patches
-            if (!(engine instanceof bsh.engine.BshScriptEngine)) {
-                try {
-                    Compilable compilableEngine = (Compilable) engine;
-                    URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream()));
-                    script = compilableEngine.compile(reader);
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
-                    }
-                } catch (ClassCastException e) {
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
-                    }
+            try {
+                Compilable compilableEngine = (Compilable) engine;
+                URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream(), UtilIO
+                    .getUtf8()));
+                script = compilableEngine.compile(reader);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
                 }
-            } else {
+            } catch (ClassCastException e) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                 }
@@ -179,7 +190,7 @@ public final class ScriptUtil {
 
     /**
      * Returns a compiled script.
-     * 
+     *
      * @param language
      * @param script
      * @return The compiled script, or <code>null</code> if the script engine does not support compilation.
@@ -187,6 +198,11 @@ public final class ScriptUtil {
      * @throws ScriptException
      */
     public static CompiledScript compileScriptString(String language, String script) throws ScriptException {
+        if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode
+            // FIXME?: currently unable to use a custom GroovyClassLoader in configureScriptEngineForInvoke so
+            // we cannot fully honor GroovyLangVariant(.BSH) config yet; thankfully right now it only needs a custom Binding...
+            language = "groovy";
+        }
         Assert.notNull("language", language, "script", script);
         String cacheKey = language.concat("://").concat(script);
         CompiledScript compiledScript = parsedScripts.get(cacheKey);
@@ -197,20 +213,13 @@ public final class ScriptUtil {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
             engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
-            // SCIPIO: 2018-03-22: beanshell-xxx-scipio: special check for bsh to avoid extra patches
-            if (!(engine instanceof bsh.engine.BshScriptEngine)) {
-                try {
-                    Compilable compilableEngine = (Compilable) engine;
-                    compiledScript = compilableEngine.compile(script);
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
-                    }
-                } catch (ClassCastException e) {
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
-                    }
+            try {
+                Compilable compilableEngine = (Compilable) engine;
+                compiledScript = compilableEngine.compile(script);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
                 }
-            } else {
+            } catch (ClassCastException e) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                 }
@@ -227,13 +236,13 @@ public final class ScriptUtil {
      * <p>If a <code>CompiledScript</code> instance is to be shared by multiple threads, then
      * each thread must create its own <code>ScriptContext</code> and pass it to the
      * <code>CompiledScript</code> eval method.</p>
-     * 
+     *
      * @param context
      * @return
      */
     public static ScriptContext createScriptContext(Map<String, Object> context) {
         Assert.notNull("context", context);
-        Map<String, Object> localContext = new HashMap<String, Object>(context);
+        Map<String, Object> localContext = new HashMap<>(context);
         localContext.put(WIDGET_CONTEXT_KEY, context);
         localContext.put("context", context);
         ScriptContext scriptContext = new SimpleScriptContext();
@@ -251,14 +260,14 @@ public final class ScriptUtil {
      * <p>If a <code>CompiledScript</code> instance is to be shared by multiple threads, then
      * each thread must create its own <code>ScriptContext</code> and pass it to the
      * <code>CompiledScript</code> eval method.</p>
-     * 
+     *
      * @param context
      * @param protectedKeys
      * @return
      */
     public static ScriptContext createScriptContext(Map<String, Object> context, Set<String> protectedKeys) {
         Assert.notNull("context", context, "protectedKeys", protectedKeys);
-        Map<String, Object> localContext = new HashMap<String, Object>(context);
+        Map<String, Object> localContext = new HashMap<>(context);
         localContext.put(WIDGET_CONTEXT_KEY, context);
         localContext.put("context", context);
         ScriptContext scriptContext = new SimpleScriptContext();
@@ -280,7 +289,7 @@ public final class ScriptUtil {
 
      /**
      * Executes a script <code>String</code> and returns the result.
-     * 
+     *
      * @param language
      * @param script
      * @param scriptClass
@@ -291,7 +300,17 @@ public final class ScriptUtil {
     public static Object evaluate(String language, String script, Class<?> scriptClass, Map<String, Object> context) throws Exception {
         Assert.notNull("context", context);
         if (scriptClass != null) {
+            if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode (runs as Groovy)
+                return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context, 
+                        GroovyLangVariant.BSH)).run();
+            }
             return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context)).run();
+        }
+        if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode (runs as Groovy)
+            // SPECIAL: we need our special Binding for Bsh compat, so reroute through GroovyUtil instead
+            // NOTE: For this we'll use cache false to be safe; callers who want speed should switch to Groovy,
+            // which gets cached by the GroovyScriptEngine through the code below this.
+            return GroovyUtil.eval(script, context, GroovyLangVariant.BSH, false, false, false);
         }
         try {
             CompiledScript compiledScript = compileScriptString(language, script);
@@ -318,7 +337,7 @@ public final class ScriptUtil {
 
     /**
      * Executes a compiled script and returns the result.
-     * 
+     *
      * @param script Compiled script.
      * @param functionName Optional function or method to invoke.
      * @param scriptContext Script execution context.
@@ -345,7 +364,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param context Script execution context.
@@ -358,7 +377,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param context Script execution context.
@@ -383,7 +402,7 @@ public final class ScriptUtil {
 
     /**
      * Executes the script at the specified location and returns the result.
-     * 
+     *
      * @param filePath Script path and file name.
      * @param functionName Optional function or method to invoke.
      * @param scriptContext Script execution context.
@@ -406,6 +425,12 @@ public final class ScriptUtil {
             }
         }
         String fileExtension = getFileExtension(filePath);
+        if ("bsh".equalsIgnoreCase(fileExtension)) { // SCIPIO: 2018-09-19: Warn here, there's nowhere else we can do it...
+            Debug.logWarning("Deprecated Beanshell script file invoked (" + filePath + "); "
+                    + "this is a compatibility mode only (runs as Groovy); please convert to Groovy script", module);
+            // FIXME?: This does not properly use the GroovyLangVariant.BSH bindings for scripts in filesystem... unclear if should have
+            fileExtension = "groovy";
+        }
         ScriptEngineManager manager = getScriptEngineManager();
         ScriptEngine engine = manager.getEngineByExtension(fileExtension);
         if (engine == null) {
@@ -417,17 +442,21 @@ public final class ScriptUtil {
         }
         engine.setContext(scriptContext);
         URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
-        FileReader reader = new FileReader(new File(scriptUrl.getFile()));
-        Object result = engine.eval(reader);
-        if (UtilValidate.isNotEmpty(functionName)) {
-            try {
-                Invocable invocableEngine = (Invocable) engine;
-                result = invocableEngine.invokeFunction(functionName, args == null ? EMPTY_ARGS : args);
-            } catch (ClassCastException e) {
-                throw new ScriptException("Script engine " + engine.getClass().getName() + " does not support function/method invocations");
+        try (
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(scriptUrl.getFile()), UtilIO
+                        .getUtf8());) {
+            Object result = engine.eval(reader);
+            if (UtilValidate.isNotEmpty(functionName)) {
+                try {
+                    Invocable invocableEngine = (Invocable) engine;
+                    result = invocableEngine.invokeFunction(functionName, args == null ? EMPTY_ARGS : args);
+                } catch (ClassCastException e) {
+                    throw new ScriptException("Script engine " + engine.getClass().getName()
+                            + " does not support function/method invocations");
+                }
             }
+            return result;
         }
-        return result;
     }
 
     private static String getFileExtension(String filePath) {
@@ -441,10 +470,26 @@ public final class ScriptUtil {
     public static Class<?> parseScript(String language, String script) {
         Class<?> scriptClass = null;
         if ("groovy".equals(language)) {
-            // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
-            // so that groovy snippets from FlexibleStringExpander support extra additions
-            //scriptClass = GroovyUtil.parseClass(script);
-            scriptClass = GroovyUtil.parseClass(script, GroovyUtil.getGroovyScriptClassLoader());
+            try {
+                // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
+                // so that groovy snippets from FlexibleStringExpander support extra additions
+                // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
+                //scriptClass = GroovyUtil.parseClass(script);
+                scriptClass = GroovyUtil.parseClass(script,
+                        GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                return null;
+            }
+        } else if ("bsh".equals(language)) {
+            // SCIPIO 2018-09-19: backward-compat mode
+            try {
+                scriptClass = GroovyUtil.parseClass(script,
+                        GroovyLangVariant.BSH.getCommonGroovyClassLoader());
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                return null;
+            }
         }
         return scriptClass;
     }
@@ -523,7 +568,7 @@ public final class ScriptUtil {
             return bindings.values();
         }
     }
-    
+
     /**
      * SCIPIO: Performs String.trim() on every line of script. Completely flattens the code.
      */
@@ -548,14 +593,14 @@ public final class ScriptUtil {
         }
         return sb.toString();
     }
-    
+
     /**
-     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread. 
+     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread.
      * Should be called by all ScriptUtil methods every time a new ScriptEngine is gotten
      * from the ScriptEngineManager.
      * <p>
      * NOTE: This is safe only with the assumption that the ScriptEngine instance
-     * passed was newly created for this thread (and not a singleton instance). 
+     * passed was newly created for this thread (and not a singleton instance).
      * At current time (2017-01-27), this was already being assumed (implied by the presence of
      * calls such as <code>ScriptEngine.setContext</code>, above),
      * and is known to be true for GroovyScriptEngineImpl (see Groovy source code),
@@ -565,7 +610,7 @@ public final class ScriptUtil {
     private static ScriptEngine configureScriptEngineForInvoke(ScriptEngine scriptEngine) {
         return configureScriptEngine(scriptEngine);
     }
-    
+
     /**
      * SCIPIO: Configures the given script engine with any non-default settings needed.
      * <p>
@@ -577,11 +622,12 @@ public final class ScriptUtil {
     private static ScriptEngine configureScriptEngine(ScriptEngine scriptEngine) {
         if (scriptEngine instanceof GroovyScriptEngineImpl) {
             GroovyScriptEngineImpl groovyScriptEngine = (GroovyScriptEngineImpl) scriptEngine;
-            groovyScriptEngine.setClassLoader(GroovyUtil.getGroovyScriptClassLoader());
+            // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
+            groovyScriptEngine.setClassLoader(GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
         }
         return scriptEngine;
     }
-    
+
     /**
      * SCIPIO: Returns an appropriate {@link javax.script.ScriptEngineManager} for current
      * thread, with ofbiz configuration (if any). Abstracts the creation and selection of the manager.

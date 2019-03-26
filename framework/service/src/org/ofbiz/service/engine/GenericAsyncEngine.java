@@ -18,10 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.service.engine;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.util.buf.StringUtils;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -29,7 +30,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
@@ -91,7 +91,10 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
 
                 GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeData", "runtimeDataId", dataId);
 
-                runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+                // SCIPIO: 2019-03-08: Do not throw exceptions needlessly; instead, simply skip any non-serializable values.
+                //runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+                List<String> errorMessageList = new ArrayList<>();
+                runtimeData.set("runtimeInfo", XmlSerializer.serializeOrNull(context, errorMessageList));
                 runtimeData.create();
 
                 // Get the userLoginId out of the context
@@ -105,12 +108,17 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 String jobId = dispatcher.getDelegator().getNextSeqId("JobSandbox");
                 String jobName = Long.toString(System.currentTimeMillis());
 
+                if (errorMessageList.size() > 0) { // SCIPIO
+                    Debug.logError("Persisted job [jobName=" + jobName + ", service=" + modelService.name + "] error: " + errorMessageList.size()
+                        + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
+                }
+
                 Map<String, Object> jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", UtilDateTime.nowTimestamp());
                 jFields.put("poolId", ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool());
                 jFields.put("statusId", "SERVICE_PENDING");
                 jFields.put("serviceName", modelService.name);
                 jFields.put("loaderName", localName);
-                jFields.put("maxRetry", Long.valueOf(modelService.maxRetry));
+                jFields.put("maxRetry", (long) modelService.maxRetry);
                 jFields.put("runtimeDataId", dataId);
                 if (UtilValidate.isNotEmpty(authUserLoginId)) {
                     jFields.put("authUserLoginId", authUserLoginId);
@@ -120,12 +128,13 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 jobV.create();
             } catch (GenericEntityException e) {
                 throw new GenericServiceException("Unable to create persisted job", e);
-            } catch (SerializeException e) {
-                throw new GenericServiceException("Problem serializing service attributes", e);
-            } catch (FileNotFoundException e) {
-                throw new GenericServiceException("Problem serializing service attributes", e);
-            } catch (IOException e) {
-                throw new GenericServiceException("Problem serializing service attributes", e);
+            // SCIPIO: 2019-03-08: Try to absorb and log these errors as much as possible, but without crashing
+            //} catch (SerializeException e) {
+            //    throw new GenericServiceException("Problem serializing service attributes", e);
+            //} catch (FileNotFoundException e) {
+            //    throw new GenericServiceException("Problem serializing service attributes", e);
+            //} catch (IOException e) {
+            //    throw new GenericServiceException("Problem serializing service attributes", e);
             } catch (GenericConfigException e) {
                 throw new GenericServiceException("Problem serializing service attributes", e);
             }

@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import java.math.RoundingMode;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.common.*;
@@ -63,12 +65,12 @@ while (invoice = invIterator.next()) {
     Boolean isPurchaseInvoice = EntityTypeUtil.hasParentType(delegator, "InvoiceType", "invoiceTypeId", invoice.getString("invoiceTypeId"), "parentTypeId", "PURCHASE_INVOICE");
     Boolean isSalesInvoice = EntityTypeUtil.hasParentType(delegator, "InvoiceType", "invoiceTypeId", (String) invoice.getString("invoiceTypeId"), "parentTypeId", "SALES_INVOICE");
     if (isPurchaseInvoice) {
-        totalInvPuApplied += InvoiceWorker.getInvoiceApplied(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
-        totalInvPuNotApplied += InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+        totalInvPuApplied += InvoiceWorker.getInvoiceApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
+        totalInvPuNotApplied += InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     }
     else if (isSalesInvoice) {
-        totalInvSaApplied += InvoiceWorker.getInvoiceApplied(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
-        totalInvSaNotApplied += InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+        totalInvSaApplied += InvoiceWorker.getInvoiceApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
+        totalInvSaNotApplied += InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     }
     else {
         Debug.logError("InvoiceType: " + invoice.invoiceTypeId + " without a valid parentTypeId: " + invoice.parentTypeId + " !!!! Should be either PURCHASE_INVOICE or SALES_INVOICE", "");
@@ -103,12 +105,12 @@ payIterator = from("PaymentAndType").where(payExprs).cursorScrollInsensitive().d
 
 while (payment = payIterator.next()) {
     if ("DISBURSEMENT".equals(payment.parentTypeId) || "TAX_PAYMENT".equals(payment.parentTypeId)) {
-        totalPayOutApplied += PaymentWorker.getPaymentApplied(payment, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
-        totalPayOutNotApplied += PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+        totalPayOutApplied += PaymentWorker.getPaymentApplied(payment, actualCurrency).setScale(2,RoundingMode.HALF_UP);
+        totalPayOutNotApplied += PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     }
     else if ("RECEIPT".equals(payment.parentTypeId)) {
-        totalPayInApplied += PaymentWorker.getPaymentApplied(payment, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
-        totalPayInNotApplied += PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+        totalPayInApplied += PaymentWorker.getPaymentApplied(payment, actualCurrency).setScale(2,RoundingMode.HALF_UP);
+        totalPayInNotApplied += PaymentWorker.getPaymentNotApplied(payment, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     }
     else {
         Debug.logError("PaymentTypeId: " + payment.paymentTypeId + " without a valid parentTypeId: " + payment.parentTypeId + " !!!! Should be either DISBURSEMENT, TAX_PAYMENT or RECEIPT", "");

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
@@ -36,7 +23,7 @@ under the License.
 <#if (orderHeader.orderId)??>
   <@heading>
     <#-- SCIPIO: This page doesn't actually show a full invoice - only the PDF is a full invoice (with tax information) - so "PDF" beside title is misleading -->
-    ${getLabel("OrderOrderId")}: ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
+    ${getLabel("OrderOrderId")}: ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@pageUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@pageUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
   </@heading>
 </#if>
 
@@ -46,21 +33,21 @@ under the License.
     <@menu args=menuArgs>
       <#-- SCIPIO: No reason to hide it: 
       <#if maySelect>-->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
+      <@menuitem type="link" href=makePageUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       <#--</#if>-->
       <#-- above will be better
       <#if maySelect>
-        <@menuitem type="link" href=makeOfbizUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
+        <@menuitem type="link" href=makePageUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       </#if>
       -->
       <#-- SCIPIO: Always show it here: <#if maySelect>-->
       <#-- NOTE: The order may actually have more than one invoice available. On this page, show only this one for now, because the
           others don't become available until after order is completed and stuff. -->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('EcommerceOrderConfirmation')} (${rawLabel('CommonPdf')})" />
+      <@menuitem type="link" href=makePageUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('EcommerceOrderConfirmation')} (${rawLabel('CommonPdf')})" />
       <#--</#if>-->
       <#-- SCIPIO: TODO: Uncomment once converted/tested
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
-        <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
+        <@menuitem type="link" href=makePageUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
       </#if>-->
     </@menu>
   </#if>
@@ -73,22 +60,24 @@ under the License.
         <@cell columns=4>
             <@section title=uiLabelMap.CommonOverview containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                 <@table type="fields">
-                  <#if placingParty?has_content && orderDate?has_content>
+                  <#assign placingPartyId = placingPartyId!(placingParty.partyId)!""><#-- SCIPIO -->
+                  <#if placingPartyId?has_content && orderDate?has_content>
                     <#-- SCIPIO: screen finds it -->
                     <#--<#assign displayParty = localOrderReadHelper.getPlacingParty()!/>-->
-                    <#assign displayParty = placingParty/>
-                    <#assign displayPartyNameResult = {}/>
-                    <#if displayParty?has_content>
-                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>
+                    <#assign displayPartyId = placingPartyId/>
+                    <#if displayPartyId?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
+                        <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayPartyId, "compareDate":(orderDate!), "userLogin":userLogin!})/>
+                    <#else>
+                        <#assign displayPartyNameResult = {}/>
                     </#if>
                     <#if displayPartyNameResult?has_content>
                         <@tr>
                           <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}</@td>
-                          <@td colspan="3">${(displayPartyNameResult.fullName)!"[Name Not Found]"}</@td>
+                          <@td colspan="3">${(displayPartyNameResult.fullName)!("["+rawLabel("OrderPartyNameNotFound")+"]")}</@td>
                         </@tr>
                     </#if>
                   </#if>
-                    <#-- SCIPIO: Show the emails (from placing party + additional, combined due to schema) -->
+                  <#-- SCIPIO: Show the emails (from placing party + additional, combined due to schema) -->
                   <#if orderEmailList?has_content>
                     <@tr>
                       <@td class="${styles.grid_large!}2">${uiLabelMap.CommonEmail}</@td>
@@ -118,26 +107,25 @@ under the License.
                       </@td>
                     </@tr>
                   </#if>
-                  <#if distributorId??>
+                  <#if distributorId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
                       <@td colspan="3">
-                         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                         ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                         <#assign distPartyNameResult = runService("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
+                         ${distPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>
-                
-                  <#if affiliateId??>
+
+                  <#if affiliateId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <@tr>
                       <@td>${uiLabelMap.OrderAffiliate}</@td>
                       <@td colspan="3">
-                        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                        ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                        <#assign affPartyNameResult = runService("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
+                        ${affPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>
-            
                 </@table>
             </@section>
         </@cell>
@@ -188,6 +176,33 @@ under the License.
                                       </#if>
                                     </@td>
                                 </@tr>
+                            <#elseif paymentMethodType.paymentMethodTypeId == "EXT_LIGHTNING">
+                                <@tr>
+                                  <#assign xbtAmount = Static["org.ofbiz.common.uom.UomWorker"].convertDatedUom(orderDate, orderGrandTotal!grandTotal!0, currencyUomId!,"XBT",dispatcher,true)>
+                                  <#assign offPayTitle>${uiLabelMap.AccountingPayWithBitcoin}</#assign>
+                                  <#assign offPayDesc>
+                                    <br/><strong><@ofbizCurrency amount=xbtAmount?default(0.00) rounding="8" isoCode="XBT"/></p></strong> 
+                                  </#assign>
+                                <@td class="${styles.grid_large!}2">${offPayTitle}</@td>
+                                <@td colspan="3">
+                                  <#-- SCIPIO: only show alert after placed and not printable -->
+                                  <#if orderHeader?has_content && !printable>
+                                     ${offPayDesc}
+                                  <#else>
+                                    ${offPayDesc}
+                                  </#if>
+                                </@td>
+                            </@tr>
+                            <@tr>
+                                <@td colspan="4">
+                                      <#if requestAttributes?has_content && requestAttributes.paymentRequest?has_content>
+                                          <@qrcode text=requestAttributes.paymentRequest width=200 height=200/>
+                                          <@alert type="info" closable=false>
+                                            <div style="word-break: break-all;">${requestAttributes.paymentRequest!""}</div>
+                                          </@alert>
+                                      </#if>
+                                </@td>
+                            </@tr>
                             <#else>
                                 <#-- ${uiLabelMap.AccountingPaymentVia} -->
                                 <@tr>

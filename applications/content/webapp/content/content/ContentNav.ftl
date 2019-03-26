@@ -16,7 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
 
 <@script>
 <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
@@ -57,10 +57,10 @@ var rawdata = [
 jQuery(document).ready(createTree());
 
  <#-------------------------------------------------------------------------------------define Requests-->
-  var editDocumentTreeUrl = '<@ofbizUrl>views/EditDocumentTree</@ofbizUrl>';
-  var listDocument =  '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
-  var editDocumentUrl = '<@ofbizUrl>views/EditDocument</@ofbizUrl>';
-  var deleteDocumentUrl = '<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>';
+  var editDocumentTreeUrl = '<@pageUrl>views/EditDocumentTree</@pageUrl>';
+  var listDocument =  '<@pageUrl>views/ListDocument</@pageUrl>';
+  var editDocumentUrl = '<@pageUrl>views/EditDocument</@pageUrl>';
+  var deleteDocumentUrl = '<@pageUrl>removeDocumentFromTree</@pageUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
@@ -111,11 +111,11 @@ jQuery(document).ready(createTree());
     function callDocument(contentId) {
         var tabitem='${activeSubMenuItem!}';
         if (tabitem=="navigateContent")
-            listDocument = '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ListDocument</@pageUrl>';
         if (tabitem=="LookupContentTree")
-            listDocument = '<@ofbizUrl>views/ListContentTree</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ListContentTree</@pageUrl>';
         if (tabitem=="LookupDetailContentTree")
-            listDocument = '<@ofbizUrl>views/ViewContentDetail</@ofbizUrl>';
+            listDocument = '<@pageUrl>views/ViewContentDetail</@pageUrl>';
 
         //jQuerry Ajax Request
         jQuery.ajax({
@@ -207,7 +207,7 @@ jQuery(document).ready(createTree());
     }
  <#------------------------------------------------------pagination function -->
     function nextPrevDocumentList(url){
-        url= '<@ofbizUrl>'+url+'</@ofbizUrl>';
+        url= '<@pageUrl>'+url+'</@pageUrl>';
          jQuery.ajax({
             url: url,
             type: 'POST',

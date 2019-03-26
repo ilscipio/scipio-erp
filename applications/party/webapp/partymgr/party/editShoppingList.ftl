@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+<form id="createEmptyShoppingList" action="<@pageUrl>createEmptyShoppingList</@pageUrl>" method="post">
   <input type="hidden" name="partyId" value="${partyId!}" />
 </form>
 <#macro menuContent menuArgs={}>
@@ -27,7 +14,7 @@ under the License.
 </#macro>
 <@section menuContent=menuContent><#--  title=uiLabelMap.PartyShoppingLists -->
     <#if shoppingLists?has_content>
-      <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
+      <form name="selectShoppingList" method="post" action="<@pageUrl>editShoppingList</@pageUrl>">
         <@fields type="default-nolabelarea">
         <input type="hidden" name="partyId" value="${partyId!}" />
         <@field type="select" name="shoppingListId">
@@ -53,17 +40,17 @@ under the License.
   <@menu args=menuArgs>
       <@menuitem type="link" href="javascript:document.updateList.submit();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text=uiLabelMap.PartyCreateNewQuote class="+${styles.action_run_sys!} ${styles.action_add!}">
-        <form method="post" name="createQuoteFromShoppingListForm" action="<@ofbizInterWebappUrl>/ordermgr/control/createQuoteFromShoppingList</@ofbizInterWebappUrl>">
+        <form method="post" name="createQuoteFromShoppingListForm" action="<@serverUrl>/ordermgr/control/createQuoteFromShoppingList</@serverUrl>">
           <input type="hidden" name="applyStorePromotions" value="N"/>
           <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId!}"/>
         </form>
       </@menuitem>
-      <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.PartyCreateNewCustRequest class="+${styles.action_run_sys!} ${styles.action_add!}" />
-      <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeServerUrl("/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.PartyCreateNewCustRequest class="+${styles.action_run_sys!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeServerUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
-    <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
+<@section title="${rawLabel('PartyShoppingListDetail')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
+    <form name="updateList" method="post" action="<@pageUrl>updateShoppingList</@pageUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
         <#assign isAutoSave = ((shoppingList.listName!"") == "auto-save")>
@@ -95,7 +82,7 @@ under the License.
               </#list>
             </@field>
             <#if parentShoppingList??>
-              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName!parentShoppingList.shoppingListId})</a>
+              <a href="<@pageUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName!parentShoppingList.shoppingListId})</a>
             </#if>
         </@field>
         <#if !isAutoSave>
@@ -107,11 +94,11 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+<@section title="${rawLabel('PartyChildShoppingList')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
+    <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyListName}</@th>
@@ -122,10 +109,10 @@ under the License.
       <#list childShoppingListDatas as childShoppingListData>
         <#assign childShoppingList = childShoppingListData.childShoppingList>
         <@tr>
-          <@td class="button-col"><a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${childShoppingList.listName!childShoppingList.shoppingListId}</a></li></@td>
+          <@td class="button-col"><a href="<@pageUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@pageUrl>">${childShoppingList.listName!childShoppingList.shoppingListId}</a></li></@td>
           <@td class="button-col align-float">
-            <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyGotoList}</a>
-            <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>">${uiLabelMap.PartyAddListToCart}</a>
+            <a href="<@pageUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@pageUrl>">${uiLabelMap.PartyGotoList}</a>
+            <a href="<@pageUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@pageUrl>">${uiLabelMap.PartyAddListToCart}</a>
           </@td>
         </@tr>
       </#list>
@@ -136,15 +123,15 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-<#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text=uiLabelMap.PartyAddListToCart class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
+<#-- <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text=uiLabelMap.PartyAddListToCart class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+<@section title="${rawLabel('PartyListItems')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
   <#if shoppingListItemDatas?has_content>
 
     <#assign paramStr = "partyId=" + partyId + "&shoppingListId=" + (shoppingListId!)/>
-    <@paginate mode="content" url=makeOfbizUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@paginate mode="content" url=makePageUrl("editShoppingList") paramStr=paramStr viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1>
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyProduct}</@th>
@@ -165,14 +152,14 @@ under the License.
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
-            <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>">${shoppingListItem.productId} -
+            <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION")!}
             </@td>
-            <form method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">
+            <form method="post" action="<@pageUrl>removeFromShoppingList</@pageUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />
               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}" />
             </form>
-            <form method="post" action="<@ofbizUrl>updateShoppingListItem</@ofbizUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
+            <form method="post" action="<@pageUrl>updateShoppingListItem</@pageUrl>" name="listform_${shoppingListItem.shoppingListItemSeqId}">
               <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />
               <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}" />
               <@td>
@@ -202,7 +189,7 @@ under the License.
 </@section>
 
 <@section title=uiLabelMap.PartyQuickAddList>
-    <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList</@ofbizUrl>">
+    <form name="addToShoppingList" method="post" action="<@pageUrl>addItemToShoppingList</@pageUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
       <@field type="input" name="productId" label=uiLabelMap.PartyProduct value="" />

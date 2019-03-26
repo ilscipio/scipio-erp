@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -22,7 +9,7 @@ under the License.
 
 <p>${uiLabelMap.AccountingEnterGiftCardNumber}</p>
 
-<@table type="fields"> <#-- orig: align="center" -->
+<@table type="fields">
   <#if requestAttributes.processResult??>
     <@tr>
       <@td colspan="2">
@@ -44,9 +31,10 @@ under the License.
     </@tr>
     <@tr><@td colspan="2">&nbsp;</@td></@tr>
   </#if>
-  <form method="post" action="<@ofbizUrl>querygcbalance</@ofbizUrl>">
+  <form method="post" action="<@pageUrl>querygcbalance</@pageUrl>">
     <input type="hidden" name="currency" value="USD" />
-    <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
+    <#-- SCIPIO: Security: Server-side code must set the paymentConfig
+    <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />-->
     <@tr>
       <@td>${uiLabelMap.AccountingCardNumber}</@td>
       <@td><input type="text" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>

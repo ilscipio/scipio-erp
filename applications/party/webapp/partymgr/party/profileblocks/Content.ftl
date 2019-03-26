@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
   <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent) menuContent=(pcntMenuCnt!"")><#-- SCIPIO: allow title override -->
     
@@ -22,7 +9,7 @@ under the License.
       
   <#if (pcntNoAttach!false) != true>
     <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent" menuContent=(pcntAttachMenuCnt!"")>
-      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
+      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@pageUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
@@ -31,13 +18,13 @@ under the License.
         <#if pcntExtraParams?has_content>
           <#assign pcntExtraParams = toSimpleMap(pcntExtraParams)>
           <#list pcntExtraParams?keys as paramName>
-            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[rawString(paramName)]!, 'html')}"/>
+            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[raw(paramName)]!, 'html')}"/>
           </#list>
         </#if>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
-        <#assign pcntDefPartyContentTypeId = rawString(pcntDefPartyContentTypeId!"INTERNAL")> 
+        <#assign pcntDefPartyContentTypeId = raw(pcntDefPartyContentTypeId!"INTERNAL")> 
        
       <#if pcntPartyContentTypeId?has_content>
         <input type="hidden" name="partyContentTypeId" value="${pcntPartyContentTypeId}"/>
@@ -46,7 +33,7 @@ under the License.
           <#-- preselect "INTERNAL"
           <option value="">${uiLabelMap.PartySelectPurpose}</option>-->
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==raw(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
           </#list>
         </@field>
       </#if>
@@ -63,7 +50,7 @@ under the License.
         <#-- SCIPIO: 2018-04-10: obscure, impossible to understand what this does here
         <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">
           <#list roles as role>
-            <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
+            <option value="${role.roleTypeId}"<#if role.roleTypeId == "_NA_"> selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>
         </@field>-->
    

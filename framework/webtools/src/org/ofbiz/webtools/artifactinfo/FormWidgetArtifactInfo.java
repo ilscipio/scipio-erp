@@ -29,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.widget.artifact.ArtifactInfoContext;
 import org.ofbiz.widget.artifact.ArtifactInfoGatherer;
@@ -108,7 +107,7 @@ public class FormWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.formThisFormExtends = aif.getFormWidgetArtifactInfo(formName);
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allFormInfosExtendingForm, formName);
+            addToSortedSetInMap(this, aif.allFormInfosExtendingForm, formName); // SCIPIO: switched method
         }
     }
 
@@ -125,7 +124,7 @@ public class FormWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.entitiesUsedInThisForm.add(aif.getEntityArtifactInfo(entityName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allFormInfosReferringToEntityName, entityName);
+            addToSortedSetInMap(this, aif.allFormInfosReferringToEntityName, entityName); // SCIPIO: switched method
         }
     }
     protected void populateServicesFromNameSet(Set<String> allServiceNameSet) throws GeneralException {
@@ -143,7 +142,7 @@ public class FormWidgetArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.servicesUsedInThisForm.add(aif.getServiceArtifactInfo(serviceName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allFormInfosReferringToServiceName, serviceName);
+            addToSortedSetInMap(this, aif.allFormInfosReferringToServiceName, serviceName); // SCIPIO: switched method
         }
     }
 
@@ -160,7 +159,7 @@ public class FormWidgetArtifactInfo extends ArtifactInfoBase {
                 // the forward reference
                 this.requestsLinkedToInForm.add(aif.getControllerRequestArtifactInfo(UtilURL.fromUrlString(controllerXmlUrl), requestUri));
                 // the reverse reference
-                UtilMisc.addToSortedSetInMap(this, aif.allFormInfosReferringToRequest, requestUniqueId);
+                addToSortedSetInMap(this, aif.allFormInfosReferringToRequest, requestUniqueId); // SCIPIO: switched method
             }
         }
     }
@@ -177,7 +176,7 @@ public class FormWidgetArtifactInfo extends ArtifactInfoBase {
                 // the forward reference
                 this.requestsTargetedByInForm.add(aif.getControllerRequestArtifactInfo(UtilURL.fromUrlString(controllerXmlUrl), requestUri));
                 // the reverse reference
-                UtilMisc.addToSortedSetInMap(this, aif.allFormInfosTargetingRequest, requestUniqueId);
+                addToSortedSetInMap(this, aif.allFormInfosTargetingRequest, requestUniqueId); // SCIPIO: switched method
             }
         }
     }

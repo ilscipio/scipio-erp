@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- SCIPIO: use parameters map as source -->
@@ -25,10 +12,10 @@ function lookupOrders(click) {
     orderIdValue = document.lookuporder.orderId.value;
     <#-- SCIPIO: don't lookup if ID contains search wildcards -->
     if (orderIdValue.length > 1 && !orderIdValue.match(/[%*]/)) {
-        document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
+        document.lookuporder.action = "<@pageUrl>orderview</@pageUrl>";
         document.lookuporder.method = "get";
     } else {
-        document.lookuporder.action = "<@ofbizUrl>searchorders</@ofbizUrl>";
+        document.lookuporder.action = "<@pageUrl>searchorders</@pageUrl>";
     }
 
     if (click) {
@@ -83,9 +70,9 @@ function submitFindForm(val){
 
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
 <#if parameters.hideFields?has_content>
-<form name="lookupandhidefields${findParams.hideFields!"Y"}" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
+<form name="lookupandhidefields${findParams.hideFields!"Y"}" method="post" action="<@pageUrl>searchorders</@pageUrl>">
 
 <#-- SCIPIO: new flag -->
 <input type="hidden" name="doFindQuery" value="Y" />
@@ -116,7 +103,7 @@ function submitFindForm(val){
 </form>
 </#if>
 
-<form method="post" name="lookuporder" id="lookuporder" action="<@ofbizUrl>searchorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
+<form method="post" name="lookuporder" id="lookuporder" action="<@pageUrl>searchorders</@pageUrl>" onsubmit="javascript:lookupOrders();">
 <input type="hidden" name="lookupFlag" value="Y"/>
 <input type="hidden" name="hideFields" value="Y"/>
 <input type="hidden" name="viewSize" value="${viewSize}"/>
@@ -133,7 +120,7 @@ function submitFindForm(val){
     <#if orderList??>
       <@menuitem type="link" href="javascript:document.lookupandhidefields${findParams.hideFields!'Y'}.submit()" text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     </#if>
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}") text=uiLabelMap.PartyLookupParty class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}") text=uiLabelMap.PartyLookupParty class="+${styles.action_nav!} ${styles.action_find!}" />
     <@menuitem type="link" href="javascript:lookupOrders(true);" text=uiLabelMap.OrderLookupOrder class="+${styles.action_run_sys!} ${styles.action_find!}" />
   </#if>
   </@menu>
@@ -244,13 +231,13 @@ function submitFindForm(val){
           <@field type="select" label=uiLabelMap.OrderSelectShippingMethod name="shipmentMethod">
               <#if currentCarrierShipmentMethod?has_content>
                 <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
-                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
+                <@field type="option" value="${raw(currentCarrierShipmentMethod.partyId)}@${raw(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
+                <@field type="option" value="${raw(currentCarrierShipmentMethod.partyId)}@${raw(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
               </#if>
               <@field type="option" value="">${uiLabelMap.OrderSelectShippingMethod}</@field>
               <#list carrierShipmentMethods as carrierShipmentMethod>
                 <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${rawString(carrierShipmentMethod.partyId)}@${rawString(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
+                <@field type="option" value="${raw(carrierShipmentMethod.partyId)}@${raw(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
               </#list>
           </@field>
           <@field type="select" label=uiLabelMap.OrderViewed name="isViewed">
@@ -312,7 +299,7 @@ function submitFindForm(val){
   </@row>    
 </#if>
 </@section>
-<#--<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>-->
+<#--<input type="image" src="<@contentUrl>/images/spacer.gif</@contentUrl>" onclick="javascript:lookupOrders(true);"/>-->
 </form>
 <#if (findParams.hideFields!"N") != "Y">
 <@script>
@@ -332,9 +319,9 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(raw(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
-    <@paginate mode="content" url=makeOfbizUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
+    <@paginate mode="content" url=makePageUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
@@ -352,13 +339,13 @@ document.lookuporder.orderId.focus();
           therefore we have to rely on the user to click "find" again until some sort of 
           workaround is found (controller limitation) -->
       <#--
-      <#assign massParamList = "hideFields=" + rawString(findParams.hideFields!"N")>
+      <#assign massParamList = "hideFields=" + raw(findParams.hideFields!"N")>
       -->
 
       <#-- 2016-08-11: these are now included in form as POST
       <#assign massParamList = "hideFields=" + "N">
       <#if paramList?has_content>
-        <#assign massParamList = massParamList + "&" + rawString(paramList)?replace("&amp;","&")>
+        <#assign massParamList = massParamList + "&" + raw(paramList)?replace("&amp;","&")>
       </#if>
       -->
       <#assign massParamList = "">
@@ -367,16 +354,16 @@ document.lookuporder.orderId.focus();
         <#--
         <select name="serviceName" onchange="javascript:setServiceName(this);">
            <option value="javascript:void(0);">&nbsp;</option>
-           <option value="<@ofbizUrl>massApproveOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderApproveOrder}</option>
-           <option value="<@ofbizUrl>massHoldOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderHold}</option>
-           <option value="<@ofbizUrl>massProcessOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderProcessOrder}</option>
-           <option value="<@ofbizUrl>massCancelOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderCancelOrder}</option>
-           <option value="<@ofbizUrl>massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderCancelRemainingPOItems}</option>
-           <option value="<@ofbizUrl>massRejectOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderRejectOrder}</option>
-           <option value="<@ofbizUrl>massPickOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderPickOrders}</option>
-           <option value="<@ofbizUrl>massQuickShipOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.OrderQuickShipEntireOrder}</option>
-           <option value="<@ofbizUrl>massPrintOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.CommonPrint}</option>
-           <option value="<@ofbizUrl>massCreateFileForOrders?${massParamListJsHtml}</@ofbizUrl>">${uiLabelMap.ContentCreateFile}</option>
+           <option value="<@pageUrl>massApproveOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderApproveOrder}</option>
+           <option value="<@pageUrl>massHoldOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderHold}</option>
+           <option value="<@pageUrl>massProcessOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderProcessOrder}</option>
+           <option value="<@pageUrl>massCancelOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderCancelOrder}</option>
+           <option value="<@pageUrl>massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderCancelRemainingPOItems}</option>
+           <option value="<@pageUrl>massRejectOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderRejectOrder}</option>
+           <option value="<@pageUrl>massPickOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderPickOrders}</option>
+           <option value="<@pageUrl>massQuickShipOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.OrderQuickShipEntireOrder}</option>
+           <option value="<@pageUrl>massPrintOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.CommonPrint}</option>
+           <option value="<@pageUrl>massCreateFileForOrders?${massParamListJsHtml}</@pageUrl>">${uiLabelMap.ContentCreateFile}</option>
         </select>-->
         <#--
         <select name="printerName">
@@ -391,23 +378,23 @@ document.lookuporder.orderId.focus();
           <@row>
             <@cell>
                 <@menu type="button-dropdown" title=uiLabelMap.OrderRunAction!"">
-                  <@menuitem type="link" text=uiLabelMap.OrderApproveOrder onClick="submitFindForm('"+makeOfbizUrl('massApproveOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderHold onClick="submitFindForm('"+makeOfbizUrl('massHoldOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderProcessOrder onClick="submitFindForm('"+makeOfbizUrl('massProcessOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderCancelOrder onClick="submitFindForm('"+makeOfbizUrl('massCancelOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderCancelRemainingPOItems onClick="submitFindForm('"+makeOfbizUrl('massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderRejectOrder onClick="submitFindForm('"+makeOfbizUrl('massRejectOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderPickOrders onClick="submitFindForm('"+makeOfbizUrl('massPickOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.OrderQuickShipEntireOrder onClick="submitFindForm('"+makeOfbizUrl('massQuickShipOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.CommonPrint onClick="submitFindForm('"+makeOfbizUrl('massPrintOrders?${massParamListJsHtml}')+"')"/>
-                  <@menuitem type="link" text=uiLabelMap.ContentCreateFile onClick="submitFindForm('"+makeOfbizUrl('massCreateFileForOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderApproveOrder onClick="submitFindForm('"+makePageUrl('massApproveOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderHold onClick="submitFindForm('"+makePageUrl('massHoldOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderProcessOrder onClick="submitFindForm('"+makePageUrl('massProcessOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderCancelOrder onClick="submitFindForm('"+makePageUrl('massCancelOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderCancelRemainingPOItems onClick="submitFindForm('"+makePageUrl('massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderRejectOrder onClick="submitFindForm('"+makePageUrl('massRejectOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderPickOrders onClick="submitFindForm('"+makePageUrl('massPickOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderQuickShipEntireOrder onClick="submitFindForm('"+makePageUrl('massQuickShipOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.CommonPrint onClick="submitFindForm('"+makePageUrl('massPrintOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.ContentCreateFile onClick="submitFindForm('"+makePageUrl('massCreateFileForOrders?${massParamListJsHtml}')+"')"/>
                 </@menu>
 
             </@cell>  
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
        <@thead>
         <@tr class="header-row">
           <@th width="5%">
@@ -450,11 +437,11 @@ document.lookuporder.orderId.focus();
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}" onchange="javascript:toggleOrderIdList();"/>
               </@td>
               <@td>${(orderType.get("description",locale)!(orderType.orderTypeId!""))!""}</@td>
-              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a></@td>
+              <@td><a href="<@pageUrl>orderview?orderId=${orderHeader.orderId}</@pageUrl>">${orderHeader.orderId}</a></@td>
               <@td>
                 <div>
                   <#if displayParty?has_content>
-                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate!, "userLogin":userLogin})/>
+                      <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate!, "userLogin":userLogin})/>
                       ${displayPartyNameResult.fullName!"[${uiLabelMap.OrderPartyNameNotFound}]"}
                   <#else>
                     ${uiLabelMap.CommonNA}
@@ -511,13 +498,13 @@ document.lookuporder.orderId.focus();
               <@td>${orderHeader.getString("orderDate")!}</@td>
               <@td>
                 <#if partyId != "_NA_">
-                  <a href="${customerDetailLink}${partyId}" class="${styles.link_nav_info_id!}">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" class="${styles.link_nav_info_id!}">${partyId}</a>
                 <#else>
                   ${uiLabelMap.CommonNA}
                 </#if>
               </@td>
               <@td align='right'>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                <a href="<@pageUrl>orderview?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
               </@td>
             </@tr>
           </#list>

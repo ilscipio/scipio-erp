@@ -1,24 +1,11 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section title=uiLabelMap.FacilitySelectOptionsToGroupBy>
-  <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
+  <form method="post" name="selectFactors" action="<@pageUrl>PicklistOptions</@pageUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
   <@row>
     <@cell columns=4>
@@ -40,12 +27,12 @@ under the License.
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text=uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked class="+${styles.action_nav!} ${styles.action_view!}" />
+    <@menuitem type="link" href=makePageUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text=uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductFindOrdersToPick menuContent=menuContent>
   <#if pickMoveInfoList?has_content>
-    <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-complex" autoAltRows=false>
       <#if pickMoveInfoList?has_content || rushOrderInfo?has_content>
        <@thead>
         <@tr class="header-row">
@@ -75,7 +62,7 @@ under the License.
           <@td>${orderNeedsStockMoveInfoListSize}</@td>
           <@td>
             <#if orderReadyToPickInfoList?has_content>
-              <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+              <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="isRushOrder" value="Y"/>
                 ${uiLabelMap.ProductPickFirst}:
@@ -106,7 +93,7 @@ under the License.
           <@tr valign="middle" alt=alt_row>
                 
               <#assign viewGroupDetailForm>
-                    <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>" method="post">
+                    <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@pageUrl>PicklistOptions</@pageUrl>" method="post">
                       <input type="hidden" name="viewDetail" value="${groupName!}"/>
                       <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                       <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
@@ -153,7 +140,7 @@ under the License.
             </@td>
             <@td>
               <#if orderReadyToPickInfoList?has_content>
-                <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                   <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
@@ -175,7 +162,7 @@ under the License.
             </@td>
             <@td>
               <#if orderReadyToPickInfoList?has_content>
-                <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
+                <form method="post" action="<@pageUrl>printPickSheets</@pageUrl>" target="_blank">
                   <input type="hidden" name="printGroupName" value="${groupName!}"/>
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
@@ -207,7 +194,7 @@ under the License.
             <@th>${orderNeedsStockMoveInfoListSizeTotal}</@th>
             <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
-                <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.ProductPickFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
@@ -219,7 +206,7 @@ under the License.
             </@td>
             <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
-                <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
+                <form method="post" action="<@pageUrl>printPickSheets</@pageUrl>" target="_blank">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
@@ -249,7 +236,7 @@ under the License.
 
 <#if toPickList?has_content>
   <@section title=uiLabelMap.ProductPickingDetail>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductOrderId}</@th>
@@ -270,14 +257,14 @@ under the License.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)>
 
-<form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+<form name="advtokeywordsearchform" method="post" action="<@pageUrl>keywordsearch</@pageUrl>">
   
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
     <#-- SCIPIO: don't hardcode these
@@ -51,8 +38,9 @@ under the License.
     </#list>
     <@field type="select" label=uiLabelMap.ProductSupplier name="SEARCH_SUPPLIER_ID">
         <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
+      <#assign orderPartyId = orderPartyId!sessionAttributes.orderPartyId!><#-- SCIPIO: Access session only once -->
       <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
-        <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if (sessionAttributes.orderPartyId?? & sessionAttributes.orderPartyId == supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
+        <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if ((orderPartyId!"") == supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
       </#list>
     </@field>
     <@field type="generic" label=uiLabelMap.CommonSortedBy>
@@ -91,15 +79,15 @@ under the License.
     <@section title="${rawLabel('OrderLastSearches')}...">
 
     <div>
-      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
+      <a href="<@pageUrl>clearSearchOptionsHistoryList</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
       ${uiLabelMap.OrderClearSearchHistoryNote}
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div>
           <b>${uiLabelMap.CommonSearch} #${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
+          <a href="<@pageUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
+          <a href="<@pageUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@pageUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>
         <#list constraintStrings as constraintString>

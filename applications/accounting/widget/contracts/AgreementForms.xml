@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
@@ -230,14 +217,16 @@ under the License.
         <field name="textValue"><display/></field>
         <field name="description"><display/></field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
-            <hyperlink target="editAgreementTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+            <hyperlink target="EditAgreementItemTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>
+                <parameter param-name="agreementItemSeqId"/>
                 <parameter param-name="agreementId"/>
             </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteAgreementTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>
+                <parameter param-name="agreementItemSeqId"/>
                 <parameter param-name="agreementId"/>
             </hyperlink>
         </field>
@@ -331,7 +320,7 @@ under the License.
     <form name="ListAgreementItemFacilities" list-name="agreementFacilities" target="" title="" type="list" paginate-target="ListAgreementItemFacilities"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="facility" entity-name="Facility"></entity-one>
+            <entity-one entity-name="Facility" value-field="facility"></entity-one>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -386,7 +375,7 @@ under the License.
     <form name="ListAgreementItemParties" list-name="agreementParties" target="" title="" type="list" paginate-target="ListAgreementItemParties"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -424,7 +413,7 @@ under the License.
     <form name="ListAgreementItemProducts" list-name="agreementProducts" target="" title="" type="list" paginate-target="ListAgreementItemProducts"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="product" entity-name="Product"/>
+            <entity-one entity-name="Product" value-field="product"/>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -483,7 +472,7 @@ under the License.
     <form name="ListAgreementPromoAppls" list-name="agreementPromoAppls" target="" title="" type="list" paginate-target="ListAgreementPromoAppls"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
-            <entity-one value-field="productPromo" entity-name="ProductPromo"></entity-one>
+            <entity-one entity-name="ProductPromo" value-field="productPromo"></entity-one>
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -686,11 +675,11 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementWorkEffortApplic" use-cache="true" list="agreementWorkEffortApplics">
-                <field-map from-field="agreementId" field-name="agreementId"/>
+                <field-map field-name="agreementId" from-field="agreementId"/>
             </entity-and>
         </actions>
         <row-actions>
-            <entity-one value-field="workEffort" entity-name="WorkEffort">
+            <entity-one entity-name="WorkEffort" value-field="workEffort">
                 <field-map field-name="workEffortId"/>
             </entity-one>
             <set field="statusId" from-field="workEffort.currentStatusId"/>

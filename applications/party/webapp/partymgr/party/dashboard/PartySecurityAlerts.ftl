@@ -1,6 +1,6 @@
 <#if securityAlerts?has_content>    
     <@section title=uiLabelMap.PartySecurityAlert>
-        <@paginate mode="content" url=makeOfbizUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
+        <@paginate mode="content" url=makePageUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
             <@table type="data-list" role="grid" autoAltRows=true id="securityAlerts">
                 <@thead>
                     <@tr valign="bottom" class="header-row">

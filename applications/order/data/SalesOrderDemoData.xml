@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
@@ -23,11 +10,11 @@ under the License.
     <Facility facilityId="ScipioShopWarehouse"/>
     
     <!-- PRODUCT STORE -->
-    <ProductStore productStoreId="B2CStore" storeName="OFBiz the B2C Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Customer"
+    <ProductStore productStoreId="B2CStore" storeName="Scipio B2C Store" companyName="Ilscipio" autoApproveReviews="Y" title="Scipio to Customer"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
         autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="ScipioShopWarehouse"
         orderNumberPrefix="B2CS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>
-    <ProductStore productStoreId="B2BStore" storeName="OFBiz the B2B Store" companyName="Apache OFBiz" autoApproveReviews="Y" title="Apache OFBiz to Business"
+    <ProductStore productStoreId="B2BStore" storeName="Scipio B2B Store" companyName="Ilscipio" autoApproveReviews="Y" title="Scipio to Business"
         subtitle="" prorateShipping="Y" prorateTaxes="Y" defaultLocaleString="en_US" defaultCurrencyUomId="USD"
         autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" requireInventory="N" reserveInventory="Y" inventoryFacilityId="ScipioShopWarehouse"
         orderNumberPrefix="B2BS" visualThemeId="EC_DEFAULT" payToPartyId="Company" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"/>

@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * has a model class, and each model class has its own factory.
  * </p>
  * <p>
- * Mini-language can be extended by:<br />
+ * Mini-language can be extended by:</p>
  * <ul>
  * <li>Creating model classes that extend {@link org.ofbiz.minilang.method.MethodOperation}</li>
  * <li>Creating factories for the model classes that implement {@link org.ofbiz.minilang.method.MethodOperation.Factory}</li>
@@ -75,8 +75,8 @@ import org.w3c.dom.Element;
  * (see <a href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html" target="_blank">ServiceLoader</a>)
  * </li>
  * </ul>
- * </p>
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-The{{%3Csimplemethod%3E}}element">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class SimpleMethod extends MiniLangElement {
 
@@ -207,7 +207,7 @@ public final class SimpleMethod extends MiniLangElement {
      * The ordering in the List is the same as the XML file.
      * <p>This method is used by unit test framework to run tests in the order they appear in the XML file.
      * Method caching is bypassed since the methods are executed only once.</p>
-     * 
+     *
      * @param xmlResource
      * @param loader
      * @return
@@ -224,13 +224,15 @@ public final class SimpleMethod extends MiniLangElement {
         ArrayList<MethodOperation> methodOperations = new ArrayList<MethodOperation>(operationElements.size());
         if (UtilValidate.isNotEmpty(operationElements)) {
             for (Element curOperElem : operationElements) {
-                String nodeName = curOperElem.getNodeName();
+                String nodeName = UtilXml.getNodeNameIgnorePrefix(curOperElem);
                 MethodOperation methodOp = null;
                 MethodOperation.Factory<MethodOperation> factory = methodOperationFactories.get(nodeName);
                 if (factory != null) {
                     methodOp = factory.createMethodOperation(curOperElem, simpleMethod);
                 } else if ("else".equals(nodeName)) {
                     // don't add anything, but don't complain either, this one is handled in the individual operations
+                } else if ("finally".equals(nodeName)) {
+                    // SCIPIO: 2018-11-28: ignore finally, handled by Try
                 } else {
                     MiniLangValidate.handleError("Invalid element found", simpleMethod, curOperElem);
                 }
@@ -297,7 +299,7 @@ public final class SimpleMethod extends MiniLangElement {
 
     /**
      * Execs the given operations returning true if all return true, or returning false and stopping if any return false.
-     * @throws MiniLangException 
+     * @throws MiniLangException
      */
     public static boolean runSubOps(List<MethodOperation> methodOperations, MethodContext methodContext) throws MiniLangException {
         Assert.notNull("methodOperations", methodOperations, "methodContext", methodContext);
@@ -469,7 +471,9 @@ public final class SimpleMethod extends MiniLangElement {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(eventErrorMessageName);
             if (errorMsg.length() > 0 || UtilValidate.isNotEmpty(tempErrorMsg)) {
-                errorMsg += tempErrorMsg;
+                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2019-02-01: Added check, to prevent appending the string "null"
+                    errorMsg += tempErrorMsg;
+                }
                 methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errorMsg);
                 forceError = true;
                 summaryErrorStringBuffer.append(errorMsg);
@@ -481,9 +485,9 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(tempErrorMsgList.toString());
             }
-            
+
             // SCIPIO: 2018-03-01: NOTE: eventMsg handling code that was here is now moved below response check
-            
+
             response = (String) methodContext.getEnv(eventResponseCodeName);
             if (UtilValidate.isEmpty(response)) {
                 if (forceError) {
@@ -498,7 +502,7 @@ public final class SimpleMethod extends MiniLangElement {
                 response = null;
             }
             returnValue = response;
-            
+
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.
@@ -517,7 +521,9 @@ public final class SimpleMethod extends MiniLangElement {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
             if (errorMsg.length() > 0 || UtilValidate.isNotEmpty(tempErrorMsg)) {
-                errorMsg += tempErrorMsg;
+                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2019-02-01: Added check, to prevent appending the string "null"
+                    errorMsg += tempErrorMsg;
+                }
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);
                 forceError = true;
                 summaryErrorStringBuffer.append(errorMsg);
@@ -536,23 +542,23 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(errorMsgMap.toString());
             }
-            
+
             // SCIPIO: 2018-03-01: NOTE: successMsg handling code that was here is now moved below response check
 
             response = (String) methodContext.getEnv(serviceResponseMessageName);
             if (UtilValidate.isEmpty(response)) {
                 if (forceError) {
                     // override response code, always use error code
-                    Debug.logVerbose("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
                     response = defaultErrorCode;
                 } else {
-                    Debug.logVerbose("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
                     response = defaultSuccessCode;
                 }
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
             returnValue = response;
-            
+
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.

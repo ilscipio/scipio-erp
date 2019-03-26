@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -250,10 +237,10 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="ContentAssoc" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
-                <field-map from-field="contentIdTo" field-name="contentIdTo"/>
-                <field-map from-field="contentAssocTypeId" field-name="contentAssocTypeId"/>
-                <field-map from-field="fromDate" field-name="fromDate"/>
+                <field-map field-name="contentId" from-field="contentId"/>
+                <field-map field-name="contentIdTo" from-field="contentIdTo"/>
+                <field-map field-name="contentAssocTypeId" from-field="contentAssocTypeId"/>
+                <field-map field-name="fromDate" from-field="fromDate"/>
             </entity-one>
         </actions>
         <auto-fields-entity entity-name="ContentAssoc"/>
@@ -294,7 +281,7 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <!--auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/-->
@@ -326,7 +313,7 @@ under the License.
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
-                <field-map from-field="contentId" field-name="contentIdTo"/>
+                <field-map field-name="contentIdTo" from-field="contentId"/>
             </entity-and>
         </actions>
         <field name="contentId">
@@ -382,7 +369,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentRole" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentRole" default-field-type="display"/>
@@ -418,7 +405,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentPurpose" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display"/>
@@ -445,7 +432,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentAttribute" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display"/>
@@ -490,7 +477,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentMetaData" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit"/>
@@ -544,7 +531,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortContent" use-cache="true" list="workEffortContents">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateWorkEffortContent" default-field-type="edit"/>
@@ -665,7 +652,7 @@ under the License.
     <form name="ListContentKeywords" type="list" target="deleteContentKeyword" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="ContentKeyword" use-cache="true">
-                <field-map from-field="contentId" field-name="contentId"/>
+                <field-map field-name="contentId" from-field="contentId"/>
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="ContentKeyword" default-field-type="display"/>

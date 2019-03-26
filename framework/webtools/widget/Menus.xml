@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
@@ -153,6 +140,12 @@ under the License.
             <link target="EntityExportAll"/>
         </menu-item>
         <menu-item name="programExport" title="${uiLabelMap.PageTitleProgramExport}">
+            <condition><!-- SCIPIO -->
+                <and>
+                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                </and>
+            </condition>
             <link target="ProgramExport"/>
         </menu-item>
         <menu-item name="entityImport" title="${uiLabelMap.PageTitleEntityImport}">
@@ -184,6 +177,10 @@ under the License.
         <menu-item name="threadList" title="${uiLabelMap.WebtoolsThreadList}">
             <link target="threadList"/>
         </menu-item>
+        <!-- SCIPIO: 2018-08-28: TODO: REVIEW: JobManagerLock 
+        <menu-item name="FindJobManagerLock" title="${uiLabelMap.WebtoolsJobManagerLockList}">
+            <link target="FindJobManagerLock"/>
+        </menu-item>-->
         <menu-item name="scheduleJob" title="${uiLabelMap.WebtoolsScheduleJob}">
             <link target="scheduleJob"/>
         </menu-item>
@@ -204,6 +201,7 @@ under the License.
         </menu-item>
         <menu-item name="artifact" title="${uiLabelMap.WebtoolsArtifactInfo}">
             <link target="ViewComponents"/>
+            <sub-menu name="artifact" include="artifactSideBar"/>
         </menu-item>
         <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
             <condition>
@@ -248,15 +246,14 @@ under the License.
     -->
 
     <menu name="artifactTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="viewents" title="${uiLabelMap.WebtoolsViewComponents}">
-            <link target="ViewComponents"/>
-        </menu-item>
         <menu-item name="artifactInfo" title="${uiLabelMap.WebtoolsArtifactInfo} ${uiLabelMap.CommonSearch} ${uiLabelMap.WebtoolsArtifactInfoTimeToLoad}">
             <link target="ArtifactInfo"/>
         </menu-item>
+        <menu-item name="viewents" title="${uiLabelMap.CommonComponents}"><!-- SCIPIO: switched: WebtoolsViewComponents -->
+            <link target="ViewComponents"/>
+        </menu-item>
     </menu>
-    
-    
+
     <menu name="artifactSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="artifactTabBar" recursive="includes-only" />
     </menu>
@@ -338,11 +335,23 @@ under the License.
             <link target="entitymaint" />
         </menu-item>
         <menu-item name="ViewRelations" title="${uiLabelMap.WebtoolsViewRelations}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <condition>
+                <and>
+                    <not><if-empty field="entityName"/></not>
+                    <not><if-empty field="modelEntity"/></not>
+                </and>
+            </condition>
             <link target="ViewRelations">
                 <parameter param-name="entityName" from-field="entityName"/>
             </link>
         </menu-item>
         <menu-item name="ViewGeneric" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <and>
+                    <not><if-empty field="entityName"/></not>
+                    <not><if-empty field="modelEntity"/></not>
+                </and>
+            </condition>
             <link target="ViewGeneric">
                 <parameter param-name="entityName" from-field="entityName"/>
                 <parameter param-name="enableEdit" value="true"/>
@@ -384,13 +393,13 @@ under the License.
                <parameter param-name="clear" value="true"/>
             </link>
         </menu-item>
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="StatsSinceStart"/>
         </menu-item>
     </menu>
 
     <menu name="StatsBinHistory" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="StatBinsHistory">
                <parameter param-name="statsId" from-field="parameters.statsId"/>
                <parameter param-name="type" from-field="parameters.type"/>
@@ -398,8 +407,9 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="FindCacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh">
+    <menu name="FindCacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="activeCacheTabMenuItem">
+        <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}" widget-style="+refresh ${styles.action_reload}">
             <link target="FindUtilCache"/>
         </menu-item>
         <menu-item name="clearAll" title="${uiLabelMap.WebtoolsClearAllCaches}">
@@ -476,6 +486,7 @@ under the License.
     <menu name="DevelopmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
             <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="LayoutDemo"/>
+            <!--<property-to-field resource="webtools" property="dev.script.tools.enabled" field="tmplTestEnabled" />-->
         </actions>
         <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="${demoTargetUrl}">
@@ -488,6 +499,7 @@ under the License.
                 <and>
                     <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
                     <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                    <!--<if-true field="tmplTestEnabled"/>-->
                 </and>
             </condition>
             <link target="TemplateTest"/>

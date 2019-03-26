@@ -16,13 +16,13 @@ import org.ofbiz.base.util.Debug;
 public class ScipioSolrInfoServlet extends HttpServlet {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * Used to deduce whether the solr webapp initialization step was reached
      * during Ofbiz initialization.
      */
     private static volatile boolean servletInitStatusReached = false;
-    
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -31,7 +31,7 @@ public class ScipioSolrInfoServlet extends HttpServlet {
             Debug.logInfo("Solr: ScipioSolrInfoServlet: (Non-first) servlet init executed", module);
         }
     }
-    
+
     private static boolean setServletInitStatusReached() {
         if (!isServletInitStatusReached()) {
             synchronized(ScipioSolrInfoServlet.class) {
@@ -41,10 +41,10 @@ public class ScipioSolrInfoServlet extends HttpServlet {
                     return true;
                 }
             }
-        } 
+        }
         return false;
     }
-    
+
     /**
      * Checks if the init method was called for any instance of this servlet.
      * <p>
@@ -54,5 +54,5 @@ public class ScipioSolrInfoServlet extends HttpServlet {
     public static boolean isServletInitStatusReached() {
         return servletInitStatusReached;
     }
-    
+
 }

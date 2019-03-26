@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#assign extInfo = parameters.extInfo!"N">
@@ -24,12 +11,12 @@ under the License.
 <#-- SCIPIO: show at bottom 
     <@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
 -->
-    <@menuitem type="link" href=makeOfbizUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployeeApplicant class="+${styles.action_nav!} ${styles.action_add!}"/>
+    <@menuitem type="link" href=makePageUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployeeApplicant class="+${styles.action_nav!} ${styles.action_add!}"/>
     <#if findEmplQueryRan>
        <#if (parameters.hideFields!"N") == "Y">
-         <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
+         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=N&doFindQuery=Y${raw(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
        <#else>
-         <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/>
+         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=Y&doFindQuery=Y${raw(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/>
        </#if>
     </#if>
   </@menu>
@@ -39,9 +26,9 @@ under the License.
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
 
-           onsubmit="javascript:lookupparty('<@ofbizUrl>viewprofile</@ofbizUrl>');"
+           onsubmit="javascript:lookupparty('<@pageUrl>viewprofile</@pageUrl>');"
        -->
-        <form method="post" name="lookupparty" action="<@ofbizUrl>findEmployees</@ofbizUrl>" class="basic-form">
+        <form method="post" name="lookupparty" action="<@pageUrl>findEmployees</@pageUrl>" class="basic-form">
             <input type="hidden" name="doFindQuery" value="Y"/><#-- SCIPIO: extra control in addition to POST -->
             <input type="hidden" name="lookupFlag" value="Y"/>
             <input type="hidden" name="hideFields" value="Y"/>
@@ -86,7 +73,7 @@ under the License.
                 <#--<hr />-->
                 <@field type="submitarea">
                     <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y&doFindQuery=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
+                    <@field type="submit" submitType="link" href=makePageUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y&doFindQuery=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
                 </@field>
         </form>
     </#if>
@@ -106,9 +93,9 @@ under the License.
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>
     <#if partyList?has_content>
-      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
-      <@paginate mode="content" url=makeOfbizUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <#assign paramStr = addParamsToStr(raw(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
+      <@paginate mode="content" url=makePageUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
+        <@table type="data-list" autoAltRows=true>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.PartyName}</@th>
@@ -128,19 +115,19 @@ under the License.
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
             <@tr valign="middle">
                 <@td><#if partyRow.getModelEntity().isField("lastName") && partyRow.lastName?has_content>
-                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
+                        <a href="<@pageUrl>EmployeeProfile?partyId=${partyRow.partyId}</@pageUrl>" class="${styles.link_nav_info_name!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
                     <#elseif partyRow.getModelEntity().isField("groupName") && partyRow.groupName?has_content>
-                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${partyRow.groupName}</a>
+                        <a href="<@pageUrl>EmployeeProfile?partyId=${partyRow.partyId}</@pageUrl>" class="${styles.link_nav_info_name!}">${partyRow.groupName}</a>
                     <#else>
                         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)>
                         <#if partyName?has_content>
-                            <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${partyName}</a>
+                            <a href="<@pageUrl>EmployeeProfile?partyId=${partyRow.partyId}</@pageUrl>" class="${styles.link_nav_info_name!}">${partyName}</a>
                         <#else>
                             (${uiLabelMap.PartyNoNameFound})
                         </#if>
                     </#if>
                 </@td>
-                <@td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${partyRow.partyId}</a></@td>
+                <@td><a href="<@pageUrl>EmployeeProfile?partyId=${partyRow.partyId}</@pageUrl>" class="${styles.link_nav_info_id!}">${partyRow.partyId}</a></@td>
                 <#if extInfo?default("") == "T">
                     <@td>${partyRow.areaCode!}</@td>
                 </#if>

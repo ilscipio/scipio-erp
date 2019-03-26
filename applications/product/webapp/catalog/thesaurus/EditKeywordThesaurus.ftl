@@ -1,23 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@section title=uiLabelMap.ProductAlternateKeyWordThesaurus>
-        <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
+        <form method="post" action="<@pageUrl>createKeywordThesaurus</@pageUrl>">
             <div>
                 <span>${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
                 <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10"/>
@@ -32,13 +19,13 @@ under the License.
         <div>
             <#list letterList as letter>
               <#if letter == firstLetter><#assign highlight=true><#else><#assign highlight=false></#if>
-              <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
+              <a href="<@pageUrl>editKeywordThesaurus?firstLetter=${letter}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
             </#list>
         </div>
         
       <#assign lastkeyword = "">
       <#if keywordThesauruses?has_content>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
             <#-- SCIPIO: TODO: rewrite this somehow without need for open/close -->
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>
@@ -52,14 +39,14 @@ under the License.
                   <@td open=true close=false />
                       <div>
                         ${keyword.enteredKeyword}
-                        <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
+                        <form method="post" action="<@pageUrl>deleteKeywordThesaurus</@pageUrl>" name="deleteKeywordThesaurus">
                           <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                           <input type="hidden" name="alternateKeyword" value="${keyword.alternateKeyword}" />
                           <input type="submit" value="${uiLabelMap.CommonDeleteAll}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
                         </form>
                       </div>
                       <div>
-                      <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
+                      <form method="post" action="<@pageUrl>createKeywordThesaurus</@pageUrl>">
                         <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                         <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
                         <span>${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
@@ -70,7 +57,7 @@ under the License.
                   <@td open=true close=false />
               </#if>
               <div>
-                <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
+                <form method="post" action="<@pageUrl>deleteKeywordThesaurus</@pageUrl>" name="deleteKeywordThesaurus">
                   <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                   <input type="hidden" name="alternateKeyword" value="${keyword.alternateKeyword}" />
                   <input type="submit" value="X" class="${styles.link_run_sys!} ${styles.action_remove!}" />

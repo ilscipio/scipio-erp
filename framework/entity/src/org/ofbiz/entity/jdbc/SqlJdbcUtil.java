@@ -30,10 +30,10 @@ import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,11 +68,55 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * GenericDAO Utility methods for general tasks
  *
  */
-public class SqlJdbcUtil {
+public final class SqlJdbcUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final int CHAR_BUFFER_SIZE = 4096;
+    private static final int CHAR_BUFFER_SIZE = 4096;
+    private static Map<String, Integer> fieldTypeMap = new HashMap<String, Integer>();
+    static {
+        fieldTypeMap.put("java.lang.String", 1);
+        fieldTypeMap.put("String", 1);
+        fieldTypeMap.put("java.sql.Timestamp", 2);
+        fieldTypeMap.put("Timestamp", 2);
+        fieldTypeMap.put("java.sql.Time", 3);
+        fieldTypeMap.put("Time", 3);
+        fieldTypeMap.put("java.sql.Date", 4);
+        fieldTypeMap.put("Date", 4);
+        fieldTypeMap.put("java.lang.Integer", 5);
+        fieldTypeMap.put("Integer", 5);
+        fieldTypeMap.put("java.lang.Long", 6);
+        fieldTypeMap.put("Long", 6);
+        fieldTypeMap.put("java.lang.Float", 7);
+        fieldTypeMap.put("Float", 7);
+        fieldTypeMap.put("java.lang.Double", 8);
+        fieldTypeMap.put("Double", 8);
+        fieldTypeMap.put("java.math.BigDecimal", 9);
+        fieldTypeMap.put("BigDecimal", 9);
+        fieldTypeMap.put("java.lang.Boolean", 10);
+        fieldTypeMap.put("Boolean", 10);
 
+        fieldTypeMap.put("java.lang.Object", 11);
+        fieldTypeMap.put("Object", 11);
+
+        fieldTypeMap.put("java.sql.Blob", 12);
+        fieldTypeMap.put("Blob", 12);
+        fieldTypeMap.put("byte[]", 12);
+        fieldTypeMap.put("java.nio.ByteBuffer", 12);
+        fieldTypeMap.put("java.nio.HeapByteBuffer", 12);
+
+        fieldTypeMap.put("java.sql.Clob", 13);
+        fieldTypeMap.put("Clob", 13);
+
+        fieldTypeMap.put("java.util.Date", 14);
+
+        // all of these treated as Collection
+        fieldTypeMap.put("java.util.ArrayList", 15);
+        fieldTypeMap.put("java.util.HashSet", 15);
+        fieldTypeMap.put("java.util.LinkedHashSet", 15);
+        fieldTypeMap.put("java.util.LinkedList", 15);
+    }
+
+    private SqlJdbcUtil () {}
     /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
     public static String makeFromClause(ModelEntity modelEntity, ModelFieldTypeReader modelFieldTypeReader, Datasource datasourceInfo) throws GenericEntityException {
         StringBuilder sql = new StringBuilder(" FROM ");
@@ -181,10 +225,8 @@ public class SqlJdbcUtil {
                     ModelViewEntity.ViewEntityCondition viewEntityCondition = viewLink.getViewEntityCondition();
                     if (viewEntityCondition != null) {
                         EntityCondition whereCondition = viewEntityCondition.getWhereCondition(modelFieldTypeReader, null);
-                        if (whereCondition != null) {
-                            condBuffer.append(" AND ");
-                            condBuffer.append(whereCondition.makeWhereString(modelEntity, null, datasourceInfo));
-                        }
+                        condBuffer.append(" AND ");
+                        condBuffer.append(whereCondition.makeWhereString(modelEntity, null, datasourceInfo));
                     }
 
                     restOfStatement.append(condBuffer.toString());
@@ -236,7 +278,7 @@ public class SqlJdbcUtil {
         return sql.toString();
     }
 
-    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+    /** Makes a WHERE clause String with "&lt;col name&gt;=?" if not null or "&lt;col name&gt; IS null" if null, all AND separated */
     @Deprecated
     public static String makeWhereStringFromFields(List<ModelField> modelFields, Map<String, Object> fields, String operator) {
         return makeWhereStringFromFields(new StringBuilder(), modelFields, fields, operator, null).toString();
@@ -246,13 +288,13 @@ public class SqlJdbcUtil {
         return makeWhereStringFromFields(sb, modelFields, fields, operator, null);
     }
 
-    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+    /** Makes a WHERE clause String with "&lt;col name&gt;=?" if not null or "&lt;col name&gt; IS null" if null, all AND separated */
     @Deprecated
     public static String makeWhereStringFromFields(List<ModelField> modelFields, Map<String, Object> fields, String operator, List<EntityConditionParam> entityConditionParams) {
         return makeWhereStringFromFields(new StringBuilder(), modelFields, fields, operator, entityConditionParams).toString();
     }
 
-    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+    /** Makes a WHERE clause String with "&lt;col name&gt;=?" if not null or "&lt;col name&gt; IS null" if null, all AND separated */
     public static StringBuilder makeWhereStringFromFields(StringBuilder sb, List<ModelField> modelFields, Map<String, Object> fields, String operator, List<EntityConditionParam> entityConditionParams) {
         if (modelFields.size() < 1) {
             return sb;
@@ -421,9 +463,9 @@ public class SqlJdbcUtil {
             sql.append(makeFromClause(modelEntity, modelFieldTypeReader, datasourceInfo));
             String viewWhereClause = makeViewWhereClause(modelEntity, datasourceInfo.getJoinStyle());
             ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
-            List<EntityCondition> whereConditions = new LinkedList<EntityCondition>();
-            List<EntityCondition> havingConditions = new LinkedList<EntityCondition>();
-            List<String> orderByList = new LinkedList<String>();
+            List<EntityCondition> whereConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            List<EntityCondition> havingConditions = new ArrayList<>(); // SCIPIO: switched to ArrayList
+            List<String> orderByList = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
             modelViewEntity.populateViewEntityConditionInformation(modelFieldTypeReader, whereConditions, havingConditions, orderByList, null);
             String viewConditionClause;
@@ -548,8 +590,8 @@ public class SqlJdbcUtil {
                 Debug.logError(e, module);
             }
         } else {
-            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() + 
-                    ", falling back on switch statement. Entity = " + 
+            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() +
+                    ", falling back on switch statement. Entity = " +
                     curField.getModelEntity().getEntityName() +
                     ", field = " + curField.getName() + ".", module);
         }
@@ -596,7 +638,7 @@ public class SqlJdbcUtil {
                         }
                     } else {
                         String value = rs.getString(ind);
-                        if (value instanceof String && curField.getEncryptMethod().isEncrypted()) {
+                        if (curField.getEncryptMethod().isEncrypted()) {
                             value = (String) entity.getDelegator().decryptFieldValue(encryptionKeyName, curField.getEncryptMethod(), value);
                         }
                         entity.dangerousSetNoCheckButFast(curField, value);
@@ -671,7 +713,7 @@ public class SqlJdbcUtil {
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
-                        entity.dangerousSetNoCheckButFast(curField, Integer.valueOf(intValue));
+                        entity.dangerousSetNoCheckButFast(curField, intValue);
                     }
                     break;
 
@@ -680,7 +722,7 @@ public class SqlJdbcUtil {
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
-                        entity.dangerousSetNoCheckButFast(curField, Long.valueOf(longValue));
+                        entity.dangerousSetNoCheckButFast(curField, longValue);
                     }
                     break;
 
@@ -689,7 +731,7 @@ public class SqlJdbcUtil {
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
-                        entity.dangerousSetNoCheckButFast(curField, Float.valueOf(floatValue));
+                        entity.dangerousSetNoCheckButFast(curField, floatValue);
                     }
                     break;
 
@@ -698,7 +740,7 @@ public class SqlJdbcUtil {
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
-                        entity.dangerousSetNoCheckButFast(curField, Double.valueOf(doubleValue));
+                        entity.dangerousSetNoCheckButFast(curField, doubleValue);
                     }
                     break;
 
@@ -716,7 +758,7 @@ public class SqlJdbcUtil {
                     if (rs.wasNull()) {
                         entity.dangerousSetNoCheckButFast(curField, null);
                     } else {
-                        entity.dangerousSetNoCheckButFast(curField, Boolean.valueOf(booleanValue));
+                        entity.dangerousSetNoCheckButFast(curField, booleanValue);
                     }
                     break;
                 }
@@ -804,8 +846,8 @@ public class SqlJdbcUtil {
                 throw new GenericDataSourceException("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", e);
             }
         } else {
-            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() + 
-                    ", falling back on switch statement. Entity = " + 
+            Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() +
+                    ", falling back on switch statement. Entity = " +
                     modelField.getModelEntity().getEntityName() +
                     ", field = " + modelField.getName() + ".", module);
         }
@@ -913,57 +955,13 @@ public class SqlJdbcUtil {
         }
     }
 
-    protected static Map<String, Integer> fieldTypeMap = new HashMap<String, Integer>();
-    static {
-        fieldTypeMap.put("java.lang.String", 1);
-        fieldTypeMap.put("String", 1);
-        fieldTypeMap.put("java.sql.Timestamp", 2);
-        fieldTypeMap.put("Timestamp", 2);
-        fieldTypeMap.put("java.sql.Time", 3);
-        fieldTypeMap.put("Time", 3);
-        fieldTypeMap.put("java.sql.Date", 4);
-        fieldTypeMap.put("Date", 4);
-        fieldTypeMap.put("java.lang.Integer", 5);
-        fieldTypeMap.put("Integer", 5);
-        fieldTypeMap.put("java.lang.Long", 6);
-        fieldTypeMap.put("Long", 6);
-        fieldTypeMap.put("java.lang.Float", 7);
-        fieldTypeMap.put("Float", 7);
-        fieldTypeMap.put("java.lang.Double", 8);
-        fieldTypeMap.put("Double", 8);
-        fieldTypeMap.put("java.math.BigDecimal", 9);
-        fieldTypeMap.put("BigDecimal", 9);
-        fieldTypeMap.put("java.lang.Boolean", 10);
-        fieldTypeMap.put("Boolean", 10);
-
-        fieldTypeMap.put("java.lang.Object", 11);
-        fieldTypeMap.put("Object", 11);
-
-        fieldTypeMap.put("java.sql.Blob", 12);
-        fieldTypeMap.put("Blob", 12);
-        fieldTypeMap.put("byte[]", 12);
-        fieldTypeMap.put("java.nio.ByteBuffer", 12);
-        fieldTypeMap.put("java.nio.HeapByteBuffer", 12);
-
-        fieldTypeMap.put("java.sql.Clob", 13);
-        fieldTypeMap.put("Clob", 13);
-
-        fieldTypeMap.put("java.util.Date", 14);
-
-        // all of these treated as Collection
-        fieldTypeMap.put("java.util.ArrayList", 15);
-        fieldTypeMap.put("java.util.HashSet", 15);
-        fieldTypeMap.put("java.util.LinkedHashSet", 15);
-        fieldTypeMap.put("java.util.LinkedList", 15);
-    }
-
     public static int getType(String fieldType) throws GenericNotImplementedException {
         Integer val = fieldTypeMap.get(fieldType);
 
         if (val == null) {
             throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
         }
-        return val.intValue();
+        return val;
     }
 
     public static void addValueSingle(StringBuffer buffer, ModelField field, Object value, List<EntityConditionParam> params) {

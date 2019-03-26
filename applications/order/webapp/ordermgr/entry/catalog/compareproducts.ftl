@@ -1,22 +1,9 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
 <#-- Header row, contains product small image, product name, price -->
     <@tr>
         <@td>&nbsp;</@td>
@@ -26,13 +13,13 @@ under the License.
     <#assign productContentWrapper = productData.productContentWrapper/>
     <#assign price = productData.priceMap/>
     <#-- SCIPIO: NOTE: productUrl manually (js-)html-escaped below -->
-    <#assign productUrl><@ofbizCatalogAltUrl productId=rawString(product.productId)/></#assign>
+    <#assign productUrl><@pageUrl uri="product?product_id="+escapeVal(product.productId, 'url')/></#assign>
     <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!/>
     <#if !smallImageUrl?has_content>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
         <@td style="width:${tdWidth?c}%;">
-            <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
+            <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Small Image"/><br />
             ${productContentWrapper.get("PRODUCT_NAME")!}<br />
     <#if totalPrice??>
             <div>${uiLabelMap.ProductAggregatedPrice}: <span class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
@@ -69,7 +56,7 @@ under the License.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${escapeVal(productUrl, 'js-html')}}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAdd${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compareFormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -77,7 +64,7 @@ under the License.
                 <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compareFormAddDefault${product_index}">
                     <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -173,7 +160,7 @@ under the License.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${escapeVal(productUrl, 'js-html')}}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compare2FormAdd${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compare2FormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>

@@ -26,6 +26,7 @@ contributor(groovyContext) {
     property name: 'context', type: 'java.util.Map'
     property name: 'delegator', type: 'org.ofbiz.entity.Delegator'
     property name: 'dispatcher', type: 'org.ofbiz.service.LocalDispatcher'
+    property name: 'security', type: 'org.ofbiz.security.Security'
 
     method name: 'runService', type: 'java.util.Map', params: [serviceName: 'String', inputMap: 'java.util.Map']
     method name: 'run', type: 'java.util.Map', params: [args: 'java.util.Map']

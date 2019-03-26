@@ -33,7 +33,7 @@ currency = parameters.currency;        // allow the display of the invoice in th
 BigDecimal conversionRate = new BigDecimal("1");
 ZERO = BigDecimal.ZERO;
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
 if (invoice) {
     // each invoice of course has two billing addresses, but the one that is relevant for purchase invoices is the PAYMENT_LOCATION of the invoice

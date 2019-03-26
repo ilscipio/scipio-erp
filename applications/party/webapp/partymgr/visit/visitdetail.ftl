@@ -1,24 +1,11 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section><#-- redundant: title=uiLabelMap.PartyVisitDetail -->
-      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="fields">
         <@tr>
           <@td>${uiLabelMap.PartyVisitIDSessionID}</@td>
           <@td>${visit.visitId!} / ${visit.sessionId!}</@td>
@@ -29,7 +16,7 @@ under the License.
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyPartyIDUserLoginID}</@td>
-          <@td><a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.partyId!}</a> / <a href="<@ofbizUrl>viewprofile?partyId=${visit.partyId!}</@ofbizUrl>">${visit.userLoginId!}</a></@td>
+          <@td><a href="<@pageUrl>viewprofile?partyId=${visit.partyId!}</@pageUrl>">${visit.partyId!}</a> / <a href="<@pageUrl>viewprofile?partyId=${visit.partyId!}</@pageUrl>">${visit.userLoginId!}</a></@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyUserCreated}</@td>
@@ -80,8 +67,8 @@ under the License.
 <@section title=uiLabelMap.PartyHitTracker>
   <#if serverHits?has_content>
     <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
-    <@paginate mode="content" url=makeOfbizUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
-      <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@paginate mode="content" url=makePageUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
+      <@table type="data-list">
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyContentId}</@th>
@@ -127,12 +114,12 @@ JIRA OFBIZ-4488: BEGIN
 https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
 <@section title=uiLabelMap.PartyPagePushFollowing>
-      <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-        <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
+      <#if security.hasPermission("SEND_CONTROL_APPLET", request)>
+        <@table type="fields">
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>
               <@td>
-                <form name="pushPage" method="get" action="<@ofbizUrl>pushPage</@ofbizUrl>">
+                <form name="pushPage" method="get" action="<@pageUrl>pushPage</@pageUrl>">
                   <input type="hidden" name="followerSid" value="${visit.sessionId}" />
                   <input type="hidden" name="visitId" value="${visit.visitId}" />
                   <input type="text" name="pageUrl" />
@@ -146,7 +133,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
             <@tr>
               <@th>${uiLabelMap.PartyFollowSession}</@th>
               <@td>
-                <form name="setFollower" method="get" action="<@ofbizUrl>setAppletFollower</@ofbizUrl>">
+                <form name="setFollower" method="get" action="<@pageUrl>setAppletFollower</@pageUrl>">
                   <input type="hidden" name="followerSid" value="${visit.sessionId}" />
                   <input type="hidden" name="visitId" value="${visit.visitId}" />
                   <input type="text" name="followSid" />

@@ -21,21 +21,10 @@ package org.ofbiz.base.util.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.management.MemoryType;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.UUID;
 
 import org.ofbiz.base.lang.SourceMonitored;
 import org.ofbiz.base.test.GenericTestCaseBase;
 import org.ofbiz.base.util.UtilIO;
-import org.ofbiz.base.util.UtilMisc;
 
 @SourceMonitored
 public class UtilIOTests extends GenericTestCaseBase {
@@ -91,13 +80,13 @@ public class UtilIOTests extends GenericTestCaseBase {
     private static void readStringTest_1(String label, String wanted, byte[] toRead) throws IOException {
         assertEquals("readString bytes default:" + label, wanted, UtilIO.readString(toRead));
         assertEquals("readString bytes UTF-8:" + label, wanted, UtilIO.readString(toRead, "UTF-8"));
-        assertEquals("readString bytes UTF8:" + label, wanted, UtilIO.readString(toRead, UtilIO.UTF8));
+        assertEquals("readString bytes UTF8:" + label, wanted, UtilIO.readString(toRead, UtilIO.getUtf8()));
         assertEquals("readString bytes offset/length default:" + label, wanted, UtilIO.readString(toRead, 0, toRead.length));
         assertEquals("readString bytes offset/length UTF-8:" + label, wanted, UtilIO.readString(toRead, 0, toRead.length, "UTF-8"));
-        assertEquals("readString bytes offset/length UTF8:" + label, wanted, UtilIO.readString(toRead, 0, toRead.length, UtilIO.UTF8));
+        assertEquals("readString bytes offset/length UTF8:" + label, wanted, UtilIO.readString(toRead, 0, toRead.length, UtilIO.getUtf8()));
         assertEquals("readString stream default:" + label, wanted, UtilIO.readString(new ByteArrayInputStream(toRead)));
         assertEquals("readString stream UTF-8:" + label, wanted, UtilIO.readString(new ByteArrayInputStream(toRead), "UTF-8"));
-        assertEquals("readString stream UTF8:" + label, wanted, UtilIO.readString(new ByteArrayInputStream(toRead), UtilIO.UTF8));
+        assertEquals("readString stream UTF8:" + label, wanted, UtilIO.readString(new ByteArrayInputStream(toRead), UtilIO.getUtf8()));
     }
 
     public void testWriteString() throws Exception {
@@ -126,7 +115,7 @@ public class UtilIOTests extends GenericTestCaseBase {
         UtilIO.writeString(baos, "UTF-8", toWrite);
         assertEquals("writeString UTF-8:" + label, wanted, baos.toByteArray());
         baos = new ByteArrayOutputStream();
-        UtilIO.writeString(baos, UtilIO.UTF8, toWrite);
+        UtilIO.writeString(baos, UtilIO.getUtf8(), toWrite);
         assertEquals("writeString UTF8:" + label, wanted, baos.toByteArray());
     }
 }

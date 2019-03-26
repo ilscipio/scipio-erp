@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import java.math.RoundingMode;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.*;
@@ -51,7 +53,7 @@ invExprs =
 invIterator = from("InvoiceAndType").where(invExprs).cursorScrollInsensitive().distinct().queryIterator();
 invoiceList = [];
 while (invoice = invIterator.next()) {
-    unAppliedAmount = InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP);
+    unAppliedAmount = InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
     if (unAppliedAmount.signum() == 1) {
         if (actualCurrency.equals(true)) {
             invoiceCurrencyUomId = invoice.currencyUomId;
@@ -62,7 +64,7 @@ while (invoice = invIterator.next()) {
                          invoiceDate : invoice.invoiceDate,
                          unAppliedAmount : unAppliedAmount,
                          invoiceCurrencyUomId : invoiceCurrencyUomId,
-                         amount : InvoiceWorker.getInvoiceTotal(invoice, actualCurrency).setScale(2,BigDecimal.ROUND_HALF_UP),
+                         amount : InvoiceWorker.getInvoiceTotal(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP),
                          invoiceTypeId : invoice.invoiceTypeId,
                          invoiceParentTypeId : invoice.parentTypeId]);
     }

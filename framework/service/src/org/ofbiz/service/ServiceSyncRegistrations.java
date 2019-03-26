@@ -14,11 +14,11 @@ import java.util.Map;
 public interface ServiceSyncRegistrations {
 
     Collection<ServiceSyncRegistration> getAllRegistrations();
-    
+
     Collection<ServiceSyncRegistration> getRegistrationsForService(String serviceName);
     Collection<ServiceSyncRegistration> getCommitRegistrationsForService(String serviceName);
     Collection<ServiceSyncRegistration> getRollbackRegistrationsForService(String serviceName);
-    
+
     ServiceSyncRegistration getFirstRegistrationForService(String serviceName);
     ServiceSyncRegistration getFirstCommitRegistrationForService(String serviceName);
     ServiceSyncRegistration getFirstRollbackRegistrationForService(String serviceName);
@@ -30,7 +30,7 @@ public interface ServiceSyncRegistrations {
     int removeService(String serviceName) throws GenericServiceException;
     int removeCommitService(String serviceName) throws GenericServiceException;
     int removeRollbackService(String serviceName) throws GenericServiceException;
-    
+
     public interface ServiceSyncRegistration {
         String getServiceName();
         boolean isCommit();

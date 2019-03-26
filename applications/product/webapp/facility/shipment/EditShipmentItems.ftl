@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if shipment??>
     <@section text=uiLabelMap.ProductNewItem>
-        <form action="<@ofbizUrl>createShipmentItem</@ofbizUrl>" method="post" name="createShipmentItemForm">
+        <form action="<@pageUrl>createShipmentItem</@pageUrl>" method="post" name="createShipmentItemForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>            
             <@field type="lookup" label=uiLabelMap.ProductProductId formName="createShipmentItemForm" name="productId" id="productId" fieldFormName="LookupProduct"/>   
             <@field type="input" label=uiLabelMap.CommonQty name="quantity" size="5" value="0"/>
@@ -28,7 +15,7 @@ under the License.
         </form>
     </@section>
     <@section>
-        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" autoAltRows=false>
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductItem}</@th>
@@ -51,35 +38,35 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <@tr valign="middle" alt=alt_row>
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td colspan="2"><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@serverUrl>" class="${styles.link_nav_info_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity!("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription!("&nbsp;")}</@td>
                 <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
             </@tr>
-            <form name="deleteShipmentItem${shipmentItemData_index}" method="post" action="<@ofbizUrl>deleteShipmentItem</@ofbizUrl>">
+            <form name="deleteShipmentItem${shipmentItemData_index}" method="post" action="<@pageUrl>deleteShipmentItem</@pageUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
             </form>
             <#list orderShipments as orderShipment>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.FacilityShipment}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.orderId!}</a> - ${orderShipment.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.FacilityShipment}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderShipment.orderId!}</a> - ${orderShipment.orderItemSeqId!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>${orderShipment.quantity!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>&nbsp;</@td>
-                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
+                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@pageUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
                 </@tr>
             </#list>
             <#list itemIssuances as itemIssuance>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.FacilityIssuance}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!}</a> - ${itemIssuance.orderItemSeqId!}</@td>
-                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
+                    <@td><span>${uiLabelMap.FacilityIssuance}<#--${uiLabelMap.ProductOrderItem}--></span> <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}</@serverUrl>" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!}</a> - ${itemIssuance.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@pageUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@pageUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
                     <@td>${itemIssuance.quantity!}</@td>
                     <@td>${itemIssuance.issuedDateTime!}</@td>
                     <@td>${uiLabelMap.ProductFuturePartyRoleList}</@td>
-                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
+                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@pageUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
                 </@tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
@@ -95,7 +82,7 @@ under the License.
                     </#if>
                     <@td><a href="javascript:document.deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                 </@tr>
-                <form name="deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}" method="post" action="<@ofbizUrl>deleteShipmentItemPackageContent</@ofbizUrl>">
+                <form name="deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}" method="post" action="<@pageUrl>deleteShipmentItemPackageContent</@pageUrl>">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentPackageContent.shipmentItemSeqId}"/>
                     <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageContent.shipmentPackageSeqId}"/>
@@ -103,7 +90,7 @@ under the License.
             </#list>
             <#if (totalQuantityToPackage > 0)>
                 <@tr valign="middle" alt=alt_row>
-                  <form action="<@ofbizUrl>createShipmentItemPackageContent</@ofbizUrl>" method="post" name="createShipmentPackageContentForm${shipmentItemData_index}">
+                  <form action="<@pageUrl>createShipmentItemPackageContent</@pageUrl>" method="post" name="createShipmentPackageContentForm${shipmentItemData_index}">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
                     <@td>&nbsp;</@td>

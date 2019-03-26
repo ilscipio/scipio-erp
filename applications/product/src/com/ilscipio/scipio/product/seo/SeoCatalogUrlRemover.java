@@ -26,7 +26,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     static final String logPrefix = "Seo: Alt URLs: ";
-    
+
     public SeoCatalogUrlRemover(Delegator delegator, LocalDispatcher dispatcher, RemoveTraversalConfig travConfig) throws GeneralException {
         super(delegator, dispatcher, travConfig);
         this.reset();
@@ -43,7 +43,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
          * in some cases can simply be set to the caller's service context (not modified).
-         * NOTE: If this was passed empty to constructor, any errors from sub-services 
+         * NOTE: If this was passed empty to constructor, any errors from sub-services
          * are guaranteed to not be localized.
          */
         public Map<String, ?> getServCtxOpts() {
@@ -63,7 +63,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             this.doChildProducts = doChildProducts;
             return this;
         }
-        
+
         public boolean isIncludeVariant() {
             return includeVariant;
         }
@@ -72,7 +72,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             this.includeVariant = includeVariant;
             return this;
         }
-        
+
         public boolean isGenerateFixedIds() {
             return generateFixedIds;
         }
@@ -100,7 +100,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             return this;
         }
     }
-    
+
     @Override
     public RemoveTraversalConfig newTravConfig() {
         return new RemoveTraversalConfig();
@@ -110,8 +110,8 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
     public RemoveTraversalConfig getTravConfig() {
         return (RemoveTraversalConfig) travConfig;
     }
-    
-    
+
+
     @Override
     public void reset() throws GeneralException {
         super.reset();
@@ -137,7 +137,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         servCtx.put("productCategoryId", productCategoryId);
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("removeProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-        
+
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
                 getStats().categorySuccess++;
@@ -146,12 +146,12 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             }
         } else {
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for category '" 
+            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for category '"
             //        + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             getStats().categoryError++;
         }
     }
-    
+
     public void removeProductAltUrls(GenericValue product) throws GeneralException {
         Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
 
@@ -160,9 +160,9 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
             return;
         }
-        
+
         String productId = product.getString("productId");
-        
+
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("removeProductAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("product", product);
         servCtx.put("productId", productId);
@@ -183,7 +183,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             if (numError != null) getStats().productError += numError;
             else getStats().productError++; // couldn't return count
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for product '" 
+            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for product '"
             //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
         Collection<String> visitedProductIds = UtilGenerics.checkCollection(recordResult.get("visitedProductIds"));

@@ -38,9 +38,8 @@ public class GetPropertyValueMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguements");
         if (!(args.get(0) instanceof TemplateScalarModel))
@@ -50,7 +49,7 @@ public class GetPropertyValueMethod implements TemplateMethodModelEx {
 
         String resource = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(0)));
         String name = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
-        
+
         String res = UtilProperties.getPropertyValue(resource, name);
 
         // here we do opposite of UtilProperties and return null if empty, so ! operator can work

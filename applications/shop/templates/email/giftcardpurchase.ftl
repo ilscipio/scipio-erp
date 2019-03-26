@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- Three standard fields cardNumber, pinNumber and amount are available from the activation
@@ -25,18 +12,20 @@ under the License.
 <#if recipientName??>${recipientName},</#if>
 <br />
 
-<#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
-${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com <#if senderName??> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>!
+<#-- SCIPIO: Rewrote and unhardcoded
+${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com (FIXME) <#if senderName??> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>! -->
+${getLabel((senderName??)?then('EcommerceYouHaveBeenSentGiftCardFrom', 'EcommerceYouHaveBeenSentGiftCard'),
+    {'storeName': raw((productStore.storeName)!), 'senderName': senderName!})}
 <br /><br />
 <#if giftMessage?has_content>
-  ${uiLabelMap.OrderGiftMessage}
+  ${getLabel('OrderGiftMessage')}:
   <br /><br />
-  ${giftMessage}
+  "${giftMessage}"
   <br /><br />
 </#if>
 
 <pre>
-  ${uiLabelMap.EcommerceYourCardNumber} ${cardNumber!}
-  ${uiLabelMap.EcommerceYourPinNumber} ${pinNumber!}
-  ${uiLabelMap.EcommerceGiftAmount} ${amount!}
+  ${uiLabelMap.EcommerceYourCardNumber}: ${cardNumber!}
+  <#if pinNumber?has_content>${uiLabelMap.EcommerceYourPinNumber}: ${pinNumber!}</#if>
+  ${uiLabelMap.EcommerceGiftAmount}: <@ofbizCurrency amount=(amount!) isoCode=(currencyUomId!)/>
 </pre>

@@ -22,10 +22,16 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * PortalPageWorker Class
+ * <p>
+ * SCIPIO: NOTE: This class appears to do absolutely nothing whatsoever...?
  */
-public class WidgetPortalPageWorker {
+public final class WidgetPortalPageWorker {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static PortalPageWorkerInterface portalPageWorker = null;
+    @SuppressWarnings("unused")
+    private static PortalPageWorkerInterface portalPageWorker = null;
+
+    private WidgetPortalPageWorker() {}
+
     static {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -22,7 +9,7 @@ under the License.
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
   </@menu>
 <#else>
   <#if !contactMech??>
@@ -30,7 +17,7 @@ under the License.
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
       <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
-        <form method="post" action="<@ofbizUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@ofbizUrl>" name="createcontactmechform">
+        <form method="post" action="<@pageUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@pageUrl>" name="createcontactmechform">
             <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
@@ -48,10 +35,12 @@ under the License.
 <#-- SCIPIO: If we are editing an address currently selected for shipping in cart, show this warning.
     This is mostly needed for checkout payment, but we'll just show for all cases to be safe. -->
 <#if contactMech??>
+  <#-- SCIPIO: Must use context or accessor
   <#if !cart?? && sessionAttributes.shoppingCart??>
     <#assign cart = sessionAttributes.shoppingCart>
-  </#if>
-  <#if cart?? && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
+  </#if>-->
+  <#assign cart = cart!getShoppingCart()!false>
+  <#if !cart?is_boolean && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
     <@commonMsg type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.ShopEditingShipAddressShipCostChange}</@commonMsg>
   </#if>
 </#if>
@@ -64,7 +53,7 @@ under the License.
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
@@ -95,7 +84,7 @@ under the License.
                   <@td>
                       <#-- SCIPIO: 2017-10-10: formerly this was: name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}"
                           but some states may cause duplicate purpose records, and then can't delete them, so must use index instead -->
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>">
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@pageUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@pageUrl>">
                           <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
@@ -109,7 +98,7 @@ under the License.
                 <@tr>
                   <@td>
                     <#-- for this, always forward back to current page -->
-                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</@ofbizUrl>" name="newpurposeform">
+                    <form method="post" action="<@pageUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</@pageUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
                         <@field type="select" name="contactMechPurposeTypeId">
@@ -134,7 +123,7 @@ under the License.
   <#else>
     <#assign targetParamStr>&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</#assign>
   </#if>
-  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}${targetParamStr}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+  <form method="post" action="<@pageUrl>${reqName}?DONE_PAGE=${donePage}${targetParamStr}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
       <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
@@ -181,7 +170,7 @@ under the License.
 
   <#else>    
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+      <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <#if requireCreate>
       <@menuitem type="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
     </#if>

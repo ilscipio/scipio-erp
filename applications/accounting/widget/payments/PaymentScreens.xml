@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -28,7 +15,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <set field="activeSubMenuItem" value="payments"/>
+                <set field="activeSubMenuItem" value="findPayments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -378,12 +365,14 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingManualTransaction"/>
-                <set field="activeSubMenuItem" value="manualtransactiontab"/>
+                <set field="activeSubMenuItem" value="manualTransaction"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ManualTx.groovy"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="GenericTransactionDecorator" location="component://accounting/widget/TransactionScreens.xml">
+                <!-- SCIPIO: TODO: REVIEW: GenericTransactionDecorator was removed...
+                <decorator-screen name="GenericTransactionDecorator" location="component://accounting/widget/TransactionScreens.xml">-->
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
@@ -407,7 +396,8 @@ under the License.
             <widgets>
                 <platform-specific>
                     <!-- TODO: problem here: the original manualTx file referred to manualGCTx, but no such ftl files seems to exist, so this will blow up -->
-                    <html><html-template location="component://accounting/webapp/accounting/payment/manualGCTx.ftl"/></html>
+                    <!-- SCIPIO: FIXME?: The missing template and previous comment are from stock; commenting out so it doesn't crash...
+                    <html><html-template location="component://accounting/webapp/accounting/payment/manualGCTx.ftl"/></html>-->
                 </platform-specific>
             </widgets>
         </section>
@@ -771,4 +761,128 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/TransactionScreens.xml#ViewGatewayResponse -->
+        <!-- view a particular gateway response -->
+    <screen name="ViewGatewayResponse">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewGatewayResponse"/>
+                <set field="activeSubMenuItem" value="gatewayResponses"/>
+
+                <set field="paymentGatewayResponseId" from-field="parameters.paymentGatewayResponseId"/>
+                <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
+
+                <entity-one entity-name="PaymentGatewayResponse" value-field="paymentGatewayResponse" auto-field-map="true"/>
+
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/ViewGatewayResponse.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleViewGatewayResponse}">
+                            <include-form name="ViewGatewayResponseRelations" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingPaymentsMenu}">
+                            <include-form name="ViewGatewayResponsePayments" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleViewGatewayResponse}">
+                            <include-form name="ViewGatewayResponse" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO (02/01/2019): Form widget replacement: component://accounting/widget/TransactionScreens.xml#FindGatewayResponse -->
+    <screen name="FindGatewayResponses">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindGatewayResponses"/> <!-- shows up in browser title bar -->
+                <set field="activeSubMenuItem" value="gatewayResponses"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindGatewayResponses" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListGatewayResponses" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO (02/01/2019): Form widget replacement: component://accounting/widget/TransactionScreens.xml#FindGatewayResponse -->
+    <!-- form to authorize a transaction -->
+    <screen name="AuthorizeTransaction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingAuthorize"/>
+                <set field="activeSubMenuItem" value="authorizeTransaction"/>
+
+                <set field="orderId" from-field="parameters.orderId"/>
+                <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
+
+                <entity-one entity-name="OrderPaymentPreference" value-field="opp">
+                    <field-map field-name="orderPaymentPreferenceId" from-field="orderPaymentPreferenceId"/>
+                </entity-one>
+                <set field="paymentMethodTypeId" from-field="opp.paymentMethodTypeId"/>
+
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/AuthorizeTransaction.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="AuthorizeTransaction" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- form to capture a transaction -->
+    <screen name="CaptureTransaction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingCapture"/>
+                <set field="activeSubMenuItem" value="captureTransaction"/>
+
+                <set field="orderId" from-field="parameters.orderId"/>
+                <set field="orderPaymentPreferenceId" from-field="parameters.orderPaymentPreferenceId"/>
+
+                <entity-one entity-name="OrderPaymentPreference" value-field="opp">
+                    <field-map field-name="orderPaymentPreferenceId" from-field="orderPaymentPreferenceId"/>
+                </entity-one>
+                <set field="paymentMethodTypeId" from-field="opp.paymentMethodTypeId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/CaptureTransaction.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="CaptureTransaction" location="component://accounting/widget/payments/PaymentForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

@@ -76,7 +76,7 @@
               </#list>
             </@field>
             <@field type="text" name="icm_${orderItem.orderItemSeqId}" value=(parameters["icm_${orderItem.orderItemSeqId}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
-            <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
+            <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                 class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
             <#-- SCIPIO: Extra hidden input to help with hide/show logic -->
@@ -86,7 +86,7 @@
           <#-- SCIPIO: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
           <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
           <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
-            <@section title="${rawString(cancelItemLabel)}: ${rawString(orderItem.itemDescription!)}">
+            <@section title="${raw(cancelItemLabel)}: ${raw(orderItem.itemDescription!)}">
               <@cancelItemForm />
             </@section>
           </@modal>-->
@@ -115,14 +115,14 @@
           <#-- product item -->
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
-            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath=true productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+            <#if !printable><a href="<@catalogAltUrl fullPath=true productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
             <#-- SCIPIO: Link to downloads to consume -->
             <#-- TODO: delegate status tests -->
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
               <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                 <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
-                <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
-                    <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
+                <a href="<#if dlAvail><@pageUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
+                    <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[<#if dlAvail>${uiLabelMap.ContentDownload}<#else>${uiLabelMap.ContentDownloadPending}</#if>]</a><#lt/>
               </#if>
             </#if>
 
@@ -236,10 +236,10 @@
                 <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value="${orderItem.subscriptionId!}"/>
                 <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/>
                 <#if orderItem.statusId == "ITEM_APPROVED">
-                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('authorizeBillingAgreement')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('authorizeBillingAgreement')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />
                 <#elseif orderItem.statusId == "ITEM_COMPLETED">
-                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingAgreementPayPalRest')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('cancelBillingAgreementPayPalRest')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopCancelSubscription}" />
                 </#if>
             </@td>

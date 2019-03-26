@@ -1,32 +1,19 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@section menuContent=menuContent>
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
         <@section>
-            <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
+            <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@serverUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
             <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
                 <@commonMsg type="result">${uiLabelMap.ProductReturnCompletelyReceived}</@commonMsg>
             </#if>
      
-            <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list">
                 <@thead>
                     <@tr class="header-row">
                         <@th>${uiLabelMap.ProductReceipt}</@th>
@@ -56,23 +43,23 @@ under the License.
     <#-- Multi-Item Return Receiving -->
     <#if returnHeader?has_content>
         <@section>
-            <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name="selectAllForm">
+            <form method="post" action="<@pageUrl>receiveReturnedProduct</@pageUrl>" name="selectAllForm">
                 <@fields type="default-manual-widgetonly">
                     <#-- general request fields -->
                     <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
                     <input type="hidden" name="returnId" value="${requestParameters.returnId!}" />
                     <input type="hidden" name="_useRowSubmit" value="Y" />
-                    <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
+                    <#assign now = UtilDateTime.nowTimestamp().toString()>
                     <#assign rowCount = 0>
                     <#if !returnItems?? || returnItems?size == 0>
                         <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
                     <#else>
-                        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                        <@table type="data-complex">
                             <@tr>
                                 <@td>
                                     <@heading>
-                                        ${uiLabelMap.ProductReceiveReturn} <a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
-                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
+                                        ${uiLabelMap.ProductReceiveReturn} <a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@serverUrl>" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
+                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${parameters.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
                                     </@heading>
                                 </@td>
                                 <@td align="right">
@@ -99,7 +86,7 @@ under the License.
                                     </@tr>
                                     <@tr>
                                         <@td>
-                                            <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                                            <@table type="fields">
                                                 <@tr>
                                                     <#assign productId = "">
                                                     <#if orderItem.productId??>
@@ -108,14 +95,14 @@ under the License.
                                                         <#assign serializedInv = product.getRelated("InventoryItem", {"inventoryItemTypeId":"SERIALIZED_INV_ITEM"}, null, false)>
                                                         <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                                                         <@td width="45%">
-                                                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
+                                                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                                             <#if serializedInv?has_content><font color="red">**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                                                         </@td>
                                                     <#elseif orderItem?has_content>
                                                         <@td width="45%">
                                                             ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                                             <input type="text" size="12" name="productId_o_${rowCount}" />
-                                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                                            <a href="<@serverUrl>/catalog/control/ViewProduct?${raw(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                                         </@td>
                                                     <#else>
                                                         <@td width="45%">
@@ -212,7 +199,7 @@ under the License.
                                 </@tr>
                                 <@tr>
                                     <@td colspan="2" align="right">
-                                        <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                                        <a href="<@pageUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
                                     </@td>
                                 </@tr>
                             <#else>

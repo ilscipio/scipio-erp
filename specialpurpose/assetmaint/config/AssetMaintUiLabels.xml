@@ -42,6 +42,7 @@
         <value xml:lang="zh-TW">SCIPIO - 資產維護</value>
     </property>
     <property key="AssetMaintCompanySubtitle">
+        <value xml:lang="de">Instandhaltungs Abteilung</value>
         <value xml:lang="en">Maintenance Department</value>
         <value xml:lang="fr">Service de maintenance</value>
         <value xml:lang="it">Servizio manutenzione</value>
@@ -52,6 +53,7 @@
         <value xml:lang="zh-TW">維護部門</value>
     </property>
     <property key="AssetMaintInvalidPartProductIdError">
+        <value xml:lang="de">"Die angebene Bauteil Id ${productId} ist nicht valide. Bitte überprüfen Sie diese und versuchen es erneut."</value>
         <value xml:lang="en">"Part Id ${productId} provided is invalid please check and try again"</value>
         <value xml:lang="fr">"La réf. de piéce ${productId} fournie n'est pas valable, SVP recommencez"</value>
         <value xml:lang="it">"Il Codice parte ${productId} fornito non è valido. Per favore controllare e riprovare"</value>
@@ -62,6 +64,7 @@
         <value xml:lang="zh-TW">"提供的零部件識別${productId}無效,請檢查重試"</value>
     </property>
     <property key="AssetMaintItemIssuance">
+        <value xml:lang="de">Bauteile</value>
         <value xml:lang="en">Parts</value>
         <value xml:lang="fr">Pièces</value>
         <value xml:lang="it">Parti</value>
@@ -72,6 +75,7 @@
         <value xml:lang="zh-TW">零部件</value>
     </property>
     <property key="AssetMaintLowPartInventoryError">
+        <value xml:lang="de">"Verfügbares Inventarniveau für ${productId} ist ${quantity}"</value>
         <value xml:lang="en">"Available Inventory level for ${productId} is ${quantity}"</value>
         <value xml:lang="fr">"Le niveau de stock disponible pour ${productId} est ${quantity"</value>
         <value xml:lang="it">"La quantità disponibile a magazzino per ${productId} è ${quantity}"</value>
@@ -93,6 +97,7 @@
         <value xml:lang="zh-TW">資產維護應用程式</value>
     </property>
     <property key="AssetMaintParentWorkEffort">
+        <value xml:lang="de">Arbeitsaufwand des Elternteil</value>
         <value xml:lang="en">Parent Work Effort</value>
         <value xml:lang="fr">"Tâche parente"</value>
         <value xml:lang="it">Impegno di lavoro padre</value>
@@ -102,7 +107,8 @@
         <value xml:lang="zh-TW">上級工作投入</value>
     </property>
     <property key="AssetMaintPartId">
-        <value xml:lang="en">Part Id</value>
+        <value xml:lang="de">Bauteil ID</value>
+        <value xml:lang="en">Part ID</value>
         <value xml:lang="fr">Réf. de la pièce</value>
         <value xml:lang="it">Codice parte</value>
         <value xml:lang="ja">部品ID</value>
@@ -111,6 +117,7 @@
         <value xml:lang="zh-TW">零部件識別</value>
     </property>
     <property key="AssetMaintProblemCallingService">
+        <value xml:lang="de">Fehler beim ausführen des Service issueInventoryItemToFixedAssetMaint</value>
         <value xml:lang="en">Problem in calling service issueInventoryItemToFixedAssetMaint</value>
         <value xml:lang="it">Problema durante la chiamata al servizio issueInventoryItemToFixedAssetMaint</value>
         <value xml:lang="ja">issueInventoryItemToFixedAssetMaintサービスの呼び出し時エラー</value>
@@ -119,6 +126,7 @@
         <value xml:lang="zh-TW">呼叫發送庫存細項到固定資產維護(issueInventoryItemToFixedAssetMaint)服務時出錯</value>
     </property>
     <property key="AssetMaintProblemGettingInventoryLevel">
+        <value xml:lang="de">Fehler beim Versuch den Inventarstand zu lesen für </value>
         <value xml:lang="en">Problem in getting Inventory level for </value>
         <value xml:lang="it">Problema ad ottenere il livello di inventario per </value>
         <value xml:lang="ja">在庫レベルの取得時にエラー: </value>
@@ -127,6 +135,7 @@
         <value xml:lang="zh-TW">獲取庫存水準時出錯: </value>
     </property>
     <property key="AssetMaintProductMaint">
+        <value xml:lang="de">Produkt Instandhaltung</value>
         <value xml:lang="en">Product Maint</value>
         <value xml:lang="fr">Maintenance</value>
         <value xml:lang="it">Manutenzione</value>
@@ -136,6 +145,7 @@
         <value xml:lang="zh-TW">產品維護</value>
     </property>
     <property key="AssetMaintViewPermissionError">
+        <value xml:lang="de">Leseberechtigungs-Fehler</value>
         <value xml:lang="en">View Permission Error</value>
         <value xml:lang="fr">Afficher l'erreur d'autorisation</value>
         <value xml:lang="it">Mostra errore di autorizzazione</value>
@@ -146,6 +156,7 @@
         <value xml:lang="zh-TW">流覽許可權錯誤</value>
     </property>
     <property key="PageTitleAddItemIssuance">
+        <value xml:lang="de">Artikelausgabe hinzufügen</value>
         <value xml:lang="en">Add Item Issuance</value>
         <value xml:lang="fr">Ajouter une émission d'article</value>
         <value xml:lang="it">Aggiungi prelievo articolo</value>
@@ -156,6 +167,7 @@
         <value xml:lang="zh-TW">增加交付細項</value>
     </property>
     <property key="PageTitleChildWorkEfforts">
+        <value xml:lang="de">Aufschlüsselung der Aufgabe</value>
         <value xml:lang="en">Task Breakdown</value>
         <value xml:lang="fr">Décomposition de tâche</value>
         <value xml:lang="it">Scoposizione compito</value>
@@ -177,6 +189,7 @@
         <value xml:lang="zh-TW">尋找維修保養</value>
     </property>
     <property key="PageTitleFindFixedAssets">
+        <value xml:lang="de">Geräte finden</value>
         <value xml:lang="en">Find Equipments</value>
         <value xml:lang="fr">Chercher des équipements</value>
         <value xml:lang="it">Ricerca cespite</value>
@@ -187,6 +200,7 @@
         <value xml:lang="zh-TW">尋找設備</value>
     </property>
     <property key="PageTitleListItemIssuance">
+        <value xml:lang="de">Bauteil Liste</value>
         <value xml:lang="en">Parts List</value>
         <value xml:lang="fr">Liste des pièces</value>
         <value xml:lang="it">Lista parti</value>

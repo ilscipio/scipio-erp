@@ -44,5 +44,7 @@
         <junit-test-suite class-name="org.ofbiz.base.test.BaseUnitTests"/>
         <junit-test-suite class-name="org.ofbiz.base.util.test.UtilPropertiesTests"/>
         <junit-test-suite class-name="org.ofbiz.base.util.test.UtilXmlTests"/>
+        <groovy-test-suite name="simple" location="component://base/script/test/SimpleTests.groovy"/>
+        <groovy-test-suite name="fileUtil" location="component://base/script/test/FileUtilTests.groovy"/>
     </test-group>
 </test-suite>

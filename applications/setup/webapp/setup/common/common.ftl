@@ -1,4 +1,7 @@
-<#-- Common setup macros, definitions, etc. -->
+<#-- SCIPIO: Common Setup templates utilities and definitions include
+    NOTE: For reuse from other applications, please import *lib.ftl instead. -->
+
+<#import "component://setup/webapp/setup/common/setuplib.ftl" as setuplib>
 
 <#-- TODO: REVIEW: this validate flag is a workaround for the loss of validate going from
     form widget to link-triggered forms -->
@@ -18,7 +21,7 @@
   <#if paramStr?has_content>
     <#local paramStr = "?" + paramStr>
   </#if>
-  <#return makeOfbizUrl("setup"+name?cap_first + paramStr)>
+  <#return makePageUrl("setup"+name?cap_first + paramStr)>
 </#function>
 
 <#function makeSetupStepUri name stepState=true>
@@ -41,7 +44,7 @@
 </#macro>
 
 <#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
-  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
+  <a href="<@serverUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
     <#if class?has_content> class="${class}"</#if><#t/>
     <#if target?has_content> target="${target}"</#if><#t/>
     ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
@@ -59,8 +62,8 @@
     </#if>
     <#local stepParams = toSimpleMap(stepState.stepParams!{})>
     <#list stepParams?keys as paramName>
-      <#if !exclude?seq_contains(rawString(paramName))>
-        <@field type="hidden" name=paramName value=stepParams[rawString(paramName)]!/>
+      <#if !exclude?seq_contains(raw(paramName))>
+        <@field type="hidden" name=paramName value=stepParams[raw(paramName)]!/>
       </#if>
     </#list>
   </#if>
@@ -202,8 +205,10 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   </#if>
   <#local submitVarSuffixJs = ""><#-- WARN: no support duplicate -->
   <@menu type="button">
-    <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
-        disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
+    <#if nextSetupStep?? && nextSetupStep?has_content>
+        <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
+            disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
+    </#if>
     <#if submitFormId?has_content && setupStep?has_content>
       <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
@@ -278,7 +283,7 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   <#local res = []>
   <#list purposes as purpose>
     <#local purposeType = delegator.findOne("ContactMechPurposeType", {"contactMechPurposeTypeId":purpose}, true)!>
-    <#local res = res + [rawString(purposeType.get("description", locale)!purposeType.contactMechPurposeTypeId!)]>
+    <#local res = res + [raw(purposeType.get("description", locale)!purposeType.contactMechPurposeTypeId!)]>
   </#list>
   <#return res>
 </#function>

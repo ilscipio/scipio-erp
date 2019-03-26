@@ -1,29 +1,70 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<div>
-    <#if quote??>
-        <#if quote.statusId == "QUO_APPROVED">
-            <a href="<@ofbizUrl>loadCartFromQuote?quoteId=${quote.quoteId}&amp;finalizeMode=init</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderCreateOrder}</a>
-        <#else>
-            <span class="${styles.link_run_sys!} ${styles.action_add!} ${styles.disabled!}">${uiLabelMap.OrderCreateOrder}</span>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <#if quote?? && quote.statusId == "QUO_APPROVED">
+            <@menuitem type="link" href=makePageUrl("loadCartFromQuote?quoteId=" + quote.quoteId + "&amp;finalizeMode=init") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateOrder />
         </#if>
-    </#if>
-</div>
+    </@menu>
+</#macro>
 
+<@section title=title!rawLabel(titleProperty)! menuContent=menuContent>
+    <#if quote?has_content>
+        <@table type="fields" class="${styles.table_basic!}" cellspacing="0">
+            <#-- quote id -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</@td>
+                <@td colspan="3">
+                    ${quote.quoteId!}
+                </@td>
+            </@tr>
+            <#-- quote name -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
+                <@td colspan="3">
+                    ${quote.quoteName!}
+                </@td>
+            </@tr>
+            <#-- quote description -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonDescription}</@td>
+                <@td colspan="3">
+                    ${quote.description!}
+                </@td>
+            </@tr>
+            <#-- quote status -->
+            <#assign status = quote.getRelatedOne("StatusItem", true)>
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
+                <@td colspan="3">
+                    ${status.get("description",locale)}
+                </@td>
+            </@tr>
+            <#-- issue date -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOrderQuoteIssueDate}</@td>
+                <@td colspan="3">
+                    ${quote.issueDate!}
+                </@td>
+            </@tr>
+            <#-- valid from date -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonValidFromDate}</@td>
+                <@td colspan="3">
+                    ${quote.validFromDate!}
+                </@td>
+            </@tr>
+            <#-- valid thru date -->
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonValidThruDate}</@td>
+                <@td colspan="3">
+                    ${quote.validThruDate!}
+                </@td>
+            </@tr>
+        </@table>
+    </#if>
+</@section>

@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
@@ -41,7 +40,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
@@ -97,6 +95,12 @@ public class PartyContentWrapper extends CommonContentWrapper {
     public List<String> getList(String contentTypeId) {
         try {
             return getPartyContentTextList(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher());
+        } catch (GeneralException ge) {
+            Debug.logError(ge, module);
+            return null;
+        } catch (IOException ioe) {
+            Debug.logError(ioe, module);
+            return null;
         } catch (Exception e) {
             Debug.logError(e, module);
             return null;
@@ -120,7 +124,7 @@ public class PartyContentWrapper extends CommonContentWrapper {
     public static String getPartyContentAsText(GenericValue party, String partyContentId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getPartyContentAsText(party, partyContentId, null, locale, null, null, dispatcher, true, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -138,7 +142,7 @@ public class PartyContentWrapper extends CommonContentWrapper {
         if (party == null) {
             return null;
         }
-        
+
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
         String cacheKey = null;
@@ -220,7 +224,7 @@ public class PartyContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, partyContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
             return;
         }
-        
+
         if (partyContentTypeId != null) {
             String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
 
@@ -321,7 +325,7 @@ public class PartyContentWrapper extends CommonContentWrapper {
         //} else {
         //    return null;
         //}
-        return EntityUtil.getFirst(partyContentList); 
+        return EntityUtil.getFirst(partyContentList);
     }
 
     public static PartyContentWrapper makePartyContentWrapper(GenericValue party, HttpServletRequest request) {

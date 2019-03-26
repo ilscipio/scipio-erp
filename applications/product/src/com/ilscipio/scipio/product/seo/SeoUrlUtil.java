@@ -26,7 +26,7 @@ import org.ofbiz.base.util.UtilValidate;
  * SCIPIO: SEO Catalog URL util
  */
 public class SeoUrlUtil {
-    
+
     /**
      * @deprecated this method did not preserve order of charFilters (though it could have
      * with LinkedHashMap, method has no control) - use {@link UrlProcessors.CharFilter} instead.

@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if !mechMap.contactMech??>
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
-    <@section title=uiLabelMap.PartyCreateNewContact>
-      <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
+    <@section title=(rawLabel('PartyCreateNewContact')+raw(ecmSecTitleSuffix!))>
+      <form method="post" action="<@pageUrl>editcontactmech</@pageUrl>" name="createcontactmechform">
         <input type="hidden" name="partyId" value="${partyId}" />
         <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
@@ -35,9 +22,13 @@ under the License.
 <#if mechMap.contactMechTypeId?has_content>
 
   <#if !mechMap.contactMech?has_content>
-    <#assign sectionTitle = uiLabelMap.PartyCreateNewContact />
+    <#assign sectionTitle = (rawLabel('PartyCreateNewContact')+raw(ecmSecTitleSuffix!))/>
   <#else>
-    <#assign sectionTitle = uiLabelMap.PartyEditContactInformation />
+    <#if !ecmSecTitleSuffix?has_content><#-- SCIPIO: if no suffix, this is redundant -->
+      <#assign sectionTitle = "">
+    <#else>
+      <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+raw(ecmSecTitleSuffix!))/>
+    </#if>
   </#if>
   <@section title=sectionTitle>
   
@@ -49,7 +40,7 @@ under the License.
   </#if>
   
   <#if !mechMap.contactMech?has_content>
-      <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+      <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="DONE_PAGE" value="${donePage}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="partyId" value="${partyId}" />
@@ -61,7 +52,7 @@ under the License.
       <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
           <@fields type="default-manual" ignoreParentField=true>
-          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list">
             <@tbody>
               <#if mechMap.partyContactMechPurposes?has_content>
                 <#list mechMap.partyContactMechPurposes as partyContactMechPurpose>
@@ -79,7 +70,7 @@ under the License.
                     <@td class="button-col">
                       <#-- SCIPIO: 2017-10-10: formerly this was: name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}"
                           but some states may cause duplicate purpose records, and then can't delete them, so must use index instead -->
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose</@ofbizUrl>" >
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@pageUrl>deletePartyContactMechPurpose</@pageUrl>" >
                          <input type="hidden" name="partyId" value="${partyId}" />
                          <input type="hidden" name="contactMechId" value="${contactMechId}" />
                          <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}" />
@@ -96,7 +87,7 @@ under the License.
               <@tfoot>
               <@tr>
                 <@td class="button-col">
-                  <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
+                  <form method="post" action="<@pageUrl>createPartyContactMechPurpose</@pageUrl>" name="newpurposeform">
                     <input type="hidden" name="partyId" value="${partyId}" />
                     <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                     <input type="hidden" name="useValues" value="true" />
@@ -116,7 +107,7 @@ under the License.
           </@fields>
         </@field>
       </#if>
-      <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+      <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="contactMechId" value="${contactMechId}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="partyId" value="${partyId}" />
@@ -167,12 +158,12 @@ under the License.
   </div>
   
     <@field type="submitarea">
-      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
+      <@field type="submit" submitType="link" href=makePageUrl("backHome") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
       <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" text=uiLabelMap.CommonSave class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </@field>
   </@section>
 <#else>
     <@field type="submitarea">
-      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
+      <@field type="submit" submitType="link" href=makePageUrl("backHome") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
     </@field>
 </#if>

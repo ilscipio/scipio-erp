@@ -34,17 +34,16 @@ public class MapKeysMethod implements TemplateMethodModelEx {
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
         TemplateModel object = (TemplateModel) args.get(0);
-        
+
         // 2016-04-20: We must wrap the keys with non-escaping wrapper, otherwise keying
         // into map using values will not work for escaped values
         return LangFtlUtil.wrapNonEscaping(LangFtlUtil.getMapKeys(object));
     }
-    
+
 }

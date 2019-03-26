@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -27,7 +14,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="Product"/>
+        <make-value entity-name="Product" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <set from-field="parameters.productId" field="newEntity.productId"/>
@@ -36,9 +23,9 @@ under the License.
         <else>
             <check-id field="newEntity.productId"/>
             <check-errors />
-            <entity-one value-field="dummyProduct" entity-name="Product"><field-map field-name="productId" from-field="parameters.productId"/></entity-one>
+            <entity-one entity-name="Product" value-field="dummyProduct"><field-map field-name="productId" from-field="parameters.productId"/></entity-one>
             <if-not-empty field="dummyProduct">
-                <add-error ><fail-property resource="CommonErrorUiLabels" property="CommonErrorDublicateKey" /></add-error>
+                <add-error ><fail-property resource="CommonErrorUiLabels" property="CommonErrorDuplicateKey" /></add-error>
             </if-not-empty>
             <check-errors />
         </else>
@@ -81,9 +68,9 @@ under the License.
                 <field-map field-name="roleTypeId" value="LTD_ADMIN"/>
             </entity-and>
 
-            <iterate entry="productCategoryRole" list="productCategoryRoles">
+            <iterate list="productCategoryRoles" entry="productCategoryRole">
                 <!-- add this new product to the category -->
-                <make-value value-field="newLimitMember" entity-name="ProductCategoryMember"/>
+                <make-value entity-name="ProductCategoryMember" value-field="newLimitMember"/>
                 <set from-field="newEntity.productId" field="newLimitMember.productId"/>
                 <set from-field="productCategoryRole.productCategoryId" field="newLimitMember.productCategoryId"/>
                 <set from-field="nowTimestamp" field="newLimitMember.fromDate"/>
@@ -91,7 +78,7 @@ under the License.
             </iterate>
         </if-has-permission>
     </simple-method>
-    <simple-method method-name="updateProduct" short-description="Update an Product">
+    <simple-method method-name="updateProduct" short-description="Update a Product">
         <set value="updateProduct" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
@@ -147,7 +134,7 @@ under the License.
             <!-- get all productAssocs, then get the actual product to update -->
             <find-by-and entity-name="ProductAssoc" map="variantProductAssocMap" list="variantProductAssocs"/>
             <filter-list-by-date list="variantProductAssocs"/>
-            <iterate entry="variantProductAssoc" list="variantProductAssocs">
+            <iterate list="variantProductAssocs" entry="variantProductAssoc">
                 <clear-field field="variantProduct"/>
                 <entity-one entity-name="Product" value-field="variantProduct" auto-field-map="false">
                     <field-map field-name="productId" from-field="variantProductAssoc.productIdTo"/>
@@ -167,6 +154,12 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
+        <entity-one entity-name="Product" value-field="dummyProduct">
+            <field-map field-name="productId" from-field="parameters.productId"/>
+        </entity-one>
+        <if-not-empty field="dummyProduct">
+            <add-error ><fail-property resource="CommonErrorUiLabels" property="CommonErrorDuplicateKey" /></add-error>
+        </if-not-empty>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
@@ -207,7 +200,7 @@ under the License.
         <!-- if requested, duplicate related data as well -->
         <if-not-empty field="parameters.duplicatePrices">
             <find-by-and entity-name="ProductPrice" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -215,7 +208,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateIDs">
             <find-by-and entity-name="GoodIdentification" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -223,7 +216,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateContent">
             <find-by-and entity-name="ProductContent" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -231,7 +224,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateCategoryMembers">
             <find-by-and entity-name="ProductCategoryMember" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <!-- Clone Content -->
@@ -270,7 +263,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateAssocs">
             <find-by-and entity-name="ProductAssoc" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -280,7 +273,7 @@ under the License.
             <entity-and entity-name="ProductAssoc" list="foundValues">
                 <field-map field-name="productIdTo" from-field="parameters.oldProductId"/>
             </entity-and>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productIdTo"/>
                 <create-value value-field="newTempValue"/>
@@ -288,7 +281,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateAttributes">
             <find-by-and entity-name="ProductAttribute" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -296,7 +289,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateFeatureAppls">
             <find-by-and entity-name="ProductFeatureAppl" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <create-value value-field="newTempValue"/>
@@ -304,7 +297,7 @@ under the License.
         </if-not-empty>
         <if-not-empty field="parameters.duplicateInventoryItems">
             <find-by-and entity-name="InventoryItem" map="productFindContext" list="foundValues"/>
-            <iterate entry="foundValue" list="foundValues">
+            <iterate list="foundValues" entry="foundValue">
                 <!--
                     NOTE: new inventory items should always be created calling the
                           createInventoryItem service because in this way we are sure
@@ -397,7 +390,7 @@ under the License.
         <store-value value-field="product"/>
         <!-- expire product from all categories -->
         <get-related value-field="product" relation-name="ProductCategoryMember" list="productCategoryMembers"/>
-        <iterate entry="productCategoryMember" list="productCategoryMembers">
+        <iterate list="productCategoryMembers" entry="productCategoryMember">
             <if-empty field="productCategoryMember.thruDate">
                 <set from-field="nowTimestamp" field="productCategoryMember.thruDate"/>
                 <store-value value-field="productCategoryMember"/>
@@ -405,7 +398,7 @@ under the License.
         </iterate>
         <!-- expire product from all associations going to it -->
         <get-related value-field="product" relation-name="AssocProductAssoc" list="assocProductAssocs"/>
-        <iterate entry="assocProductAssoc" list="assocProductAssocs">
+        <iterate list="assocProductAssocs" entry="assocProductAssoc">
             <if-empty field="assocProductAssoc.thruDate">
                 <set from-field="nowTimestamp" field="assocProductAssoc.thruDate"/>
                 <store-value value-field="assocProductAssoc"/>
@@ -420,14 +413,14 @@ under the License.
         <entity-one entity-name="ProductCalculatedInfo" value-field="productCalculatedInfo"/>
         <if-empty field="productCalculatedInfo">
             <!-- go ahead and create it -->
-            <make-value value-field="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
+            <make-value entity-name="ProductCalculatedInfo" value-field="productCalculatedInfo"/>
             <set from-field="parameters.productId" field="productCalculatedInfo.productId"/>
             <set from-field="parameters.weight" field="productCalculatedInfo.totalTimesViewed"/>
             <create-value value-field="productCalculatedInfo"/>
         <else>
             <calculate field="productCalculatedInfo.totalTimesViewed" type="Long">
-                <calcop field="productCalculatedInfo.totalTimesViewed" operator="add">
-                    <calcop field="parameters.weight" operator="get"></calcop>
+                <calcop operator="add" field="productCalculatedInfo.totalTimesViewed">
+                    <calcop operator="get" field="parameters.weight"></calcop>
                 </calcop>
             </calculate>
             <store-value value-field="productCalculatedInfo"/>
@@ -445,9 +438,9 @@ under the License.
             <call-service service-name="countProductView" in-map-name="callSubMap"></call-service>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="createProductReview" short-description="Create a ProductReview" login-required="false">
-        <make-value value-field="newEntity" entity-name="ProductReview"/>
+        <make-value entity-name="ProductReview" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set from-field="userLogin.userLoginId" field="newEntity.userLoginId"/>
         <set value="PRR_PENDING" field="newEntity.statusId"/>
@@ -486,7 +479,7 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductReview"/>
+        <make-value entity-name="ProductReview" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -509,7 +502,7 @@ under the License.
         <entity-one entity-name="ProductCalculatedInfo" value-field="productCalculatedInfo"/>
         <if-empty field="productCalculatedInfo">
             <!-- go ahead and create it -->
-            <make-value value-field="productCalculatedInfo" entity-name="ProductCalculatedInfo"/>
+            <make-value entity-name="ProductCalculatedInfo" value-field="productCalculatedInfo"/>
             <set from-field="productId" field="productCalculatedInfo.productId"/>
             <set from-field="averageCustomerRating" field="productCalculatedInfo.averageCustomerRating"/>
             <create-value value-field="productCalculatedInfo"/>
@@ -534,18 +527,18 @@ under the License.
         <set value="PRODUCT_VARIANT" field="variantsFindContext.productAssocTypeId"/>
         <find-by-and entity-name="ProductAssoc" map="variantsFindContext" list="variants"/>
         <filter-list-by-date list="variants"/>
-        <iterate entry="newProduct" list="variants">
+        <iterate list="variants" entry="newProduct">
             <set from-field="newProduct.productIdTo" field="productVariantContext.productId"/>
             <!-- if requested, duplicate related data -->
             <if-not-empty field="parameters.duplicatePrices">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductPrice" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="ProductPrice" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -554,12 +547,12 @@ under the License.
             <if-not-empty field="parameters.duplicateIDs">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="GoodIdentification" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="GoodIdentification" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -568,12 +561,12 @@ under the License.
             <if-not-empty field="parameters.duplicateContent">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductContent" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="ProductContent" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -582,12 +575,12 @@ under the License.
             <if-not-empty field="parameters.duplicateCategoryMembers">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductCategoryMember" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="ProductCategoryMember" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -596,12 +589,12 @@ under the License.
             <if-not-empty field="parameters.duplicateAttributes">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductAttribute" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="ProductAttribute" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -610,12 +603,12 @@ under the License.
             <if-not-empty field="parameters.duplicateFacilities">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductFacility" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
                 <find-by-and entity-name="ProductFacility" map="productFindContext" list="foundValues"/>
-                <iterate entry="foundValue" list="foundValues">
+                <iterate list="foundValues" entry="foundValue">
                     <clone-value value-field="foundValue" new-value-field="newTempValue"/>
                     <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
                     <create-value value-field="newTempValue"/>
@@ -624,7 +617,7 @@ under the License.
             <if-not-empty field="parameters.duplicateLocations">
                 <if-not-empty field="parameters.removeBefore">
                     <find-by-and entity-name="ProductFacilityLocation" map="productVariantContext" list="foundVariantValues"/>
-                    <iterate entry="foundVariantValue" list="foundVariantValues">
+                    <iterate list="foundVariantValues" entry="foundVariantValue">
                         <remove-value value-field="foundVariantValue"/>
                     </iterate>
                 </if-not-empty>
@@ -642,7 +635,7 @@ under the License.
         call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
         <if-empty field="callingMethodName">
-            <set value="this operation" field="callingMethodName"/>
+            <property-to-field resource="CommonUiLabels" property="CommonPermissionThisOperation" field="callingMethodName"/>
         </if-empty>
         <if-empty field="checkAction">
             <set value="UPDATE" field="checkAction"/>
@@ -680,6 +673,7 @@ under the License.
             </condition>
             <then>
                 <set field="checkActionLabel" value="${groovy: 'ProductCatalog' + checkAction.charAt(0) + checkAction.substring(1).toLowerCase() + 'PermissionError'}"/>
+                <set field="resourceDescription" from-field="callingMethodName"/>
                 <add-error>
                     <fail-property resource="ProductUiLabels" property="${checkActionLabel}"/>
                 </add-error>
@@ -711,6 +705,29 @@ under the License.
             </else>
         </if-empty>
     </simple-method>
+    <simple-method method-name="productPriceGenericPermission" short-description="product price permission logic">
+        <set field="mainAction" from-field="parameters.mainAction"/>
+        <if-empty field="mainAction">
+            <add-error>
+                <fail-property resource="ProductUiLabels" property="ProductMissingMainActionInPermissionService"/>
+            </add-error>
+            <check-errors/>
+        </if-empty>
+        <check-permission permission="CATALOG_PRICE_MAINT">
+            <fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/>
+        </check-permission>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
+        <if-empty field="error_list">
+            <set field="hasPermission" type="Boolean" value="true"/>
+            <field-to-result field="hasPermission"/>
+            <else>
+                <property-to-field resource="ProductUiLabels" property="ProductPermissionError" field="failMessage"/>
+                <set field="hasPermission" type="Boolean" value="false"/>
+                <field-to-result field="hasPermission"/>
+                <field-to-result field="failMessage"/>
+            </else>
+        </if-empty>
+    </simple-method>
 
     <!-- ================================================================ -->
     <!-- ProductRole Services -->
@@ -722,7 +739,7 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductRole"/>
+        <make-value entity-name="ProductRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
@@ -738,7 +755,7 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductRole"/>
+        <make-value entity-name="ProductRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
@@ -750,7 +767,7 @@ under the License.
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="lookupPKMap" entity-name="ProductRole"/>
+        <make-value entity-name="ProductRole" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductRole" map="lookupPKMap" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
@@ -758,41 +775,41 @@ under the License.
 
     <simple-method method-name="createVendorProduct" short-description="Create a VendorProduct">
         <make-value entity-name="VendorProduct" value-field="newEntity"/>
-        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
 
     <simple-method method-name="deleteVendorProduct" short-description="Remove the VendorProduct">
         <make-value entity-name="VendorProduct" value-field="lookedUpValue"/>
-        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-pk-fields map="parameters" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
     <!-- ProductCategoryGlAccount methods -->
-    <simple-method method-name="createProductCategoryGlAccount" short-description="Create an ProductCategoryGlAccount">
+    <simple-method method-name="createProductCategoryGlAccount" short-description="Create a ProductCategoryGlAccount">
         <set value="createProductCategoryGlAccount" field="callingMethodName"/>
         <set value="CREATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="ProductCategoryGlAccount"/>
+        <make-value entity-name="ProductCategoryGlAccount" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="updateProductCategoryGlAccount" short-description="Update an ProductCategoryGlAccount">
+    <simple-method method-name="updateProductCategoryGlAccount" short-description="Update a ProductCategoryGlAccount">
         <set value="updateProductCategoryGlAccount" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <entity-one entity-name="ProductCategoryGlAccount" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 
-    <simple-method method-name="deleteProductCategoryGlAccount" short-description="Delete an ProductCategoryGlAccount">
+    <simple-method method-name="deleteProductCategoryGlAccount" short-description="Delete a ProductCategoryGlAccount">
         <set value="deleteProductCategoryGlAccount" field="callingMethodName"/>
         <set value="DELETE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
@@ -807,15 +824,15 @@ under the License.
         <make-value entity-name="ProductGroupOrder" value-field="newEntity"/>
         <make-next-seq-id value-field="newEntity" seq-field-name="groupOrderId"/>
         <field-to-result field="newEntity.groupOrderId" result-name="groupOrderId"/>
-        <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <create-value value-field="newEntity"/>
     </simple-method>
 
     <simple-method method-name="updateProductGroupOrder" short-description="Update ProductGroupOrder">
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
-        <set-nonpk-fields value-field="productGroupOrder" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="productGroupOrder"/>
         <store-value value-field="productGroupOrder"/>
-        
+
         <if-compare field="productGroupOrder.statusId" operator="equals" value="GO_CREATED">
             <entity-one entity-name="JobSandbox" value-field="jobSandbox">
                 <field-map field-name="jobId" from-field="productGroupOrder.jobId"/>
@@ -831,25 +848,25 @@ under the License.
         <entity-and entity-name="OrderItemGroupOrder" list="orderItemGroupOrders">
             <field-map field-name="groupOrderId" from-field="parameters.groupOrderId"/>
         </entity-and>
-        <iterate entry="orderItemGroupOrder" list="orderItemGroupOrders">
+        <iterate list="orderItemGroupOrders" entry="orderItemGroupOrder">
             <remove-value value-field="orderItemGroupOrder"/>
         </iterate>
-        
+
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
         <remove-value value-field="productGroupOrder"/>
-        
+
         <entity-one entity-name="JobSandbox" value-field="jobSandbox">
             <field-map field-name="jobId" from-field="productGroupOrder.jobId"/>
         </entity-one>
         <remove-value value-field="jobSandbox"/>
-        
+
         <entity-and entity-name="JobSandbox" list="jobSandboxList">
             <field-map field-name="runtimeDataId" from-field="jobSandbox.runtimeDataId"/>
         </entity-and>
-        <iterate entry="jobSandboxRelatedRuntimeData" list="jobSandboxList">
+        <iterate list="jobSandboxList" entry="jobSandboxRelatedRuntimeData">
             <remove-value value-field="jobSandboxRelatedRuntimeData"/>
         </iterate>
-        
+
         <entity-one entity-name="RuntimeData" value-field="runtimeData">
             <field-map field-name="runtimeDataId" from-field="jobSandbox.runtimeDataId"/>
         </entity-one>
@@ -893,7 +910,7 @@ under the License.
         <entity-and entity-name="OrderItem" list="orderItems">
             <field-map field-name="orderId" from-field="parameters.orderId"/>
         </entity-and>
-        <iterate entry="orderItem" list="orderItems">
+        <iterate list="orderItems" entry="orderItem">
             <set field="productId" from-field="orderItem.productId"/>
             <entity-one entity-name="Product" value-field="product">
                 <field-map field-name="productId" from-field="orderItem.productId"/>
@@ -903,7 +920,7 @@ under the License.
                     <field-map field-name="productIdTo" from-field="orderItem.productId"/>
                     <field-map field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>
                 </entity-and>
-                <first-from-list entry="variantProductAssoc" list="variantProductAssocs"/>
+                <first-from-list list="variantProductAssocs" entry="variantProductAssoc"/>
                 <set field="productId" from-field="variantProductAssoc.productId"/>
             </if-compare>
 
@@ -911,14 +928,14 @@ under the License.
                 <field-map field-name="productId" from-field="productId"/>
             </entity-and>
             <if-not-empty field="productGroupOrders">
-                <first-from-list entry="productGroupOrder" list="productGroupOrders"/>
+                <first-from-list list="productGroupOrders" entry="productGroupOrder"/>
                 <calculate field="productGroupOrder.soldOrderQty">
-                    <calcop field="productGroupOrder.soldOrderQty" operator="add">
-                        <calcop field="orderItem.quantity" operator="get"/>
+                    <calcop operator="add" field="productGroupOrder.soldOrderQty">
+                        <calcop operator="get" field="orderItem.quantity"/>
                     </calcop>
                 </calculate>
                 <store-value value-field="productGroupOrder"/>
-                
+
                 <set field="createOrderItemGroupOrderMap.orderId" from-field="orderItem.orderId"/>
                 <set field="createOrderItemGroupOrderMap.orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
                 <set field="createOrderItemGroupOrderMap.groupOrderId" from-field="productGroupOrder.groupOrderId"/>
@@ -926,7 +943,7 @@ under the License.
             </if-not-empty>
         </iterate>
     </simple-method>
-    
+
     <simple-method method-name="cancleOrderItemGroupOrder" short-description="Cancle OrderItemGroupOrder">
         <if-not-empty field="parameters.orderItemSeqId">
             <entity-and entity-name="OrderItem" list="orderItems">
@@ -939,13 +956,13 @@ under the License.
             </entity-and>
         </else>
         </if-not-empty>
-        <iterate entry="orderItem" list="orderItems">
+        <iterate list="orderItems" entry="orderItem">
             <entity-and entity-name="OrderItemGroupOrder" list="orderItemGroupOrders">
                 <field-map field-name="orderId" from-field="orderItem.orderId"/>
                 <field-map field-name="orderItemSeqId" from-field="orderItem.orderItemSeqId"/>
             </entity-and>
             <if-not-empty field="orderItemGroupOrders">
-                <first-from-list entry="orderItemGroupOrder" list="orderItemGroupOrders"/>
+                <first-from-list list="orderItemGroupOrders" entry="orderItemGroupOrder"/>
                 <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder">
                     <field-map field-name="groupOrderId" from-field="orderItemGroupOrder.groupOrderId"/>
                 </entity-one>
@@ -959,8 +976,8 @@ under the License.
                             </else>
                             </if-not-empty>
                             <calculate field="productGroupOrder.soldOrderQty">
-                                <calcop field="productGroupOrder.soldOrderQty" operator="subtract">
-                                    <calcop field="cancelQuantity" operator="get"/>
+                                <calcop operator="subtract" field="productGroupOrder.soldOrderQty">
+                                    <calcop operator="get" field="cancelQuantity"/>
                                 </calcop>
                             </calculate>
                         </if-compare>
@@ -971,7 +988,7 @@ under the License.
             </if-not-empty>
         </iterate>
     </simple-method>
-    
+
     <simple-method method-name="checkProductGroupOrderExpired" short-description="Check ProductGroupOrder Expired">
         <entity-one entity-name="ProductGroupOrder" value-field="productGroupOrder"/>
         <if-not-empty field="productGroupOrder">
@@ -983,15 +1000,15 @@ under the License.
                 <set field="groupOrderStatusId" value="GO_CANCELLED"/>
             </else>
             </if-compare>
-            
+
             <set field="updateProductGroupOrderMap.groupOrderId" from-field="productGroupOrder.groupOrderId"/>
             <set field="updateProductGroupOrderMap.statusId" from-field="groupOrderStatusId"/>
             <call-service service-name="updateProductGroupOrder" in-map-name="updateProductGroupOrderMap"/>
-            
+
             <entity-and entity-name="OrderItemGroupOrder" list="orderItemGroupOrders">
                 <field-map field-name="groupOrderId" from-field="productGroupOrder.groupOrderId"/>
             </entity-and>
-            <iterate entry="orderItemGroupOrder" list="orderItemGroupOrders">
+            <iterate list="orderItemGroupOrders" entry="orderItemGroupOrder">
                 <set field="changeOrderItemStatusMap.orderId" from-field="orderItemGroupOrder.orderId"/>
                 <set field="changeOrderItemStatusMap.orderItemSeqId" from-field="orderItemGroupOrder.orderItemSeqId"/>
                 <set field="changeOrderItemStatusMap.statusId" from-field="newItemStatusId"/>
@@ -999,14 +1016,14 @@ under the License.
             </iterate>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="setProductReviewStatus" short-description="change the product review Status">
         <set value="setProductReviewStatus" field="callingMethodName"/>
         <set value="UPDATE" field="checkAction"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
-        
-        <entity-one value-field="productReview" entity-name="ProductReview"/>
+
+        <entity-one entity-name="ProductReview" value-field="productReview"/>
         <if-not-empty field="productReview">
             <if-compare-field field="productReview.statusId" to-field="parameters.statusId" operator="not-equals">
                 <entity-one entity-name="StatusValidChange" value-field="statusChange">
@@ -1023,82 +1040,82 @@ under the License.
             </if-compare-field>
         </if-not-empty>
         <check-errors/>
-        
+
         <set field="productReview.statusId" from-field="parameters.statusId"/>
         <store-value value-field="productReview"/>
         <field-to-result field="productReview.productReviewId" result-name="productReviewId"/>
     </simple-method>
-    
+
     <!-- ================================================================ -->
     <!-- SCIPIO: NEW Versatile Services (with stock-like functionality) -->
     <!-- ================================================================ -->
-    
+
     <simple-method method-name="createProductAndCatAssocVersatile">
-        <set-service-fields service-name="createProduct" to-map="createRecordCtx" map="parameters"/>
+        <set-service-fields service-name="createProduct" map="parameters" to-map="createRecordCtx"/>
         <call-service service-name="createProduct" in-map-name="createRecordCtx">
             <result-to-field result-name="productId" field="parameters.productId"/>
             <result-to-result result-name="productId"/>
         </call-service>
-        
-        <set-service-fields service-name="addProductToCategory" to-map="createAssocCtx" map="parameters"/>
+
+        <set-service-fields service-name="addProductToCategory" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
             <result-to-result result-name="productCategoryId"/>
             <result-to-result result-name="fromDate"/>
         </call-service>
-        
+
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
-            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="updateProductAndCatAssocVersatile">
-        <set-service-fields service-name="updateProduct" to-map="updateRecordCtx" map="parameters"/>
+        <set-service-fields service-name="updateProduct" map="parameters" to-map="updateRecordCtx"/>
         <call-service service-name="updateProduct" in-map-name="updateRecordCtx"/>
-        
-        <set-service-fields service-name="updateProductToCategory" to-map="updateAssocCtx" map="parameters"/>
+
+        <set-service-fields service-name="updateProductToCategory" map="parameters" to-map="updateAssocCtx"/>
         <call-service service-name="updateProductToCategory" in-map-name="updateAssocCtx"/>
-        
+
         <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
-            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" map="parameters" to-map="updateLocTextCtx"/>
             <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductCatAssocVersatile">
         <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
             <!-- FIXME?: check if already expired?? -->
-            <set-service-fields service-name="updateProductToCategory" to-map="updateCtx" map="parameters"/>
+            <set-service-fields service-name="updateProductToCategory" map="parameters" to-map="updateCtx"/>
             <now-timestamp field="updateCtx.thruDate"/>
             <call-service service-name="updateProductToCategory" in-map-name="updateCtx"/>
             <else>
-                <set-service-fields service-name="removeProductFromCategory" to-map="removeCtx" map="parameters"/>
+                <set-service-fields service-name="removeProductFromCategory" map="parameters" to-map="removeCtx"/>
                 <call-service service-name="removeProductFromCategory" in-map-name="removeCtx"/>
             </else>
         </if-compare>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductAndRelatedVersatile">
         <set field="callingMethodName" value="deleteProductAndRelatedVersatile"/>
         <set field="checkAction" value="DELETE"/>
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
-        
+
         <entity-one entity-name="Product" value-field="product"/>
         <if-empty field="product">
             <property-to-field resource="ProductUiLabels" property="ProductProductNotFound" field="errMsgStr" />
             <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
             <check-errors/>
         </if-empty>
-        
+
         <set field="prodIdMap.productId" from-field="parameters.productId"/>
-        
-        <!-- 
+
+        <!--
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             SCIPIO: 2017-10-31: WARN: This service is WIP and may be dangerous - currently best-effort only
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         -->
-        
+
         <!-- remove "to"/"child" associated products recursively + associations -->
         <set field="assocProdFilterByDate" set-if-null="true" value=""/>
         <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="all">
@@ -1121,9 +1138,9 @@ under the License.
                     </condition-list>
                 </condition-list>
             </entity-condition>
-            <iterate entry="productAssoc" list="productAssocList">
+            <iterate list="productAssocList" entry="productAssoc">
                 <set field="productAssocRemoveCtx" set-if-null="true" value=""/>
-                <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="productAssocRemoveCtx" map="parameters"/>
+                <set-service-fields service-name="deleteProductAndRelatedVersatile" map="parameters" to-map="productAssocRemoveCtx"/>
                 <set field="productAssocRemoveCtx.productId" from-field="productAssoc.productId"/>
                 <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="productAssocRemoveCtx"/>
             </iterate>
@@ -1131,7 +1148,7 @@ under the License.
 
         <!-- remove all "to"/"child" assoc -->
         <remove-by-and entity-name="ProductAssoc" map="prodIdMap"/>
-        
+
         <!-- remove "from"/"parent" assoc to this product -->
         <set field="prodIdToMap.productIdTo" from-field="parameters.productId"/>
         <remove-by-and entity-name="ProductAssoc" map="prodIdToMap"/>
@@ -1143,14 +1160,14 @@ under the License.
         <remove-by-and entity-name="ProductGeo" map="prodIdMap"/>
         <remove-by-and entity-name="ProductPriceChange" map="prodIdMap"/>
         <remove-by-and entity-name="ProductPrice" map="prodIdMap"/>
-        
+
         <remove-by-and entity-name="ProductConfig" map="prodIdMap"/>
         <remove-by-and entity-name="ProductConfigProduct" map="prodIdMap"/>
         <remove-by-and entity-name="ProductConfigStats" map="prodIdMap"/>
         <remove-by-and entity-name="ConfigOptionProductOption" map="prodIdMap"/>
-        
+
         <remove-by-and entity-name="GoodIdentification" map="prodIdMap"/>
-        
+
         <!-- According to Ofbiz schema, it is illegal to remove this, so...
         <entity-and entity-name="InventoryItem" list="inventoryItemList">
             <field-map field-name="productId" from-field="prodIdMap.productId"/>
@@ -1161,20 +1178,20 @@ under the License.
         </iterate>
         <remove-by-and entity-name="InventoryItemTempRes" map="prodIdMap"/>
         -->
-         
+
         <remove-by-and entity-name="ProductPaymentMethodType" map="prodIdMap"/>
 
-        <!-- TODO: REVIEW: 
+        <!-- TODO: REVIEW:
             FixedAsset -> instanceOfProductId
             FixedAssetProduct
             InvoiceItem
             ProductAverageCost
-            
+
             ProductManufacturingRule
             MrpEvent
-            
+
             SalesForecastDetail
-            
+
             // NOT deleting these - destroy order history!
             OrderItem
             OrderSummaryEntry
@@ -1185,16 +1202,16 @@ under the License.
             ReturnItem
             CartAbandonedLine
             ShoppingListItem
-            
+
             Agreement
             AgreementProductAppl
             CommunicationEventProduct
             PartyNeed
-            
+
             ShipmentReceipt
             ShipmentItem
             ShipmentPackageContent
-            
+
             CostComponent
             ProductCostComponentCalc
             ProductFacility
@@ -1215,7 +1232,7 @@ under the License.
             ReorderGuideline
             SupplierProduct
             ProductGroupOrder
-            
+
             WorkEffortGoodStandard
         -->
 
@@ -1239,7 +1256,7 @@ under the License.
                      -->
                 </condition-list>
             </entity-condition>
-            <iterate entry="productContent" list="recursiveContentList">
+            <iterate list="recursiveContentList" entry="productContent">
                 <set field="contentRemoveCtx" set-if-null="true" value=""/>
                 <set field="contentRemoveCtx.contentId" from-field="productContent.contentId"/>
                 <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
@@ -1259,13 +1276,13 @@ under the License.
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="all">
             <remove-by-and entity-name="ProductCategoryMember" map="prodIdMap"/>
         </if-compare>
-        
+
         <if-compare field="parameters.deleteChildrenSelect" operator="equals" value="recursive">
             <!-- TODO?: This will be very destructive... remove related:
                 Product
             -->
         </if-compare>
-        
+
         <if-compare field="parameters.deleteChildAssocSelect" operator="equals" value="expired">
             <!-- TODO -->
         </if-compare>
@@ -1282,17 +1299,17 @@ under the License.
         </if-compare>
 
         <!-- we wrote this so we know what it does
-        <set-service-fields service-name="deleteProduct" to-map="deleteRecordCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProduct" map="parameters" to-map="deleteRecordCtx"/>
         <call-service service-name="deleteProduct" in-map-name="deleteRecordCtx"/>-->
         <remove-value value-field="product"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteProductAndCatAssocVersatile">
-        <set-service-fields service-name="deleteProductCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
-        
+
         <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
-            <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="deleteRecordCtx" map="parameters"/>
+            <set-service-fields service-name="deleteProductAndRelatedVersatile" map="parameters" to-map="deleteRecordCtx"/>
             <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
         </if-compare>
     </simple-method>
@@ -1307,8 +1324,8 @@ under the License.
             <add-error><fail-property resource="ProductErrorUiLabels" property="productservices.could_not_create_product_category_assoc_association_exists"/></add-error>
             <check-errors/>
         </if-not-empty>
-        
-        <set-service-fields service-name="addProductToCategory" to-map="createAssocCtx" map="parameters"/>
+
+        <set-service-fields service-name="addProductToCategory" map="parameters" to-map="createAssocCtx"/>
         <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
             <result-to-result result-name="productCategoryId"/>
             <result-to-result result-name="productId"/>
@@ -1328,27 +1345,27 @@ under the License.
             <result-to-field result-name="productCategoryId" field="resultFields.productCategoryId"/>
         </call-service>
 
-        <field-to-result result-name="productId" field="resultFields.productId"/>
+        <field-to-result field="resultFields.productId" result-name="productId"/>
         <if-compare field="parameters.returnAssocFields" operator="equals" type="Boolean" value="true">
-            <field-to-result result-name="fromDate" field="resultFields.fromDate"/>
-            <field-to-result result-name="sequenceNum" field="resultFields.sequenceNum"/>
-            <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
+            <field-to-result field="resultFields.fromDate" result-name="fromDate"/>
+            <field-to-result field="resultFields.sequenceNum" result-name="sequenceNum"/>
+            <field-to-result field="resultFields.productCategoryId" result-name="productCategoryId"/>
         </if-compare>
-        <field-to-result result-name="to_productId" field="resultFields.productId"/>
-        <field-to-result result-name="to_fromDate" field="resultFields.fromDate"/>
-        <field-to-result result-name="to_sequenceNum" field="resultFields.sequenceNum"/>
-        <field-to-result result-name="to_productCategoryId" field="resultFields.productCategoryId"/>
+        <field-to-result field="resultFields.productId" result-name="to_productId"/>
+        <field-to-result field="resultFields.fromDate" result-name="to_fromDate"/>
+        <field-to-result field="resultFields.sequenceNum" result-name="to_sequenceNum"/>
+        <field-to-result field="resultFields.productCategoryId" result-name="to_productCategoryId"/>
     </simple-method>
-    
+
     <simple-method method-name="moveProductCatAssocVersatile">
-        <set-service-fields service-name="deleteProductCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <set-service-fields service-name="deleteProductCatAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
         <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
-            
+
         <!-- move is simply delete + copy for us -->
         <call-simple-method method-name="copyProductCatAssocVersatile"/>
         <check-errors/>
     </simple-method>
-    
+
     <simple-method method-name="getProductExtendedDataVersatile">
         <entity-one entity-name="Product" value-field="product"/>
         <field-to-result field="product"/>
@@ -1357,8 +1374,8 @@ under the License.
             <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
             <check-errors/>
         </if-empty>
-        
-        <set-service-fields service-name="getProductContentLocalizedSimpleTextViews" to-map="locTextCtx" map="parameters"/>
+
+        <set-service-fields service-name="getProductContentLocalizedSimpleTextViews" map="parameters" to-map="locTextCtx"/>
         <call-service service-name="getProductContentLocalizedSimpleTextViews" in-map-name="locTextCtx">
             <result-to-result result-name="viewsByType"/>
             <result-to-result result-name="viewsByTypeAndLocale"/>

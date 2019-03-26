@@ -15,6 +15,7 @@
         <implements service="permissionInterface"/>
     </service>
 
+    <!-- TODO?: CmsServices.getAdminDescriptors does not exist
     <service name="cmsGetAdminDescriptors" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.CmsServices" invoke="getAdminDescriptors">
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
@@ -22,6 +23,7 @@
         <attribute name="assetTemplates" mode="OUT" type="Array" optional="false"/>
         <attribute name="pages" mode="OUT" type="Array" optional="false"/>
     </service>
+    -->
 
     <service name="cmsExportDataFormatInterface" engine="interface">
         <description>CMS data export functionality formatting options</description>
@@ -169,7 +171,8 @@
     </service>
 
     <service name="cmsImportXmlData" engine="java" auth="true"
-        location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="importXmlData">
+        location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="importXmlData"
+        use-transaction="false"><!-- NOTE: The service itself must set up the transaction timeout and start the transaction -->
         <description>Imports CMS data</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="entityImport"/>
@@ -191,6 +194,7 @@
         <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
         <attribute name="pageId" type="String" mode="OUT" optional="false"/>
     </service>
 
@@ -221,6 +225,7 @@
         </attribute>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+         <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
     </service>
 
@@ -310,6 +315,7 @@
     <service name="cmsUpdateScriptAssocInterface" engine="interface">
         <attribute name="scriptAssocId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/><!-- always optional and should not be passed if scriptAssocId is passed -->
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="scriptLang" type="String" mode="IN" optional="true"/>
@@ -356,6 +362,7 @@
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
         <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsCopyPageTemplate" engine="java" auth="true"
@@ -377,6 +384,7 @@
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" mode="IN" type="String" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsGetPageTemplate" engine="java"
@@ -525,6 +533,7 @@
         <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
         <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsCopyAsset" engine="java"
@@ -546,6 +555,7 @@
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="contentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsGetAssetTemplateTypes" engine="java"
@@ -649,6 +659,7 @@
         <description>Creates a new asset</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="scriptTemplateId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptLang" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
@@ -670,13 +681,14 @@
         <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>-->
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="scriptTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="scriptTemplateId" type="String" mode="INOUT" optional="false"/>
     </service>
 
     <service name="cmsUpdateScriptTemplateInfo" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="updateScriptTemplateInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="scriptTemplateId" mode="IN" type="String" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
@@ -735,11 +747,8 @@
     <!-- ========================================================= -->
     <!-- Media services -->
     <!-- ========================================================= -->
-
-    <service name="cmsUploadMediaFile" engine="java"
-        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFile" auth="true" transaction-timeout="7200">
-        <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
-        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+    <!-- SCIPIO (17/12/2018): Moved to an interface so different services can reuse it -->
+    <service name="cmsUploadMediaFileInterface" engine="interface">
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false"/>
         <attribute mode="IN" name="contentName" type="String" optional="false"/>
         <attribute mode="IN" name="dataResourceTypeId" type="String" optional="false"/>
@@ -749,12 +758,45 @@
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
-        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
+        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>        
+        
+        <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
-      <!--   <attribute mode="OUT" name="organizationPartyId" type="String" optional="false"/> -->
+        <!--   <attribute mode="OUT" name="organizationPartyId" type="String" optional="false"/> -->
     </service>
+    
+    <!-- SCIPIO (17/12/2018): Attributes move to cmsUploadMediaFileInterface -->
+    <service name="cmsUploadMediaFile" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFile" auth="true" transaction-timeout="7200">
+        <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <implements service="cmsUploadMediaFileInterface"/>
+    </service>
+    
+    <service name="cmsUploadMediaFileImageCustomVariantSizes" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFileImageCustomVariantSizes" auth="true" transaction-timeout="7200">
+        <description>Imports and processes a image media file using custom variant sizes.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <implements service="cmsUploadMediaFileInterface"/>
+        <attribute mode="IN" name="customVariantSizeMethod" type="String" optional="false"/>
+        <attribute mode="IN" name="customVariantSizesImgProps" type="String" optional="true"/>
+        <attribute mode="IN" name="customVariantSizesPreset" type="String" optional="true"/>
+        <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
+        <attribute mode="IN" name="saveAsPreset" type="Boolean" optional="true"/>
+        <attribute mode="IN" name="presetName" type="String" optional="true"/>
+        
+        <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
+        <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
+        <attribute mode="IN" name="viewPortLength" type="List" optional="true"/>
+        <attribute mode="IN" name="viewPortSequenceNum" type="List" optional="true"/>
+    </service>
+    
     <service name="cmsUpdateMediaFile" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="updateMediaFile" auth="true" transaction-timeout="7200">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
@@ -786,6 +828,10 @@
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
         </attribute>
+        <!-- SCIPIO (12/17/2018): Allowing custom image variant sizes config -->
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
+        <!-- SCIPIO (01/19/2019): Passing custom image sizes for responsive images -->
+        <attribute mode="IN" name="customImageSizes" type="List" optional="true"/>
     </service>
     <service name="cmsRemoveMediaVariants" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="removeMediaVariants" auth="true" transaction-timeout="14400">
@@ -813,6 +859,24 @@
         <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="listSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="mediaFiles" type="List" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="cmsCreateCustomImageSizePreset" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="createCustomImageSizePreset" auth="true" transaction-timeout="7200">
+        <description>Creates custom image media presets.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
+        <attribute mode="IN" name="presetName" type="String" optional="true"/>
+    </service>
+
+    <service name="cmsUpdateCustomImageSizePreset" default-entity-name="ImageSizePreset" engine="entity-auto" invoke="update" auth="true">
+        <description>Updates custom image media presets.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- ========================================================= -->

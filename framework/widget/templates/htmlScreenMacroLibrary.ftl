@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "htmlCommonMacroLibrary.ftl">
 <#-- 
@@ -47,7 +34,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#if>
 </#macro>
 
-<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval extraArgs...>
+<#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval type="" extraArgs...>
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${escapeVal(id, 'js')}', '${escapeFullUrl(autoUpdateLink, 'js')}', '', '${autoUpdateInterval}');</@script>
   </#if>
@@ -60,6 +47,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#local parts = style?split(":")>
     <#local elem = parts[0]>
     <#local style = parts[1]>
+  </#if>
+  <#if !elem?has_content>
+    <#local elem = type><#-- 2018-09-04 -->
   </#if>
   <#-- SCIPIO: delegate to scipio libs -->
   <@container open=true close=false class=style id=id elem=elem />
@@ -99,7 +89,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderLink parameterList targetWindow target uniqueItemName linkType actionUrl id style name height width linkUrl text imgStr extraArgs...>
-    <#if "ajax-window" != linkType>
+    <#if "layered-modal" != linkType>
         <#if "hidden-form" == linkType>
             <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(uniqueItemName, 'html')}"><#rt/>
                 <#list parameterList as parameter>
@@ -277,7 +267,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${rawString(endClassStr)}">
+    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${raw(endClassStr)}">
     <@cell open=true close=false class=portalPageClasses />
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">

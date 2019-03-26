@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.Set;
 
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
@@ -65,7 +64,7 @@ public class ControllerViewArtifactInfo extends ArtifactInfoBase {
                 this.screenCalledByThisView = this.aif.getScreenWidgetArtifactInfo(fullScreenName.substring(poundIndex+1), fullScreenName.substring(0, poundIndex));
                 if (this.screenCalledByThisView != null) {
                     // add the reverse association
-                    UtilMisc.addToSortedSetInMap(this, aif.allViewInfosReferringToScreen, this.screenCalledByThisView.getUniqueId());
+                    addToSortedSetInMap(this, aif.allViewInfosReferringToScreen, this.screenCalledByThisView.getUniqueId()); // SCIPIO: switched method
                 }
             }
         }
@@ -82,6 +81,9 @@ public class ControllerViewArtifactInfo extends ArtifactInfoBase {
     @Override
     public String getDisplayName() {
         String location = UtilURL.getOfbizHomeRelativeLocation(this.controllerXmlUrl);
+        if (location == null) { // SCIPIO: Method may return null
+            location = "";
+        }
         if (location.endsWith("/WEB-INF/controller.xml")) {
             location = location.substring(0, location.length() - 23);
         }

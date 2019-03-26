@@ -18,23 +18,42 @@
  *******************************************************************************/
 package org.ofbiz.entity.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntitySaxReader;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class EntitySaxReaderTests {
+    private boolean logVerboseOn;
+
+    @Before
+    public void initialize() {
+        logVerboseOn = Debug.isOn(Debug.VERBOSE); // save the current setting (to be restored after the tests)
+        Debug.set(Debug.VERBOSE, false); // disable verbose logging: this is necessary to avoid a test error in the "parse" unit test
+    }
+
+    @After
+    public void restore() {
+        Debug.set(Debug.VERBOSE, logVerboseOn); // restore the verbose log setting
+    }
+
     @Test
     public void constructorWithDefaultTimeout() {
         Delegator delegator = mock(Delegator.class);
         EntitySaxReader esr = new EntitySaxReader(delegator); // create a reader with default tx timeout
         verify(delegator).cloneDelegator();
         verifyNoMoreInteractions(delegator);
-        assertEquals(esr.DEFAULT_TX_TIMEOUT, esr.getTransactionTimeout());
+        assertEquals(EntitySaxReader.DEFAULT_TX_TIMEOUT, esr.getTransactionTimeout());
     }
 
     @Test

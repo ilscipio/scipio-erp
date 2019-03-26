@@ -18,13 +18,13 @@
  *******************************************************************************/
 package org.ofbiz.entity.finder;
 
-import java.util.Map;
 import java.io.Serializable;
-import org.w3c.dom.Element;
+import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
+import org.w3c.dom.Element;
 
 @SuppressWarnings("serial")
 public abstract class Finder implements Serializable {
@@ -39,7 +39,9 @@ public abstract class Finder implements Serializable {
     public String getEntityName() {
         String entName = this.entityNameExdr.getOriginal();
         // if there is expansion syntax
-        if (entName.indexOf("${") >= 0) return null;
+        if (entName.indexOf("${") >= 0) {
+            return null;
+        }
         return entName;
     }
 

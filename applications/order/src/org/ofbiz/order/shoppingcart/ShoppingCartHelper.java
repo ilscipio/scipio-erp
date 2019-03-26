@@ -68,14 +68,16 @@ public class ShoppingCartHelper {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
+    // SCIPIO: 2018-11: Fields now final.
+
     // The shopping cart to manipulate
-    private ShoppingCart cart = null;
+    private final ShoppingCart cart;
 
     // The entity engine delegator
-    private Delegator delegator = null;
+    private final Delegator delegator;
 
     // The service invoker
-    private LocalDispatcher dispatcher = null;
+    private final LocalDispatcher dispatcher;
 
     /**
      * Changes will be made to the cart directly, as opposed
@@ -85,12 +87,12 @@ public class ShoppingCartHelper {
      */
     public ShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
         this.dispatcher = dispatcher;
+        if (delegator == null) {
+            delegator = dispatcher.getDelegator();
+        }
         this.delegator = delegator;
         this.cart = cart;
 
-        if (delegator == null) {
-            this.delegator = dispatcher.getDelegator();
-        }
         if (dispatcher == null) {
             throw new IllegalArgumentException("Dispatcher argument is null");
         }
@@ -147,7 +149,7 @@ public class ShoppingCartHelper {
 
         // check desiredDeliveryDate syntax and remove if empty
         String ddDate = (String) context.get("itemDesiredDeliveryDate");
-        if (!UtilValidate.isEmpty(ddDate)) {
+        if (UtilValidate.isNotEmpty(ddDate)) {
             try {
                 java.sql.Timestamp.valueOf((String) context.get("itemDesiredDeliveryDate"));
             } catch (IllegalArgumentException e) {
@@ -164,7 +166,7 @@ public class ShoppingCartHelper {
         }
 
         // stores the default desired delivery date in the cart if need
-        if (!UtilValidate.isEmpty(context.get("useAsDefaultDesiredDeliveryDate"))) {
+        if (UtilValidate.isNotEmpty(context.get("useAsDefaultDesiredDeliveryDate"))) {
             cart.setDefaultItemDeliveryDate((String) context.get("itemDesiredDeliveryDate"));
         } else {
             // do we really want to clear this if it isn't checked?
@@ -172,7 +174,7 @@ public class ShoppingCartHelper {
         }
 
         // stores the default comment in session if need
-        if (!UtilValidate.isEmpty(context.get("useAsDefaultComment"))) {
+        if (UtilValidate.isNotEmpty(context.get("useAsDefaultComment"))) {
             cart.setDefaultItemComment((String) context.get("itemComment"));
         } else {
             // do we really want to clear this if it isn't checked?
@@ -180,11 +182,12 @@ public class ShoppingCartHelper {
         }
 
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
-        for (int namesIdx = 0; namesIdx < ShoppingCartItem.attributeNames.length; namesIdx++) {
-            if (attributes == null)
-                attributes = new HashMap<String, Object>();
-            if (context.containsKey(ShoppingCartItem.attributeNames[namesIdx])) {
-                attributes.put(ShoppingCartItem.attributeNames[namesIdx], context.get(ShoppingCartItem.attributeNames[namesIdx]));
+        for (String attributeName : ShoppingCartItem.attributeNames) {
+            if (attributes == null) {
+                attributes = new HashMap<>();
+            }
+            if (context.containsKey(attributeName)) {
+                attributes.put(attributeName, context.get(attributeName));
             }
         }
 
@@ -201,16 +204,14 @@ public class ShoppingCartHelper {
             }
             Debug.logInfo("carthelper productid " + productId,module);
             Debug.logInfo("parent productid " + pProductId,module);
-            //if (product != null && !"Y".equals(product.getString("isVariant")))
-            //    pProductId = null;
-
         }
 
         // Get the additional features selected for the product (if any)
         Map<String, Object> selectedFeatures = UtilHttp.makeParamMapWithPrefix(context, null, "FT", null);
-        Map<String, GenericValue> additionalFeaturesMap = new HashMap<String, GenericValue>();
-        for (String selectedFeatureType : selectedFeatures.keySet()) {
-            String selectedFeatureValue = (String)selectedFeatures.get(selectedFeatureType);
+        Map<String, GenericValue> additionalFeaturesMap = new HashMap<>();
+        for (Entry<String, Object> entry : selectedFeatures.entrySet()) {
+            String selectedFeatureType = entry.getKey();
+            String selectedFeatureValue = (String) entry.getValue();
             if (UtilValidate.isNotEmpty(selectedFeatureValue)) {
                 GenericValue productFeatureAndAppl = null;
                 try {
@@ -221,7 +222,7 @@ public class ShoppingCartHelper {
                 } catch (GenericEntityException gee) {
                     Debug.logError(gee, module);
                 }
-                if (UtilValidate.isNotEmpty(productFeatureAndAppl)) {
+                if (productFeatureAndAppl != null) {
                     productFeatureAndAppl.set("productFeatureApplTypeId", "STANDARD_FEATURE");
                 }
                 additionalFeaturesMap.put(selectedFeatureType, productFeatureAndAppl);
@@ -229,10 +230,10 @@ public class ShoppingCartHelper {
         }
 
         // get order item attributes
-        Map<String, String> orderItemAttributes = new HashMap<String, String>();
+        Map<String, String> orderItemAttributes = new HashMap<>();
         String orderItemAttributePrefix = EntityUtilProperties.getPropertyValue("order", "order.item.attr.prefix", delegator);
         for (Entry<String, ? extends Object> entry : context.entrySet()) {
-            if (entry.getKey().toString().contains(orderItemAttributePrefix) && UtilValidate.isNotEmpty(entry.getValue())) {
+            if (entry.getKey().contains(orderItemAttributePrefix) && UtilValidate.isNotEmpty(entry.getValue())) {
                 orderItemAttributes.put(entry.getKey().replaceAll(orderItemAttributePrefix, ""), entry.getValue().toString());
             }
         }
@@ -256,7 +257,7 @@ public class ShoppingCartHelper {
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
             }
         } catch (CartItemModifyException e) {
-            if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+            if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
                 String errMsg = UtilProperties.getMessage(resource_error, "cart.product_not_valid_for_supplier", this.cart.getLocale());
                 errMsg = errMsg + " (" + e.getMessage() + ")";
                 result = ServiceUtil.returnError(errMsg);
@@ -272,17 +273,17 @@ public class ShoppingCartHelper {
         // Indicate there were no critical errors
         result = ServiceUtil.returnSuccess();
         if (itemId != -1) {
-            result.put("itemId", new Integer(itemId));
+            result.put("itemId", itemId);
         }
         return result;
     }
 
     public Map<String, Object> addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll, String itemGroupNumber) {
-        ArrayList<String> errorMsgs = new ArrayList<String>();
+        List<String> errorMsgs = new ArrayList<>();
         Map<String, Object> result;
         String errMsg = null;
 
-        if (orderId == null || orderId.length() <= 0) {
+        if (UtilValidate.isEmpty(orderId)) {
             errMsg = UtilProperties.getMessage(resource_error,"cart.order_not_specified_to_add_from", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
@@ -322,9 +323,9 @@ public class ShoppingCartHelper {
                 orderItemTypeId = orderItem.getString("orderItemTypeId");
                 productId = orderItem.getString("productId");
                 // do not store rental items
-                if (orderItemTypeId.equals("RENTAL_ORDER_ITEM"))
+                if ("RENTAL_ORDER_ITEM".equals(orderItemTypeId)) {
                     continue;
-                // never read: int itemId = -1;
+                }
                 if (UtilValidate.isNotEmpty(productId) && orderItem.get("quantity") != null) {
                     BigDecimal amount = orderItem.getBigDecimal("selectedAmount");
                     ProductConfigWrapper configWrapper = null;
@@ -344,9 +345,7 @@ public class ShoppingCartHelper {
                         this.cart.addOrIncreaseItem(UtilValidate.isNotEmpty(aggregatedProdId) ? aggregatedProdId :  productId, amount, orderItem.getBigDecimal("quantity"),
                                 null, null, null, null, null, null, null, catalogId, configWrapper, orderItemTypeId, itemGroupNumber, null, dispatcher);
                         noItems = false;
-                    } catch (CartItemModifyException e) {
-                        errorMsgs.add(e.getMessage());
-                    } catch (ItemNotFoundException e) {
+                    } catch (CartItemModifyException | ItemNotFoundException e) {
                         errorMsgs.add(e.getMessage());
                     }
                 }
@@ -396,10 +395,8 @@ public class ShoppingCartHelper {
             String quantStr = null;
             String itemGroupNumberToUse = itemGroupNumber;
             String originalProductId = null;
-            if (entry.getKey() instanceof String) {
+            if (UtilValidate.isNotEmpty(entry.getKey())) {
                 String key = entry.getKey();
-                //Debug.logInfo("Bulk Key: " + key, module);
-
                 int ignIndex = key.indexOf(ignSeparator);
                 if (ignIndex > 0) {
                     itemGroupNumberToUse = key.substring(ignIndex + ignSeparator.length());
@@ -432,30 +429,29 @@ public class ShoppingCartHelper {
                     if(ProductWorker.isAlternativePacking(delegator, null , productId)){
                         GenericValue originalProduct = null;
                         originalProductId = productId;
-                        productId = ProductWorker.getOriginalProductId(delegator, productId);
+                        productId = ProductWorker.getAlternativePackingOriginalProductId(delegator, productId); // SCIPIO: 2019-02-28: renamed
                         try {
                             originalProduct = EntityQuery.use(delegator).from("Product").where("productId", originalProductId).queryOne();
                         } catch (GenericEntityException e) {
                             Debug.logError(e, "Error getting parent product", module);
                         }
-                        BigDecimal piecesIncluded = BigDecimal.ZERO;
                         if(originalProduct != null){
-                            piecesIncluded = new BigDecimal(originalProduct.getLong("piecesIncluded"));
+                            BigDecimal piecesIncluded = new BigDecimal(originalProduct.getLong("piecesIncluded"));
                             quantity = quantity.multiply(piecesIncluded);
                         }
                     }
 
                     try {
-                        //For quantity we should test if we allow to add decimal quantity for this product an productStore : 
+                        //For quantity we should test if we allow to add decimal quantity for this product an productStore :
                         // if not and if quantity is in decimal format then return error.
                         if(! ProductWorker.isDecimalQuantityOrderAllowed(delegator, productId, cart.getProductStoreId())){
                             BigDecimal remainder = quantity.remainder(BigDecimal.ONE);
                             if (remainder.compareTo(BigDecimal.ZERO) != 0) {
                                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "cart.addToCart.quantityInDecimalNotAllowed", this.cart.getLocale()));
                             }
-                            quantity = quantity.setScale(0, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                            quantity = quantity.setScale(0, UtilNumber.getRoundingMode("order.rounding"));
                         } else {
-                            quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                            quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getRoundingMode("order.rounding"));
                         }
                     } catch(GenericEntityException e) {
                         Debug.logError(e.getMessage(), module);
@@ -466,11 +462,11 @@ public class ShoppingCartHelper {
                     }
 
                     try {
-                        if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "] in Item Group [" + itemGroupNumber + "]", module);
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "] in Item Group [" + itemGroupNumber + "]", module);
+                        }
                         this.cart.addOrIncreaseItem(productId, null, quantity, null, null, null, null, null, null, null, catalogId, null, null, itemGroupNumberToUse, originalProductId, dispatcher);
-                    } catch (CartItemModifyException e) {
-                        return ServiceUtil.returnError(e.getMessage());
-                    } catch (ItemNotFoundException e) {
+                    } catch (CartItemModifyException | ItemNotFoundException e) {
                         return ServiceUtil.returnError(e.getMessage());
                     }
                 }
@@ -490,10 +486,6 @@ public class ShoppingCartHelper {
         boolean useRowSubmit = (!context.containsKey("_useRowSubmit"))? false :
                 "Y".equalsIgnoreCase((String)context.get("_useRowSubmit"));
 
-        // check if we are to also look in a global scope (no delimiter)
-        //boolean checkGlobalScope = (!context.containsKey("_checkGlobalScope"))? false :
-        //        "Y".equalsIgnoreCase((String)context.get("_checkGlobalScope"));
-
         // The number of multi form rows is retrieved
         int rowCount = UtilHttp.getMultiFormRowCount(context);
 
@@ -508,7 +500,7 @@ public class ShoppingCartHelper {
             String productId = null;
             String quantStr = null;
             String requirementId = null;
-            String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+            String thisSuffix = UtilHttp.getMultiRowDelimiter() + i;
             boolean rowSelected = (!context.containsKey("_rowSubmit" + thisSuffix))? false :
                     "Y".equalsIgnoreCase((String)context.get("_rowSubmit" + thisSuffix));
 
@@ -526,15 +518,16 @@ public class ShoppingCartHelper {
                 try {
                     requirement = EntityQuery.use(delegator).from("Requirement").where("requirementId", requirementId).queryOne();
                 } catch (GenericEntityException gee) {
+                    Debug.logError(gee, module);
                 }
                 if (requirement == null) {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, 
-                            "OrderRequirementDoesNotExists", 
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                            "OrderRequirementDoesNotExists",
                             UtilMisc.toMap("requirementId", requirementId), cart.getLocale()));
                 }
 
                 if (UtilValidate.isNotEmpty(quantStr)) {
-                    BigDecimal quantity = BigDecimal.ZERO;
+                    BigDecimal quantity;
                     try {
                         quantity = (BigDecimal) ObjectType.simpleTypeConvert(quantStr, "BigDecimal", null, cart.getLocale());
                     } catch (GeneralException ge) {
@@ -551,18 +544,20 @@ public class ShoppingCartHelper {
                             }
                         }
                         if (requirementAlreadyInCart) {
-                            if (Debug.warningOn()) Debug.logWarning(UtilProperties.getMessage(resource_error, "OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), cart.getLocale()), module);
+                            if (Debug.warningOn()) {
+                                Debug.logWarning(UtilProperties.getMessage(resource_error, "OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), Debug.getLogLocale()), module); // SCIPIO: log locale
+                            }
                             continue;
                         }
 
                         try {
-                            if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
+                            }
                             int index = this.cart.addOrIncreaseItem(productId, null, quantity, null, null, null, requirement.getTimestamp("requiredByDate"), null, null, null, catalogId, null, null, itemGroupNumber, null, dispatcher);
                             ShoppingCartItem sci = this.cart.items().get(index);
                             sci.setRequirementId(requirementId);
-                        } catch (CartItemModifyException e) {
-                            return ServiceUtil.returnError(e.getMessage());
-                        } catch (ItemNotFoundException e) {
+                        } catch (CartItemModifyException | ItemNotFoundException e) {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     }
@@ -579,11 +574,11 @@ public class ShoppingCartHelper {
      * quantity is 0, do not add
      */
     public Map<String, Object> addCategoryDefaults(String catalogId, String categoryId, String itemGroupNumber) {
-        ArrayList<String> errorMsgs = new ArrayList<String>();
+        List<String> errorMsgs = new ArrayList<>();
         Map<String, Object> result = null;
         String errMsg = null;
 
-        if (categoryId == null || categoryId.length() <= 0) {
+        if (UtilValidate.isEmpty(categoryId)) {
             errMsg = UtilProperties.getMessage(resource_error,"cart.category_not_specified_to_add_from", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
@@ -619,9 +614,7 @@ public class ShoppingCartHelper {
                             null, quantity, null, null, null, null, null, null, null,
                             catalogId, null, null, itemGroupNumber, null, dispatcher);
                     totalQuantity = totalQuantity.add(quantity);
-                } catch (CartItemModifyException e) {
-                    errorMsgs.add(e.getMessage());
-                } catch (ItemNotFoundException e) {
+                } catch (CartItemModifyException | ItemNotFoundException e) {
                     errorMsgs.add(e.getMessage());
                 }
             }
@@ -640,9 +633,9 @@ public class ShoppingCartHelper {
     /** Delete an item from the shopping cart. */
     public Map<String, Object> deleteFromCart(Map<String, ? extends Object> context) {
         Map<String, Object> result = null;
-        ArrayList<String> errorMsgs = new ArrayList<String>();
+        List<String> errorMsgs = new ArrayList<>();
         for (String o : context.keySet()) {
-            if (o.toUpperCase().startsWith("DELETE")) {
+            if (o.toUpperCase(Locale.getDefault()).startsWith("DELETE")) {
                 try {
                     String indexStr = o.substring(o.lastIndexOf('_') + 1);
                     int index = Integer.parseInt(indexStr);
@@ -652,7 +645,9 @@ public class ShoppingCartHelper {
                     } catch (CartItemModifyException e) {
                         errorMsgs.add(e.getMessage());
                     }
-                } catch (NumberFormatException nfe) {}
+                } catch (NumberFormatException nfe) {
+                    Debug.logError("Error deleting from cart: " + nfe.getMessage(), module);
+                }
             }
         }
 
@@ -673,10 +668,10 @@ public class ShoppingCartHelper {
             locale = this.cart.getLocale();
         }
 
-        ArrayList<ShoppingCartItem> deleteList = new ArrayList<ShoppingCartItem>();
-        ArrayList<String> errorMsgs = new ArrayList<String>();
+        List<ShoppingCartItem> deleteList = new ArrayList<>();
+        List<String> errorMsgs = new ArrayList<>();
 
-        BigDecimal oldQuantity = BigDecimal.ONE.negate();
+        BigDecimal oldQuantity;
         String oldDescription = "";
         BigDecimal oldPrice = BigDecimal.ONE.negate();
 
@@ -688,7 +683,8 @@ public class ShoppingCartHelper {
         }
 
         // TODO: This should be refactored to use UtilHttp.parseMultiFormData(parameters)
-        for (String parameterName : context.keySet()) {
+        for (Entry<String, ? extends Object> entry : context.entrySet()) {
+            String parameterName = entry.getKey();
             int underscorePos = parameterName.lastIndexOf('_');
 
             // ignore localized date input elements, just use their counterpart without the _i18n suffix
@@ -696,15 +692,17 @@ public class ShoppingCartHelper {
                 try {
                     String indexStr = parameterName.substring(underscorePos + 1);
                     int index = Integer.parseInt(indexStr);
-                    String quantString = (String) context.get(parameterName);
+                    String quantString = (String) entry.getValue();
                     BigDecimal quantity = BigDecimal.ONE.negate();
                     String itemDescription = "";
-                    if (quantString != null) quantString = quantString.trim();
+                    if (quantString != null) {
+                        quantString = quantString.trim();
+                    }
 
                     // get the cart item
                     ShoppingCartItem item = this.cart.findCartItem(index);
-                    if (parameterName.toUpperCase().startsWith("OPTION")) {
-                        if (quantString.toUpperCase().startsWith("NO^")) {
+                    if (parameterName.toUpperCase(Locale.getDefault()).startsWith("OPTION")) {
+                        if (quantString.toUpperCase(Locale.getDefault()).startsWith("NO^")) {
                             if (quantString.length() > 2) { // the length of the prefix
                                 String featureTypeId = this.getRemoveFeatureTypeId(parameterName);
                                 if (featureTypeId != null) {
@@ -717,7 +715,7 @@ public class ShoppingCartHelper {
                                 item.putAdditionalProductFeatureAndAppl(featureAppl);
                             }
                         }
-                    } else if (parameterName.toUpperCase().startsWith("DESCRIPTION")) {
+                    } else if (parameterName.toUpperCase(Locale.getDefault()).startsWith("DESCRIPTION")) {
                         itemDescription = quantString;  // the quantString is actually the description if the field name starts with DESCRIPTION
                     } else if (parameterName.startsWith("reservStart")) {
                         if (quantString.length() ==0) {
@@ -741,15 +739,17 @@ public class ShoppingCartHelper {
                     } else if (parameterName.startsWith("shipBeforeDate")) {
                         if (UtilValidate.isNotEmpty(quantString)) {
                             // input is either yyyy-mm-dd or a full timestamp
-                            if (quantString.length() == 10)
+                            if (quantString.length() == 10) {
                                 quantString += " 00:00:00.000";
+                            }
                             item.setShipBeforeDate(Timestamp.valueOf(quantString));
                         }
                     } else if (parameterName.startsWith("shipAfterDate")) {
                         if (UtilValidate.isNotEmpty(quantString)) {
                             // input is either yyyy-mm-dd or a full timestamp
-                            if (quantString.length() == 10)
+                            if (quantString.length() == 10) {
                                 quantString += " 00:00:00.000";
+                            }
                             item.setShipAfterDate(Timestamp.valueOf(quantString));
                         }
                     } else if (parameterName.startsWith("amount")) {
@@ -769,7 +769,7 @@ public class ShoppingCartHelper {
                         }
                     } else {
                         quantity = (BigDecimal) ObjectType.simpleTypeConvert(quantString, "BigDecimal", null, locale);
-                        //For quantity we should test if we allow to add decimal quantity for this product an productStore : 
+                        //For quantity we should test if we allow to add decimal quantity for this product an productStore :
                         // if not and if quantity is in decimal format then return error.
                         if (!ProductWorker.isDecimalQuantityOrderAllowed(delegator, item.getProductId(), cart.getProductStoreId()) && parameterName.startsWith("update")) {
                             BigDecimal remainder = quantity.remainder(BigDecimal.ONE);
@@ -779,10 +779,10 @@ public class ShoppingCartHelper {
                                 result = ServiceUtil.returnError(errorMsgs);
                                 return result;
                             }
-                            quantity = quantity.setScale(0, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
-                        }                
+                            quantity = quantity.setScale(0, UtilNumber.getRoundingMode("order.rounding"));
+                        }
                         else {
-                            quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getBigDecimalRoundingMode("order.rounding"));
+                            quantity = quantity.setScale(UtilNumber.getBigDecimalScale("order.decimals"), UtilNumber.getRoundingMode("order.rounding"));
                         }
                         if (quantity.compareTo(BigDecimal.ZERO) < 0) {
                             String errMsg = UtilProperties.getMessage(resource_error, "cart.quantity_not_positive_number", this.cart.getLocale());
@@ -797,14 +797,14 @@ public class ShoppingCartHelper {
                         this.cart.setShipGroupShipDatesFromItem(item);
                     }
 
-                    if (parameterName.toUpperCase().startsWith("UPDATE")) {
+                    if (parameterName.toUpperCase(Locale.getDefault()).startsWith("UPDATE")) {
                         if (quantity.compareTo(BigDecimal.ZERO) == 0) {
                             deleteList.add(item);
                         } else {
                             if (item != null) {
                                 try {
                                     // if, on a purchase order, the quantity has changed, get the new SupplierProduct entity for this quantity level.
-                                    if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+                                    if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
                                         oldQuantity = item.getQuantity();
                                         if (oldQuantity.compareTo(quantity) != 0) {
                                             // save the old description and price, in case the user wants to change those as well
@@ -854,7 +854,7 @@ public class ShoppingCartHelper {
                         }
                     }
 
-                    if (parameterName.toUpperCase().startsWith("DESCRIPTION")) {
+                    if (parameterName.toUpperCase(Locale.getDefault()).startsWith("DESCRIPTION")) {
                         if (!oldDescription.equals(itemDescription)) {
                             if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
                                 if (item != null) {
@@ -864,7 +864,7 @@ public class ShoppingCartHelper {
                         }
                     }
 
-                    if (parameterName.toUpperCase().startsWith("PRICE")) {
+                    if (parameterName.toUpperCase(Locale.getDefault()).startsWith("PRICE")) {
                         NumberFormat pf = NumberFormat.getCurrencyInstance(locale);
                         String tmpQuantity = pf.format(quantity);
                         String tmpOldPrice = pf.format(oldPrice);
@@ -879,27 +879,26 @@ public class ShoppingCartHelper {
                         }
                     }
 
-                    if (parameterName.toUpperCase().startsWith("DELETE")) {
+                    if (parameterName.toUpperCase(Locale.getDefault()).startsWith("DELETE")) {
                         deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
-                    Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
                 } catch (Exception e) {
-                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
                 }
             } // else not a parameter we need
         }
 
         // get a list of the items to delete
         if (removeSelected) {
-            for (int si = 0; si < selectedItems.length; si++) {
-                String indexStr = selectedItems[si];
+            for (String indexStr : selectedItems) {
                 ShoppingCartItem item = null;
                 try {
                     int index = Integer.parseInt(indexStr);
                     item = this.cart.findCartItem(index);
                 } catch (Exception e) {
-                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", Debug.getLogLocale())); // SCIPIO: log locale
                 }
                 if (item != null) {
                     deleteList.add(item);
@@ -910,8 +909,9 @@ public class ShoppingCartHelper {
         for (ShoppingCartItem item : deleteList) {
             int itemIndex = this.cart.getItemIndex(item);
 
-            if (Debug.infoOn())
+            if (Debug.infoOn()) {
                 Debug.logInfo("Removing item index: " + itemIndex, module);
+            }
             try {
                 this.cart.removeCartItem(itemIndex, dispatcher);
                 cart.setShipmentMethodTypeId(itemIndex, null);
@@ -1074,7 +1074,7 @@ public class ShoppingCartHelper {
         Map<String, Object> result = null;
 
         try {
-            this.cart.setCurrency(this.dispatcher,currencyUomId);
+            this.cart.setCurrency(this.dispatcher, currencyUomId);
             result = ServiceUtil.returnSuccess();
          } catch (CartItemModifyException ex) {
              result = ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderSetCurrencyError",this.cart.getLocale()) + ex.getMessage());

@@ -15,14 +15,18 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<!-- SCIPIO: DEV NOTE: THIS FILE CONTAINS CUSTOMIZATIONS; 
+    MUST BE REVIEWED AND CHANGES REAPPLIED AFTER VERSION UPDATES. -->
+<!-- SCIPIO: Platform currently cannot read the DTD properly (FIXME)
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"
+         metadata-complete="true"
+>-->
+<web-app version="3.0"
          metadata-complete="true"
 >
-  <!-- SCIPIO: DEV NOTE: THIS FILE CONTAINS CUSTOMIZATIONS; 
-    MUST BE REVIEWED AND CHANGES REAPPLIED AFTER VERSION UPDATES. -->
 
   <!-- Uncomment if you are trying to use a Resin version before 3.0.19.
     Their XML implementation isn't entirely compatible with Xerces.
@@ -168,6 +172,17 @@
     <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
     <mime-type>application/xslt+xml</mime-type>
   </mime-mapping>
+
+  <!-- SCIPIO: explicit session config for solr (not part of Solr 6) -->
+  <session-config>
+    <session-timeout>60</session-timeout>
+      <cookie-config>
+        <http-only>true</http-only>
+        <!-- SCIPIO: must allow HTTP for local access only (solr is the exception!)
+        <secure>true</secure>-->
+      </cookie-config>
+    <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
 
   <welcome-file-list>
     <!-- SCIPIO: FIXME: 2017-09-13: This does not work, because Solr LoadAdminUiServlet expects the servlet container

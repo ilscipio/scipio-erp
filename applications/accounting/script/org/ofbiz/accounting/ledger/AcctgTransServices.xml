@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -163,7 +150,7 @@ under the License.
         </entity-condition>
         <calculate field="debitTotal" type="BigDecimal"><number value="0"/></calculate>
         <calculate field="creditTotal" type="BigDecimal"><number value="0"/></calculate>
-        <iterate entry="acctgTransEntry" list="acctgTransEntryList">
+        <iterate list="acctgTransEntryList" entry="acctgTransEntry">
             <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
                <calculate field="debitTotal" type="BigDecimal" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                         <calcop operator="add">
@@ -281,7 +268,7 @@ under the License.
 
         <!-- get current period(s) and check if closed -->
         <!-- also check if the glAccountId, amount, currencyUomId fields are all set -->
-        <iterate entry="acctgTransEntry" list="acctgTransEntryList">
+        <iterate list="acctgTransEntryList" entry="acctgTransEntry">
             <!-- we want to do this for each organizationPartyId, so only do this if we haven't already found the list for the current org -->
             <if-empty field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]">
                 <clear-field field="findCustomTimePeriodCallMap"/>
@@ -302,7 +289,7 @@ under the License.
                     </add-error>
                 </if-empty>
                 <!-- now do the actual isClose check -->
-                <iterate entry="customTimePeriod" list="customTimePeriodList">
+                <iterate list="customTimePeriodList" entry="customTimePeriod">
                     <if-compare field="customTimePeriod.isClosed" operator="equals" value="Y">
                         <add-error>
                             <fail-property resource="AccountingUiLabels" property="AccountingNoCustomTimePeriodClosed"/>
@@ -326,7 +313,7 @@ under the License.
             <!--
             <if-empty field="acctgTransEntry.currencyUomId">
                 <add-error>
-                    
+
                 </add-error>
             </if-empty>
             -->
@@ -393,7 +380,7 @@ under the License.
         <set field="creditTotal" type="BigDecimal" value="0"/>
         <set field="debitCreditDifference" type="BigDecimal" value="0"/>
 
-        <iterate entry="acctgTransEntry" list="acctgTransAndEntries">
+        <iterate list="acctgTransAndEntries" entry="acctgTransEntry">
             <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
                <set field="debitTotal" value="${debitTotal + acctgTransEntry.amount}" type="BigDecimal"/>
             <else>
@@ -414,7 +401,7 @@ under the License.
         <field-to-result field="debitTotal"/>
         <field-to-result field="creditTotal"/>
         <field-to-result field="debitCreditDifference"/>
-        
+
     </simple-method>
 
     <!-- GlAccount Trial Balance based on isPosted flag -->
@@ -423,7 +410,7 @@ under the License.
         <set field="openingBalanceDebit" type="BigDecimal" value="0"/>
         <set field="openingBalanceCredit" type="BigDecimal" value="0"/>
         <set field="debitCreditDifference" type="BigDecimal" value="0"/>
-        
+
         <!-- iterate through all GlAccOrgAndAcctgTransAndEntry in this account and that are filter based on posted and unposted, and get totals of all debits and of all credits -->
         <entity-condition entity-name="GlAccOrgAndAcctgTransAndEntry" list="glAccOrgAndAcctgTransAndEntries" use-cache="true">
             <condition-list combine="and">
@@ -435,7 +422,7 @@ under the License.
             <use-iterator/>
         </entity-condition>
 
-        <iterate entry="glAccOrgAndAcctgTransAndEntry" list="glAccOrgAndAcctgTransAndEntries">
+        <iterate list="glAccOrgAndAcctgTransAndEntries" entry="glAccOrgAndAcctgTransAndEntry">
             <if-compare field="glAccOrgAndAcctgTransAndEntry.debitCreditFlag" operator="equals" value="D">
                 <set field="openingBalanceDebit" value="${openingBalanceDebit + glAccOrgAndAcctgTransAndEntry.totalAmount}" type="BigDecimal" default-value="0"/>
             <else>
@@ -469,7 +456,7 @@ under the License.
             <set field="copyAcctgTransCtx.revert" value="Y"/>
             <call-service service-name="copyAcctgTransAndEntries" in-map-name="copyAcctgTransCtx"/>
             <clear-field field="copyAcctgTransCtx"/>
-        </iterate>        
+        </iterate>
     </simple-method>
 
     <simple-method method-name="revertAcctgTransOnCancelInvoice" short-description="Reverting Accounting Transaction And Entries on Canceling an Invoice">

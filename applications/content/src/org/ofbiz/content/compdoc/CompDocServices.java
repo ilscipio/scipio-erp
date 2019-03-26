@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -59,7 +60,7 @@ import com.lowagie.text.pdf.PdfReader;
 public class CompDocServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ContentUiLabels";
-    
+
     /**
      *
      * Creates the topmost Content entity of a Composite Document tree.
@@ -77,7 +78,6 @@ public class CompDocServices {
         Locale locale = (Locale)context.get("locale");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         String contentId = (String)context.get("contentId");
-        //String instanceContentId = null;
 
         if (UtilValidate.isNotEmpty(contentId)) {
             try {
@@ -105,8 +105,6 @@ public class CompDocServices {
 
             contentId = (String) persistContentResult.get("contentId");
             result.putAll(persistContentResult);
-            //request.setAttribute("contentId", contentId);
-            // Update ContentRevision and ContentRevisonItem
 
             Map<String, Object> contentRevisionMap = new HashMap<String, Object>();
             contentRevisionMap.put("itemContentId", contentId);
@@ -160,11 +158,8 @@ public class CompDocServices {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document();
             document.setPageSize(PageSize.LETTER);
-            //Rectangle rect = document.getPageSize();
-            //PdfWriter writer = PdfWriter.getInstance(document, baos);
             PdfCopy writer = new PdfCopy(document, baos);
             document.open();
-            int pgCnt = 0;
             for (GenericValue contentAssocRevisionItemView : compDocParts) {
                 //String thisContentId = contentAssocRevisionItemView.getString("contentId");
                 //String thisContentRevisionSeqId = contentAssocRevisionItemView.getString("maxRevisionSeqId");
@@ -183,7 +178,7 @@ public class CompDocServices {
                 } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
                     ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     inputByteArray = byteBuffer.array();
-                    String s = new String(inputByteArray);
+                    String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
                     Debug.logInfo("text/html string:" + s, module);
                     continue;
                 } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
@@ -252,7 +247,6 @@ public class CompDocServices {
                         PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
                         //cb.addTemplate(pg, left, height * pgCnt);
                         writer.addPage(pg);
-                        pgCnt++;
                     }
                 }
             }
@@ -292,12 +286,8 @@ public class CompDocServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         try {
-            //Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-            //ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document();
             document.setPageSize(PageSize.LETTER);
-            //Rectangle rect = document.getPageSize();
-            //PdfCopy writer = new PdfCopy(document, baos);
             document.open();
 
             GenericValue dataResource = null;
@@ -324,15 +314,15 @@ public class CompDocServices {
                 inputMimeType = dataResource.getString("mimeTypeId");
             }
             byte [] inputByteArray = null;
-            if (inputMimeType != null && inputMimeType.equals("application/pdf")) {
+            if (inputMimeType != null && "application/pdf".equals(inputMimeType)) {
                 ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, dataResourceId, https, webSiteId, locale, rootDir);
                 inputByteArray = byteBuffer.array();
-            } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
+            } else if (inputMimeType != null && "text/html".equals(inputMimeType)) {
                 ByteBuffer byteBuffer = DataResourceWorker.getContentAsByteBuffer(delegator, dataResourceId, https, webSiteId, locale, rootDir);
                 inputByteArray = byteBuffer.array();
-                String s = new String(inputByteArray);
+                String s = new String(inputByteArray, UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
                 Debug.logInfo("text/html string:" + s, module);
-            } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
+            } else if (inputMimeType != null && "application/vnd.ofbiz.survey.response".equals(inputMimeType)) {
                 String surveyResponseId = dataResource.getString("relatedDetailId");
                 String surveyId = null;
                 String acroFormContentId = null;
@@ -395,9 +385,6 @@ public class CompDocServices {
             ByteBuffer outByteBuffer = ByteBuffer.wrap(inputByteArray);
             results.put("outByteBuffer", outByteBuffer);
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.toString());
-        } catch (IOException e) {
-            Debug.logError(e, "Error in PDF generation: ", module);
             return ServiceUtil.returnError(e.toString());
         } catch (Exception e) {
             Debug.logError(e, "Error in PDF generation: ", module);

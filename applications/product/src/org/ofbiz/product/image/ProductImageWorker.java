@@ -26,14 +26,14 @@ import org.ofbiz.content.image.ContentImageWorker;
 /**
  * SCIPIO: Image utilities for product (specifically) image handling.
  * Added 2017-07-04.
- * 
+ *
  * @see org.ofbiz.content.image.ContentImageWorker
  * @see org.ofbiz.product.image.ScaleImage
  */
 public abstract class ProductImageWorker {
 
     public static final String PRODUCT_IMAGEPROP_FILEPATH = "/applications/product/config/ImageProperties.xml";
-    
+
     protected ProductImageWorker() {
     }
 
@@ -50,7 +50,7 @@ public abstract class ProductImageWorker {
             return ContentImageWorker.getContentImagePropertiesFullPath();
         }
     }
-    
+
     public static String getProductImagePropertiesPath() throws IOException {
         String path = ImageVariantConfig.getImagePropertiesFullPath(PRODUCT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {

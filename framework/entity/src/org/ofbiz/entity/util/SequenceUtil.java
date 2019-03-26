@@ -181,7 +181,9 @@ public class SequenceUtil {
 
             Transaction suspendedTransaction = null;
             try {
-                suspendedTransaction = TransactionUtil.suspend();
+                if (TransactionUtil.isTransactionInPlace()) { // SCIPIO: 2018-09-04: added check to eliminate useless warnings
+                    suspendedTransaction = TransactionUtil.suspend();
+                }
 
                 boolean beganTransaction = false;
                 try {
@@ -194,14 +196,14 @@ public class SequenceUtil {
                     try {
                         connection = TransactionFactoryLoader.getInstance().getConnection(SequenceUtil.this.helperInfo);
                     } catch (SQLException sqle) {
-                        Debug.logWarning("Unable to esablish a connection with the database. Error was:" + sqle.toString(), module);
+                        Debug.logWarning("Unable to establish a connection with the database. Error was:" + sqle.toString(), module);
                         throw sqle;
                     } catch (GenericEntityException e) {
-                        Debug.logWarning("Unable to esablish a connection with the database. Error was: " + e.toString(), module);
+                        Debug.logWarning("Unable to establish a connection with the database. Error was: " + e.toString(), module);
                         throw e;
                     }
                     if (connection == null) {
-                        throw new GenericEntityException("Unable to esablish a connection with the database, connection was null...");
+                        throw new GenericEntityException("Unable to establish a connection with the database, connection was null...");
                     }
 
                     try {
@@ -209,7 +211,9 @@ public class SequenceUtil {
                         String sql = null;
                         // 1 - run an update with no changes to get a lock on the record
                         if (stmt.executeUpdate(updateForLockStatement) <= 0) {
-                            Debug.logWarning("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
+                            // SCIPIO: This occurs normally and frequently; counterproductive to log as warning since almost never an error
+                            //Debug.logWarning("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
+                            Debug.logInfo("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
                             sql = "INSERT INTO " + SequenceUtil.this.tableName + " (" + SequenceUtil.this.nameColName + ", " + SequenceUtil.this.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
                             try {
                                 stmt.executeUpdate(sql);
@@ -250,12 +254,12 @@ public class SequenceUtil {
                             Debug.logWarning(sqle, "Error closing statement in sequence util", module);
                         }
                         try {
-                            if (connection != null) connection.close();
+                            connection.close();
                         } catch (SQLException sqle) {
                             Debug.logWarning(sqle, "Error closing connection in sequence util", module);
                         }
                     }
-                } catch (Exception e) {
+                } catch (SQLException | GenericEntityException  e) {
                     // reset the sequence fields and return (note: it would be better to throw an exception)
                     curSeqId = 0;
                     maxSeqId = 0;

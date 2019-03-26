@@ -38,7 +38,7 @@
                 <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
                 </entity-one>
-                <entity-and list="partyContentList" entity-name="PartyContent" filter-by-date="true">
+                <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="true">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>
@@ -110,7 +110,7 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <entity-and list="listIt" entity-name="PartyIdentificationAndParty">
+                <entity-and entity-name="PartyIdentificationAndParty" list="listIt">
                     <field-map field-name="partyId" from-field="partyId"/>
                 </entity-and>
 
@@ -508,7 +508,7 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-one entity-name="Party" value-field="party"></entity-one>
-                <entity-and list="contacts" entity-name="PartyRelationship" filter-by-date="true">
+                <entity-and entity-name="PartyRelationship" list="contacts" filter-by-date="true">
                     <field-map field-name="partyIdFrom" from-field="parameters.partyId"/>
                     <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
                     <field-map field-name="roleTypeIdTo" value="CONTACT"/>
@@ -543,7 +543,7 @@
         <section>
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <entity-and list="accounts" entity-name="PartyRelationship" filter-by-date="true">
+                <entity-and entity-name="PartyRelationship" list="accounts" filter-by-date="true">
                     <field-map field-name="partyIdTo" from-field="parameters.partyId"/>
                     <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
                     <field-map field-name="roleTypeIdTo" value="CONTACT"/>

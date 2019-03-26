@@ -18,15 +18,18 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +38,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.Appender;
 
 /**
@@ -45,18 +49,20 @@ public class StringUtil {
 
     public static final StringUtil INSTANCE = new StringUtil();
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    // FIXME: Not thread safe
-    protected static final Map<String, Pattern> substitutionPatternMap;
+    private static final Map<String, Pattern> substitutionPatternMap = createSubstitutionPatternMap();
 
-    static {
-        substitutionPatternMap = new LinkedHashMap<String, Pattern>();
+    private static Map<String, Pattern> createSubstitutionPatternMap() {
+        Map<String, Pattern> substitutionPatternMap = new LinkedHashMap<>();  // Preserve insertion order
         substitutionPatternMap.put("&&", Pattern.compile("@and", Pattern.LITERAL));
         substitutionPatternMap.put("||", Pattern.compile("@or", Pattern.LITERAL));
         substitutionPatternMap.put("<=", Pattern.compile("@lteq", Pattern.LITERAL));
         substitutionPatternMap.put(">=", Pattern.compile("@gteq", Pattern.LITERAL));
         substitutionPatternMap.put("<", Pattern.compile("@lt", Pattern.LITERAL));
         substitutionPatternMap.put(">", Pattern.compile("@gt", Pattern.LITERAL));
+        return Collections.unmodifiableMap(substitutionPatternMap);
     }
+
+    private static final Pattern listElemDelim = Pattern.compile("\\,\\s"); // SCIPIO
 
     private StringUtil() {
     }
@@ -85,7 +91,9 @@ public class StringUtil {
 
         int i = mainString.lastIndexOf(oldString);
 
-        if (i < 0) return mainString;
+        if (i < 0) {
+            return mainString;
+        }
 
         StringBuilder mainSb = new StringBuilder(mainString);
 
@@ -113,15 +121,17 @@ public class StringUtil {
      * @return a String of all values in the collection seperated by the delimiter
      */
     public static String join(Collection<?> col, String delim) {
-        if (UtilValidate.isEmpty(col))
+        if (UtilValidate.isEmpty(col)) {
             return null;
+        }
         StringBuilder buf = new StringBuilder();
         Iterator<?> i = col.iterator();
 
         while (i.hasNext()) {
             buf.append(i.next());
-            if (i.hasNext())
+            if (i.hasNext()) {
                 buf.append(delim);
+            }
         }
         return buf.toString();
     }
@@ -134,18 +144,20 @@ public class StringUtil {
      */
     public static List<String> split(String str, String delim) {
         List<String> splitList = null;
-        StringTokenizer st = null;
+        StringTokenizer st;
 
-        if (str == null) return splitList;
+        if (str == null) {
+            return null;
+        }
 
-        if (delim != null) st = new StringTokenizer(str, delim);
-        else               st = new StringTokenizer(str);
+        st = (delim != null? new StringTokenizer(str, delim): new StringTokenizer(str));
 
-        if (st != null && st.hasMoreTokens()) {
-            splitList = new LinkedList<String>();
+        if (st.hasMoreTokens()) {
+            splitList = new ArrayList<String>(); // SCIPIO: switched to ArrayList (default capacity is usually good here)
 
-            while (st.hasMoreTokens())
+            while (st.hasMoreTokens()) {
                 splitList.add(st.nextToken());
+            }
         }
         return splitList;
     }
@@ -161,15 +173,23 @@ public class StringUtil {
         List<String> splitList = null;
         String[] st = null;
 
-        if (str == null) return splitList;
+        if (str == null) {
+            return splitList;
+        }
 
-        if (delim != null) st = Pattern.compile(delim).split(str, limit);
-        else               st = str.split("\\s");
-
+        // SCIPIO: 2018-10-18: switched to String.split because is better optimized for single-char case than Pattern.compile
+        //if (delim != null) st = Pattern.compile(delim).split(str, limit);
+        if (delim != null) {
+            st = str.split(delim, limit);
+        } else {
+            st = str.split("\\s", limit); // SCIPIO: 2018-10-18: fixed missing limit in this case (stock bug)
+        }
 
         if (st != null && st.length > 0) {
-            splitList = new LinkedList<String>();
-            for (int i=0; i < st.length; i++) splitList.add(st[i]);
+            // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
+            // and can't assume a caller won't try (old interface); but assume few callers do that and set capacity tight
+            splitList = new ArrayList<String>(Arrays.asList(st)); // SCIPIO: switched to ArrayList and copy constructor
+            //for (int i=0; i < st.length; i++) splitList.add(st[i]);
         }
 
         return splitList;
@@ -182,7 +202,7 @@ public class StringUtil {
     public static List<String> quoteStrList(List<String> list) {
         List<String> tmpList = list;
 
-        list = new LinkedList<String>();
+        list = new ArrayList<String>(list.size()); // SCIPIO: switched to ArrayList
         for (String str: tmpList) {
             str = "'" + str + "'";
             list.add(str);
@@ -212,8 +232,10 @@ public class StringUtil {
      * @return a Map of name/value pairs
      */
     public static Map<String, String> strToMap(String str, String delim, boolean trim, String pairsSeparator) {
-        if (str == null) return null;
-        Map<String, String> decodedMap = new HashMap<String, String>();
+        if (str == null) {
+            return null;
+        }
+        Map<String, String> decodedMap = new HashMap<>();
         List<String> elements = split(str, delim);
         pairsSeparator = pairsSeparator == null ? "=" : pairsSeparator;
 
@@ -235,7 +257,9 @@ public class StringUtil {
             }
 
             try {
-                decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
+                if (value != null && name != null) {
+                    decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
+                }
             } catch (UnsupportedEncodingException e1) {
                 Debug.logError(e1, module);
             }
@@ -279,7 +303,9 @@ public class StringUtil {
      * @return String The encoded String
      */
     public static String mapToStr(Map<? extends Object, ? extends Object> map) {
-        if (map == null) return null;
+        if (map == null) {
+            return null;
+        }
         StringBuilder buf = new StringBuilder();
         boolean first = true;
 
@@ -287,8 +313,9 @@ public class StringUtil {
             Object key = entry.getKey();
             Object value = entry.getValue();
 
-            if (!(key instanceof String) || !(value instanceof String))
+            if (!(key instanceof String) || !(value instanceof String)) {
                 continue;
+            }
             String encodedName = null;
             try {
                 encodedName = URLEncoder.encode((String) key, "UTF-8");
@@ -302,10 +329,11 @@ public class StringUtil {
                 Debug.logError(e, module);
             }
 
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 buf.append("|");
+            }
 
             buf.append(encodedName);
             buf.append("=");
@@ -323,10 +351,12 @@ public class StringUtil {
      * @return new Map
      */
     public static Map<String, String> toMap(String s) {
-        Map<String, String> newMap = new HashMap<String, String>();
+        Map<String, String> newMap = new HashMap<>();
         if (s.startsWith("{") && s.endsWith("}")) {
             s = s.substring(1, s.length() - 1);
-            String[] entries = s.split("\\,\\s");
+            // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
+            //String[] entries = s.split("\\,\\s");
+            String[] entries = listElemDelim.split(s);
             for (String entry: entries) {
                 String[] nv = entry.split("\\=");
                 if (nv.length == 2) {
@@ -347,18 +377,22 @@ public class StringUtil {
      * @return new List
      */
     public static List<String> toList(String s) {
-        List<String> newList = new LinkedList<String>();
+        //List<String> newList = new LinkedList<String>(); // SCIPIO: switched to ArrayList (below)
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
-            String[] entries = s.split("\\,\\s");
-            for (String entry: entries) {
-                newList.add(entry);
-            }
+            // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
+            //String[] entries = s.split("\\,\\s");
+            String[] entries = listElemDelim.split(s);
+            // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
+            // and can't assume a caller won't try (old interface); but assume few callers do that and set capacity tight
+            List<String> newList = new ArrayList<String>(Arrays.asList(entries)); // SCIPIO: switched to ArrayList and copy constructor
+            //for (String entry: entries) {
+            //    newList.add(entry);
+            //}
+            return newList;
         } else {
             throw new IllegalArgumentException("String is not from List.toString()");
         }
-
-        return newList;
     }
 
     /**
@@ -368,7 +402,7 @@ public class StringUtil {
      * @return new List
      */
     public static Set<String> toSet(String s) {
-        Set<String> newSet = new LinkedHashSet<String>();
+        Set<String> newSet = new LinkedHashSet<>();
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
             String[] entries = s.split("\\,\\s");
@@ -393,7 +427,7 @@ public class StringUtil {
         if (keys == null || values == null || keys.size() != values.size()) {
             throw new IllegalArgumentException("Keys and Values cannot be null and must be the same size");
         }
-        Map<K, V> newMap = new HashMap<K, V>();
+        Map<K, V> newMap = new HashMap<>();
         for (int i = 0; i < keys.size(); i++) {
             newMap.put(keys.get(i), values.get(i));
         }
@@ -402,7 +436,9 @@ public class StringUtil {
 
     /** Make sure the string starts with a forward slash but does not end with one; converts back-slashes to forward-slashes; if in String is null or empty, returns zero length string. */
     public static String cleanUpPathPrefix(String prefix) {
-        if (UtilValidate.isEmpty(prefix)) return "";
+        if (UtilValidate.isEmpty(prefix)) {
+            return "";
+        }
 
         StringBuilder cppBuff = new StringBuilder(prefix.replace('\\', '/'));
 
@@ -493,7 +529,9 @@ public class StringUtil {
      * @return the new value
      */
     public static String addToNumberString(String numberString, long addAmount) {
-        if (numberString == null) return null;
+        if (numberString == null) {
+            return null;
+        }
         int origLength = numberString.length();
         long number = Long.parseLong(numberString);
         return padNumberString(Long.toString(number + addAmount), origLength);
@@ -509,21 +547,23 @@ public class StringUtil {
 
     /** Converts operator substitutions (@and, @or, etc) back to their original form.
      * <p>OFBiz script syntax provides special forms of common operators to make
-     * it easier to embed logical expressions in XML:
+     * it easier to embed logical expressions in XML</p>
      * <table border="1" cellpadding="2">
-     * <tr><td><strong>@and</strong></td><td>&amp;&amp;</td></tr>
-     * <tr><td><strong>@or</strong></td><td>||</td></tr>
-     * <tr><td><strong>@gt</strong></td><td>&gt;</td></tr>
-     * <tr><td><strong>@gteq</strong></td><td>&gt;=</td></tr>
-     * <tr><td><strong>@lt</strong></td><td>&lt;</td></tr>
-     * <tr><td><strong>@lteq</strong></td><td>&lt;=</td></tr>
-     * </table></p>
+     *   <caption>OFBiz XML operators</caption>
+     *   <tr><th>OFBiz operator</th><th>Substitution</th></tr>
+     *   <tr><td><strong>@and</strong></td><td>&amp;&amp;</td></tr>
+     *   <tr><td><strong>@or</strong></td><td>||</td></tr>
+     *   <tr><td><strong>@gt</strong></td><td>&gt;</td></tr>
+     *   <tr><td><strong>@gteq</strong></td><td>&gt;=</td></tr>
+     *   <tr><td><strong>@lt</strong></td><td>&lt;</td></tr>
+     *   <tr><td><strong>@lteq</strong></td><td>&lt;=</td></tr>
+     * </table>
      * @param expression The <code>String</code> to convert
      * @return The converted <code>String</code>
      */
     public static String convertOperatorSubstitutions(String expression) {
         String result = expression;
-        if (result != null && (result.contains("@") || result.contains("'"))) {
+        if (result != null && (result.contains("@"))) {
             for (Map.Entry<String, Pattern> entry: substitutionPatternMap.entrySet()) {
                 Pattern pattern = entry.getValue();
                 result = pattern.matcher(result).replaceAll(entry.getKey());
@@ -581,8 +621,12 @@ public class StringUtil {
         return makeStringWrapper(theString);
     }
     public static StringWrapper makeStringWrapper(String theString) {
-        if (theString == null) return null;
-        if (theString.length() == 0) return StringWrapper.EMPTY_STRING_WRAPPER;
+        if (theString == null) {
+            return null;
+        }
+        if (theString.length() == 0) {
+            return StringWrapper.EMPTY_STRING_WRAPPER;
+        }
         return new StringWrapper(theString);
     }
 
@@ -593,13 +637,21 @@ public class StringUtil {
     public static StringBuilder appendTo(StringBuilder sb, Iterable<? extends Appender<StringBuilder>> iterable, String prefix, String suffix, String sepPrefix, String sep, String sepSuffix) {
         Iterator<? extends Appender<StringBuilder>> it = iterable.iterator();
         while (it.hasNext()) {
-            if (prefix != null) sb.append(prefix);
+            if (prefix != null) {
+                sb.append(prefix);
+            }
             it.next().appendTo(sb);
-            if (suffix != null) sb.append(suffix);
+            if (suffix != null) {
+                sb.append(suffix);
+            }
             if (it.hasNext() && sep != null) {
-                if (sepPrefix != null) sb.append(sepPrefix);
+                if (sepPrefix != null) {
+                    sb.append(sepPrefix);
+                }
                 sb.append(sep);
-                if (sepSuffix != null) sb.append(sepSuffix);
+                if (sepSuffix != null) {
+                    sb.append(sepSuffix);
+                }
             }
         }
         return sb;
@@ -612,13 +664,21 @@ public class StringUtil {
     public static StringBuilder append(StringBuilder sb, Iterable<? extends Object> iterable, String prefix, String suffix, String sepPrefix, String sep, String sepSuffix) {
         Iterator<? extends Object> it = iterable.iterator();
         while (it.hasNext()) {
-            if (prefix != null) sb.append(prefix);
+            if (prefix != null) {
+                sb.append(prefix);
+            }
             sb.append(it.next());
-            if (suffix != null) sb.append(suffix);
+            if (suffix != null) {
+                sb.append(suffix);
+            }
             if (it.hasNext() && sep != null) {
-                if (sepPrefix != null) sb.append(sepPrefix);
+                if (sepPrefix != null) {
+                    sb.append(sepPrefix);
+                }
                 sb.append(sep);
-                if (sepSuffix != null) sb.append(sepSuffix);
+                if (sepSuffix != null) {
+                    sb.append(sepSuffix);
+                }
             }
         }
         return sb;
@@ -654,5 +714,309 @@ public class StringUtil {
         public String toString() {
             return this.theString;
         }
+    }
+
+    /**
+     * SCIPIO: Returns the given object as a CharSequence as-if if it is one, otherwise returns
+     * the object's {@link Object#toString()} value.
+     * <p>
+     * NOTE: May be used on {@link Appendable} instances that are expected to hold strings.
+     */
+    public static CharSequence asCharSequence(Object str) {
+        if (str instanceof CharSequence) {
+            return (CharSequence) str;
+        }
+        return str.toString();
+    }
+
+    /**
+     * SCIPIO: Ensures the string does not pass the given length and returns
+     * the first lengthLimit characters if longer, with extra suffix to
+     * add if passes the length (e.g., "...").
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static String limitLength(String str, int lengthLimit, String suffixIfOver) {
+        if (str == null || str.length() <= lengthLimit) {
+            return str;
+        }
+        return str.substring(0, lengthLimit) + suffixIfOver;
+    }
+
+    /**
+     * SCIPIO: Ensures the string does not pass the given length and returns the
+     * first lengthLimit characters if longer.
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static String limitLength(String str, int lengthLimit) {
+        if (str == null || str.length() <= lengthLimit) {
+            return str;
+        }
+        return str.substring(0, lengthLimit);
+    }
+
+    /**
+     * SCIPIO: Checks if the given string/StringBuilder starts with the given character.
+     */
+    public static boolean startsWith(CharSequence str, char suffix) {
+        return (str.length() > 0) && (str.charAt(0) == suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given string/StringBuilder starts with the given prefix.
+     */
+    public static boolean startsWith(CharSequence str, CharSequence prefix) {
+        return StringUtils.startsWith(str, prefix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given String/StringBuilder ends with the given character.
+     */
+    public static boolean endsWith(CharSequence str, char suffix) {
+        return (str.length() > 0) && (str.charAt(str.length() - 1) == suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given String/StringBuilder ends with the given suffix.
+     */
+    public static boolean endsWith(CharSequence str, CharSequence suffix) {
+        return StringUtils.endsWith(str, suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given object's {@link Object#toString()) value ends with the given character.
+     * CharSequence-optimized.
+     */
+    public static boolean endsWith(Object str, char suffix) {
+        return endsWith(asCharSequence(str), suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given object's {@link Object#toString()) value ends with the given suffix.
+     * CharSequence-optimized.
+     */
+    public static boolean endsWith(Object str, CharSequence suffix) {
+        return endsWith(asCharSequence(str), suffix);
+    }
+
+    /**
+     * SCIPIO: Append the string to the buffer after removing the given suffixToRemove from the end of the string if present.
+     * NOTE: Only removes one occurrence of the character.
+     */
+    public static void appendWithoutSuffix(Appendable buffer, CharSequence str, char suffixToRemove) throws IOException {
+        if (endsWith(str, suffixToRemove)) {
+            buffer.append(str, 0, str.length() - 1);
+        } else {
+            buffer.append(str);
+        }
+    }
+
+    /**
+     * SCIPIO: Append the string to the buffer after removing the given suffixToRemove from the end of the string if present.
+     */
+    public static void appendWithoutSuffix(Appendable buffer, CharSequence str, CharSequence suffixToRemove) throws IOException {
+        if (endsWith(str, suffixToRemove)) {
+            buffer.append(str, 0, str.length() - suffixToRemove.length());
+        } else {
+            buffer.append(str);
+        }
+    }
+
+    /**
+     * SCIPIO: Replaces the first characters of the string by the given character.
+     * <p>
+     * If maskLength is greater than zero, it determines the number of characters to mask from the left;
+     * if negative, the number of characters to leave unmasked from the right;
+     * if zero, returns the original string.
+     * <p>
+     * If maskLength is greater than zero and the string is less than maskLength,
+     * returns a string of maskLength masked characters; if maskLength is negative and
+     * the string is less than the absolute value of maskLength, returns the original string.
+     */
+    public static String maskLeft(CharSequence str, int maskLength, char maskChar) {
+        if (str == null) {
+            return null;
+        } else if (str.length() == 0 || maskLength == 0) {
+            return str.toString();
+        }
+        StringBuilder sb = new StringBuilder(str.length());
+        if (maskLength < 0) {
+            maskLength = (str.length() - (-maskLength));
+            if (maskLength <= 0) {
+                return str.toString();
+            }
+        }
+        for(int i = 0; i < maskLength; i++) {
+            sb.append(maskChar);
+        }
+        if (str.length() > maskLength) {
+            sb.append(str, maskLength, str.length());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * SCIPIO: Replaces the last characters of the string by the given character.
+     * <p>
+     * If maskLength is greater than zero, it determines the number of characters to mask from the right;
+     * if negative, the number of characters to leave unmasked from the left;
+     * if zero, returns the original string.
+     * <p>
+     * If maskLength is greater than zero and the string is less than maskLength,
+     * returns a string of maskLength masked characters; if maskLength is negative and
+     * the string is less than the absolute value of maskLength, returns the original string.
+     */
+    public static String maskRight(CharSequence str, int maskLength, char maskChar) {
+        if (str == null) {
+            return null;
+        } else if (str.length() == 0 || maskLength == 0) {
+            return str.toString();
+        }
+        StringBuilder sb = new StringBuilder(str.length());
+        int unmaskLength;
+        if (maskLength < 0) {
+            unmaskLength = -maskLength;
+            maskLength = (str.length() - unmaskLength);
+            if (maskLength <= 0) {
+                return str.toString();
+            }
+        } else {
+            unmaskLength = (str.length() - maskLength);
+        }
+        if (unmaskLength > 0) {
+            sb.append(str, 0, unmaskLength);
+        }
+        for(int i = 0; i < maskLength; i++) {
+            sb.append(maskChar);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters to the left.
+     */
+    public static boolean matchesMaskedLeft(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = 0;
+        while(i < maskedStr.length() && indexOf(maskChars, maskedStr.charAt(i)) >= 0) {
+            i++;
+        }
+        return substringsEqual(plainStr, maskedStr, i, maskedStr.length());
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters to the left.
+     */
+    public static boolean matchesMaskedLeft(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = 0;
+        while(i < maskedStr.length() && maskedStr.charAt(i) == maskChar) {
+            i++;
+        }
+        return substringsEqual(plainStr, maskedStr, i, maskedStr.length());
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters  to the right.
+     */
+    public static boolean matchesMaskedRight(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = maskedStr.length();
+        while(i > 0 && indexOf(maskChars, maskedStr.charAt(i - 1)) >= 0) {
+            i--;
+        }
+        return substringsEqual(plainStr, maskedStr, 0, i);
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters  to the right.
+     */
+    public static boolean matchesMaskedRight(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = maskedStr.length();
+        while(i > 0 && maskedStr.charAt(i - 1) == maskChar) {
+            i--;
+        }
+        return substringsEqual(plainStr, maskedStr, 0, i);
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any mask characters at any place in the masked string.
+     */
+    public static boolean matchesMaskedAny(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        for(int i = 0; i < maskedStr.length(); i++) {
+            if (indexOf(maskChars, maskedStr.charAt(i)) < 0) {
+                if (maskedStr.charAt(i) != plainStr.charAt(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any mask characters at any place in the masked string.
+     */
+    public static boolean matchesMaskedAny(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        for(int i = 0; i < maskedStr.length(); i++) {
+            if (maskedStr.charAt(i) != maskChar) {
+                if (maskedStr.charAt(i) != plainStr.charAt(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: Unsafe version of Apache commons ArrayUtils.indexOf (unsafe).
+     */
+    @SuppressWarnings("unused")
+    private static int indexOf(final char[] array, final char valueToFind, int startIndex) {
+        for (int i = startIndex; i < array.length; i++) {
+            if (valueToFind == array[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * SCIPIO: Unsafe version of Apache commons ArrayUtils.indexOf (unsafe).
+     */
+    private static int indexOf(final char[] array, final char valueToFind) {
+        for (int i = 0; i < array.length; i++) {
+            if (valueToFind == array[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * SCIPIO: Checks if two strings of same size have same characters between the given indices (unsafe).
+     */
+    private static boolean substringsEqual(CharSequence str1, CharSequence str2, int startIndex, int endIndex) {
+        for(int i = startIndex; i < endIndex; i++) {
+            if (str1.charAt(i) != str2.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

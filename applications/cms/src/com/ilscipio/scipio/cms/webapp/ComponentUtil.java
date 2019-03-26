@@ -22,11 +22,11 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ViewMap;
 /**
  * Component utilities
  * <p>
- * 2017-02-08: moved back to CMS package because too specific code inside. 
+ * 2017-02-08: moved back to CMS package because too specific code inside.
  * TODO?: re-refactor out generic code later.
  */
 public class ComponentUtil {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
@@ -134,17 +134,17 @@ public class ComponentUtil {
                         Map<String, List<Map<String, Object>>> currMap = UtilGenerics.checkMap(requestMaps.get(webSiteId));
                         if (currMap.containsKey("pages")) {
                             List<Map<String, Object>> pages = currMap.get("pages");
-                            generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                            generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                         } else {
                             List<Map<String, Object>> pages = new ArrayList<>();
-                            generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                            generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                             currMap.put("pages", pages);
                         }
 
                     } else {
                         Map<String, Object> currMap = component;
                         List<Map<String, Object>> pages = new ArrayList<>();
-                        generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                        generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                         currMap.put("pages", pages);
                         requestMaps.put(webSiteId, currMap);
                     }
@@ -203,9 +203,10 @@ public class ComponentUtil {
         return viewMaps;
     }
 
-    private static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, String parent,
+    // NOTE: generateMapFromRequestUri changed to public because invoked from CmsContentTree.groovy directly
+    public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, String parent,
             String webSiteId) {
-        generateMapFromRequestUri(path, type, pages, null, null, parent, webSiteId);
+        generateMapFromRequestUri(pageId, path, type, pages, null, null, parent, webSiteId);
     }
 
     /**
@@ -216,7 +217,7 @@ public class ComponentUtil {
      * <p>
      * path should start with slash (/).
      */
-    private static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
+    public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
             String parent, String webSiteId) {
         if (path == null) { // sanity checks
             throw new IllegalArgumentException("generateMapFromRequestUri: received null path");
@@ -225,17 +226,18 @@ public class ComponentUtil {
         }
         if (!path.startsWith("/")) {
             // we'll adjust it, but other code elsewhere is likely to fail, so warn.
-            Debug.logWarning("Cms: generateMapFromRequestUri: passed path did not start with a slash (/): " 
+            Debug.logWarning("Cms: generateMapFromRequestUri: passed path did not start with a slash (/): "
                     + path + "; this may get mishandled elsewhere", module);
             path = "/" + path;
         }
-        
+
         String[] items = path.split("/");
         StringBuilder subPath = new StringBuilder();
         // Iterate over all Subpaths
         if (parent == null)
             parent = "#";
         Map<String, Object> itemMap = null;
+        Map<String, Object> dataMap = null;
         for (String item : items) {
             if (item.length() > 0 && items.length > 1) {
                 /*
@@ -244,7 +246,7 @@ public class ComponentUtil {
                 String parentPath = subPath.toString();
                 subPath.append("/" + item);
                 String subPathStr = subPath.toString();
-                
+
                 // NOTE: 2017-02-14: id must contain webSiteId otherwise may not be unique globally.
                 String idPath = subPath.toString().replaceAll("/", "_");
                 String id = webSiteId + idPath;
@@ -252,9 +254,10 @@ public class ComponentUtil {
                 boolean isTargetPath = subPathStr.equals(path);
 
                 // determine if node is parent and add appropriate folder
-                itemMap = new HashMap<>(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
-                        "parent", parent, "data", UtilMisc.toMap("type", type, "parentPath", parentPath, "path",
-                                subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath)));
+                dataMap = UtilMisc.toMap("type", type, "parentPath", parentPath,
+                        "path", subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath);
+                itemMap = UtilMisc.toMap("text", item, "a_attr", subPathStr, 
+                        "id", id, "state", state, "parent", parent, "data", dataMap);
                 parent = id;
 
                 // check for map in array and add if none has been added before
@@ -262,6 +265,9 @@ public class ComponentUtil {
                     pages.add(itemMap);
                 }
             }
+        }
+        if (dataMap != null && pageId != null) {
+            dataMap.put("pageId", pageId);
         }
     }
 
@@ -274,7 +280,7 @@ public class ComponentUtil {
         if (UtilValidate.isEmpty(webSiteId)) {
             throw new IllegalArgumentException("generateMapFromViewName: missing webSiteId");
         }
-        
+
         String id = webSiteId + "_" + viewName;
         String formalId = webSiteId + "::" + viewName;
         Map<String, Object> itemMap = null;

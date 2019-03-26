@@ -18,26 +18,29 @@
  *******************************************************************************/
 package org.ofbiz.webtools.print;
 
-import java.util.Map;
-import java.util.Locale;
 import java.io.IOException;
-import java.io.Writer;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Locale;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.widget.renderer.ScreenRenderer;
-import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
+import org.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 
 /**
  * FoPrintServerEvents
@@ -46,7 +49,6 @@ import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
 public class FoPrintServerEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
 
     public static String getXslFo(HttpServletRequest req, HttpServletResponse resp) {
         LocalDispatcher dispatcher = (LocalDispatcher) req.getAttribute("dispatcher");
@@ -58,7 +60,7 @@ public class FoPrintServerEvents {
             String base64String = null;
             try {
                 byte[] bytes = FoPrintServerEvents.getXslFo(dispatcher.getDispatchContext(), screenUri, reqParams);
-                base64String = new String(Base64.encodeBase64(bytes));
+                base64String = new String(Base64.encodeBase64(bytes), UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
             } catch (GeneralException e) {
                 Debug.logError(e, module);
                 try {
@@ -100,12 +102,17 @@ public class FoPrintServerEvents {
         // render and obtain the XSL-FO
         Writer writer = new StringWriter();
         try {
-            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, htmlScreenRenderer);
+            // SCIPIO: NOTE: 2018-09-06: In old ofbiz code this used HTML renderer, can't find a reason why, but seems illogical.
+            //ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", dctx.getDelegator()),
+            //        EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", dctx.getDelegator()));
+            ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()),
+                    EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", dctx.getDelegator()));
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForService(dctx, parameters);
             screens.render(screen);
         } catch (Throwable t) {
             throw new GeneralException("Problems rendering FOP XSL-FO", t);
         }
-        return writer.toString().getBytes();
+        return writer.toString().getBytes(UtilIO.getUtf8()); // SCIPIO: UtilIO.getUtf8()
     }
 }

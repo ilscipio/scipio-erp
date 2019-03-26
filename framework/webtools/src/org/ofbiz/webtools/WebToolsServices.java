@@ -58,7 +58,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilPlist;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilProperties.UtilResourceBundle;
-import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
@@ -85,6 +84,7 @@ import org.ofbiz.entity.util.EntitySaxReader;
 import org.ofbiz.entityext.EntityGroupUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webtools.artifactinfo.ArtifactInfoFactory;
@@ -106,6 +106,64 @@ public class WebToolsServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "WebtoolsUiLabels";
 
+    /**
+     * SCIPIO: Helper class for common entity import options.
+     * <p>
+     * NOTE: This is public because some callers may be implementing extensions to these entity import services.
+     * <p>
+     * Added 2018-09-17.
+     */
+    public static class CommonEntityImportOptions { // SCIPIO: 2018-09-17
+        private EntitySaxReader.EntityFilters entityFilters;
+
+        public CommonEntityImportOptions() {
+            entityFilters = new EntitySaxReader.EntityFilters();
+        }
+
+        private CommonEntityImportOptions(DispatchContext dctx, Map<String, ?> context) {
+            entityFilters = EntitySaxReader.EntityFilters.fromMap(context);
+        }
+
+        public static CommonEntityImportOptions fromContext(DispatchContext dctx, Map<String, ?> context) {
+            return new CommonEntityImportOptions(dctx, context);
+        }
+
+        public void toContext(Map<String, Object> context) {
+            if (entityFilters != null) {
+                entityFilters.toMap(context);
+            }
+        }
+
+        public void toReader(EntitySaxReader reader) {
+            reader.setEntityFilters(entityFilters);
+        }
+
+        public EntitySaxReader.EntityFilters getEntityFilters() {
+            return entityFilters;
+        }
+
+        public void setEntityFilters(EntitySaxReader.EntityFilters entityFilters) {
+            this.entityFilters = entityFilters;
+        }
+    }
+
+    /**
+     * SCIPIO: Backward-compat attempt to make the boolean checks less bad.
+     * Any non-null value must be true for backward-compat, except we'll take 
+     * "false" to mean false.
+     * Also we won't accept empty string as true in case called outside event handler
+     * (event handler passes empty string as null).
+     * Added 2018-09-18.
+     */
+    private static boolean checkEntityImportBooleanArg(Object valueObj) {
+        Boolean value = UtilMisc.booleanValue(valueObj);
+        if (value != null) {
+            return value;
+        }
+        // Backward-compat check, replaces (valueObj != null) check used for all except entityImportReaders
+        return UtilValidate.isNotEmpty((String) valueObj);
+    }
+
     public static Map<String, Object> entityImport(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -122,16 +180,21 @@ public class WebToolsServices {
         // SCIPIO: 2017-06-15: fixup the isUrl handling: needs explicit values, and if not explicitly set, we automatically deduce.
         //boolean isUrl = (String)context.get("isUrl") != null;
         Boolean isUrl = UtilMisc.booleanValueVersatile(context.get("isUrl"));
-        String mostlyInserts = (String)context.get("mostlyInserts");
-        String maintainTimeStamps = (String)context.get("maintainTimeStamps");
-        String createDummyFks = (String)context.get("createDummyFks");
-        String checkDataOnly = (String) context.get("checkDataOnly");
+        // SCIPIO: silly casting
+        //String mostlyInserts = (String)context.get("mostlyInserts");
+        //String maintainTimeStamps = (String)context.get("maintainTimeStamps");
+        //String createDummyFks = (String)context.get("createDummyFks");
+        //String checkDataOnly = (String) context.get("checkDataOnly");
+        Object mostlyInserts = context.get("mostlyInserts");
+        Object maintainTimeStamps = context.get("maintainTimeStamps");
+        Object createDummyFks = context.get("createDummyFks");
+        Object checkDataOnly = context.get("checkDataOnly");
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
-        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: new 2017-06-15
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
         URL url = null;
 
@@ -140,16 +203,16 @@ public class WebToolsServices {
         //String uploadedFileName = (String) context.get("_uploadedFile_fileName");
         //String uploadedFileContentType = (String) context.get("_uploadedFile_contentType");
         if (uploadedFileBuffer != null) {
-            // FIXME?: this is forcing the whole file in-memory (possibly even multiple copies - ?), 
+            // FIXME?: this is forcing the whole file in-memory (possibly even multiple copies - ?),
             // but the changes needed to get around this were too many, so I ditched them for now.
             // The right way around this would be to modify parseEntityXmlFile to accept an InputStream,
             // but to get the InputStream may have to modify ServiceEventHandler to pass
             // the FileItem for its getInputStream method... but this is too invasive for now.
             fulltext = java.nio.charset.StandardCharsets.UTF_8.decode(uploadedFileBuffer).toString();
         }
-        
+
         // SCIPIO: 2017-06-15: we can automatically deduce whether isUrl is needed... no need for flag...
-        
+
         // #############################
         // The filename to parse is prepared
         // #############################
@@ -161,7 +224,7 @@ public class WebToolsServices {
             } catch (MalformedURLException mue) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsInvalidFileName", UtilMisc.toMap("filename", filename, "errorString", mue.getMessage()), locale));
             } catch (Exception exc) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorReadingFileName", UtilMisc.toMap("filename", filename, "errorString", exc.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorReadingFileName", UtilMisc.toMap("filename", filename, "errorString", exc.getMessage()), locale));
             }
         }
 
@@ -173,7 +236,7 @@ public class WebToolsServices {
             try {
                 templateReader = new FileReader(fmfilename);
             } catch (FileNotFoundException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorReadingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", e.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorReadingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", e.getMessage()), locale));
             }
 
             StringWriter outWriter = new StringWriter();
@@ -182,7 +245,7 @@ public class WebToolsServices {
             try {
                 Configuration conf = org.ofbiz.base.util.template.FreeMarkerWorker.getDefaultOfbizConfig();
                 template = new Template("FMImportFilter", templateReader, conf);
-                Map<String, Object> fmcontext = new HashMap<String, Object>();
+                Map<String, Object> fmcontext = new HashMap<>();
 
                 InputSource ins = url != null ? new InputSource(url.openStream()) : new InputSource(new StringReader(fulltext));
                 NodeModel nodeModel;
@@ -203,7 +266,7 @@ public class WebToolsServices {
                 template.process(fmcontext, outWriter);
                 fulltext = outWriter.toString();
             } catch (Exception ex) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorProcessingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", ex.getMessage()), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorProcessingTemplateFile", UtilMisc.toMap("filename", fmfilename, "errorString", ex.getMessage()), locale));
             }
         }
 
@@ -218,8 +281,9 @@ public class WebToolsServices {
                                               "maintainTimeStamps", maintainTimeStamps,
                                               "txTimeout", txTimeout,
                                               "placeholderValues", placeholderValues,
-                                              "allowedEntityNames", allowedEntityNames, // SCIPIO
                                               "userLogin", userLogin);
+                commonOptions.toContext(inputMap); // SCIPIO
+
                 if (fulltext != null) {
                     inputMap.put("xmltext", fulltext);
                 } else {
@@ -227,11 +291,13 @@ public class WebToolsServices {
                 }
                 Map<String, Object> outputMap = dispatcher.runSync("parseEntityXmlFile", inputMap);
                 if (ServiceUtil.isError(outputMap)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorParsingFile", UtilMisc.toMap("errorString", ServiceUtil.getErrorMessage(outputMap)), locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrorParsingFile", UtilMisc.toMap("errorString", ServiceUtil.getErrorMessage(outputMap)), locale));
                 } else {
                     Long numberRead = (Long)outputMap.get("rowProcessed");
                     messages.add(UtilProperties.getMessage(resource, "EntityImportRowProcessed", UtilMisc.toMap("numberRead", numberRead.toString()), locale));
                 }
+            } catch (GenericServiceException gsex) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityImportParsingError", UtilMisc.toMap("errorString", gsex.getMessage()), locale));
             } catch (Exception ex) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityImportParsingError", UtilMisc.toMap("errorString", ex.getMessage()), locale));
             }
@@ -243,7 +309,7 @@ public class WebToolsServices {
         Map<String, Object> resp = UtilMisc.toMap("messages", (Object) messages);
         return resp;
     }
-    
+
     public static Map<String, Object> entityImportDir(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -251,25 +317,33 @@ public class WebToolsServices {
         List<String> messages = new LinkedList<String>();
 
         String path = (String) context.get("path");
-        String mostlyInserts = (String) context.get("mostlyInserts");
-        String maintainTimeStamps = (String) context.get("maintainTimeStamps");
-        String createDummyFks = (String) context.get("createDummyFks");
-        boolean deleteFiles = (String) context.get("deleteFiles") != null;
-        String checkDataOnly = (String) context.get("checkDataOnly");
+        // SCIPIO: silly casting and poor boolean checks
+        //String mostlyInserts = (String) context.get("mostlyInserts");
+        //String maintainTimeStamps = (String) context.get("maintainTimeStamps");
+        //String createDummyFks = (String) context.get("createDummyFks");
+        //boolean deleteFiles = (String) context.get("deleteFiles") != null;
+        //String checkDataOnly = (String) context.get("checkDataOnly");
+        Object mostlyInserts = context.get("mostlyInserts");
+        Object maintainTimeStamps = context.get("maintainTimeStamps");
+        Object createDummyFks = context.get("createDummyFks");
+        boolean deleteFiles = checkEntityImportBooleanArg(context.get("deleteFiles"));
+        Object checkDataOnly = context.get("checkDataOnly");
+
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         Long filePause = (Long)context.get("filePause");
 
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
         if (filePause == null) {
-            filePause = Long.valueOf(0);
+            filePause = 0L;
         }
 
         if (UtilValidate.isNotEmpty(path)) {
-            long pauseLong = filePause != null ? filePause.longValue() : 0;
+            long pauseLong = filePause != null ? filePause : 0;
             File baseDir = new File(path);
 
             if (baseDir.isDirectory() && baseDir.canRead()) {
@@ -297,6 +371,7 @@ public class WebToolsServices {
                                 "txTimeout", txTimeout,
                                 "placeholderValues", placeholderValues,
                                 "userLogin", userLogin);
+                        commonOptions.toContext(parseEntityXmlFileArgs); // SCIPIO
 
                         try {
                             URL furl = f.toURI().toURL();
@@ -351,13 +426,18 @@ public class WebToolsServices {
         String readers = (String) context.get("readers");
         String overrideDelegator = (String) context.get("overrideDelegator");
         String overrideGroup = (String) context.get("overrideGroup");
-        boolean useDummyFks = "true".equals(context.get("createDummyFks"));
-        boolean maintainTxs = "true".equals(context.get("maintainTimeStamps"));
-        boolean tryInserts = "true".equals(context.get("mostlyInserts"));
-        boolean checkDataOnly = "true".equals(context.get("checkDataOnly"));
+        // SCIPIO: inconsistent boolean checks (vs other services)
+        //boolean useDummyFks = "true".equals(context.get("createDummyFks"));
+        //boolean maintainTxs = "true".equals(context.get("maintainTimeStamps"));
+        //boolean tryInserts = "true".equals(context.get("mostlyInserts"));
+        //boolean checkDataOnly = "true".equals(context.get("checkDataOnly"));
+        boolean useDummyFks = checkEntityImportBooleanArg(context.get("createDummyFks"));
+        boolean maintainTxs = checkEntityImportBooleanArg(context.get("maintainTimeStamps"));
+        boolean tryInserts = checkEntityImportBooleanArg(context.get("mostlyInserts"));
+        boolean checkDataOnly = checkEntityImportBooleanArg(context.get("checkDataOnly"));
         Locale locale = (Locale) context.get("locale");
         Integer txTimeoutInt = (Integer) context.get("txTimeout");
-        int txTimeout = txTimeoutInt != null ? txTimeoutInt.intValue() : -1;
+        int txTimeout = txTimeoutInt != null ? txTimeoutInt : -1;
 
         List<Object> messages = new LinkedList<Object>();
 
@@ -467,16 +547,21 @@ public class WebToolsServices {
         if (url == null && xmltext == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityImportNoXmlFileOrTextSpecified", locale));
         }
-        boolean mostlyInserts = (String) context.get("mostlyInserts") != null;
-        boolean maintainTimeStamps = (String) context.get("maintainTimeStamps") != null;
-        boolean createDummyFks = (String) context.get("createDummyFks") != null;
-        boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
+        // SCIPIO: these break too easily
+        //boolean mostlyInserts = (String) context.get("mostlyInserts") != null;
+        //boolean maintainTimeStamps = (String) context.get("maintainTimeStamps") != null;
+        //boolean createDummyFks = (String) context.get("createDummyFks") != null;
+        //boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
+        boolean mostlyInserts = checkEntityImportBooleanArg(context.get("mostlyInserts"));
+        boolean maintainTimeStamps = checkEntityImportBooleanArg(context.get("maintainTimeStamps"));
+        boolean createDummyFks = checkEntityImportBooleanArg(context.get("createDummyFks"));
+        boolean checkDataOnly = checkEntityImportBooleanArg(context.get("checkDataOnly"));
         Integer txTimeout = (Integer) context.get("txTimeout");
-        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: 2017-06-15
+        CommonEntityImportOptions commonOptions = CommonEntityImportOptions.fromContext(dctx, context); // SCIPIO
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
 
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
 
         long rowProcessed = 0;
@@ -484,11 +569,11 @@ public class WebToolsServices {
             EntitySaxReader reader = new EntitySaxReader(delegator);
             reader.setUseTryInsertMethod(mostlyInserts);
             reader.setMaintainTxStamps(maintainTimeStamps);
-            reader.setTransactionTimeout(txTimeout.intValue());
+            reader.setTransactionTimeout(txTimeout);
             reader.setCreateDummyFks(createDummyFks);
             reader.setCheckDataOnly(checkDataOnly);
             reader.setPlaceholderValues(placeholderValues);
-            reader.setAllowedEntityNames(allowedEntityNames);
+            commonOptions.toReader(reader); // SCIPIO
 
             long numberRead = (url != null ? reader.parse(url) : reader.parse(xmltext));
             rowProcessed = numberRead;
@@ -507,7 +592,7 @@ public class WebToolsServices {
         Timestamp fromDate = (Timestamp)context.get("fromDate");
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
-            txTimeout = Integer.valueOf(7200);
+            txTimeout = 7200;
         }
 
         List<String> results = new LinkedList<String>();
@@ -601,7 +686,8 @@ public class WebToolsServices {
 
     /** Get entity reference data. Returns the number of entities in
      * <code>numberOfEntities</code> and a List of Maps -
-     * <code>packagesList</code>.<br/> Each Map contains:<br/>
+     * <code>packagesList</code>.
+     * Each Map contains:<br>
      * <ul><li><code>packageName</code> - the entity package name</li>
      * <li><code>entitiesList</code> - a list of Maps:
        <ul>
@@ -658,8 +744,8 @@ public class WebToolsServices {
 
         ModelReader reader = delegator.getModelReader();
         Map<String, TreeSet<String>> entitiesByPackage = new HashMap<String, TreeSet<String>>();
-        TreeSet<String> packageNames = new TreeSet<String>();
-        TreeSet<String> tableNames = new TreeSet<String>();
+        Set<String> packageNames = new TreeSet<String>();
+        Set<String> tableNames = new TreeSet<String>();
 
         //put the entityNames TreeSets in a HashMap by packageName
         try {
@@ -689,7 +775,7 @@ public class WebToolsServices {
             for (String pName : packageNames) {
                 Map<String, Object> packageMap = new HashMap<String, Object>();
                 TreeSet<String> entities = entitiesByPackage.get(pName);
-                List<Map<String, Object>> entitiesList = (search == null) ? new ArrayList<Map<String, Object>>(entities.size()) 
+                List<Map<String, Object>> entitiesList = (search == null) ? new ArrayList<Map<String, Object>>(entities.size())
                         : new ArrayList<Map<String, Object>>(); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                 for (String entityName: entities) {
                     Map<String, Object> entityMap = new HashMap<String, Object>();
@@ -901,7 +987,7 @@ public class WebToolsServices {
                 ModelEntity modelEntity = reader.getModelEntity(curEntityName);
                 UtilPlist.writePlistFile(modelEntity.createEoModelMap(entityNamePrefix, datasourceName, entityNames, reader), eomodeldFullPath, curEntityName +".plist", true);
             }
-            Integer entityNamesSize = new Integer(entityNames.size());
+            Integer entityNamesSize = entityNames.size();
             return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "WebtoolsEomodelExported", UtilMisc.toMap("entityNamesSize", entityNamesSize.toString(), "eomodeldFullPath", eomodeldFullPath), locale));
         } catch (UnsupportedEncodingException e) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsEomodelSavingFileError", UtilMisc.toMap("errorString", e.toString()), locale));

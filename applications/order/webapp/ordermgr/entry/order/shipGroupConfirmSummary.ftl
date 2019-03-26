@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#--
@@ -29,7 +16,7 @@ standard order confirmation page and to be re-usable by other screens.
 <#if cart??>
   <@section title=uiLabelMap.OrderShippingInformation>
     <#-- DEV NOTE: FIXME? responsive=true here causes jquery crash... -->
-    <@table type="data-complex"> <#-- orig: class="basic-table" -->
+    <@table type="data-complex">
 
       <#-- header -->
       <@thead>
@@ -52,7 +39,7 @@ standard order confirmation page and to be re-usable by other screens.
       <#assign shipItems = cartShipInfo.getShipItems()>
       <#assign numberOfItems = shipItems.size()>
       <#if (numberOfItems > 0)>
-      <#assign shipItems = Static["org.ofbiz.base.util.UtilMisc"].toList(shipItems)>
+      <#assign shipItems = UtilMisc.toList(shipItems)>
 
       <#-- spacer goes here -->
 

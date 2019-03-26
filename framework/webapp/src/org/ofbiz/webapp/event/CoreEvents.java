@@ -130,13 +130,13 @@ public class CoreEvents {
         // the frequency map
         Map<String, Integer> freqMap = new HashMap<String, Integer>();
 
-        freqMap.put("SECONDLY", Integer.valueOf(1));
-        freqMap.put("MINUTELY", Integer.valueOf(2));
-        freqMap.put("HOURLY", Integer.valueOf(3));
-        freqMap.put("DAILY", Integer.valueOf(4));
-        freqMap.put("WEEKLY", Integer.valueOf(5));
-        freqMap.put("MONTHLY", Integer.valueOf(6));
-        freqMap.put("YEARLY", Integer.valueOf(7));
+        freqMap.put("SECONDLY", 1);
+        freqMap.put("MINUTELY", 2);
+        freqMap.put("HOURLY", 3);
+        freqMap.put("DAILY", 4);
+        freqMap.put("WEEKLY", 5);
+        freqMap.put("MONTHLY", 6);
+        freqMap.put("YEARLY", 7);
 
         // some defaults
         long startTime = (new Date()).getTime();
@@ -214,7 +214,7 @@ public class CoreEvents {
             serviceContext.put("locale", locale);
         }
 
-        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request)) { // SCIPIO: Now using request; was: request.getSession() 
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.not_authorized_to_call", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -244,7 +244,7 @@ public class CoreEvents {
                 endTime = ts1.getTime();
             } catch (IllegalArgumentException e) {
                 try {
-                    endTime = Long.parseLong(serviceTime);
+                    endTime = Long.parseLong(serviceEndTime);
                 } catch (NumberFormatException nfe) {
                     String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.invalid_format_time", locale);
                     errorBuf.append(errMsg);
@@ -286,7 +286,7 @@ public class CoreEvents {
                     String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.invalid_format_frequency", locale);
                     errorBuf.append(errMsg);
                 } else {
-                    frequency = freqMap.get(serviceFreq.toUpperCase()).intValue();
+                    frequency = freqMap.get(serviceFreq.toUpperCase());
                 }
             }
         }
@@ -312,7 +312,7 @@ public class CoreEvents {
         if (eventId != null && eventId.isEmpty()) {
             eventId = null;
         }
-        
+
         // return the errors
         if (errorBuf.length() > 0) {
             request.setAttribute("_ERROR_MESSAGE_", errorBuf.toString());
@@ -322,15 +322,15 @@ public class CoreEvents {
         Map<String, Object> syncServiceResult = null;
         // schedule service
         try {
-            if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").equals("Y")) {
+            if (null!=request.getParameter("_RUN_SYNC_") && "Y".equals(request.getParameter("_RUN_SYNC_"))) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
             } else if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
                 // SCIPIO: 2018-02-16: new ability to run async services without need to go through Job Manager (starts quicker)
                 // NOTE: Default for persist is False, because Job Manager is more intuitive in those cases
-                // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N" 
+                // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N"
                 // because in legacy code it would imply to use job scheduler.
                 dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
-                String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo", 
+                String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo",
                         UtilMisc.toMap("serviceName", serviceName), locale);
                 syncServiceResult = ServiceUtil.returnSuccess(asyncMsg);
             } else {
@@ -362,7 +362,7 @@ public class CoreEvents {
             return "error";
         }
 
-        if (null!=request.getParameter("_CLEAR_PREVIOUS_PARAMS_") && request.getParameter("_CLEAR_PREVIOUS_PARAMS_").equalsIgnoreCase("on"))
+        if (null!=request.getParameter("_CLEAR_PREVIOUS_PARAMS_") && "on".equalsIgnoreCase(request.getParameter("_CLEAR_PREVIOUS_PARAMS_")))
             session.removeAttribute("_SAVED_SYNC_RESULT_");
 
         Map<String, String[]> serviceFieldsToSave = checkMap(request.getParameterMap(), String.class, String[].class);
@@ -424,7 +424,7 @@ public class CoreEvents {
         }
     }
 
-    public static ServiceEventHandler seh = new ServiceEventHandler();
+    public static final ServiceEventHandler seh = new ServiceEventHandler();
 
     /**
      * Run a service.
@@ -471,7 +471,7 @@ public class CoreEvents {
             return "error";
         }
 
-        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request)) { // SCIPIO: Now using request; was: request.getSession()
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.not_authorized_to_call", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg + ".");
             return "error";
@@ -499,7 +499,7 @@ public class CoreEvents {
         // load the file
         File file = new File(filePath);
         if (file.exists()) {
-            Long longLen = Long.valueOf(file.length());
+            Long longLen = file.length();
             int length = longLen.intValue();
             try {
                 FileInputStream fis = new FileInputStream(file);

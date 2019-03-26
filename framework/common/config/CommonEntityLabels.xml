@@ -73,6 +73,7 @@
     <property key="CustomMethod.description.DBL_DECL_DEP_FORMULA">
         <value xml:lang="ar">الإهلاك المزدوج التراجع للأصول الثابنة (صافي القيمة الدفترية - قيمة الخردة) * 2 / الحياة المتبقية بالسنوات</value>
         <value xml:lang="cs">Metoda zrychlených odpisů DDB (Double Declined Balanced) pro majetek ((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
+        <value xml:lang="de">Abschreibungsformel nach doppelter Wertminderung für Anlagevermögen ((Netto Buchwert - Restkosten)*2/ Verbleibende Haltbarkeit in Jahren)</value>
         <value xml:lang="en">Double decline depreciation algorithm for fixed asset((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
         <value xml:lang="fr">Algorithme de dépréciation d'immobilisation ((valeur - coût déjà déprécié)*2/ années restantes)</value>
         <value xml:lang="it">Declina algoritmo doppio svalutazione per cespiti((NetBookValue - salvageCost)*2/remainingLifeInYears)</value>
@@ -86,7 +87,8 @@
     <property key="CustomMethod.description.STR_LINE_DEP_FORMULA">
         <value xml:lang="ar">الإهلاك الخطي التراجع للأصول الثابنة (تكلفة الشراء - قيمة الخردة) / الحياة المتبقية بالسنوات</value>
         <value xml:lang="cs">Lineární odpisová metoda majetku ((purchaseCost - salvageCost)/expectedLifeInYears)</value>
-        <value xml:lang="en">Straight Line depreciatiion algorithm for fixed asset((purchaseCost - salvageCost)/expectedLifeInYears)</value>
+        <value xml:lang="de">Abschreibungsformel nach linearer Wertminderung ((Anschaffungskosten - Abschreibungskosten)/Haltbarkeit in Jahren)</value>
+        <value xml:lang="en">Straight Line depreciatiion algorithm for fixed asset((purchaseCost - Restkosten)/expectedLifeInYears)</value>
         <value xml:lang="fr">Dépréciation linéaire d'immmobilisation (valeur d'achat - coût déjà déprécié) / années d'utilisation)</value>
         <value xml:lang="it">Riga semplice algoritmo svalutazione per cespiti((purchaseCost - salvageCost)/expectedLifeInYears)</value>
         <value xml:lang="ja">固定資産減価償却 定額法((購入価額 - 残存価額)/耐用年数)</value>
@@ -98,7 +100,8 @@
     </property>
     <property key="DataSource.description.ECOMMERCE_SITE">
         <value xml:lang="cs">eShop</value>
-        <value xml:lang="en">ECOMMERCE_SITE</value>
+        <value xml:lang="de">Ecommerce</value>
+        <value xml:lang="en">Ecommerce</value>
         <value xml:lang="es">Tienda online</value>
         <value xml:lang="fr">Site de commerce électronique</value>
         <value xml:lang="it">Sito ecommerce</value>
@@ -112,7 +115,8 @@
     </property>
     <property key="DataSource.description.GENERAL_MAILING">
         <value xml:lang="cs">Pošta (obecně)</value>
-        <value xml:lang="en">GENERAL_MAILING</value>
+        <value xml:lang="de">Allgemeine Postsendung</value>
+        <value xml:lang="en">General mailing</value>
         <value xml:lang="es">Mailing</value>
         <value xml:lang="fr">Mailing</value>
         <value xml:lang="it">Posta generale</value>
@@ -126,7 +130,8 @@
     </property>
     <property key="DataSource.description.LEAD_COLDCALL">
         <value xml:lang="cs">Telemarketing</value>
-        <value xml:lang="en">LEAD_COLDCALL</value>
+        <value xml:lang="de">Telemarketing</value>
+        <value xml:lang="en">Telemarketing</value>
         <value xml:lang="es">Telemárketing</value>
         <value xml:lang="fr">Télémarketing</value>
         <value xml:lang="it">Telefonata leader</value>
@@ -140,7 +145,8 @@
     </property>
     <property key="DataSource.description.LEAD_CONFERENCE">
         <value xml:lang="cs">Konference</value>
-        <value xml:lang="en">LEAD_CONFERENCE</value>
+        <value xml:lang="de">Konferenz</value>
+        <value xml:lang="en">Conference</value>
         <value xml:lang="es">Conferencia</value>
         <value xml:lang="fr">Conférence</value>
         <value xml:lang="it">Conferenza leader</value>
@@ -154,7 +160,8 @@
     </property>
     <property key="DataSource.description.LEAD_DIRECTMAIL">
         <value xml:lang="cs">Direct marketing</value>
-        <value xml:lang="en">LEAD_DIRECTMAIL</value>
+        <value xml:lang="de">Direktmarketing</value>
+        <value xml:lang="en">Direct marketing</value>
         <value xml:lang="es">Correo directo</value>
         <value xml:lang="fr">Courriel</value>
         <value xml:lang="it">Email diretta al leader</value>
@@ -168,7 +175,8 @@
     </property>
     <property key="DataSource.description.LEAD_EMPLOYEE">
         <value xml:lang="cs">Zaměstnanec</value>
-        <value xml:lang="en">LEAD_EMPLOYEE</value>
+        <value xml:lang="de">Mitarbeiter</value>
+        <value xml:lang="en">Employee</value>
         <value xml:lang="es">Empleado</value>
         <value xml:lang="fr">Employé</value>
         <value xml:lang="it">Impiegato del leader</value>
@@ -182,7 +190,8 @@
     </property>
     <property key="DataSource.description.LEAD_EXISTCUST">
         <value xml:lang="cs">Stávající zákazník</value>
-        <value xml:lang="en">LEAD_EXISTCUST</value>
+        <value xml:lang="de">Bestandskunde</value>
+        <value xml:lang="en">Existing customer</value>
         <value xml:lang="es">Cliente existente</value>
         <value xml:lang="fr">Client existant</value>
         <value xml:lang="it">Leader cliente esistente</value>
@@ -196,7 +205,8 @@
     </property>
     <property key="DataSource.description.LEAD_OTHER">
         <value xml:lang="cs">Jiný</value>
-        <value xml:lang="en">LEAD_OTHER</value>
+        <value xml:lang="de">Andere</value>
+        <value xml:lang="en">Other</value>
         <value xml:lang="es">Otro</value>
         <value xml:lang="fr">Autre</value>
         <value xml:lang="it">Altro leader</value>
@@ -210,7 +220,8 @@
     </property>
     <property key="DataSource.description.LEAD_PARTNER">
         <value xml:lang="cs">Partner</value>
-        <value xml:lang="en">LEAD_PARTNER</value>
+        <value xml:lang="de">Partner</value>
+        <value xml:lang="en">Partner</value>
         <value xml:lang="es">Partner</value>
         <value xml:lang="fr">Partenaire</value>
         <value xml:lang="it">Leader del socio</value>
@@ -224,7 +235,8 @@
     </property>
     <property key="DataSource.description.LEAD_PR">
         <value xml:lang="cs">Reklama</value>
-        <value xml:lang="en">LEAD_PR</value>
+        <value xml:lang="de">Öffentlichkeitsarbeit</value>
+        <value xml:lang="en">Public Relations</value>
         <value xml:lang="es">Relaciones públicas</value>
         <value xml:lang="fr">Relations publiques</value>
         <value xml:lang="it">Pubbliche relazioni leader</value>
@@ -238,7 +250,8 @@
     </property>
     <property key="DataSource.description.LEAD_SELFGEN">
         <value xml:lang="cs">Interní</value>
-        <value xml:lang="en">LEAD_SELFGEN</value>
+        <value xml:lang="de"></value>
+        <value xml:lang="en">Eigen generiert</value>
         <value xml:lang="es">Interno</value>
         <value xml:lang="fr">Généré en interne</value>
         <value xml:lang="it">Generato internamente</value>
@@ -252,7 +265,8 @@
     </property>
     <property key="DataSource.description.LEAD_TRADESHOW">
         <value xml:lang="cs">Předváděcí akce</value>
-        <value xml:lang="en">LEAD_TRADESHOW</value>
+        <value xml:lang="de">Messe</value>
+        <value xml:lang="en">Tradeshow</value>
         <value xml:lang="es">Demostración</value>
         <value xml:lang="fr">Démo commerciale</value>
         <value xml:lang="it">Dimostrazione commerciale</value>
@@ -266,7 +280,8 @@
     </property>
     <property key="DataSource.description.LEAD_WEBSITE">
         <value xml:lang="cs">Webové stránky</value>
-        <value xml:lang="en">LEAD_WEBSITE</value>
+        <value xml:lang="de">Website</value>
+        <value xml:lang="en">Website</value>
         <value xml:lang="es">Página web</value>
         <value xml:lang="fr">Site Web</value>
         <value xml:lang="it">Sito web leader</value>
@@ -280,7 +295,8 @@
     </property>
     <property key="DataSource.description.LEAD_WORDOFMOUTH">
         <value xml:lang="cs">Slovní reference</value>
-        <value xml:lang="en">LEAD_WORDOFMOUTH</value>
+        <value xml:lang="de">Word of Mouth</value>
+        <value xml:lang="en">Word of Mouth</value>
         <value xml:lang="es">Boca a oreja</value>
         <value xml:lang="fr">Bouche à oreille</value>
         <value xml:lang="it">Parola del mese leader</value>
@@ -312,6 +328,7 @@
     <property key="Enumeration.description.BANKING_IN_REASON">
         <value xml:lang="ar">مصرفية خلال اليوم</value>
         <value xml:lang="cs">Motivace v bance</value>
+        <value xml:lang="de">Bankeingangszahlung</value>
         <value xml:lang="en">Banking during the day</value>
         <value xml:lang="es">Cobro por banco</value>
         <value xml:lang="fr">Opération banquaire</value>
@@ -325,6 +342,7 @@
     </property>
     <property key="Enumeration.description.BANKING_OUT_REASON">
         <value xml:lang="ar">مصرفية خلال اليوم</value>
+        <value xml:lang="de">Bankausgangszahlung</value>
         <value xml:lang="en">Banking during the day</value>
         <value xml:lang="es">Pago por banco</value>
         <value xml:lang="fr">Opération banquaire</value>
@@ -339,6 +357,7 @@
     <property key="Enumeration.description.CASH_IN_REASON">
         <value xml:lang="ar">مبلغ نقدي صغير مستلم للصندوق</value>
         <value xml:lang="cs">Vložení drobné hotovosti</value>
+        <value xml:lang="de">Bargeldeinzahlung</value>
         <value xml:lang="en">Petty Cash Paid into Till</value>
         <value xml:lang="es">Cobro por caja</value>
         <value xml:lang="fr">Entrée d'espèces dans la caisse</value>
@@ -354,6 +373,7 @@
     <property key="Enumeration.description.CASH_OUT_REASON">
         <value xml:lang="ar">مبلغ نقدي صغير مدفوع</value>
         <value xml:lang="cs">Výběr drobné hotovosti</value>
+        <value xml:lang="de">Bargeldauszahlung</value>
         <value xml:lang="en">Petty Cash out</value>
         <value xml:lang="es">Pago por caja</value>
         <value xml:lang="fr">Sortie d'espèces de la caisse</value>
@@ -367,6 +387,7 @@
         <value xml:lang="zh-TW">零用金取出</value>
     </property>
     <property key="Enumeration.description.CHANGE_IN_REASON">
+        <value xml:lang="de">Änderungsgrund</value>
         <value xml:lang="en">Change added to Till's float</value>
         <value xml:lang="es">Cambio</value>
         <value xml:lang="fr">Monnaie ajoutée à l'encours de caisse</value>
@@ -381,7 +402,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_BRONZE">
         <value xml:lang="cs">Bronzová úroveň</value>
-        <value xml:lang="en">CNT_PRV_BRONZE</value>
+        <value xml:lang="de">Bronze</value>
+        <value xml:lang="en">Bronze</value>
         <value xml:lang="es">Bronce</value>
         <value xml:lang="fr">Niveau Bronze</value>
         <value xml:lang="it">Bronzo</value>
@@ -396,7 +418,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_GOLD">
         <value xml:lang="cs">Zlatá úroveň</value>
-        <value xml:lang="en">CNT_PRV_GOLD</value>
+        <value xml:lang="de">Gold</value>
+        <value xml:lang="en">Gold</value>
         <value xml:lang="es">Oro</value>
         <value xml:lang="fr">Niveau Or</value>
         <value xml:lang="it">Oro</value>
@@ -411,7 +434,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_NA_">
         <value xml:lang="cs">Neuplatní se</value>
-        <value xml:lang="en">CNT_PRV_NA_</value>
+        <value xml:lang="de">Nicht anwendbar</value>
+        <value xml:lang="en">Not applicable</value>
         <value xml:lang="es">No aplica</value>
         <value xml:lang="fr">Non applicable</value>
         <value xml:lang="it">Non applicabile</value>
@@ -426,7 +450,8 @@
     </property>
     <property key="Enumeration.description.CNT_PRV_SILVER">
         <value xml:lang="cs">Stříbrná úroveň</value>
-        <value xml:lang="en">CNT_PRV_SILVER</value>
+        <value xml:lang="de">Silber</value>
+        <value xml:lang="en">Silver</value>
         <value xml:lang="es">Plata</value>
         <value xml:lang="fr">Niveau argent</value>
         <value xml:lang="it">Argento</value>
@@ -528,7 +553,8 @@
     </property>
     <property key="Enumeration.description.ESIA_ALWAYS">
         <value xml:lang="cs">Vždy je</value>
-        <value xml:lang="en">ESIA_ALWAYS</value>
+        <value xml:lang="de">Immer</value>
+        <value xml:lang="en">Always</value>
         <value xml:lang="es">Incluir siempre</value>
         <value xml:lang="fr">Toujours inclure</value>
         <value xml:lang="it">Sempre</value>
@@ -542,7 +568,8 @@
     </property>
     <property key="Enumeration.description.ESIA_EXCLUDE">
         <value xml:lang="cs">Vyjma</value>
-        <value xml:lang="en">ESIA_EXCLUDE</value>
+        <value xml:lang="de">Ausschließen</value>
+        <value xml:lang="en">Exclude</value>
         <value xml:lang="es">Excluir</value>
         <value xml:lang="fr">Exclure</value>
         <value xml:lang="it">Escluso</value>
@@ -556,7 +583,8 @@
     </property>
     <property key="Enumeration.description.ESIA_INCLUDE">
         <value xml:lang="cs">Včetně</value>
-        <value xml:lang="en">ESIA_INCLUDE</value>
+        <value xml:lang="de">Einbeziehen</value>
+        <value xml:lang="en">Include</value>
         <value xml:lang="es">Incluido</value>
         <value xml:lang="fr">Inclure</value>
         <value xml:lang="it">Incluso</value>
@@ -693,6 +721,7 @@
     </property>
     <property key="Enumeration.description.FAC_PULLER">
         <value xml:lang="cs">Stahovák</value>
+        <value xml:lang="de">Fabrikabzieher</value>
         <value xml:lang="en">Puller</value>
         <value xml:lang="es">Extractor</value>
         <value xml:lang="fr">Extracteur</value>
@@ -710,6 +739,7 @@
     </property>
     <property key="Enumeration.description.FAC_REEL_STAND">
         <value xml:lang="cs">Naviják</value>
+        <value xml:lang="de">Rollenständer</value>
         <value xml:lang="en">Reel Stand</value>
         <value xml:lang="es">Bobina</value>
         <value xml:lang="fr">Dérouleur</value>
@@ -726,6 +756,7 @@
     </property>
     <property key="Enumeration.description.FAC_SERVICE_BODY">
         <value xml:lang="cs">Servisní zařízení</value>
+        <value xml:lang="de">Werkservice-Stelle</value>
         <value xml:lang="en">Service Body</value>
         <value xml:lang="es">Cuerpo de servicio</value>
         <value xml:lang="fr">Organisme de services</value>
@@ -852,7 +883,8 @@
     </property>
     <property key="Enumeration.description.GC_ACTIVATE">
         <value xml:lang="cs">Aktivovat</value>
-        <value xml:lang="en">GC_ACTIVATE</value>
+        <value xml:lang="de">Aktivieren</value>
+        <value xml:lang="en">Activate</value>
         <value xml:lang="es">Activar</value>
         <value xml:lang="fr">Activer</value>
         <value xml:lang="it">Attiva</value>
@@ -866,7 +898,8 @@
     </property>
     <property key="Enumeration.description.GC_RELOAD">
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="en">GC_RELOAD</value>
+        <value xml:lang="de">Neuladen</value>
+        <value xml:lang="en">Reload</value>
         <value xml:lang="es">Recargar</value>
         <value xml:lang="fr">Recharger</value>
         <value xml:lang="it">Ricaricata</value>
@@ -880,7 +913,8 @@
     </property>
     <property key="Enumeration.description.IND_AEROSPACE">
         <value xml:lang="cs">Letectví</value>
-        <value xml:lang="en">IND_AEROSPACE</value>
+        <value xml:lang="de">Luft- und Raumfahrt</value>
+        <value xml:lang="en">Aerospace</value>
         <value xml:lang="es">Indutria aeroespacial</value>
         <value xml:lang="fr">AEROSPACIATIALE</value>
         <value xml:lang="it">Spazio aereo</value>
@@ -895,7 +929,8 @@
     </property>
     <property key="Enumeration.description.IND_DISTRIBUTION">
         <value xml:lang="cs">Distribuce</value>
-        <value xml:lang="en">IND_DISTRIBUTION</value>
+        <value xml:lang="de">Vertrieb</value>
+        <value xml:lang="en">Distribution</value>
         <value xml:lang="es">Distribución</value>
         <value xml:lang="fr">DISTRIBUTION</value>
         <value xml:lang="it">In distribuzione</value>
@@ -910,7 +945,8 @@
     </property>
     <property key="Enumeration.description.IND_FINANCE">
         <value xml:lang="cs">Finance</value>
-        <value xml:lang="en">IND_FINANCE</value>
+        <value xml:lang="de">Finanz</value>
+        <value xml:lang="en">Finance</value>
         <value xml:lang="es">Finanzas</value>
         <value xml:lang="fr">FINANCE</value>
         <value xml:lang="it">Finanza</value>
@@ -925,7 +961,8 @@
     </property>
     <property key="Enumeration.description.IND_GEN_SERVICES">
         <value xml:lang="cs">Služby</value>
-        <value xml:lang="en">IND_GEN_SERVICES</value>
+        <value xml:lang="de">Allgemeine Dienstleistungen</value>
+        <value xml:lang="en">General Services</value>
         <value xml:lang="es">Servicios generales</value>
         <value xml:lang="fr">SERVICES GENERAUX</value>
         <value xml:lang="it">Servizi generale</value>
@@ -940,7 +977,8 @@
     </property>
     <property key="Enumeration.description.IND_HARDWARE">
         <value xml:lang="cs">Hardware</value>
-        <value xml:lang="en">IND_HARDWARE</value>
+        <value xml:lang="de">Materialwirtschaft</value>
+        <value xml:lang="en">Hardware</value>
         <value xml:lang="es">Material</value>
         <value xml:lang="fr">MATERIEL</value>
         <value xml:lang="it">Hardware</value>
@@ -955,7 +993,8 @@
     </property>
     <property key="Enumeration.description.IND_HEALTH_CARE">
         <value xml:lang="cs">Zdravotnictví</value>
-        <value xml:lang="en">IND_HEALTH_CARE</value>
+        <value xml:lang="de">Healthcare</value>
+        <value xml:lang="en">Healthcare</value>
         <value xml:lang="es">Salud</value>
         <value xml:lang="fr">SANTE</value>
         <value xml:lang="it">Sicurezza sulla salutea</value>
@@ -970,7 +1009,8 @@
     </property>
     <property key="Enumeration.description.IND_INSURANCE">
         <value xml:lang="cs">Pojišťovnictví</value>
-        <value xml:lang="en">IND_INSURANCE</value>
+        <value xml:lang="de">Versicherung</value>
+        <value xml:lang="en">Insurance</value>
         <value xml:lang="es">Seguros</value>
         <value xml:lang="fr">ASSURANCE</value>
         <value xml:lang="it">Assicurazione</value>
@@ -985,7 +1025,8 @@
     </property>
     <property key="Enumeration.description.IND_MANUFACTURING">
         <value xml:lang="cs">Výroba</value>
-        <value xml:lang="en">IND_MANUFACTURING</value>
+        <value xml:lang="de">Produktion</value>
+        <value xml:lang="en">Manufacturing</value>
         <value xml:lang="es">Manufactura</value>
         <value xml:lang="fr">FABRICATION</value>
         <value xml:lang="it">Produzione</value>
@@ -1000,7 +1041,8 @@
     </property>
     <property key="Enumeration.description.IND_MEDIA">
         <value xml:lang="cs">Média</value>
-        <value xml:lang="en">IND_MEDIA</value>
+        <value xml:lang="de">Media</value>
+        <value xml:lang="en">Media</value>
         <value xml:lang="es">Media</value>
         <value xml:lang="fr">MEDIA</value>
         <value xml:lang="it">Media</value>
@@ -1014,7 +1056,8 @@
     </property>
     <property key="Enumeration.description.IND_NON_PROFIT">
         <value xml:lang="cs">Neziskový sektor</value>
-        <value xml:lang="en">IND_NON_PROFIT</value>
+        <value xml:lang="de">Non-profit</value>
+        <value xml:lang="en">Non-profit</value>
         <value xml:lang="es">Sin ánimo de lucro</value>
         <value xml:lang="fr">NON LUCRATIF</value>
         <value xml:lang="it">Senza profitto</value>
@@ -1029,7 +1072,8 @@
     </property>
     <property key="Enumeration.description.IND_REAL_ESTATE">
         <value xml:lang="cs">Nemovitosti</value>
-        <value xml:lang="en">IND_REAL_ESTATE</value>
+        <value xml:lang="de">Immobilien</value>
+        <value xml:lang="en">Real estate</value>
         <value xml:lang="es">Inmobiliaria</value>
         <value xml:lang="fr">IMMOBILIER</value>
         <value xml:lang="it">Immobili</value>
@@ -1044,7 +1088,8 @@
     </property>
     <property key="Enumeration.description.IND_RETAIL">
         <value xml:lang="cs">Prodej</value>
-        <value xml:lang="en">IND_RETAIL</value>
+        <value xml:lang="de">Retail</value>
+        <value xml:lang="en">Retail</value>
         <value xml:lang="es">Venta al por menor</value>
         <value xml:lang="fr">VENTE AU DETAIL</value>
         <value xml:lang="it">Al dettaglio</value>
@@ -1059,7 +1104,8 @@
     </property>
     <property key="Enumeration.description.IND_SOFTWARE">
         <value xml:lang="cs">Software</value>
-        <value xml:lang="en">IND_SOFTWARE</value>
+        <value xml:lang="de">Software</value>
+        <value xml:lang="en">Software</value>
         <value xml:lang="es">Software</value>
         <value xml:lang="fr">LOGICIEL</value>
         <value xml:lang="it">Software</value>
@@ -1074,7 +1120,8 @@
     </property>
     <property key="Enumeration.description.IND_TELECOM">
         <value xml:lang="cs">Telekomunikace</value>
-        <value xml:lang="en">IND_TELECOM</value>
+        <value xml:lang="de">Telekommunikation</value>
+        <value xml:lang="en">Telecom</value>
         <value xml:lang="es">Telecomunicaciones</value>
         <value xml:lang="fr">TELECOM</value>
         <value xml:lang="it">Telefono</value>
@@ -1258,6 +1305,7 @@
         <value xml:lang="zh-TW">絕對網址</value>
     </property>
     <property key="Enumeration.description.KOTT_OFBURL">
+        <value xml:lang="de">OFBiz URL</value>
         <value xml:lang="en">OFBiz URL</value>
         <value xml:lang="es">URL OFBiz</value>
         <value xml:lang="fr">URL (lien internet) au sein d'OFBiz</value>
@@ -1491,6 +1539,7 @@
         <value xml:lang="zh-TW">替代辭匯</value>
     </property>
     <property key="Enumeration.description.KW_THES_REL">
+        <value xml:lang="de">Sprache: Französisch</value>
         <value xml:lang="en">Lang: FR</value>
         <value xml:lang="es">Idioma: francés</value>
         <value xml:lang="fr">Langue : français</value>
@@ -1802,6 +1851,7 @@
     </property>
     <property key="Enumeration.description.POTT_DEST">
         <value xml:lang="ar">مكان الوصول</value>
+        <value xml:lang="de">Ziel</value>
         <value xml:lang="en">Destination</value>
         <value xml:lang="es">Destino</value>
         <value xml:lang="fr">Destination</value>
@@ -1879,6 +1929,7 @@
         <value xml:lang="zh-TW">裝運港船上交貨</value>
     </property>
     <property key="Enumeration.description.POTT_INTR">
+        <value xml:lang="de">In Transit</value>
         <value xml:lang="en">In Transit</value>
         <value xml:lang="es">En tránsito</value>
         <value xml:lang="fr">En transit</value>
@@ -1895,6 +1946,7 @@
     </property>
     <property key="Enumeration.description.POTT_ORIG">
         <value xml:lang="ar">المصدر</value>
+        <value xml:lang="de">Herkunft</value>
         <value xml:lang="en">Origin</value>
         <value xml:lang="es">Origen</value>
         <value xml:lang="fr">Origine</value>
@@ -1948,7 +2000,7 @@
         <value xml:lang="de">Ist grösser oder gleich als</value>
         <value xml:lang="en">Is Greater Than or Equal To</value>
         <value xml:lang="es">Mayor o igual que</value>
-        <value xml:lang="fr">Est plus grand ou égal  à</value>
+        <value xml:lang="fr">Est plus grand ou égal à</value>
         <value xml:lang="it">E' maggiore di o uguale a</value>
         <value xml:lang="ja">≧</value>
         <value xml:lang="nl">Groter of gelijk aan</value>
@@ -2061,6 +2113,7 @@
         <value xml:lang="zh-TW">訂單小計 X 在過去 Y 個月裡</value>
     </property>
     <property key="Enumeration.description.PPIP_ORST_LAST_YEAR">
+        <value xml:lang="de">Zwischensumme X an Anzahl Bestellungen im vergangenen Jahr</value>
         <value xml:lang="en">Order sub-total X last year</value>
         <value xml:lang="es">Subtotal X de los pedidos del año pasado</value>
         <value xml:lang="fr">Sous-total X commandé l'année dernière</value>
@@ -2073,6 +2126,7 @@
         <value xml:lang="zh-TW">去年訂單小計X</value>
     </property>
     <property key="Enumeration.description.PPIP_ORST_YEAR">
+        <value xml:lang="de">Zwischensumme X an Anzahl Bestellungen seit Jahresbeginn</value>
         <value xml:lang="en">Order sub-total X since beginning of current year</value>
         <value xml:lang="es">Subtotal X de los pedidos desde inicio de año</value>
         <value xml:lang="fr">Sous-total X commandé depuis le début de l'année</value>
@@ -2524,8 +2578,21 @@
         <value xml:lang="zh">支付重试</value>
         <value xml:lang="zh-TW">付款重試</value>
     </property>
+    <property key="Enumeration.description.PRDS_ODR_PAY_CHANGE">
+        <value xml:lang="de">Aktualisierung des Bezahlstatus</value>
+        <value xml:lang="en">Payment Status Update</value>
+        <value xml:lang="es">Actualización del estado de pago</value>
+        <value xml:lang="fr">État du paiement</value>
+    </property>
+    <property key="Enumeration.description.PRDS_ODR_PAY_COMPLT">
+        <value xml:lang="de">Zahlung abgeschlossen</value>
+        <value xml:lang="en">Payment Complete</value>
+        <value xml:lang="es">Pago Completo</value>
+        <value xml:lang="fr">Paiement complet</value>
+    </property>
     <property key="Enumeration.description.PRDS_ODR_SHIP_COMPLT">
         <value xml:lang="ar">إكتمال الشحن</value>
+        <value xml:lang="de">Zustellung Abgeschlossen</value>
         <value xml:lang="en">Shipment Complete</value>
         <value xml:lang="es">Envío completo</value>
         <value xml:lang="fr">Expédition terminée</value>
@@ -2700,6 +2767,7 @@
     </property>
     <property key="Enumeration.description.PRDS_QUO_CREATED">
         <value xml:lang="ar">عرض السعر مخلق</value>
+        <value xml:lang="de">Angebot erstellt</value>
         <value xml:lang="en">Quote Created</value>
         <value xml:lang="es">Presupuesto creado</value>
         <value xml:lang="fr">Devis créé</value>
@@ -2766,6 +2834,7 @@
         <value xml:lang="zh-TW">已完成的退貨</value>
     </property>
     <property key="Enumeration.description.PRDS_TELL_FRIEND">
+        <value xml:lang="de">Weiterempfehlen</value>
         <value xml:lang="en">Tell-A-Friend</value>
         <value xml:lang="es">Díselo a un amigo</value>
         <value xml:lang="fr">Le dire à un ami</value>
@@ -2984,6 +3053,7 @@
         <value xml:lang="zh-TW">網站</value>
     </property>
     <property key="Enumeration.description.PRODRQM_ATP">
+        <value xml:lang="de">Anforderung an eine Bestellung, wenn die Produktverfügbarkeit den Mindestbestand des Warenlagers erreicht</value>
         <value xml:lang="en">Requirement for order when ATP Reaches Minimum Stock for Product-Facility</value>
         <value xml:lang="es">Solicitud de pedido cuando la cantidad disponible (ATP) alcanza el mínimo del producto por almacén</value>
         <value xml:lang="fr">Besoin créé quand la quantité disponible (ATP) atteint le stock minimum fixé</value>
@@ -3015,6 +3085,7 @@
         <value xml:lang="zh-TW">對每個銷售訂單自動</value>
     </property>
     <property key="Enumeration.description.PRODRQM_DS">
+        <value xml:lang="de">Nur Drop-shipping (Direktlieferung)</value>
         <value xml:lang="en">Drop-ship only</value>
         <value xml:lang="es">Solo envío directo</value>
         <value xml:lang="fr">Expédition par un tiers seulement</value>
@@ -3028,6 +3099,7 @@
         <value xml:lang="zh-TW">僅直接送貨</value>
     </property>
     <property key="Enumeration.description.PRODRQM_DSATP">
+        <value xml:lang="de">Automatische Direktlieferung bei niedriger Verfügbarkeit</value>
         <value xml:lang="en">Auto drop-ship on low quantity</value>
         <value xml:lang="es">Envío directo automático para pequeñas cantidades</value>
         <value xml:lang="fr">Expédition par un tiers automatique sur faible quantité</value>
@@ -3276,7 +3348,8 @@
         <value xml:lang="zh-TW">郵寄通路</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_BRONZE">
-        <value xml:lang="en">SUBSCRIBE_BRONZE</value>
+        <value xml:lang="de">Bronze Abonnement</value>
+        <value xml:lang="en">Bronze subscription</value>
         <value xml:lang="es">Suscripción bronce</value>
         <value xml:lang="fr">Niveau Bronze</value>
         <value xml:lang="it">Sottoscrizione bronzo</value>
@@ -3290,7 +3363,8 @@
         <value xml:lang="zh-TW">銅牌</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_GOLD">
-        <value xml:lang="en">SUBSCRIBE_GOLD</value>
+        <value xml:lang="de">Gold Abonnement</value>
+        <value xml:lang="en">Gold subscription</value>
         <value xml:lang="es">Suscripción oro</value>
         <value xml:lang="fr">Niveau or</value>
         <value xml:lang="it">Sottoscrizione oro</value>
@@ -3304,7 +3378,8 @@
         <value xml:lang="zh-TW">金牌</value>
     </property>
     <property key="Enumeration.description.SUBSCRIBE_SILVER">
-        <value xml:lang="en">SUBSCRIBE_SILVER</value>
+        <value xml:lang="de">Silber Abonnement</value>
+        <value xml:lang="en">Silver subscription</value>
         <value xml:lang="es">Suscripción plata</value>
         <value xml:lang="fr">Niveau argent</value>
         <value xml:lang="it">Sottoscrizione argento</value>
@@ -3365,7 +3440,8 @@
         <value xml:lang="zh-TW">未知通路</value>
     </property>
     <property key="Enumeration.description.WAM_AUTOMATIC">
-        <value xml:lang="en">WAM_AUTOMATIC</value>
+        <value xml:lang="de">Automatisch</value>
+        <value xml:lang="en">Automatisch</value>
         <value xml:lang="es">Automático</value>
         <value xml:lang="fr">Mode automatique</value>
         <value xml:lang="it">Automatico</value>
@@ -3379,7 +3455,8 @@
         <value xml:lang="zh-TW">自動</value>
     </property>
     <property key="Enumeration.description.WAM_MANUAL">
-        <value xml:lang="en">WAM_MANUAL</value>
+        <value xml:lang="de">Manuell</value>
+        <value xml:lang="en">Manuel</value>
         <value xml:lang="es">Manual</value>
         <value xml:lang="fr">Mode manuel</value>
         <value xml:lang="it">Manuale</value>
@@ -3392,7 +3469,8 @@
         <value xml:lang="zh-TW">手動</value>
     </property>
     <property key="Enumeration.description.WAT_LOOP">
-        <value xml:lang="en">WAT_LOOP</value>
+        <value xml:lang="de">Schleife</value>
+        <value xml:lang="en">Loop</value>
         <value xml:lang="es">Bucle</value>
         <value xml:lang="fr">Implémentation de boucle</value>
         <value xml:lang="it">Loop</value>
@@ -3406,7 +3484,8 @@
         <value xml:lang="zh-TW">迴圈</value>
     </property>
     <property key="Enumeration.description.WAT_NO">
-        <value xml:lang="en">WAT_NO</value>
+        <value xml:lang="de">Nr.</value>
+        <value xml:lang="en">No.</value>
         <value xml:lang="es">Ninguno</value>
         <value xml:lang="fr">Pas d'implémentation</value>
         <value xml:lang="it">Nessuno</value>
@@ -3420,7 +3499,8 @@
         <value xml:lang="zh-TW">不執行</value>
     </property>
     <property key="Enumeration.description.WAT_ROUTE">
-        <value xml:lang="en">WAT_ROUTE</value>
+        <value xml:lang="de">Route</value>
+        <value xml:lang="en">Route</value>
         <value xml:lang="es">Ruta</value>
         <value xml:lang="fr">Route</value>
         <value xml:lang="it">Percorso</value>
@@ -3434,7 +3514,8 @@
         <value xml:lang="zh-TW">路徑</value>
     </property>
     <property key="Enumeration.description.WAT_SUBFLOW">
-        <value xml:lang="en">WAT_SUBFLOW</value>
+        <value xml:lang="de">Teilstrom</value>
+        <value xml:lang="en">Subflow</value>
         <value xml:lang="es">Subflujo</value>
         <value xml:lang="fr">Implémentation de flux secondaire</value>
         <value xml:lang="it">Flusso secondario</value>
@@ -3448,7 +3529,8 @@
         <value xml:lang="zh-TW">子流程</value>
     </property>
     <property key="Enumeration.description.WAT_TOOL">
-        <value xml:lang="en">WAT_TOOL</value>
+        <value xml:lang="de">Werkzeug</value>
+        <value xml:lang="en">Tool</value>
         <value xml:lang="es">Herramienta</value>
         <value xml:lang="fr">Implémentation d'outils</value>
         <value xml:lang="it">Strumento</value>
@@ -3461,7 +3543,8 @@
         <value xml:lang="zh-TW">工具</value>
     </property>
     <property key="Enumeration.description.WDT_ARRAY">
-        <value xml:lang="en">ARRAY</value>
+        <value xml:lang="de">Array</value>
+        <value xml:lang="en">Array</value>
         <value xml:lang="es">Tabla</value>
         <value xml:lang="fr">Tableau - type complexe</value>
         <value xml:lang="it">Tabella</value>
@@ -3474,7 +3557,8 @@
         <value xml:lang="zh-TW">陣列</value>
     </property>
     <property key="Enumeration.description.WDT_BOOLEAN">
-        <value xml:lang="en">BOOLEAN</value>
+        <value xml:lang="de">Boolean</value>
+        <value xml:lang="en">Boolean</value>
         <value xml:lang="es">Booleano</value>
         <value xml:lang="fr">Booléen - type simple</value>
         <value xml:lang="it">Booleano</value>
@@ -3488,7 +3572,8 @@
         <value xml:lang="zh-TW">布林值</value>
     </property>
     <property key="Enumeration.description.WDT_DATETIME">
-        <value xml:lang="en">DATETIME</value>
+        <value xml:lang="de">Datetime</value>
+        <value xml:lang="en">Datetime</value>
         <value xml:lang="es">Fecha-hora</value>
         <value xml:lang="fr">Date-Heure - type de base</value>
         <value xml:lang="it">Data ora</value>
@@ -3502,7 +3587,8 @@
         <value xml:lang="zh-TW">日期時間</value>
     </property>
     <property key="Enumeration.description.WDT_DECLARED">
-        <value xml:lang="en">DECLARED</value>
+        <value xml:lang="de">Definiert</value>
+        <value xml:lang="en">Declared</value>
         <value xml:lang="es">Declarado</value>
         <value xml:lang="fr">Déclaré</value>
         <value xml:lang="it">Dichiarato</value>
@@ -3516,7 +3602,8 @@
         <value xml:lang="zh-TW">已聲明</value>
     </property>
     <property key="Enumeration.description.WDT_ENUMERATION">
-        <value xml:lang="en">ENUMERATION</value>
+        <value xml:lang="de">Enumeration</value>
+        <value xml:lang="en">Enumeration</value>
         <value xml:lang="es">Enumeración</value>
         <value xml:lang="fr">Enumération - type complexe</value>
         <value xml:lang="it">Enumerazione</value>
@@ -3530,7 +3617,8 @@
         <value xml:lang="zh-TW">列舉</value>
     </property>
     <property key="Enumeration.description.WDT_FLOAT">
-        <value xml:lang="en">FLOAT</value>
+        <value xml:lang="de">Float</value>
+        <value xml:lang="en">Float</value>
         <value xml:lang="es">Punto flotante</value>
         <value xml:lang="fr">Flottant - type de base</value>
         <value xml:lang="it">A virgola mobile</value>
@@ -3543,7 +3631,8 @@
         <value xml:lang="zh-TW">浮點</value>
     </property>
     <property key="Enumeration.description.WDT_INTEGER">
-        <value xml:lang="en">INTEGER</value>
+        <value xml:lang="de">Integer</value>
+        <value xml:lang="en">Integer</value>
         <value xml:lang="es">Entero</value>
         <value xml:lang="fr">Entier - type de base</value>
         <value xml:lang="it">Intero</value>
@@ -3556,7 +3645,8 @@
         <value xml:lang="zh-TW">整數</value>
     </property>
     <property key="Enumeration.description.WDT_LIST">
-        <value xml:lang="en">LIST</value>
+        <value xml:lang="de">Liste</value>
+        <value xml:lang="en">List</value>
         <value xml:lang="es">Lista</value>
         <value xml:lang="fr">Liste - type complexe</value>
         <value xml:lang="it">Lista</value>
@@ -3569,7 +3659,8 @@
         <value xml:lang="zh-TW">清單</value>
     </property>
     <property key="Enumeration.description.WDT_PERFORMER">
-        <value xml:lang="en">PERFORMER</value>
+        <value xml:lang="de">Interpret</value>
+        <value xml:lang="en">Performer</value>
         <value xml:lang="es">Intérprete</value>
         <value xml:lang="fr">Interprète - type simple</value>
         <value xml:lang="it">Interpretato</value>
@@ -3582,7 +3673,8 @@
         <value xml:lang="zh-TW">執行者</value>
     </property>
     <property key="Enumeration.description.WDT_RECORD">
-        <value xml:lang="en">RECORD</value>
+        <value xml:lang="de">Record</value>
+        <value xml:lang="en">Record</value>
         <value xml:lang="es">Entrada</value>
         <value xml:lang="fr">Enregistrement - type complexe</value>
         <value xml:lang="it">Registrato</value>
@@ -3595,7 +3687,8 @@
         <value xml:lang="zh-TW">記錄</value>
     </property>
     <property key="Enumeration.description.WDT_REFERENCE">
-        <value xml:lang="en">REFERENCE</value>
+        <value xml:lang="de">Referenz</value>
+        <value xml:lang="en">Reference</value>
         <value xml:lang="es">Referencia</value>
         <value xml:lang="fr">Référence - type de base</value>
         <value xml:lang="it">Riferimento</value>
@@ -3608,7 +3701,8 @@
         <value xml:lang="zh-TW">參考</value>
     </property>
     <property key="Enumeration.description.WDT_STRING">
-        <value xml:lang="en">STRING</value>
+        <value xml:lang="de">String</value>
+        <value xml:lang="en">String</value>
         <value xml:lang="es">Cadena</value>
         <value xml:lang="fr">Chaînes de caractères - type de base</value>
         <value xml:lang="it">Stringa</value>
@@ -3621,7 +3715,8 @@
         <value xml:lang="zh-TW">字串</value>
     </property>
     <property key="Enumeration.description.WDT_UNION">
-        <value xml:lang="en">UNION</value>
+        <value xml:lang="de">Verbindung</value>
+        <value xml:lang="en">Union</value>
         <value xml:lang="es">Unión</value>
         <value xml:lang="fr">Union - type complexe</value>
         <value xml:lang="it">Unione</value>
@@ -3634,7 +3729,8 @@
         <value xml:lang="zh-TW">聯合</value>
     </property>
     <property key="Enumeration.description.WDT_UNIT">
-        <value xml:lang="en">UNIT</value>
+        <value xml:lang="de">Einheit</value>
+        <value xml:lang="en">Unit</value>
         <value xml:lang="es">Unidad</value>
         <value xml:lang="fr">Unité - type simple</value>
         <value xml:lang="it">Unità</value>
@@ -3780,17 +3876,20 @@
         <value xml:lang="zh-TW">通用,公共訪問</value>
     </property>
     <property key="Enumeration.description.WF_PREDECESSOR">
+        <value xml:lang="de">Vorläufer</value>
         <value xml:lang="en">Preceding</value>
         <value xml:lang="nl">Voorafgaand</value>
         <value xml:lang="zh">预处理</value>
     </property>
     <property key="Enumeration.description.WF_SUCCESSOR">
+        <value xml:lang="de">Nachfolger</value>
         <value xml:lang="en">Succeeding</value>
         <value xml:lang="nl">Opvolgend</value>
         <value xml:lang="zh">后处理</value>
     </property>
     <property key="Enumeration.description.WFI_MULTIPLE">
-        <value xml:lang="en">WFI_MULTIPLE</value>
+        <value xml:lang="de">Mehrere</value>
+        <value xml:lang="en">Multiple</value>
         <value xml:lang="es">Múltiples</value>
         <value xml:lang="fr">L'activité peut être instanciée plusieurs fois</value>
         <value xml:lang="it">Multiplo</value>
@@ -3803,7 +3902,8 @@
         <value xml:lang="zh-TW">多次</value>
     </property>
     <property key="Enumeration.description.WFI_ONCE">
-        <value xml:lang="en">WFI_ONCE</value>
+        <value xml:lang="de">Einmal</value>
+        <value xml:lang="en">Once</value>
         <value xml:lang="es">Una vez</value>
         <value xml:lang="fr">L'activité ne peut être instanciée qu'une seule fois (valeur par défaut)</value>
         <value xml:lang="it">Una volta</value>
@@ -3816,7 +3916,8 @@
         <value xml:lang="zh-TW">一次</value>
     </property>
     <property key="Enumeration.description.WGC_FULL_BLOCKED">
-        <value xml:lang="en">WGC_FULL_BLOCKED</value>
+        <value xml:lang="de">Voll blockiert</value>
+        <value xml:lang="en">Full blocked</value>
         <value xml:lang="es">Completamente bloqueado</value>
         <value xml:lang="fr">Structure de réseau limitée à l'emboîtement approprié de SPLIT/JOIN et de boucle (LOOP)</value>
         <value xml:lang="it">Completamente bloccato</value>
@@ -3829,7 +3930,8 @@
         <value xml:lang="zh-TW">完全禁止</value>
     </property>
     <property key="Enumeration.description.WGC_LOOP_BLOCKED">
-        <value xml:lang="en">WGC_LOOP_BLOCKED</value>
+        <value xml:lang="de">Schleife blockiert</value>
+        <value xml:lang="en">Loop blocked</value>
         <value xml:lang="es">Bucle bloqueado</value>
         <value xml:lang="fr">Structure de réseau limitée à l'emboîtement approprié de boucle (LOOP)</value>
         <value xml:lang="it">Loop bloccato</value>
@@ -3842,7 +3944,8 @@
         <value xml:lang="zh-TW">禁止迴圈</value>
     </property>
     <property key="Enumeration.description.WGC_NON_BLOCKED">
-        <value xml:lang="en">WGC_NON_BLOCKED</value>
+        <value xml:lang="de">Nicht blockiert</value>
+        <value xml:lang="en">Non blocked</value>
         <value xml:lang="es">No bloqueado</value>
         <value xml:lang="fr">Pas de restriction sur la structure de réseau (valeur par défaut)</value>
         <value xml:lang="it">Non bloccato</value>
@@ -3855,7 +3958,8 @@
         <value xml:lang="zh-TW">不禁止</value>
     </property>
     <property key="Enumeration.description.WJT_AND">
-        <value xml:lang="en">WJT_AND</value>
+        <value xml:lang="de">Und</value>
+        <value xml:lang="en">And</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Synchronisez toutes les transitions entrantes (les attendre toutes)</value>
         <value xml:lang="it">E</value>
@@ -3868,7 +3972,8 @@
         <value xml:lang="zh-TW">且</value>
     </property>
     <property key="Enumeration.description.WJT_XOR">
-        <value xml:lang="en">WJT_XOR</value>
+        <value xml:lang="de">XOR</value>
+        <value xml:lang="en">XOR</value>
         <value xml:lang="es">O exclusivo</value>
         <value xml:lang="fr">Aucune synchronisation entrante exigée (départ à la première)</value>
         <value xml:lang="it">X-or</value>
@@ -3881,7 +3986,8 @@
         <value xml:lang="zh-TW">互斥或</value>
     </property>
     <property key="Enumeration.description.WLK_REPEAT_UNTIL">
-        <value xml:lang="en">WLK_REPEAT_UNTIL</value>
+        <value xml:lang="de">Wiederhole bis</value>
+        <value xml:lang="en">Repeat until</value>
         <value xml:lang="es">Repetir hasta</value>
         <value xml:lang="fr">Boucle de répétition "jusqu'à ce que" : continuer jusqu'à ce que la condition d'évaluation soit vérifiée</value>
         <value xml:lang="it">Ripeti fino a</value>
@@ -3894,7 +4000,8 @@
         <value xml:lang="zh-TW">重複直至</value>
     </property>
     <property key="Enumeration.description.WLK_WHILE">
-        <value xml:lang="en">WLK_WHILE</value>
+        <value xml:lang="de">While</value>
+        <value xml:lang="en">While</value>
         <value xml:lang="es">Mientras</value>
         <value xml:lang="fr">Boucle de répétition "tant que" : continuer tant que la condition d'évaluation n'est pas vérifiée</value>
         <value xml:lang="it">Mentre</value>
@@ -3907,7 +4014,8 @@
         <value xml:lang="zh-TW">迴圈</value>
     </property>
     <property key="Enumeration.description.WPM_IN">
-        <value xml:lang="en">WPM_IN</value>
+        <value xml:lang="de">IN</value>
+        <value xml:lang="en">IN</value>
         <value xml:lang="es">Parámetro de entrada</value>
         <value xml:lang="fr">Paramètre d'entrée</value>
         <value xml:lang="it">Parametro in ingresso</value>
@@ -3920,7 +4028,8 @@
         <value xml:lang="zh-TW">輸入</value>
     </property>
     <property key="Enumeration.description.WPM_INOUT">
-        <value xml:lang="en">WPM_INOUT</value>
+        <value xml:lang="de">INOUT</value>
+        <value xml:lang="en">INOUT</value>
         <value xml:lang="es">Parámetro de entrada-salida</value>
         <value xml:lang="fr">Paramètre utilisé pour l'entrée et la sortie</value>
         <value xml:lang="it">Parametro in entrata e uscita</value>
@@ -3933,7 +4042,8 @@
         <value xml:lang="zh-TW">輸入輸出</value>
     </property>
     <property key="Enumeration.description.WPM_OUT">
-        <value xml:lang="en">WPM_OUT</value>
+        <value xml:lang="de">OUT</value>
+        <value xml:lang="en">OUT</value>
         <value xml:lang="es">Parámetro de salida</value>
         <value xml:lang="fr">Paramètre de sortie</value>
         <value xml:lang="it">Parametro in uscita</value>
@@ -3946,7 +4056,8 @@
         <value xml:lang="zh-TW">輸出</value>
     </property>
     <property key="Enumeration.description.WSE_ASYNCHR">
-        <value xml:lang="en">WSE_ASYNCHR</value>
+        <value xml:lang="de">Asynchron</value>
+        <value xml:lang="en">Asynchronous</value>
         <value xml:lang="es">Asíncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
         <value xml:lang="it">Esecuzione asincrona</value>
@@ -3959,7 +4070,8 @@
         <value xml:lang="zh-TW">非同步</value>
     </property>
     <property key="Enumeration.description.WSE_SYNCHR">
-        <value xml:lang="en">WSE_SYNCHR</value>
+        <value xml:lang="de">Synchron</value>
+        <value xml:lang="en">Synchronous</value>
         <value xml:lang="es">Síncrono</value>
         <value xml:lang="fr">Exécution synchrone</value>
         <value xml:lang="it">Esecuzione sincrona</value>
@@ -3972,7 +4084,8 @@
         <value xml:lang="zh-TW">同步</value>
     </property>
     <property key="Enumeration.description.WST_AND">
-        <value xml:lang="en">WST_AND</value>
+        <value xml:lang="de">UND</value>
+        <value xml:lang="en">AND</value>
         <value xml:lang="es">Y</value>
         <value xml:lang="fr">Autorise les transitions sortantes convergentes</value>
         <value xml:lang="it">E</value>
@@ -3985,7 +4098,8 @@
         <value xml:lang="zh-TW">且</value>
     </property>
     <property key="Enumeration.description.WST_XOR">
-        <value xml:lang="en">WST_XOR</value>
+        <value xml:lang="de">XOR</value>
+        <value xml:lang="en">XOR</value>
         <value xml:lang="es">O exclusivo</value>
         <value xml:lang="fr">Autorise une seule transition sortante</value>
         <value xml:lang="it">X-Or</value>
@@ -3998,7 +4112,8 @@
         <value xml:lang="zh-TW">互斥或</value>
     </property>
     <property key="Enumeration.description.WTC_CONDITION">
-        <value xml:lang="en">WTC_CONDITION</value>
+        <value xml:lang="de">Bedingung</value>
+        <value xml:lang="en">Condition</value>
         <value xml:lang="es">Condición</value>
         <value xml:lang="fr">Condition</value>
         <value xml:lang="it">Condizione</value>
@@ -4011,7 +4126,8 @@
         <value xml:lang="zh-TW">條件</value>
     </property>
     <property key="Enumeration.description.WTC_OTHERWISE">
-        <value xml:lang="en">WTC_OTHERWISE</value>
+        <value xml:lang="de">Ansonsten</value>
+        <value xml:lang="en">Otherwise</value>
         <value xml:lang="es">En otro caso</value>
         <value xml:lang="fr">Autrement</value>
         <value xml:lang="it">Altrimenti</value>
@@ -4024,7 +4140,8 @@
         <value xml:lang="zh-TW">否則</value>
     </property>
     <property key="Enumeration.description.WTL_FROMLOOP">
-        <value xml:lang="en">WTL_FROMLOOP</value>
+        <value xml:lang="de">From Loop</value>
+        <value xml:lang="en">From Loop</value>
         <value xml:lang="es">Después de bucle</value>
         <value xml:lang="fr">Depuis une boucle</value>
         <value xml:lang="it">Dal loop</value>
@@ -4037,7 +4154,8 @@
         <value xml:lang="zh-TW">自迴圈</value>
     </property>
     <property key="Enumeration.description.WTL_NOLOOP">
-        <value xml:lang="en">WTL_NOLOOP</value>
+        <value xml:lang="de">Keine Schleife</value>
+        <value xml:lang="en">No Loop</value>
         <value xml:lang="es">Sin bucle</value>
         <value xml:lang="fr">Pas de boucle</value>
         <value xml:lang="it">Nessun loop</value>
@@ -4050,7 +4168,8 @@
         <value xml:lang="zh-TW">無迴圈</value>
     </property>
     <property key="Enumeration.description.WTL_TOLOOP">
-        <value xml:lang="en">WTL_TOLOOP</value>
+        <value xml:lang="de">To Loop</value>
+        <value xml:lang="en">To Loop</value>
         <value xml:lang="es">Hasta bucle</value>
         <value xml:lang="fr">Vers une boucle</value>
         <value xml:lang="it">Al loop</value>
@@ -4063,7 +4182,8 @@
         <value xml:lang="zh-TW">到迴圈</value>
     </property>
     <property key="Enumeration.description.WTT_APPLICATION">
-        <value xml:lang="en">WTT_APPLICATIO</value>
+        <value xml:lang="de">Applikation</value>
+        <value xml:lang="en">Application</value>
         <value xml:lang="es">Aplicación</value>
         <value xml:lang="fr">Application</value>
         <value xml:lang="it">Applicazione</value>
@@ -4077,7 +4197,8 @@
         <value xml:lang="zh-TW">應用</value>
     </property>
     <property key="Enumeration.description.WTT_PROCEDURE">
-        <value xml:lang="en">WTT_PROCEDUR</value>
+        <value xml:lang="de">Prozedur</value>
+        <value xml:lang="en">Procedure</value>
         <value xml:lang="es">Procedimiento</value>
         <value xml:lang="fr">Procédure</value>
         <value xml:lang="it">Procedura</value>
@@ -4331,7 +4452,8 @@
         <value xml:lang="zh-TW">產品商店支付服務類型</value>
     </property>
     <property key="EnumerationType.description.PROD_PRICE">
-        <value xml:lang="en">PROD_PRICE</value>
+        <value xml:lang="de">Produktpreis</value>
+        <value xml:lang="en">Product price</value>
         <value xml:lang="es">Precio de producto</value>
         <value xml:lang="fr">Liste des prix d'articles parents</value>
         <value xml:lang="it">Prezzo prodotto</value>
@@ -4476,6 +4598,7 @@
         <value xml:lang="zh-TW">產品需求方法</value>
     </property>
     <property key="EnumerationType.description.PTSOFTTFR">
+        <value xml:lang="de">Punkte der Titelübertragung</value>
         <value xml:lang="en">Points of Title Transfer</value>
         <value xml:lang="es">Puntos de transferencia de título</value>
         <value xml:lang="fr">Points de transfert de titre</value>
@@ -4509,6 +4632,7 @@
         <value xml:lang="zh-TW">詢價序號方法</value>
     </property>
     <property key="EnumerationType.description.TRACKINGCODE_SRC">
+        <value xml:lang="de">Tracking Code Quelle</value>
         <value xml:lang="en">Tracking Code Source</value>
         <value xml:lang="es">Código de seguimiento fuente</value>
         <value xml:lang="fr">Traçage de la source de code</value>
@@ -5960,22 +6084,27 @@
         <value xml:lang="zh-TW">格魯吉亞</value>
     </property>
     <property key="GeoAssocType.description.COUNTY_CITY">
+        <value xml:lang="de">Stadt in Region</value>
         <value xml:lang="en">City in a county</value>
         <value xml:lang="fr">Ville du département</value>
     </property>
     <property key="GeoAssocType.description.COUNTY_SEAT">
+        <value xml:lang="de">Regionale Hauptstadt</value>
         <value xml:lang="en">Administrative Main City of a County</value>
         <value xml:lang="fr">Chef-lieu du département</value>
     </property>
     <property key="GeoAssocType.description.GROUP_MEMBER">
+        <value xml:lang="de">Geo Group Mitglied</value>
         <value xml:lang="en">Geo Group Member</value>
         <value xml:lang="fr">Membre de la zone Géographique</value>
     </property>
     <property key="GeoAssocType.description.POSTAL_CODE">
+        <value xml:lang="de">Dem GeoTyp zugehörige Postleitzahl</value>
         <value xml:lang="en">Postal code associated to a GeoType</value>
         <value xml:lang="fr">Code Postal associé au type Géographique</value>
     </property>
     <property key="GeoAssocType.description.REGIONS">
+        <value xml:lang="de">Für eine Region einer größeren Geo-Location, d. H. Staaten, Grafschaften, Provinzen ...</value>
         <value xml:lang="en">For a region of a larger Geo, i.e. states, counties, provinces...</value>
         <value xml:lang="fr">Région d'une zone géographique plus large</value>
     </property>
@@ -7287,6 +7416,7 @@
     </property>
     <property key="Geo.geoName.NIRL">
         <value xml:lang="ar">نيرل</value>
+        <value xml:lang="de">NIRL</value>
         <value xml:lang="en">NIRL</value>
         <value xml:lang="fr">NIRL</value>
         <value xml:lang="it">NIRL</value>
@@ -7314,6 +7444,7 @@
         <value xml:lang="zh-TW">[新]紐埃島</value>
     </property>
     <property key="Geo.geoName.NL">
+        <value xml:lang="de">Neufundland/Labrador</value>
         <value xml:lang="en">Newfoundland/Labrador</value>
         <value xml:lang="fr">Terre-Neuve-et-Labrador</value>
         <value xml:lang="it">NL</value>
@@ -7390,6 +7521,7 @@
     </property>
     <property key="Geo.geoName.NS">
         <value xml:lang="ar">نوفا سكوتيا</value>
+        <value xml:lang="de">Neuschottland</value>
         <value xml:lang="en">Nova Scotia</value>
         <value xml:lang="fr">Nouvelle-Ecosse</value>
         <value xml:lang="it">NS</value>
@@ -7403,6 +7535,7 @@
     </property>
     <property key="Geo.geoName.NT">
         <value xml:lang="ar">الأقاليم الشمالية الغربية</value>
+        <value xml:lang="de">Nordwestliche Territorien</value>
         <value xml:lang="en">Northwest Territories</value>
         <value xml:lang="fr">Territoires du Nord-Ouest</value>
         <value xml:lang="it">NT</value>
@@ -7415,6 +7548,7 @@
     </property>
     <property key="Geo.geoName.NU">
         <value xml:lang="ar">نونافوت</value>
+        <value xml:lang="de">Nunavut</value>
         <value xml:lang="en">Nunavut</value>
         <value xml:lang="fr">Nunavut</value>
         <value xml:lang="it">NU</value>
@@ -7460,6 +7594,7 @@
     </property>
     <property key="Geo.geoName.ON">
         <value xml:lang="ar">اونتاريو</value>
+        <value xml:lang="de">Ontario</value>
         <value xml:lang="en">Ontario</value>
         <value xml:lang="fr">Ontario</value>
         <value xml:lang="it">Ontario</value>
@@ -7520,6 +7655,7 @@
     </property>
     <property key="Geo.geoName.PE">
         <value xml:lang="ar">إيل دو الأمير إدوارد</value>
+        <value xml:lang="de">Prinz Edward Insel</value>
         <value xml:lang="en">Prince Edward Island</value>
         <value xml:lang="fr">Île-du-Prince-Edouard</value>
         <value xml:lang="it">PE</value>
@@ -7723,6 +7859,7 @@
     </property>
     <property key="Geo.geoName.QC">
         <value xml:lang="ar">كيبيك</value>
+        <value xml:lang="de">Quebec</value>
         <value xml:lang="en">Quebec</value>
         <value xml:lang="fr">Québec</value>
         <value xml:lang="it">QC</value>
@@ -7831,6 +7968,7 @@
     </property>
     <property key="Geo.geoName.SCOT">
         <value xml:lang="ar">أسكتلندا</value>
+        <value xml:lang="de">Schottland</value>
         <value xml:lang="en">Scotland</value>
         <value xml:lang="fr">Ecosse</value>
         <value xml:lang="it">Scozia</value>
@@ -7938,6 +8076,7 @@
     </property>
     <property key="Geo.geoName.SK">
         <value xml:lang="ar">ساسكاتشوان</value>
+        <value xml:lang="de">Saskatchewan</value>
         <value xml:lang="en">Saskatchewan</value>
         <value xml:lang="fr">Saskatchewan</value>
         <value xml:lang="it">Saskatchewan</value>
@@ -8642,7 +8781,8 @@
     </property>
     <property key="Geo.geoName.WALS">
         <value xml:lang="ar">والز</value>
-        <value xml:lang="en">WALS</value>
+        <value xml:lang="de">Wales</value>
+        <value xml:lang="en">Wales</value>
         <value xml:lang="fr">Pays de Galles</value>
         <value xml:lang="it">Galles</value>
         <value xml:lang="ja">ウェールズ</value>
@@ -8701,6 +8841,7 @@
     </property>
     <property key="Geo.geoName.YT">
         <value xml:lang="ar">يوكون</value>
+        <value xml:lang="de">Yukon Gebiet</value>
         <value xml:lang="en">Yukon Territory</value>
         <value xml:lang="es">Territorio del Yukon</value>
         <value xml:lang="fr">Territoire du Yukon</value>
@@ -9051,7 +9192,8 @@
     </property>
     <property key="StatusItem.description.BLOG_DRAFT">
         <value xml:lang="cs">Návrh</value>
-        <value xml:lang="en">BLOG_DRAFT</value>
+        <value xml:lang="de">Draft</value>
+        <value xml:lang="en">Draft</value>
         <value xml:lang="es">Esbozo</value>
         <value xml:lang="fr">Ébauche</value>
         <value xml:lang="it">Bozza blog</value>
@@ -9065,7 +9207,8 @@
     </property>
     <property key="StatusItem.description.BLOG_PUBLISHED">
         <value xml:lang="cs">Publikováno</value>
-        <value xml:lang="en">BLOG_PUBLISHED</value>
+        <value xml:lang="de">Publiziert</value>
+        <value xml:lang="en">Published</value>
         <value xml:lang="es">Publicado</value>
         <value xml:lang="fr">Publié</value>
         <value xml:lang="it">Pubblicatore blog</value>
@@ -9079,7 +9222,8 @@
     </property>
     <property key="StatusItem.description.BLOG_REJECTED">
         <value xml:lang="cs">Zamítnuto</value>
-        <value xml:lang="en">BLOG_REJECTED</value>
+        <value xml:lang="de">Abgelehnt</value>
+        <value xml:lang="en">Rejected</value>
         <value xml:lang="es">Desechado</value>
         <value xml:lang="fr">Rejeté</value>
         <value xml:lang="it">Rifiutato dal blog</value>
@@ -9093,7 +9237,8 @@
     </property>
     <property key="StatusItem.description.BLOG_SUBMITTED">
         <value xml:lang="cs">Odesláno</value>
-        <value xml:lang="en">BLOG_SUBMITTED</value>
+        <value xml:lang="de">Eingereicht</value>
+        <value xml:lang="en">Submitted</value>
         <value xml:lang="es">Enviado</value>
         <value xml:lang="fr">Soumis</value>
         <value xml:lang="it">Blog submitter</value>
@@ -9221,6 +9366,7 @@
     <property key="StatusItem.description.CAL_IN_PLANNING">
         <value xml:lang="ar">قيد التخطيط</value>
         <value xml:lang="cs">V přípravě</value>
+        <value xml:lang="de">In Planung</value>
         <value xml:lang="en">In Planning</value>
         <value xml:lang="es">En planificación</value>
         <value xml:lang="fr">Planifié</value>
@@ -9255,6 +9401,7 @@
     <property key="StatusItem.description.CAL_PLANNED">
         <value xml:lang="ar">مخططة</value>
         <value xml:lang="cs">Naplánováno</value>
+        <value xml:lang="de">Geplant</value>
         <value xml:lang="en">Planned</value>
         <value xml:lang="es">Planificado</value>
         <value xml:lang="fr">Planifié</value>
@@ -9324,6 +9471,7 @@
     <property key="StatusItem.description.CLPT_IN_USE">
         <value xml:lang="ar">قيد الإستخدام</value>
         <value xml:lang="cs">Používáno</value>
+        <value xml:lang="de">In Benutzung</value>
         <value xml:lang="en">In Use</value>
         <value xml:lang="es">En uso</value>
         <value xml:lang="fr">En cours d'utilisation</value>
@@ -9376,7 +9524,8 @@
     </property>
     <property key="StatusItem.description.CNTAP_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
-        <value xml:lang="cs">Schváleno</value>  
+        <value xml:lang="cs">Schváleno</value>
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvé</value>
@@ -9392,6 +9541,7 @@
     <property key="StatusItem.description.CNTAP_IN_PROCESS">
         <value xml:lang="ar">الموافقة قيد التنفيذ</value>
         <value xml:lang="cs">Probíhá schvalování</value>
+        <value xml:lang="de">Genehmigung in Bearbeitung</value>
         <value xml:lang="en">Approval In Process</value>
         <value xml:lang="es">Aprobación en curso</value>
         <value xml:lang="fr">Approbation en cours</value>
@@ -9407,6 +9557,7 @@
     <property key="StatusItem.description.CNTAP_NOT_READY">
         <value xml:lang="ar">غير جاهزة للموافقة</value>
         <value xml:lang="cs">Nepřipraveno na schválení</value>
+        <value xml:lang="de">Nicht bereit zur Genehmigung</value>
         <value xml:lang="en">Not Ready for Approval</value>
         <value xml:lang="es">No preparado para aprobación</value>
         <value xml:lang="fr">Non prêt pour approbation</value>
@@ -9422,6 +9573,7 @@
     <property key="StatusItem.description.CNTAP_READY">
         <value xml:lang="ar">جاهزة للموافقة</value>
         <value xml:lang="cs">Připraveno ke schválení</value>
+        <value xml:lang="de">Bereit zur Genehmigung</value>
         <value xml:lang="en">Ready for Approval</value>
         <value xml:lang="es">Preparado para aprobación</value>
         <value xml:lang="fr">Prêt pour approbation</value>
@@ -9437,6 +9589,7 @@
     <property key="StatusItem.description.CNTAP_REJECTED">
         <value xml:lang="ar">مرفوضة</value>
         <value xml:lang="cs">Odmítnuto</value>
+        <value xml:lang="de">Abgelehnt</value>
         <value xml:lang="en">Rejected</value>
         <value xml:lang="es">Rechazado</value>
         <value xml:lang="fr">Refusé</value>
@@ -9452,6 +9605,7 @@
     <property key="StatusItem.description.CNTAP_SOFT_REJ">
         <value xml:lang="ar">مرفوضة سوفت</value>
         <value xml:lang="cs">Dočasně odmítnuto</value>
+        <value xml:lang="de">Soft abgelehnt</value>
         <value xml:lang="en">Soft Rejected</value>
         <value xml:lang="es">Rechazado (admite mejoras)</value>
         <value xml:lang="fr">Support rejetée</value>
@@ -9593,6 +9747,7 @@
     <property key="StatusItem.description.COM_ROLE_COMPLETED">
         <value xml:lang="ar">مقفلة</value>
         <value xml:lang="cs">Uzavřeno</value>
+        <value xml:lang="de">Geschlossen</value>
         <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
@@ -9608,6 +9763,7 @@
     <property key="StatusItem.description.COM_ROLE_CREATED">
         <value xml:lang="ar">مخلقة</value>
         <value xml:lang="cs">Vytvořeno</value>
+        <value xml:lang="de">Erstellt</value>
         <value xml:lang="en">Created</value>
         <value xml:lang="es">Creado</value>
         <value xml:lang="fr">Créé</value>
@@ -9621,7 +9777,7 @@
     </property>
     <property key="StatusItem.description.COM_ROLE_READ">
         <value xml:lang="ar">مقروءة</value>
-        <value xml:lang="de">Lesen</value>
+        <value xml:lang="de">Gelesen</value>
         <value xml:lang="en">Read</value>
         <value xml:lang="es">Leído</value>
         <value xml:lang="fr">Lu</value>
@@ -9707,6 +9863,7 @@
     </property>
     <property key="StatusItem.description.CRQ_DRAFT">
         <value xml:lang="ar">مسودة</value>
+        <value xml:lang="de">Draft</value>
         <value xml:lang="en">Draft</value>
         <value xml:lang="es">Esbozo</value>
         <value xml:lang="fr">Brouillon</value>
@@ -9720,6 +9877,7 @@
     </property>
     <property key="StatusItem.description.CRQ_PENDING">
         <value xml:lang="ar">معلقة</value>
+        <value xml:lang="de">Ausstehender Kunde</value>
         <value xml:lang="en">Pending Cust.</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -9786,6 +9944,7 @@
     </property>
     <property key="StatusItem.description.CTNT_AVAILABLE">
         <value xml:lang="ar">موجودة</value>
+        <value xml:lang="de">Verfügbar</value>
         <value xml:lang="en">Available</value>
         <value xml:lang="es">Disponible</value>
         <value xml:lang="fr">Disponible</value>
@@ -9907,6 +10066,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_ACTIVE">
         <value xml:lang="ar">مفتوحة / متداولة</value>
+        <value xml:lang="de">Aktiv/Offen</value>
         <value xml:lang="en">Active/Open</value>
         <value xml:lang="es">Activo/Abierto</value>
         <value xml:lang="fr">Actif / Ouvert</value>
@@ -9920,6 +10080,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_INACTIVE">
         <value xml:lang="ar">مقفلة/غير متداولة</value>
+        <value xml:lang="de">Inaktiv/Geschlossen</value>
         <value xml:lang="en">Inactive/Closed</value>
         <value xml:lang="es">Inactivo/Cerrado</value>
         <value xml:lang="fr">Inactif / Fermé</value>
@@ -9933,6 +10094,7 @@
     </property>
     <property key="StatusItem.description.EMPL_POS_PLANNEDFOR">
         <value xml:lang="ar">مخطط لها</value>
+        <value xml:lang="de">Geplant für</value>
         <value xml:lang="en">Planned For</value>
         <value xml:lang="es">Planificado para</value>
         <value xml:lang="fr">Prévu pour</value>
@@ -9945,7 +10107,8 @@
         <value xml:lang="zh-TW">已計劃用於</value>
     </property>
     <property key="StatusItem.description.ESR_COMPLETE">
-        <value xml:lang="en">ESR_COMPLETE</value>
+        <value xml:lang="de">Abgeschlossen</value>
+        <value xml:lang="en">Complete</value>
         <value xml:lang="es">Completado</value>
         <value xml:lang="fr">Accompli</value>
         <value xml:lang="it">Completata</value>
@@ -9958,7 +10121,8 @@
         <value xml:lang="zh-TW">完成</value>
     </property>
     <property key="StatusItem.description.ESR_DATA_ERROR">
-        <value xml:lang="en">ESR_DATA_ERROR</value>
+        <value xml:lang="de">Datenfehler</value>
+        <value xml:lang="en">Data Error</value>
         <value xml:lang="es">Error de datos</value>
         <value xml:lang="fr">Erreur de données</value>
         <value xml:lang="it">Errore nei dati</value>
@@ -9971,7 +10135,8 @@
         <value xml:lang="zh-TW">資料錯誤</value>
     </property>
     <property key="StatusItem.description.ESR_NOT_STARTED">
-        <value xml:lang="en">ESR_NOT_STARTED</value>
+        <value xml:lang="de">Nicht gestartet</value>
+        <value xml:lang="en">Not started</value>
         <value xml:lang="es">No iniciado</value>
         <value xml:lang="fr">Non démarré</value>
         <value xml:lang="it">Non iniziato</value>
@@ -9984,7 +10149,8 @@
         <value xml:lang="zh-TW">未開始</value>
     </property>
     <property key="StatusItem.description.ESR_OTHER_ERROR">
-        <value xml:lang="en">ESR_OTHER_ERROR</value>
+        <value xml:lang="de">Anderer Fehler</value>
+        <value xml:lang="en">Other Error</value>
         <value xml:lang="es">Otro error</value>
         <value xml:lang="fr">Autre erreur</value>
         <value xml:lang="it">Altro errore</value>
@@ -9997,7 +10163,8 @@
         <value xml:lang="zh-TW">其他錯誤</value>
     </property>
     <property key="StatusItem.description.ESR_PENDING">
-        <value xml:lang="en">ESR_PENDING</value>
+        <value xml:lang="de">Ausstehend</value>
+        <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">Hors ligne en attente</value>
         <value xml:lang="it">Sospeso</value>
@@ -10010,7 +10177,8 @@
         <value xml:lang="zh-TW">待定中</value>
     </property>
     <property key="StatusItem.description.ESR_RUNNING">
-        <value xml:lang="en">ESR_RUNNING</value>
+        <value xml:lang="de">Im Gange</value>
+        <value xml:lang="en">Running</value>
         <value xml:lang="es">En ejecución</value>
         <value xml:lang="fr">En fonction</value>
         <value xml:lang="it">In esecuzione</value>
@@ -10023,7 +10191,8 @@
         <value xml:lang="zh-TW">執行中</value>
     </property>
     <property key="StatusItem.description.ESR_SERVICE_ERROR">
-        <value xml:lang="en">ESR_SERVICE_ERROR</value>
+        <value xml:lang="de">Service Fehler</value>
+        <value xml:lang="en">Service Error</value>
         <value xml:lang="es">Error de llamada a servicio</value>
         <value xml:lang="fr">Erreur d'appel au service</value>
         <value xml:lang="it">Errore servizio</value>
@@ -10037,6 +10206,7 @@
     </property>
     <property key="StatusItem.description.EXST_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
+        <value xml:lang="de">Akzeptiert</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvé</value>
@@ -10050,6 +10220,7 @@
     </property>
     <property key="StatusItem.description.EXST_CANCELLED">
         <value xml:lang="ar">ملغاة</value>
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -10063,6 +10234,7 @@
     </property>
     <property key="StatusItem.description.EXST_COMPLETE">
         <value xml:lang="ar">منتهية</value>
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Complete</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Achevé</value>
@@ -10076,6 +10248,7 @@
     </property>
     <property key="StatusItem.description.EXST_DEFINED">
         <value xml:lang="ar">معرفة</value>
+        <value xml:lang="de">Definiert</value>
         <value xml:lang="en">Defined</value>
         <value xml:lang="es">Definido</value>
         <value xml:lang="fr">Paramétré</value>
@@ -10089,6 +10262,7 @@
     </property>
     <property key="StatusItem.description.EXST_IMPLEMENTED">
         <value xml:lang="ar">منفذة</value>
+        <value xml:lang="de">Implementiert</value>
         <value xml:lang="en">Implemented</value>
         <value xml:lang="es">Implementado</value>
         <value xml:lang="fr">Implémenté</value>
@@ -10102,6 +10276,7 @@
     </property>
     <property key="StatusItem.description.EXST_IN_DESIGN">
         <value xml:lang="ar">قيد التصميم</value>
+        <value xml:lang="de">In Konzeption</value>
         <value xml:lang="en">In Design</value>
         <value xml:lang="es">En proyecto</value>
         <value xml:lang="fr">En projet</value>
@@ -10115,6 +10290,7 @@
     </property>
     <property key="StatusItem.description.EXST_TESTED">
         <value xml:lang="ar">تم اختبارها</value>
+        <value xml:lang="de">Getestet</value>
         <value xml:lang="en">Tested</value>
         <value xml:lang="es">Probado</value>
         <value xml:lang="fr">Testé</value>
@@ -10216,6 +10392,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_ASSIGNED">
         <value xml:lang="ar">معيينة</value>
+        <value xml:lang="de">Zugewiesen</value>
         <value xml:lang="en">Assigned</value>
         <value xml:lang="es">Asignado</value>
         <value xml:lang="fr">Affecté</value>
@@ -10230,6 +10407,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_DENIED">
         <value xml:lang="ar">الطلب مرفوض</value>
+        <value xml:lang="de">Anfrage abgelehnt</value>
         <value xml:lang="en">Request Denied</value>
         <value xml:lang="es">Solicitud denegada</value>
         <value xml:lang="fr">Demande refusée</value>
@@ -10244,6 +10422,7 @@
     </property>
     <property key="StatusItem.description.FA_ASGN_REQUESTED">
         <value xml:lang="ar">مطلوبة</value>
+        <value xml:lang="de">Angefordert</value>
         <value xml:lang="en">Requested</value>
         <value xml:lang="es">Solicitado</value>
         <value xml:lang="fr">Demandé</value>
@@ -10258,6 +10437,7 @@
     </property>
     <property key="StatusItem.description.FNACT_ACTIVE">
         <value xml:lang="ar">متداولة</value>
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
@@ -10272,6 +10452,7 @@
     </property>
     <property key="StatusItem.description.FNACT_CANCELLED">
         <value xml:lang="ar">ملغية</value>
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -10286,6 +10467,7 @@
     </property>
     <property key="StatusItem.description.FNACT_MANFROZEN">
         <value xml:lang="ar">مجمدة يدويا</value>
+        <value xml:lang="de">Manuell eingefroren</value>
         <value xml:lang="en">Manually Frozen</value>
         <value xml:lang="es">Bloqueo manual</value>
         <value xml:lang="fr">Bloqué manuellement</value>
@@ -10299,6 +10481,7 @@
         <value xml:lang="zh-TW">手工凍結</value>
     </property>
     <property key="StatusItem.description.FNACT_NEGPENDREPL">
+        <value xml:lang="de">Negativer ausstehender Nachschub</value>
         <value xml:lang="en">Negative Pending Replenishment</value>
         <value xml:lang="es">Negativo pendiente de reposición</value>
         <value xml:lang="fr">Replanification en attente</value>
@@ -10313,6 +10496,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_COMPLETE">
         <value xml:lang="ar">منتهية</value>
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Terminé</value>
@@ -10326,6 +10510,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_DEFERRED">
         <value xml:lang="ar">مؤجلة</value>
+        <value xml:lang="de">Aufgeschoben</value>
         <value xml:lang="en">Deferred</value>
         <value xml:lang="es">Diferido</value>
         <value xml:lang="fr">Reporté</value>
@@ -10339,6 +10524,7 @@
     </property>
     <property key="StatusItem.description.HR_DS_INCOMPLETE">
         <value xml:lang="ar">غير مكتملة</value>
+        <value xml:lang="de">Unvollständig</value>
         <value xml:lang="en">Incomplete</value>
         <value xml:lang="es">Incompleto</value>
         <value xml:lang="fr">Incomplet</value>
@@ -10351,6 +10537,7 @@
         <value xml:lang="zh-TW">未完成</value>
     </property>
     <property key="StatusItem.description.HR_JS_CONTRACTOR">
+        <value xml:lang="de">Auftragnehmer</value>
         <value xml:lang="en">Contractor</value>
         <value xml:lang="es">Contratante</value>
         <value xml:lang="fr">Entrepreneur</value>
@@ -10364,6 +10551,7 @@
     </property>
     <property key="StatusItem.description.HR_JS_FULLTIME">
         <value xml:lang="ar">دوام كامل</value>
+        <value xml:lang="de">Vollzeit</value>
         <value xml:lang="en">Full time</value>
         <value xml:lang="es">Tiempo completo</value>
         <value xml:lang="fr">Temps plein</value>
@@ -10377,6 +10565,7 @@
     </property>
     <property key="StatusItem.description.HR_JS_PARTTIME">
         <value xml:lang="ar">دوام جزئي</value>
+        <value xml:lang="de">Teilzeit</value>
         <value xml:lang="en">Part time</value>
         <value xml:lang="es">Tiempo parcial</value>
         <value xml:lang="fr">Temps partiel</value>
@@ -10543,6 +10732,7 @@
     <property key="StatusItem.description.INV_ACTIVATED">
         <value xml:lang="ar">مفعلة</value>
         <value xml:lang="cs">Activovaná</value>
+        <value xml:lang="de">Aktiviert</value>
         <value xml:lang="en">Activated</value>
         <value xml:lang="es">Activado</value>
         <value xml:lang="fr">Activé</value>
@@ -10610,6 +10800,7 @@
     </property>
     <property key="StatusItem.description.INV_DEACTIVATED">
         <value xml:lang="ar">معطلة</value>
+        <value xml:lang="de">Deaktiviert</value>
         <value xml:lang="en">Deactivated</value>
         <value xml:lang="es">Desactivado</value>
         <value xml:lang="fr">Désactivé</value>
@@ -10658,6 +10849,7 @@
     </property>
     <property key="StatusItem.description.INV_NS_DEFECTIVE">
         <value xml:lang="ar">معطوبة (غير متسلسلة)</value>
+        <value xml:lang="de">Defekte (nicht serialisiert)</value>
         <value xml:lang="en">Defective (Non-Serialized)</value>
         <value xml:lang="es">Defectuoso (no serializado)</value>
         <value xml:lang="fr">Défectueux (non sérialisable)</value>
@@ -10671,6 +10863,7 @@
     </property>
     <property key="StatusItem.description.INV_NS_ON_HOLD">
         <value xml:lang="ar">قيد الانتظار (غير مستلسلة)</value>
+        <value xml:lang="de">In Wartestellung (nicht serialisiert)</value>
         <value xml:lang="en">On Hold (Non-Serialized)</value>
         <value xml:lang="es">Retenido (no serializado)</value>
         <value xml:lang="fr">En attente (non sérialisable)</value>
@@ -10920,6 +11113,7 @@
     </property>
     <property key="StatusItem.description.LEAD_ASSIGNED">
         <value xml:lang="ar">محدد لها مسؤول</value>
+        <value xml:lang="de">Zugewiesen</value>
         <value xml:lang="en">Assigned</value>
         <value xml:lang="es">Asignado</value>
         <value xml:lang="fr">Affecté</value>
@@ -10933,6 +11127,7 @@
     </property>
     <property key="StatusItem.description.LEAD_CONVERTED">
         <value xml:lang="ar">محولة</value>
+        <value xml:lang="de">Konvertiert</value>
         <value xml:lang="en">Converted</value>
         <value xml:lang="es">Convertido</value>
         <value xml:lang="fr">Converti</value>
@@ -10946,6 +11141,7 @@
     </property>
     <property key="StatusItem.description.LEAD_QUALIFIED">
         <value xml:lang="ar">منعوته</value>
+        <value xml:lang="de">Qualifiziert</value>
         <value xml:lang="en">Qualified</value>
         <value xml:lang="es">Cualificado</value>
         <value xml:lang="fr">Qualifié</value>
@@ -10959,6 +11155,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_CREATED">
         <value xml:lang="ar">مخلقة</value>
+        <value xml:lang="de">Erstellt</value>
         <value xml:lang="en">Created</value>
         <value xml:lang="fr">Créé</value>
         <value xml:lang="ja">作成</value>
@@ -10969,6 +11166,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_APPROVED">
         <value xml:lang="ar">موافق عليها</value>
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="fr">Validé</value>
         <value xml:lang="ja">承認</value>
@@ -10980,6 +11178,7 @@
     </property>
     <property key="StatusItem.description.LEAVE_REJECTED">
         <value xml:lang="ar">مرفوضة</value>
+        <value xml:lang="de">Abgelehnt</value>
         <value xml:lang="en">Rejected</value>
         <value xml:lang="fr">Rejeté</value>
         <value xml:lang="ja">否認</value>
@@ -11098,6 +11297,7 @@
         <value xml:lang="zh-TW">沒有同步</value>
     </property>
     <property key="StatusItem.description.OAGMP_ERRCONFSENT">
+        <value xml:lang="de">Fehler Bestätigung gesendet</value>
         <value xml:lang="en">Error Confirm Sent</value>
         <value xml:lang="es">Confirmación de error enviada</value>
         <value xml:lang="fr">Confirmation d'erreur envoyée</value>
@@ -11111,6 +11311,7 @@
         <value xml:lang="zh-TW">發送確認時出錯</value>
     </property>
     <property key="StatusItem.description.OAGMP_OGEN_ERROR">
+        <value xml:lang="de">Out generiert - Fehler</value>
         <value xml:lang="en">Out Generated - Error</value>
         <value xml:lang="es">Salida generada - Error</value>
         <value xml:lang="fr">Sortie générée - Erreur</value>
@@ -11123,6 +11324,7 @@
         <value xml:lang="zh-TW">產生輸出 - 錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_OGEN_SUCCESS">
+        <value xml:lang="de">Out generiert - Erfolgreich</value>
         <value xml:lang="en">Out Generated - Success</value>
         <value xml:lang="es">Salida generada - Correcto</value>
         <value xml:lang="fr">Sortie générée - Succès</value>
@@ -11135,6 +11337,7 @@
         <value xml:lang="zh-TW">產生輸出 - 成功</value>
     </property>
     <property key="StatusItem.description.OAGMP_PROC_ERROR">
+        <value xml:lang="de">In Bearbeitet - Fehler</value>
         <value xml:lang="en">In Processed - Error</value>
         <value xml:lang="es">Procesando - Error</value>
         <value xml:lang="fr">Erreur pendant l'exécution</value>
@@ -11146,6 +11349,7 @@
         <value xml:lang="zh-TW">處理輸入 - 錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_PROC_SUCCESS">
+        <value xml:lang="de">In Bearbeitet - Erfolgreich</value>
         <value xml:lang="en">In Processed - Success</value>
         <value xml:lang="es">Procesando - Correcto</value>
         <value xml:lang="fr">Exécuté avec succès</value>
@@ -11158,6 +11362,7 @@
         <value xml:lang="zh-TW">處理輸入 - 成功</value>
     </property>
     <property key="StatusItem.description.OAGMP_RECEIVED">
+        <value xml:lang="de">In Nachricht erhalten</value>
         <value xml:lang="en">In Message Received</value>
         <value xml:lang="es">Mensaje de entrada recibido</value>
         <value xml:lang="fr">Message reçu</value>
@@ -11170,6 +11375,7 @@
         <value xml:lang="zh-TW">接收到的輸入訊息</value>
     </property>
     <property key="StatusItem.description.OAGMP_REC_ERR_CON">
+        <value xml:lang="de">Fehlerbestätigung erhalten</value>
         <value xml:lang="en">Received Error Confirm</value>
         <value xml:lang="es">Recibida confirmación de error</value>
         <value xml:lang="fr">Confirmation d'erreur reçue</value>
@@ -11182,6 +11388,7 @@
         <value xml:lang="zh-TW">接收到的錯誤確認</value>
     </property>
     <property key="StatusItem.description.OAGMP_REC_SUC_CON">
+        <value xml:lang="de">Erfolgsbestätigung erhalten</value>
         <value xml:lang="en">Received Success Confirm</value>
         <value xml:lang="es">Recibida confirmación de completada</value>
         <value xml:lang="fr">Confirmation de succès reçue</value>
@@ -11194,6 +11401,7 @@
         <value xml:lang="zh-TW">接收到的成功確認</value>
     </property>
     <property key="StatusItem.description.OAGMP_SEND_ERROR">
+        <value xml:lang="de">Ausgangsnachricht Sendefehler</value>
         <value xml:lang="en">Out Message Send Error</value>
         <value xml:lang="es">Error de envío del mensaje</value>
         <value xml:lang="fr">Message d'erreur envoyé</value>
@@ -11206,6 +11414,7 @@
         <value xml:lang="zh-TW">輸出訊息發送錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_SENT">
+        <value xml:lang="de">Ausgangsnachricht gesendet</value>
         <value xml:lang="en">Out Message Sent</value>
         <value xml:lang="es">Mensaje enviado</value>
         <value xml:lang="fr">Message envoyé</value>
@@ -11218,6 +11427,7 @@
         <value xml:lang="zh-TW">輸出訊息已發送</value>
     </property>
     <property key="StatusItem.description.OAGMP_SYS_ERROR">
+        <value xml:lang="de">Systemfehler</value>
         <value xml:lang="en">System Error</value>
         <value xml:lang="es">Error del sistema</value>
         <value xml:lang="fr">Erreur système</value>
@@ -11230,6 +11440,7 @@
         <value xml:lang="zh-TW">系統錯誤</value>
     </property>
     <property key="StatusItem.description.OAGMP_TRIGGERED">
+        <value xml:lang="de">Ausgangsnachricht ausgelöst</value>
         <value xml:lang="en">Out Message Triggered</value>
         <value xml:lang="es">Mensaje externo disparado</value>
         <value xml:lang="fr">Message en sortie déclenché</value>
@@ -11465,6 +11676,7 @@
         <value xml:lang="zh-TW">送出</value>
     </property>
     <property key="StatusItem.description.PARTYINV_ACCEPTED">
+        <value xml:lang="de">Einladung angenommen</value>
         <value xml:lang="en">Invitation Accepted</value>
         <value xml:lang="es">Invitación aceptada</value>
         <value xml:lang="fr">Invitation acceptée</value>
@@ -11477,6 +11689,7 @@
         <value xml:lang="zh-TW">接受邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_CANCELLED">
+        <value xml:lang="de">Einladung abgebrochen</value>
         <value xml:lang="en">Invitation Cancelled</value>
         <value xml:lang="es">Invitación cancelada</value>
         <value xml:lang="fr">Invitation annulée</value>
@@ -11489,6 +11702,7 @@
         <value xml:lang="zh-TW">取消邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_DECLINED">
+        <value xml:lang="de">Einladung abgelehnt</value>
         <value xml:lang="en">Invitation Declined</value>
         <value xml:lang="es">Invitación rechazada</value>
         <value xml:lang="fr">Invitation refusée</value>
@@ -11501,6 +11715,7 @@
         <value xml:lang="zh-TW">拒絕邀請</value>
     </property>
     <property key="StatusItem.description.PARTYINV_PENDING">
+        <value xml:lang="de">Einladung ausstehend</value>
         <value xml:lang="en">Invitation Pending</value>
         <value xml:lang="es">Invitación pendiente</value>
         <value xml:lang="fr">Invitation en attente</value>
@@ -11513,6 +11728,7 @@
         <value xml:lang="zh-TW">邀請等待中</value>
     </property>
     <property key="StatusItem.description.PARTYINV_SENT">
+        <value xml:lang="de">Einladung gesendet</value>
         <value xml:lang="en">Invitation Sent</value>
         <value xml:lang="es">Invitación enviada</value>
         <value xml:lang="fr">Invitation envoyée</value>
@@ -11526,6 +11742,7 @@
     </property>
     <property key="StatusItem.description.PARTY_DISABLED">
         <value xml:lang="ar">معطل</value>
+        <value xml:lang="de">Inaktiv</value>
         <value xml:lang="en">Disabled</value>
         <value xml:lang="es">Desactivado</value>
         <value xml:lang="fr">Désactivé</value>
@@ -11539,6 +11756,7 @@
     </property>
     <property key="StatusItem.description.PARTY_ENABLED">
         <value xml:lang="ar">مفعل</value>
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Enabled</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Activé</value>
@@ -11684,6 +11902,7 @@
     </property>
     <property key="StatusItem.description.PAYMENT_REFUNDED">
         <value xml:lang="ar">تم ردها</value>
+        <value xml:lang="de">Zurückerstattet</value>
         <value xml:lang="en">Refunded</value>
         <value xml:lang="es">Devuelto</value>
         <value xml:lang="fr">Remboursé</value>
@@ -11715,6 +11934,7 @@
         <value xml:lang="zh-TW">已結清</value>
     </property>
     <property key="StatusItem.description.PICKITEM_CANCELLED">
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -11728,6 +11948,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.PICKITEM_COMPLETED">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completado</value>
         <value xml:lang="fr">Terminé</value>
@@ -11741,6 +11962,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.PICKITEM_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -11821,6 +12043,7 @@
         <value xml:lang="zh-TW">已揀貨</value>
     </property>
     <property key="StatusItem.description.PICKLIST_PRINTED">
+        <value xml:lang="de">Gedruckt</value>
         <value xml:lang="en">Printed</value>
         <value xml:lang="es">Impreso</value>
         <value xml:lang="fr">Imprimée</value>
@@ -11919,12 +12142,14 @@
         <value xml:lang="zh-TW">已送出</value>
     </property>
     <property key="StatusItem.description.PMNT_VOID">
+        <value xml:lang="de">Entwertet</value>
         <value xml:lang="en">Voided</value>
         <value xml:lang="zh">已作废</value>
         <value xml:lang="zh-TW">已作廢</value>
     </property>
     <property key="StatusItem.description.POSTX_ACTIVE">
-        <value xml:lang="en">POSTX_ACTIVE</value>
+        <value xml:lang="de">Aktiv</value>
+        <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
         <value xml:lang="it">Attiva</value>
@@ -11937,7 +12162,8 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.POSTX_CLOSED">
-        <value xml:lang="en">POSTX_CLOSED</value>
+        <value xml:lang="de">Geschlossen</value>
+        <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
         <value xml:lang="it">Chiusa</value>
@@ -11950,6 +12176,7 @@
         <value xml:lang="zh-TW">已關閉</value>
     </property>
     <property key="StatusItem.description.POSTX_PAID_IN">
+        <value xml:lang="de">Eingezahlt</value>
         <value xml:lang="en">PaidIn</value>
         <value xml:lang="es">Cobrado</value>
         <value xml:lang="fr">Paiement reçu</value>
@@ -11962,6 +12189,7 @@
         <value xml:lang="zh-TW">借入款</value>
     </property>
     <property key="StatusItem.description.POSTX_PAID_OUT">
+        <value xml:lang="de">Ausgezahlt</value>
         <value xml:lang="en">PaidOut</value>
         <value xml:lang="es">Pagado</value>
         <value xml:lang="fr">Paiement en sortie</value>
@@ -11974,7 +12202,8 @@
         <value xml:lang="zh-TW">借出款</value>
     </property>
     <property key="StatusItem.description.POSTX_RETURNED">
-        <value xml:lang="en">POSTX_RETURNED</value>
+        <value xml:lang="de">Retourniert</value>
+        <value xml:lang="en">Returned</value>
         <value xml:lang="es">Devuelto</value>
         <value xml:lang="fr">Retourné</value>
         <value xml:lang="it">Resa</value>
@@ -11987,7 +12216,8 @@
         <value xml:lang="zh-TW">退款</value>
     </property>
     <property key="StatusItem.description.POSTX_SOLD">
-        <value xml:lang="en">POSTX_SOLD</value>
+        <value xml:lang="de">Verkauft</value>
+        <value xml:lang="en">Sold</value>
         <value xml:lang="es">Vendido</value>
         <value xml:lang="fr">Vendu</value>
         <value xml:lang="it">Venduta</value>
@@ -12000,7 +12230,8 @@
         <value xml:lang="zh-TW">已售</value>
     </property>
     <property key="StatusItem.description.POSTX_VOIDED">
-        <value xml:lang="en">POSTX_VOIDED</value>
+        <value xml:lang="de">Entwertet</value>
+        <value xml:lang="en">Voided</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Vidé</value>
         <value xml:lang="it">Annullata</value>
@@ -12013,6 +12244,7 @@
         <value xml:lang="zh-TW">無效的</value>
     </property>
     <property key="StatusItem.description.PQV_NOT_VERIFIED">
+        <value xml:lang="de">Nicht verifiziert</value>
         <value xml:lang="en">Not verified</value>
         <value xml:lang="es">No verificado</value>
         <value xml:lang="fr">Non vérifié</value>
@@ -12025,6 +12257,7 @@
         <value xml:lang="zh-TW">尚未驗證</value>
     </property>
     <property key="StatusItem.description.PQV_VERIFIED">
+        <value xml:lang="de">Verifiziert</value>
         <value xml:lang="en">Verified</value>
         <value xml:lang="es">Verificado</value>
         <value xml:lang="fr">Vérifié</value>
@@ -12037,6 +12270,7 @@
         <value xml:lang="zh-TW">已驗證</value>
     </property>
     <property key="StatusItem.description.PRJ_ACTIVE">
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Activo</value>
         <value xml:lang="fr">Actif</value>
@@ -12050,6 +12284,7 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.PRJ_CLOSED">
+        <value xml:lang="de">Geschlossen</value>
         <value xml:lang="en">Closed</value>
         <value xml:lang="es">Cerrado</value>
         <value xml:lang="fr">Fermé</value>
@@ -12063,6 +12298,7 @@
         <value xml:lang="zh-TW">已關閉</value>
     </property>
     <property key="StatusItem.description.PRR_APPROVED">
+        <value xml:lang="de">Angenommen</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Validé</value>
@@ -12076,6 +12312,7 @@
         <value xml:lang="zh-TW">已核准</value>
     </property>
     <property key="StatusItem.description.PRR_DELETED">
+        <value xml:lang="de">Gelöscht</value>
         <value xml:lang="en">Deleted</value>
         <value xml:lang="es">Suprimido</value>
         <value xml:lang="fr">Supprimé</value>
@@ -12090,6 +12327,7 @@
         <value xml:lang="zh-TW">已刪除</value>
     </property>
     <property key="StatusItem.description.PRR_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -12257,6 +12495,7 @@
         <value xml:lang="zh-TW">正在執行</value>
     </property>
     <property key="StatusItem.description.PRUN_SCHEDULED">
+        <value xml:lang="de">Geplant</value>
         <value xml:lang="en">Scheduled</value>
         <value xml:lang="es">Planificado</value>
         <value xml:lang="fr">Planifié</value>
@@ -12613,6 +12852,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.RETURN_MAN_REFUND">
+        <value xml:lang="de">Manuelle Rückerstattung benötigt</value>
         <value xml:lang="en">Manual Refund Required</value>
         <value xml:lang="es">Requerida devolución manual</value>
         <value xml:lang="fr">Remboursement manuel nécessaire</value>
@@ -12659,9 +12899,10 @@
         <value xml:lang="zh-TW">已請求</value>
     </property>
     <property key="StatusItem.description.ROU_ACTIVE">
+        <value xml:lang="de">Aktiv</value>
         <value xml:lang="en">Active</value>
         <value xml:lang="es">Ruta activa</value>
-        <value xml:lang="fr">Bien défini et utilisable</value>
+        <value xml:lang="fr">Défini et utilisable</value>
         <value xml:lang="it">Attiva</value>
         <value xml:lang="ja">有効</value>
         <value xml:lang="nl">Actief</value>
@@ -12672,7 +12913,13 @@
         <value xml:lang="zh">有效</value>
         <value xml:lang="zh-TW">有效</value>
     </property>
+    <property key="StatusItem.description.ROU_INACTIVE">
+        <value xml:lang="de">Inaktiv</value>
+        <value xml:lang="en">Inactive</value>
+        <value xml:lang="fr">Inutilisable</value>
+    </property>
     <property key="StatusItem.description.ROU_PROD_TEMPLATE">
+        <value xml:lang="de">Produktionsvorlage</value>
         <value xml:lang="en">Production Template</value>
         <value xml:lang="es">Ruta plantilla de producto</value>
         <value xml:lang="fr">Utilisé en interne pour l'association entre le produit et le cheminement associés</value>
@@ -12702,6 +12949,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.SERVICE_CRASHED">
+        <value xml:lang="de">Abgestürzt</value>
         <value xml:lang="en">Crashed</value>
         <value xml:lang="es">Caído</value>
         <value xml:lang="fr">Planté</value>
@@ -12716,6 +12964,7 @@
         <value xml:lang="zh-TW">已損壞</value>
     </property>
     <property key="StatusItem.description.SERVICE_FAILED">
+        <value xml:lang="de">Gescheitert</value>
         <value xml:lang="en">Failed</value>
         <value xml:lang="es">Fallado</value>
         <value xml:lang="fr">Échoué</value>
@@ -12730,6 +12979,7 @@
         <value xml:lang="zh-TW">已失敗</value>
     </property>
     <property key="StatusItem.description.SERVICE_FINISHED">
+        <value xml:lang="de">Fertig</value>
         <value xml:lang="en">Finished</value>
         <value xml:lang="es">Finalizado</value>
         <value xml:lang="fr">Fini</value>
@@ -12744,6 +12994,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.SERVICE_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -12758,6 +13009,7 @@
         <value xml:lang="zh-TW">等待中</value>
     </property>
     <property key="StatusItem.description.SERVICE_QUEUED">
+        <value xml:lang="de">In Warteschlange</value>
         <value xml:lang="en">Queued</value>
         <value xml:lang="es">Encolado</value>
         <value xml:lang="fr">Placé dans la file d'attente</value>
@@ -12771,6 +13023,7 @@
         <value xml:lang="zh-TW">已進入佇列</value>
     </property>
     <property key="StatusItem.description.SERVICE_RUNNING">
+        <value xml:lang="de">Läuft</value>
         <value xml:lang="en">Running</value>
         <value xml:lang="es">Ejecutando</value>
         <value xml:lang="fr">En cours d'éxécution</value>
@@ -12784,7 +13037,7 @@
         <value xml:lang="zh-TW">正在執行</value>
     </property>
     <property key="StatusItem.description.SHIPMENT_CANCELLED">
-        <value xml:lang="de">Annulliert</value>
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Annulée</value>
@@ -12898,7 +13151,8 @@
         <value xml:lang="zh-TW">已裝運</value>
     </property>
     <property key="StatusItem.description.SHRSCS_ACCEPTED">
-        <value xml:lang="en">SHRSCS_ACCEPTED</value>
+        <value xml:lang="de">Angenommen</value>
+        <value xml:lang="en">Accepted</value>
         <value xml:lang="es">Aceptado</value>
         <value xml:lang="fr">Accepté</value>
         <value xml:lang="it">Accettato</value>
@@ -12912,7 +13166,8 @@
         <value xml:lang="zh-TW">已接受</value>
     </property>
     <property key="StatusItem.description.SHRSCS_CONFIRMED">
-        <value xml:lang="en">SHRSCS_CONFIRMED</value>
+        <value xml:lang="de">Bestätigt</value>
+        <value xml:lang="en">Confirmed</value>
         <value xml:lang="es">Confirmado</value>
         <value xml:lang="fr">Confirmé</value>
         <value xml:lang="it">Confermato</value>
@@ -12926,7 +13181,8 @@
         <value xml:lang="zh-TW">已確認</value>
     </property>
     <property key="StatusItem.description.SHRSCS_NOT_STARTED">
-        <value xml:lang="en">SHRSCS_NOT_STARTED</value>
+        <value xml:lang="de">Ausstehend</value>
+        <value xml:lang="en">Not started</value>
         <value xml:lang="es">No empezado</value>
         <value xml:lang="fr">Non commencé</value>
         <value xml:lang="it">Non iniziato</value>
@@ -12940,7 +13196,8 @@
         <value xml:lang="zh-TW">沒有開始</value>
     </property>
     <property key="StatusItem.description.SHRSCS_VOIDED">
-        <value xml:lang="en">SHRSCS_VOIDED</value>
+        <value xml:lang="de">Entwertet</value>
+        <value xml:lang="en">Voided</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Vidé</value>
         <value xml:lang="it">Annullato</value>
@@ -12953,6 +13210,7 @@
         <value xml:lang="zh-TW">無效</value>
     </property>
     <property key="StatusItem.description.SUP_RETURN_ACCEPTED">
+        <value xml:lang="de">Angenommen</value>
         <value xml:lang="en">Accepted</value>
         <value xml:lang="es">Aceptado</value>
         <value xml:lang="fr">Accepté</value>
@@ -12966,6 +13224,7 @@
         <value xml:lang="zh-TW">已接受</value>
     </property>
     <property key="StatusItem.description.SUP_RETURN_CANCELLED">
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -12979,6 +13238,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.SUP_RETURN_COMPLETED">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Terminé</value>
@@ -12992,6 +13252,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.SUP_RETURN_REQUESTED">
+        <value xml:lang="de">Angefragt</value>
         <value xml:lang="en">Requested</value>
         <value xml:lang="es">Solicitado</value>
         <value xml:lang="fr">Demandé</value>
@@ -13005,6 +13266,7 @@
         <value xml:lang="zh-TW">已請求</value>
     </property>
     <property key="StatusItem.description.SUP_RETURN_SHIPPED">
+        <value xml:lang="de">Versendet</value>
         <value xml:lang="en">Shipped</value>
         <value xml:lang="es">Enviado</value>
         <value xml:lang="fr">Expédié</value>
@@ -13034,6 +13296,7 @@
         <value xml:lang="zh-TW">已同步</value>
     </property>
     <property key="StatusItem.description.TIMESHEET_APPROVED">
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvée</value>
@@ -13047,6 +13310,7 @@
         <value xml:lang="zh-TW">已核准</value>
     </property>
     <property key="StatusItem.description.TIMESHEET_COMPLETED">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Terminée</value>
@@ -13060,6 +13324,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.TIMESHEET_IN_PROCESS">
+        <value xml:lang="de">In Bearbeitung</value>
         <value xml:lang="en">In-Process</value>
         <value xml:lang="es">En curso</value>
         <value xml:lang="fr">En cours</value>
@@ -13073,6 +13338,7 @@
         <value xml:lang="zh-TW">處理中</value>
     </property>
     <property key="StatusItem.description.TRAINING_APPLIED">
+        <value xml:lang="de">Angewandt</value>
         <value xml:lang="en">Applied</value>
         <value xml:lang="fr">Postulée</value>
         <value xml:lang="ru">Приложенный</value>
@@ -13080,6 +13346,7 @@
         <value xml:lang="zh-TW">已申請</value>
     </property>
     <property key="StatusItem.description.TRAINING_APPROVED">
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvée</value>
@@ -13093,6 +13360,7 @@
         <value xml:lang="zh-TW">已核准</value>
     </property>
     <property key="StatusItem.description.TRAINING_ASSIGNED">
+        <value xml:lang="de">Zugewiesen</value>
         <value xml:lang="en">Assigned</value>
         <value xml:lang="fr">Affecté</value>
         <value xml:lang="ja">割当</value>
@@ -13131,6 +13399,7 @@
         <value xml:lang="zh-TW">已拒絕</value>
     </property>
     <property key="StatusItem.description.WEFA_AVAILABLE">
+        <value xml:lang="de">Verfügbar</value>
         <value xml:lang="en">Available</value>
         <value xml:lang="es">Disponible</value>
         <value xml:lang="fr">Disponible</value>
@@ -13144,6 +13413,7 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.WEFA_IN_USE">
+        <value xml:lang="de">In Nutzung</value>
         <value xml:lang="en">In Use</value>
         <value xml:lang="es">En uso</value>
         <value xml:lang="fr">En cours d'utilisation</value>
@@ -13157,6 +13427,7 @@
         <value xml:lang="zh-TW">使用中</value>
     </property>
     <property key="StatusItem.description.WEGS_CANCELLED">
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -13170,6 +13441,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.WEGS_COMPLETED">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Completed</value>
         <value xml:lang="fr">Terminé</value>
         <value xml:lang="it">Completato</value>
@@ -13182,6 +13454,7 @@
         <value xml:lang="zh-TW">已完成</value>
     </property>
     <property key="StatusItem.description.WEGS_CREATED">
+        <value xml:lang="de">Erstellt</value>
         <value xml:lang="en">Created</value>
         <value xml:lang="es">Creado</value>
         <value xml:lang="fr">Créé</value>
@@ -13195,6 +13468,7 @@
         <value xml:lang="zh-TW">已建立</value>
     </property>
     <property key="StatusItem.description.WEPA_AV_AVAILABLE">
+        <value xml:lang="de">Verfügbar</value>
         <value xml:lang="en">Available</value>
         <value xml:lang="es">Disponible</value>
         <value xml:lang="fr">Disponible</value>
@@ -13208,6 +13482,7 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="StatusItem.description.WEPA_AV_AWAY">
+        <value xml:lang="de">Abwesend</value>
         <value xml:lang="en">Away</value>
         <value xml:lang="es">Esperando</value>
         <value xml:lang="fr">Distant</value>
@@ -13220,6 +13495,7 @@
         <value xml:lang="zh-TW">離開</value>
     </property>
     <property key="StatusItem.description.WEPA_AV_BUSY">
+        <value xml:lang="de">Beschäftigt</value>
         <value xml:lang="en">Busy</value>
         <value xml:lang="es">Ocupado</value>
         <value xml:lang="fr">Occupé</value>
@@ -13233,6 +13509,7 @@
         <value xml:lang="zh-TW">忙祿</value>
     </property>
     <property key="StatusItem.description.WEPR_CANCELLED">
+        <value xml:lang="de">Abgebrochen</value>
         <value xml:lang="en">Cancelled</value>
         <value xml:lang="es">Cancelado</value>
         <value xml:lang="fr">Annulé</value>
@@ -13246,6 +13523,7 @@
         <value xml:lang="zh-TW">已取消</value>
     </property>
     <property key="StatusItem.description.WEPR_COMPLETE">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Complete</value>
         <value xml:lang="es">Completo</value>
         <value xml:lang="fr">Terminé</value>
@@ -13259,6 +13537,7 @@
         <value xml:lang="zh-TW">完成</value>
     </property>
     <property key="StatusItem.description.WEPR_IN_PROGRESS">
+        <value xml:lang="de">In Bearbeitung</value>
         <value xml:lang="en">In Progress</value>
         <value xml:lang="es">En curso</value>
         <value xml:lang="fr">En cours</value>
@@ -13272,6 +13551,7 @@
         <value xml:lang="zh-TW">進行中</value>
     </property>
     <property key="StatusItem.description.WEPR_ON_HOLD">
+        <value xml:lang="de">Pausiert</value>
         <value xml:lang="en">On Hold</value>
         <value xml:lang="es">En espera</value>
         <value xml:lang="fr">En attente</value>
@@ -13285,6 +13565,7 @@
         <value xml:lang="zh-TW">保留</value>
     </property>
     <property key="StatusItem.description.WEPR_PLANNING">
+        <value xml:lang="de">Planung</value>
         <value xml:lang="en">Planning</value>
         <value xml:lang="es">Planificado</value>
         <value xml:lang="fr">Planifié</value>
@@ -13298,6 +13579,7 @@
         <value xml:lang="zh-TW">計畫中</value>
     </property>
     <property key="StatusItem.description.WERV_APPROVED">
+        <value xml:lang="de">Genehmigt</value>
         <value xml:lang="en">Approved</value>
         <value xml:lang="es">Aprobado</value>
         <value xml:lang="fr">Approuvé</value>
@@ -13311,6 +13593,7 @@
         <value xml:lang="zh-TW">已核准</value>
     </property>
     <property key="StatusItem.description.WERV_DELETED">
+        <value xml:lang="de">Gelöscht</value>
         <value xml:lang="en">Deleted</value>
         <value xml:lang="es">Borrado</value>
         <value xml:lang="fr">Supprimé</value>
@@ -13324,6 +13607,7 @@
         <value xml:lang="zh-TW">已刪除</value>
     </property>
     <property key="StatusItem.description.WERV_PENDING">
+        <value xml:lang="de">Ausstehend</value>
         <value xml:lang="en">Pending</value>
         <value xml:lang="es">Pendiente</value>
         <value xml:lang="fr">En attente</value>
@@ -13435,7 +13719,8 @@
         <value xml:lang="zh-TW">已終止</value>
     </property>
     <property key="StatusItem.description.WIP_INCOMING_DONE">
-        <value xml:lang="en">WIP_INCOMING_DONE</value>
+        <value xml:lang="de">Eingehend: erledigt</value>
+        <value xml:lang="en">Incoming: done</value>
         <value xml:lang="es">Entrante terminado</value>
         <value xml:lang="fr">En cours : article entrant d'inventaire effectué</value>
         <value xml:lang="it">Entrata terminata</value>
@@ -13449,7 +13734,8 @@
         <value xml:lang="zh-TW">完成收入</value>
     </property>
     <property key="StatusItem.description.WIP_INCOMING_FULFIL">
-        <value xml:lang="en">WIP_INCOMING_FULFIL</value>
+        <value xml:lang="de">Eingehend: erfüllt</value>
+        <value xml:lang="en">Incoming: fulfilled</value>
         <value xml:lang="es">Entrante en cumplimiento</value>
         <value xml:lang="fr">En cours : accomplissement d'article entrant</value>
         <value xml:lang="it">Entrata in completamento</value>
@@ -13463,7 +13749,8 @@
         <value xml:lang="zh-TW">實現收入</value>
     </property>
     <property key="StatusItem.description.WIP_INCOMING_PLAN">
-        <value xml:lang="en">WIP_INCOMING_PLAN</value>
+        <value xml:lang="de">Eingehend: planung</value>
+        <value xml:lang="en">Incoming plan</value>
         <value xml:lang="es">Entrante planificado</value>
         <value xml:lang="fr">En cours : article estimé à recevoir</value>
         <value xml:lang="it">Entrata pianificata</value>
@@ -13477,7 +13764,8 @@
         <value xml:lang="zh-TW">計劃收入</value>
     </property>
     <property key="StatusItem.description.WIP_INCOMING_RES">
-        <value xml:lang="en">WIP_INCOMING_RES</value>
+        <value xml:lang="de">Eingehend: reserviert</value>
+        <value xml:lang="en">Incoming: reserved</value>
         <value xml:lang="es">Entrante reservado</value>
         <value xml:lang="fr">En cours : article entrant d'inventaire réservé</value>
         <value xml:lang="it">Entrata riservata</value>
@@ -13491,7 +13779,8 @@
         <value xml:lang="zh-TW">預留收入</value>
     </property>
     <property key="StatusItem.description.WIP_OUTGOING_DONE">
-        <value xml:lang="en">WIP_OUTGOING_DONE</value>
+        <value xml:lang="de">ausgehend: erledigt</value>
+        <value xml:lang="en">outgoing: done</value>
         <value xml:lang="es">Saliente terminado</value>
         <value xml:lang="fr">En cours : article sortant d'inventaire effectué</value>
         <value xml:lang="it">Uscita terminata</value>
@@ -13505,7 +13794,8 @@
         <value xml:lang="zh-TW">完成費用</value>
     </property>
     <property key="StatusItem.description.WIP_OUTGOING_FULFIL">
-        <value xml:lang="en">WIP_OUTGOING_FULFIL</value>
+        <value xml:lang="de">Ausgehend: erfüllt</value>
+        <value xml:lang="en">outgoing: fulfilled</value>
         <value xml:lang="es">Saliente en cumplimiento</value>
         <value xml:lang="fr">En cours : accomplissement d'article sortant</value>
         <value xml:lang="it">Uscita in completamento</value>
@@ -13519,7 +13809,8 @@
         <value xml:lang="zh-TW">實現費用</value>
     </property>
     <property key="StatusItem.description.WIP_OUTGOING_PLAN">
-        <value xml:lang="en">WIP_OUTGOING_PLAN</value>
+        <value xml:lang="de">Ausgehend: geplant</value>
+        <value xml:lang="en">outgoing: planned</value>
         <value xml:lang="es">Saliente planificado</value>
         <value xml:lang="fr">En cours : article sortant estimé</value>
         <value xml:lang="it">Uscita pianificata</value>
@@ -13533,7 +13824,8 @@
         <value xml:lang="zh-TW">計劃費用</value>
     </property>
     <property key="StatusItem.description.WIP_OUTGOING_RES">
-        <value xml:lang="en">WIP_OUTGOING_RES</value>
+        <value xml:lang="de">Ausgehend: reserviert</value>
+        <value xml:lang="en">outgoing: reserved</value>
         <value xml:lang="es">Saliente</value>
         <value xml:lang="fr">En cours : article sortant d'inventaire réservé</value>
         <value xml:lang="it">Uscita riservata</value>
@@ -13547,7 +13839,8 @@
         <value xml:lang="zh-TW">預留費用</value>
     </property>
     <property key="StatusItem.description.WPS_RELEASED">
-        <value xml:lang="en">WPS_RELEASED</value>
+        <value xml:lang="de">Freigegeben</value>
+        <value xml:lang="en">Released</value>
         <value xml:lang="es">Publicado</value>
         <value xml:lang="fr">Publié</value>
         <value xml:lang="it">Pubblicata</value>
@@ -13561,7 +13854,8 @@
         <value xml:lang="zh-TW">已發行</value>
     </property>
     <property key="StatusItem.description.WPS_UNDER_REVISION">
-        <value xml:lang="en">WPS_UNDER_REVISION</value>
+        <value xml:lang="de">Wird geprüft</value>
+        <value xml:lang="en">Under Revision</value>
         <value xml:lang="es">En revisión</value>
         <value xml:lang="fr">En cours de révision</value>
         <value xml:lang="it">In revisione</value>
@@ -13575,7 +13869,8 @@
         <value xml:lang="zh-TW">修訂中</value>
     </property>
     <property key="StatusItem.description.WPS_UNDER_TEST">
-        <value xml:lang="en">WPS_UNDER_TEST</value>
+        <value xml:lang="de">Wird getestet</value>
+        <value xml:lang="en">Under Test</value>
         <value xml:lang="es">En prueba</value>
         <value xml:lang="fr">En cours de test</value>
         <value xml:lang="it">In test</value>
@@ -13766,6 +14061,7 @@
         <value xml:lang="zh-TW">發票狀態</value>
     </property>
     <property key="StatusType.description.INV_NON_SER_STTS">
+        <value xml:lang="de">Nicht serialisierter Inventar-Gegenstand</value>
         <value xml:lang="en">Non-Serialized Inventory Item</value>
         <value xml:lang="es">Producto sin número de serie</value>
         <value xml:lang="fr">Ligne de stock sans n° de série</value>
@@ -13782,6 +14078,7 @@
         <value xml:lang="zh-TW">無序的庫存細項</value>
     </property>
     <property key="StatusType.description.INV_SERIALIZED_STTS">
+        <value xml:lang="de">Serialisierter Inventar-Gegenstand</value>
         <value xml:lang="en">Serialized Inventory Item</value>
         <value xml:lang="es">Producto con número de serie</value>
         <value xml:lang="fr">Ligne de stock avec n° de série</value>
@@ -13847,6 +14144,7 @@
         <value xml:lang="zh-TW">訂單細項</value>
     </property>
     <property key="StatusType.description.ORDER_RETURN_STTS">
+        <value xml:lang="de">Bestellretouren Status</value>
         <value xml:lang="en">Order Return Status</value>
         <value xml:lang="es">Estado de devolución</value>
         <value xml:lang="fr">Statut de retour de commande</value>
@@ -13930,7 +14228,7 @@
         <value xml:lang="zh-TW">付款狀態</value>
     </property>
     <property key="StatusType.description.PRODUCTION_RUN">
-        <value xml:lang="de">Produktionslauf Status</value>
+        <value xml:lang="de">Produktionsauftrag Status</value>
         <value xml:lang="en">Production Run Status</value>
         <value xml:lang="es">Estado de tirada</value>
         <value xml:lang="fr">Statut d'ordre de fabrication</value>
@@ -15676,6 +15974,7 @@
         <value xml:lang="zh-TW">在途轉移已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_CANCELLED">
+        <value xml:lang="de">Inventaranforderung abgebrochen</value>
         <value xml:lang="en">Inventory Request Cancelled</value>
         <value xml:lang="es">Petición de inventario cancelada</value>
         <value xml:lang="fr">Demande d'inventaire annulée</value>
@@ -15690,6 +15989,7 @@
         <value xml:lang="zh-TW">存貨請求已取消</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_COMPLETE">
+        <value xml:lang="de">Inventaranforderung abgeschlossen</value>
         <value xml:lang="en">Inventory Request Completed</value>
         <value xml:lang="es">Petición de inventario cerrada</value>
         <value xml:lang="fr">Femande d'inventaire terminée</value>
@@ -15705,6 +16005,7 @@
         <value xml:lang="zh-TW">存貨請求已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_EN_ROUTE">
+        <value xml:lang="de">Inventaranforderung auf dem Weg</value>
         <value xml:lang="en">Inventory Request In Route</value>
         <value xml:lang="es">Petición de inventario en camino</value>
         <value xml:lang="fr">La demande d'inventaire est en route</value>
@@ -15720,6 +16021,7 @@
         <value xml:lang="zh-TW">存貨請求在途</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_REQUESTED.IXF_SCHEDULED">
+        <value xml:lang="de">Inventaranforderung eingeplant</value>
         <value xml:lang="en">Inventory Request Scheduled</value>
         <value xml:lang="es">Petición de inventario planificada</value>
         <value xml:lang="fr">La demande d'inventaire est programmée</value>
@@ -15735,6 +16037,7 @@
         <value xml:lang="zh-TW">存貨請求已計劃</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_CANCELLED">
+        <value xml:lang="de">Geplantes Inventar storniert</value>
         <value xml:lang="en">Scheduled Inventory Cancelled</value>
         <value xml:lang="es">Inventario planificado cancelado</value>
         <value xml:lang="fr">L'inventaire programmée est annulé</value>
@@ -15750,6 +16053,7 @@
         <value xml:lang="zh-TW">已計劃的存貨已取消</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_COMPLETE">
+        <value xml:lang="de">Geplantes Inventar abgeschlossen</value>
         <value xml:lang="en">Scheduled Inventory Completed</value>
         <value xml:lang="es">Inventario planificado finalizado</value>
         <value xml:lang="fr">L'inventaire programmé est terminé</value>
@@ -15765,6 +16069,7 @@
         <value xml:lang="zh-TW">已計劃的存貨已完成</value>
     </property>
     <property key="StatusValidChange.transitionName.IXF_SCHEDULED.IXF_EN_ROUTE">
+        <value xml:lang="de">Geplantes Inventar unterwegs</value>
         <value xml:lang="en">Scheduled Inventory In Route</value>
         <value xml:lang="es">Inventario planificado en camino</value>
         <value xml:lang="fr">L'inventaire programmée est en route</value>
@@ -16394,6 +16699,7 @@
         <value xml:lang="zh-TW">揀貨</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_ASSIGNED.PICKLIST_PRINTED">
+        <value xml:lang="de">Gedruckt</value>
         <value xml:lang="en">Printed</value>
         <value xml:lang="es">Impreso</value>
         <value xml:lang="fr">Imprimé</value>
@@ -16454,6 +16760,7 @@
         <value xml:lang="zh-TW">揀貨</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_INPUT.PICKLIST_PRINTED">
+        <value xml:lang="de">Druck</value>
         <value xml:lang="en">Print</value>
         <value xml:lang="es">Imprimir</value>
         <value xml:lang="fr">Imprimer</value>
@@ -16466,6 +16773,7 @@
         <value xml:lang="zh-TW">列印</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_PRINTED.PICKLIST_CANCELLED">
+        <value xml:lang="de">Abbrechen</value>
         <value xml:lang="en">Cancel</value>
         <value xml:lang="es">Cancelar</value>
         <value xml:lang="fr">Annulé</value>
@@ -16479,6 +16787,7 @@
         <value xml:lang="zh-TW">取消</value>
     </property>
     <property key="StatusValidChange.transitionName.PICKLIST_PRINTED.PICKLIST_PICKED">
+        <value xml:lang="de">Pick</value>
         <value xml:lang="en">Pick</value>
         <value xml:lang="es">Recoger</value>
         <value xml:lang="fr">Prélevé</value>
@@ -17108,6 +17417,7 @@
         <value xml:lang="zh-TW">投遞</value>
     </property>
     <property key="StatusValidChange.transitionName.SHRSCS_ACCEPTED.SHRSCS_VOIDED">
+        <value xml:lang="de">Ungültig</value>
         <value xml:lang="en">Void</value>
         <value xml:lang="es">Anulado</value>
         <value xml:lang="fr">Annuler</value>
@@ -17140,6 +17450,7 @@
         <value xml:lang="zh-TW">接收</value>
     </property>
     <property key="StatusValidChange.transitionName.SHRSCS_CONFIRMED.SHRSCS_VOIDED">
+        <value xml:lang="de">Ungültig</value>
         <value xml:lang="en">Void</value>
         <value xml:lang="es">Anular</value>
         <value xml:lang="fr">Annuler</value>
@@ -17289,6 +17600,39 @@
         <value xml:lang="zh">安道尔比塞塔</value>
         <value xml:lang="zh-TW">安道爾比薩斜塔</value>
     </property>
+    <property key="Uom.abbreviation.LEN_in">
+        <value xml:lang="de">in</value>
+        <value xml:lang="en">in</value>
+        <value xml:lang="it">in</value>
+        <value xml:lang="ja">インチ</value>
+        <value xml:lang="vi">trong</value>
+        <value xml:lang="zh">英寸</value>
+        <value xml:lang="zh-TW">英寸</value>
+    </property>
+    <property key="Uom.abbreviation.WT_g">
+        <value xml:lang="de">g</value>
+        <value xml:lang="en">g</value>
+    </property>
+    <property key="Uom.abbreviation.WT_kg">
+        <value xml:lang="de">kg</value>
+        <value xml:lang="en">kg</value>
+        <value xml:lang="ru">кг</value>
+        <value xml:lang="th">กิโลกรัม</value>
+        <value xml:lang="vi">cân</value>
+        <value xml:lang="zh">公斤</value>
+        <value xml:lang="zh-TW">公斤</value>
+    </property>
+    <property key="Uom.abbreviation.WT_lb">
+        <value xml:lang="de">Pfund (Gewicht)</value>
+        <value xml:lang="en">lbs</value>
+        <value xml:lang="es">libras</value>
+        <value xml:lang="fr">livres</value>
+        <value xml:lang="it">libre</value>
+        <value xml:lang="ja">ポンド</value>
+        <value xml:lang="ru">фнт</value>
+        <value xml:lang="zh">磅</value>
+        <value xml:lang="zh-TW">磅</value>
+        </property>
     <property key="Uom.description.AED">
         <value xml:lang="ar">درهم أماراتي</value>
         <value xml:lang="cs">Emirátský dirham</value>
@@ -17306,6 +17650,22 @@
         <value xml:lang="zh-TW">阿聯酋迪拉姆</value>
     </property>
     <property key="Uom.description.AFA">
+        <value xml:lang="ar">أفغاني</value>
+        <value xml:lang="cs">Afghánský afghání</value>
+        <value xml:lang="de">Afghani</value>
+        <value xml:lang="en">Afghani</value>
+        <value xml:lang="fr">Afghani</value>
+        <value xml:lang="it">Afghani</value>
+        <value xml:lang="ja">アフガニ</value>
+        <value xml:lang="pt">Afghani</value>
+        <value xml:lang="pt-BR">Afegão</value>
+        <value xml:lang="ro">Afghani</value>
+        <value xml:lang="ru">Афгани</value>
+        <value xml:lang="th">อัฟกานิ </value>
+        <value xml:lang="zh">阿富汗尼</value>
+        <value xml:lang="zh-TW">阿富汗尼</value>
+    </property>
+    <property key="Uom.description.AFN">
         <value xml:lang="ar">أفغاني</value>
         <value xml:lang="cs">Afghánský afghání</value>
         <value xml:lang="de">Afghani</value>
@@ -17368,6 +17728,22 @@
         <value xml:lang="th">กิลเดอร์ เนเธอร์แลนด์แอนทิลลิส</value>
         <value xml:lang="zh">安第列斯群岛盾</value>
         <value xml:lang="zh-TW">安第列斯群島盾</value>
+    </property>
+    <property key="Uom.description.AOA">
+        <value xml:lang="ar">كوانزا أنغولية</value>
+        <value xml:lang="cs">Angolská kwanza</value>
+        <value xml:lang="de">Kwanza Angola</value>
+        <value xml:lang="en">Angolan Kwanza</value>
+        <value xml:lang="fr">Kwanza d'Angola</value>
+        <value xml:lang="it">Kwanza Angola</value>
+        <value xml:lang="ja">アンゴラ・クワンザ</value>
+        <value xml:lang="pt">Angolan Kwanza</value>
+        <value xml:lang="pt-BR">Kwanza Angolano</value>
+        <value xml:lang="ro">Kwanza Angola</value>
+        <value xml:lang="ru">Ангольские кванза</value>
+        <value xml:lang="th">ควันซา อังโกลา</value>
+        <value xml:lang="zh">安哥拉宽扎</value>
+        <value xml:lang="zh-TW">安哥拉寬紮</value>
     </property>
     <property key="Uom.description.AOK">
         <value xml:lang="ar">كوانزا أنغولية</value>
@@ -17585,6 +17961,7 @@
     <property key="Uom.description.AREA_rd2">
         <value xml:lang="ar">مربع رود</value>
         <value xml:lang="cs">Čtvereční rod</value>
+        <value xml:lang="de">Vierkantstab</value>
         <value xml:lang="en">Square Rod</value>
         <value xml:lang="es">Rod cuadrado</value>
         <value xml:lang="fr">Rod carré (1/160 acre = 25,29285 m²)</value>
@@ -17683,6 +18060,22 @@
         <value xml:lang="zh-TW">阿魯巴盾</value>
     </property>
     <property key="Uom.description.AZM">
+        <value xml:lang="ar">أذربيجان مانات</value>
+        <value xml:lang="cs">Ázerbájdžánský manat</value>
+        <value xml:lang="de">Manat Aserbaidschan</value>
+        <value xml:lang="en">Azerbaijan Manat</value>
+        <value xml:lang="fr">Manat d'Azerbaïdjan</value>
+        <value xml:lang="it">Manat Azerbaijan</value>
+        <value xml:lang="ja">アゼルバイジャン・マナト</value>
+        <value xml:lang="pt">Azerbaijan Manat</value>
+        <value xml:lang="pt-BR">Manat azeri</value>
+        <value xml:lang="ro">Manat Azerbaijan</value>
+        <value xml:lang="ru">Азербайджанский манат</value>
+        <value xml:lang="th">มานาท อาเซอร์ไบจัน</value>
+        <value xml:lang="zh">阿塞拜疆曼纳特</value>
+        <value xml:lang="zh-TW">亞塞拜然曼納特</value>
+    </property>
+    <property key="Uom.description.AZN">
         <value xml:lang="ar">أذربيجان مانات</value>
         <value xml:lang="cs">Ázerbájdžánský manat</value>
         <value xml:lang="de">Manat Aserbaidschan</value>
@@ -17877,6 +18270,7 @@
     <property key="Uom.description.BRR">
         <value xml:lang="ar">برازيل</value>
         <value xml:lang="cs">Brazil</value>
+        <value xml:lang="de">Brasilien</value>
         <value xml:lang="en">Brazil</value>
         <value xml:lang="es">Brazil</value>
         <value xml:lang="fr">Brésil</value>
@@ -17921,6 +18315,22 @@
         <value xml:lang="th">พูลา บอตสวานา</value>
         <value xml:lang="zh">博茨瓦纳普拉</value>
         <value xml:lang="zh-TW">博茨瓦納普拉</value>
+    </property>
+    <property key="Uom.description.BYN">
+        <value xml:lang="ar">روبل بيلاروسية</value>
+        <value xml:lang="cs">Běloruský rubl</value>
+        <value xml:lang="de">Rubel Weissrussland</value>
+        <value xml:lang="en">Belorussian Ruble</value>
+        <value xml:lang="fr">Rouble de Biélorussie</value>
+        <value xml:lang="it">Rublo Bielorussia</value>
+        <value xml:lang="ja">ベラルーシ・ルーブル</value>
+        <value xml:lang="pt">Belorussian Ruble</value>
+        <value xml:lang="pt-BR">Rublo bielorusso</value>
+        <value xml:lang="ro">Rublo Bielorussia</value>
+        <value xml:lang="ru">Белорусский рубль</value>
+        <value xml:lang="th">รูเบิล เบลารุส</value>
+        <value xml:lang="zh">白俄罗斯卢布</value>
+        <value xml:lang="zh-TW">白俄羅斯盧布</value>
     </property>
     <property key="Uom.description.BYR">
         <value xml:lang="ar">روبل بيلاروسية</value>
@@ -17971,7 +18381,8 @@
     </property>
     <property key="Uom.description.CDP">
         <value xml:lang="ar">سانتو دوميونغو</value>
-        <value xml:lang="en">Santo Domiongo</value>
+        <value xml:lang="de">Santo Domingo</value>
+        <value xml:lang="en">Santo Domingo</value>
         <value xml:lang="es">Santo Domingo</value>
         <value xml:lang="fr">Saint-Domingue</value>
         <value xml:lang="it">Santo Domingo</value>
@@ -18460,6 +18871,7 @@
     </property>
     <property key="Uom.description.DRP">
         <value xml:lang="ar">بيزو الجمهورية الدومينيكية</value>
+        <value xml:lang="de">Dominikanische Republik Peso</value>
         <value xml:lang="en">Dominican Republic Peso</value>
         <value xml:lang="fr">Peso de la République Dominicaine</value>
         <value xml:lang="it">Peso Repubblica Domenicana</value>
@@ -18475,6 +18887,7 @@
     <property key="Uom.description.DZD">
         <value xml:lang="ar">دينار جزائري</value>
         <value xml:lang="de">Dinar Algerien</value>
+        <value xml:lang="de">Algerischer Dinar</value>
         <value xml:lang="en">Algerian Dinar</value>
         <value xml:lang="fr">Dinar algérien</value>
         <value xml:lang="it">Dinaro Algerino</value>
@@ -18776,6 +19189,7 @@
     </property>
     <property key="Uom.description.GEK">
         <value xml:lang="ar">كبون جورجي</value>
+        <value xml:lang="de">Georgischer Kupon</value>
         <value xml:lang="en">Georgian Kupon</value>
         <value xml:lang="fr">Kupon de Georgie</value>
         <value xml:lang="it">Kupon Georgia</value>
@@ -18789,6 +19203,21 @@
         <value xml:lang="zh-TW">喬治亞庫龐</value>
     </property>
     <property key="Uom.description.GHC">
+        <value xml:lang="ar">سيدي غاني</value>
+        <value xml:lang="de">Ghana Cedi</value>
+        <value xml:lang="en">Ghanian Cedi</value>
+        <value xml:lang="fr">Cedi ghanéen</value>
+        <value xml:lang="it">Cedi Ghanian</value>
+        <value xml:lang="ja">ガーナ・セディ</value>
+        <value xml:lang="pt">Ghanian Cedi</value>
+        <value xml:lang="pt-BR">Cedi de Gana</value>
+        <value xml:lang="ro">Cedi Ghanian</value>
+        <value xml:lang="ru">Ганский седи</value>
+        <value xml:lang="th">เซดี กานา</value>
+        <value xml:lang="zh">加纳塞第</value>
+        <value xml:lang="zh-TW">加納塞第</value>
+    </property>
+    <property key="Uom.description.GHS">
         <value xml:lang="ar">سيدي غاني</value>
         <value xml:lang="de">Ghana Cedi</value>
         <value xml:lang="en">Ghanian Cedi</value>
@@ -19179,8 +19608,24 @@
         <value xml:lang="zh">柬埔寨里尔</value>
         <value xml:lang="zh-TW">柬埔寨裡爾</value>
     </property>
+    <property key="Uom.description.KGS">
+        <value xml:lang="ar">قيرغيزستان سوم</value>
+        <value xml:lang="de">Kirgisistan Som</value>
+        <value xml:lang="en">Kirghizstan Som</value>
+        <value xml:lang="fr">Som du Kirghizstan</value>
+        <value xml:lang="it">Som Kirghizstan</value>
+        <value xml:lang="ja">キルギス・ソム</value>
+        <value xml:lang="pt">Kirghizstan Som</value>
+        <value xml:lang="pt-BR">Som do Quirguistão</value>
+        <value xml:lang="ro">Som Kirghizstan</value>
+        <value xml:lang="ru">Киргизстанский сом</value>
+        <value xml:lang="th">Kirghizstan Som</value>
+        <value xml:lang="zh">吉尔吉斯斯坦索姆</value>
+        <value xml:lang="zh-TW">吉爾吉斯斯坦索姆</value>
+    </property>
     <property key="Uom.description.KIS">
         <value xml:lang="ar">قيرغيزستان سوم</value>
+        <value xml:lang="de">Kirgisistan Som</value>
         <value xml:lang="en">Kirghizstan Som</value>
         <value xml:lang="fr">Som du Kirghizstan</value>
         <value xml:lang="it">Som Kirghizstan</value>
@@ -19332,6 +19777,7 @@
     </property>
     <property key="Uom.description.LEN_cb">
         <value xml:lang="ar">كابل</value>
+        <value xml:lang="de">Kabel</value>
         <value xml:lang="en">Cable</value>
         <value xml:lang="es">Cable</value>
         <value xml:lang="fr">Câble</value>
@@ -19348,6 +19794,7 @@
     </property>
     <property key="Uom.description.LEN_chG">
         <value xml:lang="ar">سلسلة (مساح / غونترل)</value>
+        <value xml:lang="de">Chain (Guntertakelung / Landvermesser)</value>
         <value xml:lang="en">Chain (Gunter's/surveyor's)</value>
         <value xml:lang="es">Chain (de Gunter/Inspector)</value>
         <value xml:lang="fr">Chaîne (de Gunter/Inspecteur = 20,1168 m)</value>
@@ -19364,7 +19811,8 @@
     </property>
     <property key="Uom.description.LEN_chR">
         <value xml:lang="ar">سلسلة (هندسية / رامدن)</value>
-        <value xml:lang="en">Chain (Ramden's/engineer's)</value>
+        <value xml:lang="de">Chain (Ramsden's/engineers')</value>
+        <value xml:lang="en">Chain (Ramsden's/engineers')</value>
         <value xml:lang="es">Chain (de Ramden/Ingeniero)</value>
         <value xml:lang="fr">Chaîne (de Ramden/Ingénieur = 30,48 m)</value>
         <value xml:lang="it">Chain (Ramden's/engineer's)</value>
@@ -19479,6 +19927,7 @@
     </property>
     <property key="Uom.description.LEN_hand">
         <value xml:lang="ar">يد (طول الحصان)</value>
+        <value xml:lang="de">Hand (horse's height)</value>
         <value xml:lang="en">Hand (horse's height)</value>
         <value xml:lang="es">Mano (altura de caballo)</value>
         <value xml:lang="fr">Main (10,16 cm)</value>
@@ -19547,6 +19996,7 @@
     </property>
     <property key="Uom.description.LEN_lnG">
         <value xml:lang="ar">رابط (غونتر)</value>
+        <value xml:lang="de">Link (Gunter's)</value>
         <value xml:lang="en">Link (Gunter's)</value>
         <value xml:lang="es">Link (de Gunter)</value>
         <value xml:lang="fr">Lien (de Gunter =  0,201168 m)</value>
@@ -19563,7 +20013,8 @@
     </property>
     <property key="Uom.description.LEN_lnR">
         <value xml:lang="ar">رابط (رامدن)</value>
-        <value xml:lang="en">Link (Ramden's)</value>
+        <value xml:lang="de">Link (Ramsden's)</value>
+        <value xml:lang="en">Link (Ramsden's)</value>
         <value xml:lang="es">Link (de Ramden)</value>
         <value xml:lang="fr">Lien (de Randem = 0,3048 m)</value>
         <value xml:lang="it">Link (Ramden's)</value>
@@ -19702,6 +20153,7 @@
     </property>
     <property key="Uom.description.LEN_rd">
         <value xml:lang="ar">قصبة</value>
+        <value xml:lang="de">Rod (5,0292 m)</value>
         <value xml:lang="en">Rod</value>
         <value xml:lang="es">Rod</value>
         <value xml:lang="fr">Rod (5,0292 m)</value>
@@ -20023,19 +20475,19 @@
         <value xml:lang="zh-TW">馬拉維克瓦查</value>
     </property>
     <property key="Uom.description.MXN">
-        <value xml:lang="ar">بيزو مكسيكي (جديد)</value>
-        <value xml:lang="de">Peso Mexiko (neuer)</value>
-        <value xml:lang="en">Mexican Peso (new)</value>
-        <value xml:lang="fr">Peso (nouveau) du Mexique</value>
-        <value xml:lang="it">Peso Messicano (nuovo)</value>
-        <value xml:lang="ja">メキシコ・ペソ(新)</value>
-        <value xml:lang="pt">Mexican Peso (new)</value>
-        <value xml:lang="pt-BR">Peso Mexicano (novo)</value>
-        <value xml:lang="ro">Peso Messicano (nou)</value>
-        <value xml:lang="ru">Мексиканский песо (новый)</value>
+        <value xml:lang="ar">بيزو مكسيكي</value>
+        <value xml:lang="de">Peso Mexiko</value>
+        <value xml:lang="en">Mexican Peso</value>
+        <value xml:lang="fr">Peso du Mexique</value>
+        <value xml:lang="it">Peso Messicano </value>
+        <value xml:lang="ja">メキシコ・ペソ</value>
+        <value xml:lang="pt">Mexican Peso</value>
+        <value xml:lang="pt-BR">Peso Mexicano</value>
+        <value xml:lang="ro">Peso Messicano</value>
+        <value xml:lang="ru">Мексиканский песо</value>
         <value xml:lang="th">เปโซ เม็กซิโก</value>
-        <value xml:lang="zh">墨西哥比索(新)</value>
-        <value xml:lang="zh-TW">墨西哥比索(新)</value>
+        <value xml:lang="zh">墨西哥比索</value>
+        <value xml:lang="zh-TW">墨西哥比索</value>
     </property>
     <property key="Uom.description.MXP">
         <value xml:lang="ar">بيزو مكسيكي (قديم)</value>
@@ -20068,6 +20520,21 @@
         <value xml:lang="zh-TW">馬來西亞林吉特</value>
     </property>
     <property key="Uom.description.MZM">
+        <value xml:lang="ar">متيكال موزمبيقي</value>
+        <value xml:lang="de">Metical Mosambik</value>
+        <value xml:lang="en">Mozambique Metical</value>
+        <value xml:lang="fr">Metical du Mozambique</value>
+        <value xml:lang="it">Metical Mozambico</value>
+        <value xml:lang="ja">モザンビーク・メディカル</value>
+        <value xml:lang="pt">Mozambique Metical</value>
+        <value xml:lang="pt-BR">Metical Moçambicano</value>
+        <value xml:lang="ro">Metical Mozambic</value>
+        <value xml:lang="ru">Мозамбикский метикал</value>
+        <value xml:lang="th">เมททิคัล โมซัทบิก</value>
+        <value xml:lang="zh">莫桑比克美提卡</value>
+        <value xml:lang="zh-TW">莫三比克美提卡</value>
+    </property>
+    <property key="Uom.description.MZN">
         <value xml:lang="ar">متيكال موزمبيقي</value>
         <value xml:lang="de">Metical Mosambik</value>
         <value xml:lang="en">Mozambique Metical</value>
@@ -20128,8 +20595,24 @@
         <value xml:lang="zh">尼加拉瓜科多巴</value>
         <value xml:lang="zh-TW">尼加拉瓜科多巴</value>
     </property>
+    <property key="Uom.description.ILS">
+        <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
+        <value xml:lang="de">Neuer israelischer Schekel</value>
+        <value xml:lang="en">New Israeli Shekel</value>
+        <value xml:lang="fr">Nouveau shekel</value>
+        <value xml:lang="it">Shekel Nuovo Israele</value>
+        <value xml:lang="ja">イスラエル・新シェケル</value>
+        <value xml:lang="pt">New Israeli Shekel</value>
+        <value xml:lang="pt-BR">Novo Shekel israelita</value>
+        <value xml:lang="ro">Shekel Nuovo Israel</value>
+        <value xml:lang="ru">Новый Израильский шекель</value>
+        <value xml:lang="th">เชคเกิล อิสราเอล</value>
+        <value xml:lang="zh">新以色列谢克尔</value>
+        <value xml:lang="zh-TW">新以色列謝克爾</value>
+    </property>
     <property key="Uom.description.NIS">
         <value xml:lang="ar">الشيكل الإسرائيلي الجديد</value>
+        <value xml:lang="de">Neuer israelischer Schekel</value>
         <value xml:lang="en">New Israeli Shekel</value>
         <value xml:lang="fr">Shekel du nouvel Israël</value>
         <value xml:lang="it">Shekel Nuovo Israele</value>
@@ -20250,6 +20733,7 @@
     </property>
     <property key="Uom.description.OTH_ea">
         <value xml:lang="ar">لكل</value>
+        <value xml:lang="de">Jeder</value>
         <value xml:lang="en">Each</value>
         <value xml:lang="fr">Pièce/s</value>
         <value xml:lang="it">Ciascuno</value>
@@ -20277,6 +20761,7 @@
     </property>
     <property key="Uom.description.OTH_pp">
         <value xml:lang="ar">للشخص</value>
+        <value xml:lang="de">Pro Person</value>
         <value xml:lang="en">Per Person</value>
         <value xml:lang="es">Por persona</value>
         <value xml:lang="fr">Par personne</value>
@@ -20409,6 +20894,7 @@
     </property>
     <property key="Uom.description.PLZ">
         <value xml:lang="ar">بولندا</value>
+        <value xml:lang="de">Polen</value>
         <value xml:lang="en">Poland</value>
         <value xml:lang="es">Polonia</value>
         <value xml:lang="fr">Pologne</value>
@@ -20467,17 +20953,6 @@
         <value xml:lang="zh">卡塔尔里亚尔</value>
         <value xml:lang="zh-TW">卡塔爾裡亞爾</value>
     </property>
-  <!-- see https://issues.apache.org/jira/browse/OFBIZ-3246 property key="Uom.description.RMB">
-            <value xml:lang="en">Chinese Renminbi Yuan</value>
-            <value xml:lang="fr">Yuan Renmimbi chinois</value>
-            <value xml:lang="it">Chinese Renminbi Yuan</value>
-            <value xml:lang="ja">中国人民元</value>
-            <value xml:lang="pt">Chinese Renminbi Yuan</value>
-            <value xml:lang="ro">Chinese Renminbi Yuan</value>
-            <value xml:lang="ru">Китайский юань</value>
-            <value xml:lang="th">หยวน จีนเหรินหมินปี้</value>
-            <value xml:lang="zh">中国人民币元</value>
-      </property-->
     <property key="Uom.description.ROL">
         <value xml:lang="ar">ليو روماني</value>
         <value xml:lang="de">Leu Rumänien</value>
@@ -20492,6 +20967,36 @@
         <value xml:lang="th">ลิว โรมาเนีย</value>
         <value xml:lang="zh">罗马尼亚列伊</value>
         <value xml:lang="zh-TW">羅馬尼亞列伊</value>
+    </property>
+    <property key="Uom.description.RON">
+        <value xml:lang="ar">ليو روماني</value>
+        <value xml:lang="de">Leu Rumänien</value>
+        <value xml:lang="en">Romanian Leu</value>
+        <value xml:lang="fr">Leu roumain</value>
+        <value xml:lang="it">Leu Romania</value>
+        <value xml:lang="ja">ルーマニア・レウ</value>
+        <value xml:lang="pt">Romanian Leu</value>
+        <value xml:lang="pt-BR">Leu Romeno</value>
+        <value xml:lang="ro">Leu Romania</value>
+        <value xml:lang="ru">Румынский лей</value>
+        <value xml:lang="th">ลิว โรมาเนีย</value>
+        <value xml:lang="zh">罗马尼亚列伊</value>
+        <value xml:lang="zh-TW">羅馬尼亞列伊</value>
+    </property>
+    <property key="Uom.description.RUB">
+        <value xml:lang="ar">روبل روسي</value>
+        <value xml:lang="de">Rubel Russland</value>
+        <value xml:lang="en">Russian Rouble</value>
+        <value xml:lang="fr">Rouble russe</value>
+        <value xml:lang="it">Rublo Russo</value>
+        <value xml:lang="ja">ロシア・ルーブル</value>
+        <value xml:lang="pt">Russian Rouble</value>
+        <value xml:lang="pt-BR">Rublo Russo</value>
+        <value xml:lang="ro">Rubla Rusia</value>
+        <value xml:lang="ru">Российский рубль</value>
+        <value xml:lang="th">รูเบิล รัสเซีย</value>
+        <value xml:lang="zh">俄罗斯卢布</value>
+        <value xml:lang="zh-TW">俄羅斯盧布</value>
     </property>
     <property key="Uom.description.RUR">
         <value xml:lang="ar">روبل روسي</value>
@@ -20567,6 +21072,21 @@
         <value xml:lang="th">รูปี เซเชลส์</value>
         <value xml:lang="zh">塞舌尔卢比</value>
         <value xml:lang="zh-TW">塞舌爾盧比</value>
+    </property>
+    <property key="Uom.description.SDG">
+        <value xml:lang="ar">جنيه سوداني</value>
+        <value xml:lang="de">Pfund Sudan</value>
+        <value xml:lang="en">Sudanese Pound</value>
+        <value xml:lang="fr">Pound soudanais</value>
+        <value xml:lang="it">Sterlina Sudanese</value>
+        <value xml:lang="ja">スーダン・ポンド</value>
+        <value xml:lang="pt">Sudanese Pound</value>
+        <value xml:lang="pt-BR">Libras Sudanesas</value>
+        <value xml:lang="ro">Sterlina Sudaneza</value>
+        <value xml:lang="ru">Суданский фунт</value>
+        <value xml:lang="th">ปอนด์ ซูดาน</value>
+        <value xml:lang="zh">苏丹镑</value>
+        <value xml:lang="zh-TW">蘇丹鎊</value>
     </property>
     <property key="Uom.description.SDP">
         <value xml:lang="ar">جنيه سوداني</value>
@@ -20995,6 +21515,7 @@
     </property>
     <property key="Uom.description.TF_score">
         <value xml:lang="cs">Čas ve dvacetiletích</value>
+        <value xml:lang="de">Zeit in Ergebnissen//Scores</value>
         <value xml:lang="en">Time in Scores</value>
         <value xml:lang="es">Tiempo en notas</value>
         <value xml:lang="fr">Temps en double-décade (ou 4 lustres)</value>
@@ -21074,6 +21595,22 @@
         <value xml:lang="zh-TW">塔吉克斯坦盧布</value>
     </property>
     <property key="Uom.description.TMM">
+        <value xml:lang="ar">مانات تركمنستاني</value>
+        <value xml:lang="cs">Turkmenský manat</value>
+        <value xml:lang="de">Manat Turkmenistan</value>
+        <value xml:lang="en">Turkmenistani Manat</value>
+        <value xml:lang="fr">Manat de Turkmenistan</value>
+        <value xml:lang="it">Manat Turkmenistani</value>
+        <value xml:lang="ja">トルクメニスタン・マナト</value>
+        <value xml:lang="pt">Turkmenistani Manat</value>
+        <value xml:lang="pt-BR">Manata Turquemeno</value>
+        <value xml:lang="ro">Manat Turkmenistani</value>
+        <value xml:lang="ru">Туркменистанский манат</value>
+        <value xml:lang="th">Turkmenistani Manat</value>
+        <value xml:lang="zh">土库曼斯坦马纳特</value>
+        <value xml:lang="zh-TW">土庫曼斯坦馬納特</value>
+    </property>
+    <property key="Uom.description.TMT">
         <value xml:lang="ar">مانات تركمنستاني</value>
         <value xml:lang="cs">Turkmenský manat</value>
         <value xml:lang="de">Manat Turkmenistan</value>
@@ -21215,7 +21752,8 @@
     </property>
     <property key="Uom.description.UAK">
         <value xml:lang="cs">Ukrajinská hřivna</value>
-        <value xml:lang="en">UAK</value>
+        <value xml:lang="de">Ukraine Karbovanets</value>
+        <value xml:lang="en">Ukraine Karbovanets</value>
         <value xml:lang="fr">Hryvnia ukrainienne</value>
         <value xml:lang="it">Karbowanez Ucraina</value>
         <value xml:lang="ja">ウクライナ・グリブナ</value>
@@ -21227,6 +21765,22 @@
         <value xml:lang="zh-TW">烏克蘭格裡夫那</value>
     </property>
     <property key="Uom.description.UGS">
+        <value xml:lang="ar">شلن اوغندي</value>
+        <value xml:lang="cs">Ugandský šilink</value>
+        <value xml:lang="de">Schilling Uganda</value>
+        <value xml:lang="en">Ugandan Shilling</value>
+        <value xml:lang="fr">Shilling d'Uganda</value>
+        <value xml:lang="it">Scellino Uganda</value>
+        <value xml:lang="ja">ウガンダ・シリング</value>
+        <value xml:lang="pt">Ugandan Shilling</value>
+        <value xml:lang="pt-BR">Xelim de Uganda</value>
+        <value xml:lang="ro">Siling Uganda</value>
+        <value xml:lang="ru">Угандийский шиллинг</value>
+        <value xml:lang="th">ชิลลิง ยูกันดา</value>
+        <value xml:lang="zh">乌干达先令</value>
+        <value xml:lang="zh-TW">烏甘達先令</value>
+    </property>
+    <property key="Uom.description.UGX">
         <value xml:lang="ar">شلن اوغندي</value>
         <value xml:lang="cs">Ugandský šilink</value>
         <value xml:lang="de">Schilling Uganda</value>
@@ -21263,6 +21817,7 @@
     <property key="Uom.description.UYP">
         <value xml:lang="ar">بيزو اوروغواي الجديد</value>
         <value xml:lang="cs">Nové uruguayské peso</value>
+        <value xml:lang="de">Uruguayischer neuer Peso</value>
         <value xml:lang="en">Uruguayan New Peso</value>
         <value xml:lang="es">Nuevo Peso Uruguayo</value>
         <value xml:lang="fr">Nouveau peso d'Uruguay</value>
@@ -21279,6 +21834,7 @@
     <property key="Uom.description.UYU">
         <value xml:lang="ar">بيزو اوروغواي</value>
         <value xml:lang="cs">Uruguayské peso</value>
+        <value xml:lang="de">Uruguay</value>
         <value xml:lang="en">Uruguay</value>
         <value xml:lang="es">Uruguay</value>
         <value xml:lang="fr">Peso uruguayen</value>
@@ -21405,6 +21961,22 @@
         <value xml:lang="zh-TW">立方碼</value>
     </property>
     <property key="Uom.description.VEB">
+        <value xml:lang="ar">بوليفار بنزويلي</value>
+        <value xml:lang="cs">Venezuelský bolívar</value>
+        <value xml:lang="de">Bolivar Venezuela</value>
+        <value xml:lang="en">Venezuelan Bolivar</value>
+        <value xml:lang="fr">Bolivar du Vénézuela</value>
+        <value xml:lang="it">Bolivar Venezuelano</value>
+        <value xml:lang="ja">ベネズエラ・ボリバル</value>
+        <value xml:lang="pt">Venezuelan Bolivar</value>
+        <value xml:lang="pt-BR">Bolívar Venezuelano</value>
+        <value xml:lang="ro">Bolivar Venezuela</value>
+        <value xml:lang="ru">Венесуэльский боливар</value>
+        <value xml:lang="th">โบลิวาร์ เวเนซูเอลา</value>
+        <value xml:lang="zh">委内瑞拉博利瓦</value>
+        <value xml:lang="zh-TW">委內瑞拉博利瓦</value>
+    </property>
+    <property key="Uom.description.VEF">
         <value xml:lang="ar">بوليفار بنزويلي</value>
         <value xml:lang="cs">Venezuelský bolívar</value>
         <value xml:lang="de">Bolivar Venezuela</value>
@@ -21753,6 +22325,7 @@
     </property>
     <property key="Uom.description.WT_dwt">
         <value xml:lang="ar">وزن البنس</value>
+        <value xml:lang="de">Pennyweight</value>
         <value xml:lang="en">Pennyweight</value>
         <value xml:lang="es">Pennyweight</value>
         <value xml:lang="fr">pennyweight (1,55517384 g)</value>
@@ -22054,6 +22627,22 @@
         <value xml:lang="zh">赞比亚克瓦查</value>
         <value xml:lang="zh-TW">贊比亞克瓦查</value>
     </property>
+    <property key="Uom.description.ZMW">
+        <value xml:lang="ar">كواشا زامبية</value>
+        <value xml:lang="cs">Zambijská kwacha</value>
+        <value xml:lang="de">Kwacha Sambia</value>
+        <value xml:lang="en">Zambian Kwacha</value>
+        <value xml:lang="fr">Kwacha de Zambie</value>
+        <value xml:lang="it">Kwacha Zambia</value>
+        <value xml:lang="ja">ザンビア・クワチャ</value>
+        <value xml:lang="pt">Zambian Kwacha</value>
+        <value xml:lang="pt-BR">Kwacha Zambiano</value>
+        <value xml:lang="ro">Kwacha Zambia</value>
+        <value xml:lang="ru">Замбийский квача</value>
+        <value xml:lang="th">ควาซา แซมเบีย</value>
+        <value xml:lang="zh">赞比亚克瓦查</value>
+        <value xml:lang="zh-TW">贊比亞克瓦查</value>
+    </property>
     <property key="Uom.description.ZRZ">
         <value xml:lang="ar">زائير</value>
         <value xml:lang="cs">Zaire</value>
@@ -22070,6 +22659,22 @@
         <value xml:lang="zh-TW">紮伊爾</value>
     </property>
     <property key="Uom.description.ZWD">
+        <value xml:lang="ar">دولار زمبابوي</value>
+        <value xml:lang="cs">Zimbavský dolar</value>
+        <value xml:lang="de">Dollar Simbabwe</value>
+        <value xml:lang="en">Zimbabwean Dollar</value>
+        <value xml:lang="fr">Dollar de Zimbabwe</value>
+        <value xml:lang="it">Dollaro Zimbawe</value>
+        <value xml:lang="ja">ジンバブエ・ドル</value>
+        <value xml:lang="pt">Zimbabwean Dollar</value>
+        <value xml:lang="pt-BR">Dólar zimbabweano</value>
+        <value xml:lang="ro">Dollar Zimbague</value>
+        <value xml:lang="ru">Зимбабвийский доллар</value>
+        <value xml:lang="th">ดอลลาร์ ซิมบับเว</value>
+        <value xml:lang="zh">津巴布韦元</value>
+        <value xml:lang="zh-TW">津巴布韋元</value>
+    </property>
+    <property key="Uom.description.ZWL">
         <value xml:lang="ar">دولار زمبابوي</value>
         <value xml:lang="cs">Zimbavský dolar</value>
         <value xml:lang="de">Dollar Simbabwe</value>
@@ -22304,77 +22909,5 @@
         <value xml:lang="vi">Cân nặng</value>
         <value xml:lang="zh">重量</value>
         <value xml:lang="zh-TW">重量</value>
-    </property>
-    <property key="VisualTheme.description.BIZZNESS_TIME">
-        <value xml:lang="cs">Bizzness : vertikální menu</value>
-        <value xml:lang="en">It's bizzness, it's bizzness time.  I couldn't have said it better myself. This theme gets down</value>
-        <value xml:lang="es">Bizzness, es hora de bizzness.  No lo podría haber dicho mejor. Este tema lo consigue</value>
-        <value xml:lang="fr">Bizzness : menu principal vertical</value>
-        <value xml:lang="ja">さあ仕事をしよう。自分自身うまく言えない。このテーマはやめた</value>
-        <value xml:lang="pt-BR">É Bizzness, é hora Bizzness. Eu não poderia ter dito melhor sozinho. Este tema fica para baixo</value>
-        <value xml:lang="ru">Это бизнес, это бизнес время. Я не могу сказать что-то лучше о себе. Эта тема получена ниже</value>
-        <value xml:lang="vi">It's bizzness, it's bizzness time.  I couldn't have said it better myself. This theme gets down</value>
-        <value xml:lang="zh">商务时代。我不能自己说它是最好的。本风格搞定</value>
-        <value xml:lang="zh-TW">商務時代.我不能自己說它是最好的.本風格搞定</value>
-    </property>
-    <property key="VisualTheme.description.BLUELIGHT">
-        <value xml:lang="cs">BlueLight Theme: navigační řádek, menu a zakulacené rohy</value>
-        <value xml:lang="en">BlueLight Theme: Breadcrumbs, drop-down menus and rounded corners</value>
-        <value xml:lang="es">BlueLight: Migas de pan, menús desplegables y las esquinas redondeadas</value>
-        <value xml:lang="fr">BlueLight Theme: fil d'ariane, menus déroulants et coins arrondis</value>
-        <value xml:lang="ja">ブルーライト: パンくずリスト、ドロップダウンメニュー、そして丸いコーナー</value>
-        <value xml:lang="pt-BR">Bluelight Tema: Breadcrumbs, menus drop-down e cantos arredondados</value>
-        <value xml:lang="ru">Светло-голубая тема: Бреадкрамбсы, раскрывающиеся меню с закругленным углами</value>
-        <value xml:lang="vi">BlueLight Theme: Breadcrumbs, drop-down menus and rounded corners</value>
-        <value xml:lang="zh">浅蓝风格：自动的多级导航，下拉式菜单，以及圆角</value>
-        <value xml:lang="zh-TW">淺藍風格:自動的多級導航,下拉式選單,以及圓角</value>
-    </property>
-    <property key="VisualTheme.description.DROPPINGCRUMBS">
-        <value xml:lang="cs">Dropping Crumbs: Pokročilejší varianta Blue-Light, menu integrované s navigací</value>
-        <value xml:lang="en">Dropping Crumbs: Evolution of Blue-Light, includes a drop down menu embedded in the breadcrumbs bar</value>
-        <value xml:lang="es">Dropping Crumbs: Evolución de BlueLight, incluye un menú desplegable incrustado en la barra de migas de pan</value>
-        <value xml:lang="fr">Dropping Crumbs: déclinaison de Bluelight, plus sobre, menu déroulant intégré dans la barre du fil d'ariane</value>
-        <value xml:lang="ja">パンくず: ブルーライトの改良。パンくずリストバーに組み込まれたドロップダウンメニューを含む</value>
-        <value xml:lang="pt-BR">Descartando Migalhas: Evolução da azul-luz, inclui um menu drop-down incorporado na barra de farinha de rosca</value>
-        <value xml:lang="ru">Падающие крамбы: Эволюция светло-голубых, включает раскрывающиеся меню встроенных в полосу бреадкрамбов</value>
-        <value xml:lang="vi">Dropping Crumbs: Evolution of Blue-Light, includes a drop down menu embedded in the breadcrumbs bar</value>
-        <value xml:lang="zh">下拉多级：浅蓝风格的演化版，包括一个嵌入多级导航条的下拉式菜单</value>
-        <value xml:lang="zh-TW">下拉多級:淺藍風格的演化版,包括一個嵌入多級導航條的下拉式選單</value>
-    </property>
-    <property key="VisualTheme.description.FLAT_GREY">
-        <value xml:lang="cs">Flat Grey - Plovoucí rozložení, podpora obousměrného textu</value>
-        <value xml:lang="en">Flat Grey - Floating Layout, Sight-Impaired Accessible, Bidirectional</value>
-        <value xml:lang="es">Flat Grey - Diseño flotante, accesible para personas con discapacidad visual, bidireccional</value>
-        <value xml:lang="fr">Flat Grey : mise en page dynamique, accessibilité, support de texte bidirectionnel</value>
-        <value xml:lang="ja">フラットグレー: 以前のOFBiz標準フローティングレイアウト</value>
-        <value xml:lang="pt-BR">Apartamento Grey - Layout padrão antigo OFBiz flutuante</value>
-        <value xml:lang="ru">Плоские серые - Плавающие лейауты, Слабовидящий доступ, Двунаправленный</value>
-        <value xml:lang="vi">Flat Grey - Floating Layout, Sight-Impaired Accessible, Bidirectional</value>
-        <value xml:lang="zh">浅灰－浮动样式，视觉阻挡，双向</value>
-        <value xml:lang="zh-TW">淺灰－浮動式,視障殘疾人專用,雙向</value>
-    </property>
-    <property key="VisualTheme.description.MULTIFLEX">
-        <value xml:lang="cs">Alternativní téma pro eShop</value>
-        <value xml:lang="en">Alternative VisualTheme for Ecommerce</value>
-        <value xml:lang="es">Tema visual alternativo para comercio electrónico</value>
-        <value xml:lang="fr">Une alternative pour le theme de base du module de commerce électronique</value>
-        <value xml:lang="ja">マルチフレックス: 別のEコマース向けテーマ</value>
-        <value xml:lang="pt-BR">Alternativa para VisualTheme Ecommerce</value>
-        <value xml:lang="ru">Альтернативная Визуальная Тема для электронной коммерции</value>
-        <value xml:lang="vi">Giao diện trực quan thay thế khác cho trang thương mại điện tử</value>
-        <value xml:lang="zh">电子商务的替代视觉风格</value>
-        <value xml:lang="zh-TW">電子商務的替代視覺風格</value>
-    </property>
-    <property key="VisualTheme.description.TOMAHAWK">
-        <value xml:lang="cs">Tomahawk: evoluční verze Dropping Crumbs</value>
-        <value xml:lang="en">Tomahawk: the evolution of the Dropping Crumbs theme</value>
-        <value xml:lang="es">Tomahawk: la evolución del tema Dropping Crumbs</value>
-        <value xml:lang="fr">Tomahawk: évolution de Dropping Crumbs dans les tons noir et orange</value>
-        <value xml:lang="ja">トマホーク: パンくずの改良</value>
-        <value xml:lang="pt-BR">Tomahawk: a evolução do tema Migalhas Descartando</value>
-        <value xml:lang="ru">Томахавк: эволюция падающих крамбов темы</value>
-        <value xml:lang="vi">Tomahawk: Ôi võ đức trí djjava ơi. evolution of the Dropping Crumbs theme</value>
-        <value xml:lang="zh">印第安战斧：下拉多级风格的演化版</value>
-        <value xml:lang="zh-TW">印第安戰斧:下拉多級風格的演化版</value>
     </property>
 </resource>

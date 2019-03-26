@@ -1,6 +1,5 @@
-<#-- 
-Common CMS editor macros and utilities
--->
+<#-- SCIPIO: Common CMS templates utilities and definitions include
+    NOTE: For reuse from other applications, please import *lib.ftl instead. -->
 
 <#global CMS_SHORTDESC_DISPLAY_MAX_SIZE = 200>
 
@@ -37,7 +36,7 @@ Common CMS editor macros and utilities
 </#function>
 
 <#function makeShortCmsDesc desc>
-  <#local desc = rawString(desc)>
+  <#local desc = raw(desc)>
   <#if (desc?length > CMS_SHORTDESC_DISPLAY_MAX_SIZE)>
     <#local desc = (desc[0..<CMS_SHORTDESC_DISPLAY_MAX_SIZE]) + "...">
   </#if>
@@ -46,7 +45,7 @@ Common CMS editor macros and utilities
 
 <#macro webSiteSelectField name="webSiteId" label="" value="" valueUnsafe=false required=false container="" tooltip="" emptyLabel=true>
     <#-- We get cmsWebSiteList from: component://cms/script/com/ilscipio/scipio/cms/editor/CmsEditorCommon.groovy (app-wide auto-include)
-    <#local websites = delegator.findByAnd("WebSite", null, Static["org.ofbiz.base.util.UtilMisc"].toList("siteName ASC"), false)>-->
+    <#local websites = delegator.findByAnd("WebSite", null, UtilMisc.toList("siteName ASC"), false)>-->
     <#local websites = cmsWebSiteList![]>
     <#if !label?has_content>
       <#local label = uiLabelMap.CommonWebsite>
@@ -171,7 +170,7 @@ Common CMS editor macros and utilities
 </#macro>
 
 <#macro assetAssocFields assetTmpl={}>
-  <#local availAssets = delegator.findByAnd("CmsAssetTemplate", null, Static["org.ofbiz.base.util.UtilMisc"].toList("templateName ASC"), false)>
+  <#local availAssets = delegator.findByAnd("CmsAssetTemplate", null, UtilMisc.toList("templateName ASC"), false)>
   <@field type="select" name="assetTemplateId" label=uiLabelMap.CmsAsset>
     <option value=""> - </option>
     <#list availAssets as asset>
@@ -222,7 +221,11 @@ Common CMS editor macros and utilities
     function displayCmsErrorMessage(errorMsg) {
         if (errorMsg) {
             var alertBox = '<@compress_single_line><@alert type="error">'+errorMsg+'</@alert></@compress_single_line>';
-            $("#main-alert-box").append(alertBox).foundation();
+            var containerBox = $("#main-${styles.alert_wrap!}").append(alertBox);
+            try {
+                containerBox.foundation();
+            } catch(err) {
+            }
         }
     }
     
@@ -237,7 +240,11 @@ Common CMS editor macros and utilities
     function displayCmsEventMessage(eventMsg) {
         if (eventMsg) {
             var alertBox = '<@compress_single_line><@alert type="success">'+eventMsg+'</@alert></@compress_single_line>';
-            $("#main-alert-box").append(alertBox).foundation();
+            var containerBox = $("#main-${styles.alert_wrap!}").append(alertBox);
+            try {
+                containerBox.foundation();
+            } catch(err) {
+            }
         }
     }
     
@@ -351,7 +358,7 @@ Common CMS editor macros and utilities
 </#macro>
 
 <#-- Creates a new association between a CmsScriptTemplate and a template record (type implied by form action and passed nested hidden inputs) -->
-<#macro cmsScriptTemplateSelectForm formAction baseId="script-assoc-create">
+<#macro cmsScriptTemplateSelectForm formAction baseId="script-assoc-create" webSiteId="">
 
     <#-- should always show the existing scripts form, unless there are no existing standalone scripts in the system. -->
     <#local existingSelected = standaloneScriptTemplates?has_content>
@@ -396,17 +403,21 @@ Common CMS editor macros and utilities
     <div id="${(baseId+"-newloc")}"<#if existingSelected> style="display: none;"</#if>>
       <@form method="post" action=formAction id=(baseId+"-newloc-form")>
 
-        <input type="hidden" name="templateSource" value="Location" />
+        <input type="hidden" name="templateSource" value="Location"/>
         
         <#-- NON-STANDALONE means the CmsScriptTemplate will be automatically deleted once orphaned, 
             as long as the user has never edited it further (editing it switches it to "Y").
             without this auto-delete, we would probably just annoy users who make heavy use of script locations. -->
-        <input type="hidden" name="standalone" value="N" />
+        <input type="hidden" name="standalone" value="N"/>
 
         <@field type="text" label=uiLabelMap.CmsScriptName size="30" name="templateName" required=true tooltip=uiLabelMap.CmsScriptNameDescription />
         <@field type="text" label=uiLabelMap.CmsScriptLocation size="30" name="templateLocation" required=true 
             placeholder="component://cms/cms-templates/actions/xxx.groovy"/>
- 
+        <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only -->
+        <@webSiteSelectField name="webSiteId" value=webSiteId required=false
+            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+        <input type="hidden" name="currentWebSiteId" value="${webSiteId}"/><#-- see CmsGetPage.groovy -->
+
         <@cmsScriptTemplateSelectFormCommonFields><#nested></@cmsScriptTemplateSelectFormCommonFields>
       </@form>
     </div>
@@ -421,7 +432,10 @@ Common CMS editor macros and utilities
 
 <#-- TODO?: we could support more editable fields, but to avoid issues and simplify, we are setting the script reference read-only here  -->
 <#macro cmsScriptTemplateSelectFormEditFields scriptTmpl>
-        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value="${rawString(scriptTmpl.templateName!scriptTmpl.id)} (${rawString(scriptTmpl.id)})"/>
+        <#local nameMarkup>${scriptTmpl.templateName!scriptTmpl.id} <#t/>
+            (<a href="<@pageUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@pageUrl>">${scriptTmpl.id}</a>)</#local>
+        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value=wrapAsRaw({'raw':raw(scriptTmpl.templateName!scriptTmpl.id), 'htmlmarkup':nameMarkup})/>
+        <@field type="display" label=uiLabelMap.CommonWebsite name="webSiteId" value=(scriptTmpl.webSiteId!"-")/>
         <@field type="display" label=uiLabelMap.CmsQualifiedName name="qualifiedName" value=(scriptTmpl.qualifiedName!"")/>
         <@field type="text" label=uiLabelMap.CmsInvokeName size="30" name="invokeName" required=false tooltip=uiLabelMap.CmsScriptInvokeNameDescription value=scriptTmpl.invokeName!/>
         <@field type="text" label=uiLabelMap.CommonPosition size="30" name="inputPosition" required=false value=scriptTmpl.inputPosition!/>
@@ -442,10 +456,11 @@ Common CMS editor macros and utilities
                 </@tr>
             </@thead>
             <#list scriptTemplates as scriptTmpl><#-- NOTE: should be already sorted by LinkedHashMap -->
+                <#local editUrlHtml = escapeVal(makePageUrl("editScript?scriptTemplateId="+raw(scriptTmpl.id)), "html")>
                 <@tr>
                    <@td>${scriptTmpl.inputPosition!}</@td>
-                   <@td><a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.id!}</a></@td>
-                   <@td><a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.templateName!}</a></@td>
+                   <@td><a href="${editUrlHtml}">${scriptTmpl.id!}</a></@td>
+                   <@td><a href="${editUrlHtml}">${scriptTmpl.templateName!}</a></@td>
                    <#-- TODO: ONLY SUPPORT location for now, because body storage requires more advanced screens for reuse -->
                    <@td>${scriptTmpl.qualifiedName!""}</@td>
                    <#--<@td>${scriptTmpl.invokeName!""}</@td> -->
@@ -474,9 +489,9 @@ Common CMS editor macros and utilities
     <#if scriptTemplates?has_content>
       <#if updateAction?has_content>
         <#list scriptTemplates as scriptTmpl>
-          <@modal id="edit_script_${rawString(scriptTmpl.assocId)}">
+          <@modal id="edit_script_${raw(scriptTmpl.assocId)}">
             <@heading>${uiLabelMap.CmsEditScript}</@heading>
-            <form method="post" action="<@ofbizUrl>${updateAction}</@ofbizUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
+            <form method="post" action="<@pageUrl>${updateAction}</@pageUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
             <@fields type="default-compact">
               <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}" />
             <#list updateFields?keys as fieldName>
@@ -491,7 +506,7 @@ Common CMS editor macros and utilities
       </#if>
       <#if deleteAction?has_content>
         <#list scriptTemplates as scriptTmpl>
-            <form id="remove_script_${escapeVal(scriptTmpl.assocId, 'html')}" method="post" action="<@ofbizUrl>${deleteAction}</@ofbizUrl>">
+            <form id="remove_script_${escapeVal(scriptTmpl.assocId, 'html')}" method="post" action="<@pageUrl>${deleteAction}</@pageUrl>">
                 <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}"/>
                 <input type="hidden" name="scriptTemplateId" value="${scriptTmpl.id}"/>
               <#list updateFields?keys as fieldName>
@@ -613,7 +628,7 @@ Common CMS editor macros and utilities
 
                 $.ajax({
                       type: "POST",
-                      url: "<@ofbizUrl escapeAs='js'>exportCmsDataAsXmlJson</@ofbizUrl>",
+                      url: "<@pageUrl escapeAs='js'>exportCmsDataAsXmlJson</@pageUrl>",
                       data: params,
                       cache:false,
                       async:true,
@@ -648,7 +663,7 @@ Common CMS editor macros and utilities
         <@heading>${escapeVal(title, 'htmlmarkup')}</@heading>
         <@alert type="warning">${uiLabelMap.CommonFunctionalityWorkInProgressWarning} [2017-12-04]</@alert>
         <@fields type="default-compact">
-            <form action="<@ofbizUrl uri=target/>" method="post" id="cms-copy-object-form">
+            <form action="<@pageUrl uri=target/>" method="post" id="cms-copy-object-form">
                 <#nested/>
                 <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_copy!}" />
             </form>
@@ -667,5 +682,127 @@ Common CMS editor macros and utilities
     </@field>
 </#macro>
 
+<#macro customVariantSizeForm>
+  <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
+      <@row>
+        <@cell columns=3>
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeName}</label>
+          <input type="text" name="variantSizeName" class="field-inline required" size="20" required="required">
+          <#-- <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=3>
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeWidth}</label>
+          <input type="text" name="variantSizeWidth" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=3>
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeHeight}</label>
+          <input type="text" name="variantSizeHeight" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=3>
+          <input type="hidden" name="variantSizeSequenceNum" value="0"/>
+        </@cell>
+      </@row>    
+  </@fields>
+</#macro>
+
+<#macro commonCustomVariantSizeScript saveAsPreset=false>
+    <@script>
+        <#if saveAsPreset>
+         var saveAsPreset = function() {
+            var isChecked = jQuery(this).is(':checked');
+            if (isChecked === true) {
+                jQuery('#cmsmedia-customvariantsize-preset-name').show();
+            } else {
+                jQuery('#cmsmedia-customvariantsize-preset-name').hide();
+            }
+         };
+         jQuery('#saveAsPreset').click(saveAsPreset);
+        </#if>
+
+        var customVariantSizeCount = 0;
+        var customVariantSizeFieldCount = 0;
+        var addCustomVariantSize = function() {
+            customVariantSizeCount++;
+            <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
+            var customVariantSizeForm = $('${escapeVal(customVariantSizeForm, 'js')}');
+            var variantSizeSequenceNum = customVariantSizeForm.find('input').each(function() {
+                $(this, customVariantSizeForm).attr('id', 'customvariantsize-field-' + customVariantSizeFieldCount);
+                if ($(this).attr('name') == 'variantSizeSequenceNum') {
+                    $(this, customVariantSizeForm).val(customVariantSizeCount);
+                }
+                customVariantSizeFieldCount++;
+                console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());
+            });
+               
+            jQuery('.cmsmedia-customvariantsize-add-cnt').before(customVariantSizeForm);
+        };
+        jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+
+        var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
+        jQuery(customVariantSizeMethodElem).click(function() {
+            customVariantSizeMethod = $(this).val();
+            if (customVariantSizeMethod == "customVariantSizesForm") {
+                addCustomVariantSize();
+            }
+            jQuery('.cmsmedia-customvariantsize-method').hide();
+            jQuery('.' + customVariantSizeMethod).show();
+        });
+    </@script>
+</#macro>
+
+<#macro responsiveImgForm>
+     <@fields type="default-manual" label=uiLabelMap.CmsMediaResponsiveImgForm>
+      <@row>
+        <@cell columns=4>
+          <label class="form-field-label">${uiLabelMap.ImageViewPortMediaQuery}</label>
+          <input type="text" name="viewPortMediaQuery" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="viewPortMediaQuery" labelArea=true label=uiLabelMap.ImageViewPortMediaQuery required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=4>
+          <label class="form-field-label">${uiLabelMap.ImageViewPortLength}</label>
+          <input type="text" name="viewPortLength" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=4>
+          <input type="hidden" name="viewPortSequenceNum" required="required">
+          <#-- <@field type="hidden" inline=true name="viewPortSequenceNum" labelArea=true required=true value="" id=""/> -->
+        </@cell>
+      </@row>
+     </@fields>
+</#macro>
+
+<#macro responsiveImgScript>
+    <@script>
+        <#assign customResponsiveImgForm><@responsiveImgForm /></#assign>
+        var responsiveImgCount = 0;
+        var responsiveImgFieldCount = 0;
+        var addResponsiveImgSize = function() {
+            responsiveImgCount++;
+            var customResponsiveImgForm = $('${escapeVal(customResponsiveImgForm, 'js')}');
+            var viewPortSequenceNum = jQuery(customResponsiveImgForm).find('input').each(function() {
+                $(this, customResponsiveImgForm).attr('id', 'responsiveimg-field-' + responsiveImgFieldCount);
+                if ($(this).attr('name') == 'viewPortSequenceNum') {
+                    $(this, customResponsiveImgForm).val(responsiveImgCount);
+                }
+                responsiveImgFieldCount++;
+                console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());
+            });
+            jQuery('.cmsmedia-responsiveimg-add-cnt').before(customResponsiveImgForm);
+        };
+
+        $('select[name=srcsetModeEnumId]').change(function() {
+           if ($(this).val() != "IMG_SRCSET_VW") {
+                jQuery('.cmsmedia-responsiveimg-mode').hide();
+           } else {
+                jQuery('.cmsmedia-responsiveimg-mode').show();
+                addResponsiveImgSize();
+           }
+        });
+
+       jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+    </@script>
+</#macro>
 
 

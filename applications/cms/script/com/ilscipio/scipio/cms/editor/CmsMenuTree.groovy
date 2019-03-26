@@ -1,24 +1,10 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-
+/**
+ * Scipio CMS Menu Tree - script
+ */
 import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.control.*;
-import org.ofbiz.base.component.ComponentConfig;
-
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeCore;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
-import com.ilscipio.scipio.cms.webapp.ComponentUtil;
-import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
 
 final String module = "CmsMenuTree.groovy";
+
 // Fetch menus from db
 
 /*menuResult = dispatcher.runSync("cmsGetMenus", ["request":request, "response":response, 
@@ -29,5 +15,4 @@ if (ServiceUtil.isSuccess(menuResult)) {
     context.cmsErrorHandler.addContextReadErrorFromServiceResult(context, menuResult);
 }*/
 
-cmsMenus = select("menuId","menuName").from("CmsMenu").cache(false).queryList();
-context.cmsMenus = cmsMenus;
+context.cmsMenus = select("menuId", "menuName").from("CmsMenu").cache(false).queryList();

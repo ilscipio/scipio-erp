@@ -24,7 +24,6 @@ import java.util.List;
 import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -33,9 +32,11 @@ import org.ofbiz.entity.util.EntityQuery;
 /**
  * StatusWorker
  */
-public class StatusWorker {
+public final class StatusWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private StatusWorker() {}
 
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeId) {
         Delegator delegator = (Delegator) pageContext.getRequest().getAttribute("delegator");

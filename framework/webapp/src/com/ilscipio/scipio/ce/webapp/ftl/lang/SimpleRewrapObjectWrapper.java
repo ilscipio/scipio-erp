@@ -15,7 +15,7 @@ public class SimpleRewrapObjectWrapper implements ObjectWrapper, ObjectRewrapper
     protected final ObjectWrapper objectWrapper;
     protected final boolean preserving;
     protected final Boolean copying;
-    
+
     protected SimpleRewrapObjectWrapper(Environment env, ObjectWrapper objectWrapper, boolean preserving,
             Boolean copying) {
         this.env = env;
@@ -28,7 +28,7 @@ public class SimpleRewrapObjectWrapper implements ObjectWrapper, ObjectRewrapper
             boolean preserving, Boolean copying) {
         return new SimpleRewrapObjectWrapper(env, objectWrapper, preserving, copying);
     }
-    
+
     @Override
     public TemplateModel wrap(Object arg) throws TemplateModelException {
         // TODO: this should handle other types

@@ -19,11 +19,10 @@
 
 package org.ofbiz.entity.condition;
 
-import groovy.util.BuilderSupport;
-
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -33,9 +32,12 @@ import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.model.ModelEntity;
 
+import groovy.util.BuilderSupport;
+
 public class EntityConditionBuilder extends BuilderSupport {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    @SuppressWarnings("serial")
     private static class ConditionHolder extends EntityCondition {
         protected EntityCondition condition;
 
@@ -43,7 +45,8 @@ public class EntityConditionBuilder extends BuilderSupport {
             this.condition = condition;
         }
 
-        public Object asType(Class clz) {
+        @SuppressWarnings("unused")
+        public Object asType(Class<?> clz) {
             Debug.logInfo("asType(%s): %s", module, clz, condition);
             if (clz == EntityCondition.class) {
                 return condition;
@@ -51,6 +54,7 @@ public class EntityConditionBuilder extends BuilderSupport {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public EntityCondition build() {
             return condition;
         }
@@ -86,9 +90,9 @@ public class EntityConditionBuilder extends BuilderSupport {
 
     @Override
     protected Object createNode(Object methodName) {
-        String operatorName = ((String)methodName).toLowerCase();
+        String operatorName = ((String)methodName).toLowerCase(Locale.getDefault());
         EntityJoinOperator operator = EntityOperator.lookupJoin(operatorName);
-        List<EntityCondition> condList = new LinkedList<EntityCondition>();
+        List<EntityCondition> condList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         return new ConditionHolder(EntityCondition.makeCondition(condList, operator));
     }
 
@@ -100,23 +104,22 @@ public class EntityConditionBuilder extends BuilderSupport {
     }
 
     @Override
-    protected Object createNode(Object methodName, Map mapArg) {
+    protected Object createNode(Object methodName, @SuppressWarnings("rawtypes") Map mapArg) {
         Map<String, Object> fieldValueMap = UtilGenerics.checkMap(mapArg);
-        String operatorName = ((String)methodName).toLowerCase();
+        String operatorName = ((String)methodName).toLowerCase(Locale.getDefault());
         EntityComparisonOperator<String, Object> operator = EntityOperator.lookupComparison(operatorName);
-        List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
+        List<EntityCondition> conditionList = new ArrayList<>(fieldValueMap.size()); // SCIPIO: switched to ArrayList
         for (Map.Entry<String, Object> entry : fieldValueMap.entrySet()) {
             conditionList.add(EntityCondition.makeCondition(entry.getKey(), operator, entry.getValue()));
         }
         if (conditionList.size() == 1) {
             return new ConditionHolder(conditionList.get(0));
-        } else {
-            return new ConditionHolder(EntityCondition.makeCondition(conditionList));
         }
+        return new ConditionHolder(EntityCondition.makeCondition(conditionList));
     }
 
     @Override
-    protected Object createNode(Object methodName, Map mapArg, Object objArg) {
+    protected Object createNode(Object methodName, @SuppressWarnings("rawtypes") Map mapArg, Object objArg) {
         return null;
     }
 
@@ -125,7 +128,7 @@ public class EntityConditionBuilder extends BuilderSupport {
         ConditionHolder holder = (ConditionHolder) parent;
         EntityConditionList<EntityCondition> parentConList = UtilGenerics.cast(holder.condition);
         Iterator<EntityCondition> iterator = parentConList.getConditionIterator();
-        List<EntityCondition> tempList = new LinkedList<EntityCondition>();
+        List<EntityCondition> tempList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         while (iterator.hasNext()) {
             tempList.add(iterator.next());
         }

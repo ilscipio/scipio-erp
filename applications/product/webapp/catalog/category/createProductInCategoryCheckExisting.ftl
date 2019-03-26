@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productCategoryId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </#if>
   </@menu>
 </#macro>
@@ -38,7 +25,7 @@ under the License.
 </#assign>
 <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
       <#if products?has_content>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
           <@thead>
             <@tr>
                 <@td>${uiLabelMap.ProductInternalName}</@td>
@@ -51,7 +38,7 @@ under the License.
             <@tr>
                 <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
                 <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
-                <@td width="10%"><a href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
+                <@td width="10%"><a href="<@pageUrl>ViewProduct?productId=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
             </@tr>
           </#list>
           </@tbody>
@@ -62,11 +49,11 @@ under the License.
 
       <@row>
         <@cell>
-        <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>">
+        <form name="createProductInCategoryForm" method="post" action="<@pageUrl>createProductInCategory</@pageUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
-            <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
+                <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
                 <#assign productFeature = productFeatureAndTypeData.productFeature>
                 <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
                 <@field type="display" label=(productFeatureType.description)>

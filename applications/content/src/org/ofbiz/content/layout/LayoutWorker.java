@@ -42,10 +42,12 @@ import org.ofbiz.webapp.event.FileUploadProgressListener;
 /**
  * LayoutWorker Class
  */
-public class LayoutWorker {
+public final class LayoutWorker {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
+
+    private LayoutWorker() {}
 
     /**
      * Uploads image data from a form and stores it in ImageDataResource.
@@ -53,20 +55,18 @@ public class LayoutWorker {
      * and the binary data to be in a field id'd by uploadField.
      */
     public static Map<String, Object> uploadImageAndParameters(HttpServletRequest request, String uploadField) {
-
-        //Debug.logVerbose("in uploadAndStoreImage", "");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map<String, Object> results = new HashMap<String, Object>();
-        Map<String, String> formInput = new LinkedHashMap<String, String>();
+        Map<String, Object> results = new HashMap<>();
+        Map<String, String> formInput = new LinkedHashMap<>();
         results.put("formInput", formInput);
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, new File(new File("runtime"), "tmp")));
-        
+
         // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
         FileUploadProgressListener listener = new FileUploadProgressListener();
         fu.setProgressListener(listener);
         request.getSession().setAttribute("uploadProgressListener", listener);
-        
+
         List<FileItem> lst = null;
         try {
            lst = UtilGenerics.checkList(fu.parseRequest(request));
@@ -78,7 +78,6 @@ public class LayoutWorker {
             String errMsg = UtilProperties.getMessage(err_resource,
                     "layoutEvents.no_files_uploaded", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            //Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(err_resource,
                     "layoutEvents.no_files_uploaded", locale));
         }
@@ -94,7 +93,6 @@ public class LayoutWorker {
             if (fi.isFormField()) {
                 formInput.put(fieldName, fieldStr);
                 request.setAttribute(fieldName, fieldStr);
-            //Debug.logVerbose("in uploadAndStoreImage, fieldName:" + fieldName + " fieldStr:" + fieldStr, "");
             }
             if (fieldName.equals(uploadField)) {
                 imageFi = fi;
@@ -104,10 +102,9 @@ public class LayoutWorker {
         }
 
         if (imageFi == null) {
-            String errMsg = UtilProperties.getMessage(err_resource, 
+            String errMsg = UtilProperties.getMessage(err_resource,
                     "layoutEvents.image_null", UtilMisc.toMap("imageFi", imageFi), locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            //Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + ") is null", module);
             return null;
         }
 
@@ -115,8 +112,6 @@ public class LayoutWorker {
         ByteBuffer byteWrap = ByteBuffer.wrap(imageBytes);
         results.put("imageData", byteWrap);
         results.put("imageFileName", imageFi.getName());
-
-        //Debug.logVerbose("in uploadAndStoreImage, results:" + results, "");
         return results;
     }
 

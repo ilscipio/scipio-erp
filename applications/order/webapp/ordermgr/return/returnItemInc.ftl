@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#assign sectionTitle>
     <@row>
         <@cell small=10>
-            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading>
+            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading>
         </@cell>
         <@cell small=2>
             <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
@@ -32,7 +19,7 @@ under the License.
   <#-- information about orders and amount refunded/credited on past returns -->
   <#if orh??>
   <@section>
-        <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="summary">
           <@tr>
             <@th width="25%">${uiLabelMap.OrderOrderTotal}</@th>
             <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>
@@ -133,7 +120,7 @@ under the License.
               <@td>
                 <#if orderItem.productId??>
                   <#assign product = orderItem.getRelatedOne("Product", false)/>
-                  <#if product.productTypeId == "ASSET_USAGE_OUT_IN">
+                  <#if (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                     <input type="text" size="8" name="returnPrice_o_${rowCount}" value="0.00"/>
                   <#else>
                     <input type="text" size="8" name="returnPrice_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnablePrice")?string("##0.00")}"/>
@@ -150,7 +137,7 @@ under the License.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId=="RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId=="RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>
@@ -184,7 +171,7 @@ under the License.
   
   
 <#if returnableItems?has_content>
-  <#assign sectionTitle>${getLabel('OrderReturnAdjustments')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnAdjustments')} ${getLabel('CommonNbr')} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
@@ -217,7 +204,7 @@ under the License.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId == "RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>
@@ -238,7 +225,7 @@ under the License.
         <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
         <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
         
-  <#assign sectionTitle>${getLabel('OrderReturnManualAdjustment')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnManualAdjustment')} ${getLabel('CommonNbr')} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
         <@table type="data-list">
           <@thead>
@@ -260,7 +247,7 @@ under the License.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId == "RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>

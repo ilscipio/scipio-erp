@@ -36,8 +36,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;string-to-list&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Cstringtolist%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class StringToList extends MethodOperation {
 
@@ -49,7 +49,9 @@ public final class StringToList extends MethodOperation {
     public StringToList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<string-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<string-to-list> element is deprecated (use <set>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "list", "arg-list", "string", "message-field");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "list", "string");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "list", "arg-list");

@@ -474,7 +474,9 @@
             var html = '',
                 i = 0;
             while (i < 12) {
-                html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
+                 // Scipio ERP fix
+                  html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
+                 // html+=$('<span>').addClass('month').text(dates[this.language].monthsShort[i++]);
             }
             this.picker.find('.datepicker-months td').html(html);
         },

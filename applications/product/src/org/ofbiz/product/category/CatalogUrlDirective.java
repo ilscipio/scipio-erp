@@ -25,25 +25,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.control.WebAppConfigurationException;
-import org.ofbiz.webapp.ftl.OfbizUrlTransform;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
-import freemarker.template.TemplateScalarModel;
-import freemarker.template.utility.DeepUnwrap;
 
 /**
  * CatalogUrlDirective - Freemarker Template Directive for generating URLs suitable for use by the CatalogUrlServlet
@@ -80,75 +76,55 @@ import freemarker.template.utility.DeepUnwrap;
  * </ul>
  */
 public class CatalogUrlDirective implements TemplateDirectiveModel {
-
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    public void execute(Environment env, Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        Map<String, TemplateModel> params = UtilGenerics.checkMap(args);
-        // SCIPIO: various changes here
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-        
+
         String productId = TransformUtil.getStringArg(args, "productId", rawParams);
         String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
         String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
 
-        BeanModel req = (BeanModel) env.getVariable("request");
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
+        RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
 
-        // SCIPIO: new flags
-        
-        Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
         Boolean secure = TransformUtil.getBooleanArg(args, "secure");
         Boolean encode = TransformUtil.getBooleanArg(args, "encode");
+        Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
 
-        String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams); // SCIPIO: webSiteId
-        
-        String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
-        
         Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
-        
-        if (req != null) {
-            HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-            
-            // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
-            BeanModel resp = (BeanModel) env.getVariable("response");
-            HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
-            
-            //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
-            String url = null;
-            try {
-                url = CatalogUrlServlet.makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
-                        prefix, fullPath, secure, encode);
-            } catch (WebAppConfigurationException e) {
-                throw new IOException(e.getMessage());
+        Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env); // SCIPIO: 2018-08-02: get proper locale
+
+        String url;
+        try {
+            if (request != null) {
+                FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
+                        TransformUtil.getStringArg(args, "prefix", rawParams), request, null);
+                HttpServletResponse response = ContextFtlUtil.getResponse(env);
+                url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
+                        targetWebappInfo, fullPath, secure, encode);
+            } else { // SCIPIO: New: Handle non-request cases
+                Map<String, Object> context = ContextFtlUtil.getContext(env);
+                Delegator delegator = ContextFtlUtil.getDelegator(request, env);
+                LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
+                FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
+                        TransformUtil.getStringArg(args, "prefix", rawParams), null, context);
+                url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId,
+                        currentCategoryId, previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
             }
-            
-            // SCIPIO: no null
             if (url != null) {
-                env.getOut().write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
+                url = UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env);
             }
-        } else if (webSiteId != null || prefix != null) {
-            // SCIPIO: New: Handle non-request cases
-            Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
-            LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-            Locale locale = (Locale) args.get("locale");
-            
-            String url;
-            try {
-                url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams, webSiteId, 
-                        prefix, fullPath, secure);
-            } catch (WebAppConfigurationException e) {
-                throw new IOException(e.getMessage());
-            }
-            
-            // SCIPIO: no null
-            if (url != null) {
-                env.getOut().write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
-            }
+        } catch(Exception e) {
+            throw new TemplateException(e, env);
+        }
+        if (url != null) { // SCIPIO: NOTE: Let IOException propagate ONLY for write call (see TemplateDirectiveModel description)
+            env.getOut().write(url);
         }
     }
 }

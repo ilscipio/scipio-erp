@@ -19,7 +19,10 @@
 package org.ofbiz.webapp.event;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +32,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig.EventHandlerWrapperDef;
+import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 
 /**
  * EventFactory - Event Handler Factory
@@ -37,19 +43,54 @@ public class EventFactory {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private final Map<String, EventHandler> handlers = new HashMap<String, EventHandler>();
+    private final Map<String, EventHandler> handlers;
+    private final Map<String, List<EventHandlerWrapper>> wrappers; // SCIPIO: added 2018-11-23
+    private final List<EventHandlerWrapper> allTriggerWrappers; // SCIPIO: added 2018-11-23
 
     public EventFactory(ServletContext context, URL controllerConfigURL) {
         // load all the event handlers
         try {
-            Set<Map.Entry<String,String>> handlerEntries = ConfigXMLReader.getControllerConfig(controllerConfigURL).getEventHandlerMap().entrySet();
-            if (handlerEntries != null) {
-                for (Map.Entry<String,String> handlerEntry: handlerEntries) {
-                    EventHandler handler = (EventHandler) ObjectType.getInstance(handlerEntry.getValue());
-                    handler.init(context);
-                    this.handlers.put(handlerEntry.getKey(), handler);
+            ControllerConfig controllerConfig = ConfigXMLReader.getControllerConfig(controllerConfigURL);
+            Map<String, EventHandler> handlers = new HashMap<>();
+            for (Map.Entry<String,String> handlerEntry: controllerConfig.getEventHandlerMap().entrySet()) {
+                EventHandler handler = (EventHandler) ObjectType.getInstance(handlerEntry.getValue());
+                handler.init(context);
+                handlers.put(handlerEntry.getKey(), handler);
+            }
+            this.handlers = handlers;
+
+            // SCIPIO: handler wrappers
+            Map<String, List<EventHandlerWrapper>> wrappers = new HashMap<>();
+            
+            Set<String> allTriggerNames = new HashSet<>(Event.TRIGGERS);
+            // First pass to collect all the known triggers
+            for(EventHandlerWrapperDef def : controllerConfig.getEventHandlerWrapperMap().values()) {
+                if (def.getTriggers() != null) {
+                    allTriggerNames.addAll(def.getTriggers());
                 }
             }
+            ArrayList<EventHandlerWrapper> allTriggerWrappers = new ArrayList<>();
+            for(EventHandlerWrapperDef def : controllerConfig.getEventHandlerWrapperMap().values()) {
+                EventHandlerWrapper handler = (EventHandlerWrapper) ObjectType.getInstance(def.getClassName());
+                handler.init(context);
+                for(String trigger : (def.getTriggers() != null) ? def.getTriggers() : allTriggerNames) {
+                    List<EventHandlerWrapper> list = wrappers.get(trigger);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        wrappers.put(trigger, list);
+                    }
+                    list.add(handler);
+                }
+                if (def.getTriggers() == null) {
+                    allTriggerWrappers.add(handler);
+                }
+            }
+            for(List<EventHandlerWrapper> list : wrappers.values()) {
+                ((ArrayList<EventHandlerWrapper>) list).trimToSize();
+            }
+            allTriggerWrappers.trimToSize();
+            this.wrappers = wrappers;
+            this.allTriggerWrappers = allTriggerWrappers;
         } catch (Exception e) {
             Debug.logError(e, module);
             throw new GeneralRuntimeException(e);
@@ -62,5 +103,10 @@ public class EventFactory {
             throw new EventHandlerException("No handler found for type: " + type);
         }
         return handler;
+    }
+
+    public List<EventHandlerWrapper> getEventHandlerWrappersForTrigger(String trigger) { // SCIPIO
+        List<EventHandlerWrapper> wrapperList = wrappers.get(trigger);
+        return (wrapperList != null) ? wrapperList : allTriggerWrappers;
     }
 }

@@ -10,7 +10,7 @@
     "acctg-newtimeperiod", "acctg-edittimeperiod"
 ]>
 <#assign efpActionProps = {
-	"default": {
+    "default": {
         "add": {
             "type": "form",
             "mode": "show",
@@ -18,27 +18,27 @@
             "defaultParams": wrapRawScript("function() { return defaultGlAccountParams; }")
         }
     }, 
-	"timePeriod": {   
-	    "add": {
-	        "type": "form",
-	        "mode": "show",
-	        "id": "acctg-newtimeperiod"
-	    },
-	    "edit": {
-	    	"type": "form",
-	        "mode": "show",
-	        "id": "acctg-edittimeperiod"	        
-	    },
-	    "remove": {
-	    	"type": "form",
+    "timePeriod": {   
+        "add": {
+            "type": "form",
+            "mode": "show",
+            "id": "acctg-newtimeperiod"
+        },
+        "edit": {
+            "type": "form",
+            "mode": "show",
+            "id": "acctg-edittimeperiod"            
+        },
+        "remove": {
+            "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
             "id": "acctg-removetimeperiod-form"
-	    },
-	    "manage": {
+        },
+        "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
             "paramNames": {"customTimePeriodId": true }            
         }
     }
@@ -52,11 +52,11 @@
 <#-- RENDERS DISPLAY OPTIONS -->
 <#macro efpExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
-    <@form action=makeOfbizUrl("setupAccounting") method="get">
+    <@form action=makePageUrl("setupAccounting") method="get">
       <@defaultWizardFormFields/>
     </@form>
   </@section>
 </#macro>
 
 <#-- CORE INCLUDE -->
-<#include "component://accounting/webapp/accounting/period/tree/EditCustomTimePeriodCore.ftl">		
+<#include "component://accounting/webapp/accounting/period/tree/EditCustomTimePeriodCore.ftl">        

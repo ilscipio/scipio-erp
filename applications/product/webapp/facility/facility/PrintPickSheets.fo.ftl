@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -125,7 +112,7 @@ under the License.
                                                                   <fo:block>${uiLabelMap.ProductShipmentMethod}:</fo:block>
                                                              </fo:table-cell>
                                                              <fo:table-cell>
-                                                                 <fo:block font-weight="bold">${carrierPartyId!}-${shipmentMethodType!}</fo:block>
+                                                                 <fo:block font-weight="bold" wrap-option="wrap">${carrierPartyId!}-${shipmentMethodType!}</fo:block>
                                                              </fo:table-cell>
                                                          </fo:table-row>
                                                      </fo:table-body>
@@ -189,7 +176,7 @@ under the License.
                                                 <fo:table-cell><fo:block font-size="10pt"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></fo:block></fo:table-cell>
                                             </fo:table-row>
                                             </#if>
-                                            <#if product.productTypeId == "MARKETING_PKG_AUTO">
+                                            <#if (product.productTypeId!) == "MARKETING_PKG_AUTO">
                                                 <fo:table-row background-color="${rowColor}">
                                                     <fo:table-cell  number-columns-spanned="6">
                                                         <fo:block text-align="left" font-weight="bold">

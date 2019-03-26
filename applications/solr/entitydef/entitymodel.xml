@@ -19,7 +19,7 @@
   <!-- com.ilscipio.scipio.solr -->
   <!-- ========================================================= -->
 
-    <entity entity-name="SolrStatus" package-name="com.ilscipio.scipio.solr" title="SOLR Status Entity" never-cache="true">
+    <entity entity-name="SolrStatus" package-name="com.ilscipio.scipio.solr" title="SOLR Status" never-cache="true">
         <field name="solrId" type="id-ne"></field>
         <field name="dataStatusId" type="id"></field>
         <field name="dataCfgVersion" type="value"><description>Last config version used (by rebuildSolrIndex) - from solrconfig.properties/solr.config.version[.custom]</description></field><!-- added 2017-08-23 -->

@@ -56,8 +56,8 @@ import org.w3c.dom.Element;
 public class IterateSectionWidget extends ModelScreenWidget {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static int DEFAULT_PAGE_SIZE = 5;
-    public static int MAX_PAGE_SIZE = 10000;
+    public static final int DEFAULT_PAGE_SIZE = 5;
+    public static final int MAX_PAGE_SIZE = 10000;
 
     private final List<ModelScreenWidget.Section> sectionList;
     private final FlexibleMapAccessor<Object> listNameExdr;
@@ -96,7 +96,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         if (childElementList.isEmpty()) {
             this.sectionList = Collections.emptyList();
         } else {
-            List<ModelScreenWidget.Section> sectionList = new ArrayList<ModelScreenWidget.Section>(childElementList.size());
+            List<ModelScreenWidget.Section> sectionList = new ArrayList<>(childElementList.size());
             for (Element sectionElement: childElementList) {
                 ModelScreenWidget.Section section = new ModelScreenWidget.Section(modelScreen, sectionElement, false);
                 sectionList.add(section);
@@ -112,7 +112,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
     @Override
     public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         int viewIndex = 0;
-        int viewSize = this.viewSize;
+        int locViewSize = this.viewSize;
         int lowIndex = -1;
         int highIndex = -1;
         int listSize = 0;
@@ -151,20 +151,20 @@ public class IterateSectionWidget extends ModelScreenWidget {
                 String viewIndexString = params.get("VIEW_INDEX" + "_" + WidgetWorker.getPaginatorNumber(context));
                 String viewSizeString = params.get("VIEW_SIZE" + "_" + WidgetWorker.getPaginatorNumber(context));
                 viewIndex = Integer.parseInt(viewIndexString);
-                viewSize = Integer.parseInt(viewSizeString);
-            } catch (Exception e) {
+                locViewSize = Integer.parseInt(viewSizeString);
+            } catch (NumberFormatException e) {
                 try {
-                    viewIndex = ((Integer) context.get("viewIndex")).intValue();
+                    viewIndex = (Integer) context.get("viewIndex");
                 } catch (Exception e2) {
                     viewIndex = 0;
                 }
             }
-            context.put("viewIndex", Integer.valueOf(viewIndex));
-            lowIndex = viewIndex * viewSize;
-            highIndex = (viewIndex + 1) * viewSize;
+            context.put("viewIndex", viewIndex);
+            lowIndex = viewIndex * locViewSize;
+            highIndex = (viewIndex + 1) * locViewSize;
         } else {
             viewIndex = 0;
-            viewSize = MAX_PAGE_SIZE;
+            locViewSize = MAX_PAGE_SIZE;
             lowIndex = 0;
             highIndex = MAX_PAGE_SIZE;
         }
@@ -187,7 +187,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
             } else {
                 contextMs.put(entryName, item);
             }
-            contextMs.put("itemIndex", Integer.valueOf(itemIndex));
+            contextMs.put("itemIndex", itemIndex);
 
             if (iterateIndex < listSize) {
                 contextMs.put("iterateId",String.valueOf(entryName+iterateIndex));
@@ -208,7 +208,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
                 Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
                 if (globalCtx != null) {
                     lastPageNumber = (Integer)globalCtx.get("PAGINATOR_NUMBER");
-                    globalCtx.put("PAGINATOR_NUMBER", Integer.valueOf(startPageNumber));
+                    globalCtx.put("PAGINATOR_NUMBER", startPageNumber);
                 }
                 renderNextPrev(writer, context, listSize, actualPageSize);
                 if (globalCtx != null) {
@@ -230,10 +230,9 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
     public boolean getPaginate(Map<String, Object> context) {
         if (!this.paginate.isEmpty() && UtilValidate.isNotEmpty(this.paginate.expandString(context))) {
-            return Boolean.valueOf(this.paginate.expandString(context)).booleanValue();
-        } else {
-            return true;
+            return Boolean.valueOf(this.paginate.expandString(context));
         }
+        return true;
     }
 
     public int getViewSize() {
@@ -266,34 +265,17 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
         int viewIndex = -1;
         try {
-            viewIndex = ((Integer) context.get("viewIndex")).intValue();
+            viewIndex = (Integer) context.get("viewIndex");
         } catch (Exception e) {
             viewIndex = 0;
         }
 
         int viewSize = -1;
         try {
-            viewSize = ((Integer) context.get("viewSize")).intValue();
+            viewSize = (Integer) context.get("viewSize");
         } catch (Exception e) {
             viewSize = this.getViewSize();
         }
-
-
-        /*
-        int highIndex = -1;
-        try {
-            highIndex = modelForm.getHighIndex();
-        } catch (Exception e) {
-            highIndex = 0;
-        }
-
-        int lowIndex = -1;
-        try {
-            lowIndex = modelForm.getLowIndex();
-        } catch (Exception e) {
-            lowIndex = 0;
-        }
-         */
 
         int lowIndex = viewIndex * viewSize;
         int highIndex = (viewIndex + 1) * viewSize;
@@ -305,7 +287,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
 
-        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
         writer.append("<table border=\"0\" width=\"100%\" cellpadding=\"2\">\n");
@@ -315,37 +297,42 @@ public class IterateSectionWidget extends ModelScreenWidget {
         if (viewIndex > 0) {
             writer.append(" <a href=\"");
             StringBuilder linkText = new StringBuilder(targetService);
-            if (linkText.indexOf("?") < 0)  linkText.append("?");
-            else linkText.append("&amp;");
-            //if (queryString != null && !queryString.equals("null")) linkText += queryString + "&";
+            if (linkText.indexOf("?") < 0) {
+                linkText.append("?");
+            } else {
+                linkText.append("&amp;");
+            }
             if (UtilValidate.isNotEmpty(queryString)) {
                 linkText.append(queryString).append("&amp;");
             }
             linkText.append("VIEW_SIZE_"+ paginatorNumber + "=").append(viewSize).append("&amp;VIEW_INDEX_" + paginatorNumber + "=").append(viewIndex - 1).append("\"");
 
             // make the link
-            writer.append(rh.makeLink(request, response, linkText.toString(), false, false, false));
+            writer.append(rh.makeLink(request, response, linkText.toString(), false, null, true)); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             String previous = UtilProperties.getMessage("CommonUiLabels", "CommonPrevious", (Locale) context.get("locale"));
             writer.append(" class=\"buttontext\">[").append(previous).append("]</a>\n");
 
         }
         if (listSize > 0) {
-            Map<String, Integer> messageMap = UtilMisc.toMap("lowCount", Integer.valueOf(lowIndex + 1), "highCount", Integer.valueOf(lowIndex + actualPageSize), "total", Integer.valueOf(listSize));
+            Map<String, Integer> messageMap = UtilMisc.toMap("lowCount", lowIndex + 1, "highCount", lowIndex + actualPageSize, "total", listSize);
             String commonDisplaying = UtilProperties.getMessage("CommonUiLabels", "CommonDisplaying", messageMap, (Locale) context.get("locale"));
             writer.append(" <span class=\"tabletext\">").append(commonDisplaying).append("</span> \n");
         }
         if (highIndex < listSize) {
             writer.append(" <a href=\"");
             StringBuilder linkText = new StringBuilder(targetService);
-            if (linkText.indexOf("?") < 0)  linkText.append("?");
-            else linkText.append("&amp;");
+            if (linkText.indexOf("?") < 0) {
+                linkText.append("?");
+            } else {
+                linkText.append("&amp;");
+            }
             if (UtilValidate.isNotEmpty(queryString)) {
                 linkText.append(queryString).append("&amp;");
             }
             linkText.append("VIEW_SIZE_" + paginatorNumber + "=").append(viewSize).append("&amp;VIEW_INDEX_" + paginatorNumber + "=").append(viewIndex + 1).append("\"");
 
             // make the link
-            writer.append(rh.makeLink(request, response, linkText.toString(), false, false, false));
+            writer.append(rh.makeLink(request, response, linkText.toString(), false, null, true)); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             String next = UtilProperties.getMessage("CommonUiLabels", "CommonNext", (Locale) context.get("locale"));
             writer.append(" class=\"buttontext\">[").append(next).append("]</a>\n");
 
@@ -388,5 +375,3 @@ public class IterateSectionWidget extends ModelScreenWidget {
     }
 
 }
-
-

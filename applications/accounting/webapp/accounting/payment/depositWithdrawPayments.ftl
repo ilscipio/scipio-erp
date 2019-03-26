@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@script>
@@ -70,7 +57,7 @@ function getPaymentRunningTotal() {
 
 </@script>
 <@section>
-    <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
+    <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@pageUrl>depositWithdrawPayments</@pageUrl>">
         <#if paymentList?has_content>
             <input type="hidden" name="organizationPartyId" value="${organizationPartyId!}" />
             <input type="hidden" name="finAccountId" value="${finAccountId!}" />
@@ -91,7 +78,7 @@ function getPaymentRunningTotal() {
                     <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" />
                     <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                 </div>
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" -->
+            <@table type="data-list" autoAltRows=true>
               <@thead>
                 <@tr class="header-row-2">
                     <@th>${uiLabelMap.AccountingPayment}</@th>
@@ -105,7 +92,7 @@ function getPaymentRunningTotal() {
                 </@thead>
                 <#list paymentList as payment>
                     <@tr>
-                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
+                        <@td><a href="<@pageUrl>paymentOverview?paymentId=${payment.paymentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
                         <@td>${payment.paymentTypeDesc!}</@td>
                         <@td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</@td>
                         <@td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</@td>

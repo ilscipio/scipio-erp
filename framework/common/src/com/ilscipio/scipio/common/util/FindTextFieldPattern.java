@@ -19,7 +19,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 @SuppressWarnings("serial")
 public class FindTextFieldPattern implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     @SuppressWarnings("unchecked")
     public static final EntityComparisonOperator<Comparable<Object>, Object> EQUALS_ENTITY_OPERATOR = (EntityComparisonOperator<Comparable<Object>, Object>) FindServices.getEntityOperatorsMap().get("equals");
     @SuppressWarnings("unchecked")
@@ -71,25 +71,25 @@ public class FindTextFieldPattern implements Serializable {
         }
         return new FindTextFieldPattern(pattern, operatorName, entityOperator, Boolean.TRUE.equals(ignoreCase));
     }
-    
+
     public static FindTextFieldPattern fromFindOperatorSafe(String pattern, String operatorName, Boolean ignoreCase) {
         try {
             return fromFindOperator(pattern, operatorName, ignoreCase);
         } catch(Exception e) {
-            Debug.logError("Error creating find text field pattern '" + pattern 
+            Debug.logError("Error creating find text field pattern '" + pattern
                     + "' for operator '" + operatorName + "': " + e.getMessage(), module);
             return null;
         }
     }
-    
+
     public static FindTextFieldPattern fromFindOperatorSafe(String pattern, String operatorName, Object ignoreCase) throws IllegalArgumentException {
         return fromFindOperatorSafe(pattern, operatorName, UtilMisc.booleanValueVersatile(ignoreCase));
     }
-    
+
     public static FindTextFieldPattern fromStrictEqualsOperator(String pattern) {
         return new FindTextFieldPattern(pattern, "equals", EQUALS_ENTITY_OPERATOR, false);
     }
-    
+
     public static FindTextFieldPattern fromPermissiveContainsOperator(String pattern) {
         return new FindTextFieldPattern(pattern, "like", LIKE_ENTITY_OPERATOR, true);
     }
@@ -109,7 +109,7 @@ public class FindTextFieldPattern implements Serializable {
     public boolean isIgnoreCase() {
         return ignoreCase;
     }
-    
+
     @SuppressWarnings("unchecked")
     public boolean matches(String text) {
         if (ignoreCase) text = text.toLowerCase();
@@ -125,22 +125,22 @@ public class FindTextFieldPattern implements Serializable {
 //            }
 //        }, pattern);
     }
-    
+
     public boolean matchesSafe(String text) {
         try {
             return matches(text);
         } catch(Exception e) {
-            Debug.logError("Error matching text '" + text + "' to find text field pattern '" + pattern 
+            Debug.logError("Error matching text '" + text + "' to find text field pattern '" + pattern
                     + "' using operator '" + operatorName + "': " + e.getMessage(), module);
             return false;
         }
     }
-    
+
     // TODO: in, not-in operators (rhs is Collection)
-    
+
     private static class EmptyCheckFindTextFieldPattern extends FindTextFieldPattern {
         private static final EmptyCheckFindTextFieldPattern INSTANCE = new EmptyCheckFindTextFieldPattern();
-        
+
         private EmptyCheckFindTextFieldPattern() {
             super("", "empty", null, false);
         }

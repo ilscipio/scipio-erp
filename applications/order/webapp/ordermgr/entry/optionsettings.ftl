@@ -1,23 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#-- SCIPIO: OrderEntry Shipment method selection (full checkout) -->
+
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 <#assign columns=6>
 
   <#-- SCIPIO: Warning to prevent confusion... -->
@@ -25,18 +14,19 @@ under the License.
     <@alert type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.OrderNoShipMethodAvailable} ${uiLabelMap.OrderMayNotProceedWithOrder}</@alert>
   </#if>
 
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="options"/>
               
 <#list 1..cart.getShipGroupSize() as currIndex>
 <#assign shipGroupIndex = currIndex - 1>
 
+<#assign chosenShippingMethod = "N@A"><#-- SCIPIO: Always reset vars -->
 <#if cart.getShipmentMethodTypeId(shipGroupIndex)?? && cart.getCarrierPartyId(shipGroupIndex)??>
-    <#assign chosenShippingMethod = cart.getShipmentMethodTypeId(shipGroupIndex) + '@' + cart.getCarrierPartyId(shipGroupIndex)>
+    <#assign chosenShippingMethod = raw(cart.getShipmentMethodTypeId(shipGroupIndex)) + '@' + raw(cart.getCarrierPartyId(shipGroupIndex))>
 </#if>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":supplierPartyId}, false)! />
-  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawString(supplier.groupName!(supplier.partyId))}</#if></#assign>
+  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${raw(supplier.groupName!(supplier.partyId))}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>
         <@cell columns=columns>
@@ -45,22 +35,21 @@ under the License.
                 <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, 0)>
                 <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
                 <#list carrierShipmentMethods as carrierShipmentMethod>
-                    <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
+                    <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
                     <#assign radioText>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                       <#if cart.getShippingContactMechId(shipGroupIndex)??>
                         <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)!(-1)>
                         <#if shippingEst?has_content>
-                          &nbsp;-&nbsp;
                           <#if (shippingEst > -1)>
-                            <@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
-                          <#else>
-                            Calculated Offline
+                            &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
+                          <#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                            &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                           </#if>
                         </#if>
                       </#if>
                     </#assign>
-                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == (chosenShippingMethod!"N@A"))/>                   
+                    <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value=shippingMethod id="${shipGroupIndex!0}_shipping_method_${shippingMethod}" label=wrapAsRaw(radioText, 'htmlmarkup') checked=(shippingMethod == chosenShippingMethod)/>                   
                 </#list>
                 <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex!0}_shipping_method" value="Default" checked=true label=uiLabelMap.FacilityNoOtherShippingMethods/>

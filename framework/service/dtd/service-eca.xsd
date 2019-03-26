@@ -49,8 +49,8 @@ under the License.
                     <xs:enumeration value="global-commit"><xs:annotation><xs:documentation>Runs when the transaction the service is running in is successfully committed.</xs:documentation></xs:annotation></xs:enumeration>
                     <xs:enumeration value="global-commit-post-run"><xs:annotation><xs:documentation>Like global-commit, but gets its context post/after the run of the service and all non-global ECA rules.</xs:documentation></xs:annotation></xs:enumeration>
                     <xs:enumeration value="global-rollback"><xs:annotation><xs:documentation>Runs when the transaction the service is running in is rolled back.</xs:documentation></xs:annotation></xs:enumeration>
-                    <xs:enumeration value="auth"/>
-                    <xs:enumeration value="in-validate"/>
+                    <xs:enumeration value="auth"><xs:annotation><xs:documentation>Runs before the user is authenticated. Note that when the service to which the eca is associated is executed asynchronously this event occurs at least two times (at the time of the call and at the time of the execution). For this reason it is only safe to use this event to call services that don't change the status of any system.</xs:documentation></xs:annotation></xs:enumeration>
+                    <xs:enumeration value="in-validate"><xs:annotation><xs:documentation>Runs before the input parameters are validated. Note that when the service to which the eca is associated is executed asynchronously this event occurs at least two times (at the time of the call and at the time of the execution). For this reason it is only safe to use this event to call services that don't change the status of any system.</xs:documentation></xs:annotation></xs:enumeration>
                     <xs:enumeration value="out-validate"/>
                     <xs:enumeration value="invoke"/>
                     <xs:enumeration value="commit"/>
@@ -58,22 +58,9 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="run-on-failure" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="run-on-error" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="run-on-failure" type="xs:boolean" default="false"/>
+        <xs:attribute name="run-on-error" type="xs:boolean" default="false"/>
+        <xs:attribute name="enabled" type="xs:boolean" default="true"/>
     </xs:attributeGroup>
     <xs:element name="condition">
         <xs:complexType>
@@ -213,63 +200,13 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="run-as-user"/>
         <xs:attribute type="xs:string" name="result-map-name"/>
-        <xs:attribute name="new-transaction" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="result-to-context" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="result-to-result" default="false">
+        <xs:attribute name="new-transaction" type="xs:boolean" default="false"/>
+        <xs:attribute name="result-to-context" type="xs:boolean" default="true"/>
+        <xs:attribute name="result-to-result" type="xs:boolean" default="false">
             <xs:annotation><xs:documentation>If true, copies the action's result Map into the service's result Map.</xs:documentation></xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="ignore-failure" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="ignore-error" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="persist" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="ignore-failure" type="xs:boolean" default="true"/>
+        <xs:attribute name="ignore-error" type="xs:boolean" default="true"/>
+        <xs:attribute name="persist" type="xs:boolean" default="false"/>
     </xs:attributeGroup>
 </xs:schema>
-<!--
-    <service-eca>
-        <eca service="testBsh" event="commit">
-          <condition field-name="foo" operator="equals" rhs="1"/>
-          <action service="testScv" mode="sync"/>
-          <action service="testScv" mode="sync"/>
-        </eca>
-    </service-eca>
--->

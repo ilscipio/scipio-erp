@@ -43,7 +43,7 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     protected static final class Removal<V> extends Change<V> {
-        protected final V oldValue;
+        private final V oldValue;
 
         protected Removal(V oldValue) {
             this.oldValue = oldValue;
@@ -65,7 +65,7 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     protected static final class Addition<V> extends Change<V> {
-        protected final V newValue;
+        private final V newValue;
 
         protected Addition(V newValue) {
             this.newValue = newValue;
@@ -87,8 +87,8 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     protected static final class Update<V> extends Change<V> {
-        protected final V newValue;
-        protected final V oldValue;
+        private final V newValue;
+        private final V oldValue;
 
         protected Update(V newValue, V oldValue) {
             this.newValue = newValue;
@@ -114,12 +114,12 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     protected static class Listener<K, V> implements CacheListener<K, V> {
-        protected Map<K, Set<Change<V>>> changeMap = new HashMap<K, Set<Change<V>>>();
+        protected Map<K, Set<Change<V>>> changeMap = new HashMap<>();
 
         private void add(K key, Change<V> change) {
             Set<Change<V>> changeSet = changeMap.get(key);
             if (changeSet == null) {
-                changeSet = new HashSet<Change<V>>();
+                changeSet = new HashSet<>();
                 changeMap.put(key, changeSet);
             }
             for (Change<V> checkChange: changeSet) {
@@ -132,26 +132,34 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         }
 
         public synchronized void noteKeyRemoval(UtilCache<K, V> cache, K key, V oldValue) {
-            add(key, new Removal<V>(oldValue));
+            add(key, new Removal<>(oldValue));
         }
 
         public synchronized void noteKeyAddition(UtilCache<K, V> cache, K key, V newValue) {
-            add(key, new Addition<V>(newValue));
+            add(key, new Addition<>(newValue));
         }
 
         public synchronized void noteKeyUpdate(UtilCache<K, V> cache, K key, V newValue, V oldValue) {
-            add(key, new Update<V>(newValue, oldValue));
+            add(key, new Update<>(newValue, oldValue));
         }
 
         @Override
         public boolean equals(Object o) {
+            if (!(o instanceof Listener)) {
+                return false;
+            }
             Listener<?, ?> other = (Listener<?, ?>) o;
             return changeMap.equals(other.changeMap);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
         }
     }
 
     private static <K, V> Listener<K, V> createListener(UtilCache<K, V> cache) {
-        Listener<K, V> listener = new Listener<K, V>();
+        Listener<K, V> listener = new Listener<>();
         cache.addListener(listener);
         return listener;
     }
@@ -160,11 +168,11 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         super(name);
     }
 
-    private <K, V> UtilCache<K, V> createUtilCache(int sizeLimit, int maxInMemory, long ttl, boolean useSoftReference, boolean useFileSystemStore) {
-        return UtilCache.createUtilCache(getClass().getName() + "." + getName(), sizeLimit, maxInMemory, ttl, useSoftReference, useFileSystemStore);
+    private <K, V> UtilCache<K, V> createUtilCache(int sizeLimit, int maxInMemory, long ttl, boolean useSoftReference) {
+        return UtilCache.createUtilCache(getClass().getName() + "." + getName(), sizeLimit, maxInMemory, ttl, useSoftReference);
     }
 
-    private static <K, V> void assertUtilCacheSettings(UtilCache<K, V> cache, Integer sizeLimit, Integer maxInMemory, Long expireTime, Boolean useSoftReference, Boolean useFileSystemStore) {
+    private static <K, V> void assertUtilCacheSettings(UtilCache<K, V> cache, Integer sizeLimit, Integer maxInMemory, Long expireTime, Boolean useSoftReference) {
         if (sizeLimit != null) {
             assertEquals(cache.getName() + ":sizeLimit", sizeLimit.intValue(), cache.getSizeLimit());
         }
@@ -177,9 +185,6 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         if (useSoftReference != null) {
             assertEquals(cache.getName() + ":useSoftReference", useSoftReference.booleanValue(), cache.getUseSoftReference());
         }
-        if (useFileSystemStore != null) {
-            assertEquals(cache.getName() + ":useFileSystemStore", useFileSystemStore.booleanValue(), cache.getUseFileSystemStore());
-        }
         assertEquals("initial empty", true, cache.isEmpty());
         assertEquals("empty keys", Collections.emptySet(), cache.getCacheLineKeys());
         assertEquals("empty values", Collections.emptyList(), cache.values());
@@ -189,18 +194,18 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
 
     public void testCreateUtilCache() {
         String name = getClass().getName() + "." + getName();
-        assertUtilCacheSettings(UtilCache.createUtilCache(), null, null, null, null, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name), null, null, null, null, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, false), null, null, null, Boolean.FALSE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, true), null, null, null, Boolean.TRUE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(5, 15000), 5, null, 15000L, null, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 6, 16000), 6, null, 16000L, null, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 7, 17000, false), 7, null, 17000L, Boolean.FALSE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 8, 18000, true), 8, null, 18000L, Boolean.TRUE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 9, 5, 19000, false, false), 9, 5, 19000L, Boolean.FALSE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 10, 6, 20000, false, true), 10, 6, 20000L, Boolean.FALSE, null);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 11, 7, 21000, false, false, "a", "b"), 11, 7, 21000L, Boolean.FALSE, Boolean.FALSE);
-        assertUtilCacheSettings(UtilCache.createUtilCache(name, 12, 8, 22000, false, true, "c", "d"), 12, 8, 22000L, Boolean.FALSE, Boolean.TRUE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(), null, null, null, null);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name), null, null, null, null);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, false), null, null, null, Boolean.FALSE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, true), null, null, null, Boolean.TRUE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(5, 15000), 5, null, 15000L, null);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 6, 16000), 6, null, 16000L, null);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 7, 17000, false), 7, null, 17000L, Boolean.FALSE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 8, 18000, true), 8, null, 18000L, Boolean.TRUE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 9, 5, 19000, false), 9, 5, 19000L, Boolean.FALSE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 10, 6, 20000, false), 10, 6, 20000L, Boolean.FALSE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 11, 7, 21000, false, "a", "b"), 11, 7, 21000L, Boolean.FALSE);
+        assertUtilCacheSettings(UtilCache.createUtilCache(name, 12, 8, 22000, false, "c", "d"), 12, 8, 22000L, Boolean.FALSE);
     }
 
     public static <K, V> void assertKey(String label, UtilCache<K, V> cache, K key, V value, V other, int size, Map<K, V> map) {
@@ -228,7 +233,7 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         assertTrue("validKey", UtilCache.validKey(cache.getName(), key));
         assertFalse("validKey", UtilCache.validKey(":::" + cache.getName(), key));
         assertEquals("get", value, cache.get(key));
-        assertEquals("keys", new HashSet<K>(UtilMisc.toList(key)), cache.getCacheLineKeys());
+        assertEquals("keys", new HashSet<>(UtilMisc.toList(key)), cache.getCacheLineKeys());
         assertEquals("values", UtilMisc.toList(value), cache.values());
     }
 
@@ -245,11 +250,11 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
 
     private static void basicTest(UtilCache<String, String> cache) throws Exception {
         Listener<String, String> gotListener = createListener(cache);
-        Listener<String, String> wantedListener = new Listener<String, String>();
+        Listener<String, String> wantedListener = new Listener<>();
         for (int i = 0; i < 2; i++) {
             assertTrue("UtilCacheTable.keySet", UtilCache.getUtilCacheTableKeySet().contains(cache.getName()));
             assertSame("UtilCache.findCache", cache, UtilCache.findCache(cache.getName()));
-            assertSame("UtilCache.getOrCreateUtilCache", cache, UtilCache.getOrCreateUtilCache(cache.getName(), cache.getSizeLimit(), cache.getMaxInMemory(), cache.getExpireTime(), cache.getUseSoftReference(), cache.getUseFileSystemStore()));
+            assertSame("UtilCache.getOrCreateUtilCache", cache, UtilCache.getOrCreateUtilCache(cache.getName(), cache.getSizeLimit(), cache.getMaxInMemory(), cache.getExpireTime(), cache.getUseSoftReference()));
 
             assertNoSingleKey(cache, "one");
             long origByteSize = cache.getSizeInBytes();
@@ -316,20 +321,15 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         UtilCache.clearCache(":::" + cache.getName());
     }
 
-    public void testBasicDisk() throws Exception {
-        UtilCache<String, String> cache = createUtilCache(5, 0, 0, false, true);
-        basicTest(cache);
-    }
-
     public void testSimple() throws Exception {
-        UtilCache<String, String> cache = createUtilCache(5, 0, 0, false, false);
+        UtilCache<String, String> cache = createUtilCache(5, 0, 0, false);
         basicTest(cache);
     }
 
     public void testPutIfAbsent() throws Exception {
-        UtilCache<String, String> cache = createUtilCache(5, 5, 2000, false, false);
+        UtilCache<String, String> cache = createUtilCache(5, 5, 2000, false);
         Listener<String, String> gotListener = createListener(cache);
-        Listener<String, String> wantedListener = new Listener<String, String>();
+        Listener<String, String> wantedListener = new Listener<>();
         wantedListener.noteKeyAddition(cache, "two", "dos");
         assertNull("putIfAbsent", cache.putIfAbsent("two", "dos"));
         assertHasSingleKey(cache, "two", "dos");
@@ -340,9 +340,9 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     public void testPutIfAbsentAndGet() throws Exception {
-        UtilCache<String, String> cache = createUtilCache(5, 5, 2000, false, false);
+        UtilCache<String, String> cache = createUtilCache(5, 5, 2000, false);
         Listener<String, String> gotListener = createListener(cache);
-        Listener<String, String> wantedListener = new Listener<String, String>();
+        Listener<String, String> wantedListener = new Listener<>();
         wantedListener.noteKeyAddition(cache, "key", "value");
         wantedListener.noteKeyAddition(cache, "anotherKey", "anotherValue");
         assertNull("no-get", cache.get("key"));
@@ -366,12 +366,9 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     public void testChangeMemSize() throws Exception {
         int size = 5;
         long ttl = 2000;
-        UtilCache<String, Serializable> cache = createUtilCache(size, size, ttl, false, false);
-        Map<String, Serializable> map = new HashMap<String, Serializable>();
-        for (int i = 0; i < size; i++) {
-            String s = Integer.toString(i);
-            assertKey(s, cache, s, new String(s), new String(":" + s), i + 1, map);
-        }
+        UtilCache<String, Serializable> cache = createUtilCache(size, size, ttl, false);
+        Map<String, Serializable> map = new HashMap<>();
+        assertKeyLoop(size, cache, map);
         cache.setMaxInMemory(2);
         assertEquals("cache.size", 2, cache.size());
         map.keySet().retainAll(cache.getCacheLineKeys());
@@ -398,11 +395,8 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
     }
 
     private void expireTest(UtilCache<String, Serializable> cache, int size, long ttl) throws Exception {
-        Map<String, Serializable> map = new HashMap<String, Serializable>();
-        for (int i = 0; i < size; i++) {
-            String s = Integer.toString(i);
-            assertKey(s, cache, s, new String(s), new String(":" + s), i + 1, map);
-        }
+        Map<String, Serializable> map = new HashMap<>();
+        assertKeyLoop(size, cache, map);
         Thread.sleep(ttl + 500);
         map.clear();
         for (int i = 0; i < size; i++) {
@@ -411,22 +405,26 @@ public class UtilCacheTests extends GenericTestCaseBase implements Serializable 
         }
         assertEquals("map-keys", map.keySet(), cache.getCacheLineKeys());
         assertEquals("map-values", map.values(), cache.values());
-        for (int i = 0; i < size; i++) {
-            String s = Integer.toString(i);
-            assertKey(s, cache, s, new String(s), new String(":" + s), i + 1, map);
-        }
+        assertKeyLoop(size, cache, map);
         assertEquals("map-keys", map.keySet(), cache.getCacheLineKeys());
         assertEquals("map-values", map.values(), cache.values());
     }
 
+    private void assertKeyLoop(int size, UtilCache<String, Serializable> cache, Map<String, Serializable> map) {
+        for (int i = 0; i < size; i++) {
+            String s = Integer.toString(i);
+            assertKey(s, cache, s, new String(s), new String(":" + s), i + 1, map);
+        }
+    }
+
     public void testExpire() throws Exception {
-        UtilCache<String, Serializable> cache = createUtilCache(5, 5, 2000, false, false);
+        UtilCache<String, Serializable> cache = createUtilCache(5, 5, 2000, false);
         expireTest(cache, 5, 2000);
         long start = System.currentTimeMillis();
         useAllMemory();
         long end = System.currentTimeMillis();
         long ttl = end - start + 1000;
-        cache = createUtilCache(1, 1, ttl, true, false);
+        cache = createUtilCache(1, 1, ttl, true);
         expireTest(cache, 1, ttl);
         assertFalse("not empty", cache.isEmpty());
         useAllMemory();

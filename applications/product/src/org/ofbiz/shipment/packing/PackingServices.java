@@ -31,6 +31,11 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * PackingServices.
+ * <p>
+ * SCIPIO: 2018-11-28: All operations are now synchronized.
+ */
 public class PackingServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -38,6 +43,7 @@ public class PackingServices {
 
     public static Map<String, Object> addPackLine(DispatchContext dctx, Map<String, ? extends Object> context) {
         PackingSession session = (PackingSession) context.get("packingSession");
+        synchronized (session) { // SCIPIO
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         String orderId = (String) context.get("orderId");
         String productId = (String) context.get("productId");
@@ -65,34 +71,34 @@ public class PackingServices {
         }
 
         try {
-            session.addOrIncreaseLine(orderId, null, shipGroupSeqId, productId, quantity, packageSeq.intValue(), weight, false);
+            session.addOrIncreaseLine(orderId, null, shipGroupSeqId, productId, quantity, packageSeq, weight, false);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-
+        }
         return ServiceUtil.returnSuccess();
     }
 
     /**
      * <p>Create or update package lines.</p>
-     * <p>Context parameters:
+     * Context parameters:
      * <ul>
      * <li>selInfo - selected rows</li>
      * <li>iteInfo - orderItemIds</li>
      * <li>prdInfo - productIds</li>
      * <li>pkgInfo - package numbers</li>
      * <li>wgtInfo - weights to pack</li>
-     * <li>numPackagesInfo - number of packages to pack per line (>= 1, default: 1)<br/>
+     * <li>numPackagesInfo - number of packages to pack per line (&gt;= 1, default: 1)<br>
      * Packs the same items n times in consecutive packages, starting from the package number retrieved from pkgInfo.</li>
      * </ul>
-     * </p>
      * @param dctx the dispatch context
      * @param context the context
      * @return returns the result of the service execution
      */
     public static Map<String, Object> packBulk(DispatchContext dctx, Map<String, ? extends Object> context) {
         PackingSession session = (PackingSession) context.get("packingSession");
+        synchronized (session) { // SCIPIO
         String orderId = (String) context.get("orderId");
         String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         Boolean updateQuantity = (Boolean) context.get("updateQuantity");
@@ -205,6 +211,7 @@ public class PackingServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
         }
+        }
         return ServiceUtil.returnSuccess();
     }
 
@@ -212,7 +219,7 @@ public class PackingServices {
         PackingSession session = (PackingSession) context.get("packingSession");
         int nextSeq = session.nextPackageSeq();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        result.put("nextPackageSeq", Integer.valueOf(nextSeq));
+        result.put("nextPackageSeq", nextSeq);
         return result;
     }
 
@@ -220,7 +227,7 @@ public class PackingServices {
         PackingSession session = (PackingSession) context.get("packingSession");
         int nextSeq = session.clearLastPackage();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        result.put("nextPackageSeq", Integer.valueOf(nextSeq));
+        result.put("nextPackageSeq", nextSeq);
         return result;
     }
 
@@ -234,17 +241,18 @@ public class PackingServices {
         Integer packageSeqId = (Integer) context.get("packageSeqId");
         Locale locale = (Locale) context.get("locale");
 
+        synchronized (session) { // SCIPIO
         PackingSessionLine line = session.findLine(orderId, orderItemSeqId, shipGroupSeqId,
-                productId, inventoryItemId, packageSeqId.intValue());
+                productId, inventoryItemId, packageSeqId);
 
         // remove the line
         if (line != null) {
             session.clearLine(line);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPackLineNotFound", locale));
         }
-
+        }
         return ServiceUtil.returnSuccess();
     }
 
@@ -265,6 +273,7 @@ public class PackingServices {
         String carrierRoleTypeId = (String) context.get("carrierRoleTypeId");
         String productStoreId = (String) context.get("productStoreId");
 
+        synchronized (session) { // SCIPIO
         BigDecimal shippableWeight = setSessionPackageWeights(session, packageWeights);
         BigDecimal estimatedShipCost = session.getShipmentCostEstimate(shippingContactMechId, shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId, productStoreId, null, null, shippableWeight, null);
         session.setAdditionalShippingCharge(estimatedShipCost);
@@ -273,13 +282,15 @@ public class PackingServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("additionalShippingCharge", estimatedShipCost);
         return result;
+        }
     }
 
 
     public static Map<String, Object> completePack(DispatchContext dctx, Map<String, ? extends Object> context) {
         PackingSession session = (PackingSession) context.get("packingSession");
         Locale locale = (Locale) context.get("locale");
-        
+        String shipmentId = null; // SCIPIO: moved here from below
+
         // set the instructions -- will clear out previous if now null
         String instructions = (String) context.get("handlingInstructions");
         String pickerPartyId = (String) context.get("pickerPartyId");
@@ -287,6 +298,8 @@ public class PackingServices {
         Map<String, String> packageWeights = UtilGenerics.checkMap(context.get("packageWeights"));
         Map<String, String> boxTypes = UtilGenerics.checkMap(context.get("boxTypes"));
         String weightUomId = (String) context.get("weightUomId");
+
+        synchronized (session) { // SCIPIO
         session.setHandlingInstructions(instructions);
         session.setPickerPartyId(pickerPartyId);
         session.setAdditionalShippingCharge(additionalShippingCharge);
@@ -299,20 +312,21 @@ public class PackingServices {
             force = Boolean.FALSE;
         }
 
-        String shipmentId = null;
+        //String shipmentId = null; // SCIPIO: moved above
         try {
             shipmentId = session.complete(force);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
         }
-
+        }
+        
         Map<String, Object> resp;
         if ("EMPTY".equals(shipmentId)) {
-            resp = ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            resp = ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ProductPackCompleteNoItems", locale));
         } else {
-            resp = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, 
+            resp = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,
                     "ProductPackComplete", UtilMisc.toMap("shipmentId", shipmentId), locale));
         }
 
@@ -323,6 +337,7 @@ public class PackingServices {
     public static BigDecimal setSessionPackageWeights(PackingSession session, Map<String, String> packageWeights) {
         BigDecimal shippableWeight = BigDecimal.ZERO;
         if (! UtilValidate.isEmpty(packageWeights)) {
+            synchronized (session) { // SCIPIO
             for (Map.Entry<String, String> entry: packageWeights.entrySet()) {
                 String packageSeqId = entry.getKey();
                 String packageWeightStr = entry.getValue();
@@ -334,12 +349,14 @@ public class PackingServices {
                     session.setPackageWeight(Integer.parseInt(packageSeqId), null);
                 }
             }
+            }
         }
         return shippableWeight;
     }
 
     public static void setSessionShipmentBoxTypes(PackingSession session, Map<String, String> boxTypes) {
         if (UtilValidate.isNotEmpty(boxTypes)) {
+            synchronized (session) { // SCIPIO
             for (Map.Entry<String, String> entry: boxTypes.entrySet()) {
                 String packageSeqId = entry.getKey();
                 String boxTypeStr = entry.getValue();
@@ -348,6 +365,7 @@ public class PackingServices {
                 } else {
                     session.setShipmentBoxType(Integer.parseInt(packageSeqId), null);
                 }
+            }
             }
         }
     }

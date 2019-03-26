@@ -74,6 +74,7 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.SSLUtil;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
@@ -306,12 +307,12 @@ public class CatalinaContainer implements Container {
 
 
         String alp2 = ContainerConfig.getPropertyValue(engineConfig, "access-log-pattern", null);
-        if (al != null && !UtilValidate.isEmpty(alp2)) {
+        if (al != null && UtilValidate.isNotEmpty(alp2)) {
             al.setPattern(alp2);
         }
 
         String alp3 = ContainerConfig.getPropertyValue(engineConfig, "access-log-prefix", null);
-        if (al != null && !UtilValidate.isEmpty(alp3)) {
+        if (al != null && UtilValidate.isNotEmpty(alp3)) {
             al.setPrefix(alp3);
         }
 
@@ -558,9 +559,11 @@ public class CatalinaContainer implements Container {
         }
 
         JarScanner jarScanner = context.getJarScanner();
+        if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner 
+            jarScanner.setJarScanFilter(new FilterJars(appInfo)); // SCIPIO: 2018-10-03: Pass webapp info
+        }
         if (jarScanner instanceof StandardJarScanner) {
             StandardJarScanner standardJarScanner = (StandardJarScanner) jarScanner;
-            standardJarScanner.setJarScanFilter(new FilterJars());
             standardJarScanner.setScanClassPath(true);
         }
 
@@ -568,12 +571,9 @@ public class CatalinaContainer implements Container {
         context.setJ2EEServer(J2EE_SERVER);
         context.setLoader(new WebappLoader(Thread.currentThread().getContextClassLoader()));
 
-        context.setCookies(appInfo.isSessionCookieAccepted());
-        context.addParameter("cookies", appInfo.isSessionCookieAccepted() ? "true" : "false");
-
         context.setDisplayName(appInfo.name);
         context.setDocBase(location);
-        
+
         StandardRoot resources = new StandardRoot(context);
         resources.setAllowLinking(true);
         context.setResources(resources);
@@ -604,11 +604,15 @@ public class CatalinaContainer implements Container {
         for (Map.Entry<String, String> entry: initParameters.entrySet()) {
             context.addParameter(entry.getKey(), entry.getValue());
         }
-        
+
         // SCIPIO: 2017-09-13: MAJOR FIX: the line below allows web.xml files to accurately specify
         // their welcome-file-lists; previously they did not work properly because the Tomcat defaults
         // were getting priority (e.g. index.html was always used if it existed).
         context.setReplaceWelcomeFiles(true);
+
+        // SCIPIO: 2018-12-03: We set a special session listener for all webapps to initialize the session sync object
+        context.addApplicationLifecycleListener(UtilHttp.SessionSyncEventListener.getInstance());
+        context.addApplicationLifecycleListener(UtilHttp.ServletContextSyncEventListener.getInstance());
 
         return context;
     }

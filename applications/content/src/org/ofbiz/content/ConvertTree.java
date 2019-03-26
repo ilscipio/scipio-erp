@@ -51,7 +51,7 @@ With this program and the content navigation a office file server can be replace
 document tree in OFBiz. From that point on the documents can be connected to the cutomers,
 orders, invoices etc..
 
-In order ta make this service active add the following to the service definition file:
+In order to make this service active add the following to the service definition file:
 
 <service name="convertTree"  auth="true" engine="java" invoke="convertTree" transaction-timeout="3600"
                  location="org.ofbiz.content.tree.ConvertTree">
@@ -62,18 +62,18 @@ In order ta make this service active add the following to the service definition
 
 */
 
-
     public static  Map<String, Object> convertTree(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String file = (String) context.get("file");
+        Map<String, Object> result = new HashMap<String, Object>();
         String errMsg = "", sucMsg= "";
         GenericValue Entity = null;
         try {
             BufferedReader input = null;
             try {
-                if (!UtilValidate.isEmpty(file)) {
+                if (UtilValidate.isNotEmpty(file)) {
                     input = new BufferedReader(new FileReader(file));
                     String line = null;
                     int size = 0;
@@ -113,15 +113,16 @@ In order ta make this service active add the following to the service definition
                         contentAssoc.put("contentAssocTypeId", "TREE_CHILD");
                         contentAssoc.put("contentIdTo", "ROOT");
                         contentAssoc.put("userLogin", userLogin);
-                        dispatcher.runSync("createContentAssoc", contentAssoc);
-                        int recordCount = 0;
+                        result = dispatcher.runSync("createContentAssoc", contentAssoc);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                         while ((line = input.readLine()) != null) {//start line
                              boolean hasFolder = true;
                              String rootContent = null, contentId = null; counterLine++;
                              if (counterLine > 1) {
                                 size = line.length();
                                 String check = "\\", checkSubContent = ",", contentName = "", contentNameInprogress = "", data = line.substring(3, size);
-                                //Debug.logInfo("======Data======"+data);
                                 size = data.length();
 
                                 for (int index = 0; index< size; index++) {//start character in line
@@ -186,7 +187,7 @@ In order ta make this service active add the following to the service definition
                                             rootContent = "HOME_DUCUMENT";
                                         }
                                         contentAssocs = EntityQuery.use(delegator).from("ContentAssoc")
-                                                .where("contentId", contentId, 
+                                                .where("contentId", contentId,
                                                         "contentIdTo", rootContent,
                                                         "contentAssocTypeId", "TREE_CHILD")
                                                 .queryList();
@@ -219,7 +220,6 @@ In order ta make this service active add the following to the service definition
                                         }
                                     }
                                 }//end character in line
-                                recordCount++;
                             }
                         }//end line
                         sucMsg = "Convert Documents Tree Successful.\nTotal : " + counterLine + " rows"; // SCIPIO: 2018-02-27: switched out <br/> for line-break
@@ -230,18 +230,9 @@ In order ta make this service active add the following to the service definition
                  input.close();
              }
              return ServiceUtil.returnSuccess(sucMsg);
-        } catch (IOException e) {
-            errMsg = "IOException "+ UtilMisc.toMap("errMessage", e.toString());
+        } catch (IOException | GenericServiceException | GenericEntityException e) {
+            errMsg = "Exception " + UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (GenericServiceException e) {
-            errMsg = "GenericServiceException "+ UtilMisc.toMap("errMessage", e.toString());
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (GenericEntityException e) {
-            errMsg = "GenericEntityException "+ UtilMisc.toMap("errMessage", e.toString());
-            Debug.logError(e, errMsg, module);
-            e.printStackTrace();
             return ServiceUtil.returnError(errMsg);
         }
     }
@@ -250,6 +241,7 @@ In order ta make this service active add the following to the service definition
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = new HashMap<String, Object>();
         String subContents = null, check = ",", oldChar = "\"", newChar = "", contentNameInprogress = "", contentName = "", contentId = null;
         GenericValue Entity = null;
         String errMsg = "", sucMsg= "";
@@ -261,7 +253,6 @@ In order ta make this service active add the following to the service definition
                 boolean contentNameMatch = false;
                 if (subContents.charAt(index) == check.charAt(0)) {//store data
                     contentName = contentName + contentNameInprogress;
-                    //Debug.logInfo("subcontentName---->"+contentName);
                     if (contentName.length()>100) {
                         contentName = contentName.substring(0,100);
                     }
@@ -285,9 +276,11 @@ In order ta make this service active add the following to the service definition
                         //create DataResource
                         Map<String,Object> data = new HashMap<String, Object>();
                         data.put("userLogin", userLogin);
-                        String dataResourceId = dispatcher.runSync("createDataResource", data).get("dataResourceId").toString();
-                        //Debug.logInfo("==dataResourceId" + dataResourceId);
-
+                        result = dispatcher.runSync("createDataResource", data);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
+                        String dataResourceId = (String) result.get("dataResourceId");
                         //create Content
                         contentId = delegator.getNextSeqId("Content");
                         Entity = null;
@@ -311,7 +304,10 @@ In order ta make this service active add the following to the service definition
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);
                         contentAssoc.put("userLogin", userLogin);
-                        dispatcher.runSync("createContentAssoc", contentAssoc);
+                        result = dispatcher.runSync("createContentAssoc", contentAssoc);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     }
                     contentName ="";
                     contentNameInprogress="";
@@ -347,9 +343,11 @@ In order ta make this service active add the following to the service definition
                         //create DataResource
                         Map<String,Object> data = new HashMap<String, Object>();
                         data.put("userLogin", userLogin);
-                        String dataResourceId = dispatcher.runSync("createDataResource",data).get("dataResourceId").toString();
-                        //Debug.logInfo("==dataResourceId" + dataResourceId);
-
+                        result = dispatcher.runSync("createDataResource", data);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
+                        String dataResourceId = (String) result.get("dataResourceId");
                         //create Content
                         contentId = delegator.getNextSeqId("Content");
                         Entity = null;
@@ -373,7 +371,10 @@ In order ta make this service active add the following to the service definition
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);
                         contentAssoc.put("userLogin", userLogin);
-                        dispatcher.runSync("createContentAssoc", contentAssoc);
+                        result = dispatcher.runSync("createContentAssoc", contentAssoc);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     }
                 }
             }
@@ -381,12 +382,10 @@ In order ta make this service active add the following to the service definition
         } catch (GenericEntityException e) {
             errMsg = "GenericEntityException "+ UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            e.printStackTrace();
             return ServiceUtil.returnError(errMsg);
         } catch (GenericServiceException e) {
             errMsg = "GenericServiceException"+ UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            e.printStackTrace();
             return ServiceUtil.returnError(errMsg);
         }
     }

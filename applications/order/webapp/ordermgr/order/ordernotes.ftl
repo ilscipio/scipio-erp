@@ -1,35 +1,22 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if orderHeader?has_content>
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+    <#if security.hasEntityPermission("ORDERMGR", "_NOTE", request)>
+      <@menuitem type="link" href=makePageUrl("createnewnote?${raw(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>
   </#macro>
   <@section title=uiLabelMap.OrderNotes menuContent=menuContent>
  
   <#if orderNotes?has_content>
-    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="fields">
       <#list orderNotes as note>
         <@tr>
           <@td valign="top" width="35%">
@@ -44,7 +31,7 @@ under the License.
           <@td align="right" valign="top" width="15%">
             <#if (note.internalNote!) == "N">
                 ${uiLabelMap.OrderPrintableNote}
-                <form name="privateNotesForm_${note_index}" method="post" action="<@ofbizUrl>updateOrderNote</@ofbizUrl>">
+                <form name="privateNotesForm_${note_index}" method="post" action="<@pageUrl>updateOrderNote</@pageUrl>">
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="Y"/>
@@ -53,7 +40,7 @@ under the License.
             </#if>
             <#if (note.internalNote!) == "Y">
                 ${uiLabelMap.OrderNotPrintableNote}
-                <form name="publicNotesForm_${note_index}" method="post" action="<@ofbizUrl>updateOrderNote</@ofbizUrl>">
+                <form name="publicNotesForm_${note_index}" method="post" action="<@pageUrl>updateOrderNote</@pageUrl>">
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="N"/>

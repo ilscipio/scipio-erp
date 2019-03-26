@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -32,24 +19,29 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
     -->
 
     <eca entity="Product" operation="create-store" event="return">
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="Product" operation="remove" event="return">
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductCategoryMember" operation="create-store-remove" event="return">
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="LIST_PRICE"/>
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <!-- NOTE: ONLY keywords with statusId==KW_APPROVED are solr-indexed; both KW_TAG and KW_KEYWORD types are indexed.
@@ -59,20 +51,24 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
             we do this even for TAG (not ofbiz-auto-indexed) because otherwise it becomes too inconsistent and hard to understand. -->
     <eca entity="ProductKeyword" operation="create-store-remove" event="return">
         <condition operator="is-not-empty" field-name="statusId"/>
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <!-- 2017-09: intercept new/removed ProductContent records
         FIXME: this doesn't catch in-place DataResource/ElectronicText updates; difficult -->
     <eca entity="ProductContent" operation="create-store-remove" event="return">
+        <set field-name="updateVariants" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <!-- 2017-09: inStock flag in solr schema is updated via getProductInventoryAvailable service 
         WARN: this ECA could be performance-heavy in production -->
     <eca entity="InventoryItem" operation="create-store" event="return">
         <condition operator="is-not-empty" field-name="productId"/>
+        <set field-name="updateVirtual" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductFacility" operation="create-store-remove" event="return">
+        <set field-name="updateVirtual" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     

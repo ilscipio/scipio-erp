@@ -1,29 +1,16 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("FindProductPriceRules") text=uiLabelMap.ProductFindRule class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href=makePageUrl("FindProductPriceRules") text=uiLabelMap.ProductFindRule class="+${styles.action_nav!} ${styles.action_find!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductGlobalPriceRule menuContent=menuContent>
   <@fields type="default-manual-widgetonly">
-    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list">
         <@thead>
           <@tr class="header-row">
             <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -37,7 +24,7 @@ under the License.
           <@tr valign="middle">
             <@td><b>${productPriceRule.productPriceRuleId}</b></@td>
             <@td>
-                <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
+                <form method="post" action="<@pageUrl>updateProductPriceRule</@pageUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                     <@field type="input" size="15" name="ruleName" value=productPriceRule.ruleName />
                     <@field type="input" size="15" name="description" value=(productPriceRule.description!) />
@@ -56,7 +43,7 @@ under the License.
             </@td>
             <@td align="center">&nbsp;
               <#if !productPriceConds?has_content && !productPriceActions?has_content>
-                  <form method="post" action="<@ofbizUrl>deleteProductPriceRule</@ofbizUrl>" name="deleteProductPriceRule">
+                  <form method="post" action="<@pageUrl>deleteProductPriceRule</@pageUrl>" name="deleteProductPriceRule">
                       <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                       <@field type="submit" text=uiLabelMap.CommonDelete class="${styles.link_run_sys!} ${styles.action_remove!}" />
                   </form>
@@ -66,7 +53,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductConditions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                 <@thead>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
@@ -82,7 +69,7 @@ under the License.
                         <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
                         <@td><b>${productPriceCond.productPriceCondSeqId}</b></@td>
                         <@td>
-                            <form method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
+                            <form method="post" action="<@pageUrl>updateProductPriceCond</@pageUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                                 <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
                                 <@field type="select" name="inputParamEnumId" size="1">
@@ -114,7 +101,7 @@ under the License.
                             </form>
                         </@td>
                         <@td align="center">
-                         <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
+                         <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@pageUrl>deleteProductPriceCond</@pageUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
                            <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
@@ -125,7 +112,7 @@ under the License.
                   <@tfoot>
                   <@tr>
                     <@td colspan="3">
-                        <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
+                        <form method="post" action="<@pageUrl>createProductPriceCond</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <@field type="select" name="inputParamEnumId" size="1">
@@ -150,7 +137,7 @@ under the License.
           <@tr valign="top">
             <@td align="right">${uiLabelMap.ProductActions}</@td>
             <@td colspan="2">
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                   <@tr class="header-row">
                     <@th width="5%">${uiLabelMap.ProductSeqId}</@th>
                     <@th width="85%">${uiLabelMap.ProductActionTypeAmount}</@th>
@@ -160,7 +147,7 @@ under the License.
                       <@tr valign="middle">
                         <@td><b>${productPriceAction.productPriceActionSeqId}</b></@td>
                         <@td>
-                            <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
+                            <form method="post" action="<@pageUrl>updateProductPriceAction</@pageUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                                 <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
                                 <@field type="select" name="productPriceActionTypeId" size="1">
@@ -180,7 +167,7 @@ under the License.
                             </form>
                         </@td>
                         <@td align="center">
-                          <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
+                          <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@pageUrl>deleteProductPriceAction</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
                             <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
@@ -191,7 +178,7 @@ under the License.
                   <@tfoot>
                   <@tr>
                     <@td colspan="3">
-                        <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
+                        <form method="post" action="<@pageUrl>createProductPriceAction</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <@field type="select" name="productPriceActionTypeId" size="1">

@@ -37,7 +37,7 @@ public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategor
                 // if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
                 // }
-                
+
                 GenericValue fieldDefinition = EntityUtil.getFirst(EntityUtil.filterByAnd(getDatevFieldDefinitions(), UtilMisc.toMap("fieldName", fieldName)));
                 GenericValue mappingDefinition = getDatevMappingDefinitions().get(fieldDefinition.getString("fieldId"));
                 if (UtilValidate.isNotEmpty(mappingDefinition)) {

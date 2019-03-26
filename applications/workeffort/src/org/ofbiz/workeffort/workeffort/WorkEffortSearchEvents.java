@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -56,17 +55,21 @@ public class WorkEffortSearchEvents {
         WorkEffortSearchOptions workEffortSearchOptions = WorkEffortSearchSession.getWorkEffortSearchOptions(session);
 
         Integer viewIndexInteger = workEffortSearchOptions.getViewIndex();
-        if (viewIndexInteger != null) viewIndex = viewIndexInteger.intValue();
+        if (viewIndexInteger != null) {
+            viewIndex = viewIndexInteger;
+        }
         Integer viewSizeInteger = workEffortSearchOptions.getViewSize();
-        if (viewSizeInteger != null) viewSize = viewSizeInteger.intValue();
+        if (viewSizeInteger != null) {
+            viewSize = viewSizeInteger;
+        }
 
         lowIndex = viewIndex * viewSize;
         highIndex = (viewIndex + 1) * viewSize;
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
-        Integer resultOffset = Integer.valueOf(lowIndex + 1);
+        Integer resultOffset = lowIndex + 1;
         // SCIPIO: FIXME: if maxResults is set to viewSize, pagination is always disabled...
-        Integer maxResults = Integer.valueOf(viewSize);
+        Integer maxResults = viewSize;
 
         // ========== Do the actual search
         ArrayList<String> workEffortIds = null;
@@ -90,7 +93,7 @@ public class WorkEffortSearchEvents {
 
             Integer totalResults = workEffortSearchContext.getTotalResults();
             if (totalResults != null) {
-                listSize = totalResults.intValue();
+                listSize = totalResults;
             }
         }
 
@@ -103,14 +106,14 @@ public class WorkEffortSearchEvents {
         String searchSortOrderString = WorkEffortSearchSession.searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         result.put("workEffortIds", workEffortIds);
-        result.put("viewIndex", Integer.valueOf(viewIndex));
-        result.put("viewSize", Integer.valueOf(viewSize));
-        result.put("listSize", Integer.valueOf(listSize));
-        result.put("lowIndex", Integer.valueOf(lowIndex));
-        result.put("highIndex", Integer.valueOf(highIndex));
+        result.put("viewIndex", viewIndex);
+        result.put("viewSize", viewSize);
+        result.put("listSize", listSize);
+        result.put("lowIndex", lowIndex);
+        result.put("highIndex", highIndex);
         result.put("searchConstraintStrings", searchConstraintStrings);
         result.put("searchSortOrderString", searchSortOrderString);
 

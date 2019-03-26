@@ -44,7 +44,7 @@ if (productStore) {
         context.defaultSalesChannel = from("Enumeration").where("enumId", productStore.defaultSalesChannelEnumId).cache(true).queryOne();
 }
 // Get the Cart
-shoppingCart = session.getAttribute("shoppingCart");
+shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObjectIfExists(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 context.shoppingCart = shoppingCart;
 
 salesChannels = from("Enumeration").where("enumTypeId", "ORDER_SALES_CHANNEL").orderBy("sequenceId").cache(true).queryList();
@@ -67,8 +67,17 @@ if (partyId) {
     if (party) {
         contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
         if (contactMech) {
-            ShoppingCart shoppingCart = ShoppingCartEvents.getCartObject(request);
-            shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            try { // SCIPIO
+                shoppingCart = cartUpdate.getCartForUpdate();
+                
+                shoppingCart.setAllShippingContactMechId(contactMech.contactMechId);
+                
+                shoppingCart = cartUpdate.commit(shoppingCart);
+                context.shoppingCart = shoppingCart;
+            } finally {
+                cartUpdate.close();
+            }
         }
     }
 }

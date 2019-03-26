@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -28,7 +29,6 @@ import java.util.TreeMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.KeywordSearchUtil;
 import org.ofbiz.content.data.DataResourceWorker;
@@ -55,7 +55,7 @@ public class ContentKeywordIndex {
 
     public static void indexKeywords(GenericValue content, boolean doAll) throws GenericEntityException {
         if (content == null) return;
-        
+
         Delegator delegator = content.getDelegator();
         if (delegator == null) return;
         String contentId = content.getString("contentId");
@@ -71,7 +71,7 @@ public class ContentKeywordIndex {
         List<String> strings = new LinkedList<String>();
 
         int pidWeight = 1;
-        keywords.put(content.getString("contentId").toLowerCase(), Long.valueOf(pidWeight));
+        keywords.put(content.getString("contentId").toLowerCase(Locale.getDefault()), (long) pidWeight);
 
         addWeightedKeywordSourceString(content, "dataResourceId", strings);
         addWeightedKeywordSourceString(content, "contentName", strings);
@@ -179,17 +179,6 @@ public class ContentKeywordIndex {
             addWeightedKeywordSourceString(dataResource, "dataResourceName", strings);
             addWeightedKeywordSourceString(dataResource, "objectInfo", strings);
         }
-        /*List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId).queryList();
-        for (GenericValue contentDataResourceView: contentDataResourceViews) {
-            int weight = 1;
-            addWeightedDataResourceString(contentDataResourceView, weight, strings, delegator, content);
-
-            List<GenericValue> alternateViews = contentDataResourceView.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), false);
-            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
-            for (GenericValue thisView: alternateViews) {
-                addWeightedDataResourceString(thisView, weight, strings, delegator, content);
-            }
-        }*/
 
         if (UtilValidate.isNotEmpty(strings)) {
             for (String str: strings) {
@@ -199,7 +188,7 @@ public class ContentKeywordIndex {
         }
 
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
-        int keywordMaxLength = Integer.parseInt(EntityUtilProperties.getPropertyValue("contentsearch", "content.keyword.max.length", delegator));
+        int keywordMaxLength = EntityUtilProperties.getPropertyAsInteger("contentsearch", "content.keyword.max.length", 0);
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() <= keywordMaxLength) {
                 GenericValue contentKeyword = delegator.makeValue("ContentKeyword", UtilMisc.toMap("contentId", content.getString("contentId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <service name="facilityPermissionCheck" engine="simple"
+            location="component://product/script/org/ofbiz/permission/PermissionServices.xml" invoke="facilityPermissionCheck">
+        <description>Facility Manager permission Checking Logic</description>
+        <implements service="permissionInterface"/>
+    </service>
+
+    <service name="facilityManagerPermission" engine="simple"
+            location="component://product/script/org/ofbiz/permission/PermissionServices.xml" invoke="facilityPermissionCheck">
+        <description>Facility Manager permission Checking Logic</description>
+        <deprecated use-instead="facilityPermissionCheck">SCIPIO: 2018-09-10: deprecated upstream</deprecated>
+        <implements service="facilityPermissionCheck"/>
+    </service>
+</services>

@@ -35,7 +35,6 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
@@ -50,14 +49,11 @@ import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
 import org.ofbiz.widget.model.ModelFormField;
-import org.ofbiz.widget.model.ModelFormField.OptionSource;
-import org.ofbiz.widget.model.ModelFormField.SingleOption;
-import org.ofbiz.widget.model.ModelFormFieldBuilder;
 import org.ofbiz.widget.model.ModelGrid;
 
 /**
  * A form rendering engine.
- * 
+ *
  */
 public class FormRenderer {
 
@@ -65,12 +61,12 @@ public class FormRenderer {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * An instance of this class is created by each thread for each form that
      * is rendered. If you need to keep track of things while rendering, then
      * this is the place to do it. In other words, feel free to modify this
      * object's state (except for the final fields of course).
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -79,8 +75,15 @@ public class FormRenderer {
         Locale locale = UtilMisc.ensureLocale(context.get("locale"));
         String retVal = FlexibleStringExpander.expandString(modelForm.getContainerId(), context, locale);
         Integer itemIndex = (Integer) context.get("itemIndex");
+        // SCIPIO: 2018-09-04: TODO: REVIEW: following changes from upstream (do we need parentItemIndex? what about this list check?
+        //if (itemIndex != null/* && "list".equals(modelForm.getType()) */) {
+        //    if (UtilValidate.isNotEmpty(context.get("parentItemIndex"))) {
+        //        return retVal + context.get("parentItemIndex") + modelForm.getItemIndexSeparator() + itemIndex;
+        //    }
+        //    return retVal + modelForm.getItemIndexSeparator() + itemIndex;
+        //}
         if (itemIndex != null && "list".equals(modelForm.getType())) {
-            return retVal + modelForm.getItemIndexSeparator() + itemIndex.intValue();
+            return retVal + modelForm.getItemIndexSeparator() + itemIndex;
         }
         return retVal;
     }
@@ -92,10 +95,9 @@ public class FormRenderer {
             formName = modelForm.getName();
         }
         if (itemIndex != null && "list".equals(modelForm.getType())) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
-        } else {
-            return formName;
+            return formName + modelForm.getItemIndexSeparator() + itemIndex;
         }
+        return formName;
     }
 
     public static String getFocusFieldName(ModelForm modelForm, Map<String, Object> context) {
@@ -153,8 +155,9 @@ public class FormRenderer {
             case FieldInfo.IGNORED:
                 if (modelFormField.shouldUse(context)) {
                     hiddenIgnoredFieldList.add(modelFormField);
-                    if (alreadyRendered != null)
+                    if (alreadyRendered != null) {
                         alreadyRendered.add(modelFormField.getName());
+                    }
                 }
                 break;
 
@@ -174,13 +177,16 @@ public class FormRenderer {
                     // don't add to already rendered here, or the hyperlink won't ger rendered: if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
+
+            default:
+                break;
             }
         }
         return hiddenIgnoredFieldList;
     }
 
     private List<FieldGroupBase> getInbetweenList(FieldGroup startFieldGroup, FieldGroup endFieldGroup) {
-        ArrayList<FieldGroupBase> inbetweenList = new ArrayList<FieldGroupBase>();
+        List<FieldGroupBase> inbetweenList = new ArrayList<>();
         boolean firstFound = false;
         String startFieldGroupId = null;
         String endFieldGroupId = null;
@@ -196,8 +202,9 @@ public class FormRenderer {
         while (iter.hasNext()) {
             FieldGroupBase obj = iter.next();
             if (obj instanceof ModelForm.Banner) {
-                if (firstFound)
+                if (firstFound) {
                     inbetweenList.add(obj);
+                }
             } else {
                 FieldGroup fieldGroup = (FieldGroup) obj;
                 String fieldGroupId = fieldGroup.getId();
@@ -210,9 +217,8 @@ public class FormRenderer {
                 if (firstFound) {
                     if (fieldGroupId.equals(endFieldGroupId)) {
                         break;
-                    } else {
-                        inbetweenList.add(fieldGroup);
                     }
+                    inbetweenList.add(fieldGroup);
                 }
             }
         }
@@ -226,12 +232,11 @@ public class FormRenderer {
      * @param writer The Writer that the form text will be written to
      * @param context Map containing the form context; the following are
      *   reserved words in this context: parameters (Map), isError (Boolean),
-     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
-     *   formName (String, optional alternate name for form, defaults to the
+     *   itemIndex (Integer, for lists only, otherwise null), formName
+     *   (String, optional alternate name for form, defaults to the
      *   value of the name attribute)
      */
-    public void render(Appendable writer, Map<String, Object> context)
-            throws Exception {
+    public void render(Appendable writer, Map<String, Object> context) throws Exception {
         //  increment the paginator, only for list and multi forms
         if (modelForm instanceof ModelGrid) {
             WidgetWorker.incrementPaginatorNumber(context);
@@ -248,7 +253,6 @@ public class FormRenderer {
             context.put("useRequestParameters", Boolean.FALSE);
         }
 
-        
         // find the highest position number to get the max positions used
         // SCIPIO: use explicit if set, and also take position-span into account here
         Integer positions = modelForm.getPositions();
@@ -256,7 +260,7 @@ public class FormRenderer {
             positions = 1;
             for (ModelFormField modelFormField : modelForm.getFieldList()) {
                 int curPos = modelFormField.getPosition();
-                
+
                 Integer positionSpan = modelFormField.getPositionSpan();
                 if (positionSpan == null) {
                     positionSpan = modelForm.getDefaultPositionSpan();
@@ -264,11 +268,11 @@ public class FormRenderer {
                 if (positionSpan != null && positionSpan > 0) {
                     curPos += (positionSpan - 1);
                 }
-                
+
                 if (curPos > positions) {
                     positions = curPos;
                 }
-                
+
                 FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
                 if (currentFieldInfo == null) {
                     throw new IllegalArgumentException(
@@ -290,10 +294,9 @@ public class FormRenderer {
             if (UtilValidate.isEmpty(modelForm.getType())) {
                 throw new IllegalArgumentException("The form 'type' tag is missing or empty on the form with the name "
                         + modelForm.getName());
-            } else {
-                throw new IllegalArgumentException("The form type " + modelForm.getType()
-                        + " is not supported for form with name " + modelForm.getName());
             }
+            throw new IllegalArgumentException("The form type " + modelForm.getType()
+                    + " is not supported for form with name " + modelForm.getName());
         }
     }
 
@@ -325,15 +328,15 @@ public class FormRenderer {
         }
         return innerFormFieldsCells;
     }
-    
+
     /**
      * SCIPIO: Gets the basic number of cells, discarding duplicates, assuming each unique
-     * field name corresponds to one cell. 
+     * field name corresponds to one cell.
      */
     private int getBasicFormFieldCellCount(ModelForm modelForm, List<ModelFormField> formFields) {
         int innerFormFieldsCells = 0;
         if (formFields == null) return innerFormFieldsCells;
-        
+
         // 2018-03-02: we must not count successive fields having the same name (different use-when conditions)
         //innerFormFieldsCells = innerFormFields.size();
         String lastFieldName = "";
@@ -345,23 +348,23 @@ public class FormRenderer {
             }
             lastFieldName = modelFormField.getName();
         }
-        
+
         return innerFormFieldsCells;
     }
-    
+
     private int renderHeaderRow(Appendable writer, Map<String, Object> context)
             throws IOException {
         int maxNumOfColumns = 0;
 
         // SCIPIO: factored this out; I don't recall in which cases this could be false, but keeping for safety.
         boolean isListOrMultiForm = ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()));
-        
+
         // We will render one title/column for all the fields with the same name
         // in this model: we can have more fields with the same name when use-when
         // conditions are used or when a form is extended or when the fields are
         // automatically retrieved by a service or entity definition.
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
-        tempFieldList.addAll(modelForm.getFieldList());    
+        tempFieldList.addAll(modelForm.getFieldList());
         // SCIPIO: NOTE: this addAll added by us
         if (isListOrMultiForm && !modelForm.getUseMasterSubmitField()) {
             tempFieldList.addAll(modelForm.getMultiSubmitFields());
@@ -382,12 +385,13 @@ public class FormRenderer {
         // We get a sorted (by position, ascending) set of lists;
         // each list contains all the fields with that position.
         Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
-        List<Map<String, List<ModelFormField>>> fieldRowsByPosition = new LinkedList<Map<String, List<ModelFormField>>>(); // this list will contain maps, each one containing the list of fields for a position
+        List<Map<String, List<ModelFormField>>> fieldRowsByPosition = new LinkedList<>(); // this list will contain maps, each one containing the list of fields for a position
         for (List<ModelFormField> mainFieldList : fieldListsByPosition) {
             int numOfColumns = 0;
-            List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<ModelFormField>();
-            List<ModelFormField> innerFormFields = new LinkedList<ModelFormField>();
-            List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<ModelFormField>();
+
+            List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<>();
+            List<ModelFormField> innerFormFields = new LinkedList<>();
+            List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<>();
 
             // render title for each field, except hidden & ignored, etc
 
@@ -404,7 +408,6 @@ public class FormRenderer {
             boolean inputFieldFound = false;
             for (ModelFormField modelFormField : mainFieldList) {
                 FieldInfo fieldInfo = modelFormField.getFieldInfo();
-               
 
                 // if the field's title is explicitly set to "" (title="") then
                 // the header is not created for it; this is useful for position list
@@ -420,10 +423,15 @@ public class FormRenderer {
                     continue;
                 }
 
+                // SCIPIO: 2018-09-04: TODO: REVIEW: shouldIgnore from upstream, unclear if will work as-is, but will not break anything if not used.
+                if (modelFormField.shouldIgnore(context)) {
+                    continue;
+                }
+
                 // SCIPIO: added SUBMIT here
                 if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                         && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
-                        && fieldInfo.getFieldType() != FieldInfo.HYPERLINK  
+                        && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
                         && fieldInfo.getFieldType() != FieldInfo.SUBMIT) {
                     inputFieldFound = true;
                     continue;
@@ -464,7 +472,7 @@ public class FormRenderer {
             int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
             int innerDisplayHyperlinkFieldsBeginCells = innerDisplayHyperlinkFieldsBegin.size();
             int innerDisplayHyperlinkFieldsEndCells = innerDisplayHyperlinkFieldsEnd.size();
-            
+
             // SCIPIO: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
                 ModelFormField headerItem = modelForm.getRowSubmitHeaderSelectField();
@@ -473,7 +481,7 @@ public class FormRenderer {
                     mainFieldList.add(headerItem);
                 }
             }
-            
+
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
                 numOfColumns += innerDisplayHyperlinkFieldsBeginCells;
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
@@ -486,7 +494,7 @@ public class FormRenderer {
             if (maxNumOfColumns < numOfColumns) {
                 maxNumOfColumns = numOfColumns;
             }
-            
+
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
                     "inputFields", innerFormFields, "displayAfter", innerDisplayHyperlinkFieldsEnd, "mainFieldList",
                     mainFieldList);
@@ -495,6 +503,8 @@ public class FormRenderer {
         // ===========================
         // Rendering
         // ===========================
+        // SCIPIO: 2018-09-04: TODO: REVIEW: this is a new macro from upstream; we don't currently need it...
+        //formStringRenderer.renderFormatHeaderOpen(writer, context, modelForm);
         for (Map<String, List<ModelFormField>> listsMap : fieldRowsByPosition) {
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin = listsMap.get("displayBefore");
             List<ModelFormField> innerFormFields = listsMap.get("inputFields");
@@ -505,14 +515,14 @@ public class FormRenderer {
             int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
             int innerDisplayHyperlinkFieldsBeginCells = innerDisplayHyperlinkFieldsBegin.size();
             int innerDisplayHyperlinkFieldsEndCells = innerDisplayHyperlinkFieldsEnd.size();
-            
+
             int numOfCells = innerDisplayHyperlinkFieldsBeginCells + innerDisplayHyperlinkFieldsEndCells
                     + innerFormFieldsCells; //+ (innerFormFields.size() > 0 ? 1 : 0);
             int numOfColumnsToSpan = maxNumOfColumns - numOfCells + 1;
             if (numOfColumnsToSpan < 1) {
                 numOfColumnsToSpan = 1;
             }
-            
+
             if (numOfCells > 0) {
                 formStringRenderer.renderFormatHeaderRowOpen(writer, context, modelForm);
 
@@ -539,9 +549,9 @@ public class FormRenderer {
                                 break;
                             }
                         }
-                        
+
                         // SCIPIO: FIXME?: the renderFormatHeaderRow(Form)CellOpen calls here always pass position span 1,
-                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true) 
+                        // which only works assuming innerDisplayHyperlinkFieldsEnd is non-empty (usually true)
 
                         // SCIPIO: rearranged this completely. it's the modelFormField.getSeparateColumn() option that complicates this.
                         if (hasSepColumns) {
@@ -569,7 +579,7 @@ public class FormRenderer {
                                 // render title (unless this is a submit or a reset field)
                                 formStringRenderer.renderFieldTitle(writer, context, modelFormField);
                                 firstInCell = false;
-                                
+
                                 if (fieldHasSepColumn) {
                                     formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                                     cellOpen = false;
@@ -586,7 +596,7 @@ public class FormRenderer {
                                 if (!firstInCell) {
                                     formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(writer, context, modelForm,
                                             modelFormField, false);
-                                } 
+                                }
                                 // render title (unless this is a submit or a reset field)
                                 formStringRenderer.renderFieldTitle(writer, context, modelFormField);
                                 firstInCell = false;
@@ -636,6 +646,8 @@ public class FormRenderer {
                 formStringRenderer.renderFormatHeaderRowClose(writer, context, modelForm);
             }
         }
+        // SCIPIO: 2018-09-04: TODO: REVIEW: this is a new macro from upstream; we don't currently need it...
+        //formStringRenderer.renderFormatHeaderClose(writer, context, modelForm);
 
         return maxNumOfColumns;
     }
@@ -657,6 +669,8 @@ public class FormRenderer {
             case FieldInfo.HYPERLINK:
                 formStringRenderer.renderHiddenField(writer, context, modelFormField, modelFormField.getEntry(context));
                 break;
+            default:
+                break;
             }
         }
     }
@@ -669,13 +683,13 @@ public class FormRenderer {
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin, List<ModelFormField> innerFormFields,
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd, List<ModelFormField> mainFieldList, int position,
             int numOfColumns, boolean isListOrMultiForm) throws IOException {
-        
+
         boolean renderedHiddenFields = false;
         // SCIPIO: NEW BLOCK: get real/accurate count of inner field cells
         int innerFormFieldsCells = getInnerFormFieldCellCount(modelForm, innerFormFields);
         int innerDisplayHyperlinkFieldsBeginCells = innerDisplayHyperlinkFieldsBegin.size();
         int innerDisplayHyperlinkFieldsEndCells = innerDisplayHyperlinkFieldsEnd.size();
-                
+
         // SCIPIO: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
         if (innerFormFieldsCells > 0 && modelForm.getUseRowSubmit()) {
             ModelFormField item = modelForm.getRowSubmitSelectField();
@@ -684,7 +698,7 @@ public class FormRenderer {
                 mainFieldList.add(item);
             }
         }
-        
+
         int numOfCells = innerDisplayHyperlinkFieldsBeginCells + innerDisplayHyperlinkFieldsEndCells
                 + innerFormFieldsCells; // + (innerFormFields.size() > 0 ? 1 : 0);
         int numOfColumnsToSpan = numOfColumns - numOfCells + 1;
@@ -695,7 +709,7 @@ public class FormRenderer {
         // render row formatting open
         formStringRenderer.renderFormatItemRowOpen(writer, localContext, modelForm);
         Iterator<ModelFormField> innerDisplayHyperlinkFieldsBeginIter = innerDisplayHyperlinkFieldsBegin.iterator();
-        Map<String, Integer> fieldCount = new HashMap<String, Integer>();
+        Map<String, Integer> fieldCount = new HashMap<>();
         while (innerDisplayHyperlinkFieldsBeginIter.hasNext()) {
             ModelFormField modelFormField = innerDisplayHyperlinkFieldsBeginIter.next();
             if (fieldCount.containsKey(modelFormField.getName())) {
@@ -704,13 +718,19 @@ public class FormRenderer {
                 fieldCount.put(modelFormField.getName(), 1);
             }
         }
-        
+
         if (modelForm.getGroupColumns()) {
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
                 boolean cellOpen = false;
                 ModelFormField modelFormField = innerDisplayHyperlinkFieldIter.next();
+
+                // SCIPIO: 2018-09-04: TODO: REVIEW: shouldIgnore from upstream, unclear if will work as-is, but will not break anything if not used.
+                if(modelFormField.shouldIgnore(localContext)) {
+                    continue;
+                }
+
                 // span columns only if this is the last column in the row (not just in this first list)
                 if (fieldCount.get(modelFormField.getName()) < 2) {
                     if ((innerDisplayHyperlinkFieldIter.hasNext() || numOfCells > innerDisplayHyperlinkFieldsBeginCells)) {
@@ -748,10 +768,10 @@ public class FormRenderer {
                         break;
                     }
                 }
-                
+
                 // SCIPIO: only support this if no separate columns at all.
                 if (!hasSepColumns) {
-                    // render the "form" cell                
+                    // render the "form" cell
                     formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
                 }
                 if (formPerItem) {
@@ -787,7 +807,7 @@ public class FormRenderer {
                         // render field widget
                         // SCIPIO: 2018-03-02: factored out for possible need to reuse
                         renderItemRowCellFields(writer, localContext, formStringRenderer, modelFormField, innerFormFieldsIt, !isListOrMultiForm);
-                        
+
                         if (fieldHasSepColumn) {
                             formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
                             cellOpen = false;
@@ -832,7 +852,7 @@ public class FormRenderer {
                     formStringRenderer.renderFormatItemRowCellOpen(writer, localContext, modelForm, modelFormField,
                             numOfColumnsToSpan);
                 }
-                
+
                 // SCIPIO: 2016-11-02: if there were no editable "middle" fields to render, there's still the case where
                 // we have only hidden fields with a submit button (such as delete action).
                 // in that case we just insert them into the next cell.
@@ -840,7 +860,7 @@ public class FormRenderer {
                     this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
                     renderedHiddenFields = true;
                 }
-                
+
                 if (!isListOrMultiForm || modelFormField.shouldUse(localContext)) {
                     modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                 }
@@ -886,13 +906,13 @@ public class FormRenderer {
      * consumed from the formFieldsIt list iterator.
      * <p>
      * This is needed because we could have several fields of same name
-     * in a row with different use-when expressions. In such case, we must render 
+     * in a row with different use-when expressions. In such case, we must render
      * exactly one cell for all of them (at most one, but one is always required also).
      * We must process the fields having same name as a "batch" here.
      * <p>
      * Added 2018-03-02.
      */
-    private void renderItemRowCellFields(Appendable writer, Map<String, Object> localContext, FormStringRenderer formStringRenderer, 
+    private void renderItemRowCellFields(Appendable writer, Map<String, Object> localContext, FormStringRenderer formStringRenderer,
             ModelFormField modelFormField, ListIterator<ModelFormField> formFieldsIt, boolean forceUse) throws IOException {
         List<ModelFormField> sameNameFields = null;
         String modelFormFieldName = modelFormField.getName();
@@ -918,8 +938,8 @@ public class FormRenderer {
             }
         }
     }
-    
-    
+
+
     /**
      * SCIPIO: callbacks for important render item rows events.
      */
@@ -929,9 +949,9 @@ public class FormRenderer {
         void notifyHasDisplayResult() throws IOException;
         int getNumOfColumns();
     }
-    
+
     private void renderItemRows(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer,
-            boolean formPerItem, int numOfColumns, RenderItemRowsEventHandler listFormHandler) throws IOException {
+            boolean formPerItem, int numOfColumns, RenderItemRowsEventHandler listFormHandler) throws IOException { // SCIPIO: added listFormHandler
         String lookupName = modelForm.getListName();
         if (UtilValidate.isEmpty(lookupName)) {
             Debug.logError("No value for list or iterator name found.", module);
@@ -939,8 +959,9 @@ public class FormRenderer {
         }
         Object obj = context.get(lookupName);
         if (obj == null) {
-            if (Debug.verboseOn())
-                Debug.logVerbose("No object for list or iterator name [" + lookupName + "] found, so not rendering rows.", module);
+            if (Debug.verboseOn()) {
+                 Debug.logVerbose("No object for list or iterator name [" + lookupName + "] found, so not rendering rows.", module);
+            }
             return;
         }
         // if list is empty, do not render rows
@@ -954,32 +975,32 @@ public class FormRenderer {
         // set low and high index
         Paginator.getListLimits(modelForm, context, obj);
 
-        int listSize = ((Integer) context.get("listSize")).intValue();
-        int lowIndex = ((Integer) context.get("lowIndex")).intValue();
-        int highIndex = ((Integer) context.get("highIndex")).intValue();
+        int listSize = (Integer) context.get("listSize");
+        int lowIndex = (Integer) context.get("lowIndex");
+        int highIndex = (Integer) context.get("highIndex");
 
         // we're passed a subset of the list, so use (0, viewSize) range
         if (modelForm.isOverridenListSize()) {
             lowIndex = 0;
-            highIndex = ((Integer) context.get("viewSize")).intValue();
+            highIndex = (Integer) context.get("viewSize");
         }
 
         // SCIPIO: factored this out; I don't recall in which cases this could be false, but keeping for safety.
         boolean isListOrMultiForm = ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()));
-        
+
         if (iter != null) {
-            
-            listFormHandler.notifyHasList();
-            
+
+            listFormHandler.notifyHasList(); // SCIPIO
+
             // render item rows
             int itemIndex = -1;
             Object item = null;
             context.put("wholeFormContext", context);
-            Map<String, Object> previousItem = new HashMap<String, Object>();
+            Map<String, Object> previousItem = new HashMap<>();
             while ((item = safeNext(iter)) != null) {
-                
-                listFormHandler.notifyHasResult();
-                
+
+                listFormHandler.notifyHasResult(); // SCIPIO
+
                 itemIndex++;
                 if (itemIndex >= highIndex) {
                     break;
@@ -990,10 +1011,7 @@ public class FormRenderer {
                     continue;
                 }
 
-                listFormHandler.notifyHasDisplayResult();
-                
-                // reset/remove the BshInterpreter now as well as later because chances are there is an interpreter at this level of the stack too
-                this.resetBshInterpreter(context);
+                listFormHandler.notifyHasDisplayResult(); // SCIPIO
 
                 Map<String, Object> itemMap = UtilGenerics.checkMap(item);
                 MapStack<String> localContext = MapStack.create(context);
@@ -1010,27 +1028,24 @@ public class FormRenderer {
                     }
                 }
 
-                // reset/remove the BshInterpreter now as well as later because chances are there is an interpreter at this level of the stack too
-                this.resetBshInterpreter(localContext);
                 localContext.push();
                 localContext.put("previousItem", previousItem);
-                previousItem = new HashMap<String, Object>();
+                previousItem = new HashMap<>();
                 previousItem.putAll(itemMap);
 
                 AbstractModelAction.runSubActions(modelForm.getRowActions(), localContext);
 
-                localContext.put("itemIndex", Integer.valueOf(itemIndex - lowIndex));
+                localContext.put("itemIndex", itemIndex - lowIndex);
                 if (UtilValidate.isNotEmpty(context.get("renderFormSeqNumber"))) {
                     localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
                 }
 
-                this.resetBshInterpreter(localContext);
-
-                if (Debug.verboseOn())
-                    Debug.logVerbose("In form got another row, context is: " + localContext, module);
+                if (Debug.verboseOn()) {
+                     Debug.logVerbose("In form got another row, context is: " + localContext, module);
+                }
 
                 // Check to see if there is a field, same name and same use-when (could come from extended form)
-                List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
+                List<ModelFormField> tempFieldList = new LinkedList<>();
                 tempFieldList.addAll(modelForm.getFieldList());
                 for (int j = 0; j < tempFieldList.size(); j++) {
                     ModelFormField modelFormField = tempFieldList.get(j);
@@ -1066,9 +1081,9 @@ public class FormRenderer {
                     // For each position (the subset of fields with the same position attribute)
                     // we have two phases: preprocessing and rendering
 
-                    List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<ModelFormField>();
-                    List<ModelFormField> innerFormFields = new LinkedList<ModelFormField>();
-                    List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<ModelFormField>();
+                    List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<>();
+                    List<ModelFormField> innerFormFields = new LinkedList<>();
+                    List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<>();
 
                     // Preprocessing:
                     // all the form fields are evaluated and the ones that will
@@ -1155,7 +1170,7 @@ public class FormRenderer {
                         innerDisplayHyperlinkFieldsEnd.add(modelFormField);
                         currentPosition = modelFormField.getPosition();
                     }
-                          
+
                     // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
                     if (isListOrMultiForm && !modelForm.getUseMasterSubmitField()) {
                         Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
@@ -1167,20 +1182,19 @@ public class FormRenderer {
                             }
                         }
                     }
-                    
+
                     List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
                             currentPosition);
-                    
-                    
+
                     // Rendering:
                     // the fields in the three lists created in the preprocessing phase
                     // are now rendered: this will create a visual representation
                     // of one row (for the current position).
                     if (innerDisplayHyperlinkFieldsBegin.size() > 0 || innerFormFields.size() > 0
                             || innerDisplayHyperlinkFieldsEnd.size() > 0) {
-                        
+
                         numOfColumns = listFormHandler.getNumOfColumns();
-                                
+
                         this.renderItemRow(writer, localContext, formStringRenderer, formPerItem, hiddenIgnoredFieldList,
                                 innerDisplayHyperlinkFieldsBegin, innerFormFields, innerDisplayHyperlinkFieldsEnd,
                                 fieldListByPosition, currentPosition, numOfColumns, isListOrMultiForm);
@@ -1192,9 +1206,9 @@ public class FormRenderer {
             if ((itemIndex + 1) < highIndex) {
                 highIndex = itemIndex + 1;
                 // if list size is overridden, use full listSize
-                context.put("highIndex", Integer.valueOf(modelForm.isOverridenListSize() ? listSize : highIndex));
+                context.put("highIndex", modelForm.isOverridenListSize() ? listSize : highIndex);
             }
-            context.put("actualPageSize", Integer.valueOf(highIndex - lowIndex));
+            context.put("actualPageSize", highIndex - lowIndex);
 
             if (iter instanceof EntityListIterator) {
                 try {
@@ -1210,32 +1224,32 @@ public class FormRenderer {
      * SCIPIO: Helper object to handle renderer the table wrappers, headers, etc.
      */
     private class RenderListFormHandler implements RenderItemRowsEventHandler {
-        
+
         private Appendable writer;
         private Map<String, Object> context;
-        
+
         private int numOfColumns = 0;
-        
+
         private boolean wrapperOpened = false;
         private boolean headerRendered = false;
         private boolean footerRendered = false;
         private boolean alternateTextRendered = false;
         private boolean wrapperClosed = false;
         private boolean submitFormRendered = false;
-        
+
         private boolean hasList = false;
         private boolean hasResult = false;
         private boolean hasDisplayResult = false;
-        
+
         public RenderListFormHandler(Appendable writer, Map<String, Object> context) {
             super();
             this.writer = writer;
             this.context = context;
         }
-        
+
         public void renderInit() throws IOException {
             context.put("formHasList", hasList);
-            context.put("formHasListResult", hasResult);   
+            context.put("formHasListResult", hasResult);
             context.put("formHasDisplayResult", hasDisplayResult);
         }
 
@@ -1244,32 +1258,32 @@ public class FormRenderer {
             hasList = true;
             context.put("formHasList", hasList);
         }
-        
+
         @Override
         public void notifyHasResult() throws IOException {
             hasResult = true;
             context.put("formHasListResult", hasResult);
         }
-        
+
         @Override
         public void notifyHasDisplayResult() throws IOException {
             hasDisplayResult = true;
             context.put("formHasDisplayResult", hasDisplayResult);
-            
+
             // MUST render the table wrapper if results are going to be displayed
             renderTableOpen(true, false);
         }
-        
+
         public void renderTableOpen(boolean wrapperRequired, boolean headerRequired) throws IOException {
             renderTableWrapperOpen(wrapperRequired);
             renderTableHeader(headerRequired);
         }
-        
+
         @Override
         public int getNumOfColumns() {
             return numOfColumns;
         }
-        
+
         public void renderTableClose() throws IOException {
             renderTableWrapperOpen(false);
             renderTableHeader(false);
@@ -1279,29 +1293,29 @@ public class FormRenderer {
 
         public void renderFinalize() throws IOException {
             context.remove("formHasList");
-            context.remove("formHasListResult"); 
-            context.remove("formHasDisplayResult"); 
+            context.remove("formHasListResult");
+            context.remove("formHasDisplayResult");
         }
-        
+
         private void renderTableWrapperOpen(boolean required) throws IOException {
             if (!wrapperOpened) {
-                if (required || !modelForm.isHideTableWhen(context)) {   
+                if (required || !modelForm.isHideTableWhen(context)) {
                     formStringRenderer.renderFormatListWrapperOpen(writer, context, modelForm);
                     wrapperOpened = true;
                 }
             }
         }
-        
+
         private void renderTableHeader(boolean required) throws IOException {
             if (wrapperOpened && !headerRendered) {
                 if (required ||
-                    (!modelForm.isHideHeaderWhen(context) && !modelForm.getHideHeader(context))) {   
+                    (!modelForm.isHideHeaderWhen(context) && !modelForm.getHideHeader(context))) {
                     numOfColumns = renderHeaderRow(writer, context);
                     headerRendered = true;
                 }
-            }  
+            }
         }
-        
+
         private void renderAlternateText(boolean required) throws IOException {
             if (!alternateTextRendered) {
                 if (required || modelForm.isUseAlternateTextWhen(context)) {
@@ -1311,7 +1325,7 @@ public class FormRenderer {
                 alternateTextRendered = true;
             }
         }
-        
+
         private void renderTableWrapperClose() throws IOException {
             if (wrapperOpened && !wrapperClosed) {
                 // render formatting wrapper close
@@ -1329,7 +1343,7 @@ public class FormRenderer {
             if (!footerRendered && wrapperOpened && hasDisplayResult && !wrapperClosed && UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields())) {
                 Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
                 formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
-                
+
                 // gather the submit fields that should actually render
                 List<ModelFormField> includedFields = new ArrayList<>(modelForm.getMultiSubmitFields().size());
                 while (submitFields.hasNext()) {
@@ -1358,55 +1372,55 @@ public class FormRenderer {
                 footerRendered = true;
             }
         }
-        
+
         public void renderSubmitForm() throws IOException {
             if (!submitFormRendered && wrapperOpened && wrapperClosed && hasDisplayResult) {
                 // in addition, if row-submit, we should have rendered a foot
                 if (footerRendered || !modelForm.getUseRowSubmit()) {
-                    // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+                    // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.
                     formStringRenderer.renderSubmitForm(writer, context, modelForm);
                     submitFormRendered = true;
                 }
             }
         }
     }
-    
+
     private void renderListFormString(Appendable writer, Map<String, Object> context,
             int positions) throws IOException {
         RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
         listFormHandler.renderInit();
-        
+
         // render list/tabular type forms
 
         // prepare the items iterator and compute the pagination parameters
         Paginator.preparePager(modelForm, context);
 
         int numOfColumns = listFormHandler.getNumOfColumns();
-        
+
         // ===== render the item rows =====
         final boolean formPerItem = true; // SCIPIO: NOTE: the orig stock value was true.
         // TODO: set formPerItem = false when figure out alternative, because it produces invalid HTML
         this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
-        
+
         if (modelForm.getUseMasterSubmitField())
             listFormHandler.renderTableFooter();
-        
+
         listFormHandler.renderTableClose();
-        
-        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
+
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.
         listFormHandler.renderSubmitForm();
-        
+
         // SCIPIO: 2017-04-21: new
         formStringRenderer.renderFormPageScripts(writer, context, modelForm);
-       
+
         listFormHandler.renderFinalize();
     }
 
-    private void renderMultiFormString(Appendable writer, Map<String, Object> context, 
+    private void renderMultiFormString(Appendable writer, Map<String, Object> context,
             int positions) throws IOException {
         RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
         listFormHandler.renderInit();
-        
+
         if (!modelForm.getSkipStart()) {
             formStringRenderer.renderFormOpen(writer, context, modelForm);
         }
@@ -1415,33 +1429,33 @@ public class FormRenderer {
         Paginator.preparePager(modelForm, context);
 
         int numOfColumns = listFormHandler.getNumOfColumns();
-        
+
         // ===== render the item rows =====
         final boolean formPerItem = false; // SCIPIO: NOTE: this was always false even in stock ofbiz
         this.renderItemRows(writer, context, formStringRenderer, formPerItem, numOfColumns, listFormHandler);
-        
-        if (modelForm.getUseMasterSubmitField())        
-            listFormHandler.renderTableFooter(); 
+
+        if (modelForm.getUseMasterSubmitField())
+            listFormHandler.renderTableFooter();
 
         listFormHandler.renderTableClose();
 
         if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderMultiFormClose(writer, context, modelForm);
         }
-        
-        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.   
+
+        // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.
         // NOTE: this must be OUTSIDE the multi form close because it has its own <form> element
         listFormHandler.renderSubmitForm();
-        
+
         // SCIPIO: 2017-04-21: new
         formStringRenderer.renderFormPageScripts(writer, context, modelForm);
 
         listFormHandler.renderFinalize();
     }
 
-    private void renderSingleFormString(Appendable writer, Map<String, Object> context, 
+    private void renderSingleFormString(Appendable writer, Map<String, Object> context,
             int positions) throws IOException {
-        List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
+        List<ModelFormField> tempFieldList = new LinkedList<>();
         tempFieldList.addAll(modelForm.getFieldList());
 
         // Check to see if there is a field, same name and same use-when (could come from extended form)
@@ -1463,14 +1477,15 @@ public class FormRenderer {
             }
         }
 
-        Set<String> alreadyRendered = new TreeSet<String>();
+        Set<String> alreadyRendered = new TreeSet<>();
         FieldGroup lastFieldGroup = null;
         // render form open
-        if (!modelForm.getSkipStart())
+        if (!modelForm.getSkipStart()) {
             formStringRenderer.renderFormOpen(writer, context, modelForm);
+        }
 
         // render all hidden & ignored fields
-        List<ModelFormField> hiddenIgnoredFieldList = this.getHiddenIgnoredFields(context, alreadyRendered, tempFieldList, -1);
+        List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(context, alreadyRendered, tempFieldList, -1);
         this.renderHiddenIgnoredFields(writer, context, formStringRenderer, hiddenIgnoredFieldList);
 
         // render formatting wrapper open
@@ -1502,9 +1517,9 @@ public class FormRenderer {
             }
         }
 
-        Integer lastPositionInRow = null;
-        RenderRowFieldEntrySequencer rowFieldEntries = null;
-        
+        Integer lastPositionInRow = null; // SCIPIO
+        RenderRowFieldEntrySequencer rowFieldEntries = null; // SCIPIO
+
         boolean isFirstPass = true;
         boolean haveRenderedOpenFieldRow = false;
         while (currentFormField != null) {
@@ -1535,7 +1550,7 @@ public class FormRenderer {
                     nextFormField = null;
                 } else {
                     // at the end...
-                    lastFormField = currentFormField;
+                    lastFormField = currentFormField; // SCIPIO
                     currentFormField = null;
                     // nextFormField is already null
                     break;
@@ -1553,7 +1568,7 @@ public class FormRenderer {
                     lastFieldGroupName = lastFieldGroup.getId();
                     if (!lastFieldGroupName.equals(currentFieldGroupName)) {
                         if (haveRenderedOpenFieldRow) {
-                            rowFieldEntries.processRowEnd(writer, context, positions);
+                            rowFieldEntries.processRowEnd(writer, context, positions); // SCIPIO
                             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
                             haveRenderedOpenFieldRow = false;
                         }
@@ -1582,7 +1597,6 @@ public class FormRenderer {
             if (alreadyRendered.contains(currentFormField.getName())) {
                 continue;
             }
-            //Debug.logInfo("In single form evaluating use-when for field " + currentFormField.getName() + ": " + currentFormField.getUseWhen(), module);
             if (!currentFormField.shouldUse(context)) {
                 if (UtilValidate.isNotEmpty(lastFormField)) {
                     currentFormField = lastFormField;
@@ -1605,8 +1619,7 @@ public class FormRenderer {
                 if (currentFormField.isCombinePrevious(context, lastFormField)) {
                     // staying on same row
                     stayingOnRow = true;
-                }
-                else if (lastFormField.getPosition() >= currentFormField.getPosition()) {
+                } else if (lastFormField.getPosition() >= currentFormField.getPosition()) {
                     // moving to next row
                     stayingOnRow = false;
                 } else {
@@ -1621,23 +1634,21 @@ public class FormRenderer {
             int positionSpan;
             if (fieldPositionSpan != null && fieldPositionSpan > 0) {
                 positionSpan = fieldPositionSpan - 1;
-            }
-            else {
+            } else {
                 if (nextFormField != null) {
                     if (nextFormField.getPosition() > currentFormField.getPosition()) {
                         positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
-                        nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
+                        nextPositionInRow = nextFormField.getPosition();
                     } else {
                         positionSpan = positions - currentFormField.getPosition();
                     }
-                }
-                else {
+                } else {
                     positionSpan = positions - currentFormField.getPosition();
                 }
                 if (fieldPositionSpan == null) {
                     Integer defaultPositionSpan = modelForm.getDefaultPositionSpan();
                     if (defaultPositionSpan != null && defaultPositionSpan > 0) {
-                        // form default shouldn't permit breaking grid, less strong 
+                        // form default shouldn't permit breaking grid, less strong
                         defaultPositionSpan = defaultPositionSpan - 1;
                         if (defaultPositionSpan < positionSpan) {
                             positionSpan = defaultPositionSpan;
@@ -1648,7 +1659,7 @@ public class FormRenderer {
 
             // SCIPIO: pass these (and unset below)
             context.put("formFieldRender_positions", positions);
-            
+
             if (stayingOnRow) {
                 // no spacer cell, might add later though...
                 //formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, currentFormField);
@@ -1676,21 +1687,21 @@ public class FormRenderer {
                 lastPositionInRow = null;
                 rowFieldEntries = new RenderRowFieldEntrySequencer();
             }
-            
+
             context.remove("formFieldRender_positions");
-            
+
             // SCIPIO: don't force render form field entry here. allow to accumulate them for row and render all at once at row close.
             // This allows delayed render so more info available and fixes ofbiz bug where nextFormField was
             // sometimes a field that was not going to be rendered, giving invalid positions.
             // render form field
             //new RenderFieldEntry(...).render(...);
             rowFieldEntries.acceptFieldEntry(new RenderFieldEntry(currentFormField, positionSpan, nextPositionInRow, lastPositionInRow));
-            
+
             lastPositionInRow = currentFormField.getPosition();
         }
         // render row formatting close after the end if needed
         if (haveRenderedOpenFieldRow) {
-            rowFieldEntries.processRowEnd(writer, context, positions);
+            rowFieldEntries.processRowEnd(writer, context, positions); // SCIPIO
             formStringRenderer.renderFormatFieldRowClose(writer, context, modelForm);
         }
 
@@ -1702,9 +1713,10 @@ public class FormRenderer {
         //formStringRenderer.renderFormatSingleWrapperClose(writer, context, this);
 
         // render form close
-        if (!modelForm.getSkipEnd())
+        if (!modelForm.getSkipEnd()) {
             formStringRenderer.renderFormClose(writer, context, modelForm);
-        
+        }
+
         // SCIPIO: 2017-04-21: new
         formStringRenderer.renderFormPageScripts(writer, context, modelForm);
     }
@@ -1718,7 +1730,7 @@ public class FormRenderer {
         //private final int positionSpan;
         //private final Integer nextPositionInRow;
         //private final Integer lastPositionInRow;
-        
+
         public RenderFieldEntry(ModelFormField currentFormField,
                 int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) {
             super();
@@ -1727,31 +1739,31 @@ public class FormRenderer {
             //this.nextPositionInRow = nextPositionInRow;
             //this.lastPositionInRow = lastPositionInRow;
         }
-        
+
         public ModelFormField getFormField() {
             return formField;
         }
-        
-        public void render(Appendable writer, Map<String, Object> context, 
+
+        public void render(Appendable writer, Map<String, Object> context,
                 int positions, int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow) throws IOException {
             this.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, true, true, true);
         }
-        
-        public void render(Appendable writer, Map<String, Object> context, 
+
+        public void render(Appendable writer, Map<String, Object> context,
                 int positions, int positionSpan, Integer nextPositionInRow, Integer lastPositionInRow,
                 boolean openWrappers, boolean renderBody, boolean closeWrappers) throws IOException {
             FieldInfo fieldInfo = formField.getFieldInfo();
-            
+
             context.put("formFieldRender_positions", positions);
             context.put("formFieldRender_position", formField.getPosition());
             context.put("formFieldRender_positionSpan", positionSpan);
             context.put("formFieldRender_nextPositionInRow", nextPositionInRow);
             context.put("formFieldRender_lastPositionInRow", lastPositionInRow);
-            
+
             if (openWrappers) {
                 // render title formatting open
                 formStringRenderer.renderFormatFieldRowTitleCellOpen(writer, context, formField);
-    
+
                 // render title (unless this is a submit or a reset field)
                 if (fieldInfo.getFieldType() != FieldInfo.SUBMIT
                         && fieldInfo.getFieldType() != FieldInfo.RESET) {
@@ -1762,13 +1774,13 @@ public class FormRenderer {
                     formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
                     context.remove("renderFormatEmptySpace_role");
                 }
-    
+
                 // render title formatting close
                 formStringRenderer.renderFormatFieldRowTitleCellClose(writer, context, formField);
-    
+
                 // render separator
                 formStringRenderer.renderFormatFieldRowSpacerCell(writer, context, formField);
-    
+
                 // render widget formatting open
                 formStringRenderer.renderFormatFieldRowWidgetCellOpen(writer, context, formField, positions, positionSpan,
                         nextPositionInRow);
@@ -1784,22 +1796,22 @@ public class FormRenderer {
                 formStringRenderer.renderFormatFieldRowWidgetCellClose(writer, context, formField, positions, positionSpan,
                         nextPositionInRow);
             }
-            
+
             context.remove("formFieldRender_positions");
             context.remove("formFieldRender_position");
             context.remove("formFieldRender_positionSpan");
             context.remove("formFieldRender_nextPositionInRow");
             context.remove("formFieldRender_lastPositionInRow");
         }
-        
+
     }
-    
+
     /**
      * SCIPIO: renders accumulated field entries all at once (for delayed render).
      */
     private class RenderRowFieldEntrySequencer {
         private List<RenderFieldEntry> fieldEntries = new ArrayList<RenderFieldEntry>();
-        
+
         /**
          * Accepts a new field entry for rendering. Currently simply accumulates.
          */
@@ -1807,22 +1819,22 @@ public class FormRenderer {
             // simply accumulate
             fieldEntries.add(fieldEntry);
         }
-        
+
         /**
          * Processes row close. Currently renders all accumulated entries.
          */
-        public void processRowEnd(Appendable writer, Map<String, Object> context, 
+        public void processRowEnd(Appendable writer, Map<String, Object> context,
                 int positions) throws IOException {
             // note: the "last" and "next" form fields here may differ from the ones in the main loop
             // these are for calculating positions only
-            
+
             Integer lastPositionInRow = null;
             for(int i = 0; i < fieldEntries.size(); i++) {
                 RenderFieldEntry fieldEntry = fieldEntries.get(i);
                 ModelFormField currentFormField = fieldEntry.getFormField();
-                
+
                 ModelFormField nextFormField = null;
-                List<RenderFieldEntry> combinedFields = new ArrayList<RenderFieldEntry>();
+                List<RenderFieldEntry> combinedFields = new ArrayList<>();
                 // find out if any fields are supposed to be body-combined with this one
                 // and get next non-combining field
                 int j = i + 1;
@@ -1838,7 +1850,7 @@ public class FormRenderer {
                     prevEntry = candidateEntry;
                     j++;
                 }
-                    
+
                 Integer nextPositionInRow = null;
                 // SCIPIO: support a specific position span. note: the value we pass to macro is one less.
                 Integer fieldPositionSpan = currentFormField.getPositionSpan();
@@ -1854,8 +1866,7 @@ public class FormRenderer {
                         } else {
                             positionSpan = positions - currentFormField.getPosition();
                         }
-                    }
-                    else {
+                    } else {
                         positionSpan = positions - currentFormField.getPosition();
                     }
                     if (fieldPositionSpan == null) {
@@ -1869,18 +1880,17 @@ public class FormRenderer {
                         }
                     }
                 }
-                
+
                 if (combinedFields.size() <= 0) {
                     fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow);
-                }
-                else {
+                } else {
                     fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, true, true, false);
                     for(RenderFieldEntry combinedField : combinedFields) {
                         combinedField.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, false, true, false);
                     }
                     fieldEntry.render(writer, context, positions, positionSpan, nextPositionInRow, lastPositionInRow, false, false, true);
                 }
-                
+
                 lastPositionInRow = currentFormField.getPosition();
                 // skip the combined ones
                 if (combinedFields.size() > 0) {
@@ -1889,12 +1899,8 @@ public class FormRenderer {
             }
         }
     }
-    
-    private void resetBshInterpreter(Map<String, Object> context) {
-        context.remove("bshInterpreter");
-    }
 
-    private static <X> X safeNext(Iterator<X> iterator) {
+    private static <X> X safeNext(Iterator<X> iterator) { // SCIPIO: new. TODO: move to UtilMisc.
         try {
             return iterator.next();
         } catch (NoSuchElementException e) {

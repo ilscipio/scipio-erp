@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -32,7 +19,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -41,7 +28,7 @@ under the License.
         <entity-one entity-name="PaymentApplication" value-field="paymentApplication">
             <field-map field-name="paymentApplicationId" from-field="paymentApplicationId"/>
         </entity-one>
-        <entity-one value-field="payment" entity-name="Payment">
+        <entity-one entity-name="Payment" value-field="payment">
             <field-map field-name="paymentId" from-field="serviceInMap.paymentId"/>
         </entity-one>
         <assert>
@@ -62,8 +49,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="notAppliedInvoice" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="notAppliedInvoice" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -78,7 +65,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -91,7 +78,7 @@ under the License.
             <field field="delegator" type="org.ofbiz.entity.Delegator"/>
             <field field="serviceInMap.paymentId"/>
         </call-class-method>
-        <entity-one value-field="payment" entity-name="Payment">
+        <entity-one entity-name="Payment" value-field="payment">
             <field-map field-name="paymentId" from-field="serviceInMap.paymentId"/>
         </entity-one>
         <assert>
@@ -114,8 +101,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="appliedBilling" to-field="paymentAmount"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="appliedBilling" to-field="paymentAmount"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -129,7 +116,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -142,7 +129,7 @@ under the License.
             <field field="delegator" type="org.ofbiz.entity.Delegator"/>
             <field field="serviceInMap.paymentId"/>
         </call-class-method>
-        <entity-one value-field="payment" entity-name="Payment">
+        <entity-one entity-name="Payment" value-field="payment">
             <field-map field-name="paymentId" from-field="serviceInMap.paymentId"/>
         </entity-one>
         <assert>
@@ -163,8 +150,8 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
-            <if-compare-field operator="equals" field="notAppliedToPayment" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
+            <if-compare-field operator="equals" field="notAppliedToPayment" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>
@@ -177,7 +164,7 @@ under the License.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
-        
+
         <set field="serviceInMap.userLogin" from-field="userLogin"/>
         <call-service service-name="createPaymentApplication" in-map-name="serviceInMap" include-user-login="false">
             <result-to-field result-name="amountApplied"/>
@@ -186,7 +173,7 @@ under the License.
         <entity-one entity-name="PaymentApplication" value-field="paymentApplication">
             <field-map field-name="paymentApplicationId" from-field="paymentApplicationId"/>
         </entity-one>
-        <entity-one value-field="payment" entity-name="Payment">
+        <entity-one entity-name="Payment" value-field="payment">
             <field-map field-name="paymentId" from-field="serviceInMap.paymentId"/>
         </entity-one>
         <assert>
@@ -203,7 +190,7 @@ under the License.
         </call-class-method>
         <set field="zero" value="0" type="BigDecimal"/>
         <assert>
-            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>                        
+            <if-compare-field operator="equals" field="notAppliedPayment" to-field="zero"/>
         </assert>
         <check-errors/>
         <remove-value value-field="paymentApplication"/>

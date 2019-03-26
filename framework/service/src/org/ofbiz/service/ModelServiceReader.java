@@ -21,10 +21,11 @@ package org.ofbiz.service;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,15 +36,19 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
-import org.ofbiz.service.ModelParam.ModelParamValidator;
+import org.ofbiz.service.ModelService.LogLevel;
 import org.ofbiz.service.group.GroupModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,6 +63,8 @@ import org.xml.sax.SAXException;
 public class ModelServiceReader implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final boolean loadValidateHigh = UtilProperties.getPropertyValue("debug", "code.loading.validate.level").contains("high"); // SCIPIO
 
     /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
     protected boolean isFromURL;
@@ -91,14 +98,12 @@ public class ModelServiceReader implements Serializable {
         UtilTimer utilTimer = new UtilTimer();
         Document document;
         if (this.isFromURL) {
-            // utilTimer.timerString("Before getDocument in file " + readerURL);
             document = getDocument(readerURL);
 
             if (document == null) {
                 return null;
             }
         } else {
-            // utilTimer.timerString("Before getDocument in " + handler);
             try {
                 document = handler.getDocument();
             } catch (GenericConfigException e) {
@@ -107,10 +112,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
-        Map<String, ModelService> modelServices = new HashMap<String, ModelService>();
-        if (this.isFromURL) {// utilTimer.timerString("Before getDocumentElement in file " + readerURL);
-        } else {// utilTimer.timerString("Before getDocumentElement in " + handler);
-        }
+        Map<String, ModelService> modelServices = new HashMap<>();
 
         Element docElement = document.getDocumentElement();
         if (docElement == null) {
@@ -146,33 +148,14 @@ public class ModelServiceReader implements Serializable {
                         Debug.logWarning("Service " + serviceName + " is defined more than once, " +
                             "most recent will over-write previous definition(s)", module);
                     }
-
-                    // utilTimer.timerString("  After serviceName -- " + i + " --");
                     ModelService service = createModelService(curServiceElement, resourceLocation);
 
-                    // utilTimer.timerString("  After createModelService -- " + i + " --");
-                    if (service != null) {
-                        modelServices.put(serviceName, service);
-                        // utilTimer.timerString("  After modelServices.put -- " + i + " --");
-                        /*
-                        int reqIn = service.getParameterNames(ModelService.IN_PARAM, false).size();
-                        int optIn = service.getParameterNames(ModelService.IN_PARAM, true).size() - reqIn;
-                        int reqOut = service.getParameterNames(ModelService.OUT_PARAM, false).size();
-                        int optOut = service.getParameterNames(ModelService.OUT_PARAM, true).size() - reqOut;
-
-                        if (Debug.verboseOn()) {
-                            String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
-                                " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
-
-                            Debug.logVerbose(msg, module);
-                        }
-                        */
-                    } else {
-                        Debug.logWarning(
-                            "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
-                            serviceName, module);
+                    // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
+                    if (loadValidateHigh) {
+                        service.validateModel();
                     }
 
+                    modelServices.put(serviceName, service);
                 }
             } while ((curChild = curChild.getNextSibling()) != null);
         } else {
@@ -183,9 +166,7 @@ public class ModelServiceReader implements Serializable {
             Debug.logInfo("Loaded [" + i + "] Services from " + readerURL, module);
         } else {
             utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
-            if (Debug.infoOn()) {
-                Debug.logInfo("Loaded [" + i + "] Services from " + resourceLocation, module);
-            }
+            Debug.logInfo("Loaded [" + i + "] Services from " + resourceLocation, module);
         }
         return modelServices;
     }
@@ -202,10 +183,19 @@ public class ModelServiceReader implements Serializable {
         service.defaultEntityName = UtilXml.checkEmpty(serviceElement.getAttribute("default-entity-name")).intern();
         service.fromLoader = isFromURL ? readerURL.toExternalForm() : handler.getLoaderName();
 
+        // SCIPIO: log level
+        LogLevel logLevel = LogLevel.fromName(serviceElement.getAttribute("log"), null);
+        if (logLevel == null) {
+            logLevel = "true".equalsIgnoreCase(serviceElement.getAttribute("debug")) ? LogLevel.DEBUG : LogLevel.NORMAL;
+        }
+        service.logLevel = logLevel;
+
         // these default to true; if anything but true, make false
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
-        service.debug = "true".equalsIgnoreCase(serviceElement.getAttribute("debug"));
+        // SCIPIO: Enhanced above
+        //service.debug = "true".equalsIgnoreCase(serviceElement.getAttribute("debug"));
+        service.debug = logLevel.isDebug();
 
         // these defaults to false; if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
@@ -216,12 +206,12 @@ public class ModelServiceReader implements Serializable {
             service.useTransaction = true;
             Debug.logWarning("In service definition [" + service.name + "] the value use-transaction has been changed from false to true as required when require-new-transaction is set to true", module);
         }
-        service.hideResultInLog = !"false".equalsIgnoreCase(serviceElement.getAttribute("hideResultInLog"));        
+        service.hideResultInLog = !"false".equalsIgnoreCase(serviceElement.getAttribute("hideResultInLog"));
 
         // set the semaphore sleep/wait times
         String semaphoreWaitStr = UtilXml.checkEmpty(serviceElement.getAttribute("semaphore-wait-seconds"));
         int semaphoreWait = 300;
-        if (!UtilValidate.isEmpty(semaphoreWaitStr)) {
+        if (UtilValidate.isNotEmpty(semaphoreWaitStr)) {
             try {
                 semaphoreWait = Integer.parseInt(semaphoreWaitStr);
             } catch (NumberFormatException e) {
@@ -233,7 +223,7 @@ public class ModelServiceReader implements Serializable {
 
         String semaphoreSleepStr = UtilXml.checkEmpty(serviceElement.getAttribute("semaphore-sleep"));
         int semaphoreSleep = 500;
-        if (!UtilValidate.isEmpty(semaphoreSleepStr)) {
+        if (UtilValidate.isNotEmpty(semaphoreSleepStr)) {
             try {
                 semaphoreSleep = Integer.parseInt(semaphoreSleepStr);
             } catch (NumberFormatException e) {
@@ -246,7 +236,7 @@ public class ModelServiceReader implements Serializable {
         // set the max retry field
         String maxRetryStr = UtilXml.checkEmpty(serviceElement.getAttribute("max-retry"));
         int maxRetry = -1;
-        if (!UtilValidate.isEmpty(maxRetryStr)) {
+        if (UtilValidate.isNotEmpty(maxRetryStr)) {
             try {
                 maxRetry = Integer.parseInt(maxRetryStr);
             } catch (NumberFormatException e) {
@@ -259,7 +249,7 @@ public class ModelServiceReader implements Serializable {
         // get the timeout and convert to int
         String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timeout"), serviceElement.getAttribute("transaction-timout"));
         int timeout = 0;
-        if (!UtilValidate.isEmpty(timeoutStr)) {
+        if (UtilValidate.isNotEmpty(timeoutStr)) {
             try {
                 timeout = Integer.parseInt(timeoutStr);
             } catch (NumberFormatException e) {
@@ -267,13 +257,13 @@ public class ModelServiceReader implements Serializable {
                 timeout = 0;
             }
         }
-        service.transactionTimeout = timeout;                
+        service.transactionTimeout = timeout;
 
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");
 
         // construct the context
-        service.contextInfo = new HashMap<String, ModelParam>();
+        service.contextInfo = new HashMap<>();
         this.createNotification(serviceElement, service);
         this.createPermission(serviceElement, service);
         this.createPermGroups(serviceElement, service);
@@ -282,11 +272,36 @@ public class ModelServiceReader implements Serializable {
         this.createAutoAttrDefs(serviceElement, service);
         this.createAttrDefs(serviceElement, service);
         this.createOverrideDefs(serviceElement, service);
+        this.createDeprecated(serviceElement, service);
+        this.createProperties(serviceElement, service); // SCIPIO: 2018-11-23
         // Get metrics.
         Element metricsElement = UtilXml.firstChildElement(serviceElement, "metric");
         if (metricsElement != null) {
             service.metrics = MetricsFactory.getInstance(metricsElement);
         }
+
+        // SCIPIO
+        String loc = service.definitionLocation;
+        if (UtilValidate.isNotEmpty(loc)) {
+            try {
+                loc = UtilURL.getOfbizHomeRelativeLocation(new java.net.URI(loc));
+            } catch (Exception e) {
+                Debug.logError("Could not get service '" + service.name + "' relative definition location: "
+                        + e.toString(), module);
+            }
+        }
+        service.relativeDefinitionLocation = (loc != null) ? loc : "";
+
+        if (service.contextParamList instanceof ArrayList) {
+            ((ArrayList<ModelParam>) service.contextParamList).trimToSize();
+        }
+        if (service.notifications instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelNotification>) service.notifications).trimToSize();
+        }
+        if (service.permissionGroups instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelPermGroup>) service.permissionGroups).trimToSize();
+        }
+
         return service;
     }
 
@@ -391,6 +406,9 @@ public class ModelServiceReader implements Serializable {
                 group.permissions.add(perm);
             }
         }
+        if (group.permissions instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelPermission>) group.permissions).trimToSize();
+        }
     }
 
     private void createGroupDefs(Element baseElement, ModelService service) {
@@ -400,7 +418,9 @@ public class ModelServiceReader implements Serializable {
             groupElement.setAttribute("name", "_" + service.name + ".group");
             service.internalGroup = new GroupModel(groupElement);
             service.invoke = service.internalGroup.getGroupName();
-            if (Debug.verboseOn()) Debug.logVerbose("Created INTERNAL GROUP model [" + service.internalGroup + "]", module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Created INTERNAL GROUP model [" + service.internalGroup + "]", module);
+            }
         }
     }
 
@@ -408,9 +428,9 @@ public class ModelServiceReader implements Serializable {
         for (Element implement: UtilXml.childElementList(baseElement, "implements")) {
             String serviceName = UtilXml.checkEmpty(implement.getAttribute("service")).intern();
             boolean optional = UtilXml.checkBoolean(implement.getAttribute("optional"), false);
-            if (serviceName.length() > 0)
+            if (serviceName.length() > 0) {
                 service.implServices.add(new ModelServiceIface(serviceName, optional));
-                //service.implServices.add(serviceName);
+            }
         }
     }
 
@@ -440,51 +460,49 @@ public class ModelServiceReader implements Serializable {
         }
 
         if (delegator != null && entityName != null) {
-            Map<String, ModelParam> modelParamMap = new LinkedHashMap<String, ModelParam>();
+            Map<String, ModelParam> modelParamMap = new LinkedHashMap<>();
             try {
                 ModelEntity entity = delegator.getModelEntity(entityName);
                 if (entity == null) {
                     throw new GeneralException("Could not find entity with name [" + entityName + "]");
                 }
                 Iterator<ModelField> fieldsIter = entity.getFieldsIterator();
-                if (fieldsIter != null) {
-                    while (fieldsIter.hasNext()) {
-                        ModelField field = fieldsIter.next();
-                        if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
-                            ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
-                            if (fieldType == null) {
-                                throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
-                            }
-                            ModelParam param = new ModelParam();
-                            param.entityName = entityName;
-                            param.fieldName = field.getName();
-                            param.name = field.getName();
-                            param.type = fieldType.getJavaType();
-                            // this is a special case where we use something different in the service layer than we do in the entity/data layer
-                            if ("java.sql.Blob".equals(param.type)) {
-                                param.type = "java.nio.ByteBuffer";
-                            }
-                            param.mode = UtilXml.checkEmpty(autoElement.getAttribute("mode")).intern();
-                            param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
-                            param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
-                            param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
-                            modelParamMap.put(field.getName(), param);
+                while (fieldsIter.hasNext()) {
+                    ModelField field = fieldsIter.next();
+                    if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
+                        ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
+                        if (fieldType == null) {
+                            throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
                         }
-                    }
-
-                    // get the excludes list; and remove those from the map
-                    List<? extends Element> excludes = UtilXml.childElementList(autoElement, "exclude");
-                    if (excludes != null) {
-                        for (Element exclude: excludes) {
-                            modelParamMap.remove(UtilXml.checkEmpty(exclude.getAttribute("field-name")));
+                        ModelParam param = new ModelParam();
+                        param.entityName = entityName;
+                        param.fieldName = field.getName();
+                        param.name = field.getName();
+                        param.type = fieldType.getJavaType();
+                        // this is a special case where we use something different in the service layer than we do in the entity/data layer
+                        if ("java.sql.Blob".equals(param.type)) {
+                            param.type = "java.nio.ByteBuffer";
                         }
+                        param.mode = UtilXml.checkEmpty(autoElement.getAttribute("mode")).intern();
+                        param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
+                        param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
+                        param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
+                        param.typeConvert = "true".equalsIgnoreCase(autoElement.getAttribute("type-convert")); // SCIPIO: auto type convert flag: default to false
+                        modelParamMap.put(field.getName(), param);
                     }
+                }
 
-                    // now add in all the remaining params
-                    for (ModelParam thisParam: modelParamMap.values()) {
-                        //Debug.logInfo("Adding Param to " + service.name + ": " + thisParam.name + " [" + thisParam.mode + "] " + thisParam.type + " (" + thisParam.optional + ")", module);
-                        service.addParam(thisParam);
+                // get the excludes list; and remove those from the map
+                List<? extends Element> excludes = UtilXml.childElementList(autoElement, "exclude");
+                if (excludes != null) {
+                    for (Element exclude : excludes) {
+                        modelParamMap.remove(UtilXml.checkEmpty(exclude.getAttribute("field-name")));
                     }
+                }
+
+                // now add in all the remaining params
+                for (ModelParam thisParam : modelParamMap.values()) {
+                    service.addParam(thisParam);
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem loading auto-attributes [" + entityName + "] for " + service.name, module);
@@ -517,7 +535,9 @@ public class ModelServiceReader implements Serializable {
             // default value
             String defValue = attribute.getAttribute("default-value");
             if (UtilValidate.isNotEmpty(defValue)) {
-                if (Debug.verboseOn()) Debug.logVerbose("Got a default-value [" + defValue + "] for service attribute [" + service.name + "." + param.name + "]", module);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Got a default-value [" + defValue + "] for service attribute [" + service.name + "." + param.name + "]", module);
+                }
                 param.setDefaultValue(defValue.intern());
             }
 
@@ -531,6 +551,9 @@ public class ModelServiceReader implements Serializable {
                 param.fieldName = param.name;
             }
 
+            // SCIPIO: auto type convert flag
+            param.typeConvert = "true".equalsIgnoreCase(attribute.getAttribute("type-convert")); // default to false
+
             // set the validators
             this.addValidators(attribute, param);
             service.addParam(param);
@@ -543,7 +566,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = ModelService.RESPONSE_MESSAGE;
         def.type = "String";
-        def.mode = "OUT";
+        def.mode = ModelService.OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -551,7 +574,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = ModelService.ERROR_MESSAGE;
         def.type = "String";
-        def.mode = "OUT";
+        def.mode = ModelService.OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -559,7 +582,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = ModelService.ERROR_MESSAGE_LIST;
         def.type = "java.util.List";
-        def.mode = "OUT";
+        def.mode = ModelService.OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -567,7 +590,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = ModelService.SUCCESS_MESSAGE;
         def.type = "String";
-        def.mode = "OUT";
+        def.mode = ModelService.OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -575,7 +598,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = ModelService.SUCCESS_MESSAGE_LIST;
         def.type = "java.util.List";
-        def.mode = "OUT";
+        def.mode = ModelService.OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -583,7 +606,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = "userLogin";
         def.type = "org.ofbiz.entity.GenericValue";
-        def.mode = "INOUT";
+        def.mode = ModelService.IN_OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -591,7 +614,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = "login.username";
         def.type = "String";
-        def.mode = "IN";
+        def.mode = ModelService.IN_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -599,7 +622,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = "login.password";
         def.type = "String";
-        def.mode = "IN";
+        def.mode = ModelService.IN_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -607,7 +630,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = "locale";
         def.type = "java.util.Locale";
-        def.mode = "INOUT";
+        def.mode = ModelService.IN_OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -615,7 +638,7 @@ public class ModelServiceReader implements Serializable {
         def = new ModelParam();
         def.name = "timeZone";
         def.type = "java.util.TimeZone";
-        def.mode = "INOUT";
+        def.mode = ModelService.IN_OUT_PARAM;
         def.optional = true;
         def.internal = true;
         service.addParam(def);
@@ -674,6 +697,11 @@ public class ModelServiceReader implements Serializable {
                     param.setDefaultValue(defValue);
                 }
 
+                // SCIPIO: auto type convert flag
+                if (UtilValidate.isNotEmpty(overrideElement.getAttribute("type-convert"))) {
+                    param.typeConvert = "true".equalsIgnoreCase(overrideElement.getAttribute("type-convert")); // default to true
+                }
+
                 // override validators
                 this.addValidators(overrideElement, param);
 
@@ -686,11 +714,62 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
+    private void createDeprecated(Element baseElement, ModelService service) {
+        Element deprecated = UtilXml.firstChildElement(baseElement, "deprecated");
+        if (deprecated != null) {
+            service.deprecatedUseInstead = deprecated.getAttribute("use-instead");
+            service.deprecatedSince = deprecated.getAttribute("since");
+            // SCIPIO: trim it
+            //service.deprecatedReason = UtilXml.elementValue(deprecated);
+            String deprecatedReason = UtilXml.elementValue(deprecated);
+            service.deprecatedReason = (deprecatedReason != null) ? deprecatedReason.trim() : null;
+            service.informIfDeprecated(false); // SCIPIO: do not log as warning during loading
+        }
+    }
+
+    /**
+     * SCIPIO: Loads custom service properties.
+     * Added 2018-11-23.
+     */
+    private void createProperties(Element baseElement, ModelService service) {
+        List<? extends Element> propertyElements = UtilXml.childElementList(baseElement, "property");
+        if (UtilValidate.isNotEmpty(propertyElements)) {
+            Map<String, Object> properties = new HashMap<>();
+            for(Element propertyElement : propertyElements) {
+                String name = propertyElement.getAttribute("name");
+                String type = propertyElement.getAttribute("type");
+                String valueStr = propertyElement.getAttribute("value");
+                Object value = null;
+                if (UtilValidate.isNotEmpty(valueStr)) { // NOTE: empty allowed; means override inherited with null
+                    try {
+                        Map<String, Object> propertyCtx = new HashMap<>();
+                        // TODO?: should we make anything available in this context? This runs early during system load.
+                        FlexibleStringExpander expr = FlexibleStringExpander.getInstance(valueStr);
+                        Object result = expr.expand(propertyCtx);
+                        if (result != null && UtilValidate.isNotEmpty(type)) {
+                            value = ObjectType.simpleTypeConvert(result, type, null, null);
+                        } else {
+                            value = result;
+                        }
+                    } catch (Exception e) {
+                        Debug.logError(e, "Unable to evaluate service property '" + name 
+                                + "' for service '" + service.name + " (will be null)", module);
+                    }
+                }
+                properties.put(name, value);
+            }
+            service.properties = Collections.unmodifiableMap(properties);
+            if (Debug.verboseOn() && properties.size() > 0) {
+                Debug.logVerbose("Explicit properties for service '" + service.name + "': " + properties, module);
+            }
+        }
+    }
+
     private void addValidators(Element attribute, ModelParam param) {
         List<? extends Element> validateElements = UtilXml.childElementList(attribute, "type-validate");
         if (UtilValidate.isNotEmpty(validateElements)) {
             // always clear out old ones; never append
-            param.validators = new LinkedList<ModelParamValidator>();
+            param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
             Element validate = validateElements.get(0);
             String methodName = validate.getAttribute("method").intern();
@@ -708,12 +787,15 @@ public class ModelServiceReader implements Serializable {
                     param.addValidator(className, methodName, resource, property);
                 }
             }
+
+            ((ArrayList<ModelParam.ModelParamValidator>) param.validators).trimToSize(); // SCIPIO
         }
     }
 
     private Document getDocument(URL url) {
-        if (url == null)
+        if (url == null) {
             return null;
+        }
         Document document = null;
 
         try {
@@ -722,14 +804,13 @@ public class ModelServiceReader implements Serializable {
             // Error generated during parsing)
             Exception x = sxe;
 
-            if (sxe.getException() != null)
+            if (sxe.getException() != null) {
                 x = sxe.getException();
-            x.printStackTrace();
-        } catch (ParserConfigurationException pce) {
+            }
+            Debug.logError(x, module); // SCIPIO: 2018-08-13: remove printStackTrace
+        } catch (ParserConfigurationException | IOException e) {
             // Parser with specified options can't be built
-            pce.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Debug.logError(e, module);
         }
 
         return document;

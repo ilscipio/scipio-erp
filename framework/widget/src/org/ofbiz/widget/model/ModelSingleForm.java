@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 
 /**
  * Models the &lt;form&gt; element.
- * 
+ *
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
@@ -38,14 +38,14 @@ public class ModelSingleForm extends ModelForm {
      * ----------------------------------------------------------------------- *
      *                     DEVELOPERS PLEASE READ
      * ----------------------------------------------------------------------- *
-     * 
+     *
      * This model is intended to be a read-only data structure that represents
      * an XML element. Outside of object construction, the class should not
      * have any behaviors. All behavior should be contained in model visitors.
-     * 
+     *
      * Instances of this class will be shared by multiple threads - therefore
      * it is immutable. DO NOT CHANGE THE OBJECT'S STATE AT RUN TIME!
-     * 
+     *
      */
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -77,10 +77,15 @@ public class ModelSingleForm extends ModelForm {
             } else if (!parentForm.equals(formElement.getAttribute("name"))) {
                 // try to find a form definition in the same file
                 Element rootElement = formElement.getOwnerDocument().getDocumentElement();
-                List<? extends Element> formElements = UtilXml.childElementList(rootElement, "form");
+                // SCIPIO: Forward-compatibility with grid
+                //List<? extends Element> formElements = UtilXml.childElementList(rootElement, "form");
+                List<? extends Element> formElements = UtilXml.childElementList(rootElement);
                 //Uncomment below to add support for abstract forms
                 //formElements.addAll(UtilXml.childElementList(rootElement, "abstract-form"));
                 for (Element parentElement : formElements) {
+                    if (!("grid".equals(parentElement.getTagName()) || "form".equals(parentElement.getTagName()))) { // SCIPIO
+                        continue;
+                    }
                     if (parentElement.getAttribute("name").equals(parentForm)) {
                         parent = FormFactory.createModelForm(parentElement, entityModelReader, dispatchContext, parentResource,
                                 parentForm);
@@ -98,7 +103,7 @@ public class ModelSingleForm extends ModelForm {
     }
 
     @Override
-    public String getWidgetType() {
+    public String getWidgetType() { // SCIPIO
         return "form";
     }
 }

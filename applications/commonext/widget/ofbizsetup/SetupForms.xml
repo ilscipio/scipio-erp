@@ -178,9 +178,9 @@
         <field name="defaultLocaleString"><hidden value="en_US"/></field>
         <field name="enableAutoSuggestionList"><hidden/></field>
         <field name="showOutOfStockProducts"><hidden value="Y"/></field>
-        <field name="authDeclinedMessage"><hidden value="There has been a problem with your method of payment. Please try a different method or call customer service."/></field>
-        <field name="authFraudMessage"><hidden value="Your order has been rejected and your account has been disabled due to fraud."/></field>
-        <field name="authErrorMessage"><hidden value="Problem connecting to payment processor; we will continue to retry and notify you by email."/></field>
+        <field name="authDeclinedMessage"><hidden/></field><!-- SCIPIO: 2017-03-07: Now defaults to OrderEntityLabels#ProductStore...: value="There has been a problem with your method of payment. Please try a different method or call customer service." -->
+        <field name="authFraudMessage"><hidden/></field><!-- SCIPIO: 2017-03-07: Now defaults to OrderEntityLabels#ProductStore...: value="Your order has been rejected and your account has been disabled due to fraud." -->
+        <field name="authErrorMessage"><hidden/></field><!-- SCIPIO: 2017-03-07: Now defaults to OrderEntityLabels#ProductStore...: value="Problem connecting to payment processor; we will continue to retry and notify you by email." -->
         <field name="defaultPassword"><hidden/></field>
         <field name="inventoryFacilityAction"><hidden/></field>
         <field name="paymentList"><hidden value="${paymentList}"/></field>

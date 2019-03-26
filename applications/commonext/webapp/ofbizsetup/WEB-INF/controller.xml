@@ -62,7 +62,9 @@
     <!-- ================ Product Store Requests ============= -->
     <request-map uri="FindProductStore">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindProductStore"/>
+        <!-- SCIPIO: Does not exist
+        <response name="success" type="view" value="FindProductStore"/>-->
+        <response name="success" type="view" value="EditProductStore"/>
     </request-map>
     <request-map uri="EditProductStore">
         <security https="true" auth="true"/>
@@ -97,7 +99,9 @@
 
     <request-map uri="ViewFacility">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewFacility"/>
+        <!-- SCIPIO: Does not exist
+        <response name="success" type="view" value="ViewFacility"/>-->
+        <response name="success" type="view" value="EditFacility"/>
     </request-map>
     <request-map uri="EditFacility">
         <security https="true" auth="true"/>
@@ -116,7 +120,12 @@
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
     
-    <request-map uri="FindWebSite"><security https="true" auth="true"/><response name="success" type="view" value="FindWebSite"/></request-map>
+    <request-map uri="FindWebSite">
+        <security https="true" auth="true"/>
+        <!-- SCIPIO: Does not exist
+        <response name="success" type="view" value="FindWebSite"/>-->
+        <response name="success" type="view" value="EditWebSite"/>
+    </request-map>
     <request-map uri="EditWebSite">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditWebSite"/>
@@ -199,16 +208,16 @@
     <view-map name="initialsetup" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#InitialSetup"/>
     <view-map name="showMessage" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#nopartyAcctgPreference"/>
     
-    <view-map name="ViewFacility" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#ViewFacility"/>
+    <!--<view-map name="ViewFacility" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#ViewFacility"/> - SCIPIO: Does not exist -->
     <view-map name="EditFacility" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#EditFacility"/>
     
-    <view-map name="FindProductStore" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#FindProductStore"/>
+    <!--<view-map name="FindProductStore" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#FindProductStore"/> - SCIPIO: Does not exist -->
     <view-map name="EditProductStore" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#EditProductStore"/>
 
     <view-map name="EntityExportAll" type="screen" page="component://commonext/widget/ofbizsetup/CommonScreens.xml#EntityExportAll"/>
 
-    <view-map name="FindWebSite" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#FindWebSite" type="screen"/>
-    <view-map name="EditWebSite" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#EditWebSite" type="screen"/>
+    <!--<view-map name="FindWebSite" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#FindWebSite"/> - SCIPIO: Does not exist -->
+    <view-map name="EditWebSite" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#EditWebSite"/>
     
     <view-map name="firstcustomer" type="screen" page="component://commonext/widget/ofbizsetup/ProfileScreens.xml#FirstCustomer"/>
     <view-map name="firstproduct" type="screen" page="component://commonext/widget/ofbizsetup/SetupScreens.xml#EditProdCatalog"/>

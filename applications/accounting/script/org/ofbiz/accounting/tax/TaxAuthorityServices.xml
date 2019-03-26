@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -42,7 +29,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthority" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthority" short-description="delete a TaxAuthority">
@@ -63,7 +50,7 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
-        
+
         <!-- SCIPIO: extra verification to help error message; REMOVED - re-add if needed again
         <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
         <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
@@ -100,7 +87,7 @@ under the License.
         -->
 
         <entity-one entity-name="TaxAuthorityAssoc" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityAssoc" short-description="delete a TaxAuthorityAssoc">
@@ -135,7 +122,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityCategory" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityCategory" short-description="delete a TaxAuthorityCategory">
@@ -200,7 +187,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityGlAccount" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityGlAccount" short-description="delete a TaxAuthorityGlAccount">
@@ -240,7 +227,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="TaxAuthorityRateProduct" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteTaxAuthorityRateProduct" short-description="delete a TaxAuthorityRateProduct">
@@ -254,18 +241,17 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
-
     <!-- PartyTaxAuthInfo methods -->
     <simple-method method-name="createPartyTaxAuthInfo" short-description="create a PartyTaxAuthInfo">
         <set value="_CREATE" field="securityAction"/>
-        <!--
+        <!-- SCIPIO: "Removed permission validation in service so that the user can set his own taxAuthority"
         <check-permission permission="ACCOUNTING" action="${securityAction}">
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>-->
 
         <call-simple-method method-name="validatePartyTaxIdInline"/>
 
-        <entity-one value-field="taxAuth" entity-name="TaxAuthority"/>
+        <entity-one entity-name="TaxAuthority" value-field="taxAuth"/>
         <if-empty field="taxAuth">
             <add-error>
                 <fail-property resource="PartyUiLabels" property="PartyTaxAuthPartyAndGeoNotAvailable"/>
@@ -282,7 +268,7 @@ under the License.
 
         <create-value value-field="newEntity"/>
         <!-- SCIPIO: 2017-04-24: this service must output the fromDate when it's omitted so it can be re-queried -->
-        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/>
     </simple-method>
     <simple-method method-name="updatePartyTaxAuthInfo" short-description="update a PartyTaxAuthInfo">
         <set value="_UPDATE" field="securityAction"/>
@@ -296,7 +282,7 @@ under the License.
         <check-errors/>
 
         <entity-one entity-name="PartyTaxAuthInfo" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="validatePartyTaxIdInline" short-description="validatePartyTaxIdInline">
@@ -331,15 +317,15 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createCustomerTaxAuthInfo" short-description="Create a Customer PartyTaxAuthInfo">
-        <call-bsh><![CDATA[
+        <script lang="groovy"><![CDATA[
             taxAuthPartyGeoIds = parameters.get("taxAuthPartyGeoIds");
             parameters.put("taxAuthPartyId", taxAuthPartyGeoIds.substring(0, taxAuthPartyGeoIds.indexOf("::")));
             parameters.put("taxAuthGeoId", taxAuthPartyGeoIds.substring(taxAuthPartyGeoIds.indexOf("::") + 2));
-        ]]></call-bsh>
+        ]]></script>
         <set-service-fields service-name="createPartyTaxAuthInfo" map="parameters" to-map="createPartyTaxAuthInfoMap"/>
         <call-service service-name="createPartyTaxAuthInfo" in-map-name="createPartyTaxAuthInfoMap" include-user-login="true"/>
     </simple-method>
-    
+
     <!-- SCIPIO: 2017-04-21: new -->
     <simple-method method-name="verifyValidTaxAuthority" short-description="SCIPIO: verifies the given partyId + geoId is a valid TaxAuthority">
         <entity-one entity-name="TaxAuthority" value-field="verifiedTaxAuthority" auto-field-map="false">

@@ -27,7 +27,6 @@ import java.net.URL;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.component.ComponentURLException;
-import org.ofbiz.base.util.Debug;
 
 /**
  * A special location resolver that uses Strings like URLs, but with more options
@@ -36,7 +35,7 @@ import org.ofbiz.base.util.Debug;
 
 public class ComponentLocationResolver implements LocationResolver {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public URL resolveLocation(String location) throws MalformedURLException {
         String baseLocation = getBaseLocation(location).toString();

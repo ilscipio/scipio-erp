@@ -37,7 +37,7 @@ basePaymentId = parameters.paymentId;
 basePayment = from("Payment").where("paymentId", basePaymentId).queryOne();
 
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+rounding = UtilNumber.getRoundingMode("invoice.rounding");
 
 paymentsMapList = [];  // to pass back to the screeen list of unapplied payments
 

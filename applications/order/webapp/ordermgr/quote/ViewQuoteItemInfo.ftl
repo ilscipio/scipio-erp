@@ -1,52 +1,33 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#macro menuContent menuArgs={}>
+  <#-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+  <#--
   <@menu args=menuArgs>
   <#if (maySelectItems!"N") == "Y">
     <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text=uiLabelMap.OrderAddAllToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </#if>
   </@menu>
+  -->
 </#macro>
 
 <@section title=uiLabelMap.OrderOrderQuoteItems menuContent=menuContent>
 
-    <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-complex" autoAltRows=true>
           <@thead>
             <@tr valign="bottom" class="header-row">
-                <@th width="15%">${uiLabelMap.ProductItem}</@th>
+                <@th width="20%">${uiLabelMap.ProductItem}</@th>
                 <@th width="20%">${uiLabelMap.CommonProduct}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.CommonQuantity}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.OrderSelAmount}</@th>
-                <@th width="5%" class="align-right">&nbsp;</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.OrderOrderQuoteUnitPrice}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.OrderAdjustments}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.CommonSubtotal}</@th>
-            </@tr>
-            <@tr valign="bottom" class="header-row">
-                <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermType}</@th>
-                <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermValue}</@th>
-                <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermDays}</@th>
-                <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderQuoteTermDescription}</@th>
-                <@th></@th>
-                <@th></@th>
-                <@th></@th>
-                <@th align="right">&nbsp;</@th>
+                <@th width="5%">${uiLabelMap.CommonTerms}</@th>
+                <@th width="5%">${uiLabelMap.CommonAdjustments}</@th>
             </@tr>
           </@thead>
           <@tbody>
@@ -67,63 +48,86 @@ under the License.
                 
                 <@tr>
                     <@td>
-                        <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
-                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${quoteItem.quoteItemSeqId}</a>
+                            <a href="<@pageUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@pageUrl>" class="${styles.link_nav_info_id!}">${quoteItem.quoteItemSeqId}</a>
                         <#else>
                             ${quoteItem.quoteItemSeqId}
                         </#if>
-                        </div>
-                        <#assign quoteTerms = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteItem.quoteId, "quoteItemSeqId" : quoteItem.quoteItemSeqId})>
                     </@td>
-                    <@td valign="top">
-                            <#if showQuoteManagementLinks??>
-                                  <#if quoteItem.productId??>
-                                    <#assign product = quoteItem.getRelatedOne("Product", false)/>
-                                    
-                                    ${quoteItem.productId} - ${(product.internalName)!}
-                                  <#else>
-                                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${quoteItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_add!}">
-                                    ${uiLabelMap.ProductCreateProduct}
-                                    </a>
-                                  </#if>
-                            <#else>
-                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${quoteItem.productId!}</a>
-                            </#if>
-                        </@td>
-                    <@td class="amount">${quoteItem.quantity!}</@td>
-                    <@td align="amount" valign="top">${quoteItem.selectedAmount!}</@td>
-                    <@td></@td>
-                    <@td class="align-right" valign="top"><@ofbizCurrency amount=quoteItem.quoteUnitPrice isoCode=quote.currencyUomId/></@td>
+                    <@td>
+                        <#if showQuoteManagementLinks??>
+                              <#if quoteItem.productId??>
+                                <#assign product = quoteItem.getRelatedOne("Product", false)/>
+                                
+                                ${quoteItem.productId} - ${(product.internalName)!}
+                              <#else>
+                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${quoteItem.productId!}</@serverUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+                                ${uiLabelMap.ProductCreateProduct}
+                                </a>
+                              </#if>
+                        <#else>
+                            <a href="<@pageUrl>product?product_id=${quoteItem.productId!}</@pageUrl>" class="${styles.link_nav_info_id!}">${quoteItem.productId!}</a>
+                        </#if>
+                    </@td>
+                    <@td class="amount">${quoteItem.quantity!0}</@td>
+                    <@td class="amount">${quoteItem.selectedAmount!0}</@td>
+                    <@td class="amount"><@ofbizCurrency amount=quoteItem.quoteUnitPrice isoCode=quote.currencyUomId/></@td>
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAdjustmentAmount isoCode=quote.currencyUomId/></@td>
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAmount isoCode=quote.currencyUomId/></@td>
+                    <@td>
+                        <#assign quoteTerms = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteItem.quoteId, "quoteItemSeqId" : quoteItem.quoteItemSeqId},[], true)>
+                        <@modal id="displayTerms_${quoteItem.quoteItemSeqId}" label=uiLabelMap.CommonQuoteTerms linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_edit!}">
+                            <#-- now show terms details per line item in a modal -->
+                            <@heading level=1>${uiLabelMap.CommonQuoteTerms}</@heading>
+                            <@table type="data-list" autoAltRows=true inheritAltRows=true>
+                                <@thead>
+                                    <@tr class="header-row-2">
+                                        <@th>${uiLabelMap.OrderOrderTermType}</@th>
+                                        <@th>${uiLabelMap.OrderOrderTermValue}</@th>
+                                        <@th>${uiLabelMap.OrderOrderTermDays}</@th>
+                                        <@th>${uiLabelMap.OrderQuoteTermDescription}</@th>
+                                    </@tr>
+                                </@thead>
+                                <#if quoteTerms?has_content>
+                                    <#list quoteTerms as quoteTerm>
+                                        <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
+                                        <@tr groupLast=true>
+                                            <@td valign="top">;${termDescription.description!}</@td>
+                                            <@td valign="top">${quoteTerm.termValue!}</@td>
+                                            <@td valign="top"><#if quoteTerm.termDays?has_content>${quoteTerm.termDays!}</#if></@td>
+                                            <@td valign="top"><#if quoteTerm.description?has_content>${quoteTerm.description}</#if></@td>
+                                        </@tr>
+                                    </#list>
+                                </#if>
+                            </@table>
+                        </@modal>
+                    </@td>
+                    <@td>
+                        <@modal id="displayAdjustments_${quoteItem.quoteItemSeqId}" label=uiLabelMap.CommonQuoteAdjustments linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_edit!}">
+                            <#-- now show adjustment details per line item in a modal -->
+                            <@heading level=1>${uiLabelMap.CommonQuoteAdjustments}</@heading>
+                            <@table type="data-list" autoAltRows=true inheritAltRows=true>
+                                <@thead>
+                                    <@tr class="header-row-2">
+                                        <@th>${uiLabelMap.CommonDescription}</@th>
+                                        <@th>${uiLabelMap.CommonAmount}</@th>
+                                    </@tr>
+                                </@thead>
+                                <#list quoteItemAdjustments as quoteItemAdjustment>
+                                    <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
+                                    <@tr groupLast=true>
+                                        <@td class="align-right" colspan="6">${adjustmentType.get("description",locale)!}</@td>
+                                        <@td class="amount"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></@td>
+                                    </@tr>
+                                </#list>
+                            </@table>
+                        </@modal>
+                    </@td>
                 </@tr>
-                <#list quoteTerms as quoteTerm>
-                <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
-                <@tr groupLast=true>
-                    <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${termDescription.description!}</@td>
-                    <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termValue!}</@td>
-                    <@td valign="top"><#if quoteTerm.termDays??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termDays!}</#if></@td>
-                    <@td valign="top"><#if quoteTerm.description??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.description}</#if></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                </@tr>
-                </#list>
-                <#-- now show adjustment details per line item -->
-                <#list quoteItemAdjustments as quoteItemAdjustment>
-                    <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
-                    <@tr groupLast=true>
-                        <@td class="align-right" colspan="6">${adjustmentType.get("description",locale)!}</@td>
-                        <@td class="amount"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></@td>
-                        <@td>&nbsp;</@td>
-                    </@tr>
-                </#list>
             </#list>
             <@tr type="util" useAlt=false><@td colspan="10"><hr /></@td></@tr>
             <@tr useAlt=false>
-                <@td class="align-right" colspan="7">${uiLabelMap.CommonSubtotal}</@td>
+                <@td class="align-right" colspan="8">${uiLabelMap.CommonSubtotal}</@td>
                 <@td class="amount"><@ofbizCurrency amount=totalQuoteAmount isoCode=quote.currencyUomId/></@td>
             </@tr>
             <@tr useAlt=false><@td colspan="5"></@td><@td colspan="6"><hr /></@td></@tr>
@@ -134,7 +138,7 @@ under the License.
                 <#if !quoteAdjustment.quoteItemSeqId??>
                     <#assign totalQuoteHeaderAdjustmentAmount = quoteAdjustment.amount?default(0) + totalQuoteHeaderAdjustmentAmount>
                     <@tr useAlt=false>
-                      <@td class="align-right" colspan="6">${adjustmentType.get("description",locale)!}</@td>
+                      <@td class="align-right" colspan="8">${adjustmentType.get("description",locale)!}</@td>
                       <@td class="amount"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></@td>
                     </@tr>
                 </#if>
@@ -142,10 +146,10 @@ under the License.
             </#list>
             <#assign grandTotalQuoteAmount = totalQuoteAmount + totalQuoteHeaderAdjustmentAmount>
             <#if findAdjustment>
-                <@tr useAlt=false><@td colspan="5"></@td><@td colspan="6"><hr /></@td></@tr>
+                <@tr useAlt=false><@td colspan="7"></@td><@td colspan="8"><hr /></@td></@tr>
             </#if>
             <@tr useAlt=false>
-                <@td  class="align-right" colspan="7">${uiLabelMap.OrderGrandTotal}</@td>
+                <@td  class="align-right" colspan="8">${uiLabelMap.OrderGrandTotal}</@td>
                 <@td class="align-right">
                     <@ofbizCurrency amount=grandTotalQuoteAmount isoCode=quote.currencyUomId/>
                 </@td>
@@ -153,3 +157,5 @@ under the License.
           </@tbody>
     </@table>
 </@section>
+
+

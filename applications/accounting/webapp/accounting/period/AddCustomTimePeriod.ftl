@@ -1,6 +1,6 @@
-<#if security.hasPermission("PERIOD_MAINT", session)>    
+<#if security.hasPermission("PERIOD_MAINT", request)>    
     <@section>
-        <form method="post" action="<@ofbizUrl>createCustomTimePeriod</@ofbizUrl>" name="createCustomTimePeriodForm">
+        <form method="post" action="<@pageUrl>createCustomTimePeriod</@pageUrl>" name="createCustomTimePeriodForm">
             <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
             <#-- <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" /> -->
             <input type="hidden" name="useValues" value="true" />
@@ -26,7 +26,7 @@
                 </@field>
             </div>
             <div>                      
-                <@field type="input" size="20" name="organizationPartyId" label=uiLabelMap.AccountingOrgPartyId />                      
+                <@field type="input" size="20" name="organizationPartyId" label=uiLabelMap.AccountingOrgPartyId value=findOrganizationPartyId!organizationPartyId!/>
                 <@field type="select" name="periodTypeId" label=uiLabelMap.AccountingPeriodType>
                     <#list periodTypes as periodType>
                         <#assign isDefault = false>
@@ -35,7 +35,7 @@
                                 <#assign isDefault = true>
                             </#if>
                         </#if>
-                        <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
+                        <option value="${periodType.periodTypeId}"<#if isDefault> selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
                     </#list>
                 </@field>                  
                 <@field type="input" size="4" name="periodNum" label=uiLabelMap.AccountingPeriodNumber />                      

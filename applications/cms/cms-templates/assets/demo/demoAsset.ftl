@@ -11,11 +11,11 @@
     <#assign recurseDepth = -1>
 </#if>
 
-<@section title=("Demo asset" + recurseDescStr + (rawString(invokeMethodDescStr!"")))>
+<@section title=("Demo asset" + recurseDescStr + (raw(invokeMethodDescStr!"")))>
   <#if content?has_content>
     <#-- FIXME: extremely inefficient processing technique...
         but fixing requires refactoring/revisiting way attributes work... -->
-    <#assign interpretedContent = rawString(content)?interpret>
+    <#assign interpretedContent = raw(content)?interpret>
     <@interpretedContent/>
   </#if>
   

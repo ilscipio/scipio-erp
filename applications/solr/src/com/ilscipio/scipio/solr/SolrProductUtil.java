@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
@@ -41,6 +43,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
@@ -68,7 +71,7 @@ public abstract class SolrProductUtil {
     public static final Map<String, String> PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY;
     static {
         Map<String, String> map = new HashMap<>();
-        
+
         map.put("productId", "productId");
         map.put("internalName", "internalName");
         map.put("smallImageUrl", "smallImageUrl");
@@ -80,23 +83,23 @@ public abstract class SolrProductUtil {
         // NOT REAL Product ENTITY FIELDS
         //map.put("defaultPrice", "defaultPrice");
         //map.put("listPrice", "listPrice");
-        
+
         PRODSIMPLEFIELDMAP_ENTITY_TO_SOLR = Collections.unmodifiableMap(map);
-        
+
         Map<String, String> solrEntMap = new HashMap<>();
         for(Map.Entry<String, String> entry : map.entrySet()) {
             solrEntMap.put(entry.getValue(), entry.getKey());
         }
         PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY = Collections.unmodifiableMap(solrEntMap);
     }
-    
+
     public static final String PRODUCTFIELD_SALESDISCDATE = "salesDiscDate_dt";
 
     private static final Map<String, Object> defaultUserProductSearchConfig;
     static {
         Map<String, Object> config = null;
         try {
-            config = readUserProductSearchConfig(DelegatorFactory.getDelegator("default"), 
+            config = readUserProductSearchConfig(DelegatorFactory.getDelegator("default"),
                     SolrUtil.solrConfigName, "solr.search.user.");
         } catch(Exception e) {
             Debug.logError(e, "Solr: Could not read default user product search config from solr.properties: " + e.getMessage(), module);
@@ -104,20 +107,20 @@ public abstract class SolrProductUtil {
         }
         defaultUserProductSearchConfig = Collections.unmodifiableMap(config); // FIXME: contents are not properly unmodifiable
     }
-    
+
     private static final String configuredFallbackDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.fallback", null);
     private static final String configuredForceDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.force", null);
 
-    
+
     /**
      * Cached names of solrProductAttributesSimple service interface field names.
-     * DEV NOTE: there used to be a hardcoded list here (well, in SolrUtil), 
+     * DEV NOTE: there used to be a hardcoded list here (well, in SolrUtil),
      * but it was out of sync with the service params; this should help prevent that.
      * TODO: REVIEW: ideally might want to get rid of this third layer of naming...
      */
     private static List<String> solrProdAttrSimple = null;
-    
-    
+
+
     public static String getConfiguredDefaultCurrency(Delegator delegator, GenericValue productStore) {
         if (configuredForceDefaultCurrency != null) return configuredForceDefaultCurrency;
         if (productStore != null) {
@@ -125,22 +128,22 @@ public abstract class SolrProductUtil {
             if (UtilValidate.isNotEmpty(currency)) return currency;
         }
         if (configuredFallbackDefaultCurrency != null) return configuredFallbackDefaultCurrency;
-        return EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", 
+        return EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD",
                 delegator != null ? delegator : (productStore != null ? productStore.getDelegator() : null));
     }
-    
+
     public static String getConfiguredDefaultCurrency(GenericValue productStore) {
         return getConfiguredDefaultCurrency(null, productStore);
     }
-    
+
     public static String getConfiguredForceDefaultCurrency(GenericValue productStore) {
         return configuredForceDefaultCurrency;
     }
-    
+
     public static String getConfiguredForceDefaultCurrency(Delegator delegator) {
         return configuredForceDefaultCurrency;
     }
-    
+
     /**
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
      */
@@ -151,7 +154,7 @@ public abstract class SolrProductUtil {
         else if ("longDescription".equals(entityFieldName)) return "longdescription_i18n_" + SolrLocaleUtil.getLangCode(locale);
         return PRODSIMPLEFIELDMAP_ENTITY_TO_SOLR.get(entityFieldName);
     }
-    
+
     /**
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
      */
@@ -162,7 +165,7 @@ public abstract class SolrProductUtil {
         else if (solrFieldName.startsWith("longdescription_i18n_")) return "longDescription";
         else return PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY.get(solrFieldName);
     }
-    
+
     /**
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
      */
@@ -172,7 +175,7 @@ public abstract class SolrProductUtil {
         else if (solrFieldName.startsWith("title_i18n_")) return "alphaTitleSort_" + solrFieldName.substring("title_i18n_".length());
         else return solrFieldName;
     }
-    
+
     /**
      * SPECIAL sort expressions needed to fill in locales with missing texts.
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
@@ -189,14 +192,14 @@ public abstract class SolrProductUtil {
 //        else if (solrFieldName.startsWith("longdescription_i18n_")) solrFieldName = "longdescription_i18n_";
 //        else if (solrFieldName.startsWith("alphaTitleSort_")) solrFieldName = "alphaTitleSort_";
 //        else return solrFieldName;
-//        
+//
 //        List<String> fieldNames = new ArrayList<>();
 //        if (locale != null) fieldNames.add(solrFieldName + SolrLocaleUtil.getLangCode(locale));
 //        if (fallbackLocale != null && (locale == null || !SolrLocaleUtil.isSameLangCode(locale, fallbackLocale))) fieldNames.add(solrFieldName + SolrLocaleUtil.getLangCode(fallbackLocale));
 //        fieldNames.add(solrFieldName + I18N_FIELD_GENERAL);
 //        return SolrExprUtil.makeSortFieldFallbackExpr(fieldNames);
     }
-    
+
     public static String getProductSolrPriceFieldNameFromEntityPriceType(String productPriceTypeId, Locale locale, String logPrefix) {
         if ("LIST_PRICE".equals(productPriceTypeId)) {
             return "listPrice";
@@ -208,31 +211,31 @@ public abstract class SolrProductUtil {
             return "defaultPrice";
         }
     }
-    
+
     public static Map<String, Object> getDefaultUserProductSearchConfig(GenericValue productStore) {
         return defaultUserProductSearchConfig;
     }
-    
+
     /**
      * Returns set of query fields (with optional power expressions, e.g. ^2) for user/public searches
      * appropriate for locale and store and according to config, to use instead of the default search field ("text").
      * FOR USE WITH USER MODE AND EDISMAX ONLY
      * <p>
      * Automatically normalizes the locales.
-     * 
+     *
      * @see #readUserProductSearchConfig for config
      */
     public static Set<String> determineUserProductSearchQueryFields(Delegator delegator, Locale userLocale, GenericValue productStore, Map<String, Object> config) {
         setDefaultsUserProductSearchConfig(config, getDefaultUserProductSearchConfig(productStore));
-        
+
         String defaultField = (String) config.get("product.defaultField");
         if (defaultField == null || defaultField.isEmpty()) defaultField = "text_i18n_";
-        
+
         String i18nFieldsSelect = (String) config.get("i18nFieldsSelect");
         Collection<Locale> i18nForceLocales = UtilGenerics.checkCollection(config.get("i18nForceLocales"));
         String userLocalePower = (String) config.get("userLocalePower");
         Collection<String> commonFields = UtilGenerics.checkCollection(config.get("product.commonFields"));
-        
+
         List<FlexibleStringExpander> extraLangFields = UtilGenerics.checkList(config.get("product.extraLangFields"));
         String extraUserLocalePower = (String) config.get("extraUserLocalePower");
         String extraStoreLocalePower = (String) config.get("extraStoreLocalePower");
@@ -241,7 +244,7 @@ public abstract class SolrProductUtil {
         if (UtilValidate.isNotEmpty(i18nFieldsSelect)) {
             if ("user-store".equals(i18nFieldsSelect)) {
                 // FIXME: Set strings are not check for power e.g. ^2 suffix
-                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, true, i18nForceLocales, defaultField, userLocalePower, null, null, 
+                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, true, i18nForceLocales, defaultField, userLocalePower, null, null,
                         extraLangFields, extraUserLocalePower, extraStoreLocalePower);
                 if (commonFields != null) queryFields.addAll(commonFields);
             } else if ("user".equals(i18nFieldsSelect)) {
@@ -255,7 +258,7 @@ public abstract class SolrProductUtil {
                 if (commonFields != null) queryFields.addAll(commonFields);
             } else {
                 if (!"NONE".equals(i18nFieldsSelect)) {
-                    Debug.logError("Solr: Unrecognized i18nFieldsSelect config value (may be from properties or screen code): " 
+                    Debug.logError("Solr: Unrecognized i18nFieldsSelect config value (may be from properties or screen code): "
                             + i18nFieldsSelect + "; using \"NONE\" instead", module);
                 }
                 // return nothing; indicates use default and don't use qf param
@@ -267,7 +270,7 @@ public abstract class SolrProductUtil {
         }
         return queryFields;
     }
-    
+
     /**
      * Reads common solr user search options from a properties file.
      * Example/Reference: Scipio shop.properties values having "shop.search.solr." prefix.
@@ -280,9 +283,9 @@ public abstract class SolrProductUtil {
         config.put("i18nForceLocales", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "i18nForceLocales", null, delegator));
         config.put("userLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "userLocalePower", null, delegator));
         config.put("product.commonFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.commonFields", null, delegator));
-        
+
         config.put("product.defaultField", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.defaultField", null, delegator));
-        
+
         config.put("product.extraLangFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.extraLangFields", null, delegator));
         config.put("extraUserLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "extraUserLocalePower", null, delegator));
         config.put("extraStoreLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "extraStoreLocalePower", null, delegator));
@@ -290,11 +293,11 @@ public abstract class SolrProductUtil {
         if (parseCfg) parseUserProductSearchConfig(delegator, config);
         return config;
     }
-    
+
     public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix) {
         return readUserProductSearchConfig(delegator, propResource, propNamePrefix, true);
     }
-    
+
     /**
      * Reads common user search options from a properties file plus overrides.
      * Example: Scipio shop.properties values having "shop.search.solr." prefix.
@@ -307,17 +310,17 @@ public abstract class SolrProductUtil {
         if (parseCfg) parseUserProductSearchConfig(delegator, config);
         return config;
     }
-    
+
     public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, Map<String, Object> overrideConfig) {
         return readUserProductSearchConfig(delegator, propResource, propNamePrefix, overrideConfig, true);
     }
-    
+
     public static void overrideUserProductSearchConfig(Map<String, Object> destConfig, Map<String, Object> overrideConfig) {
         for(Map.Entry<String, ?> entry : overrideConfig.entrySet()) {
             if (entry.getValue() != null) destConfig.put(entry.getKey(), entry.getValue());
         }
     }
-    
+
     public static void setDefaultsUserProductSearchConfig(Map<String, Object> destConfig, Map<String, Object> defaultsConfig) {
         for(Map.Entry<String, Object> entry : defaultsConfig.entrySet()) {
             if (entry.getValue() != null) {
@@ -328,7 +331,7 @@ public abstract class SolrProductUtil {
             }
         }
     }
-    
+
     public static void parseUserProductSearchConfig(Delegator delegator, Map<String, Object> config) {
         Object i18nForceLocalesObj = config.get("i18nForceLocales");
         if (i18nForceLocalesObj instanceof String) {
@@ -351,7 +354,7 @@ public abstract class SolrProductUtil {
             }
             config.put("product.commonFields", commonFields);
         }
-        
+
         Object extraLangFieldsObj = config.get("product.extraLangFields");
         if (extraLangFieldsObj instanceof String) {
             Collection<String> extraLangFields;
@@ -367,7 +370,7 @@ public abstract class SolrProductUtil {
             config.put("product.extraLangFields", exdrList);
         }
     }
-    
+
     private static ModelService getModelServiceStaticSafe(String serviceName) {
         try {
             LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
@@ -377,7 +380,7 @@ public abstract class SolrProductUtil {
             return null;
         }
     }
-    
+
     /**
      * Clears all Product and related entity caches that are used in Solr indexing.
      * Should be done at beginning of <code>rebuildSolrIndex</code> so that useCache=true can
@@ -387,11 +390,11 @@ public abstract class SolrProductUtil {
     public static void clearProductEntityCaches(Delegator delegator, LocalDispatcher dispatcher) {
         try {
             Debug.logInfo("Solr: Clearing product entity caches", module);
-            
+
             for(String entityName: delegator.getModelReader().getEntityNames()) {
                 if (entityName.startsWith("Prod")) {
                     String rest = entityName.substring("Prod".length());
-                    if (rest.startsWith("uct") || rest.startsWith("Catalog") 
+                    if (rest.startsWith("uct") || rest.startsWith("Catalog")
                             || rest.startsWith("ConfItem")) {
                         clearCacheLine(delegator, entityName);
                     }
@@ -405,15 +408,15 @@ public abstract class SolrProductUtil {
             Debug.logError("Solr: Error trying to clear product entity caches: " + e.getMessage(), module);
         }
     }
-    
+
     private static void clearCacheLine(Delegator delegator, String entityName) {
         if (Debug.verboseOn()) Debug.logVerbose("Solr: Clearing entity cache for: " + entityName, module);
         delegator.clearCacheLine(entityName);
     }
-    
+
     /**
      * Generates a map of product content that may be passed to the addToSolrIndex service.
-     * NOTE: the result field names match the addToSolrIndex service fields, NOT the 
+     * NOTE: the result field names match the addToSolrIndex service fields, NOT the
      * Solr schema product fields; these are extra intermediates.
      * DEV NOTE: FIXME: this extra layer of renaming is confusing and problematic; should get rid of it...
      */
@@ -433,13 +436,21 @@ public abstract class SolrProductUtil {
                 throw new IllegalArgumentException("Missing productId");
             }
             // 2018: The fields map is needed for arbitrarily-named fields such as dynamicFields.
-            // It is much more flexible than the stock static field names in the 
+            // It is much more flexible than the stock static field names in the
             // solrProductAttributes service interface and in the future may replace it entirely.
             Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
-            
+
+            // Get all product assoc
+            List<GenericValue> productAssocFromList = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId).filterByDate().cache(useCache).queryList();
+            List<GenericValue> productAssocToList = EntityQuery.use(delegator).from("ProductAssoc").where("productIdTo", productId).filterByDate().cache(useCache).queryList();
+
             // 2017-09: if variant, must also get virtual's categories
-            List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
-            
+            //List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
+            List<GenericValue> productVariantAssocs = null;
+            if ("Y".equals(product.getString("isVariant"))) { // 2018-12-20: reuse productAssocTo
+                productVariantAssocs = EntityUtil.filterByAnd(productAssocToList, UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+            }
+
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
             Set<String> productCategoryIds = new LinkedHashSet<>();
             getProductCategoryIds(productCategoryIds, dctx, productId, productVariantAssocs, useCache);
@@ -447,35 +458,72 @@ public abstract class SolrProductUtil {
             // Trying to set a correctand trail
             Collection<String> trails = new LinkedHashSet<String>();
             getCategoryTrails(trails, dctx, productCategoryIds, useCache);
-            dispatchContext.put("category", new ArrayList<>(trails));
 
             // Get the catalogs that have associated the categories
             Collection<String> catalogs = new LinkedHashSet<>();
             getCatalogIdsFromCategoryTrails(catalogs, dctx, trails, useCache);
-            dispatchContext.put("catalog", new ArrayList<>(catalogs));
-            
+
             List<GenericValue> productStores;
-            if (catalogs.isEmpty()) {
-                // TODO: REVIEW: we can't have this as a warning because many small component product currently won't associate to any store this way
-                if (productCategoryIds.isEmpty()) {
-                    Debug.logInfo("Solr: No categories for product '" + productId + "'; can't determine product store", module);
-                } else {
-                    Debug.logInfo("Solr: No catalogs for product '" + productId + "'; can't determine product store", module);
-                }
-                productStores = new ArrayList<>();
-            } else {
+            if (!catalogs.isEmpty()) {
                 productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, useCache);
-                dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
+            } else {
+                productStores = new ArrayList<>();
             }
+
+            Collection<String> relatedCategoryIds = null;
+            Collection<String> relatedTrails = null;
+            Collection<String> relatedCatalogs = null;
+            // TODO: REVIEW: If we could not determine catalog of store directly, usually due to config, alternative package
+            // or other complex products, search product assoc to try to determine (slow)
+            // NOTE: We do NOT subscribe the product to any specific categories in this case...
+            // Leaving that up to the entities
+            if (catalogs.isEmpty() || productStores.isEmpty()) {
+                // SPECIAL: If we could not determine a product store, look up any related products
+                // TODO: REVIEW: For now we do NOT set categories or catalog from this; store is most basic
+                relatedCategoryIds = new LinkedHashSet<>();
+                relatedTrails = new LinkedHashSet<>();
+                relatedCatalogs = new LinkedHashSet<>();
+                // Self and virtuals are covered above
+                Collection<String> relatedProductIds = new LinkedHashSet<>();
+                Set<String> catCheckedProductIds = new HashSet<>();
+                // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
+                catCheckedProductIds.add(productId);
+                catCheckedProductIds.addAll(UtilMisc.getMapValuesForKey(productVariantAssocs, "productId"));
+                getProductCategoryIdsAggressive(relatedCategoryIds, relatedProductIds, catCheckedProductIds, dctx, productId, productVariantAssocs, productAssocFromList, productAssocToList,
+                        false, useCache); // NOTE: firstFoundOnly==false
+                getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, useCache);
+                getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, useCache);
+                catalogs.addAll(relatedCatalogs);
+                productStores.addAll(SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, useCache));
+            }
+
+            List<String> productStoreIdList = UtilMisc.getMapValuesForKeyOrNewList(productStores, "productStoreId");
+            dispatchContext.put("productStore", productStoreIdList);
+
+            if (productStores.isEmpty()) {
+                Debug.logInfo("Solr: Cannot determine store for product '" + productId + "'", module);
+            } else {
+                if (SolrUtil.verboseOn()) {
+                    if (relatedCatalogs != null) {
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' indirectly (" + productStoreIdList + ")", module);
+                    } else {
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' directly (" + productStoreIdList + ")", module);
+                    }
+                }
+            }
+
+            dispatchContext.put("category", new ArrayList<>(trails));
+            dispatchContext.put("catalog", new ArrayList<>(catalogs));
+
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
             // NOTE: we skip the isContentReference warning if there's both a forced locale and forced currency.
-            GenericValue productStore = ProductStoreWorker.getContentReferenceStoreOrFirst(productStores, 
-                    (SolrLocaleUtil.getConfiguredForceDefaultLocale(delegator) == null || SolrProductUtil.getConfiguredForceDefaultCurrency(delegator) == null) 
+            GenericValue productStore = ProductStoreWorker.getContentReferenceStoreOrFirst(productStores,
+                    (SolrLocaleUtil.getConfiguredForceDefaultLocale(delegator) == null || SolrProductUtil.getConfiguredForceDefaultCurrency(delegator) == null)
                         ? ("product '" + productId + "'") : null);
             List<Locale> locales = SolrLocaleUtil.getConfiguredLocales(productStore);
             Locale defaultProductLocale = SolrLocaleUtil.getConfiguredDefaultLocale(productStore);
-            
+
             // Generate special ProductContentWrapper for the supported languages
             Map<String, ProductContentWrapper> pcwMap = new HashMap<>();
             List<ProductContentWrapper> pcwList = new ArrayList<>(locales.size());
@@ -484,31 +532,36 @@ public abstract class SolrProductUtil {
                 pcwMap.put(SolrLocaleUtil.getLangCode(locale), pcw);
                 pcwList.add(pcw);
             }
-            
+
             String parentProductId = null;
             if ("Y".equals(product.getString("isVariant"))) {
                 // IMPORTANT: same parent lookup logic as used by ProductContentWrapper
                 parentProductId = ProductWorker.getParentProductId(productId, delegator, useCache);
             }
-            
+
             dispatchContext.put("productId", productId);
             // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
-            if (product.get("internalName") != null)
+            if (product.get("internalName") != null) {
                 dispatchContext.put("internalName", product.get("internalName"));
-            if (product.get("productTypeId") != null)
+            }
+            if (product.get("productTypeId") != null) {
                 dispatchContext.put("productTypeId", product.get("productTypeId"));
+            }
             // GenericValue manu = product.getRelatedOneCache("Manufacturer");
             // if (product.get("manu") != null) dispatchContext.put("manu", "");
             String smallImage = (String) product.get("smallImageUrl");
-            if (smallImage != null)
+            if (smallImage != null) {
                 dispatchContext.put("smallImage", smallImage);
+            }
             String mediumImage = (String) product.get("mediumImageUrl");
-            if (mediumImage != null)
+            if (mediumImage != null) {
                 dispatchContext.put("mediumImage", mediumImage);
+            }
             String largeImage = (String) product.get("largeImageUrl");
-            if (largeImage != null)
-                dispatchContext.put("largeImage", largeImage);                
-            
+            if (largeImage != null) {
+                dispatchContext.put("largeImage", largeImage);
+            }
+
             // if(product.get("weight") != null) dispatchContext.put("weight", "");
 
             // Alternative
@@ -531,7 +584,7 @@ public abstract class SolrProductUtil {
             final boolean useTotal = true;
             // WARN: here the total (inStock) behavior for variants is determined by the first store found only!
             final boolean useVariantStockCalcForTotal = (productStore != null && Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc")));
-            Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, product, 
+            Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, product,
                     productStores, useTotal, useVariantStockCalcForTotal, nowTimestamp, useCache);
             for (Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {
                 if ("_total_".equals(entry.getKey())) {
@@ -539,7 +592,7 @@ public abstract class SolrProductUtil {
                 } else {
                     String fieldName = "storeStock_" + SolrExprUtil.escapeFieldNamePart(entry.getKey()) + "_pi";
                     if (fields.containsKey(fieldName)) {
-                        Debug.logError("Solr: DATA ERROR - DUPLICATE PRODUCT STORE storeStock_ VARIABLE DETECTED (" + fieldName 
+                        Debug.logError("Solr: DATA ERROR - DUPLICATE PRODUCT STORE storeStock_ VARIABLE DETECTED (" + fieldName
                                 + ", for productStoreId '" + entry.getKey() + "') - productStoreId clash - Solr cannot index data for this store!"
                                 + " This means that your system contains two ProductStores that have productStoreIds"
                                 + " too similar so they cannot be uniquely represented in the Solr schema field names."
@@ -569,20 +622,20 @@ public abstract class SolrProductUtil {
 
             // this is the currencyUomId that the prices in solr should use...
             String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
-            
+
             if ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId"))) {
-                getConfigurableProductStartingPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                getConfigurableProductStartingPrices(dispatchContext, delegator, dispatcher, userLogin, context, product,
                         productStore, currencyUomId, defaultProductLocale, useCache);
             } else {
-                getProductStandardPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                getProductStandardPrices(dispatchContext, delegator, dispatcher, userLogin, context, product,
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
-            
+
             Timestamp salesDiscDate = product.getTimestamp("salesDiscontinuationDate");
             if (salesDiscDate != null) {
                 fields.put("salesDiscDate_dt", salesDiscDate);
             }
-            
+
             // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
             Set<String> keywords = new LinkedHashSet<>();
             // NOTE: for variant products, we also include the keywords from the virtual/parent
@@ -596,18 +649,88 @@ public abstract class SolrProductUtil {
         return dispatchContext;
     }
 
-    protected static void getProductCategoryIds(Collection<String> productCategoryIds, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs, 
+    protected static void getProductCategoryIds(Collection<String> productCategoryIds, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
             boolean useCache) throws GenericEntityException {
         List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
                 .filterByDate().cache(useCache).queryList();
-        SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
+        UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
 
         if (UtilValidate.isNotEmpty(productVariantAssocs)) {
             for(GenericValue productVariantAssoc : productVariantAssocs) {
                 String virtualProductId = productVariantAssoc.getString("productId");
                 List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
                         .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
+                UtilMisc.getMapValuesForKey(virtualCategories, "productCategoryId", productCategoryIds);
+            }
+        }
+    }
+
+    /**
+     * Aggressively collects ProductCategoryMember from specified product or any related product. Slow and should only be used (for now)
+     * in the cases where getProductCategoryIds returns nothing.
+     * NOTE: The categoryIds returned do NOT necessarily indicate the product belongs to them; it is mainly used
+     * to determine the productStoreIds for the product.
+     * NOTE: This re-runs the check on "this" product and its virtual; use {@link #getProductCategoryIdsAggressiveNoSelfOrVirtual} to skip that.
+     */
+    protected static void getProductCategoryIdsAggressive(Collection<String> productCategoryIds, Collection<String> productIds, Set<String> productsCatChecked, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
+            List<GenericValue> productAssocFromList, List<GenericValue> productAssocToList, boolean firstFoundOnly, boolean useCache) throws GenericEntityException {
+        if (productIds.contains(productId)) { // NOTE: This prevents both endless loops in edge cases as well as a few needless duplicate queries
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Solr: Product assoc loop detected/product already visited: '" + productId + "'", module);
+            }
+            return;
+        }
+        productIds.add(productId);
+
+        if (!productsCatChecked.contains(productId)) { // this check prevents needless re-queries (better than nothing)
+            productsCatChecked.add(productId);
+            List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
+                    .filterByDate().cache(useCache).queryList();
+            if (!categories.isEmpty()) {
+                UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
+                if (firstFoundOnly) {
+                    return;
+                }
+            }
+        }
+
+        if (productVariantAssocs == null) {
+            productVariantAssocs = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productId")
+                .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(useCache).queryList();
+        }
+        for(GenericValue productVariantAssoc : productVariantAssocs) {
+            String virtualProductId = productVariantAssoc.getString("productId");
+            /* go deep
+            List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
+                    .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
+            if (!virtualCategories.isEmpty()) {
                 SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
+                if (firstFoundOnly) {
+                    return;
+                }
+            }*/
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, virtualProductId, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
+            }
+        }
+        List<GenericValue> altPkgAssocs = (productAssocFromList != null) ? 
+                EntityUtil.filterByAnd(productAssocFromList, UtilMisc.toMap("productAssocTypeId", "ALTERNATIVE_PACKAGE")) :
+                EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productIdTo").where("productId", productId, "productAssocTypeId", "ALTERNATIVE_PACKAGE").filterByDate().cache(useCache).queryList();
+        for(GenericValue altPkgAssoc : altPkgAssocs) {
+            String productIdTo = altPkgAssoc.getString("productIdTo");
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, productIdTo, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
+            }
+        }
+        List<GenericValue> configProductList = EntityQuery.use(dctx.getDelegator()).from("ProductConfigAndConfigProduct")
+                .select("productId").where("configProductId", productId).cache(useCache).queryList();
+        for(GenericValue configProduct : configProductList) {
+            String parentProductId = configProduct.getString("productId");
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, parentProductId, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
             }
         }
     }
@@ -635,8 +758,8 @@ public abstract class SolrProductUtil {
         Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
         for (String trail : trails) {
             String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
-            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId); 
-            if (catalogMembers == null) {          
+            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId);
+            if (catalogMembers == null) {
                 catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(dctx.getDelegator(), productCategoryId, useCache);
                 categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
             }
@@ -657,17 +780,17 @@ public abstract class SolrProductUtil {
         }
         return fields;
     }
-    
+
     protected static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
-        
+
         List<EntityCondition> productIdOrList = new ArrayList<>(productIds.length);
         for(String productId : productIds) {
             if (productId != null) productIdOrList.add(EntityCondition.makeCondition("productId", productId));
         }
         condList.add(productIdOrList.size() == 1 ? productIdOrList.get(0) : EntityCondition.makeCondition(productIdOrList, EntityOperator.OR));
         // IMPORTANT: ONLY add keywords IF auto-generation by ofbiz is disabled for the product
-        
+
         // FIXME?: we can only index a subset of cases; we use simplest condition possible; see eecas.xml for details
         //condList.add(EntityCondition.makeCondition("keywordTypeId", KWT_KEYWORD));
 //        EntityCondition tagCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_TAG"),
@@ -680,26 +803,26 @@ public abstract class SolrProductUtil {
 //                EntityCondition.makeCondition("statusId", "KW_APPROVED")); // DO NOT allow empty status, because it might be auto-generated
 //        condList.add(EntityCondition.makeCondition(tagCond, EntityOperator.OR, keywordCond));
         condList.add(EntityCondition.makeCondition("statusId", "KW_APPROVED"));
-        List<GenericValue> productKeywords = delegator.findList("ProductKeyword", 
+        List<GenericValue> productKeywords = delegator.findList("ProductKeyword",
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
         for(GenericValue productKeyword : productKeywords) {
             keywords.add(productKeyword.getString("keyword"));
         }
     }
-    
-    protected static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 
+
+    protected static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product,
             String productContentTypeId, List<Locale> locales, Locale defaultProductLocale, List<ProductContentWrapper> pcwList, boolean useCache) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
-        
+
         contentMap.put(SolrLocaleUtil.I18N_GENERAL, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, useCache));
-        
+
         getProductContentForLocales(contentMap, delegator, dispatcher, product, productContentTypeId, locales, defaultProductLocale, useCache);
-        
+
         refineLocalizedContentValues(contentMap, locales, defaultProductLocale);
-        
+
         return contentMap;
     }
-    
+
     /**
      * Refines the map of localized content values (locale->value) by filling in missing values for locales where possible.
      * <p>
@@ -708,14 +831,14 @@ public abstract class SolrProductUtil {
      * accurately reflects the language that the general entries are written in - this is
      * normally ProductStore.defaultLocaleString and found using {@link SolrLocaleUtil#getConfiguredDefaultLocale(GenericValue)}.
      * This simplifies queries significantly. See solrconfig.properties and schema.
-     * 
+     *
      * @see SolrLocaleUtil#getConfiguredDefaultLocale(GenericValue)
      */
     public static void refineLocalizedContentValues(Map<String, String> contentMap, List<Locale> locales, Locale defaultProductLocale) {
         if (defaultProductLocale != null) {
             String generalValue = contentMap.get(SolrLocaleUtil.I18N_GENERAL);
             String defaultLangValue = contentMap.get(SolrLocaleUtil.getLangCode(defaultProductLocale));
-            
+
             if (UtilValidate.isEmpty(defaultLangValue)) {
                 if (UtilValidate.isNotEmpty(generalValue)) {
                     contentMap.put(SolrLocaleUtil.getLangCode(defaultProductLocale), generalValue);
@@ -728,7 +851,7 @@ public abstract class SolrProductUtil {
         }
     }
 
-    
+
     /**
      * Based on a mix of
      * {@link org.ofbiz.product.product.ProductContentWrapper#getProductContentAsText(String, GenericValue, String, Locale, String, String, String, Delegator, LocalDispatcher, Writer)}
@@ -738,10 +861,10 @@ public abstract class SolrProductUtil {
      * Unlike ProductContentWrapper, this NEVER returns a fallback language for the locales, and
      * does not consult the entity field - no map entry if there's no text in the given language.
      */
-    protected static void getProductContentForLocales(Map<String, String> contentMap, Delegator delegator, LocalDispatcher dispatcher, 
+    protected static void getProductContentForLocales(Map<String, String> contentMap, Delegator delegator, LocalDispatcher dispatcher,
             GenericValue product, String productContentTypeId, Collection<Locale> locales, Locale defaultProductLocale, boolean useCache) throws GeneralException, IOException {
         String productId = product.getString("productId");
-        
+
         List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
         if (UtilValidate.isEmpty(productContentList) && ("Y".equals(product.getString("isVariant")))) {
             GenericValue parent = ProductWorker.getParentProduct(productId, delegator, useCache);
@@ -754,19 +877,19 @@ public abstract class SolrProductUtil {
             return;
         }
         String contentId = productContent.getString("contentId");
-        
+
         GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache(useCache).queryOne();
         if (content == null) {
             return;
         }
-        
+
         //boolean deepCache = useCache; // SCIPIO: SPECIAL: only way to prevent all caching
-        
+
         String thisLocaleString = (String) content.get("localeString");
         thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
         // special case: no locale string: treat as general
         if (thisLocaleString.isEmpty()) { // 2017-11-24: this would actually have priority over entity field now:  && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.I18N_GENERAL))
-            // NOTE: 2017-11-24: due to ContentWrapper changes, this case now has priority over the entity field for 
+            // NOTE: 2017-11-24: due to ContentWrapper changes, this case now has priority over the entity field for
             // the value of I18N_GENERAL
             GenericValue targetContent = content;
             Locale locale = defaultProductLocale;
@@ -799,8 +922,8 @@ public abstract class SolrProductUtil {
             }
         }
     }
-    
-    protected static String getContentText(Delegator delegator, LocalDispatcher dispatcher, GenericValue targetContent, 
+
+    protected static String getContentText(Delegator delegator, LocalDispatcher dispatcher, GenericValue targetContent,
             GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
         Writer out = new StringWriter();
         Map<String, Object> inContext = new HashMap<>();
@@ -810,8 +933,8 @@ public abstract class SolrProductUtil {
         ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", null, useCache, deepCache, null);
         return out.toString();
     }
-    
-    protected static void getProductStandardPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+
+    protected static void getProductStandardPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         Map<String, Object> priceContext = UtilMisc.toMap("product", product);
         priceContext.put("currencyUomId", currencyUomId);
@@ -829,13 +952,13 @@ public abstract class SolrProductUtil {
             }
         }
     }
-    
-    protected static void getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+
+    protected static void getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, product.getString("productId"), null, null, null, currencyUomId, priceLocale, userLogin);
         configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
         BigDecimal listPrice = configWrapper.getTotalListPrice();
-        // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and 
+        // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and
         // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
         //if (listPrice != null) {
         if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || configWrapper.hasOriginalListPrice())) {
@@ -846,11 +969,11 @@ public abstract class SolrProductUtil {
             out.put("defaultPrice", scaleCurrency(defaultPrice).toString());
         }
     }
-    
+
     protected static BigDecimal scaleCurrency(BigDecimal amount) {
-        return amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return amount.setScale(2, RoundingMode.HALF_UP);
     }
-    
+
     protected static List<String> getSolrProdAttrSimple() {
         List<String> attrList = solrProdAttrSimple;
         if (attrList == null) {
@@ -867,29 +990,29 @@ public abstract class SolrProductUtil {
      * Generates a Solr schema product from the fields of the solrProductAttributes service interface.
      * DEV NOTE: TODO: REVIEW: the solrProductAttributes interface may be an undesirable intermediate...
      */
-    public static SolrInputDocument generateSolrProductDocument(Delegator delegator, LocalDispatcher dispatcher, 
+    public static SolrInputDocument generateSolrProductDocument(Delegator delegator, LocalDispatcher dispatcher,
             Map<String, Object> context, boolean useCache) throws GenericEntityException, IllegalArgumentException {
         SolrInputDocument doc = new SolrInputDocument();
-        
+
         String productId = (String) context.get("productId");
         if (UtilValidate.isEmpty(productId)) throw new IllegalArgumentException("generateSolrProductDocument: missing productId");
-        
+
         GenericValue productStore = null;
         Collection<String> productStoreIds = asStringCollection(context.get("productStore"));
         if (UtilValidate.isNotEmpty(productStoreIds)) {
-            productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", 
+            productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId",
                     productStoreIds.iterator().next()), useCache);
         }
         List<Locale> locales = SolrLocaleUtil.getConfiguredLocales(productStore);
         Locale defaultLocale = SolrLocaleUtil.getConfiguredDefaultLocale(productStore);
-        
+
         // add defined attributes
         for (String attrName : getSolrProdAttrSimple()) {
             if (context.get(attrName) != null) {
                 doc.addField(attrName, context.get(attrName).toString());
             }
         }
-    
+
         addStringValuesToSolrDoc(doc, "catalog", asStringCollection(context.get("catalog")));
         addStringValuesToSolrDoc(doc, "productStore", productStoreIds);
         addStringValuesToSolrDoc(doc, "cat", asStringCollection(context, "category"));
@@ -903,11 +1026,11 @@ public abstract class SolrProductUtil {
         addLocalizedContentStringMapToSolrDoc(delegator, doc, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("title")));
         addLocalizedContentStringMapToSolrDoc(delegator, doc, "description_i18n_", "description_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("description")));
         addLocalizedContentStringMapToSolrDoc(delegator, doc, "longdescription_i18n_", "longdescription_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("longDescription")));
-    
+
         // FIXME?: MANUAL population of the alpha sort field, because it's complex
-        addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.I18N_GENERAL, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, 
+        addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.I18N_GENERAL, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL,
                 UtilGenerics.<String, String>checkMap(context.get("title")), locales, defaultLocale);
-        
+
         // SCIPIO: 2018-02-05: new "manual" fields map, without abstraction
         Map<String, Object> fields = UtilGenerics.checkMap(context.get("fields"));
         if (fields != null) {
@@ -917,14 +1040,14 @@ public abstract class SolrProductUtil {
         }
         return doc;
     }
-    
+
     protected static Collection<String> asStringCollection(Object value) {
         if (value == null) return null;
         else if (value instanceof Collection) return UtilGenerics.checkCollection(value);
         else if (value instanceof String) return UtilMisc.<String>toList((String)value);
         else throw new IllegalArgumentException("generateSolrProductDocument: Expected Collection or String for parameter, instead got: " + value.getClass().getName());
     }
-    
+
     protected static Collection<String> asStringCollection(Map<String, Object> context, String paramName) {
         try {
             return asStringCollection(context.get(paramName));
@@ -932,7 +1055,7 @@ public abstract class SolrProductUtil {
             throw new IllegalArgumentException("generateSolrProductDocument: Expected Collection or String for parameter '" + paramName + "', instead got: " + context.get(paramName).getClass().getName());
         }
     }
-    
+
     protected static void addStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values) {
         if (values == null) return;
         Iterator<?> attrIter = values.iterator();
@@ -941,7 +1064,7 @@ public abstract class SolrProductUtil {
             doc.addField(solrFieldName, attr.toString());
         }
     }
-    
+
     /**
      * addConcatenatedStringValuesToSolrDoc.
      * NOTE: 2018-04-04: this now omits the field if empty string by default.
@@ -949,7 +1072,7 @@ public abstract class SolrProductUtil {
     protected static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr) {
         addConcatenatedStringValuesToSolrDoc(doc, solrFieldName, values, joinStr, true);
     }
-    
+
     protected static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr, boolean omitIfEmpty) {
         if (values == null) return;
         String joined = StringUtils.join(values, joinStr);
@@ -957,7 +1080,7 @@ public abstract class SolrProductUtil {
             doc.addField(solrFieldName, joined);
         }
     }
-    
+
     protected static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
         if (contentMap == null) return;
         for (Map.Entry<String, String> entry : contentMap.entrySet()) {
@@ -970,13 +1093,13 @@ public abstract class SolrProductUtil {
             }
         }
     }
-    
+
     /**
-     * FIXME: This is a WORKAROUND replacement following the removal of 
+     * FIXME: This is a WORKAROUND replacement following the removal of
      * {@code
      *  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
      * }
-     * in the solr schema. 
+     * in the solr schema.
      * There are 2 problems:
      * 1) this code should be done by solr, e.g. using existing or custom field processor: https://wiki.apache.org/solr/UpdateRequestProcessor
      * 2) we should not store strings for missing languages at all anymore, it causes
@@ -985,43 +1108,43 @@ public abstract class SolrProductUtil {
      *    considered an optimization to do it an indexing (at expense of correct-language),
      *    but this was done as a workaround.
      */
-    protected static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, 
-            String alphaFieldNamePrefix, String alphaDefaultFieldName, String solrFieldNamePrefix, String solrDefaultFieldName, 
+    protected static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc,
+            String alphaFieldNamePrefix, String alphaDefaultFieldName, String solrFieldNamePrefix, String solrDefaultFieldName,
             Map<String, String> contentMap, List<Locale> locales, Locale defaultProductLocale) {
         if (contentMap == null) return;
-        
+
         String generalValue = null;
         if (contentMap.containsKey(SolrLocaleUtil.I18N_GENERAL)) {
             generalValue = contentMap.get(SolrLocaleUtil.I18N_GENERAL);
             doc.addField(alphaDefaultFieldName, generalValue);
         }
-        
+
         // fill in ALL the locales
         for(Locale locale : locales) {
             String locStr = SolrLocaleUtil.getLangCode(locale);
-            
+
             String value = contentMap.get(solrFieldNamePrefix + locStr);
             if (UtilValidate.isEmpty(value)) {
                 value = generalValue;
-                // 2017-09-14: no longer needed because general and target lang are 
+                // 2017-09-14: no longer needed because general and target lang are
 //                if (UtilValidate.isEmpty(value)) {
 //                    // if there's nothing else, check entry for sys default lang; even though
 //                    // this is sure to be the wrong language, it's better than nothing for sorting...
 //                    value = contentMap.get(solrFieldNamePrefix + defaultProductLocale);
 //                }
             }
-            
+
             doc.addField(alphaFieldNamePrefix + locStr, value);
         }
     }
-    
+
     public static String makeExcludeVariantsExpr() {
         return "-isVariant:true";
     }
 
     /**
      * Adds a variant exclude filter to the list.
-     * Emulates ProductSearchSession's 
+     * Emulates ProductSearchSession's
      * <code>EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y")</code>
      */
     public static void addExcludeVariantsFilter(List<String> queryFilters) {
@@ -1030,13 +1153,13 @@ public abstract class SolrProductUtil {
 
     /**
      * Adds a variant exclude filter to the query.
-     * Emulates ProductSearchSession's 
+     * Emulates ProductSearchSession's
      * <code>EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y")</code>
      */
     public static void addExcludeVariantsFilter(SolrQuery solrQuery) {
         solrQuery.addFilterQuery(makeExcludeVariantsExpr());
     }
-    
+
     /**
      * Adds the default product filters, for solr service implementations.
      * <p>
@@ -1049,15 +1172,15 @@ public abstract class SolrProductUtil {
         GenericValue productStore = (GenericValue) context.get("productStore");
         Timestamp filterTimestamp = (Timestamp) context.get("filterTimestamp");
         if (filterTimestamp == null) filterTimestamp = UtilDateTime.nowTimestamp();
-        
+
         Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default FALSE
-        if (Boolean.TRUE.equals(useStockFilter) || 
+        if (Boolean.TRUE.equals(useStockFilter) ||
             (useStockFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showOutOfStockProducts")))) {
             queryFilters.add(makeProductInStockExpr(productStore));
         }
-        
+
         Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default FALSE
-        if (Boolean.TRUE.equals(useDiscFilter) || 
+        if (Boolean.TRUE.equals(useDiscFilter) ||
             (useDiscFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showDiscontinuedProducts")))) {
             queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr(SolrProductUtil.PRODUCTFIELD_SALESDISCDATE, filterTimestamp));
         }
@@ -1068,18 +1191,72 @@ public abstract class SolrProductUtil {
             addExcludeVariantsFilter(queryFilters);
         }
     }
-    
+
     /**
      * Makes a product in-stock filter expression, specific to the productStore if non-null,
      * or if null, for all the product's facilities combined.
      */
     public static String makeProductInStockExpr(GenericValue productStore) {
         if (productStore != null) {
-            return "storeStock_" 
-                    + SolrExprUtil.escapeFieldNamePart(productStore.getString("productStoreId")) 
+            return "storeStock_"
+                    + SolrExprUtil.escapeFieldNamePart(productStore.getString("productStoreId"))
                     + "_pi:[1 TO *]";
         } else {
             return "inStock:[1 TO *]";
         }
+    }
+    
+    public static String getSearchSortByExpr(ProductSearch.ResultSortOrder sortOrder, String priceSortField, GenericValue productStore, Delegator delegator, Locale locale) {
+        String sortBy = null;
+        if (sortOrder instanceof ProductSearch.SortProductPrice) {
+            ProductSearch.SortProductPrice so = (ProductSearch.SortProductPrice) sortOrder;
+            sortBy = SolrProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
+                locale, "Keyword search: ");
+            if (!"defaultPrice".equals(sortBy)) {
+                // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
+                // TODO?: REVIEW: query would be faster without function, but unclear if want to create
+                // a physical sortPrice or sortListPrice in the solr product schema
+                // the solr sortBy doesn't support sorting on the extra returnFields, apparently - at least not in this version
+                //kwsArgs.searchReturnFields = (kwsArgs.searchReturnFields ?: "*") + 
+                //    ",sortPrice=if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
+                //kwsArgs.sortBy = "sortPrice";
+                if ("min".equals(priceSortField)) {
+                    sortBy = "if(exists(" + sortBy + "),min(" + sortBy + "," + "defaultPrice),defaultPrice)";
+                } else if ("exists".equals(priceSortField)) {
+                    sortBy = "if(exists(" + sortBy + ")," + sortBy + ",defaultPrice)";
+                } else { // if ("exact".equals(priceSortField)) {
+                    //sortBy = sortBy; // redundant
+                }
+            }
+        //} else if (sortOrder instanceof ProductSearch.SortProductFeature) {
+            // TODO?
+            //ProductSearch.SortProductFeature so = (ProductSearch.SortProductFeature) sortOrder;
+        } else if (sortOrder instanceof ProductSearch.SortKeywordRelevancy) {
+            //ProductSearch.SortKeywordRelevancy so = (ProductSearch.SortKeywordRelevancy) sortOrder;
+            //sortBy = null;
+        } else if (sortOrder instanceof ProductSearch.SortProductField) {
+            ProductSearch.SortProductField so = (ProductSearch.SortProductField) sortOrder;
+            // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
+            Locale simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
+            sortBy = SolrProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale);
+            if (UtilValidate.isEmpty(sortBy)) {
+                sortBy = so.getFieldName();
+            }
+            if (UtilValidate.isNotEmpty(sortBy)) {
+                String newSortBy = SolrProductUtil.getProductSolrSortFieldNameFromSolr(sortBy, simpleLocale);
+                if (UtilValidate.isNotEmpty(newSortBy)) {
+                    sortBy = newSortBy;
+                }
+                newSortBy = SolrProductUtil.makeProductSolrSortFieldExpr(
+                        sortBy, 
+                        SolrLocaleUtil.getCompatibleLocaleValid(locale, productStore),
+                        SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
+                    );
+                if (UtilValidate.isNotEmpty(newSortBy)) {
+                    sortBy = newSortBy;
+                }
+            }
+        }
+        return sortBy;
     }
 }

@@ -28,7 +28,7 @@ public abstract class SolrQueryUtil {
             }
         }
     }
-    
+
     public static List<String> copyQueryFilters(List<String> queryFilters) {
         return queryFilters != null ? new ArrayList<>(queryFilters) : new ArrayList<>();
     }
@@ -53,9 +53,9 @@ public abstract class SolrQueryUtil {
         // exception message usually contains the string: "org.apache.solr.search.SyntaxError"
         // hopefully this is accurate enough... how else to check? cause is not set and
         // the root SyntaxError is from an inaccessible jar (CANNOT add it to classpath)
-        return ((t instanceof SolrException) && t.getMessage().toLowerCase().contains("syntax")); 
+        return ((t instanceof SolrException) && t.getMessage().toLowerCase().contains("syntax"));
     }
-    
+
     /**
      * Adds the default/common query filters for products, including filters for
      * Product inventory and Product.salesDiscontinuationDate, with options corresponding

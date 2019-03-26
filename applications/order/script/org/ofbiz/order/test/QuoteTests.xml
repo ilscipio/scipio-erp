@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,15 +27,15 @@ under the License.
         </assert>
 
         <!-- Confirm the database changes -->
-        <entity-one value-field="quoteWorkEffort" entity-name="QuoteWorkEffort">
+        <entity-one entity-name="QuoteWorkEffort" value-field="quoteWorkEffort">
             <field-map field-name="quoteId" from-field="serviceCtx.quoteId"/>
             <field-map field-name="workEffortId" from-field="serviceCtx.workEffortId"/>
         </entity-one>
         <assert><not><if-empty field="quoteWorkEffort"/></not></assert>
         <check-errors/>
     </simple-method>
-    
-    <simple-method method-name="testCreateQuoteWorkEffortFail" 
+
+    <simple-method method-name="testCreateQuoteWorkEffortFail"
         short-description="Test case for unsuccessfully creating a QuoteWorkEffort record by attempting to use a quoteId and workEffortId that has already been used in an existing QuoteWorkEffortRecord." login-required="false">
 
         <!-- Use to confirm nothing has changed at the end of the test -->
@@ -61,9 +48,9 @@ under the License.
         <set field="serviceCtx.quoteId" value="9000"/>
         <set field="serviceCtx.workEffortId" value="9007"/>
 
-        <!-- Execute the service, note break-on-error is false so that the test itself doesn't 
+        <!-- Execute the service, note break-on-error is false so that the test itself doesn't
              fail and we also need a separate transaction so our lookup below doesn't fail due to the rollback -->
-        <call-service service-name="createQuoteWorkEffort" in-map-name="serviceCtx" 
+        <call-service service-name="createQuoteWorkEffort" in-map-name="serviceCtx"
             break-on-error="false" require-new-transaction="true">
             <results-to-map map-name="serviceResult"/>
         </call-service>
@@ -75,7 +62,7 @@ under the License.
         <assert><if-compare field="serviceResult.responseMessage" operator="equals" value="error"/></assert>
 
         <!-- Confirm the database changes, in this case nothing should have changed -->
-        <entity-condition list="quoteWorkEfforts" entity-name="QuoteWorkEffort">
+        <entity-condition entity-name="QuoteWorkEffort" list="quoteWorkEfforts">
             <condition-list>
                 <condition-expr field-name="lastUpdatedStamp" operator="greater-equals" from-field="startTime"/>
                 <condition-expr field-name="quoteId" from-field="serviceCtx.quoteId"/>
@@ -109,7 +96,7 @@ under the License.
             </and>
         </assert>
         <!-- Confirm that a matching WorkEffort was created -->
-        <entity-and list="workEfforts" entity-name="WorkEffort">
+        <entity-and entity-name="WorkEffort" list="workEfforts">
             <field-map field-name="workEffortId" from-field="serviceResult.workEffortId"/>
             <field-map field-name="currentStatusId" from-field="serviceCtx.currentStatusId"/>
             <field-map field-name="workEffortName" from-field="serviceCtx.workEffortName"/>
@@ -118,7 +105,7 @@ under the License.
         <assert>
             <not><if-empty field="workEfforts"/></not>
         </assert>
-        <entity-one value-field="quoteWorkEffort" entity-name="QuoteWorkEffort">
+        <entity-one entity-name="QuoteWorkEffort" value-field="quoteWorkEffort">
             <field-map field-name="quoteId" from-field="serviceCtx.quoteId"/>
             <field-map field-name="workEffortId" from-field="serviceResult.workEffortId"/>
         </entity-one>
@@ -140,12 +127,12 @@ under the License.
             <results-to-map map-name="serviceResult"/>
         </call-service>
 <!--         Confirm that a matching Quoteterm was created -->
-        <entity-and list="quoteTermList" entity-name="QuoteTerm">
+        <entity-and entity-name="QuoteTerm" list="quoteTermList">
             <field-map field-name="termTypeId" from-field="serviceCtx.termTypeId"/>
             <field-map field-name="quoteId" from-field="serviceCtx.quoteId"/>
             <field-map field-name="quoteItemSeqId" from-field="serviceCtx.quoteItemSeqId"/>
         </entity-and>
-        <first-from-list entry="quoteTerm" list="quoteTermList"/>
+        <first-from-list list="quoteTermList" entry="quoteTerm"/>
         <assert>
            <not><if-empty field="quoteTerm"/></not>
            <if-compare-field operator="equals" to-field="quoteTerm.termTypeId" field="serviceCtx.termTypeId"/>
@@ -174,7 +161,7 @@ under the License.
             <results-to-map map-name="serviceResult"/>
         </call-service>
 <!--         Confirm that a matching Quoteterm was updated -->
-        <entity-one value-field="quoteTerm" entity-name="QuoteTerm">
+        <entity-one entity-name="QuoteTerm" value-field="quoteTerm">
             <field-map field-name="termTypeId" from-field="serviceCtx.termTypeId"/>
             <field-map field-name="quoteId" from-field="serviceCtx.quoteId"/>
             <field-map field-name="quoteItemSeqId" from-field="serviceCtx.quoteItemSeqId"/>
@@ -202,7 +189,7 @@ under the License.
         <call-service service-name="deleteQuoteTerm" in-map-name="serviceCtx">
             <results-to-map map-name="serviceResult"/>
         </call-service>
-        <entity-one value-field="quoteTerm" entity-name="QuoteTerm">
+        <entity-one entity-name="QuoteTerm" value-field="quoteTerm">
             <field-map field-name="termTypeId" from-field="serviceCtx.termTypeId"/>
             <field-map field-name="quoteId" from-field="serviceCtx.quoteId"/>
             <field-map field-name="quoteItemSeqId" from-field="serviceCtx.quoteItemSeqId"/>

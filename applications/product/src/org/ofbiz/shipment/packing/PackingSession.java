@@ -19,6 +19,7 @@
 package org.ofbiz.shipment.packing;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,11 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * PackingSession.
+ * <p>
+ * SCIPIO: 2018-11-28: All public methods are now synchronized.
+ */
 @SuppressWarnings("serial")
 public class PackingSession implements java.io.Serializable {
 
@@ -103,7 +109,7 @@ public class PackingSession implements java.io.Serializable {
         this(dispatcher, userLogin, null, null, null, null);
     }
 
-    public void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, BigDecimal quantity, int packageSeqId, BigDecimal weight, boolean update) throws GeneralException {
+    public synchronized void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, BigDecimal quantity, int packageSeqId, BigDecimal weight, boolean update) throws GeneralException {
         // reset the session if we just completed
         if (status == 0) {
             throw new GeneralException("Packing session has been completed; be sure to CLEAR before packing a new order! [000]");
@@ -183,6 +189,9 @@ public class PackingSession implements java.io.Serializable {
                     case 0:
                         Debug.logInfo("Packing check returned '0' - doing nothing.", module);
                         break;
+                    default:
+                        Debug.logInfo("Packing check returned '> 2' or '< 0'", module);
+                        break;
                 }
             }
 
@@ -201,15 +210,15 @@ public class PackingSession implements java.io.Serializable {
         this.runEvents(PackingEvent.EVENT_CODE_ADD);
     }
 
-    public void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, BigDecimal quantity, int packageSeqId) throws GeneralException {
+    public synchronized void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, BigDecimal quantity, int packageSeqId) throws GeneralException {
         this.addOrIncreaseLine(orderId, orderItemSeqId, shipGroupSeqId, null, quantity, packageSeqId, BigDecimal.ZERO, false);
     }
 
-    public void addOrIncreaseLine(String productId, BigDecimal quantity, int packageSeqId) throws GeneralException {
+    public synchronized void addOrIncreaseLine(String productId, BigDecimal quantity, int packageSeqId) throws GeneralException {
         this.addOrIncreaseLine(null, null, null, productId, quantity, packageSeqId, BigDecimal.ZERO, false);
     }
 
-    public PackingSessionLine findLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, int packageSeq) {
+    public synchronized PackingSessionLine findLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, int packageSeq) {
         for (PackingSessionLine line: this.getLines()) {
             if (orderId.equals(line.getOrderId()) &&
                     orderItemSeqId.equals(line.getOrderItemSeqId()) &&
@@ -237,6 +246,10 @@ public class PackingSession implements java.io.Serializable {
                 String invItemId = res.getString("inventoryItemId");
                 packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, weight, packageSeqId));
                 break;
+            default:
+                // SCIPIO: 2018-10-09: Not sure how this should be handled, log as error for now...
+                //throw new GeneralException("value of checkCode different than expected");
+                Debug.logError("createPackLineItem: value of checkCode different than expected (0-2); please report this error: " + checkCode, module);
         }
 
         // Add the line weight to the package weight
@@ -313,7 +326,7 @@ public class PackingSession implements java.io.Serializable {
         }
     }
 
-    public void addItemInfo(List<GenericValue> infos) {
+    public synchronized void addItemInfo(List<GenericValue> infos) {
         for (GenericValue v: infos) {
             ItemDisplay newItem = new ItemDisplay(v);
             int currentIdx = itemInfos.indexOf(newItem);
@@ -326,22 +339,23 @@ public class PackingSession implements java.io.Serializable {
         }
     }
 
-    public List<ItemDisplay> getItemInfos() {
+    public synchronized List<ItemDisplay> getItemInfos() {
         return itemInfos;
     }
 
     /**
      * <p>Delivers all the packing lines grouped by package.</p>
-     * <p>Output map:
+     * Output map:
      * <ul>
-     * <li>packageMap - a Map of type Map<Integer, List<PackingSessionLine>>
+     * <li>packageMap - a Map of type {@code Map<Integer, List<PackingSessionLine>>}
      * that maps package sequence ids to the lines that belong in
      * that package</li>
-     * <li>sortedKeys - a List of type List<Integer> with the sorted package
+     * <li>sortedKeys - a List of type List&lt;Integer&gt; with the sorted package
      * sequence numbers to index the packageMap</li>
+     * </ul>
      * @return result Map with packageMap and sortedKeys
      */
-    public Map<Object, Object> getPackingSessionLinesByPackage() {
+    public synchronized Map<Object, Object> getPackingSessionLinesByPackage() {
         Map<Integer, List<PackingSessionLine>> packageMap = new HashMap<Integer, List<PackingSessionLine>>();
         for (PackingSessionLine line : packLines) {
            int pSeq = line.getPackageSeq();
@@ -364,35 +378,35 @@ public class PackingSession implements java.io.Serializable {
         return result;
     }
 
-    public void clearItemInfos() {
+    public synchronized void clearItemInfos() {
         itemInfos.clear();
     }
 
-    public String getShipmentId() {
+    public synchronized String getShipmentId() {
         return this.shipmentId;
     }
 
-    public List<PackingSessionLine> getLines() {
+    public synchronized List<PackingSessionLine> getLines() {
         return this.packLines;
     }
 
-    public int nextPackageSeq() {
+    public synchronized int nextPackageSeq() {
         return ++packageSeq;
     }
 
-    public int getCurrentPackageSeq() {
+    public synchronized int getCurrentPackageSeq() {
         return packageSeq;
     }
 
-    public BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId) {
+    public synchronized BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId) {
         return getPackedQuantity(orderId, orderItemSeqId, shipGroupSeqId,  productId, null, -1);
     }
 
-    public BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, int packageSeq) {
+    public synchronized BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, int packageSeq) {
         return getPackedQuantity(orderId, orderItemSeqId, shipGroupSeqId,  productId, null, packageSeq);
     }
 
-    public BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, int packageSeq) {
+    public synchronized BigDecimal getPackedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, int packageSeq) {
         BigDecimal total = BigDecimal.ZERO;
         for (PackingSessionLine line: this.getLines()) {
             if (orderId.equals(line.getOrderId()) && orderItemSeqId.equals(line.getOrderItemSeqId()) &&
@@ -407,7 +421,7 @@ public class PackingSession implements java.io.Serializable {
         return total;
     }
 
-    public BigDecimal getPackedQuantity(String productId, int packageSeq) {
+    public synchronized BigDecimal getPackedQuantity(String productId, int packageSeq) {
         if (productId != null) {
             try {
                 productId = ProductWorker.findProductId(this.getDelegator(), productId);
@@ -429,7 +443,7 @@ public class PackingSession implements java.io.Serializable {
         return total;
     }
 
-    public BigDecimal getPackedQuantity(int packageSeq) {
+    public synchronized BigDecimal getPackedQuantity(int packageSeq) {
         BigDecimal total = BigDecimal.ZERO;
         for (PackingSessionLine line: this.getLines()) {
             if (packageSeq == -1 || packageSeq == line.getPackageSeq()) {
@@ -439,11 +453,11 @@ public class PackingSession implements java.io.Serializable {
         return total;
     }
 
-    public BigDecimal getPackedQuantity(String productId) {
+    public synchronized BigDecimal getPackedQuantity(String productId) {
         return getPackedQuantity(productId, -1);
     }
 
-    public BigDecimal getCurrentReservedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId) {
+    public synchronized BigDecimal getCurrentReservedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId) {
         BigDecimal reserved = BigDecimal.ONE.negate();
         try {
             GenericValue res = EntityUtil.getFirst(this.getDelegator().findByAnd("OrderItemAndShipGrpInvResAndItemSum", UtilMisc.toMap("orderId", orderId,
@@ -458,7 +472,7 @@ public class PackingSession implements java.io.Serializable {
         return reserved;
     }
 
-    public BigDecimal getCurrentShippedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId) {
+    public synchronized BigDecimal getCurrentShippedQuantity(String orderId, String orderItemSeqId, String shipGroupSeqId) {
         BigDecimal shipped = BigDecimal.ZERO;
         List<GenericValue> issues = this.getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
         if (issues != null) {
@@ -472,7 +486,7 @@ public class PackingSession implements java.io.Serializable {
         return shipped;
     }
 
-    public List<String> getCurrentShipmentIds(String orderId, String orderItemSeqId, String shipGroupSeqId) {
+    public synchronized List<String> getCurrentShipmentIds(String orderId, String orderItemSeqId, String shipGroupSeqId) {
         Set<String> shipmentIds = new HashSet<String>();
         List<GenericValue> issues = this.getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
 
@@ -487,86 +501,86 @@ public class PackingSession implements java.io.Serializable {
         return retList;
     }
 
-    public List<String> getCurrentShipmentIds(String orderId, String shipGroupSeqId) {
+    public synchronized List<String> getCurrentShipmentIds(String orderId, String shipGroupSeqId) {
         return this.getCurrentShipmentIds(orderId, null, shipGroupSeqId);
     }
 
-    public void registerEvent(PackingEvent event) {
+    public synchronized void registerEvent(PackingEvent event) {
         this.packEvents.add(event);
         this.runEvents(PackingEvent.EVENT_CODE_EREG);
     }
 
-    public LocalDispatcher getDispatcher() {
+    public synchronized LocalDispatcher getDispatcher() {
         if (_dispatcher == null) {
             _dispatcher = ServiceContainer.getLocalDispatcher(dispatcherName, this.getDelegator());
         }
         return _dispatcher;
     }
 
-    public Delegator getDelegator() {
+    public synchronized Delegator getDelegator() {
         if (_delegator == null) {
             _delegator = DelegatorFactory.getDelegator(delegatorName);
         }
         return _delegator;
     }
 
-    public GenericValue getUserLogin() {
+    public synchronized GenericValue getUserLogin() {
         return this.userLogin;
     }
 
-    public int getStatus() {
+    public synchronized int getStatus() {
         return this.status;
     }
 
-    public String getFacilityId() {
+    public synchronized String getFacilityId() {
         return this.facilityId;
     }
 
-    public void setFacilityId(String facilityId) {
+    public synchronized void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
 
-    public String getPrimaryOrderId() {
+    public synchronized String getPrimaryOrderId() {
         return this.primaryOrderId;
     }
 
-    public void setPrimaryOrderId(String orderId) {
+    public synchronized void setPrimaryOrderId(String orderId) {
         this.primaryOrderId = orderId;
     }
 
-    public String getPrimaryShipGroupSeqId() {
+    public synchronized String getPrimaryShipGroupSeqId() {
         return this.primaryShipGrp;
     }
 
-    public void setPrimaryShipGroupSeqId(String shipGroupSeqId) {
+    public synchronized void setPrimaryShipGroupSeqId(String shipGroupSeqId) {
         this.primaryShipGrp = shipGroupSeqId;
     }
 
-    public void setPicklistBinId(String binId) {
+    public synchronized void setPicklistBinId(String binId) {
         this.picklistBinId = binId;
     }
 
-    public String getPicklistBinId() {
+    public synchronized String getPicklistBinId() {
         return this.picklistBinId;
     }
 
-    public String getHandlingInstructions() {
+    public synchronized String getHandlingInstructions() {
         return this.instructions;
     }
 
-    public void setHandlingInstructions(String instructions) {
+    public synchronized void setHandlingInstructions(String instructions) {
         this.instructions = instructions;
     }
 
-    public void setPickerPartyId(String partyId) {
+    public synchronized void setPickerPartyId(String partyId) {
         this.pickerPartyId = partyId;
     }
 
-    public String getPickerPartyId() {
+    public synchronized String getPickerPartyId() {
         return this.pickerPartyId;
     }
 
-    public int clearLastPackage() {
+    public synchronized int clearLastPackage() {
         if (packageSeq == 1) {
             this.clear();
             return packageSeq;
@@ -582,7 +596,7 @@ public class PackingSession implements java.io.Serializable {
         return packageSeq;
     }
 
-    public void clearLine(PackingSessionLine line) {
+    public synchronized void clearLine(PackingSessionLine line) {
         this.packLines.remove(line);
         BigDecimal packageWeight = this.packageWeights.get(line.packageSeq);
         if (packageWeight != null) {
@@ -597,14 +611,14 @@ public class PackingSession implements java.io.Serializable {
         }
     }
 
-    public void clearAllLines() {
+    public synchronized void clearAllLines() {
         this.packLines.clear();
         this.packageWeights.clear();
         this.shipmentBoxTypes.clear();
         this.packageSeq = 1;
     }
 
-    public void clear() {
+    public synchronized void clear() {
         this.packLines.clear();
         this.instructions = null;
         this.pickerPartyId = null;
@@ -620,10 +634,7 @@ public class PackingSession implements java.io.Serializable {
         this.runEvents(PackingEvent.EVENT_CODE_CLEAR);
     }
 
-    public String complete(boolean force) throws GeneralException {
-        // clear out empty lines
-        // this.checkEmptyLines(); // removing, this seems to be causeing issues -  mja
-
+    public synchronized String complete(boolean force) throws GeneralException {
         // check to see if there is anything to process
         if (this.getLines().size() == 0) {
             return "EMPTY";
@@ -864,15 +875,15 @@ public class PackingSession implements java.io.Serializable {
         }
     }
 
-    public BigDecimal getAdditionalShippingCharge() {
+    public synchronized BigDecimal getAdditionalShippingCharge() {
         return additionalShippingCharge;
     }
 
-    public void setAdditionalShippingCharge(BigDecimal additionalShippingCharge) {
+    public synchronized void setAdditionalShippingCharge(BigDecimal additionalShippingCharge) {
         this.additionalShippingCharge = additionalShippingCharge;
     }
 
-    public BigDecimal getTotalWeight() {
+    public synchronized BigDecimal getTotalWeight() {
         BigDecimal total = BigDecimal.ZERO;
         for (int i = 0; i < packageSeq; i++) {
             BigDecimal packageWeight = getPackageWeight(i);
@@ -883,19 +894,19 @@ public class PackingSession implements java.io.Serializable {
         return total;
     }
 
-    public BigDecimal getShipmentCostEstimate(GenericValue orderItemShipGroup, String productStoreId, List<GenericValue> shippableItemInfo, BigDecimal shippableTotal, BigDecimal shippableWeight, BigDecimal shippableQuantity) {
+    public synchronized BigDecimal getShipmentCostEstimate(GenericValue orderItemShipGroup, String productStoreId, List<GenericValue> shippableItemInfo, BigDecimal shippableTotal, BigDecimal shippableWeight, BigDecimal shippableQuantity) {
         return getShipmentCostEstimate(orderItemShipGroup.getString("contactMechId"), orderItemShipGroup.getString("shipmentMethodTypeId"),
                                        orderItemShipGroup.getString("carrierPartyId"), orderItemShipGroup.getString("carrierRoleTypeId"),
                                        productStoreId, shippableItemInfo, shippableTotal, shippableWeight, shippableQuantity);
     }
 
-    public BigDecimal getShipmentCostEstimate(GenericValue orderItemShipGroup, String productStoreId) {
+    public synchronized BigDecimal getShipmentCostEstimate(GenericValue orderItemShipGroup, String productStoreId) {
         return getShipmentCostEstimate(orderItemShipGroup.getString("contactMechId"), orderItemShipGroup.getString("shipmentMethodTypeId"),
                                        orderItemShipGroup.getString("carrierPartyId"), orderItemShipGroup.getString("carrierRoleTypeId"),
                                        productStoreId, null, null, null, null);
     }
 
-    public BigDecimal getShipmentCostEstimate(String shippingContactMechId, String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String productStoreId, List<GenericValue> shippableItemInfo, BigDecimal shippableTotal, BigDecimal shippableWeight, BigDecimal shippableQuantity) {
+    public synchronized BigDecimal getShipmentCostEstimate(String shippingContactMechId, String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String productStoreId, List<GenericValue> shippableItemInfo, BigDecimal shippableTotal, BigDecimal shippableWeight, BigDecimal shippableQuantity) {
 
         BigDecimal shipmentCostEstimate = null;
         Map<String, Object> serviceResult = null;
@@ -932,13 +943,19 @@ public class PackingSession implements java.io.Serializable {
             serviceContext.put("shippableTotal", shippableTotal);
 
             serviceResult = getDispatcher().runSync("calcShipmentCostEstimate", serviceContext);
+
+            if (ServiceUtil.isError(serviceResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                return shipmentCostEstimate;
+            }
+
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
         }
 
-        if (!UtilValidate.isEmpty(serviceResult)) {
+        if (UtilValidate.isNotEmpty(serviceResult)) {
             shipmentCostEstimate = (BigDecimal) serviceResult.get("shippingEstimateAmount");
         }
 
@@ -946,37 +963,37 @@ public class PackingSession implements java.io.Serializable {
 
     }
 
-    public String getWeightUomId() {
+    public synchronized String getWeightUomId() {
         return weightUomId;
     }
 
-    public void setWeightUomId(String weightUomId) {
+    public synchronized void setWeightUomId(String weightUomId) {
         this.weightUomId = weightUomId;
     }
 
-    public void setShipmentBoxTypeId(String shipmentBoxTypeId) {
+    public synchronized void setShipmentBoxTypeId(String shipmentBoxTypeId) {
         this.shipmentBoxTypeId = shipmentBoxTypeId;
     }
 
-    public List<Integer> getPackageSeqIds() {
+    public synchronized List<Integer> getPackageSeqIds() {
         Set<Integer> packageSeqIds = new TreeSet<Integer>();
         if (! UtilValidate.isEmpty(this.getLines())) {
             for (PackingSessionLine line: this.getLines()) {
-                packageSeqIds.add(Integer.valueOf(line.getPackageSeq()));
+                packageSeqIds.add(line.getPackageSeq());
             }
         }
         return UtilMisc.makeListWritable(packageSeqIds);
     }
 
-    public void setPackageWeight(int packageSeqId, BigDecimal packageWeight) {
+    public synchronized void setPackageWeight(int packageSeqId, BigDecimal packageWeight) {
         if (UtilValidate.isEmpty(packageWeight)) {
-            packageWeights.remove(Integer.valueOf(packageSeqId));
+            packageWeights.remove(packageSeqId);
         } else {
-            packageWeights.put(Integer.valueOf(packageSeqId), packageWeight);
+            packageWeights.put(packageSeqId, packageWeight);
         }
     }
 
-    public BigDecimal getPackageWeight(int packageSeqId) {
+    public synchronized BigDecimal getPackageWeight(int packageSeqId) {
         if (this.packageWeights == null) return null;
         BigDecimal packageWeight = null;
         Object p = packageWeights.get(packageSeqId);
@@ -986,7 +1003,7 @@ public class PackingSession implements java.io.Serializable {
         return packageWeight;
     }
 
-    public void addToPackageWeight(int packageSeqId, BigDecimal weight) {
+    public synchronized void addToPackageWeight(int packageSeqId, BigDecimal weight) {
         if (UtilValidate.isEmpty(weight)) return;
         BigDecimal packageWeight = getPackageWeight(packageSeqId);
         BigDecimal newPackageWeight = UtilValidate.isEmpty(packageWeight) ? weight : weight.add(packageWeight);
@@ -994,15 +1011,15 @@ public class PackingSession implements java.io.Serializable {
     }
 
     // These methods (setShipmentBoxType and getShipmentBoxType) are added so that each package will have different box type.
-    public void setShipmentBoxType(int packageSeqId, String shipmentBoxType) {
+    public synchronized void setShipmentBoxType(int packageSeqId, String shipmentBoxType) {
         if (UtilValidate.isEmpty(shipmentBoxType)) {
-            shipmentBoxTypes.remove(Integer.valueOf(packageSeqId));
+            shipmentBoxTypes.remove(packageSeqId);
         } else {
-            shipmentBoxTypes.put(Integer.valueOf(packageSeqId), shipmentBoxType);
+            shipmentBoxTypes.put(packageSeqId, shipmentBoxType);
         }
     }
 
-    public String getShipmentBoxType(int packageSeqId) {
+    public synchronized String getShipmentBoxType(int packageSeqId) {
         if (this.shipmentBoxTypes == null) return null;
         String shipmentBoxType = null;
         Object p = shipmentBoxTypes.get(packageSeqId);
@@ -1020,7 +1037,7 @@ public class PackingSession implements java.io.Serializable {
 
         public ItemDisplay(GenericValue v) {
             if ("PicklistItem".equals(v.getEntityName())) {
-                quantity = v.getBigDecimal("quantity").setScale(2, BigDecimal.ROUND_HALF_UP);
+                quantity = v.getBigDecimal("quantity").setScale(2, RoundingMode.HALF_UP);
                 try {
                     orderItem = v.getRelatedOne("OrderItem", false);
                     productId = v.getRelatedOne("InventoryItem", false).getString("productId");
@@ -1031,7 +1048,7 @@ public class PackingSession implements java.io.Serializable {
                 // this is an OrderItemAndShipGrpInvResAndItemSum
                 orderItem = v;
                 productId = v.getString("inventoryProductId");
-                quantity = v.getBigDecimal("totQuantityReserved").setScale(2, BigDecimal.ROUND_HALF_UP);
+                quantity = v.getBigDecimal("totQuantityReserved").setScale(2, RoundingMode.HALF_UP);
             }
             Debug.logInfo("created item display object quantity: " + quantity + " (" + productId + ")", module);
         }

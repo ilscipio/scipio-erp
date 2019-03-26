@@ -22,8 +22,8 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,10 +43,8 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
-
-
 
 /**
  * ContentManagementEvents Class
@@ -59,12 +57,11 @@ public class ContentManagementEvents {
         HttpSession session = request.getSession();
         Security security = (Security)request.getAttribute("security");
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        ServletContext servletContext = session.getServletContext();
         String webSiteId = WebSiteWorker.getWebSiteId(request);
         Delegator delegator = (Delegator)request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        //if (Debug.infoOn()) Debug.logInfo("in updateStaticValues, paramMap:" + paramMap , module);
+        Map<String, Object> result = new HashMap<>();
         String parentPlaceholderId = (String)paramMap.get("ph");
         if (UtilValidate.isEmpty(parentPlaceholderId)) {
             request.setAttribute("_ERROR_MESSAGE_", "ParentPlaceholder is empty.");
@@ -82,33 +79,15 @@ public class ContentManagementEvents {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
-/*
-        Set keySet = paramMap.keySet();
-        Iterator itKeySet = keySet.iterator();
-        Map contentIdLookup = new HashMap<String, Object>();
-        while (itKeySet.hasNext()) {
-            String idxAndContentId = (String)itKeySet.next();
-            int pos = idxAndContentId.indexOf("_");
-            if (pos > 0) {
-                String idxStr = idxAndContentId.substring(0, pos);
-                int idx = Integer.parseInt(idxStr);
-                String contentId = idxAndContentId.substring(pos + 1);
-                contentIdLookup.put(contentId, Integer.valueOf(idx));
-            }
-        }
-*/
 
         int counter = 0;
         for (Map<String, Object> map : valueList) {
             String contentId = (String)map.get("contentId");
-            //Integer idxObj = (Integer)contentIdLookup.get(contentId);
-            //int idx = idxObj.intValue();
             for (String [] pubArr : permittedPublishPointList) {
                 String pubContentId = pubArr[0];
                 String pubValue = (String)map.get(pubContentId);
                 String paramName = Integer.toString(counter)  + "_" + pubContentId;
                 String paramValue = (String)paramMap.get(paramName);
-                //if (Debug.infoOn()) Debug.logInfo("in updateStaticValues, contentId:" + contentId + " pubContentId:" + pubContentId + " pubValue:" + pubValue + " paramName:" + paramName + " paramValue:" + paramValue, module);
                 Map<String, Object> serviceIn = new HashMap<String, Object>();
                 serviceIn.put("userLogin", userLogin);
                 serviceIn.put("contentIdTo", contentId);
@@ -117,22 +96,40 @@ public class ContentManagementEvents {
                 try {
                     if (UtilValidate.isNotEmpty(paramValue)) {
                         if (!paramValue.equals(pubValue)) {
-                            if (paramValue.equalsIgnoreCase("Y")) {
+                            if ("Y".equalsIgnoreCase(paramValue)) {
                                 serviceIn.put("fromDate", UtilDateTime.nowTimestamp());
-                                dispatcher.runSync("createContentAssoc", serviceIn);
-                            } else if (paramValue.equalsIgnoreCase("N") && pubValue.equalsIgnoreCase("Y")) {
+                                result = dispatcher.runSync("createContentAssoc", serviceIn);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
+                            } else if ("N".equalsIgnoreCase(paramValue) && "Y".equalsIgnoreCase(pubValue)) {
                                 serviceIn.put("thruDate", UtilDateTime.nowTimestamp());
                                 Timestamp fromDate = (Timestamp)map.get(pubContentId + "FromDate");
                                 serviceIn.put("fromDate", fromDate);
-                                dispatcher.runSync("updateContentAssoc", serviceIn);
+                                result = dispatcher.runSync("updateContentAssoc", serviceIn);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                             }
                         }
                     } else if (UtilValidate.isNotEmpty(pubValue)) {
-                        if (pubValue.equalsIgnoreCase("Y")) {
+                        if ("Y".equalsIgnoreCase(pubValue)) {
                                 serviceIn.put("thruDate", UtilDateTime.nowTimestamp());
                                 Timestamp fromDate = (Timestamp)map.get(pubContentId + "FromDate");
                                 serviceIn.put("fromDate", fromDate);
-                                dispatcher.runSync("updateContentAssoc", serviceIn);
+                                result = dispatcher.runSync("updateContentAssoc", serviceIn);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                         }
                     }
                 } catch (GenericServiceException e) {
@@ -155,12 +152,10 @@ public class ContentManagementEvents {
         HttpSession session = request.getSession();
         Security security = (Security)request.getAttribute("security");
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        ServletContext servletContext = session.getServletContext();
         String webSiteId = WebSiteWorker.getWebSiteId(request);
         Delegator delegator = (Delegator)request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, paramMap:" + paramMap , module);
         String targContentId = (String)paramMap.get("contentId"); // The content to be linked to one or more sites
         String roles = null;
         String authorId = null;
@@ -174,15 +169,14 @@ public class ContentManagementEvents {
 
         // Determine if user is owner of target content
         String userLoginId = userLogin.getString("userLoginId");
-        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, userLoginId:" + userLoginId + " authorId:" + authorId , module);
         List<String> roleTypeList = null;
         if (authorId != null && userLoginId != null && authorId.equals(userLoginId)) {
             roles = "OWNER";
             roleTypeList = StringUtil.split(roles, "|");
         }
         List<String> targetOperationList = UtilMisc.<String>toList("CONTENT_PUBLISH");
+        // TODO check the purpose of this list and if we want to make use of it. Else remove
         List<String> contentPurposeList = null; //UtilMisc.toList("ARTICLE");
-        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, roles:" + roles +" roleTypeList:" + roleTypeList , module);
         String permittedAction = (String)paramMap.get("permittedAction"); // The content to be linked to one or more sites
         String permittedOperations = (String)paramMap.get("permittedOperations"); // The content to be linked to one or more sites
         if (UtilValidate.isEmpty(targContentId)) {
@@ -203,40 +197,30 @@ public class ContentManagementEvents {
             request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
             return "error";
         }
-                //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, origPublishedLinkList:" + origPublishedLinkList , module);
 
         // make a map of the values that are passed in using the top subSite as the key.
         // Content can only be linked to one subsite under a top site (ends with "_MASTER")
         Map<String, String> siteIdLookup = new HashMap<String, String>();
-        for (String param : paramMap.keySet()) {
+        for (Entry<String, Object> entry : paramMap.entrySet()) {
+            String param = entry.getKey();
             int pos = param.indexOf("select_");
-                //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, param:" + param + " pos:" + pos , module);
             if (pos >= 0) {
                 String siteId = param.substring(7);
                 String subSiteVal = (String)paramMap.get(param);
                 siteIdLookup.put(siteId, subSiteVal);
             }
         }
-        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, siteIdLookup:" + siteIdLookup , module);
 
         // Loop thru all the possible subsites
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        // int counter = 0;
-        String responseMessage = null;
-        String errorMessage = null;
-        // String permissionMessage = null;
         boolean statusIdUpdated = false;
-        Map<String, Object> results = null;
+        Map<String, Object> result = new HashMap<>();
         for (Object [] arr : origPublishedLinkList) {
-            //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, arr:" + Arrays.asList(arr) , module);
             String contentId = (String)arr[0]; // main (2nd level) site id
             String origSubContentId = null;
             List<Object []> origSubList = UtilGenerics.checkList(arr[1]);
-            // Timestamp topFromDate = (Timestamp)arr[3];
             Timestamp origFromDate = null;
             for (Object [] pubArr : origSubList) {
-            // see if a link already exists by looking for non-null fromDate
-                //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, pubArr:" + Arrays.asList(pubArr) , module);
                 Timestamp fromDate = (Timestamp)pubArr[2];
                 origSubContentId = null;
                 if (fromDate != null) {
@@ -247,23 +231,20 @@ public class ContentManagementEvents {
             }
 
             String currentSubContentId = siteIdLookup.get(contentId);
-            //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, currentSubContentId:" + currentSubContentId , module);
-            //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, origSubContentId:" + origSubContentId , module);
             try {
                 if (UtilValidate.isNotEmpty(currentSubContentId)) {
                     if (!currentSubContentId.equals(origSubContentId)) {
                         // disable existing link
                         if (UtilValidate.isNotEmpty(origSubContentId) && origFromDate != null) {
                             List<GenericValue> oldActiveValues = EntityQuery.use(delegator).from("ContentAssoc")
-                                    .where("contentId", targContentId, 
-                                            "contentIdTo", origSubContentId, 
-                                            "contentAssocTypeId", "PUBLISH_LINK", 
+                                    .where("contentId", targContentId,
+                                            "contentIdTo", origSubContentId,
+                                            "contentAssocTypeId", "PUBLISH_LINK",
                                             "thruDate", null)
                                     .queryList();
                             for (GenericValue cAssoc : oldActiveValues) {
                                 cAssoc.set("thruDate", nowTimestamp);
                                 cAssoc.store();
-                                //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, deactivating:" + cAssoc , module);
                             }
                         }
                         // create new link
@@ -275,14 +256,13 @@ public class ContentManagementEvents {
                         serviceIn.put("contentIdTo", currentSubContentId);
                         serviceIn.put("roleTypeList", roleTypeList);
                         serviceIn.put("targetOperationList", targetOperationList);
+                        // TODO check if this should be removed (see above)
                         serviceIn.put("contentPurposeList", contentPurposeList);
-                        results = dispatcher.runSync("createContentAssoc", serviceIn);
-                        responseMessage = (String)results.get(ModelService.RESPONSE_MESSAGE);
-                        if (UtilValidate.isNotEmpty(responseMessage)) {
-                            errorMessage = (String)results.get(ModelService.ERROR_MESSAGE);
-                            Debug.logError("in updatePublishLinks, serviceIn:" + serviceIn , module);
-                            Debug.logError(errorMessage, module);
+                        result = dispatcher.runSync("createContentAssoc", serviceIn);
+                        if (ServiceUtil.isError(result)) {
+                            String errorMessage = ServiceUtil.getErrorMessage(result);
                             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                            Debug.logError(errorMessage, module);
                             return "error";
                         }
 
@@ -294,10 +274,15 @@ public class ContentManagementEvents {
                         serviceIn.put("contentIdTo", contentId);
                         serviceIn.put("roleTypeList", roleTypeList);
                         serviceIn.put("targetOperationList", targetOperationList);
+                        // TODO check if this should be removed (see above)
                         serviceIn.put("contentPurposeList", contentPurposeList);
-                        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, serviceIn(3b):" + serviceIn , module);
-                        results = dispatcher.runSync("createContentAssoc", serviceIn);
-                        //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, results(3b):" + results , module);
+                        result = dispatcher.runSync("createContentAssoc", serviceIn);
+                        if (ServiceUtil.isError(result)) {
+                            String errorMessage = ServiceUtil.getErrorMessage(result);
+                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                            Debug.logError(errorMessage, module);
+                            return "error";
+                        }
                         if (!statusIdUpdated) {
                             try {
                                 GenericValue targContent = EntityQuery.use(delegator).from("Content").where("contentId", targContentId).queryOne();
@@ -314,9 +299,9 @@ public class ContentManagementEvents {
                 } else if (UtilValidate.isNotEmpty(origSubContentId)) {
                     // if no current link is passed in, look to see if there is an existing link(s) that must be disabled
                     List<GenericValue> oldActiveValues = EntityQuery.use(delegator).from("ContentAssoc")
-                            .where("contentId", targContentId, 
-                                    "contentIdTo", origSubContentId, 
-                                    "contentAssocTypeId", "PUBLISH_LINK", 
+                            .where("contentId", targContentId,
+                                    "contentIdTo", origSubContentId,
+                                    "contentAssocTypeId", "PUBLISH_LINK",
                                     "thruDate", null)
                             .queryList();
                     for (GenericValue cAssoc : oldActiveValues) {

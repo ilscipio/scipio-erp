@@ -114,7 +114,9 @@ if (context.setupWizardActionsRun != true) {
     context.productStoreId = productStoreId;
     parameters.productStoreId = productStoreId;
     context.productStore = productStore;
-    
+
+    context.defaultWebSiteId = setupStepStates?.store?.stepData?.defaultWebSite?.webSiteId; // may be null
+
     context.setupStepSkippable = setupStepSkippable;
     context.nextSetupStep = nextSetupStep;
     context.nextAvailSetupStep = nextAvailSetupStep;

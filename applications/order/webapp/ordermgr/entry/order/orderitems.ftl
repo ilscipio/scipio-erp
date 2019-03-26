@@ -1,21 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <@section title=uiLabelMap.OrderOrderItems>
         <@menu type="button"> <#-- class="boxlink" -->
@@ -25,7 +14,7 @@ under the License.
           </#if>
         </@menu>
         
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr>
             <#assign prodColWidth = "65%">
@@ -42,22 +31,63 @@ under the License.
             </#if>
           </@tr>
           </@thead>
-          <#list orderItems! as orderItem>
+
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo orderItem>
+            <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
+            <#if orderItemProdCfgMap??>
+              <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+            <#else>
+              <#local cfgWrp = false><#-- TODO -->
+            </#if>
+            <#if !cfgWrp?is_boolean>
+              <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+              <#if selectedOptions?has_content>
+                <ul class="order-item-attrib-list">
+                  <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                  </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#if orderItemAttrMap??>
+              <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+            <#else>
+              <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+            </#if>
+            <#if orderItemAttributes?has_content>
+                <ul class="order-item-attrib-list">
+                  <#list orderItemAttributes as orderItemAttribute>
+                    <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
+                  </#list>
+                </ul>
+            </#if>
+        </#macro>
+
+          <#list (orderItems!) as orderItem>
             <#assign itemType = orderItem.getRelatedOne("OrderItemType", false)!>
             <@tr>
               <#if orderItem.productId?? && orderItem.productId == "_?_">
                 <@td colspan=(maySelectItems!false)?string("6", "5") valign="top">
                   <b><div> &gt;&gt; ${orderItem.itemDescription}</div></b>
+                    <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+                    <@orderItemAttrInfo orderItem=orderItem/>
+                    <#-- SCIPIO: show application survey response QA list for this item -->
+                    <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
                 </@td>
               <#else>
                 <@td valign="top">
                     <#if orderItem.productId??>
-                      <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                      <a href="<@pageUrl>product?product_id=${orderItem.productId}</@pageUrl>">${orderItem.productId} - ${orderItem.itemDescription}</a>
                     <#else>
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
-                  </@td>
-                <@td class="${styles.text_right!}" valign="top">${orderItem.quantity?string.number}</@td>
+                    <@orderItemAttrInfo orderItem=orderItem/>
+                    <#-- SCIPIO: show application survey response QA list for this item -->
+                    <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
+                </@td>
+                <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
+                <@td class="${styles.text_right!}" valign="top">${effTotalQuantity?string.number}</@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity?string.number -->
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></@td>
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></@td>
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></@td>

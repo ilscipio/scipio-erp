@@ -31,7 +31,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -44,13 +43,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
+import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -61,22 +70,47 @@ import com.ibm.icu.util.Calendar;
 /**
  * HttpUtil - Misc HTTP Utility Functions
  */
-public class UtilHttp {
+public final class UtilHttp {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final String MULTI_ROW_DELIMITER = "_o_";
+    public static final String MULTI_ROW_DELIMITER = "_o_"; // SCIPIO: 2018-08: keeping public for backward-compat
     public static final String ROW_SUBMIT_PREFIX = "_rowSubmit_o_";
     public static final String COMPOSITE_DELIMITER = "_c_";
     public static final int MULTI_ROW_DELIMITER_LENGTH = MULTI_ROW_DELIMITER.length();
     public static final int ROW_SUBMIT_PREFIX_LENGTH = ROW_SUBMIT_PREFIX.length();
     public static final int COMPOSITE_DELIMITER_LENGTH = COMPOSITE_DELIMITER.length();
 
-    public static final String SESSION_KEY_TIMEZONE = "timeZone";
+    /**
+     * SCIPIO: The name of a session attribute that contains an object to synchronize on for
+     * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpSession)}.
+     */
+    public static final String SESSION_SYNCOBJ = "scpSessSyncObj";
+    @Deprecated
+    public static final String SESSION_SYNC_OBJECT = SESSION_SYNCOBJ;
+
+    /**
+     * SCIPIO: The name of a servlet context attribute that contains an object to synchronize on for
+     * whole-session synchronization. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     */
+    public static final String SERVLETCONTEXT_SYNCOBJ = "scpApplSyncObj";
+    @Deprecated
+    public static final String SERVLETCONTEXT_SYNC_OBJECT = SERVLETCONTEXT_SYNCOBJ;
+
+    /**
+     * SCIPIO: The name of a servlet context attribute that contains names of session attributes which
+     * should not be persisted. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     */
+    public static final String SESSION_NOPERSIST_ATTRLIST = "scpSessAttrNoPersist";
+
+    private static final String SESSION_KEY_TIMEZONE = "timeZone";
+
+    private static final UtilHttp INSTANCE = new UtilHttp(); // SCIPIO: This is for FreeMarkerWorker (only!)
+
+    private UtilHttp () {}
 
     /**
      * Create a combined map from servlet context, session, attributes and parameters
-     * @return The resulting Map
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request) {
         return getCombinedMap(request, null);
@@ -84,19 +118,142 @@ public class UtilHttp {
 
     /**
      * Create a combined map from servlet context, session, attributes and parameters
-     * -- this method will only use the skip names for session and servlet context attributes
-     * @return The resulting Map
+     * -- this method will only use the skip names for session and servlet context attributes.
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> combinedMap = new HashMap<String, Object>();
+        Map<String, Object> combinedMap = new HashMap<>();
         combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
         combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
         combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
         combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
-
         return combinedMap;
     }
 
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute or parameter:
+     * request attributes -> session attributes -> servlet context attributes -> request parameters.
+     * Uses same combining rules as {@link #getCombinedMap(HttpServletRequest)}.
+     */
+    public static Object getCombinedAttrParam(HttpServletRequest request, String name) {
+        Object value = getAllAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getRequestParam(request, name);
+    }
+    
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with
+     * request attributes having priority, followed by request parameters, and finally session attributes.
+     */
+    public static Map<String, Object> getRequestSessionAttrParamMap(HttpServletRequest request) {
+        return getRequestSessionAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with
+     * request attributes having priority, followed by request parameters, and finally session attributes
+     * -- this method will only use the skip names for session and servlet context attributes.
+     */
+    public static Map<String, Object> getRequestSessionAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
+        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute:
+     * request attributes -> session attributes -> servlet context attributes.
+     * Uses same combining rules as {@link #getRequestSessionAttrParamMap(HttpServletRequest)}.
+     */
+    public static Object getRequestSessionAttrParam(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        value = getRequestParam(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getSessionAttr(request, name);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request, session and servlet context attributes, in that order of priority.
+     * Does NOT contain request parameters.
+     */
+    public static Map<String, Object> getAllAttributeMap(HttpServletRequest request) {
+        return getRequestSessionAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request, session and servlet context attributes, in that order of priority.
+     * -- this method will only use the skip names for session and servlet context attributes.
+     *  Does NOT contain request parameters.
+     */
+    public static Map<String, Object> getAllAttributeMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
+        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute:
+     * request attributes -> session attributes -> servlet context attributes.
+     * Uses same combining rules as {@link #getRequestSessionAttrParamMap(HttpServletRequest)}.
+     * Does NOT check request parameters.
+     */
+    public static Object getAllAttr(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        value = getSessionAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getServletContextAttr(request, name);
+    }
+    
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters only, with attributes having priority.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getRequestAttrParamMap(HttpServletRequest request) {
+        return getRequestAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters, with attributes having priority.
+     * -- this method will only use the skip names for session and servlet context attributes.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getRequestAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute or parameter:
+     * request attributes -> request parameters.
+     * Uses same combining rules as {@link #getRequestAttrParamMap(HttpServletRequest)}.
+     */
+    public static Object getRequestAttrParam(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getRequestParam(request, name);
+    }
+    
     /**
      * Create a map from a HttpServletRequest (parameters) object
      * @return The resulting Map
@@ -115,8 +272,8 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip.booleanValue();
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
+        Map<String, Object> paramMap = new HashMap<>();
 
         // add all the actual HTTP request parameters
         Enumeration<String> e = UtilGenerics.cast(request.getParameterNames());
@@ -129,7 +286,7 @@ public class UtilHttp {
             Object value = null;
             String[] paramArr = request.getParameterValues(name);
             if (paramArr != null) {
-                if (paramArr.length > 1) {
+                if (paramArr.length != 1) { // SCIPIO: For correctness, switched this: (paramArr.length > 1)
                     value = Arrays.asList(paramArr);
                 } else {
                     value = paramArr[0];
@@ -151,27 +308,43 @@ public class UtilHttp {
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("Made Request Parameter Map with [" + paramMap.size() + "] Entries", module);
-          //Debug.logVerbose("Request Parameter Map Entries: " + System.getProperty("line.separator") + UtilMisc.printMap(paramMap), module); see OFBIZ-9310
         }
 
         return canonicalizeParameterMap(paramMap);
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getParameterMap(HttpServletRequest)}.
+     */
+    public static Object getRequestParam(HttpServletRequest request, String name) {
+        Object value = getPathInfoOnlyParam(request, name);
+        if (value == null) {
+            String[] paramArr = request.getParameterValues(name);
+            if (paramArr != null) {
+                if (paramArr.length != 1) { // SCIPIO: For correctness, switched this: (paramArr.length > 1)
+                    value = Arrays.asList(paramArr);
+                } else {
+                    value = paramArr[0];
+                    // does the same thing basically, nothing better about it as far as I can see: value = request.getParameter(name);
+                }
+            }
+        }
+        return canonicalizeParameter(value);
+    }
+    
     public static Map<String, Object> getQueryStringOnlyParameterMap(String queryString) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         if (UtilValidate.isNotEmpty(queryString)) {
             StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
             while (queryTokens.hasMoreTokens()) {
                 String token = queryTokens.nextToken();
                 if (token.startsWith("amp;")) {
                     // this is most likely a split value that had an &amp; in it, so don't consider this a name; note that some old code just stripped the "amp;" and went with it
-                    //token = token.substring(4);
                     continue;
                 }
                 int equalsIndex = token.indexOf("=");
-                String name = token;
                 if (equalsIndex > 0) {
-                    name = token.substring(0, equalsIndex);
+                    String name = token.substring(0, equalsIndex);
                     paramMap.put(name, token.substring(equalsIndex + 1));
                 }
             }
@@ -179,20 +352,30 @@ public class UtilHttp {
         return canonicalizeParameterMap(paramMap);
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getQueryStringOnlyParameterMap(String)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getQueryStringOnlyParam(String queryString, String name) {
+        return getQueryStringOnlyParameterMap(queryString).get(name); // TODO: Optimize
+    }
+
     public static Map<String, Object> getPathInfoOnlyParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
         return getPathInfoOnlyParameterMap(request.getPathInfo(), nameSet, onlyIncludeOrSkip);
     }
 
     public static Map<String, Object> getPathInfoOnlyParameterMap(String pathInfoStr, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip.booleanValue();
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
+        Map<String, Object> paramMap = new HashMap<>();
 
         // now add in all path info parameters /~name1=value1/~name2=value2/
         // note that if a parameter with a given name already exists it will be put into a list with all values
 
         if (UtilValidate.isNotEmpty(pathInfoStr)) {
             // make sure string ends with a trailing '/' so we get all values
-            if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
+            if (!pathInfoStr.endsWith("/")) {
+                pathInfoStr += "/";
+            }
 
             int current = pathInfoStr.indexOf('/');
             int last = current;
@@ -214,7 +397,7 @@ public class UtilHttp {
                             paramList.add(value);
                         } else {
                             String paramString = (String) curValue;
-                            paramList = new LinkedList<String>();
+                            paramList = new LinkedList<>();
                             paramList.add(paramString);
                             paramList.add(value);
                         }
@@ -229,6 +412,14 @@ public class UtilHttp {
         return canonicalizeParameterMap(paramMap);
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getPathInfoOnlyParameterMap(String)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getPathInfoOnlyParam(HttpServletRequest request, String name) {
+        return getPathInfoOnlyParameterMap(request.getPathInfo(), null, null).get(name); // TODO: Optimize
+    }
+
     public static Map<String, Object> getUrlOnlyParameterMap(HttpServletRequest request) {
         // NOTE: these have already been through canonicalizeParameterMap, so not doing it again here
         Map<String, Object> paramMap = getQueryStringOnlyParameterMap(request.getQueryString());
@@ -236,12 +427,20 @@ public class UtilHttp {
         return paramMap;
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getUrlOnlyParameterMap(HttpServletRequest)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getUrlOnlyParam(HttpServletRequest request, String name) {
+        return getUrlOnlyParameterMap(request).get(name); // TODO: Optimize
+    }
+
     public static Map<String, Object> canonicalizeParameterMap(Map<String, Object> paramMap) {
         for (Map.Entry<String, Object> paramEntry: paramMap.entrySet()) {
             if (paramEntry.getValue() instanceof String) {
                 paramEntry.setValue(canonicalizeParameter((String) paramEntry.getValue()));
             } else if (paramEntry.getValue() instanceof Collection<?>) {
-                List<String> newList = new LinkedList<String>();
+                List<String> newList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
                 for (String listEntry: UtilGenerics.<String>checkCollection(paramEntry.getValue())) {
                     newList.add(canonicalizeParameter(listEntry));
                 }
@@ -251,11 +450,26 @@ public class UtilHttp {
         return paramMap;
     }
 
+    public static Object canonicalizeParameter(Object paramValue) { // SCIPIO
+        if (paramValue instanceof String) {
+            paramValue = canonicalizeParameter((String) paramValue);
+        } else if (paramValue instanceof Collection<?>) {
+            List<String> newList = new ArrayList<>();
+            for (String listEntry: UtilGenerics.<String>checkCollection(paramValue)) {
+                newList.add(canonicalizeParameter((String) listEntry));
+            }
+            paramValue = newList;
+        }
+        return paramValue;
+    }
+
     public static String canonicalizeParameter(String paramValue) {
         try {
             /** calling canonicalize with strict flag set to false so we only get warnings about double encoding, etc; can be set to true for exceptions and more security */
             String cannedStr = UtilCodec.canonicalize(paramValue, false);
-            if (Debug.verboseOn()) Debug.logVerbose("Canonicalized parameter with " + (cannedStr.equals(paramValue) ? "no " : "") + "change: original [" + paramValue + "] canned [" + cannedStr + "]", module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Canonicalized parameter with " + (cannedStr.equals(paramValue) ? "no " : "") + "change: original [" + paramValue + "] canned [" + cannedStr + "]", module);
+            }
             return cannedStr;
         } catch (Exception e) {
             Debug.logError(e, "Error in canonicalize parameter value [" + paramValue + "]: " + e.toString(), module);
@@ -271,13 +485,13 @@ public class UtilHttp {
         // SCIPIO: delegating
         return transformJSONAttributeMap(getAttributeMap(request));
     }
-    
+
     /**
      * SCIPIO: factored out from getJSONAttributeMap.
      * Added 2017-05-01.
      */
     public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
-        Map<String, Object> returnMap = new HashMap<String, Object>();
+        Map<String, Object> returnMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : attrMap.entrySet()) {
             String key = entry.getKey();
             Object val = entry.getValue();
@@ -285,7 +499,9 @@ public class UtilHttp {
                 val = val.toString();
             }
             if (val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
-                if (Debug.verboseOn()) Debug.logVerbose("Adding attribute to JSON output: " + key, module);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Adding attribute to JSON output: " + key, module);
+                }
                 returnMap.put(key, val);
             }
         }
@@ -306,14 +522,15 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getAttributeMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> attributeMap = new HashMap<String, Object>();
+        Map<String, Object> attributeMap = new HashMap<>();
 
         // look at all request attributes
         Enumeration<String> requestAttrNames = UtilGenerics.cast(request.getAttributeNames());
         while (requestAttrNames.hasMoreElements()) {
             String attrName = requestAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = request.getAttribute(attrName);
             attributeMap.put(attrName, attrValue);
@@ -325,6 +542,13 @@ public class UtilHttp {
         }
 
         return attributeMap;
+    }
+
+    /**
+     * SCIPIO: Returns the named request attribute.
+     */
+    public static Object getRequestAttr(HttpServletRequest request, String name) {
+        return request.getAttribute(name);
     }
 
     /**
@@ -340,15 +564,16 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getSessionMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> sessionMap = new HashMap<String, Object>();
+        Map<String, Object> sessionMap = new HashMap<>();
         HttpSession session = request.getSession();
 
         // look at all the session attributes
         Enumeration<String> sessionAttrNames = UtilGenerics.cast(session.getAttributeNames());
         while (sessionAttrNames.hasMoreElements()) {
             String attrName = sessionAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = session.getAttribute(attrName);
             sessionMap.put(attrName, attrValue);
@@ -360,6 +585,14 @@ public class UtilHttp {
         }
 
         return sessionMap;
+    }
+
+    /**
+     * SCIPIO: Returns the named session attribute, IF a session exists. Does not force session creation.
+     */
+    public static <T> T getSessionAttr(HttpServletRequest request, String name) {
+        HttpSession session = request.getSession(false); // Do not create.
+        return (session != null) ? UtilGenerics.cast(session.getAttribute(name)) : null;
     }
 
     /**
@@ -375,15 +608,16 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getServletContextMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> servletCtxMap = new HashMap<String, Object>();
+        Map<String, Object> servletCtxMap = new HashMap<>();
 
         // look at all servlet context attributes
-        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         Enumeration<String> applicationAttrNames = UtilGenerics.cast(servletContext.getAttributeNames());
         while (applicationAttrNames.hasMoreElements()) {
             String attrName = applicationAttrNames.nextElement();
-            if (namesToSkip != null && namesToSkip.contains(attrName))
+            if (namesToSkip != null && namesToSkip.contains(attrName)) {
                 continue;
+            }
 
             Object attrValue = servletContext.getAttribute(attrName);
             servletCtxMap.put(attrName, attrValue);
@@ -397,6 +631,13 @@ public class UtilHttp {
         return servletCtxMap;
     }
 
+    /**
+     * SCIPIO: Returns the named servlet context attribute.
+     */
+    public static <T> T getServletContextAttr(HttpServletRequest request, String name) {
+        return UtilGenerics.cast(request.getServletContext().getAttribute(name));
+    }
+
     public static Map<String, Object> makeParamMapWithPrefix(HttpServletRequest request, String prefix, String suffix) {
         return makeParamMapWithPrefix(request, null, prefix, suffix);
     }
@@ -406,7 +647,7 @@ public class UtilHttp {
     }
 
     public static Map<String, Object> makeParamMapWithPrefix(Map<String, ? extends Object> context, Map<String, ? extends Object> additionalFields, String prefix, String suffix) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String, ? extends Object> entry: context.entrySet()) {
             String parameterName = entry.getKey();
             if (parameterName.startsWith(prefix)) {
@@ -501,7 +742,7 @@ public class UtilHttp {
     }
 
     public static List<Object> makeParamListWithSuffix(HttpServletRequest request, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
-        List<Object> paramList = new ArrayList<Object>();
+        List<Object> paramList = new ArrayList<>();
         Enumeration<String> parameterNames = UtilGenerics.cast(request.getParameterNames());
         while (parameterNames.hasMoreElements()) {
             String parameterName = parameterNames.nextElement();
@@ -544,7 +785,9 @@ public class UtilHttp {
         if (request.getContextPath().length() > 1) {
             appName = request.getContextPath().substring(1);
         }
-        return appName;
+        // SCIPIO: Prevent slashes in "application name", only bad things can come of them (see also LoginWorker)
+        //return appName
+        return appName.replaceAll("/", "_");
     }
 
     public static void setInitialRequestInfo(HttpServletRequest request) {
@@ -585,8 +828,9 @@ public class UtilHttp {
         StringBuilder requestUrl = new StringBuilder();
         requestUrl.append(request.getScheme());
         requestUrl.append("://" + request.getServerName());
-        if (request.getServerPort() != 80 && request.getServerPort() != 443)
+        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
             requestUrl.append(":" + request.getServerPort());
+        }
         return requestUrl;
     }
 
@@ -608,7 +852,7 @@ public class UtilHttp {
         Object localeObject = session != null ? session.getAttribute("locale") : null;
 
         // next see if the userLogin has a value
-        if (localeObject == null) {
+        if (localeObject == null && session != null) { // SCIPIO: 2018-07-30: added null session check
             Map<?, ?> userLogin = (Map<?, ?>) session.getAttribute("userLogin");
             if (userLogin == null) {
                 userLogin = (Map<?,?>) session.getAttribute("autoUserLogin");
@@ -620,7 +864,7 @@ public class UtilHttp {
         }
 
         // no user locale? before global default try appDefaultLocale if specified
-        if (localeObject == null && !UtilValidate.isEmpty(appDefaultLocale)) {
+        if (localeObject == null && UtilValidate.isNotEmpty(appDefaultLocale)) {
             localeObject = appDefaultLocale;
         }
 
@@ -638,7 +882,9 @@ public class UtilHttp {
      * @return Locale The current Locale to use
      */
     public static Locale getLocale(HttpServletRequest request) {
-        if (request == null) return Locale.getDefault();
+        if (request == null) {
+            return Locale.getDefault();
+        }
         return getLocale(request, request.getSession(), null);
     }
 
@@ -649,8 +895,22 @@ public class UtilHttp {
      * @return Locale The current Locale to use
      */
     public static Locale getLocale(HttpSession session) {
-        if (session == null) return Locale.getDefault();
+        if (session == null) {
+            return Locale.getDefault();
+        }
         return getLocale(null, session, null);
+    }
+
+    /**
+     * SCIPIO: Get the Locale object from a session variable; if not found use the browser's default;
+     * if the session does not exist, does NOT create it (unlike {@link #getLocale(HttpServletRequest)}).
+     * Added 2018-07-30.
+     * @param request HttpServletRequest object to use for lookup
+     * @return Locale The current Locale to use
+     */
+    public static Locale getLocaleExistingSession(HttpServletRequest request) {
+        if (request == null) return Locale.getDefault();
+        return getLocale(request, request.getSession(false), null);
     }
 
     public static void setLocale(HttpServletRequest request, String localeString) {
@@ -701,7 +961,7 @@ public class UtilHttp {
     public static TimeZone getTimeZone(HttpServletRequest request, HttpSession session, String appDefaultTimeZoneString) {
         // check session first, should override all if anything set there
         TimeZone timeZone = session != null ? (TimeZone) session.getAttribute(SESSION_KEY_TIMEZONE) : null;
-        
+
         // next see if the userLogin has a value
         if (timeZone == null) {
             Map<String, Object> userLogin = UtilGenerics.checkMap(session.getAttribute("userLogin"), String.class, Object.class);
@@ -728,6 +988,49 @@ public class UtilHttp {
     }
 
     /**
+     * SCIPIO: Returns the current user login from "userLogin" request attribute or, if not set,
+     * the "userLogin" session attribute; <strong>may</strong> also update the request attribute
+     * from the session attribute (not guaranteed).
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpServletRequest)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getUserLogin(HttpServletRequest request) {
+        T userLogin = (T) request.getAttribute("userLogin");
+        /* TODO: REVIEW: This will likely be enabled in the future!
+        if (userLogin == null) {
+            userLogin = getUserLogin(request.getSession(false));
+            if (userLogin != null) {
+                request.setAttribute("userLogin", userLogin);
+            }
+        }
+        return userLogin;
+        */
+        return (userLogin != null) ? userLogin : getUserLogin(request.getSession(false));
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getUserLogin(HttpSession session) {
+        return (session != null) ? (T) session.getAttribute("userLogin") : null;
+    }
+
+    /**
      * Get the currency string from the session.
      * @param session HttpSession object to use for lookup
      * @return String The ISO currency code
@@ -749,7 +1052,7 @@ public class UtilHttp {
         }
 
         // no user currency? before global default try appDefaultCurrencyUom if specified
-        if (iso == null && !UtilValidate.isEmpty(appDefaultCurrencyUom)) {
+        if (iso == null && UtilValidate.isNotEmpty(appDefaultCurrencyUom)) {
             iso = appDefaultCurrencyUom;
         }
 
@@ -837,18 +1140,8 @@ public class UtilHttp {
                             }
                         }
                         buf.append(UtilCodec.getEncoder("url").encode(name));
-                        /* the old way: try {
-                            buf.append(URLEncoder.encode(name, "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);
-                        } */
                         buf.append('=');
                         buf.append(UtilCodec.getEncoder("url").encode(valueStr));
-                        /* the old way: try {
-                            buf.append(URLEncoder.encode(valueStr, "UTF-8"));
-                        } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);
-                        } */
                     }
                 }
             }
@@ -857,7 +1150,9 @@ public class UtilHttp {
     }
 
     public static String getRequestUriFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return null;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
         int endOfRequestUri = target.length();
         if (target.indexOf('?') > 0) {
             endOfRequestUri = target.indexOf('?');
@@ -878,7 +1173,9 @@ public class UtilHttp {
      * @return The query string
      */
     public static String getQueryStringFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return "";
+        if (UtilValidate.isEmpty(target)) {
+            return "";
+        }
         int queryStart = target.indexOf('?');
         if (queryStart != -1) {
             return target.substring(queryStart);
@@ -892,7 +1189,9 @@ public class UtilHttp {
      * @return The request target string
      */
     public static String removeQueryStringFromTarget(String target) {
-        if (UtilValidate.isEmpty(target)) return null;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
         int queryStart = target.indexOf('?');
         if (queryStart < 0) {
             return target;
@@ -902,8 +1201,12 @@ public class UtilHttp {
 
     public static String getWebappMountPointFromTarget(String target) {
         int firstChar = 0;
-        if (UtilValidate.isEmpty(target)) return null;
-        if (target.charAt(0) == '/') firstChar = 1;
+        if (UtilValidate.isEmpty(target)) {
+            return null;
+        }
+        if (target.charAt(0) == '/') {
+            firstChar = 1;
+        }
         int pathSep = target.indexOf('/', 1);
         String webappMountPoint = null;
         if (pathSep > 0) {
@@ -949,8 +1252,7 @@ public class UtilHttp {
         long nowMillis = System.currentTimeMillis();
         response.setDateHeader("Expires", nowMillis);
         response.setDateHeader("Last-Modified", nowMillis); // always modified
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate"); // HTTP/1.1
-        response.addHeader("Cache-Control", "post-check=0, pre-check=0, false");
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private"); // HTTP/1.1
         response.setHeader("Pragma", "no-cache"); // HTTP/1.0
     }
 
@@ -983,24 +1285,15 @@ public class UtilHttp {
         }
 
         // create the streams
-        OutputStream out = response.getOutputStream();
-        InputStream in = new ByteArrayInputStream(bytes);
 
         // stream the content
-        try {
+        try (OutputStream out = response.getOutputStream();
+                InputStream in = new ByteArrayInputStream(bytes)) {
             streamContent(out, in, bytes.length);
+            out.flush();
         } catch (IOException e) {
-            in.close();
-            out.close(); // should we close the ServletOutputStream on error??
             throw e;
         }
-
-        // close the input stream
-        in.close();
-
-        // close the servlet output stream
-        out.flush();
-        out.close();
     }
 
     public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String contentType) throws IOException {
@@ -1032,17 +1325,12 @@ public class UtilHttp {
         }
 
         // stream the content
-        OutputStream out = response.getOutputStream();
-        try {
+        try (OutputStream out = response.getOutputStream()) {
             streamContent(out, in, length);
+            out.flush();
         } catch (IOException e) {
-            out.close();
             throw e;
         }
-
-        // close the servlet output stream
-        out.flush();
-        out.close();
     }
 
     public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String contentType) throws IOException {
@@ -1059,8 +1347,6 @@ public class UtilHttp {
      * @throws IOException
      */
     public static void streamContent(OutputStream out, InputStream in, int length) throws IOException {
-        int bufferSize = 512; // same as the default buffer size; change as needed
-
         // make sure we have something to write to
         if (out == null) {
             throw new IOException("Attempt to write to null output stream");
@@ -1077,28 +1363,19 @@ public class UtilHttp {
         }
 
         // initialize the buffered streams
-        BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
-        BufferedInputStream bis = new BufferedInputStream(in, bufferSize);
-
-        byte[] buffer = new byte[length];
+        // SCIPIO: 2018-08-30: not available from base at current time (FIXME?)
+        //int bufferSize = EntityUtilProperties.getPropertyAsInteger("content", "stream.buffersize", 8192);
+        int bufferSize = UtilProperties.getPropertyAsInteger("content", "stream.buffersize", 8192);
+        byte[] buffer = new byte[bufferSize];
         int read = 0;
-        try {
+        try (BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
+                BufferedInputStream bis = new BufferedInputStream(in, bufferSize)) {
             while ((read = bis.read(buffer, 0, buffer.length)) != -1) {
                 bos.write(buffer, 0, read);
             }
         } catch (IOException e) {
             Debug.logError(e, "Problem reading/writing buffers", module);
-            bis.close();
-            bos.close();
             throw e;
-        } finally {
-            if (bis != null) {
-                bis.close();
-            }
-            if (bos != null) {
-                bos.flush();
-                bos.close();
-            }
         }
     }
 
@@ -1107,7 +1384,7 @@ public class UtilHttp {
     }
 
     public static String stripViewParamsFromQueryString(String queryString, String paginatorNumber) {
-        Set<String> paramNames = new HashSet<String>();
+        Set<String> paramNames = new HashSet<>();
         if (UtilValidate.isNotEmpty(paginatorNumber)) {
             paginatorNumber = "_" + paginatorNumber;
         }
@@ -1153,19 +1430,28 @@ public class UtilHttp {
      * index of the row.
      */
     public static Collection<Map<String, Object>> parseMultiFormData(Map<String, Object> parameters) {
-        Map<Integer, Map<String, Object>> rows = new HashMap<Integer, Map<String, Object>>(); // stores the rows keyed by row number
+        Map<Integer, Map<String, Object>> rows = new HashMap<>(); // stores the rows keyed by row number
 
         // first loop through all the keys and create a hashmap for each ${ROW_SUBMIT_PREFIX}${N} = Y
-        for (String key: parameters.keySet()) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            String key = entry.getKey();
             // skip everything that is not ${ROW_SUBMIT_PREFIX}N
-            if (key == null || key.length() <= ROW_SUBMIT_PREFIX_LENGTH) continue;
-            if (key.indexOf(MULTI_ROW_DELIMITER) <= 0) continue;
-            if (!key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
-            if (!parameters.get(key).equals("Y")) continue;
+            if (key == null || key.length() <= ROW_SUBMIT_PREFIX_LENGTH) {
+                continue;
+            }
+            if (key.indexOf(MULTI_ROW_DELIMITER) <= 0) {
+                continue;
+            }
+            if (!key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) {
+                continue;
+            }
+            if (!"Y".equals(entry.getValue())) {
+                continue;
+            }
 
             // decode the value of N and create a new map for it
             Integer n = Integer.decode(key.substring(ROW_SUBMIT_PREFIX_LENGTH, key.length()));
-            Map<String, Object> m = new HashMap<String, Object>();
+            Map<String, Object> m = new HashMap<>();
             m.put("row", n); // special "row" = N tuple
             rows.put(n, m); // key it to N
         }
@@ -1174,15 +1460,23 @@ public class UtilHttp {
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             String key = entry.getKey();
             // skip keys without DELIMITER and skip ROW_SUBMIT_PREFIX
-            if (key == null) continue;
+            if (key == null) {
+                continue;
+            }
             int index = key.indexOf(MULTI_ROW_DELIMITER);
-            if (index <= 0) continue;
-            if (key.length() > ROW_SUBMIT_PREFIX_LENGTH && key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) continue;
+            if (index <= 0) {
+                continue;
+            }
+            if (key.length() > ROW_SUBMIT_PREFIX_LENGTH && key.substring(0, ROW_SUBMIT_PREFIX_LENGTH).equals(ROW_SUBMIT_PREFIX)) {
+                continue;
+            }
 
             // get the map with index N
             Integer n = Integer.decode(key.substring(index + MULTI_ROW_DELIMITER_LENGTH, key.length())); // N from ${param}${DELIMITER}${N}
             Map<String, Object> map = rows.get(n);
-            if (map == null) continue;
+            if (map == null) {
+                continue;
+            }
 
             // get the key without the <DELIMITER>N suffix and store it and its value
             String newKey = key.substring(0, index);
@@ -1197,7 +1491,7 @@ public class UtilHttp {
      * multi form parameters (usually named according to the ${param}_o_N notation).
      */
     public static <V> Map<String, V> removeMultiFormParameters(Map<String, V> parameters) {
-        Map<String, V> filteredParameters = new HashMap<String, V>();
+        Map<String, V> filteredParameters = new HashMap<>();
         for (Map.Entry<String, V> entry : parameters.entrySet()) {
             String key = entry.getKey();
             if (key != null && (key.indexOf(MULTI_ROW_DELIMITER) != -1 || key.indexOf("_useRowSubmit") != -1 || key.indexOf("_rowCount") != -1)) {
@@ -1211,7 +1505,7 @@ public class UtilHttp {
 
     /**
      * Utility to make a composite parameter from the given prefix and suffix.
-     * The prefix should be a regular paramter name such as meetingDate. The
+     * The prefix should be a regular parameter name such as meetingDate. The
      * suffix is the composite field, such as the hour of the meeting. The
      * result would be meetingDate_${COMPOSITE_DELIMITER}_hour.
      *
@@ -1228,9 +1522,13 @@ public class UtilHttp {
      * the composite according to compositeType. For example, consider the following
      * form widget field,
      *
-     *   <field name="meetingDate">
+     * <pre>
+     * {@code
+     * <field name="meetingDate">
      *     <date-time type="timestamp" input-method="time-dropdown">
-     *   </field>
+     * </field>
+     * }
+     * </pre>
      *
      * The result in HTML is three input boxes to input the date, hour and minutes separately.
      * The parameter names are named meetingDate_c_date, meetingDate_c_hour, meetingDate_c_minutes.
@@ -1244,13 +1542,17 @@ public class UtilHttp {
      */
     public static Object makeParamValueFromComposite(HttpServletRequest request, String prefix, Locale locale) {
         String compositeType = request.getParameter(makeCompositeParam(prefix, "compositeType"));
-        if (UtilValidate.isEmpty(compositeType)) return null;
+        if (UtilValidate.isEmpty(compositeType)) {
+            return null;
+        }
 
         // collect the composite fields into a map
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         for (Enumeration<String> names = UtilGenerics.cast(request.getParameterNames()); names.hasMoreElements();) {
             String name = names.nextElement();
-            if (!name.startsWith(prefix + COMPOSITE_DELIMITER)) continue;
+            if (!name.startsWith(prefix + COMPOSITE_DELIMITER)) {
+                continue;
+            }
 
             // extract the suffix of the composite name
             String suffix = name.substring(name.indexOf(COMPOSITE_DELIMITER) + COMPOSITE_DELIMITER_LENGTH);
@@ -1269,9 +1571,15 @@ public class UtilHttp {
             String hour = data.get("hour");
             String minutes = data.get("minutes");
             String ampm = data.get("ampm");
-            if (date == null || date.length() < 10) return null;
-            if (UtilValidate.isEmpty(hour)) return null;
-            if (UtilValidate.isEmpty(minutes)) return null;
+            if (date == null || date.length() < 10) {
+                return null;
+            }
+            if (UtilValidate.isEmpty(hour)) {
+                return null;
+            }
+            if (UtilValidate.isEmpty(minutes)) {
+                return null;
+            }
             boolean isTwelveHour = UtilValidate.isNotEmpty(ampm);
 
             // create the timestamp from the data
@@ -1282,8 +1590,12 @@ public class UtilHttp {
                 cal.setTime(timestamp);
                 if (isTwelveHour) {
                     boolean isAM = ("AM".equals(ampm) ? true : false);
-                    if (isAM && h == 12) h = 0;
-                    if (!isAM && h < 12) h += 12;
+                    if (isAM && h == 12) {
+                        h = 0;
+                    }
+                    if (!isAM && h < 12) {
+                        h += 12;
+                    }
                 }
                 cal.set(Calendar.HOUR_OF_DAY, h);
                 cal.set(Calendar.MINUTE, Integer.parseInt(minutes));
@@ -1298,31 +1610,28 @@ public class UtilHttp {
         return null;
     }
 
-    /** 
-     * Obtains the session ID from the request, or "unknown" if no session present. 
+    /**
+     * Obtains the session ID from the request, or "[none]" if no session present.
      * <p>
-     * SCIPIO: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
-     * (2016-05-26), this method will in fact cause new session creation, and may be unsafe to fix directly.
-     * To avoid completely, call {@link #getSessionIdIfSet} instead, which guarantees
-     * no session creation.
+     * SCIPIO: 2018-12-11: This no longer forces session creation and now returns "[none]" instead of "unknown",
+     * which was inaccurate. Note that this was primarily used for log display, and previously this was miscoded
+     * such that it could never actually return "unknown"; therefore, if any code was checking the string "unknown",
+     * it never did anything anyway.
      */
     public static String getSessionId(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (session == null ? "unknown" : session.getId());
+        HttpSession session = request.getSession(false); // SCIPIO: use false!
+        return (session == null ? "[none]" : session.getId());
     }
-    
-    /** 
-     * SCIPIO: Obtains the session ID from the request, or "unknown" if no session present. 
-     * <p>
-     * <strong>NOTE</strong>: Currently (2016-05-26) This version unlike {@link #getSessionId} ACTUALLY does
-     * what the description says, and will never implicitly create a new session if none 
-     * existed. If the above is ever fixed, this one should remain the same.
+
+    /**
+     * SCIPIO: Obtains the session ID from the request, or "[none]" if no session present.
+     * @deprecated 2018-12-11: This is now handled by {@link #getSessionId(HttpServletRequest)}.
      */
+    @Deprecated
     public static String getSessionIdIfSet(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        return (session == null ? "unknown" : session.getId());
+        return getSessionId(request);
     }
-    
+
     /**
      * checks, if the current request comes from a searchbot
      *
@@ -1336,27 +1645,25 @@ public class UtilHttp {
         if (UtilValidate.isNotEmpty(spiderRequest)) {
             if ("Y".equals(spiderRequest)) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
-            List<String> spiderList = StringUtil.split(UtilProperties.getPropertyValue("url", "link.remove_lsessionid.user_agent_list"), ",");
+            return false;
+        }
+        String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
+        List<String> spiderList = StringUtil.split(UtilProperties.getPropertyValue("url", "link.remove_lsessionid.user_agent_list"), ",");
 
-            if (UtilValidate.isNotEmpty(spiderList)) {
-                for (String spiderNameElement : spiderList) {
-                    Pattern pattern = null;
-                    try {
-                        pattern = PatternFactory.createOrGetPerl5CompiledPattern(spiderNameElement, false);
-                    } catch (MalformedPatternException e) {
-                        Debug.logError(e, module);
-                    }
-                    PatternMatcher matcher = new Perl5Matcher();
-                    if (matcher.contains(initialUserAgent, pattern)) {
-                        request.setAttribute("_REQUEST_FROM_SPIDER_", "Y");
-                        result = true;
-                        break;
-                    }
+        if (UtilValidate.isNotEmpty(spiderList)) {
+            for (String spiderNameElement : spiderList) {
+                Pattern pattern = null;
+                try {
+                    pattern = PatternFactory.createOrGetPerl5CompiledPattern(spiderNameElement, false);
+                } catch (MalformedPatternException e) {
+                    Debug.logError(e, module);
+                }
+                PatternMatcher matcher = new Perl5Matcher();
+                if (matcher.contains(initialUserAgent, pattern)) {
+                    request.setAttribute("_REQUEST_FROM_SPIDER_", "Y");
+                    result = true;
+                    break;
                 }
             }
         }
@@ -1376,7 +1683,7 @@ public class UtilHttp {
         HttpSession session = request.getSession();
         Boolean javaScriptEnabled = (Boolean) session.getAttribute("javaScriptEnabled");
         if (javaScriptEnabled != null) {
-            return javaScriptEnabled.booleanValue();
+            return javaScriptEnabled;
         }
         // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless detected as off
         //return false;
@@ -1424,31 +1731,74 @@ public class UtilHttp {
         HttpSession session = request.getSession();
         Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
         if (paramMapStore == null) {
-            paramMapStore = new HashMap<String, Map<String, Object>>();
-            session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
-        }
-        Map<String, Object> parameters = getParameterMap(request);
-        String paramMapId = RandomStringUtils.randomAlphanumeric(10);
-        paramMapStore.put(paramMapId, parameters);
-        return paramMapId;
-    }
-
-    public static void restoreStashedParameterMap(HttpServletRequest request, String paramMapId) {
-        HttpSession session = request.getSession();
-        Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
-        if (paramMapStore != null) {
-            Map<String, Object> paramMap = paramMapStore.get(paramMapId);
-            if (paramMap != null) {
-                paramMapStore.remove(paramMapId);
-                for (Map.Entry<String, Object> paramEntry : paramMap.entrySet()) {
-                    if (request.getAttribute(paramEntry.getKey()) != null) {
-                        Debug.logWarning("Skipped loading parameter [" + paramEntry.getKey() + "] because it would have overwritten a request attribute" , module);
-                        continue;
-                    }
-                    request.setAttribute(paramEntry.getKey(), paramEntry.getValue());
+            // SCIPIO: Synchronize the creation of this map to prevent lost entries, and
+            // make sure it's thread-safe
+            //paramMapStore = new HashMap<>();
+            //session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
+            synchronized (getSessionSyncObject(request)) {
+                paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
+                if (paramMapStore == null) {
+                    paramMapStore = new ConcurrentHashMap<>();
+                    session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
                 }
             }
         }
+        Map<String, Object> parameters = getParameterMap(request);
+        // SCIPIO: Just in case of conflict, loop this
+        //String paramMapId = RandomStringUtils.randomAlphanumeric(10);
+        //paramMapStore.put(paramMapId, parameters);
+        while(true) {
+            String paramMapId = RandomStringUtils.randomAlphanumeric(10);
+            if (paramMapStore.putIfAbsent(paramMapId, parameters) == null) {
+                return paramMapId;
+            }
+        }
+    }
+
+    public static Map<String, Object> getStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
+        if (paramMapStore != null) {
+            return paramMapStore.get(paramMapId);
+        }
+        return null;
+    }
+    
+    public static Map<String, Object> removeStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
+        if (paramMapStore != null) {
+            return paramMapStore.remove(paramMapId);
+        }
+        return null;
+    }
+
+    public static void restoreStashedParameterMap(HttpServletRequest request, Map<String, ?> paramMap) { // SCIPIO: New method
+        // SCIPIO: Refactored from the original restoreStashedParameterMap
+        if (paramMap != null) {
+            //paramMapStore.remove(paramMapId);
+            for (Map.Entry<String, ?> paramEntry : paramMap.entrySet()) {
+                if (request.getAttribute(paramEntry.getKey()) != null) {
+                    Debug.logWarning("Skipped loading parameter [" + paramEntry.getKey() + "] because it would have overwritten a request attribute" , module);
+                    continue;
+                }
+                request.setAttribute(paramEntry.getKey(), paramEntry.getValue());
+            }
+        }
+    }
+
+    public static void restoreStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: NOTE: Original stock method, refactored + delegated
+        restoreStashedParameterMap(request, removeStashedParameterMap(request, paramMapId));
+    }
+
+    public static void restoreStashedParameterMapNoRemove(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        restoreStashedParameterMap(request, getStashedParameterMap(request, paramMapId));
     }
 
     /**
@@ -1459,16 +1809,50 @@ public class UtilHttp {
     public static String getNextUniqueId(HttpServletRequest request) {
         Integer uniqueIdNumber= (Integer)request.getAttribute("UNIQUE_ID");
         if (uniqueIdNumber == null) {
-            uniqueIdNumber = Integer.valueOf(1);
+            uniqueIdNumber = 1;
         }
 
-        request.setAttribute("UNIQUE_ID", Integer.valueOf(uniqueIdNumber.intValue() + 1));
+        request.setAttribute("UNIQUE_ID", uniqueIdNumber + 1);
         return "autoId_" + uniqueIdNumber;
     }
-    
+
     public static void setContentDisposition(final HttpServletResponse response, final String filename) {
         String dispositionType = UtilProperties.getPropertyValue("requestHandler", "content-disposition-type", "attachment");
         response.setHeader("Content-Disposition", String.format("%s; filename=\"%s\"", dispositionType, filename));
+    }
+
+    public static CloseableHttpClient getAllowAllHttpClient() {
+        return getAllowAllHttpClient("component://base/config/ofbizssl.jks", "changeit");
+    }
+
+    public static CloseableHttpClient getAllowAllHttpClient(String jksStoreFileName, String jksStorePassword) {
+        try {
+            // Trust own CA and all self-signed certs
+            SSLContext sslContext = SSLContexts.custom()
+                    .loadTrustMaterial(FileUtil.getFile(jksStoreFileName), jksStorePassword.toCharArray(),
+                            new TrustSelfSignedStrategy())
+                    .build();
+            // No host name verifier
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    sslContext,
+                    NoopHostnameVerifier.INSTANCE);
+            CloseableHttpClient httpClient = HttpClients.custom()
+                    .setSSLSocketFactory(sslsf)
+                    .build();
+            return httpClient;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            return HttpClients.createDefault();
+        }
+    }
+
+    public static String getMultiRowDelimiter() {
+        return MULTI_ROW_DELIMITER;
+    }
+
+    public static String getRowSubmitPrefix() {
+        return ROW_SUBMIT_PREFIX;
     }
 
     /**
@@ -1482,7 +1866,7 @@ public class UtilHttp {
     public static boolean isFullUrl(String uri) {
         return (uri.startsWith("http://") || uri.startsWith("https://") || uri.startsWith("//"));
     }
-    
+
     /**
      * SCIPIO: Checks if the given uri is a full URL, permissively, attempting to allow
      * some types of language encodings.
@@ -1506,12 +1890,12 @@ public class UtilHttp {
         }
         return false;
     }
-    
+
     /**
      * SCIPIO: builds a list of prefixes used for checking full URL presence in permissive fashion.
      * <p>
      * WARN/FIXME?: Imprecise, bad, potential security risk, does not handle CSS
-     * 
+     *
      * @see #isFullUrlPerm
      */
     private static List<String> makeFullUrlPermPrefixes() {
@@ -1519,29 +1903,216 @@ public class UtilHttp {
         prefixes.add("http://");
         prefixes.add("https://");
         prefixes.add("//");
-        
+
         for(String encoderName : new String[] { "html" }) {
             UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder(encoderName);
             prefixes.add(encoder.encode("http://"));
             prefixes.add(encoder.encode("https://"));
             prefixes.add(encoder.encode("//"));
         }
-        
+
         // SPECIAL CASE: the encoders don't deal with javascript properly, where the frontslashes
         // may be escaped by backslashes. even worse, in Freemarker, only the first slash is escaped...
         prefixes.add("\\/\\/");
         prefixes.add("\\//");
-        
+
         // FIXME: Doesn't handle CSS!
-        
+
         ArrayList<String> prefixList = new ArrayList<>(prefixes);
         prefixList.trimToSize();
         return prefixList;
     }
-    
+
     /**
      * SCIPIO: pre-built list of static full URL permissive prefixes
      */
     private static final List<String> fullUrlPermPrefixes = makeFullUrlPermPrefixes();
 
+    /**
+     * SCIPIO: Returns all the [paramNameSuffix] suffixes from parameters named "[paramNamePrefix][paramNameSuffix]" for which
+     * the parameter value is in the specified values.
+     */
+    public static List<String> getParameterNamesWithValue(HttpServletRequest request, Collection<String> values, String paramNamePrefix) {
+        List<String> result = new ArrayList<>();
+        Enumeration<String> e = UtilGenerics.cast(request.getParameterNames());
+        if (paramNamePrefix == null) {
+            paramNamePrefix = "";
+        }
+        while (e.hasMoreElements()) {
+            String name = e.nextElement();
+            if (name.startsWith(paramNamePrefix) && values.contains(request.getParameter(name))) {
+                result.add(name.substring(paramNamePrefix.length()));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * SCIPIO: Returns all the [paramNameSuffix] suffixes from parameters named "[paramNamePrefix][paramNameSuffix]" for which
+     * the parameter value is in the specified values.
+     */
+    public static List<String> getParameterNamesWithValue(HttpServletRequest request, String value, String paramNamePrefix) {
+        return getParameterNamesWithValue(request, UtilMisc.toSet(value), paramNamePrefix);
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full session synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the session. It is not supported
+     * by the servlet API to synchronize on the HttpSession object itself, and it also prevents
+     * session facades from being used in projects.
+     * <p>
+     * The sync object is normally set on session creation by {@link SessionSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getSessionSyncObject(HttpSession session) {
+        Object syncObj = session.getAttribute(SESSION_SYNCOBJ);
+        if (syncObj != null) {
+            return syncObj;
+        }
+        // The sync object should always be there, but if for some reason it got removed, add one...
+        // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpSession here, but it is likely to do nothing.
+        synchronized(session) {
+            syncObj = session.getAttribute(SESSION_SYNCOBJ);
+            if (syncObj != null) {
+                return null;
+            }
+            syncObj = createSessionSyncObject();
+            session.setAttribute(SESSION_SYNCOBJ, syncObj);
+            Debug.logWarning("Session synchronization object (" + SESSION_SYNCOBJ
+                    + ") not found in session attributes; creating", module); // log after to minimize exposure
+        }
+        return syncObj;
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full session synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the session. It is not supported
+     * by the servlet API to synchronize on the HttpSession object itself, and it also prevents
+     * session facades from being used in projects.
+     * <p>
+     * The sync object is normally set on session creation by {@link SessionSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getSessionSyncObject(HttpServletRequest request) {
+        return getSessionSyncObject(request.getSession());
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createSessionSyncObject() { // SCIPIO
+        return new java.io.Serializable(){};
+    }
+
+    /**
+     * SCIPIO: Special listener to initialize the session sync object.
+     * Automatically added to all webapps by CatalinaContainer.
+     * Added 2018-12-03.
+     */
+    public static class SessionSyncEventListener implements javax.servlet.http.HttpSessionListener {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        private static final SessionSyncEventListener INSTANCE = new SessionSyncEventListener();
+        public static javax.servlet.http.HttpSessionListener getInstance() { return INSTANCE; }
+        @Override
+        public void sessionCreated(HttpSessionEvent se) {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Initialized session sync object", module);
+            }
+            se.getSession().setAttribute(SESSION_SYNCOBJ, createSessionSyncObject());
+        }
+        @Override
+        public void sessionDestroyed(HttpSessionEvent se) {
+        }
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full servlet context synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the servlet context. It is not supported
+     * by the servlet API to synchronize on the HttpServletContext object itself, and it also prevents
+     * servlet context facades from being used in projects.
+     * <p>
+     * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getServletContextSyncObject(ServletContext context) {
+        Object syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+        if (syncObj != null) {
+            return syncObj;
+        }
+        // The sync object should always be there, but if for some reason it got removed, add one...
+        // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpServletContext here, but it is likely to do nothing.
+        synchronized(context) {
+            syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+            if (syncObj != null) {
+                return null;
+            }
+            syncObj = createServletContextSyncObject();
+            context.setAttribute(SERVLETCONTEXT_SYNC_OBJECT, syncObj);
+            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNC_OBJECT
+                    + ") not found in servlet context attributes; creating", module); // log after to minimize exposure
+        }
+        return syncObj;
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full servlet context synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the servlet context. It is not supported
+     * by the servlet API to synchronize on the HttpServletContext object itself, and it also prevents
+     * servlet context facades from being used in projects.
+     * <p>
+     * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getServletContextSyncObject(HttpServletRequest request) {
+        return getServletContextSyncObject(request.getServletContext());
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createServletContextSyncObject() { // SCIPIO
+        return new java.io.Serializable(){};
+    }
+
+    /**
+     * SCIPIO: Special listener to initialize the servlet context sync object.
+     * Automatically added to all webapps by CatalinaContainer.
+     * Added 2018-12-03.
+     */
+    public static class ServletContextSyncEventListener implements javax.servlet.ServletContextListener {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        private static final ServletContextSyncEventListener INSTANCE = new ServletContextSyncEventListener();
+        public static javax.servlet.ServletContextListener getInstance() { return INSTANCE; }
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+            if (Debug.infoOn()) { // Log this one as info, because important to know Tomcat in fact picked up this listener
+                Debug.logInfo("Initialized servlet context sync object", module);
+            }
+            sce.getServletContext().setAttribute(SERVLETCONTEXT_SYNC_OBJECT, createServletContextSyncObject());
+        }
+        @Override
+        public void contextDestroyed(ServletContextEvent sce) {
+        }
+    }
+
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilHttp getStaticInstance() {
+        return INSTANCE;
+    }
 }

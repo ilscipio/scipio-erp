@@ -1,25 +1,15 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#if orderHeader?has_content>
 <@section title=uiLabelMap.OrderOrderItems>
-            <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-complex" role="grid">
               <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="30%">${uiLabelMap.ProductProduct}</@th>
@@ -30,6 +20,47 @@ under the License.
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
                 </@tr>
                 </@thead>
+
+                <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+                <#macro orderItemAttrInfo orderItem>
+                    <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
+                    <#if orderItemProdCfgMap??>
+                      <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+                    <#else>
+                      <#local cfgWrp = false><#-- TODO -->
+                    </#if>
+                    <#if !cfgWrp?is_boolean>
+                      <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+                      <#if selectedOptions?has_content>
+                        <ul class="order-item-attrib-list">
+                          <#list selectedOptions as option>
+                            <li>${option.getDescription()}</li>
+                          </#list>
+                        </ul>
+                      </#if>
+                    </#if>
+                    <#if orderItemAttrMap??>
+                      <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+                    <#else>
+                      <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+                    </#if>
+                    <#if orderItemAttributes?has_content>
+                        <ul class="order-item-attrib-list">
+                          <#list orderItemAttributes as orderItemAttribute>
+                            <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
+                          </#list>
+                        </ul>
+                    </#if>
+                </#macro>
+
+                <#macro orderItemGiftCardActInfo gcInfoList>
+                    <ul class="order-item-attrib-list order-item-gift-card-info">
+                      <#list gcInfoList as gcInfo>
+                        <li>${uiLabelMap.AccountingCardNumber} : ${acctlib.getGiftCardDisplayNumber(gcInfo.cardNumber!)}</li>
+                      </#list>
+                    </ul>
+                </#macro>
+
                 <#if !orderItemList?has_content>
                     <@tr type="meta">
                         <@td colspan="6">
@@ -43,47 +74,49 @@ under the License.
                         <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
                         <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
                         <#if orderHeader.orderTypeId == "SALES_ORDER"><#assign pickedQty = orderReadHelper.getItemPickedQuantityBd(orderItem)></#if>
-                        <@tr class="${rowColor!}">
+                        <@tr class=rowColor!"">
                             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
                             <#assign productId = orderItem.productId!>
                             <#-- SCIPIO: This product lookup added by us, missing from upstream patch -->
                             <#assign product = orderItem.getRelatedOne("Product", false)!>
-                            <#if productId?? && productId == "shoppingcart.CommentLine">
+                            <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
+                                <@orderItemAttrInfo orderItem=orderItem/>
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
-                                        <#elseif productId??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
-                                            <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.supplierProductId, false)!"">
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
+                                        <#elseif productId?has_content>
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, productId, false)!"">
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
+                                            <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
-                                        <#elseif orderItemType??>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
+                                        <#elseif orderItemType?has_content>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${orderItem.itemDescription!}</a>
+                                            ${orderItem.itemDescription!}
                                         </#if>
                                         
-                                        <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
-                                        <#if orderItemAttributes?has_content>
-                                            <ul>
-                                            <#list orderItemAttributes as orderItemAttribute>
-                                                <li>
-                                                    ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
-                                                </li>
-                                            </#list>
-                                            </ul>
+                                        <@orderItemAttrInfo orderItem=orderItem/>
+                                        <#-- SCIPIO: Show purchased account brief/masked info -->
+                                        <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem, "", product)!>
+                                        <#if gcInfoList?has_content>
+                                          <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
                                         </#if>
+                                        <#-- SCIPIO: show application survey response QA list for this item -->
+                                        <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
+
                                         <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
-                                           <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
+                                           <@modal id="${raw(orderId)}_${raw(orderItem.orderItemSeqId)}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
-                                                    <li><a href="<@ofbizInterWebappUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"<#rt/>
+                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${raw(externalKeyParam)}</@serverUrl>"<#rt/>
                                                         <#lt/> target="_blank" class="${styles.link_run_sys_inline!} ${styles.action_export!}">${downloadContent.contentName!downloadContent.contentId!}</a>
                                               </#list>
                                               </ol>
@@ -91,27 +124,27 @@ under the License.
                                         </#if>
                                 </@td>
                             </#if>
-                            <#if productId?? && productId == "shoppingcart.CommentLine">
+                            <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td colspan="6"> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <#-- now show status details per line item -->
-                                <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
-                                <@td class="${styles.text_right!}">
+                                <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)!>
+                                <@td class=(styles.text_right!)>
                                     <#assign productItemStatus>
-                                                <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>                                       
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@pageUrl>changeOrderItemStatus</@pageUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
                                                     </form>
                                                     <br/>
-                                                <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                                <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                                                     <#assign paymentMethod = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethod", false)!>
                                                     <#if !paymentMethod?has_content>
                                                         <#assign paymentMethodType = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethodType", false)>            
                                                         <a href="javascript:document.OrderCancelOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderCancelSelectedItems}</a>
-                                                        <form name="OrderCancelOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                        <form name="OrderCancelOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@pageUrl>changeOrderItemStatus</@pageUrl>">
                                                             <input type="hidden" name="statusId" value="ITEM_CANCELLED"/>
                                                             <input type="hidden" name="orderId" value="${orderId!}"/>
                                                             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
@@ -132,13 +165,13 @@ under the License.
                                                 <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                                 <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                     <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                    ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>">${returnItem.returnId}</a>
+                                                    ${uiLabelMap.CommonNbr}<a href="<@pageUrl>returnMain?returnId=${returnItem.returnId}</@pageUrl>">${returnItem.returnId}</a>
                                                 </#if>
                                             </#list>
                                         </#if>
                                     </#assign>
                                     <#if productItemStatus?has_content>
-                                        <@modal id="${productId}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
+                                        <@modal id="${raw(productId)}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
                                     <#else>
                                         ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
@@ -163,7 +196,7 @@ under the License.
                                                             </#if>
                                                         </#list>
                                                     </#if>
-                                                    <#if product.productTypeId == "SERVICE" && currentItemStatus.statusId == "ITEM_COMPLETED">
+                                                    <#if (product.productTypeId!) == "SERVICE" && currentItemStatus.statusId == "ITEM_COMPLETED">
                                                         <#assign shippedQuantity = orderItem.quantity?default(0)/>
                                                         <#assign totalReceived = orderItem.quantity?default(0)>
                                                     </#if>
@@ -172,6 +205,7 @@ under the License.
                                                     <#else>
                                                         <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
                                                     </#if>
+                                                    <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
                                                     <#-- to compute shortfall amount, sum up the orderItemShipGrpInvRes.quantityNotAvailable -->
                                                     <#assign shortfalledQuantity = 0/>
                                                     <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
@@ -179,8 +213,8 @@ under the License.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label=(orderItem.quantity!0)?string.number>    
-                                            <@table type="data-complex"> <#-- orig: class="" -->
+                                        <@modal id="${raw(productId)}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->   
+                                            <@table type="data-complex">
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
                                                     <@td>${orderItem.quantity?default(0)?string.number}</@td>
@@ -256,7 +290,7 @@ under the License.
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
                                             <@modal id="${productId}_i" label=uiLabelMap.ProductInventory>
-                                                    <@table type="fields"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
+                                                    <@table type="fields">
                                                         <@tr>
                                                             <@td>${uiLabelMap.OrderRequiredForSO}</@td>
                                                             <@td style="padding-left: 15px; text-align: left;">${requiredQuantity}</@td>
@@ -302,26 +336,26 @@ under the License.
                                                             <@td style="padding-left: 15px; text-align: left;">${unplannedQuantity}</@td>
                                                         </@tr>
                                                     </@table>
-                                                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" 
+                                                    <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${raw(externalKeyParam)}</@serverUrl>" 
                                                         class="${styles.link_run_sys!} ${styles.action_view!}" target="_blank">${uiLabelMap.ProductInventory}</a>
                                             </@modal>
                                         </#if>
                                     </#if>
                                 </@td>
-                                <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
+                                <@td class=(styles.text_right!) valign="top" nowrap="nowrap">
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
                                     / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </@td>
-                                <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
+                                <@td class=(styles.text_right!) valign="top" nowrap="nowrap">
                                     <#assign modalLabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
                                     <@modal id="${productId}_adj" label=modalLabel>
-                                        <@table type="data-complex" class="+grid"> <#-- orig: class="grid" -->
+                                        <@table type="data-complex" class="+grid">
                                             <@thead>
                                                 <@tr>
                                                 <@th width="70%" colspan="2">${uiLabelMap.OrderAdjustments}</@th>
                                                 <@th></@th>
                                                 <@th></@th>
-                                                <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
+                                                <@th width="10%" class=(styles.text_right!)>${uiLabelMap.OrderSubTotal}</@th>
                                                 <@th></@th>
                                                 <@th></@th>
                                                 </@tr>
@@ -337,7 +371,7 @@ under the License.
                                     <@td colspan="6">
                                         <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
                                             ${uiLabelMap.ManufacturingProductionRun}
-                                            <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
+                                            <a href="<@serverUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
                                             ${uiLabelMap.OrderCurrentStatus}
                                             ${(delegator.findOne("StatusItem", {"statusId":workEffort.getString("currentStatusId")}, true).get("description",locale))!}
                                         <#else>
@@ -365,7 +399,7 @@ under the License.
                                     <@td>&nbsp;</@td>
                                     <@td colspan="6">
                                         ${uiLabelMap.OrderLinkedToOrderItem}&nbsp;(${description!})
-                                        <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${linkedOrderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;${linkedOrderItemValueStatus.description!}
+                                        <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${linkedOrderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;${linkedOrderItemValueStatus.description!}
                                     </@td>
                                 </@tr>
                             </#list>
@@ -381,7 +415,7 @@ under the License.
                                     <@td>&nbsp;</@td>
                                     <@td colspan="6">
                                         ${uiLabelMap.OrderLinkedFromOrderItem}&nbsp;(${description!})
-                                        <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${linkedOrderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;${linkedOrderItemValueStatus.description!}
+                                        <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${linkedOrderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;${linkedOrderItemValueStatus.description!}
                                     </@td>
                                 </@tr>
                             </#list>
@@ -394,7 +428,7 @@ under the License.
                                     <@td>&nbsp;</@td>
                                     <@td colspan="6">
                                         ${uiLabelMap.OrderLinkedToRequirement}&nbsp;
-                                        <a href="<@ofbizUrl>EditRequirement?requirementId=${linkedRequirement.requirementId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${linkedRequirement.requirementId}</a>&nbsp;
+                                        <a href="<@pageUrl>EditRequirement?requirementId=${linkedRequirement.requirementId}</@pageUrl>" class="${styles.link_nav_info_id!}">${linkedRequirement.requirementId}</a>&nbsp;
                                     </@td>
                                 </@tr>
                             </#list>
@@ -406,7 +440,7 @@ under the License.
                                 <@td>&nbsp;</@td>
                                 <@td colspan="6">
                                     ${uiLabelMap.OrderLinkedToQuote}&nbsp;
-                                    <a href="<@ofbizUrl>EditQuoteItem?quoteId=${linkedQuote.quoteId}&amp;quoteItemSeqId=${linkedQuote.quoteItemSeqId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${linkedQuote.quoteId}-${linkedQuote.quoteItemSeqId}</a>&nbsp;
+                                    <a href="<@pageUrl>EditQuoteItem?quoteId=${linkedQuote.quoteId}&amp;quoteItemSeqId=${linkedQuote.quoteItemSeqId}</@pageUrl>" class="${styles.link_nav_info_id!}">${linkedQuote.quoteId}-${linkedQuote.quoteItemSeqId}</a>&nbsp;
                                 </@td>
                             </@tr>
                         </#if>
@@ -423,7 +457,7 @@ under the License.
                                             (${orderItemAdjustment.comments!""})
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
+                                            <a href="<@serverUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
                                         </#if>
                                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                             <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -470,7 +504,9 @@ under the License.
                                     </@td>
                                     <@td>&nbsp;</@td>
                                     <@td class="${styles.text_right!}">
+                                      <#if orderItemPriceInfo.modifyAmount??>
                                         <@ofbizCurrency amount=orderItemPriceInfo.modifyAmount isoCode=currencyUomId/>
+                                      </#if>
                                     </@td>
                                     <@td colspan="3">&nbsp;</@td>
                                 </@tr>
@@ -483,7 +519,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonSurveys}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
+                                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
                                     </@td>
                                     <@td colspan="5">&nbsp;</@td>
                                 </@tr>
@@ -546,7 +582,7 @@ under the License.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
+                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
                                         ${uiLabelMap.OrderShipGroup}&nbsp;${orderItemShipGrpInvRes.shipGroupSeqId}
                                     </@td>
                                     <@td align="center">
@@ -557,7 +593,7 @@ under the License.
                                                                 
                                                 [${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;${uiLabelMap.OrderBackOrdered}]
                                                                 
-                                                <#--<a href="<@ofbizUrl>balanceInventoryItems?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&amp;orderId=${orderId}&amp;priorityOrderId=${orderId}&amp;priorityOrderItemSeqId=${orderItemShipGrpInvRes.orderItemSeqId}</@ofbizUrl>" style="font-size: xx-small;">Raise Priority</a> -->
+                                                <#--<a href="<@pageUrl>balanceInventoryItems?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&amp;orderId=${orderId}&amp;priorityOrderId=${orderId}&amp;priorityOrderItemSeqId=${orderItemShipGrpInvRes.orderItemSeqId}</@pageUrl>" style="font-size: xx-small;">Raise Priority</a> -->
                                         </#if>
                                         &nbsp;
                                     </@td>
@@ -571,7 +607,7 @@ under the License.
                             <#list orderShipments as orderShipment>
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
-                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
+                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
                                     </@td>
                                     <@td align="center">
                                         ${orderShipment.quantity?string.number}&nbsp;
@@ -588,7 +624,7 @@ under the License.
                                 <@td colspan="2">
                                     <#if itemIssuance.shipmentId?has_content>
                                         ${uiLabelMap.OrderIssuedToShipmentItem}&nbsp;
-                                        <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${itemIssuance.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
+                                        <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${itemIssuance.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
                                     <#else>
                                         ${uiLabelMap.OrderIssuedWithoutShipment}
                                     </#if>
@@ -608,7 +644,7 @@ under the License.
                                         <#if itemIssuance.inventoryItemId?has_content>
                                             <#assign inventoryItem = itemIssuance.getRelatedOne("InventoryItem", false)/>
                                             ${uiLabelMap.CommonInventory}
-                                            <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
+                                            <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
                                             ${uiLabelMap.OrderShipGroup}&nbsp;${itemIssuance.shipGroupSeqId!}
                                             <#if (inventoryItem.serialNumber?has_content)>
                                                 <br />
@@ -631,11 +667,11 @@ under the License.
                                     <@td colspan="2">
                                         <#if shipmentReceipt.shipmentId?has_content>
                                             ${uiLabelMap.OrderShipmentReceived}&nbsp;
-                                            <a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${shipmentReceipt.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
+                                            <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipmentReceipt.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
                                         </#if>
                                         &nbsp;<#if shipmentReceipt.datetimeReceived?has_content><@formattedDateTime date=shipmentReceipt.datetimeReceived /></#if>&nbsp;
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
+                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
                                     </@td>
                                     <@td align="center">
                                         ${shipmentReceipt.quantityAccepted?string.number}&nbsp;/&nbsp;${shipmentReceipt.quantityRejected?default(0)?string.number}
@@ -664,7 +700,7 @@ under the License.
                             <@td>&nbsp;</@td>
                             <@td colspan="4">
                               <@section>
-                                  <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                                  <@table type="data-list">
                                     <@tr>
                                       <@td class="${styles.text_right!}" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}

@@ -42,8 +42,8 @@ import com.ibm.icu.util.Calendar;
 
 /**
  * Implements the &lt;set-calendar&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Csetcalendar%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
  */
 public final class SetCalendar extends MethodOperation {
 
@@ -105,8 +105,10 @@ public final class SetCalendar extends MethodOperation {
     public SetCalendar(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
-            MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "from-field", "replace with \"from\"");
+                MiniLangValidate.deprecatedAttribute(simpleMethod, element, "default-value", "replace with \"default\"");
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "field", "from-field", "from", "value", "default-value", "default", "set-if-null",
                     "years", "months", "days", "hours", "minutes", "seconds", "millis", "period-align-start", "period-align-end", "locale", "time-zone");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "field");
@@ -122,7 +124,9 @@ public final class SetCalendar extends MethodOperation {
         }
         this.fieldFma = FlexibleMapAccessor.getInstance(element.getAttribute("field"));
         String fromAttribute = element.getAttribute("from");
-        if (MiniLangUtil.containsScript(fromAttribute)) {
+        // SCIPIO: Use safer script check (see MiniLangUtil.containsScript(String) for details)
+        //if (MiniLangUtil.containsScript(fromAttribute)) {
+        if (MiniLangUtil.startsWithScriptPrefix(fromAttribute)) {
             this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(fromAttribute));
             this.fromFma = FlexibleMapAccessor.getInstance(null);
         } else {
@@ -197,7 +201,7 @@ public final class SetCalendar extends MethodOperation {
             if (timeZone == null) {
                 timeZone = TimeZone.getDefault();
             }
-            fromStamp = (Timestamp) MiniLangUtil.convertType(newValue, java.sql.Timestamp.class, locale, timeZone, UtilDateTime.DATE_TIME_FORMAT);
+            fromStamp = (Timestamp) MiniLangUtil.convertType(newValue, java.sql.Timestamp.class, locale, timeZone, UtilDateTime.getDateTimeFormat());
             if (!this.yearsFse.isEmpty()) {
                 years= parseInt(this.yearsFse.expandString(methodContext.getEnvMap()));
             }

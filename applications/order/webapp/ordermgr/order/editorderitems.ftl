@@ -1,43 +1,47 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://product/webapp/catalog/common/cataloglib.ftl" as cataloglib>
 
 <#if orderHeader?has_content>
 
   <#-- price change rules -->
   <#assign allowPriceChange = false/>
-  <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
+  <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", request))>
       <#assign allowPriceChange = true/>
   </#if>
 
+<@script>
+    <#-- SCIPIO: without this, may have issues with b -->
+    function submitUpdateItemInfoForm(action, orderItemSeqId, shipGroupSeqId) {
+        document.updateItemInfo.action = action;
+        document.updateItemInfo.orderItemSeqId.value = orderItemSeqId ? orderItemSeqId : '';
+        document.updateItemInfo.shipGroupSeqId.value = shipGroupSeqId ? shipGroupSeqId : '';
+        document.updateItemInfo.submit();
+        return;
+    }
+</@script>
+
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
-        <@menuitem type="link" href=makeOfbizUrl("orderview?${rawString(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('updateOrderItems'), 'js')}');" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('cancelSelectedOrderItems'), 'js')}');" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('cancelOrderItem'), 'js')}');" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href=makePageUrl("orderview?${raw(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
       </#if>
     </#if>
     </@menu>
   </#macro>
   <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
+
+    <@alert type="warning">${uiLabelMap.CommonFunctionalityIssuesNotWorkCorrectlyInfo}</@alert>
+
+    <#assign nestedFormMarkup></#assign><#-- SCIPIO: fix for bad nested html forms -->
 
         <#if !orderItemList?has_content>
             <@commonMsg type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@commonMsg>
@@ -45,13 +49,13 @@ under the License.
         
         <#-- SCIPIO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
         
-        <@table type="data-complex" class="+order-items"> <#-- orig: class="basic-table order-items" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex" class="+order-items">
 
         <#if orderItemList?has_content>
-            <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">
+            <form name="updateItemInfo" id="updateItemInfo" method="post" action="<@pageUrl>updateOrderItems</@pageUrl>">
             <input type="hidden" name="orderId" value="${orderId}"/>
-            <input type="hidden" name="orderItemSeqId" value=""/>
-            <input type="hidden" name="shipGroupSeqId" value=""/>
+            <input type="hidden" name="orderItemSeqId" value="" id="updateItemInfo_orderItemSeqId"/>
+            <input type="hidden" name="shipGroupSeqId" value="" id="updateItemInfo_shipGroupSeqId"/>
             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
               <#-- SCIPIO: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
               <input type="hidden" name="supplierPartyId" value="${partyId!}"/>
@@ -102,7 +106,7 @@ under the License.
                                   
                                       <#if productId??>
                                           <#assign product = orderItem.getRelatedOne("Product", true)>
-                                          <#if product.salesDiscontinuationDate?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
+                                          <#if product.salesDiscontinuationDate?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                               <span class="alert">${uiLabelMap.OrderItemDiscontinued}: ${product.salesDiscontinuationDate}</span>
                                           </#if>
                                       </#if>
@@ -114,11 +118,11 @@ under the License.
                                       WARN: if uncomment this, please unhardcode the links - see getPropertyValue below
                                   <#if productId??>
                                   <div>
-                                      <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <#- SCIPIO: Now points to shop ->
-                                      <a href="<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
+                                      <a href="<@serverUrl>/shop/control/product?product_id=${productId}</@serverUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
+                                      <a href="<@pageUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@pageUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
                                   </#if>
@@ -130,14 +134,16 @@ under the License.
                               <@td class="${styles.text_right!}">
                                   <@modal id="${productId}_st" label=currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)>
                                    
-                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
-                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
+                                                  <#assign nestedFormMarkup>${nestedFormMarkup}
+                                                    <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@pageUrl>changeOrderItemStatus</@pageUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
                                                     </form>
+                                                  </#assign>
                                                 <br/>
                                             </#if>
                                   <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
@@ -154,7 +160,7 @@ under the License.
                                     <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                     <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${returnItem.returnId}</a>
+                                                ${uiLabelMap.CommonNbr}<a href="<@pageUrl>returnMain?returnId=${returnItem.returnId}</@pageUrl>" class="${styles.link_nav_info_id!}">${returnItem.returnId}</a>
                                     </#if>
                                   </#list>
                                 </#if>
@@ -181,8 +187,9 @@ under the License.
                                 <#else>
                                   <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double)>
                                 </#if>
-                                <@modal id="${productId}_q" label=orderItem.quantity?default(0)?string.number>    
-                                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))>
+                                <@modal id="${productId}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->
+                                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                                                 <@tr valign="top">
                                                     
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>
@@ -255,27 +262,23 @@ under the License.
                                         <#if downloadContents?has_content>
                                           <#--
                                           <#list downloadContents as downloadContent>
-                                            <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+                                            <@menuitem type="link" href=makeServerUrl("/content/control/ViewSimpleContent?contentId=${escapeVal(downloadContent.contentId, 'url')}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                           -->
-                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
+                                          <@modal id="${raw(orderId)}_${raw(orderItem.orderItemSeqId)}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
-                                                    <li><a href="<@ofbizInterWebappUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"<#rt/>
+                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${raw(externalKeyParam)}</@serverUrl>"<#rt/>
                                                         <#lt/> target="_blank" class="${styles.link_run_sys_inline!} ${styles.action_export!}">${downloadContent.contentName!downloadContent.contentId!}</a>
                                               </#list>
                                               </ol>
                                           </@modal>
                                         </#if>
-                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <#-- SCIPIO: Now points to shop -->
-                                        <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
-                                        <#if productPageUrl?has_content>
-                                          <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
-                                        </#if>
+                                        <@menuitem type="link" href=makeServerUrl("/catalog/control/ViewProduct?productId=${escapeVal(productId, 'url')}${raw(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
+                                        <@cataloglib.productShopPageUrlMenuItem productId=productId!/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
+                                            <@menuitem type="link" href=makePageUrl("viewimage?orderId=${escapeVal(orderId, 'url')}&orderItemSeqId=${escapeVal(orderItem.orderItemSeqId, 'url')}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>
                                     </@menu>
                               </@td>
@@ -327,7 +330,7 @@ under the License.
                               <#assign shippedQuantity = orderReadHelper.getItemShipGroupAssocShippedQuantity(orderItem, shipGroup.shipGroupSeqId)>
                               <#if shipGroupAssoc.quantity != shippedQuantity>
                                 <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)) && ("Y" != orderItem.isPromo!))>
-                                <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
+                                <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", request) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
                                 <@tr>
                                     <@td class="align-text">
                                         ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
@@ -345,7 +348,8 @@ under the License.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()" text="${rawLabel('CommonCancel')} ${rawLabel('CommonItem')}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" />
+                                          <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('cancelOrderItem'), 'js')}', '${escapeVal(orderItem.orderItemSeqId!, 'js')}', '${escapeVal(shipGroup.shipGroupSeqId!, 'js')}');"
+                                            text=(rawLabel('CommonCancel')+" "+rawLabel('CommonItem')) class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" /><#-- SCIPIO: removed: target="_orderImage" -->
                                         </#if>
                                       </@menu>
                                     </@td>
@@ -391,14 +395,6 @@ under the License.
                       
                       
                     </#if>
-                <@tr>
-                    <@td colspan="6">&nbsp;</@td>
-                    <@td>
-                        <@menu type="button">
-                          <@menuitem type="submit" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
-                        </@menu>
-                    </@td>
-                </@tr>
                     
                 </#list>
                 <@tr>
@@ -427,7 +423,7 @@ under the License.
                 </#if>
             </#if>
             <#if adjustmentAmount != 0>
-                <form name="updateOrderAdjustmentForm${orderAdjustmentId}" method="post" action="<@ofbizUrl>updateOrderAdjustment</@ofbizUrl>">
+                <form name="updateOrderAdjustmentForm${orderAdjustmentId}" method="post" action="<@pageUrl>updateOrderAdjustment</@pageUrl>">
                     <input type="hidden" name="orderAdjustmentId" value="${orderAdjustmentId!}"/>
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                         <@tr>
@@ -452,7 +448,7 @@ under the License.
                             </@td>
                         </@tr>
                 </form>
-                <form name="deleteOrderAdjustment${orderAdjustmentId}" method="post" action="<@ofbizUrl>deleteOrderAdjustment</@ofbizUrl>">
+                <form name="deleteOrderAdjustment${orderAdjustmentId}" method="post" action="<@pageUrl>deleteOrderAdjustment</@pageUrl>">
                     <input type="hidden" name="orderAdjustmentId" value="${orderAdjustmentId!}"/>
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <#if adjustmentType.get("orderAdjustmentTypeId") == "PROMOTION_ADJUSTMENT">
@@ -463,8 +459,8 @@ under the License.
         </#list>
 
         <#-- add new adjustment -->
-        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
-            <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>createOrderAdjustment</@ofbizUrl>">
+        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
+            <form name="addAdjustmentForm" method="post" action="<@pageUrl>createOrderAdjustment</@pageUrl>">
                 <input type="hidden" name="comments" value="Added manually by [${userLogin.userLoginId}]"/>
                 <input type="hidden" name="isManual" value="Y"/>
                 <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -556,6 +552,8 @@ under the License.
                     <@td>&nbsp;</@td>
                 </@tr>
         </@table>
+        
+        ${nestedFormMarkup}<#-- SCIPIO -->
         
   </@section>
     

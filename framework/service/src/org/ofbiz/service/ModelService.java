@@ -18,23 +18,27 @@
  *******************************************************************************/
 package org.ofbiz.service;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingInput;
@@ -60,6 +64,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -68,6 +73,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.group.GroupModel;
 import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
@@ -85,7 +91,7 @@ import com.ibm.wsdl.extensions.soap.SOAPOperationImpl;
 @SuppressWarnings("serial")
 public class ModelService extends AbstractMap<String, Object> implements Serializable {
     private static final Field[] MODEL_SERVICE_FIELDS;
-    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP = new LinkedHashMap<String, Field>();
+    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP = new LinkedHashMap<>();
     static {
         MODEL_SERVICE_FIELDS = ModelService.class.getFields();
         for (Field field: MODEL_SERVICE_FIELDS) {
@@ -98,6 +104,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public static final String TNS = "http://ofbiz.apache.org/service/";
     public static final String OUT_PARAM = "OUT";
     public static final String IN_PARAM = "IN";
+    public static final String IN_OUT_PARAM = "INOUT";
 
     public static final String RESPONSE_MESSAGE = "responseMessage";
     public static final String RESPOND_SUCCESS = "success";
@@ -114,20 +121,29 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Added 2017-11-28.
      */
     public static final List<String> SYS_RESPONSE_FIELDS = UtilMisc.unmodifiableArrayList(
-            RESPONSE_MESSAGE, 
-            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, 
+            RESPONSE_MESSAGE,
+            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP,
             SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
     );
-    
+
+    /**
+     * SCIPIO: List of the common system response field keys returnable in service results, as a (Hash)Set.
+     * Added 2018-11-23.
+     */
+    public static final Set<String> SYS_RESPONSE_FIELDS_SET = UtilMisc.unmodifiableHashSetCopy(SYS_RESPONSE_FIELDS);
+
     public static final String resource = "ServiceErrorUiLabels";
 
-    // SCIPIO: new 2017-09-13
+    // SCIPIO: Added 2017-09-13
     private static final int logParamLevel;
     static {
         Integer level = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "run.logParamLevel"));
         logParamLevel = (level != null) ? level : Debug.INFO;
     }
-    
+
+    // SCIPIO: Added 2019-01-31
+    public static final List<String> COMMON_INTERNAL_IN_FIELDS = UtilMisc.unmodifiableArrayList("userLogin", "locale", "timeZone");
+
     /** The name of this service */
     public String name;
 
@@ -199,27 +215,32 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /** Require a new transaction for this service */
     public boolean hideResultInLog;
-    
+
     /** Set of services this service implements */
-    public Set<ModelServiceIface> implServices = new LinkedHashSet<ModelServiceIface>();
+    public Set<ModelServiceIface> implServices = new LinkedHashSet<>();
 
     /** Set of override parameters */
-    public Set<ModelParam> overrideParameters = new LinkedHashSet<ModelParam>();
+    public Set<ModelParam> overrideParameters = new LinkedHashSet<>();
 
     /** List of permission groups for service invocation */
-    public List<ModelPermGroup> permissionGroups = new LinkedList<ModelPermGroup>();
+    public List<ModelPermGroup> permissionGroups = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** List of email-notifications for this service */
-    public List<ModelNotification> notifications = new LinkedList<ModelNotification>();
+    public List<ModelNotification> notifications = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Internal Service Group */
     public GroupModel internalGroup = null;
 
+    /**Deprecated information*/
+    public String deprecatedUseInstead = null;
+    public String deprecatedSince = null;
+    public String deprecatedReason = null;
+
     /** Context Information, a Map of parameters used by the service, contains ModelParam objects */
-    protected Map<String, ModelParam> contextInfo = new LinkedHashMap<String, ModelParam>();
+    protected Map<String, ModelParam> contextInfo = new LinkedHashMap<>();
 
     /** Context Information, a List of parameters used by the service, contains ModelParam objects */
-    protected List<ModelParam> contextParamList = new LinkedList<ModelParam>();
+    protected List<ModelParam> contextParamList = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
     protected boolean inheritedParameters = false;
@@ -228,6 +249,41 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Service metrics.
      */
     public Metrics metrics = null;
+
+    /**
+     * SCIPIO: Defines custom service properties, which can be interpreted by the system or custom
+     * code as needed.
+     */
+    protected Map<String, Object> properties = Collections.emptyMap(); 
+    
+    String relativeDefinitionLocation; // SCIPIO
+
+    public enum LogLevel { // SCIPIO
+        DEBUG,
+        NORMAL,
+        QUIET;
+        
+        public static LogLevel fromName(String name, LogLevel defaultValue) {
+            if (UtilValidate.isEmpty(name)) {
+                return defaultValue;
+            }
+            return LogLevel.valueOf(LogLevel.class, name.toUpperCase());
+        }
+        
+        public boolean isDebug() {
+            return this == DEBUG;
+        }
+        public boolean isQuiet() {
+            return this == QUIET;
+        }
+    }
+    
+    /**
+     * SCIPIO: If true, avoids optional logging.
+     */
+    LogLevel logLevel = LogLevel.NORMAL;
+    
+    private transient List<ModelParam> typeConvertParamList; // SCIPIO
 
     public ModelService() {}
 
@@ -270,6 +326,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         for (ModelParam param: modelParamList) {
             this.addParamClone(param);
         }
+        this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
+        this.logLevel = model.logLevel; // SCIPIO
+        this.typeConvertParamList = model.typeConvertParamList; // SCIPIO
     }
 
     @Override
@@ -315,7 +374,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof ModelServiceMapEntry)) return false;
+            if (!(o instanceof ModelServiceMapEntry)) {
+                return false;
+            }
             ModelServiceMapEntry other = (ModelServiceMapEntry) o;
             return field.equals(other.field) && ModelService.this == other.getModelService();
         }
@@ -343,6 +404,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     }
 
                     public Map.Entry<String, Object> next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
                         return new ModelServiceMapEntry(MODEL_SERVICE_FIELDS[i++]);
                     }
 
@@ -396,7 +460,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Test if we have already inherited our interface parameters
      * @return boolean
      */
-    public boolean inheritedParameters() {
+    public synchronized boolean inheritedParameters() {
         return this.inheritedParameters;
     }
 
@@ -443,7 +507,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     public Set<String> getAllParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             nameList.add(p.name);
         }
@@ -451,10 +515,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     public Set<String> getInParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (p.isIn()) nameList.add(p.name);
+            if (p.isIn()) {
+                nameList.add(p.name);
+            }
         }
         return nameList;
     }
@@ -465,17 +531,21 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         for (ModelParam p: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if (p.isIn() && !p.internal) count++;
+            if (p.isIn() && !p.internal) {
+                count++;
+            }
         }
 
         return count;
     }
 
     public Set<String> getOutParamNames() {
-        Set<String> nameList = new TreeSet<String>();
+        Set<String> nameList = new TreeSet<>();
         for (ModelParam p: this.contextParamList) {
             // don't include IN parameters in this list, only OUT and INOUT
-            if (p.isOut()) nameList.add(p.name);
+            if (p.isOut()) {
+                nameList.add(p.name);
+            }
         }
         return nameList;
     }
@@ -486,7 +556,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         for (ModelParam p: this.contextParamList) {
             // don't include IN parameters in this list, only OUT and INOUT
-            if (p.isOut() && !p.internal) count++;
+            if (p.isOut() && !p.internal) {
+                count++;
+            }
         }
 
         return count;
@@ -494,19 +566,17 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     public void updateDefaultValues(Map<String, Object> context, String mode) {
         List<ModelParam> params = this.getModelParamList();
-        if (params != null) {
-            for (ModelParam param: params) {
-                if ("INOUT".equals(param.mode) || mode.equals(param.mode)) {
-                    Object defaultValueObj = param.getDefaultValue();
-                    if (defaultValueObj != null && context.get(param.name) == null) {
-                        context.put(param.name, defaultValueObj);
-                        // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
-                        // it makes developers avoid the default-value attribute altogether.
-                        // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
-                        //Debug.logInfo(...);
-                        if (Debug.isOn(logParamLevel) || this.debug) {
-                            Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
-                        }
+        for (ModelParam param: params) {
+            if (IN_OUT_PARAM.equals(param.mode) || mode.equals(param.mode)) {
+                Object defaultValueObj = param.getDefaultValue();
+                if (defaultValueObj != null && context.get(param.name) == null) {
+                    context.put(param.name, defaultValueObj);
+                    // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
+                    // it makes developers avoid the default-value attribute altogether.
+                    // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
+                    //Debug.logInfo(...);
+                    if ((Debug.isOn(logParamLevel) && !this.isQuiet()) || this.debug) {
+                        Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
                     }
                 }
             }
@@ -520,24 +590,22 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param locale the actual locale to use
      */
     public void validate(Map<String, Object> context, String mode, Locale locale) throws ServiceValidationException {
-        Map<String, String> requiredInfo = new HashMap<String, String>();
-        Map<String, String> optionalInfo = new HashMap<String, String>();
-        boolean verboseOn = Debug.verboseOn();
+        Map<String, String> requiredInfo = new HashMap<>();
+        Map<String, String> optionalInfo = new HashMap<>();
 
-        if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && context != null && context.containsKey(RESPONSE_MESSAGE)) {
             if (RESPOND_ERROR.equals(context.get(RESPONSE_MESSAGE)) || RESPOND_FAIL.equals(context.get(RESPONSE_MESSAGE))) {
-                if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
+                if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
                 return;
             }
         }
 
         // get the info values
         for (ModelParam modelParam: this.contextParamList) {
-            // Debug.logInfo("In ModelService.validate preparing parameter [" + modelParam.name + (modelParam.optional?"(optional):":"(required):") + modelParam.mode + "] for service [" + this.name + "]", module);
-            if ("INOUT".equals(modelParam.mode) || mode.equals(modelParam.mode)) {
+            if (IN_OUT_PARAM.equals(modelParam.mode) || mode.equals(modelParam.mode)) {
                 if (modelParam.optional) {
                     optionalInfo.put(modelParam.name, modelParam.type);
                 } else {
@@ -547,14 +615,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         // get the test values
-        Map<String, Object> requiredTest = new HashMap<String, Object>();
-        Map<String, Object> optionalTest = new HashMap<String, Object>();
+        Map<String, Object> requiredTest = new HashMap<>();
+        Map<String, Object> optionalTest = new HashMap<>();
 
-        if (context == null) context = new HashMap<String, Object>();
+        if (context == null) {
+            context = new HashMap<>();
+        }
         requiredTest.putAll(context);
 
-        List<String> requiredButNull = new LinkedList<String>();
-        List<String> keyList = new LinkedList<String>();
+        List<String> requiredButNull = new ArrayList<>(); // SCIPIO: switched to ArrayList
+        List<String> keyList = new ArrayList<>(); // SCIPIO: switched to ArrayList
         keyList.addAll(requiredTest.keySet());
         for (String key: keyList) {
             Object value = requiredTest.get(key);
@@ -569,11 +639,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         // check for requiredButNull fields and return an error since null values are not allowed for required fields
         if (requiredButNull.size() > 0) {
-            List<String> missingMsg = new LinkedList<String>();
+            List<String> missingMsg = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (String missingKey: requiredButNull) {
                 String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
                 if (message == null) {
-                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale);
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.getResource(), "ModelService.following_required_parameter_missing", locale);
                     message = errMsg + " [" + this.name + "." + missingKey + "]";
                 }
                 missingMsg.add(message);
@@ -581,7 +651,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             throw new ServiceValidationException(missingMsg, this, requiredButNull, null, mode);
         }
 
-        if (verboseOn) {
+        if (Debug.verboseOn()) {
             StringBuilder requiredNames = new StringBuilder();
 
             for (String key: requiredInfo.keySet()) {
@@ -590,11 +660,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 }
                 requiredNames.append(key);
             }
-            Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
 
-            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size(), module);
-            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
+            if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
                 optionalTest.size() + " / " + optionalInfo.size(), module);
         }
 
@@ -607,12 +677,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         // required and type validation complete, do allow-html validation
-        if ("IN".equals(mode)) {
-            List<String> errorMessageList = new LinkedList<String>();
+        if (IN_PARAM.equals(mode)) {
+            List<String> errorMessageList = new ArrayList<>(); // SCIPIO: switched to ArrayList
             for (ModelParam modelParam : this.contextInfo.values()) {
                 // the param is a String, allow-html is not any, and we are looking at an IN parameter during input parameter validation
-                if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type)) 
-                        && !"any".equals(modelParam.allowHtml) && ("INOUT".equals(modelParam.mode) || "IN".equals(modelParam.mode))) {
+                if (context.get(modelParam.name) != null && ("String".equals(modelParam.type) || "java.lang.String".equals(modelParam.type))
+                        && !"any".equals(modelParam.allowHtml) && (IN_OUT_PARAM.equals(modelParam.mode) || IN_PARAM.equals(modelParam.mode))) {
                     String value = (String) context.get(modelParam.name);
                     UtilCodec.checkStringForHtmlStrictNone(modelParam.name, value, errorMessageList);
                 }
@@ -621,6 +691,22 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 throw new ServiceValidationException(errorMessageList, this, mode);
             }
         }
+    }
+
+    /**
+     * Check a Map against the IN parameter information, uses the validate() method for that
+     * Always called with only IN_PARAM, so to be called before the service is called with the passed context
+     * @param context the passed context
+     * @param locale the actual locale to use
+     * @return boolean True is the service called with these IN_PARAM is valid
+     */
+    public boolean isValid(Map<String, Object> context, Locale locale) {
+        try {
+            validate(context, IN_PARAM, locale);
+        } catch (ServiceValidationException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -639,33 +725,35 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         Set<String> keySet = info.keySet();
 
         // Quick check for sizes
-        if (info.size() == 0 && test.size() == 0) return;
+        if (info.size() == 0 && test.size() == 0) {
+            return;
+        }
         // This is to see if the test set contains all from the info set (reverse)
         if (reverse && !testSet.containsAll(keySet)) {
-            Set<String> missing = new TreeSet<String>(keySet);
+            Set<String> missing = new TreeSet<>(keySet);
 
             missing.removeAll(testSet);
-            List<String> missingMsgs = new LinkedList<String>();
+            List<String> missingMsgs = new ArrayList<>(missing.size()); // SCIPIO: switched to ArrayList
             for (String key: missing) {
                 String msg = model.getParam(key).getPrimaryFailMessage(locale);
                 if (msg == null) {
-                    String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "ModelService.following_required_parameter_missing", locale) ;
+                    String errMsg = UtilProperties.getMessage(ServiceUtil.getResource(), "ModelService.following_required_parameter_missing", locale) ;
                     msg = errMsg + " [" + mode + "] [" + model.name + "." + key + "]";
                 }
                 missingMsgs.add(msg);
             }
 
-            List<String> missingCopy = new LinkedList<String>();
-            missingCopy.addAll(missing);
+            List<String> missingCopy = new ArrayList<>(missing); // SCIPIO: switched to ArrayList
+            //missingCopy.addAll(missing);
             throw new ServiceValidationException(missingMsgs, model, missingCopy, null, mode);
         }
 
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
-            Set<String> extra = new TreeSet<String>(testSet);
+            Set<String> extra = new TreeSet<>(testSet);
 
             extra.removeAll(keySet);
-            List<String> extraMsgs = new LinkedList<String>();
+            List<String> extraMsgs = new ArrayList<>(extra.size()); // SCIPIO: switched to ArrayList
             for (String key: extra) {
                 ModelParam param = model.getParam(key);
                 String msg = null;
@@ -678,13 +766,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 extraMsgs.add(msg);
             }
 
-            List<String> extraCopy = new LinkedList<String>();
-            extraCopy.addAll(extra);
+            List<String> extraCopy = new ArrayList<>(extra); // SCIPIO: switched to ArrayList
+            //extraCopy.addAll(extra);
             throw new ServiceValidationException(extraMsgs, model, null, extraCopy, mode);
         }
 
         // * Validate types next
-        List<String> typeFailMsgs = new LinkedList<String>();
+        List<String> typeFailMsgs = new ArrayList<>(); // SCIPIO: switched to ArrayList
         for (String key: testSet) {
             ModelParam param = model.getParam(key);
 
@@ -792,7 +880,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             throw new GeneralException("Unable to run validation method [" + vali.getMethodName() + "] in class [" + vali.getClassName() + "]");
         }
 
-        return resultBool.booleanValue();
+        return resultBool;
     }
 
     /**
@@ -805,16 +893,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @return List of parameter names
      */
     public List<String> getParameterNames(String mode, boolean optional, boolean internal) {
-        List<String> names = new LinkedList<String>();
+        List<String> names = new ArrayList<>(contextParamList.size()); // SCIPIO: switched to ArrayList
 
-        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
+        if (!IN_PARAM.equals(mode) && !OUT_PARAM.equals(mode) && !IN_OUT_PARAM.equals(mode)) {
             return names;
         }
         if (contextInfo.size() == 0) {
             return names;
         }
         for (ModelParam param: contextParamList) {
-            if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
                 if (optional || !param.optional) {
                     if (internal || !param.internal) {
                         names.add(param.name);
@@ -873,12 +961,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param locale Locale to use to do some type conversion
      */
     public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode, boolean includeInternal, List<Object> errorMessages, TimeZone timeZone, Locale locale) {
-        Map<String, Object> target = new HashMap<String, Object>();
+        Map<String, Object> target = new HashMap<>();
 
         if (source == null) {
             return target;
         }
-        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
+        if (!IN_PARAM.equals(mode) && !OUT_PARAM.equals(mode) && !IN_OUT_PARAM.equals(mode)) {
             return target;
         }
         if (contextInfo.size() == 0) {
@@ -886,65 +974,15 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         if (locale == null) {
-            // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
-            if (source.containsKey("locale")) {
-                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
-                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings, 
-                // performance is not the concern anyway.
-                //locale = (Locale) source.get("locale");
-                Object value = source.get("locale");
-                if (value instanceof Locale) {
-                    locale = (Locale) value;
-                } else if (value != null) {
-                    try {
-                        locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
-                    } catch (GeneralException e) {
-                        // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
-                        // but we must always warn with special message here because this also affects the other fields
-                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName() 
-                                + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
-                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
-                        if (errorMessages != null) {
-                            errorMessages.add(errMsg);
-                        }
-                    }
-                }
-            }
-            if (locale == null) {
-                locale = Locale.getDefault();
-            }
+            locale = getLocale(source, errorMessages); // SCIPIO: Refactored
         }
 
         if (timeZone == null) {
-            // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
-            if (source.containsKey("timeZone")) {
-                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
-                //timeZone = (TimeZone) source.get("timeZone");
-                Object value = source.get("timeZone");
-                if (value instanceof TimeZone) {
-                    timeZone = (TimeZone) value;
-                } else if (value != null) {
-                    try {
-                        timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
-                    } catch (GeneralException e) {
-                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName() 
-                                + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
-                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
-                        if (errorMessages != null) {
-                            errorMessages.add(errMsg);
-                        }
-                    }
-                }
-            }
-            if (timeZone == null) {
-                timeZone = TimeZone.getDefault();
-            }
+            timeZone = getTimeZone(source, locale, errorMessages); // SCIPIO: Refactored
         }
 
         for (ModelParam param: contextParamList) {
-            //boolean internalParam = param.internal;
-
-            if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
                 String key = param.name;
 
                 // internal map of strings
@@ -984,8 +1022,100 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         return target;
     }
 
+    private Locale getLocale(Map<String, ?> source, List<? super String> errorMessages) { // SCIPIO: Refactored from makeValid
+        Locale locale = null;
+        // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
+        if (source.containsKey("locale")) {
+            // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
+            // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings,
+            // performance is not the concern anyway.
+            //locale = (Locale) source.get("locale");
+            Object value = source.get("locale");
+            if (value instanceof Locale) {
+                locale = (Locale) value;
+            } else if (value != null) {
+                try {
+                    locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
+                } catch (GeneralException e) {
+                    // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
+                    // but we must always warn with special message here because this also affects the other fields
+                    String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName()
+                            + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
+                    Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                    if (errorMessages != null) {
+                        errorMessages.add(errMsg);
+                    }
+                }
+            }
+        }
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return locale;
+    }
+    
+    private TimeZone getTimeZone(Map<String, ?> source, Locale locale, List<? super String> errorMessages) { // SCIPIO: Refactored from makeValid
+        TimeZone timeZone = null;
+        // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
+        if (source.containsKey("timeZone")) {
+            // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
+            //timeZone = (TimeZone) source.get("timeZone");
+            Object value = source.get("timeZone");
+            if (value instanceof TimeZone) {
+                timeZone = (TimeZone) value;
+            } else if (value != null) {
+                try {
+                    timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
+                } catch (GeneralException e) {
+                    String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName()
+                            + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
+                    Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                    if (errorMessages != null) {
+                        errorMessages.add(errMsg);
+                    }
+                }
+            }
+        }
+        if (timeZone == null) {
+            timeZone = TimeZone.getDefault();
+        }
+        return timeZone;
+    }
+    
+    /**
+     * SCIPIO: Performs auto type conversions for fields marked type-convert="auto", in-place in the context.
+     */
+    public void applyTypeConvert(Map<String, Object> context, String mode, Locale locale, TimeZone timeZone, List<? super String> errorMessages) {
+        for(ModelParam param : getTypeConvertParamList()) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
+                String key = param.name;
+                Object value = context.get(key);
+                if (value != null) {
+                    if (locale == null) {
+                        locale = getLocale(context, errorMessages); // SCIPIO: Refactored
+                    }
+    
+                    if (timeZone == null) {
+                        timeZone = getTimeZone(context, locale, errorMessages); // SCIPIO: Refactored
+                    }
+                    try {
+                        // no need to fail on type conversion; the validator will catch this
+                        value = ObjectType.simpleTypeConvert(value, param.type, null, timeZone, locale, false);
+                        context.put(key, value);
+                    } catch (GeneralException e) {
+                        String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private Map<String, Object> makePrefixMap(Map<String, ? extends Object> source, ModelParam param) {
-        Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
             String key = entry.getKey();
             if (key.startsWith(param.stringMapPrefix)) {
@@ -997,7 +1127,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     private List<Object> makeSuffixList(Map<String, ? extends Object> source, ModelParam param) {
-        List<Object> paramList = new LinkedList<Object>();
+        List<Object> paramList = new ArrayList<>(source.size()); // SCIPIO: switched to ArrayList
         for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
             String key = entry.getKey();
             if (key.endsWith(param.stringListSuffix)) {
@@ -1014,7 +1144,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Evaluates permission-service for this service.
      * @param dctx DispatchContext from the invoked service
-     * @param context Map containing userLogin and context infromation
+     * @param context Map containing userLogin and context information
      * @return result of permission service invocation
      */
     public Map<String, Object> evalPermission(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -1031,51 +1161,42 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 result.put("failMessage", e.getMessage());
                 return result;
             }
-            if (permission != null) {
-                Map<String, Object> ctx = permission.makeValid(context, ModelService.IN_PARAM);
-                if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
-                    ctx.put("mainAction", this.permissionMainAction);
-                }
-                if (UtilValidate.isNotEmpty(this.permissionResourceDesc)) {
-                    ctx.put("resourceDescription", this.permissionResourceDesc);
-                } else if (thisService != null) {
-                    ctx.put("resourceDescription", thisService.name);
-                }
+            Map<String, Object> ctx = permission.makeValid(context, IN_PARAM);
+            if (UtilValidate.isNotEmpty(this.permissionMainAction)) {
+                ctx.put("mainAction", this.permissionMainAction);
+            }
+            if (UtilValidate.isNotEmpty(this.permissionResourceDesc)) {
+                ctx.put("resourceDescription", this.permissionResourceDesc);
+            }
+            ctx.put("resourceDescription", thisService.name);
 
-                LocalDispatcher dispatcher = dctx.getDispatcher();
-                Map<String, Object> resp;
-                try {
-                    resp = dispatcher.runSync(permission.name,  ctx, 300, true);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    Map<String, Object> result = ServiceUtil.returnSuccess();
-                    result.put("hasPermission", Boolean.FALSE);
-                    result.put("failMessage", e.getMessage());
-                    return result;
-                }
-                if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
-                    Map<String, Object> result = ServiceUtil.returnSuccess();
-                    result.put("hasPermission", Boolean.FALSE);
-                    String failMessage = (String) resp.get("failMessage");
-                    if (UtilValidate.isEmpty(failMessage)) {
-                        failMessage = ServiceUtil.getErrorMessage(resp);
-                    }
-                    result.put("failMessage", failMessage);
-                    return result;
-                }
-                return resp;
-            } else {
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            Map<String, Object> resp;
+            try {
+                resp = dispatcher.runSync(permission.name, ctx, 300, true);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("hasPermission", Boolean.FALSE);
-                result.put("failMessage", "No ModelService found with the name [" + this.permissionServiceName + "]");
+                result.put("failMessage", e.getMessage());
                 return result;
             }
-        } else {
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.put("hasPermission", Boolean.FALSE);
-            result.put("failMessage", "No ModelService found; no service name specified!");
-            return result;
+            if (ServiceUtil.isError(resp) || ServiceUtil.isFailure(resp)) {
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("hasPermission", Boolean.FALSE);
+                String failMessage = (String) resp.get("failMessage");
+                if (UtilValidate.isEmpty(failMessage)) {
+                    failMessage = ServiceUtil.getErrorMessage(resp);
+                }
+                result.put("failMessage", failMessage);
+                return result;
+            }
+            return resp;
         }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("hasPermission", Boolean.FALSE);
+        result.put("failMessage", "No ModelService found; no service name specified!");
+        return result;
     }
 
     /**
@@ -1090,7 +1211,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Evaluates permissions for a service.
      * @param dctx DispatchContext from the invoked service
-     * @param context Map containing userLogin infromation
+     * @param context Map containing userLogin information
      * @return true if all permissions evaluate true.
      */
     public boolean evalPermissions(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -1101,10 +1222,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     return false;
                 }
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -1112,7 +1231,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @return A list of required IN parameters in the order which they were defined.
      */
     public List<Object> getInParameterSequence(Map<String, ? extends Object> source) {
-        List<Object> target = new LinkedList<Object>();
+        List<Object> target = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         if (source == null) {
             return target;
         }
@@ -1121,7 +1240,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) {
+                continue;
+            }
 
             Object srcObject = source.get(modelParam.name);
             if (srcObject != null) {
@@ -1136,8 +1257,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * the service was created.
      */
     public List<ModelParam> getModelParamList() {
-        List<ModelParam> newList = new LinkedList<ModelParam>();
-        newList.addAll(this.contextParamList);
+        List<ModelParam> newList = new ArrayList<>(this.contextParamList); // SCIPIO: switched to ArrayList
+        //newList.addAll(this.contextParamList);
         return newList;
     }
 
@@ -1146,10 +1267,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * the service was created.
      */
     public List<ModelParam> getInModelParamList() {
-        List<ModelParam> inList = new LinkedList<ModelParam>();
+        List<ModelParam> inList = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         for (ModelParam modelParam: this.contextParamList) {
             // don't include OUT parameters in this list, only IN and INOUT
-            if ("OUT".equals(modelParam.mode)) continue;
+            if (OUT_PARAM.equals(modelParam.mode)) {
+                continue;
+            }
 
             inList.add(modelParam);
         }
@@ -1163,7 +1286,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {
         if (!inheritedParameters) {
             // services w/ engine 'group' auto-implement the grouped services
-            if (this.engineName.equals("group") && implServices.size() == 0) {
+            if ("group".equals(this.engineName) && implServices.size() == 0) {
                 GroupModel group = internalGroup;
                 if (group == null) {
                     group = ServiceGroupReader.getGroupModel(this.location);
@@ -1189,8 +1312,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                             if (existingParam != null) {
                                 // if the existing param is not INOUT and the newParam.mode is different from existingParam.mode, make the existing param optional and INOUT
                                 // TODO: this is another case where having different optional/required settings for IN and OUT would be quite valuable...
-                                if (!"INOUT".equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
-                                    existingParam.mode = "INOUT";
+                                if (!IN_OUT_PARAM.equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
+                                    existingParam.mode = IN_OUT_PARAM;
                                     if (existingParam.optional || newParam.optional) {
                                         existingParam.optional = true;
                                     }
@@ -1203,6 +1326,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                                     newParamClone.optional = true;
                                 }
                                 this.addParam(newParamClone);
+                            }
+                        }
+                        
+                        // SCIPIO: 2018-11-23: Inherit custom properties
+                        if (!model.properties.isEmpty()) {
+                            Map<String, Object> newProperties = new HashMap<>(model.properties);
+                            newProperties.putAll(this.properties);
+                            this.properties = Collections.unmodifiableMap(newProperties);
+                            if (Debug.verboseOn() && newProperties.size() > 0) {
+                                Debug.logVerbose("Merged properties for service '" + this.name + "': " + newProperties, module);
                             }
                         }
                     } else {
@@ -1260,6 +1393,38 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
     }
 
+    /**
+     * if the service is declare as deprecated, create a log warning with the reason
+     * <p>
+     * SCIPIO: By default this now only logs if verbose on. This should not be a warning in every place,
+     * because having deprecated services is normal. During loading, we don't want to see these,
+     * only if they're invoked.
+     */
+    public void informIfDeprecated(boolean warn) {
+        if (this.deprecatedUseInstead != null && (warn || Debug.verboseOn())) { // SCIPIO: warn or verbose
+            StringBuilder informMsg = new StringBuilder("DEPRECATED: the service ")
+                    .append(name).append( " has been deprecated and replaced by ").append(deprecatedUseInstead);
+            if (this.deprecatedSince != null) {
+                informMsg.append(", since ").append(deprecatedSince);
+            }
+            if (deprecatedReason != null) {
+                informMsg.append(" because '").append(deprecatedReason).append("'");
+            }
+            if (warn) { // SCIPIO
+                Debug.logWarning(informMsg.toString(), module);
+            } else {
+                Debug.logVerbose(informMsg.toString(), module);
+            }
+        }
+    }
+
+    /**
+     * if the service is declare as deprecated, create a log warning with the reason
+     */
+    public void informIfDeprecated() {
+        informIfDeprecated(true); // SCIPIO: now delegating
+    }
+
     public Document toWSDL(String locationURI) throws WSDLException {
         WSDLFactory factory = WSDLFactory.newInstance();
         Definition def = factory.newDefinition();
@@ -1280,85 +1445,81 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             builder = factory.newDocumentBuilder();
             document = builder.newDocument();
         } catch (Exception e) {
-            throw new WSDLException("can not create WSDL", module.toString());
+            throw new WSDLException("can not create WSDL", ModelService.class.getName()); // SCIPIO: changed variable used for module name
         }
         def.setTypes(this.getTypes(document, def));
 
         // set the IN parameters
         Input input = def.createInput();
         Set<String> inParam = this.getInParamNames();
-        if (inParam != null) {
-            Message inMessage = def.createMessage();
-            inMessage.setQName(new QName(TNS, this.name + "Request"));
-            inMessage.setUndefined(false);
-            Part parametersPart = def.createPart();
-            parametersPart.setName("map-Map");
-            parametersPart.setTypeName(new QName(TNS, "map-Map"));
-            inMessage.addPart(parametersPart);
-            Element documentation = document.createElement("wsdl:documentation");
-            for (String paramName: inParam) {
-                ModelParam param = this.getParam(paramName);
-                if (!param.internal) {
-                    Part part = param.getWSDLPart(def);
-                    Element attribute = document.createElement("attribute");
-                    attribute.setAttribute("name", paramName);
-                    attribute.setAttribute("type", part.getTypeName().getLocalPart());
-                    attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
-                    attribute.setAttribute("java-class", param.type);
-                    attribute.setAttribute("optional", Boolean.toString(param.optional));
-                    documentation.appendChild(attribute);
-                }
+        Message inMessage = def.createMessage();
+        inMessage.setQName(new QName(TNS, this.name + "Request"));
+        inMessage.setUndefined(false);
+        Part parametersPart = def.createPart();
+        parametersPart.setName("map-Map");
+        parametersPart.setTypeName(new QName(TNS, "map-Map"));
+        inMessage.addPart(parametersPart);
+        Element documentation = document.createElement("wsdl:documentation");
+        for (String paramName : inParam) {
+            ModelParam param = this.getParam(paramName);
+            if (!param.internal) {
+                Part part = param.getWSDLPart(def);
+                Element attribute = document.createElement("attribute");
+                attribute.setAttribute("name", paramName);
+                attribute.setAttribute("type", part.getTypeName().getLocalPart());
+                attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
+                attribute.setAttribute("java-class", param.type);
+                attribute.setAttribute("optional", Boolean.toString(param.optional));
+                documentation.appendChild(attribute);
             }
-            Element usernameAttr = document.createElement("attribute");
-            usernameAttr.setAttribute("name", "login.username");
-            usernameAttr.setAttribute("type", "std-String");
-            usernameAttr.setAttribute("namespace", TNS);
-            usernameAttr.setAttribute("java-class", String.class.getName());
-            usernameAttr.setAttribute("optional", Boolean.toString(!this.auth));
-            documentation.appendChild(usernameAttr);
-
-            Element passwordAttr = document.createElement("attribute");
-            passwordAttr.setAttribute("name", "login.password");
-            passwordAttr.setAttribute("type", "std-String");
-            passwordAttr.setAttribute("namespace", TNS);
-            passwordAttr.setAttribute("java-class", String.class.getName());
-            passwordAttr.setAttribute("optional", Boolean.toString(!this.auth));
-            documentation.appendChild(passwordAttr);
-
-            parametersPart.setDocumentationElement(documentation);
-            def.addMessage(inMessage);
-            input.setMessage(inMessage);
         }
+        Element usernameAttr = document.createElement("attribute");
+        usernameAttr.setAttribute("name", "login.username");
+        usernameAttr.setAttribute("type", "std-String");
+        usernameAttr.setAttribute("namespace", TNS);
+        usernameAttr.setAttribute("java-class", String.class.getName());
+        usernameAttr.setAttribute("optional", Boolean.toString(!this.auth));
+        documentation.appendChild(usernameAttr);
+
+        Element passwordAttr = document.createElement("attribute");
+        passwordAttr.setAttribute("name", "login.password");
+        passwordAttr.setAttribute("type", "std-String");
+        passwordAttr.setAttribute("namespace", TNS);
+        passwordAttr.setAttribute("java-class", String.class.getName());
+        passwordAttr.setAttribute("optional", Boolean.toString(!this.auth));
+        documentation.appendChild(passwordAttr);
+
+        parametersPart.setDocumentationElement(documentation);
+        def.addMessage(inMessage);
+        input.setMessage(inMessage);
 
         // set the OUT parameters
         Output output = def.createOutput();
         Set<String> outParam = this.getOutParamNames();
-        if (outParam != null) {
-            Message outMessage = def.createMessage();
-            outMessage.setQName(new QName(TNS, this.name + "Response"));
-            outMessage.setUndefined(false);
-            Part resultsPart = def.createPart();
-            resultsPart.setName("map-Map");
-            resultsPart.setTypeName(new QName(TNS, "map-Map"));
-            outMessage.addPart(resultsPart);
-            Element documentation = document.createElement("wsdl:documentation");
-            for (String paramName: outParam) {
-                ModelParam param = this.getParam(paramName);
-                if (!param.internal) {
-                    Part part = param.getWSDLPart(def);
-                    Element attribute = document.createElement("attribute");
-                    attribute.setAttribute("name", paramName);
-                    attribute.setAttribute("type", part.getTypeName().getLocalPart());
-                    attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
-                    attribute.setAttribute("java-class", param.type);
-                    attribute.setAttribute("optional", Boolean.toString(param.optional));
-                    documentation.appendChild(attribute);
-                }
+        Message outMessage = def.createMessage();
+        outMessage.setQName(new QName(TNS, this.name + "Response"));
+        outMessage.setUndefined(false);
+        Part resultsPart = def.createPart();
+        resultsPart.setName("map-Map");
+        resultsPart.setTypeName(new QName(TNS, "map-Map"));
+        outMessage.addPart(resultsPart);
+        documentation = document.createElement("wsdl:documentation");
+        for (String paramName : outParam) {
+            ModelParam param = this.getParam(paramName);
+            if (!param.internal) {
+                Part part = param.getWSDLPart(def);
+                Element attribute = document.createElement("attribute");
+                attribute.setAttribute("name", paramName);
+                attribute.setAttribute("type", part.getTypeName().getLocalPart());
+                attribute.setAttribute("namespace", part.getTypeName().getNamespaceURI());
+                attribute.setAttribute("java-class", param.type);
+                attribute.setAttribute("optional", Boolean.toString(param.optional));
+                documentation.appendChild(attribute);
             }
-            resultsPart.setDocumentationElement(documentation);
-            def.addMessage(outMessage);
-            output.setMessage(outMessage);
         }
+        resultsPart.setDocumentationElement(documentation);
+        def.addMessage(outMessage);
+        output.setMessage(outMessage);
 
         // set port type
         Operation operation = def.createOperation();
@@ -2032,5 +2193,154 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
         types.setDocumentationElement(schema);
         return types;
+    }
+
+    /**
+     * SCIPIO: 2018-09-10: additional load-time validation support.
+     * <p>
+     * For now this stops on the first issue, good enough for now.
+     */
+    protected boolean validateModel() {
+        boolean valid = true;
+        if ("entity-auto".equals(this.engineName) && UtilValidate.isEmpty(this.defaultEntityName)) {
+            valid = false;
+            Debug.logError("entity-auto service '" + name + "' does not specify a default-entity-name", module);
+        }
+        if (UtilValidate.isNotEmpty(location)) {
+            if (location.startsWith("component://")) {
+                URL resolvedLocation = null;
+                try {
+                    resolvedLocation = FlexibleLocation.resolveLocation(location);
+                    if (resolvedLocation == null) {
+                        throw new NullPointerException();
+                    }
+                    if (!new java.io.File(resolvedLocation.toURI()).exists()) {
+                        throw new FileNotFoundException();
+                    }
+                } catch (Exception e) {
+                    valid = false;
+                    Debug.logError("Service '" + name + "' points to invalid file location: " + location
+                            + " (" + e.toString() + ")", module);
+                    resolvedLocation = null;
+                }
+                if (resolvedLocation != null) {
+                    if ("simple".equals(engineName)) {
+                        try {
+                            Document document = null;
+                            try {
+                                document = UtilXml.readXmlDocument(resolvedLocation, true, true);
+                            } catch (Exception e) {
+                                throw new IllegalArgumentException("Could not read SimpleMethod XML document [" + resolvedLocation + "]: ", e);
+                            }
+                            boolean found = false;
+                            for (Element simpleMethodElement : UtilXml.childElementList(document.getDocumentElement(), "simple-method")) {
+                                String simpleMethodName = simpleMethodElement.getAttribute("method-name");
+                                if (invoke.equals(simpleMethodName)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                throw new IllegalArgumentException("simple-method with name '" + invoke + "' not found");
+                            }
+                        } catch(Exception e) {
+                            valid = false;
+                            Debug.logError("simple-method service '" + name + "' points to an invalid method ("
+                                    + invoke + ") in " + location + " (" + e.toString() + ")", module);
+                        }
+                    } else if ("groovy".equals(engineName)) {
+                        // TODO: how?
+                    }
+                }
+            } else if ("java".equals(engineName)) {
+                // FIXME?: always ClassNotFoundException for thirdparty classes during loading, skip for now...
+                if (!location.startsWith("org.ofbiz.accounting.thirdparty.") &&
+                    !location.startsWith("org.ofbiz.content.openoffice.")) {
+                    try {
+                        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                        Class<?> c = cl.loadClass(location);
+                        c.getMethod(invoke, DispatchContext.class, Map.class);
+                    } catch(ClassNotFoundException e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid class (" + location + ") (" + e.toString() + ")", module);
+                    } catch(NoSuchMethodException e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid method ("
+                                + invoke + ") in class (" + location + ") (" + e.toString() + ")", module);
+                    } catch(Exception e) {
+                        valid = false;
+                        Debug.logError("java service '" + name + "' points to an invalid method ("
+                                + invoke + ") or class (" + location + ") (" + e.toString() + ")", module);
+                    }
+                }
+            }
+        }
+        return valid;
+    }
+
+    /**
+     * SCIPIO: Get the named custom property defined on this service.
+     * Added 2018-11-23.
+     */
+    public Object getProperty(String name) {
+        return properties.get(name);
+    }
+
+    /**
+     * SCIPIO: Checks if this service has any custom properties.
+     * Added 2018-11-23.
+     */
+    public Object hasProperties() {
+        return !properties.isEmpty();
+    }
+
+    /**
+     * SCIPIO: Get the custom properties defined on this service.
+     * Added 2018-11-23.
+     */
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+    
+    /**
+     * SCIPIO: Returns the definition location relative to project root.
+     */
+    public String getRelativeDefinitionLocation() {
+        return relativeDefinitionLocation;
+    }
+
+    /**
+     * SCIPIO: Returns true if the service should not log any non-vital information.
+     */
+    public boolean isQuiet() {
+        return getLogLevel().isQuiet();
+    }
+
+    /**
+     * SCIPIO: Returns configured logging level.
+     */
+    public LogLevel getLogLevel() {
+        return logLevel;
+    }
+
+    /**
+     * SCIPIO: Returns the service attributes marked for auto-conversion.
+     */
+    public List<ModelParam> getTypeConvertParamList() {
+        List<ModelParam> paramList = this.typeConvertParamList;
+        if (paramList == null) {
+            paramList = this.getModelParamList().stream().filter(p -> p.isTypeConvert())
+                    .collect(Collectors.toCollection(ArrayList::new));
+            ((ArrayList<ModelParam>) paramList).trimToSize();
+            this.typeConvertParamList = Collections.unmodifiableList(paramList);
+        }
+        return paramList;
+    }
+
+    /**
+     * SCIPIO: Returns true if the given field name is in {@link #SYS_RESPONSE_FIELDS}.
+     */
+    public static boolean isSysResponseField(String fieldName) {
+        return SYS_RESPONSE_FIELDS_SET.contains(fieldName);
     }
 }

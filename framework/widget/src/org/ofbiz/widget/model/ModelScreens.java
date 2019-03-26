@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 public class ModelScreens implements Map<String, ModelScreen>, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     /**
      * SCIPIO: Default name of the common screens file indicated to contain centralized reusable
      * settings, via {@link ModelScreenSettings.AutoIncludeSettings}.
@@ -32,34 +32,34 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
      */
     public static final String COMMON_SCREENS_FILE = "CommonScreens.xml";
     private static final String SEP_COMMON_SCREENS_FILE = "/" + COMMON_SCREENS_FILE;
-    
+
     protected final Map<String, ModelScreen> screenMap;
     protected final Map<String, ModelScreenGroup> screenGroupMap; // TODO: list of this
     protected final ModelScreenGroup rootGroup;
     protected final String location;
-    
+
     // duplicated from rootGroups, for faster access
     protected final ModelScreenSettings effectiveSettings;
-    
+
     public ModelScreens(Element rootElement, String sourceLocation) {
         this(rootElement, sourceLocation, true);
     }
-    
+
     public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings) {
         this.location = sourceLocation;
         Map<String, ModelScreen> screenMap = new HashMap<String, ModelScreen>();
         Map<String, ModelScreenGroup> screenGroupMap = new HashMap<String, ModelScreenGroup>();
-        
+
         // SCIPIO: NOTE: 2016-10-30: The base code for this was originally moved from
         //   org.ofbiz.widget.model.ScreenFactory.readScreenDocument(Document, String)
         // but completely scrapped.
-        
+
         ModelScreenGroup rootGroup = new ModelScreenGroup(rootElement, true, this, sourceLocation, useAutoIncludeSettings);
         for(ModelScreen modelScreen : rootGroup.getScreenList()) {
             screenMap.put(modelScreen.getName(), modelScreen);
         }
         screenGroupMap.put(rootGroup.getName(), rootGroup);
-        
+
         List<? extends Element> childElements = UtilXml.childElementList(rootElement, "screen-group");
         for (Element childElement: childElements) {
             ModelScreenGroup modelScreenGroup = new ModelScreenGroup(childElement, false, this, sourceLocation, useAutoIncludeSettings);
@@ -67,23 +67,23 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
                 screenMap.put(modelScreen.getName(), modelScreen);
             }
             if (screenGroupMap.containsKey(modelScreenGroup.getName())) {
-                Debug.logWarning("Screen file [" + sourceLocation + 
+                Debug.logWarning("Screen file [" + sourceLocation +
                         "] contains more than one group with name [" + modelScreenGroup.getName() + "]; using last", module);
-            } 
+            }
             screenGroupMap.put(modelScreenGroup.getName(), modelScreenGroup);
         }
-        
+
         // NOTE: for performance reasons, in this class we leave the Collections.unmodifiableXxx
-        // calls to the getters. 
+        // calls to the getters.
         // This is safe because HashMap is read-only thread-safe after population when set in final field.
-        // (doing extra copy here because screenMap/screenGroupMap may need to be changed to LinkedHashMap or other later 
+        // (doing extra copy here because screenMap/screenGroupMap may need to be changed to LinkedHashMap or other later
         // during construct)
         this.screenMap = new HashMap<>(screenMap);
         this.screenGroupMap = new HashMap<>(screenGroupMap);
         this.rootGroup = rootGroup;
         this.effectiveSettings = rootGroup.getEffectiveSettings();
     }
-    
+
     public ModelScreens() {
         this.location = null;
         this.screenMap = new HashMap<>();
@@ -91,20 +91,20 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
         this.rootGroup = new ModelScreenGroup((String) null, true, this, this.location);
         this.effectiveSettings = rootGroup.getEffectiveSettings();
     }
-    
+
     //@Override
     public String getLocation() { // SCIPIO: new
         return location;
     }
-    
+
     public Map<String, ModelScreen> getScreenMap() {
         return Collections.unmodifiableMap(screenMap);
     }
-    
+
     public Map<String, ModelScreen> getRootScreenMap() {
         return rootGroup.getScreenMap();
     }
-    
+
     public ModelScreenGroup getRootGroup() {
         return rootGroup;
     }
@@ -112,44 +112,44 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     public Map<String, ModelScreenGroup> getScreenGroupMap() {
         return Collections.unmodifiableMap(screenGroupMap);
     }
-    
+
     /**
      * Returns settings map for root screens/group.
      */
     public Map<String, ModelScreenSettings> getScreenSettingsMap() {
         return rootGroup.getScreenSettingsMap();
     }
-    
+
     /**
      * Returns effective settings for root screens/group.
      */
     public ModelScreenSettings getEffectiveSettings() {
         return effectiveSettings;
     }
-    
+
     /**
      * Returns name settings for root screens/group.
      */
     public ModelScreenSettings getSettings(String name) {
         return rootGroup.screenSettingsMap.get(name);
     }
-    
+
     /**
      * Gets any screen in file.
      */
     public ModelScreen getScreen(String name) {
         return screenMap.get(name);
     }
-    
+
     /**
      * Gets screen from root only.
      */
     public ModelScreen getRootScreen(String name) {
         return rootGroup.screenMap.get(name);
     }
-    
+
     /* Map interface methods */
-    
+
     @Override
     public int size() {
         return screenMap.size();
@@ -209,11 +209,11 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     public Set<java.util.Map.Entry<String, ModelScreen>> entrySet() {
         return Collections.unmodifiableMap(screenMap).entrySet();
     }
-    
+
     public boolean isAutoIncludeSettingsConfigFile(String sourceLocation) {
         return sourceLocation.endsWith(SEP_COMMON_SCREENS_FILE);
     }
-    
+
     /**
      * Checks for a CommonScreens.xml (or equivalent) file in same dir as sourceLocation;
      * if not found, checks parent dir; etc; up to top widget folder.
@@ -237,7 +237,7 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
         }
         return null;
     }
-    
+
     /**
      * Represents any element child of top "screens" element in *Screens.xml file.
      */
@@ -247,6 +247,6 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
          * SCIPIO: Returns all the screens contained in this entry.
          */
         List<ModelScreen> getScreenList();
-        
+
     }
 }

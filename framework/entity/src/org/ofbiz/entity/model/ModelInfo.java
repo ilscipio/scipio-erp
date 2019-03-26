@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -31,21 +32,22 @@ import org.w3c.dom.Element;
  * An object that models the <code>&lt;entitymodel&gt;</code> child elements that provide default values.
  *
  */
+@SuppressWarnings("serial")
 @ThreadSafe
-public final class ModelInfo {
+public final class ModelInfo implements Serializable { // SCIPIO: added Serializable
 
     public static final ModelInfo DEFAULT = new ModelInfo("None", "None", getCopyrightString(), "None", "1.0", "");
 
     /**
      * Returns a new <code>ModelInfo</code> instance initialized to the values found in <code>element</code> attributes.
-     * 
+     *
      * @param defaultInfo A <code>ModelInfo</code> instance that will provide default values for missing attributes.
      * @param element
      */
     public static ModelInfo createFromAttributes(ModelInfo defaultInfo, Element element) {
         String title = element.getAttribute("title").intern();
         if (title.isEmpty()) {
-            title = defaultInfo.getTitle();
+            title = element.getAttribute("entity-name").intern();
         }
         String description = StringUtil.internString(UtilXml.childElementValue(element, "description"));
         if (description == null || description.isEmpty()) {
@@ -72,7 +74,7 @@ public final class ModelInfo {
 
     /**
      * Returns a new <code>ModelInfo</code> instance initialized to the values found in <code>element</code> child elements.
-     * 
+     *
      * @param defaultInfo A <code>ModelInfo</code> instance that will provide default values for missing child elements.
      * @param element
      */

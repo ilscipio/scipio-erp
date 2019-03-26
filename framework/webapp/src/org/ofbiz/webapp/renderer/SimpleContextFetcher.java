@@ -9,7 +9,7 @@ import org.ofbiz.base.util.collections.MapStack;
 public class SimpleContextFetcher implements RenderContextFetcher {
     protected Appendable writer;
     protected MapStack<String> context;
-    
+
     public SimpleContextFetcher(Appendable writer, MapStack<String> context) {
         this.writer = writer;
         if (context == null) context = MapStack.create();

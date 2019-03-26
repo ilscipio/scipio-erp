@@ -1,37 +1,24 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if productId??>
 
 <#-- SCIPIO: 2017-05-22: added link to new feature -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <@menuitem type="link" href=makePageUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
     </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductFeatures menuContent=menuContent>
   <#if productFeatureAndAppls?has_content>
-    <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
+    <form method="post" action="<@pageUrl>UpdateFeatureToProductApplication</@pageUrl>" name="selectAllForm">
     <@fields type="default-manual-widgetonly">
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
       <input type="hidden" name="productId" value="${productId}"/>
-      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true>
         <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonId}</@th>
@@ -58,21 +45,21 @@ under the License.
             <input type="hidden" name="productId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productId)!}" />
             <input type="hidden" name="productFeatureId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productFeatureId)!}" />
             <input type="hidden" name="fromDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.fromDate)!}" />
-            <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+            <a href="<@pageUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@pageUrl>" class="${styles.link_nav_info_id!}">
                 ${(productFeatureAndAppl.productFeatureId)!}</a></@td>
           <@td>${(productFeatureAndAppl.get("description",locale))!}</@td>
           <@td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></@td>
           <@td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</@td>
-          <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">
+          <@td><a href="<@pageUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@pageUrl>" class="${styles.link_nav_info_desc!}">
               ${(curProductFeatureCategory.description)!}
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>
-    <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
+    <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && UtilDateTime.nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
           <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
           <@td class=cellClass>${(productFeatureAndAppl.fromDate)!}</@td>
           <@td>
     <#assign hasExpired = false>
-    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && UtilDateTime.nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
             <#if hasExpired><#assign class="alert"><#else><#assign class=""></#if>
             <@field type="datetime" name="thruDate_o_${productFeatureAndAppl_index}" value=((productFeatureAndAppl.thruDate)!) size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" />
             <@field type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />
@@ -108,7 +95,7 @@ under the License.
     </@fields>
     </form>
   <#list productFeatureAndAppls as productFeatureAndAppl>
-    <form name="RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method="post" action="<@ofbizUrl>RemoveFeatureFromProduct</@ofbizUrl>">
+    <form name="RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method="post" action="<@pageUrl>RemoveFeatureFromProduct</@pageUrl>">
       <input type="hidden" name="productId" value="${(productFeatureAndAppl.productId)!}"/>
       <input type="hidden" name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)!}"/>
       <input type="hidden" name="fromDate" value="${(productFeatureAndAppl.fromDate)!}"/>
@@ -120,7 +107,7 @@ under the License.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureFromCategory>
-    <form method="post" action="<@ofbizUrl>ApplyFeaturesFromCategory</@ofbizUrl>">
+    <form method="post" action="<@pageUrl>ApplyFeaturesFromCategory</@pageUrl>">
       <input type="hidden" name="productId" value="${productId}"/>
       
       <@field type="select" label=uiLabelMap.ProductFeatureCategory size=1 name="productFeatureCategoryId">
@@ -140,8 +127,8 @@ under the License.
       <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && (productFeatureApplType.productFeatureApplTypeId!) =="SELECTABLE_FEATURE")>selected="selected"</#if>
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && (productFeatureApplType.productFeatureApplTypeId!) =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && (productFeatureApplType.productFeatureApplTypeId!) == "SELECTABLE_FEATURE")> selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && (productFeatureApplType.productFeatureApplTypeId!) == "STANDARD_FEATURE")> selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
       </#list>
       </@field>
@@ -151,22 +138,48 @@ under the License.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureTypeId>
-    <form method="post" action="<@ofbizUrl>ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" name="addFeatureByTypeIdCode">
+    <form method="post" action="<@pageUrl>ApplyFeatureToProductFromTypeAndCode</@pageUrl>" name="addFeatureByTypeIdCode">
       <input type="hidden" name="productId" value="${productId}"/>
       
-      <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
-      <#list productFeatureTypes as productFeatureType>
-        <option value="${(productFeatureType.productFeatureTypeId)!}">${(productFeatureType.get("description",locale))!} </option>
-      </#list>
-      </@field>
+      <@script>
+        $(window).load(function() {
+            $("select[name=productFeatureTypeId]").change(function() { 
+                $.ajax ({
+                    url: '<@pageUrl>FindProductFeatureTypesAndCodes</@pageUrl>',
+                    type: "POST",
+                    async: true,
+                    data: {"productFeatureTypeId" : this.value},
+                    success: function(data) {
+                        if (data.productFeatureCodes) {
+                            $('select[name=idCode]').html('');
+                            for (code in data.productFeatureCodes) {
+                                productFeature = data.productFeatureCodes[code];
+                                $('select[name=idCode]').append('<option value="' + productFeature.idCode + '">' + productFeature.idCode + ' [' + productFeature.description + ']</option>')
+                            }
+                        }
+                    }
+                });
+            });
+        });
+      </@script>
       
-      <@field type="input" label=uiLabelMap.CommonIdCode size=10 name="idCode" value="" />
-    
+      <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
+          <option value="">--</option>
+          <#list productFeatureTypes as productFeatureType>
+            <option value="${(productFeatureType.productFeatureTypeId)!}">${(productFeatureType.get("description",locale))!} </option>
+          </#list>
+      </@field>
+
+      <#-- @field type="input" label=uiLabelMap.CommonIdCode size=10 name="idCode" value="" / -->
+      <@field type="select" label=uiLabelMap.CommonIdCode name="idCode">
+        <option value="">--</option>
+      </@field>
+
       <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId == "SELECTABLE_FEATURE")> selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId == "STANDARD_FEATURE")> selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
       </#list>
       </@field>
@@ -180,7 +193,7 @@ under the License.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureID>
-    <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
+    <form method="post" action="<@pageUrl>ApplyFeatureToProduct</@pageUrl>" name="addFeatureById">
       <input type="hidden" name="productId" value="${productId}"/>
       
       <@field type="lookup" label=uiLabelMap.CommonId formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature" />
@@ -188,8 +201,8 @@ under the License.
       <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId =="SELECTABLE_FEATURE")>selected="selected"</#if>
-          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId =="STANDARD_FEATURE")>selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'Y' && productFeatureApplType.productFeatureApplTypeId == "SELECTABLE_FEATURE")> selected="selected"</#if>
+          <#if (productFeatureApplType.productFeatureApplTypeId?? && product?? && product.isVirtual == 'N' && productFeatureApplType.productFeatureApplTypeId == "STANDARD_FEATURE")> selected="selected"</#if>
             >${(productFeatureApplType.get("description",locale))!} </option>
       </#list>
       </@field>

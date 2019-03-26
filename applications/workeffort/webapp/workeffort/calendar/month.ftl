@@ -1,31 +1,18 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
-<#include 'calendarcommon.ftl'>
+<#include "component://workeffort/webapp/workeffort/common/common.ftl">
 
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
 <#-- SCIPIO: FTL now includes the title -->
 <#macro menuContent menuArgs={}>
-    <@calendarDateSwitcher period="month"/>
+    <@workefflib.calendarDateSwitcher period="month"/>
 </#macro>
-<@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)
+<@section title=UtilDateTime.timeStampToString(start, 'MMMM yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->
 
 <#if periods?has_content>
@@ -41,7 +28,7 @@ under the License.
 <#-- not using scrollable=true, should have better resizing method-->
 <div class="month-calendar-full">
 <@table type="data-complex" autoAltRows=true class="+calendar"
-    responsive=false><#--responsiveOptions={"ordering":false}--><#-- orig: class="basic-table calendar" --> <#-- orig: cellspacing="0" -->
+    responsive=false><#--responsiveOptions={"ordering":false}-->
   <@thead>
   <@tr class="header-row">
     <@th class="+month-header-week">&nbsp;</@th>
@@ -65,7 +52,7 @@ under the License.
         <div class="month-entry-wrapper">
         <div class="month-entry-abs">
         <div class="month-entry-content">
-          <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
+          <a href="<@pageUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@pageUrl>" class="${styles.link_nav_info_desc!}">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
         </div>
         </div>
         </div>
@@ -113,8 +100,8 @@ under the License.
     <div class="month-entry-wrapper">
     <div class="month-entry-abs">
     <div class="month-entry-content">
-      <span class="month-entry-content-title"><a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("d")?cap_first}<#if period.start?date?string("d") == "1"> ${period.start?date?string("MMMM")}</#if></a></span>
-      <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@ofbizUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;startTime=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@ofbizUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
+      <span class="month-entry-content-title"><a href="<@pageUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@pageUrl>">${period.start?date?string("d")?cap_first}<#if period.start?date?string("d") == "1"> ${period.start?date?string("MMMM")}</#if></a></span>
+      <span class="month-entry-content-add"><a class="add-new ${styles.link_nav_inline!} ${styles.action_add!}" href="<@pageUrl>${newCalEventUrl}?period=month&amp;form=edit&amp;startTime=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${urlParam!}${addlParam!}</@pageUrl>">[+]</a><#--${uiLabelMap.CommonAddNew}--></span>
       <br/>
 
       <#if (parameters.hideEvents!"") != "Y">
@@ -221,14 +208,14 @@ under the License.
 
 <#--
     <@td valign="top">
-      <@table type="fields" width="100%"> <#- orig: cellspacing="0" -> <#- orig: cellpadding="0" -> <#- orig: border="0" ->
+      <@table type="fields" width="100%">
         <@tr>
-          <@td nowrap="nowrap" class="monthdaynumber"><a href="<@ofbizUrl>day?startTime=${period.start.time?string("#")}<#if eventsParam?has_content>&amp;${eventsParam}</#if>${addlParam!}</@ofbizUrl>"  class="${styles.link_nav_info_number!} monthdaynumber">${period.start?date?string("d")?cap_first}</a></@td>
-          <@td align="right"><a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</@td>
+          <@td nowrap="nowrap" class="monthdaynumber"><a href="<@pageUrl>day?startTime=${period.start.time?string("#")}<#if eventsParam?has_content>&amp;${eventsParam}</#if>${addlParam!}</@pageUrl>"  class="${styles.link_nav_info_number!} monthdaynumber">${period.start?date?string("d")?cap_first}</a></@td>
+          <@td align="right"><a href="<@pageUrl>EditWorkEffort?workEffortTypeId=EVENT&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</@td>
         </@tr>
       </@table>
       <#list period.calendarEntries as calEntry>
-      <@table type="fields" width="100%"> <#- orig: cellspacing="0" -> <#- orig: cellpadding="0" -> <#- orig: border="0" ->
+      <@table type="fields" width="100%">
         <@tr width="100%">
           <@td class='monthcalendarentry' width="100%" valign='top'>
             <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>
@@ -241,7 +228,7 @@ under the License.
               ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
             </#if>
             <br />
-            <a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}${addlParam!}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName!"Undefined"}</a>&nbsp;
+            <a href="<@pageUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}${addlParam!}</@pageUrl>" class="event">${calEntry.workEffort.workEffortName!"Undefined"}</a>&nbsp;
           </@td>
         </@tr>
       </@table>

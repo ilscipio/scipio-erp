@@ -34,12 +34,12 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * User preference worker methods.
  */
-public class PreferenceWorker {
+public final class PreferenceWorker {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /**
      * User preference administrator permission. Currently set to "USERPREF_ADMIN".
      */
-    public static final String ADMIN_PERMISSION = "USERPREF_ADMIN";
+    public static final String ADMIN_PERMISSION = "USERPREF_ADMIN"; // SCIPIO: 2018-08-30: keeping public for backward-compat
     /** User login ID parameter name. Currently set to "userPrefLoginId". This
      * parameter name is used in preference service definitions to specify a user login ID
      * that is different than the currently logged in user.
@@ -50,6 +50,8 @@ public class PreferenceWorker {
      * retrieve default preferences when the user is not logged in.
      */
     public static final String DEFAULT_UID = "_NA_";
+
+    private PreferenceWorker () {}
 
     /**
      * Add a UserPreference GenericValue to a Map.
@@ -85,7 +87,7 @@ public class PreferenceWorker {
         if (userLogin != null) {
             String userLoginId = userLogin.getString("userLoginId");
             String userLoginIdArg = (String) context.get(LOGINID_PARAMETER_NAME); // is an optional parameters which defaults to the logged on user
-            if (userLoginIdArg == null || (userLoginIdArg != null && userLoginId.equals(userLoginIdArg))) {
+            if (userLoginIdArg == null || userLoginId.equals(userLoginIdArg)) {
                 hasPermission = true; // users can copy to their own preferences
             } else {
                 Security security = ctx.getSecurity();
@@ -131,7 +133,7 @@ public class PreferenceWorker {
      * @return user preference map
      */
     public static Map<String, Object> createUserPrefMap(GenericValue rec) throws GeneralException {
-        return addPrefToMap(rec, new LinkedHashMap<String, Object>());
+        return addPrefToMap(rec, new LinkedHashMap<>());
     }
 
     /**
@@ -141,7 +143,7 @@ public class PreferenceWorker {
      * @return user preference map
      */
     public static Map<String, Object> createUserPrefMap(List<GenericValue> recList) throws GeneralException {
-        Map<String, Object> userPrefMap =  new LinkedHashMap<String, Object>();
+        Map<String, Object> userPrefMap =  new LinkedHashMap<>();
         if (recList != null) {
             for (GenericValue value: recList) {
                 addPrefToMap(value, userPrefMap);
@@ -178,7 +180,7 @@ public class PreferenceWorker {
     /**
      * Checks for valid userLoginId to get preferences. Returns true if valid.
      * <p>This method applies a small rule set to determine if user preferences
-     * can be retrieved by the current user:
+     * can be retrieved by the current user:</p>
      * <ul>
      * <li>If the user isn't logged in, then the method returns true</li>
      * <li>If the user is logged in and the userPrefLoginId specified in the context Map
@@ -187,7 +189,7 @@ public class PreferenceWorker {
      * is different than the user's userLoginId, then a security permission check is performed.
      * If the user has the <a href="#ADMIN_PERMISSION">ADMIN_PERMISSION</a> permission then the
      *  method returns true.</li>
-     * </ul></p>
+     * </ul>
      *
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input arguments.
@@ -213,7 +215,7 @@ public class PreferenceWorker {
     /**
      * Checks for valid userLoginId to set preferences. Returns true if valid.
      * <p>This method applies a small rule set to determine if user preferences
-     * can be set by the current user:
+     * can be set by the current user:</p>
      * <ul>
      * <li>If the user isn't logged in, then the method returns false</li>
      * <li>If the user is logged in and the userPrefLoginId specified in the context Map
@@ -222,7 +224,7 @@ public class PreferenceWorker {
      * is different than the user's userLoginId, then a security permission check is performed.
      * If the user has the <a href="#ADMIN_PERMISSION">ADMIN_PERMISSION</a>
      * permission then the method returns true.</li>
-     * </ul></p>
+     * </ul>
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input arguments.
      * @return true if arguments are valid

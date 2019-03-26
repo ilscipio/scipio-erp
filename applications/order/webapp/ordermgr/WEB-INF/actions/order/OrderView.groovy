@@ -67,7 +67,7 @@ if (orderHeader) {
     context.hasPermission = true;
     context.canViewInternalDetails = true;
 
-    orderReadHelper = new OrderReadHelper(orderHeader);
+    orderReadHelper = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
@@ -92,18 +92,23 @@ if (orderHeader) {
     context.orderType = orderType;
 
     // get the display party
-    displayParty = null;
+    def displayParty;
+    def displayPartyId; // SCIPIO (and switched displayParty to def)
     if ("PURCHASE_ORDER".equals(orderType)) {
         displayParty = orderReadHelper.getSupplierAgent();
+        displayPartyId = orderReadHelper.getSupplierAgentPartyId();
     } else {
         displayParty = orderReadHelper.getPlacingParty();
+        displayPartyId = orderReadHelper.getPlacingPartyId();
     }
-    if (displayParty) {
-        partyId = displayParty.partyId;
+    // SCIPIO: 2019-02-27: if null, fallback on the ID
+    
+    if (displayPartyId) { // SCIPIO: if (displayParty) {
+        partyId = displayPartyId; // SCIPIO: displayParty.partyId;
         context.displayParty = displayParty;
         context.partyId = partyId;
 
-        paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, displayParty.partyId, false);
+        paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, displayPartyId, false);
         context.paymentMethodValueMaps = paymentMethodValueMaps;
     }
 
@@ -198,7 +203,7 @@ if (orderHeader) {
         }
         OISGAssContents = [];
         shipGroups.each { shipGroup ->
-            OISGAssContents.addAll(EntityUtil.filterByAnd(shipGroup.getRelated("OrderItemShipGroupAssoc"), UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId"))));
+            OISGAssContents.addAll(EntityUtil.filterByAnd(shipGroup.getRelated("OrderItemShipGroupAssoc", null, null, false), UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId"))));
         }
         BigDecimal totalQuantityPlanned = 0;
         OISGAssContents.each { OISGAssContent ->
@@ -557,3 +562,9 @@ orderAdjustments.each { orderAdjustment ->
     }
 }
 context.orderAdjustmentId = orderAdjustmentId;
+
+// SCIPIO: OrderItemAttributes and ProductConfigWrappers
+if (orderHeader) {
+    orderItemProdCfgMap = orderReadHelper.getProductConfigWrappersByOrderItemSeqId(orderItems);
+    context.orderItemProdCfgMap = orderItemProdCfgMap;
+}

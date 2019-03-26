@@ -24,7 +24,7 @@ import org.ofbiz.entity.model.ModelEntity;
 controlPath = parameters._CONTROL_PATH_;
 context.controlPath = controlPath;
 
-if (security.hasPermission("ENTITY_MAINT", session)) {
+if (security.hasPermission("ENTITY_MAINT", request)) {
     forstatic = "true".equals(parameters.forstatic);
     context.forstatic = forstatic;
 

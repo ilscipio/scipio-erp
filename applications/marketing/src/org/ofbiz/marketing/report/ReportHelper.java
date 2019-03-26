@@ -18,17 +18,23 @@
  *******************************************************************************/
 package org.ofbiz.marketing.report;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import java.util.*;
 
 /**
  * Marketing Report Helper
  */
-public class ReportHelper {
+public final class ReportHelper {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private ReportHelper() {}
 
 /**
  * Calculate conversion rates based on a List of visits and orders.  Designed to be used for reporting on
@@ -58,21 +64,21 @@ public class ReportHelper {
 
                 reportValue.put("orders", orderValue.getLong("orderId")); // # of orders
                 if (orderValue.getDouble("grandTotal") == null) {
-                    reportValue.put("orderAmount", Double.valueOf(0));
+                    reportValue.put("orderAmount", (double) 0);
                 } else {
                     reportValue.put("orderAmount", orderValue.getDouble("grandTotal"));
                 }
                 if ((orderValue.getLong("orderId") == null) || (visit.getLong("visitId") == null) ||
                     (visit.getLong("visitId").intValue() == 0)) {
-                    reportValue.put("conversionRate", Double.valueOf(0));
+                    reportValue.put("conversionRate", (double) 0);
                 } else {
-                    reportValue.put("conversionRate", Double.valueOf(orderValue.getLong("orderId").doubleValue() / visit.getLong("visitId").doubleValue()));
+                    reportValue.put("conversionRate", orderValue.getLong("orderId").doubleValue() / visit.getLong("visitId").doubleValue());
                 }
             } else {
                 // no matching orders - all those values are zeroes
-                reportValue.put("orders", Long.valueOf(0));
-                reportValue.put("orderAmount", Double.valueOf(0));
-                reportValue.put("conversionRate", Double.valueOf(0));
+                reportValue.put("orders", 0L);
+                reportValue.put("orderAmount", (double) 0);
+                reportValue.put("conversionRate", (double) 0);
             }
 
             conversionRates.add(reportValue);

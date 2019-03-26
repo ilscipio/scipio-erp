@@ -30,7 +30,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupProductForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productId", "productCategoryId", "prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -46,7 +46,7 @@
     <#else>
       <#if formActionType == "edit">
         <@field type="display" label=uiLabelMap.FormFieldTitle_productId><#rt/>
-            <span class="ect-managefield ect-managefield-for-productId"><@setupExtAppLink uri="/catalog/control/EditProduct?productId=${rawString(params.productId!)}" text=params.productId!/></span><#t/>
+            <span class="ect-managefield ect-managefield-for-productId"><@setupExtAppLink uri="/catalog/control/EditProduct?productId=${raw(params.productId!)}" text=params.productId!/></span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="productId" value=(params.productId!) class="+ect-inputfield"/>
       <#else>
@@ -58,7 +58,7 @@
       <#if formActionType != "add">
         <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId" class="+ect-inputfield" required=true>
             <#list productTypes as productTypeData>
-                <option<#if rawString(params.productTypeId!) == rawString(productTypeData.productTypeId!)> selected="selected"</#if> value="${productTypeData.productTypeId}">${productTypeData.get("description", locale)}</option>
+                <option<#if raw(params.productTypeId!) == raw(productTypeData.productTypeId!)> selected="selected"</#if> value="${productTypeData.productTypeId}">${productTypeData.get("description", locale)}</option>
             </#list>
         </@field>
         
@@ -84,11 +84,11 @@
         <#-- WARNING: if the "add category" is ever rewritten as AJAX, this will need to be rewritten! -->
         <@field type="select" label=uiLabelMap.ProductPrimaryCategory name="primaryProductCategoryId" class="+ect-inputfield">
             <#local catFound = false>
-            <#local primaryCatId = rawString(params.primaryProductCategoryId!)>
+            <#local primaryCatId = raw(params.primaryProductCategoryId!)>
           <#local optMarkup>
             <@field type="option" value=""></@field>
             <#list (allStoreCategories![]) as option>
-                <#local selected = (rawString(option.productCategoryId) == primaryCatId)>
+                <#local selected = (raw(option.productCategoryId) == primaryCatId)>
                 <#local catFound = catFound || selected>
                 <@field type="option" value=(option.productCategoryId) selected=selected><#if option.categoryName?has_content>${option.categoryName!} [${option.productCategoryId}]<#else>${option.productCategoryId}</#if></@field>
             </#list>
@@ -133,7 +133,7 @@
                     });
                 });
             </@script>
-            <@catalogStcLocFields objectType="product" params=params/>
+            <@cataloglib.catalogStcLocFields objectType="product" params=params/>
         </@fieldset>
         
         <@alert type="info">${uiLabelMap.SetupProductEditNotice} (<@setupExtAppLink uri="/catalog/control/EditProduct" text=uiLabelMap.ProductNewProduct/>)</@alert>
@@ -186,7 +186,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteProductForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productId", "productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
@@ -209,7 +209,7 @@
   <@setupDeleteProductForm id="ect-removeproductassoc-form" target="setupDeleteProduct" isDeleteRecord=false/>
 
 <#macro setupCopyMoveAssocProductForm id target formActionType>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productId", "productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

@@ -13,7 +13,7 @@ import org.ofbiz.base.util.collections.MapStack;
  * <p>
  * 2016-01-06: Previously this class only saved and passed a few major global values from the
  * initial context (request, locale, globalContext, etc.). Now, we exploit the fact that the
- * initial context is a MapStack which is only a reference to other maps and simply pass this stack 
+ * initial context is a MapStack which is only a reference to other maps and simply pass this stack
  * to the Environment which means it will automatically know of the last changes to it.
  * <p>
  * This is a delicate hack based on MapStack's implementation, but it works for now.
@@ -23,14 +23,14 @@ import org.ofbiz.base.util.collections.MapStack;
  *    may be something other than the global MapStack context. we simply ignore this for now
  *    because it is rare and probably not a problem.
  *    WARN: it could still be a problem in complex rendering cases.
- * <p>   
+ * <p>
  * TODO?: The real solution to all of this is to modify all MacroXxxRenderer methods to pass context
  * to macro calls. However it's major change and may not even work with the current Freemarker calls used.
  */
 class ContextHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     private final String rendererLabel;
     private MacroScreenRenderer screenRenderer = null;
     private Map<String, Object> lastRenderContext = new HashMap<String, Object>();
@@ -46,7 +46,7 @@ class ContextHandler {
             screenRenderer = (MacroScreenRenderer) screens.getScreenStringRenderer();
         }
     }
-    
+
     /**
      * Registers the context as an initial context for the render thread.
      * Call from methods where the original context is expected to be passed at some point.
@@ -70,7 +70,7 @@ class ContextHandler {
                     + "could not retrieve macro screen renderer instance", module);
         }
     }
-    
+
     /**
      * Registers/saves elements from context as needed.
      * Call from any *StringRenderer method that may be important.
@@ -78,16 +78,16 @@ class ContextHandler {
     public void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
         registerScreenRenderer(writer, context);
     }
-    
+
     public Map<String, Object> getInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
         return screenRenderer != null ? screenRenderer.initialContext : new HashMap<String, Object>();
     }
-    
+
     public Map<String, Object> getInitialContext(Appendable writer) throws IOException {
         return screenRenderer != null ? screenRenderer.initialContext : new HashMap<String, Object>();
     }
-    
-    
+
+
     /**
      * Creates a new context as source for data model for a new Environment, populated with given
      * initial values, in addition to anything we deem needed.
@@ -119,7 +119,7 @@ class ContextHandler {
         lastRenderContext = renderContext;
         return renderContext;
     }
-    
+
     /**
      * Returns the most appropriate render context for macro rendering.
      * <p>
@@ -130,7 +130,7 @@ class ContextHandler {
     public Map<String, Object> getRenderContext(Appendable writer, Map<String, Object> currentContext) throws IOException {
         return lastRenderContext;
     }
-    
+
     /**
      * NOTE: The other overload should be preferred when possible: {@link #getRenderContext(Appendable, Map)
      * @see #getRenderContext(Appendable, Map)
@@ -138,13 +138,13 @@ class ContextHandler {
     public Map<String, Object> getRenderContext(Appendable writer) throws IOException {
         return lastRenderContext;
     }
-    
+
     private Map<String, Object> createRenderContextFromInitial(MapStack<String> initContext, Map<String, Object> extraValues) throws IOException {
 
         // FIXME: here we'll cheat and just dump this into the context. it's a terrible idea but won't matter.
         initContext.putAll(extraValues);
-        
+
         return initContext;
     }
-    
+
 }

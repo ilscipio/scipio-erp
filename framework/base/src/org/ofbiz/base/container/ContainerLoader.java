@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 /**
  * An object that loads containers (background processes).
- * 
+ *
  * <p>Normally, instances of this class are created by OFBiz startup code, and
  * client code should not create instances of this class. Client code is
  * responsible for making sure containers are shut down properly. </p>
@@ -65,8 +65,8 @@ public class ContainerLoader implements StartupLoader {
         this.configFile = config.containerConfig;
 
         List<String> loaders = null;
-        for (Map loaderMap: config.loaders) {
-            if (module.equals(loaderMap.get("class"))) {
+        for (Map<String, String> loaderMap: config.loaders) {
+            if (ContainerLoader.class.getName().equals(loaderMap.get("class"))) { // SCIPIO: removed use of module here
                 loaders = StringUtil.split((String)loaderMap.get("profiles"), ",");
             }
         }

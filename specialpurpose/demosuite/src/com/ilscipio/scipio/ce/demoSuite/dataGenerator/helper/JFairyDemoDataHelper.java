@@ -7,41 +7,41 @@ import java.util.Map;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 
-public class JFairyDemoDataHelper extends DemoDataHelper {
+public class JFairyDemoDataHelper extends AbstractDemoDataHelper {
 
-	private Locale locale;
+    private Locale locale;
 
-	public JFairyDemoDataHelper(Map<String, Object> context) throws Exception {
-		super(context, JFairySettings.class);
-	}
+    public JFairyDemoDataHelper(Map<String, Object> context) throws Exception {
+        super(context, JFairySettings.class);
+    }
 
-	public boolean generateAddress() {
-		return (boolean) getContext().get("generateAddress");
-	}
+    public Locale getLocale() {
+        return locale;
+    }
 
-	public boolean generateUserLogin() {
-		return (boolean) getContext().get("generateUserLogin");
-	}
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
-	public Locale getLocale() {
-		return locale;
-	}
+    public boolean generateAddress() {
+        return (boolean) getContext().get("generateAddress");
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public boolean generateUserLogin() {
+        return (boolean) getContext().get("generateUserLogin");
+    }
 
-	public static class JFairySettings extends DataGeneratorSettings {
+    public static class JFairySettings extends DataGeneratorSettings {
 
-		public JFairySettings(Delegator delegator) throws GenericEntityException {
-			super(delegator);
-		}
+        public JFairySettings(Delegator delegator) throws GenericEntityException {
+            super(delegator);
+        }
 
-		@Override
-		public List<Object> getFields() {
-			return null;
-		}
+        @Override
+        public List<Object> getFields() {
+            return null;
+        }
 
-	}
+    }
 
 }

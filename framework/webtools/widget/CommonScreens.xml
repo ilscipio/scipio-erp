@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,7 +13,7 @@ under the License.
         as well as providing app implementation documentation and examples; 
         to this end it also frequently contains descriptions of many patterns used throughout the backend.
         Some descriptions are also found instead in the common component files such as component://common/widget/CommonScreens.xml and CommonMenus.xml,
-        and others in the create-component templated files under component://resources/templates/Screens.xml and Menus.xml.
+        and others in the create-component templated files under framework/resources/templates/Screens.xml and Menus.xml.
         For more elemental widget language definitions, see corresponding component://widget/dtd/widget-*.xsd files. -->
         
     <!-- SCIPIO: Common settings for other *Screens.xml files in this app (those that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
@@ -339,14 +326,16 @@ under the License.
     <screen name="printStart">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printStart.ftl"/></html></platform-specific>
+                <!-- SCIPIO: TODO: REVIEW: this template is removed/missing
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printStart.ftl"/></html></platform-specific>-->
             </widgets>
         </section>
     </screen>
     <screen name="printDone">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printDone.ftl"/></html></platform-specific>
+                <!-- SCIPIO: TODO: REVIEW: this template is removed/missing
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/print/printDone.ftl"/></html></platform-specific>-->
             </widgets>
         </section>
     </screen>
@@ -363,6 +352,20 @@ under the License.
                         <platform-specific><html><html-template location="component://webtools/webapp/webtools/cert/viewbrowsercerts.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PopUpDecorator">
+        <section>
+            <actions>
+                <property-map resource="TemporalExpressionUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
@@ -438,7 +441,6 @@ under the License.
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for WEBTOOLS, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>

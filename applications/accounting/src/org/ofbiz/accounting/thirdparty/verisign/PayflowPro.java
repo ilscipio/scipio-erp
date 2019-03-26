@@ -21,12 +21,13 @@ package org.ofbiz.accounting.thirdparty.verisign;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -38,6 +39,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
@@ -88,7 +90,7 @@ public class PayflowPro {
             isPayPal = true;
         }
 
-        Map<String, String> data = new HashMap<String, Object>();
+        Map<String, String> data = new HashMap<String, String>();
 
         boolean isReAuth = false;
         if (isPayPal) {
@@ -208,7 +210,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
 
@@ -279,7 +281,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
 
@@ -354,7 +356,7 @@ public class PayflowPro {
         GenericValue captureTrans = PaymentGatewayServices.getCaptureTransaction(paymentPref);
 
         if (captureTrans == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
@@ -427,11 +429,11 @@ public class PayflowPro {
         String configString = "payment.properties";
 
         if (cart == null || cart.items().size() <= 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalShoppingCartIsEmpty", locale));
         }
 
-        Map<String, String> data = new HashMap<String, Object>();
+        Map<String, String> data = new HashMap<String, String>();
 
         data.put("TRXTYPE", "O");
         data.put("TENDER", "P");
@@ -447,7 +449,7 @@ public class PayflowPro {
             addCartDetails(data, cart);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayflowErrorRetreivingCartDetails", locale));
         }
 
@@ -475,7 +477,7 @@ public class PayflowPro {
         if (!"0".equals(result)) {
             String respMsg = responseMap.get("RESPMSG");
             Debug.logError("A problem occurred while requesting an express checkout token from paypal: Result = " + result + ", Message = " + respMsg, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalCommunicationError", locale));
         }
         token = responseMap.get("TOKEN");
@@ -541,7 +543,7 @@ public class PayflowPro {
         String paymentGatewayConfigId = payPalPaymentSetting.getString("paymentGatewayConfigId");
         String configString = "payment.properties";
 
-        Map<String, String> data = new HashMap<String, Object>();
+        Map<String, String> data = new HashMap<String, String>();
         data.put("TRXTYPE", "O");
         data.put("TENDER", "P");
         data.put("ACTION", "G");
@@ -570,7 +572,7 @@ public class PayflowPro {
         Map<String, String> responseMap = parseResponse(resp);
         if (!"0".equals(responseMap.get("RESULT"))) {
             Debug.logError("A problem occurred while requesting the checkout details from paypal: Result = " + responseMap.get("RESULT") + ", Message = " + responseMap.get("RESPMSG"), module);
-            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels", 
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingErrorUiLabels",
                     "AccountingPayPalCommunicationError", locale));
         }
 
@@ -620,7 +622,7 @@ public class PayflowPro {
         }
         BigDecimal processAmount = paymentPref.getBigDecimal("maxAmount");
 
-        Map<String, String> data = new HashMap<String, Object>();
+        Map<String, String> data = new HashMap<String, String>();
         data.put("TRXTYPE", "O");
         data.put("TENDER", "P");
         data.put("PAYERID", payPalPaymentMethod.getString("payerId"));
@@ -668,7 +670,7 @@ public class PayflowPro {
 
     private static Map<String, String> parseResponse(String resp) {
         Debug.logInfo("Verisign response string: " + resp, module);
-        Map<String, String> parameters = new HashMap<String, Object>();
+        Map<String, String> parameters = new HashMap<String, String>();
         List<String> params = StringUtil.split(resp, "&");
         for (String str : params) {
             if (str.length() > 0) {
@@ -906,8 +908,8 @@ public class PayflowPro {
         Integer maxLogFileSize = Integer.decode(getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "maxLogFileSize", resource, "payment.verisign.maxLogFileSize", "1000000"));
         boolean stackTraceOn = "Y".equalsIgnoreCase(getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "stackTraceOn", resource, "payment.verisign.stackTraceOn", "N"));
 
-        PayflowAPI pfp = new PayflowAPI(hostAddress, hostPort.intValue(), timeout.intValue(), proxyAddress,
-                proxyPort.intValue(), proxyLogon, proxyPassword);
+        PayflowAPI pfp = new PayflowAPI(hostAddress, hostPort, timeout, proxyAddress,
+                proxyPort, proxyLogon, proxyPassword);
         SDKProperties.setLogFileName(logFileName);
         SDKProperties.setLoggingLevel(loggingLevel);
         SDKProperties.setMaxLogFileSize(maxLogFileSize);

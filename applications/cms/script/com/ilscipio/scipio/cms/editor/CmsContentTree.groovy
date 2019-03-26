@@ -58,20 +58,21 @@ if (ServiceUtil.isSuccess(pagesResult)) {
             if (page.primaryPath != null) {
                 String webSiteId = page.webSiteId;
                 String primaryPath = page.primaryPath;
+                String pageId = page.id;
                 if (requestMaps.containsKey(webSiteId)) {
                     Map currMap = requestMaps.get(webSiteId);
                     List currPages = currMap.pages;
                     if (currPages == null) {
                         currPages = new ArrayList();
-                        ComponentUtil.generateMapFromRequestUri(primaryPath, "page", currPages, webSiteId, webSiteId);
+                        ComponentUtil.generateMapFromRequestUri(pageId, primaryPath, "page", currPages, webSiteId, webSiteId);
                         currMap.put("pages",currPages);
                     } else {
-                        ComponentUtil.generateMapFromRequestUri(primaryPath, "page", currPages, webSiteId, webSiteId);
+                        ComponentUtil.generateMapFromRequestUri(pageId, primaryPath, "page", currPages, webSiteId, webSiteId);
                     }
                 } else {
                     Map currMap = new HashMap();
                     List currPages = new ArrayList();
-                    ComponentUtil.generateMapFromRequestUri(primaryPath, "page", currPages, webSiteId, webSiteId);
+                    ComponentUtil.generateMapFromRequestUri(pageId, primaryPath, "page", currPages, webSiteId, webSiteId);
                     currMap.put("pages", currPages);
                     requestMaps.put(webSiteId,currMap);
                 }

@@ -1,0 +1,17 @@
+[Unit]
+Description=Scipio ERP Service
+After=syslog.target network.target network-online.target
+Requires=network-online.target
+
+[Service]
+User=scipio
+Group=scipio
+WorkingDirectory=/home/scipio/scipioce-dev
+ExecStart=/bin/sh -c "exec /usr/java/latest/bin/java -Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/ -jar /home/scipio/scipioce-dev/ofbiz.jar"
+ExecStop=/bin/kill $MAINPID
+SuccessExitStatus=143
+KillMode=process
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

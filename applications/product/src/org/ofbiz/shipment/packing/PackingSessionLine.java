@@ -22,16 +22,21 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * PackingSessionLine.
+ * <p>
+ * SCIPIO: WARNING: 2018-11-28: Do not modify this instance directly; must go through synchronized
+ * {@link PackingSession} methods!
+ */
 @SuppressWarnings("serial")
 public class PackingSessionLine implements java.io.Serializable {
 

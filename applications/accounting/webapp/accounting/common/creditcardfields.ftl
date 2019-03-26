@@ -1,21 +1,9 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- SCIPIO: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
 
@@ -66,29 +54,17 @@ under the License.
         <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
     </@field>
    
-    <#assign cardNumber = parameters["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!>
+    <#assign cardNumber = raw(parameters["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!)>
     <#if cardNumber?has_content>
         <#if cardNumberMinDisplay?has_content>
             <#-- create a display version of the card where all but the last four digits are * -->
-            <#assign cardNumberDisplay = "">
-            <#if cardNumber?has_content>
-                <#assign size = cardNumber?length - 4>
-                <#if (size > 0)>
-                    <#list 0 .. size-1 as foo>
-                        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-                    </#list>
-                    <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-                <#else>
-                    <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-                    <#assign cardNumberDisplay = cardNumber>
-                </#if>
-            </#if>
+            <#assign cardNumberDisplay = acctlib.getCreditCardDisplayNumber(cardNumber!)><#-- SCIPIO: Refactored -->
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumberDisplay!) label=uiLabelMap.AccountingCardNumber required=true />
         <#else>
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber!) label=uiLabelMap.AccountingCardNumber required=true/>
         </#if>
     <#else>
-        <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber) label=uiLabelMap.AccountingCardNumber required=true/>
+        <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value="" label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
   <#-- SCIPIO: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->

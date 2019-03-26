@@ -12,7 +12,7 @@ public class WrappingOptions {
     protected final String targetWrapperName;
     protected final ObjectWrapper targetWrapper;
     protected final RewrapMode rewrapMode;
-    
+
     protected final ObjectWrapper curObjectWrapper;
 
     public WrappingOptions(String targetWrapperName, ObjectWrapper targetWrapper, RewrapMode rewrapMode, ObjectWrapper curObjectWrapper) {
@@ -22,7 +22,7 @@ public class WrappingOptions {
         this.rewrapMode = rewrapMode;
         this.curObjectWrapper = curObjectWrapper;
     }
-    
+
     public static WrappingOptions makeOptions(String wrapper, String mode, Environment env) throws TemplateModelException {
         ObjectWrapper targetWrapper = ObjectWrapperUtil.getObjectWrapperByName(wrapper, env);
         if (targetWrapper == null) {
@@ -31,7 +31,7 @@ public class WrappingOptions {
         if (wrapper == null) {
             wrapper = "";
         }
-        
+
         RewrapMode rewrapMode = RewrapMode.ALWAYS_DEEP;
         if (mode != null && !mode.isEmpty()) {
             rewrapMode = RewrapMode.fromString(mode);
@@ -39,8 +39,8 @@ public class WrappingOptions {
                 throw new TemplateModelException("Unrecognized rewrapping mode: " + mode);
             }
         }
-        
-        return new WrappingOptions(wrapper, ObjectWrapperUtil.getObjectWrapperByName(wrapper, env), 
+
+        return new WrappingOptions(wrapper, ObjectWrapperUtil.getObjectWrapperByName(wrapper, env),
                 rewrapMode, env.getObjectWrapper());
     }
 
@@ -64,17 +64,17 @@ public class WrappingOptions {
      * Rewrap mode for rewrapObject macro (third parameter).
      */
     public enum RewrapMode {
-        
+
         // TODO: all the commented ones
         //ALWAYS("always", true, false, false),
         ALWAYS_DEEP("always-deep", true, true, false);
-        
+
         //NEEDED("needed", false, false, false),
         //NEEDED_DEEP("needed-deep", false, true, false),
-        
+
         //NEEDED_FAST("needed", false, false, true),
         //NEEDED_DEEP_FAST("needed-deep", false, true, true);
-      
+
         private static final Map<String, RewrapMode> strToModeMap;
         static {
             Map<String, RewrapMode> modeMap = new HashMap<>();
@@ -88,7 +88,7 @@ public class WrappingOptions {
         final boolean always; // where to always force rewrap (true), or try to avoid (false)
         final boolean deep;
         final boolean fast;
-        
+
         private RewrapMode(String strVal, boolean always, boolean deep, boolean fast) {
             this.strVal = strVal;
             this.always = always;
@@ -111,7 +111,7 @@ public class WrappingOptions {
         public boolean isDeep() {
             return deep;
         }
-        
+
         public boolean isFast() {
             return fast;
         }

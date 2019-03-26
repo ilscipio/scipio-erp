@@ -486,6 +486,7 @@
                 <parameter param-name="applyingPartyId" from-field="partyId"/>
             </link>
         </menu-item>
+        <!-- 
         <menu-item name="HideOld" title="${uiLabelMap.PartyHideOld}" widget-style="+${styles.action_run_sys} ${styles.action_hide}">
             <condition>
                 <if-true field="showOld"/>
@@ -502,7 +503,7 @@
                 <parameter param-name="partyId" from-field="party.partyId"/>
                 <parameter param-name="SHOW_OLD" value="true"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     
 </menus>

@@ -70,13 +70,6 @@ under the License.
 
     <!-- Reusable types -->
 
-    <xs:simpleType name="booleanConst">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="true" />
-            <xs:enumeration value="false" />
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:simpleType name="booleanExpr">
         <xs:restriction base="xs:string">
             <xs:pattern value="\$\{.+\}|true|false" />
@@ -272,7 +265,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="login-required" type="booleanConst">
+            <xs:attribute name="login-required" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Require a user login to run this method. Defaults to "true".
@@ -281,7 +274,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="use-transaction" type="booleanConst">
+            <xs:attribute name="use-transaction" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Create a transaction if none exists for this thread. Defaults to "true".
@@ -806,6 +799,10 @@ under the License.
             <xs:documentation>
                 Copies a field to a servlet session attribute.
                 Valid only when the simple-method is called as an event, it is ignored otherwise.
+
+                SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+                to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+                It does not provide any form of thread safety or atomicity.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -1052,7 +1049,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="booleanConst" name="no-locale">
+            <xs:attribute type="xs:boolean" name="no-locale">
                 <xs:annotation>
                     <xs:documentation>
                         Suppress property value localization. The user's/system locale will be ignored
@@ -1186,6 +1183,10 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Assigns a field from an expression or script, or from a constant value. Also supports a default value and type conversion.
+
+                SCIPIO: WARNING: Unlike other elements, the default for set-if-null for this operation is currently "false".
+                It is recommended to explicitly specify set-if-null="[true|false]" when the source field may be null, including for "false".
+                NOTE: Unlike this one, the screen widgets "set" element uses default true (due to poor upstream legacy design decision)!
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -1253,17 +1254,24 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="set-if-null" type="booleanConst">
+            <xs:attribute name="set-if-null" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Controls if the target field can be set to null when the from attribute evaluates to null.
-                        Defaults to "false".
+                        Defaults to "false". 
                         
+                        SCIPIO: WARNING: This is default "false" currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets);
+                        all others have default "true" instead (due to poor upstream legacy design decision).
+                        
+                        NOTE: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        this behavior and NOT rely on the default, because it may be changed in the future.
+
                         Optional. Attribute type: constant.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="set-if-empty" type="booleanConst">
+            <xs:attribute name="set-if-empty" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Controls if the target field can be set to an empty value. The meaning of "empty" depends on the Java data type.
@@ -1280,6 +1288,9 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Adjusts a Timestamp by a specified time duration.
+
+                SCIPIO: WARNING: Unlike other elements, the default for set-if-null for this operation is currently "false".
+                It is recommended to explicitly specify set-if-null="[true|false]" when the source field may be null, including for "false".
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -1328,12 +1339,19 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="set-if-null" type="booleanConst">
+            <xs:attribute name="set-if-null" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Controls if the target field can be set to null when the from attribute evaluates to null.
                         Defaults to "false".
+
+                        SCIPIO: WARNING: This is default "false" currently ONLY for "set" and "set-calendar"
+                        operations in simple-method service/event/tests definitions (not other operations, not in screen widgets);
+                        all others have default "true" instead (due to poor upstream legacy design decision).
                         
+                        NOTE: It is recommended to explicitly use set-if-null="false" if you explicitly require
+                        this behavior and NOT rely on the default, because it may be changed in the future.
+
                         Optional. Attribute type: constant.
                     </xs:documentation>
                 </xs:annotation>
@@ -2368,11 +2386,10 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Executes a BSH script. Deprecated - replace with script.
-                
-                The script can be contained in a Java resource, and/or a short
-                script can be included in the element body.
-                If a Java resource is specified, and the element body contains a script,
-                the element body script will be executed after the Java resource script is executed.
+
+                SCIPIO: 2018-09-19: DEPRECATED: Please change your code to use the "script"
+                element with groovy (groovy:) instead. Beanshell is no longer supported and
+                this directive now runs Groovy in a compatibility mode.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType mixed="true">
@@ -2648,7 +2665,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="include-user-login" type="booleanConst">
+            <xs:attribute name="include-user-login" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Include the current UserLogin entity value in the called service's IN parameters.
@@ -2658,7 +2675,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="break-on-error" type="booleanConst">
+            <xs:attribute name="break-on-error" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Halt script execution if the called service returns an error.
@@ -2688,7 +2705,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="require-new-transaction" type="booleanConst">
+            <xs:attribute name="require-new-transaction" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Require a new transaction for the called service.
@@ -2738,7 +2755,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="include-user-login" type="booleanConst">
+            <xs:attribute name="include-user-login" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Include the current UserLogin entity value in the called service's IN parameters.
@@ -2877,6 +2894,10 @@ under the License.
             <xs:documentation>
                 Copies the called service's OUT attribute to the specified session attribute.
                 Valid only when the script is run in an event.
+                
+                SCIPIO: WARNING: When dealing with collections in session attributes, this method must only be used 
+                to modify thread-safe collections such as ConcurrentHashMap or CopyOnWriteArrayList.
+                It does not provide any form of thread safety or atomicity.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -2926,9 +2947,49 @@ under the License.
             <xs:documentation>
                 Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
                 included in the script attribute or in the element body.
+
+                SCIPIO: 2018-09-21: This now recognizes explicit "lang" attribute, which can also be
+                specified using a prefix such as "groovy:" in the body.
+
+                NOTE: 2018-09-21: This element has been patched for inline scripts:
+                When using the XML body to define inline script, old-style
+                operators such as @and, @or are NOT converted, to avoid interfering with the script.
+                Only the "script" attribute code receives this old-style operator conversion.
+                The old-style operators are practically useless today and only interfere with code.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType mixed="true">
+            <xs:attribute name="lang">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Script language, explicit.
+                        Optional for scripts specified by location (extension is used instead; NOTE: 2016-11-11: lang attribute may be ignored for location).
+                        Required for scripts inlined as child CDATA text script body or script attribute
+                        IF the language name is not otherwise prefixed to the script body followed by colon (with no leading space, e.g. "groovy:...").
+                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix
+                        as it is less error-prone (prefix is space-sensitive) and supports xml editor completion.
+                        Default: (none)
+                        RECOMMENDED: groovy</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="groovy" />
+                        <xs:enumeration value="simple-method" />
+                        <xs:enumeration value="simple-map-processor" />
+                        <!-- SCIPIO: 2018-09-19: Since this attribute was added for Scipio, likely nobody used this, so can let xml parser report as error
+                        <xs:enumeration value="bsh">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SCIPIO: 2018-09-19: DEPRECATED: Please change your code to groovy instead.
+                                    Beanshell is no longer supported and this directive now runs Groovy in a compatibility mode.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>-->
+                        <!-- SCIPIO: 2018-09-19: This was never used, and it's certain it cannot work
+                            anymore; unclear if it ever had a chance of working or could in future
+                        <xs:enumeration value="java" />-->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="location">
                 <xs:annotation>
                     <xs:documentation>
@@ -2948,6 +3009,14 @@ under the License.
                         
                         Required if the location attribute is empty. Attribute type: script.
                     </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="trim-lines" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                        NOTE: This gets rid of indents, but flattens code.
+                        NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
+                        Default: true (to optimize caching speed)</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>
@@ -3158,7 +3227,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="ignore-if-null" type="booleanConst">
+            <xs:attribute name="ignore-if-null" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Ignore the condition if the r-value is null.
@@ -3168,7 +3237,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="ignore-if-empty" type="booleanConst">
+            <xs:attribute name="ignore-if-empty" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Ignore the condition if the r-value is empty.
@@ -3178,7 +3247,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="ignore-case" type="booleanConst">
+            <xs:attribute name="ignore-case" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Perform a case-insensitive comparison.
@@ -3269,7 +3338,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="do-cache-clear" type="booleanConst">
+            <xs:attribute name="do-cache-clear" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Clear the cache. Defaults to "true".
@@ -3278,7 +3347,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="or-store" type="booleanConst">
+            <xs:attribute name="or-store" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Store the entity value if it already exists. Defaults to "false".
@@ -4316,7 +4385,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="get-long-only" type="booleanConst">
+            <xs:attribute name="get-long-only" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>
                         Preserve the sequence type - a numeric long. If set to "false" the sequence
@@ -4791,6 +4860,60 @@ under the License.
         </xs:complexType>
     </xs:element>
 
+
+<!--
+    ================================
+    == Other Operations (SCIPIO) ===
+    ================================
+-->
+
+    <xs:element name="synchronized" substitutionGroup="OtherOperations">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Wraps the code in a java synchronized block on the given field.
+                Added 2018-11-20.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations"/>
+            <xs:attribute name="field" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the field to use.
+                        
+                        Optional. Attribute type: expression.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="try" substitutionGroup="OtherOperations">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Wraps the code in a java try/finally block.
+                TODO: Does not yet support catch block.
+                Added 2018-11-28.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations" />
+                <xs:element minOccurs="0" maxOccurs="1" ref="finally"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="finally">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Code that always runs whether try works or throws an exception.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations"/>
+        </xs:complexType>
+    </xs:element>
+
     <!--
         ======================================================
         ========== The Simple Map Processor Section ==========
@@ -5084,7 +5207,7 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="replace" default="true">
+        <xs:attribute name="replace" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>
                     Specify if an existing field in the out-Map should be replaced or not, defaults to true.
@@ -5092,26 +5215,14 @@ under the License.
                     and if it finds a value of the same name already there it will not copy over top of that value.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="set-if-null" default="true">
+        <xs:attribute name="set-if-null" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>
                     Specifies whether or not to set fields that are null or empty.
                     Defaults to true.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="convert">
@@ -5155,7 +5266,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="replace" default="true">
+        <xs:attribute name="replace" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>
                     Specify if an existing field in the out-Map should be replaced or not, defaults to true.
@@ -5163,26 +5274,14 @@ under the License.
                     and if it finds a value of the same name already there it will not copy over top of that value.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="set-if-null" default="true">
+        <xs:attribute name="set-if-null" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>
                     Specifies whether or not to set fields that are null or empty.
                     Defaults to true.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="format">
             <xs:annotation>

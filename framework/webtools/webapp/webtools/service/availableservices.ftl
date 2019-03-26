@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#--Dispatcher Name: ${dispatcherName!uiLabelMap.CommonNA} -->
@@ -26,24 +13,33 @@ under the License.
 <#if selectedServiceMap??>
 
   <#if showWsdl?? && showWsdl == true>
-    <@section title="${rawLabel('WebtoolsServiceWSDL')} - ${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title=rawLabel('WebtoolsServiceWSDL')+" - "+rawLabel('WebtoolsService')+" "+raw(selectedServiceMap.serviceName)>
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
-        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
+        <a href="<@pageUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
-    <@section title="${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title=rawLabel('WebtoolsService')+" "+raw(selectedServiceMap.serviceName)>
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
-          <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
-          <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
+          <@menuitem type="link" href=makePageUrl(url) text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makePageUrl("scheduleJob?SERVICE_NAME=${raw(selectedServiceMap.serviceName)}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
+          <@menuitem type="link" href=makePageUrl("setSyncServiceParameters?SERVICE_NAME=${raw(selectedServiceMap.serviceName)}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
+
+        <#if selectedServiceMap.deprecatedUseInstead?has_content>
+          <@section title=rawLabel('WebtoolsWarningLogLevel')?upper_case+": "+rawLabel('WebtoolsDeprecated')>
+            <@field type="display" label=uiLabelMap.WebtoolsDeprecatedUseInstead><#if raw(selectedServiceMap.deprecatedUseInstead)?lower_case == "none">${uiLabelMap.CommonNone}<#else><#rt/>
+                <a href="<@pageUrl>ServiceList?sel_service_name=${selectedServiceMap.deprecatedUseInstead}</@pageUrl>">${selectedServiceMap.deprecatedUseInstead}</a></#if></@field><#lt/>
+            <@field type="display" label=uiLabelMap.CommonSince>${selectedServiceMap.deprecatedSince!}</@field>
+            <@field type="display" label=uiLabelMap.CommonReason>${selectedServiceMap.deprecatedReason!}</@field>
+          </@section>
+        </#if>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
     <@row>
         <@cell columns=6>
-          <form name="exportServiceEoModelBundle" method="post" action="<@ofbizUrl>exportServiceEoModelBundle</@ofbizUrl>" class="basic-form">
+          <form name="exportServiceEoModelBundle" method="post" action="<@pageUrl>exportServiceEoModelBundle</@pageUrl>" class="basic-form">
             <input type="hidden" name="sel_service_name" value="${selectedServiceMap.serviceName}"/>
             <input type="hidden" name="serviceName" value="${selectedServiceMap.serviceName}"/>
             Save eomodeld to Local Path: <input type="text" name="eomodeldFullPath" value="${parameters.eomodeldFullPath!}" size="60"/>
@@ -53,7 +49,7 @@ under the License.
       </@row>
     <@row>
         <@cell>
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="fields">
         <@thead>
           <@tr>
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -66,7 +62,7 @@ under the License.
             <@td>${uiLabelMap.WebtoolsServiceName}</@td>
             <@td>${selectedServiceMap.serviceName}</@td>
             <@td>${uiLabelMap.WebtoolsEngineName}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>">${selectedServiceMap.engineName}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@pageUrl>">${selectedServiceMap.engineName}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.CommonDescription}</@td>
@@ -76,19 +72,19 @@ under the License.
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsExportable}</@td>
-            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool == "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>" class="+${styles.link_nav!}" >${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
+            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool == "true">&nbsp;(<a href="<@pageUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@pageUrl>" class="+${styles.link_nav_inline!}" >WSDL</a>)</#if></@td>
             <@td>${uiLabelMap.WebtoolsLocation}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>">${selectedServiceMap.location}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=location@${selectedServiceMap.location}</@pageUrl>">${selectedServiceMap.location}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsDefinitionLocation}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>">${selectedServiceMap.definitionLocation}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@pageUrl>">${selectedServiceMap.definitionLocation}</a></@td>
             <@td>${uiLabelMap.WebtoolsDefaultEntityName}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>">${selectedServiceMap.defaultEntityName}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@pageUrl>">${selectedServiceMap.defaultEntityName}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsArtifactInfo}</@td>
-            <@td><a href="<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>">${uiLabelMap.WebtoolsArtifactInfo}</a></@td>
+            <@td><a href="<@pageUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@pageUrl>">${uiLabelMap.WebtoolsArtifactInfo}</a></@td>
             <@td>${uiLabelMap.WebtoolsRequireNewTransaction}</@td>
             <@td>${selectedServiceMap.requireNewTransaction}</@td>
           </@tr>
@@ -110,7 +106,7 @@ under the License.
     <@cell>
         <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list">
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
@@ -140,7 +136,7 @@ under the License.
           ${selectedServiceMap.implServices}
         <#elseif selectedServiceMap.implServices?has_content>
           <#list selectedServiceMap.implServices as implSrv>
-            <a href="<@ofbizUrl>${url}?sel_service_name=${implSrv.getService()}</@ofbizUrl>">${implSrv.getService()}</a><br />
+            <a href="<@pageUrl>${url}?sel_service_name=${implSrv.getService()}</@pageUrl>">${implSrv.getService()}</a><br />
           </#list>
         </#if>
     </@cell>
@@ -161,7 +157,7 @@ under the License.
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
-        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-complex">
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEventName}</@th>
@@ -188,9 +184,9 @@ under the License.
               <#if ecaMap.actions?has_content>
                 <@td>
                   <#list ecaMap.actions as action>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
-                        <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName!uiLabelMap.CommonNA}</a></@td>
+                        <@td colspan="2"><a href="<@pageUrl>${url}?sel_service_name=${action.serviceName}</@pageUrl>">${action.serviceName!uiLabelMap.CommonNA}</a></@td>
                       </@tr>
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError!uiLabelMap.CommonNA}</@td>
@@ -215,13 +211,13 @@ under the License.
               <#if ecaMap.conditions?has_content>
                 <@td>
                   <#list ecaMap.conditions as condition>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType!uiLabelMap.CommonNA}</@td>
                         <@td>
                           <b>${uiLabelMap.WebtoolsConditionService}</b>
                           <#if condition.conditionService?has_content>
-                            <a href="<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>">${condition.conditionService!uiLabelMap.CommonNA}</a>
+                            <a href="<@pageUrl>${url}?sel_service_name=${condition.conditionService}</@pageUrl>">${condition.conditionService!uiLabelMap.CommonNA}</a>
                           <#else>
                             ${condition.conditionService!uiLabelMap.CommonNA}
                           </#if>
@@ -250,7 +246,7 @@ under the License.
               <#if ecaMap.sets?has_content>
                 <@td>
                   <#list ecaMap.sets as set>
-                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                    <@table type="fields">
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName!uiLabelMap.CommonNA}</@td>
                         <@td>&nbsp;</@td>
@@ -298,7 +294,7 @@ under the License.
           <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <@table type="data-list" class="+param-table"> <#-- orig: class="basic-table param-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list" class="+param-table">
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -323,7 +319,7 @@ under the License.
                   <@td>${modelParam.internal!}</@td>
                   <@td>
                     <#if modelParam.entityName??>
-                      <a href="<@ofbizUrl>${url}?constraint=default_entity_name@${modelParam.entityName}</@ofbizUrl>">${modelParam.entityName!}</a>
+                      <a href="<@pageUrl>${url}?constraint=default_entity_name@${modelParam.entityName}</@pageUrl>">${modelParam.entityName!}</a>
                     </#if>
                   </@td>
                   <@td>${modelParam.fieldName!}</@td>
@@ -346,13 +342,13 @@ under the License.
   <#-- Show alphabetical index -->
   <#if serviceNamesAlphaList?? && serviceNamesAlphaList?has_content>
       <@nav type="magellan">
-        <@mli arrival="Service_all"><a href="<@ofbizUrl>${url}</@ofbizUrl>">${uiLabelMap.CommonAll}</a></@mli>
+        <@mli arrival="Service_all"><a href="<@pageUrl>${url}</@pageUrl>">${uiLabelMap.CommonAll}</a></@mli>
         <#assign isfirst=true>
         <#list serviceNamesAlphaList as alpha>
           <#-- Use this to jump to location
           <a href="#Service_${alpha}">${alpha}</a>
            -->
-          <@mli arrival="Service_${alpha}"><a href="<@ofbizUrl>${url}?constraint=alpha@${alpha}</@ofbizUrl>">${alpha}</a></@mli>
+          <@mli arrival="Service_${alpha}"><a href="<@pageUrl>${url}?constraint=alpha@${alpha}</@pageUrl>">${alpha}</a></@mli>
           <#assign isfirst=false>
         </#list>
       </@nav>
@@ -360,13 +356,13 @@ under the License.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
+      <@menuitem type="link" href=makePageUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
     </@menu>
   </#macro>
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName!uiLabelMap.CommonNA} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" autoAltRows=true scrollable=true>
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>
@@ -379,6 +375,9 @@ under the License.
         </@thead>
         <#assign lastChar = "">
         <#list servicesList as service>
+          <#-- SCIPIO: TODO: deprecation warning
+            <td><#if service.deprecated?has_content><strike></#if><a href='<@pageUrl>${url}?sel_service_name=${service.serviceName}</@pageUrl>'>${service.serviceName}</a><#if service.deprecated?has_content></strike> @deprecated</#if></td>
+          -->
           <#assign firstChar = service.serviceName?substring(0, 1)>
           <#if firstChar != lastChar>
             <#assign anchorId = "Service_${firstChar}">
@@ -388,12 +387,12 @@ under the License.
             <#assign anchorAttribs = {}>
           </#if>
           <@tr>
-            <@td id=anchorId attribs=anchorAttribs><a href="<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>">${service.serviceName}</a></@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${service.engineName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.engineName}</a></@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName!uiLabelMap.CommonNA}</@ofbizUrl>">${service.defaultEntityName}</a></@td>
+            <@td id=anchorId attribs=anchorAttribs><#if service.deprecated?has_content><strike></#if><a href="<@pageUrl>${url}?sel_service_name=${service.serviceName}</@pageUrl>">${service.serviceName}</a><#if service.deprecated?has_content></strike> (${uiLabelMap.WebtoolsDeprecated})</#if></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=engine_name@${service.engineName!uiLabelMap.CommonNA}</@pageUrl>">${service.engineName}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=default_entity_name@${service.defaultEntityName!uiLabelMap.CommonNA}</@pageUrl>">${service.defaultEntityName}</a></@td>
             <@td>${service.invoke}</@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=location@${service.location!uiLabelMap.CommonNA}</@ofbizUrl>">${service.location}</a></@td>
-            <@td><a href="<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>">${service.definitionLocation}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=location@${service.location!uiLabelMap.CommonNA}</@pageUrl>">${service.location}</a></@td>
+            <@td><a href="<@pageUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@pageUrl>">${service.definitionLocation}</a></@td>
           </@tr>
           <#assign lastChar = firstChar>
         </#list>

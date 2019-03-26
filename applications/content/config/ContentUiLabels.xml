@@ -29,7 +29,13 @@
         <value xml:lang="zh">无法找到cmsform！</value>
         <value xml:lang="zh-TW">無法找到cmsform！</value>
     </property>
+    <property key="ConfirmDeleteContent">
+        <value xml:lang="de">Wollen Sie den Inhalt wirklich löschen?</value>
+        <value xml:lang="en">Do you really want to delete this content?</value>
+        <value xml:lang="fr">Voulez-vous vraiment supprimer ce document ?</value>
+    </property>
     <property key="ContenCommEventContentAssocNotFoundForDelete">
+        <value xml:lang="de">Die fürs Löschen benötigte CommEventContentAssoc Entity konnte nicht gefunden werden. communicationEventId: ${parameters.communicationEventId},  contentId: ${parameters.contentId}</value>
         <value xml:lang="en">CommEventContentAssoc entity not found for delete, communicationEventId: ${parameters.communicationEventId} and contentId: ${parameters.contentId}</value>
         <value xml:lang="fr">L'association avec la communication ${parameters.communicationEventId} et le document ${parameters.contentId} pour la suppression n'a pas été trouvée</value>
         <value xml:lang="it">Entità CommEventContentAssoc non trovata da cancellare, communicationEventId: ${parameters.communicationEventId} e contentId: ${parameters.contentId}</value>
@@ -40,6 +46,7 @@
         <value xml:lang="zh-TW">沒有找到要刪除的通訊事件內容結合(CommEventContentAssoc)資料資料實體,通訊事件識別(communicationEventId):${parameters.communicationEventId}, 內容識別(contentId):${parameters.contentId}</value>
     </property>
     <property key="ContenCommEventContentAssocNotFoundForUpdate">
+        <value xml:lang="de">Die zur Aktualisierung benötigte CommEventContentAssoc entity konnte nicht gefunden werden. communicationEventId: ${parameters.communicationEventId}, contentId: ${parameters.contentId}</value>
         <value xml:lang="en">CommEventContentAssoc entity not found for update, communicationEventId: ${parameters.communicationEventId} and contentId: ${parameters.contentId}</value>
         <value xml:lang="fr">L'association avec la communication ${parameters.communicationEventId} et le document ${parameters.contentId} pour la mise à jour n'a pas été trouvée</value>
         <value xml:lang="it">Entità CommEventContentAssoc non trovata da aggiornare, communicationEventId: ${parameters.communicationEventId} e contentId: ${parameters.contentId}</value>
@@ -51,6 +58,7 @@
     </property>
     <property key="ContentAbsoluteFile">
         <value xml:lang="da">Absolut fil</value>
+        <value xml:lang="de">Absolute Datei</value>
         <value xml:lang="en">Absolute File</value>
         <value xml:lang="fr">Fichier à nom absolu</value>
         <value xml:lang="it">File assoluto</value>
@@ -59,6 +67,10 @@
         <value xml:lang="vi">Tập tin tuyệt đối</value>
         <value xml:lang="zh">绝对地址文件</value>
         <value xml:lang="zh-TW">絕對位址檔案</value>
+    </property>
+    <property key="ContentAltStcLocFieldInfo">
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
+        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
     </property>
     <property key="ContentAnswer">
         <value xml:lang="ar">الجواب</value>
@@ -95,6 +107,7 @@
         <value xml:lang="zh-TW">回答</value>
     </property>
     <property key="ContentAnyAssocType">
+        <value xml:lang="de">Jeder Beziehungs-Typ (Assoc Type)</value>
         <value xml:lang="en">Any Assoc Type</value>
         <value xml:lang="fr">Tous types d'associations</value>
         <value xml:lang="ja">任意の関連付け種類</value>
@@ -104,6 +117,7 @@
         <value xml:lang="zh-TW">任一結合類型</value>
     </property>
     <property key="ContentArticleName">
+        <value xml:lang="de">Artikelname</value>
         <value xml:lang="en">Article Name</value>
         <value xml:lang="fr">Nom de l'article</value>
         <value xml:lang="ja">記事名</value>
@@ -114,6 +128,7 @@
         <value xml:lang="zh-TW">文章名稱</value>
     </property>
     <property key="ContentArticleNameIsMissing">
+        <value xml:lang="de">Artikelname fehlt.</value>
         <value xml:lang="en">Article Name is missing.</value>
         <value xml:lang="fr">Le nom de l'article est manquant.</value>
         <value xml:lang="it">Nome articolo è mancante.</value>
@@ -141,6 +156,7 @@
         <value xml:lang="zh-TW">內容結合</value>
     </property>
     <property key="ContentAssocDeactivatingError">
+        <value xml:lang="de">Fehler beim Deaktivieren von ContentAssoc. Entity ist null.</value>
         <value xml:lang="en">Error in deactivating ContentAssoc. Entity is null.</value>
         <value xml:lang="fr">Erreur dans la désactivation de l'association. Entité inexistante.</value>
         <value xml:lang="it">Errore nella disattivazione dell'entità ContentAssoc che è nulla.</value>
@@ -151,6 +167,7 @@
         <value xml:lang="zh-TW">內容結合(ContentAssoc)關閉時出錯.資料資料實體是空的(null).</value>
     </property>
     <property key="ContentAssocNotFound">
+        <value xml:lang="de">Es konnte keine Beziehung für contentId ${activeContentId} und contentIdTo ${contentIdTo} and contentAssocTypeId ${contentAssocTypeId} und fromDate ${fromDate} gefunden werden.</value>
         <value xml:lang="en">No association found for contentId ${activeContentId} and contentIdTo ${contentIdTo} and contentAssocTypeId ${contentAssocTypeId} and fromDate ${fromDate}</value>
         <value xml:lang="fr">Pas d'association trouvée pour le document référencé ${activeContentId} et le document associé référencé ${contentIdTo} sous le type d'association ${contentAssocTypeId} et pour la date ${fromDate}</value>
         <value xml:lang="it">Nessuna associazione trovata per il contenuto ${activeContentId} e il contenuto a ${contentIdTo} e il tipo associazione contenuto ${contentAssocTypeId} e dalla data ${fromDate}</value>
@@ -161,6 +178,7 @@
         <value xml:lang="zh-TW">沒有找到結合:內容識別(contentId) ${activeContentId}, 內容識別到(contentIdTo) ${contentIdTo},內容結合類型識別(contentAssocTypeId) ${contentAssocTypeId},日期從(fromDate) ${fromDate}</value>
     </property>
     <property key="ContentAssocRetrievingError">
+        <value xml:lang="de">Fehler beim Abrufen des Inhalts: ${errorString}</value>
         <value xml:lang="en">Error in retrieving Content: ${errorString}</value>
         <value xml:lang="fr">Erreur dans la recherche de document : ${errorString}</value>
         <value xml:lang="it">Errore nel ricavare ContentAsssoc entity: ${errorString}</value>
@@ -171,7 +189,8 @@
         <value xml:lang="zh-TW">取得內容(Content)時出錯:${errorString}</value>
     </property>
     <property key="ContentAssocUpdateError">
-        <value xml:lang="en">Error in updating ContentAssoc. Entity is null.</value>
+        <value xml:lang="de">Fehler beim Aktualisieren von ContentAssoc. Entity ist null.</value>
+        <value xml:lang="en">Error in updating ContentAssoc. Entity ist null.</value>
         <value xml:lang="fr">Erreur dans la mise à jour de l'association. Entité inexistante.</value>
         <value xml:lang="it">Errore nell'aggiornamento dell'entità ContentAssoc che è nulla.</value>
         <value xml:lang="ja">コンテンツ関連付けの更新中にエラー。エンティティが空です。</value>
@@ -216,6 +235,7 @@
     </property>
     <property key="ContentAttributeName">
         <value xml:lang="da">Attribut navn</value>
+        <value xml:lang="de">Attributname</value>
         <value xml:lang="en">Attribute Name</value>
         <value xml:lang="fr">Nom d'attribut</value>
         <value xml:lang="it">Nome attributo</value>
@@ -227,6 +247,7 @@
         <value xml:lang="zh-TW">屬性名稱</value>
     </property>
     <property key="ContentAutoCreateKeywords">
+        <value xml:lang="de">Keywörter automatisch erstellen.</value>
         <value xml:lang="en">Auto Create Keywords</value>
         <value xml:lang="fr">Création automatique des mots clés</value>
         <value xml:lang="ja">キーワード自動作成</value>
@@ -237,6 +258,7 @@
     </property>
     <property key="ContentBlog">
         <value xml:lang="da">Blog</value>
+        <value xml:lang="de">Blog</value>
         <value xml:lang="en">Blog</value>
         <value xml:lang="fr">Blog</value>
         <value xml:lang="it">Blog</value>
@@ -249,6 +271,7 @@
     </property>
     <property key="ContentBlogArticle">
         <value xml:lang="da">Artikel</value>
+        <value xml:lang="de">Artikel</value>
         <value xml:lang="en">Article</value>
         <value xml:lang="fr">Article</value>
         <value xml:lang="it">Articolo</value>
@@ -261,6 +284,7 @@
     </property>
     <property key="ContentBlogArticleList">
         <value xml:lang="da">Liste med blog artikler</value>
+        <value xml:lang="de">Liste an Blogartikeln</value>
         <value xml:lang="en">List of Blog articles</value>
         <value xml:lang="fr">Liste des articles du blog</value>
         <value xml:lang="it">Lista degli articoli Blog</value>
@@ -273,6 +297,7 @@
     </property>
     <property key="ContentBlogDescription">
         <value xml:lang="da">Blog beskrivelse</value>
+        <value xml:lang="de">Blog Beschreibung</value>
         <value xml:lang="en">Blog Description</value>
         <value xml:lang="fr">Description du blog</value>
         <value xml:lang="it">Descrizione blog</value>
@@ -285,6 +310,7 @@
     </property>
     <property key="ContentBlogEdit">
         <value xml:lang="da">Redigér en blog</value>
+        <value xml:lang="de">Blog bearbeiten</value>
         <value xml:lang="en">Edit a Blog</value>
         <value xml:lang="fr">Modifier un blog</value>
         <value xml:lang="it">Aggiorna un Blog</value>
@@ -296,8 +322,9 @@
         <value xml:lang="zh-TW">編輯一個部落格</value>
     </property>
     <property key="ContentBlogEntryId">
-        <value xml:lang="da">Blog indlæg id</value>
-        <value xml:lang="en">Blog entry Id</value>
+        <value xml:lang="da">Blog indlæg ID</value>
+        <value xml:lang="de">Blog Eintrag ID</value>
+        <value xml:lang="en">Blog entry ID</value>
         <value xml:lang="fr">Réf. de note de blog</value>
         <value xml:lang="it">Voce blog</value>
         <value xml:lang="ja">ブログエントリID</value>
@@ -309,6 +336,7 @@
     </property>
     <property key="ContentBlogList">
         <value xml:lang="da">Liste med blogs</value>
+        <value xml:lang="de">Liste der Blogs</value>
         <value xml:lang="en">List of Blogs</value>
         <value xml:lang="fr">Liste des blogs</value>
         <value xml:lang="it">Lista dei Blog</value>
@@ -321,6 +349,7 @@
     </property>
     <property key="ContentBlogName">
         <value xml:lang="da">Blog navn</value>
+        <value xml:lang="de">Blog Name</value>
         <value xml:lang="en">Blog Name</value>
         <value xml:lang="fr">Nom du blog</value>
         <value xml:lang="it">Nome blog</value>
@@ -333,6 +362,7 @@
     </property>
     <property key="ContentBlogPost">
         <value xml:lang="da">POST</value>
+        <value xml:lang="de">POST</value>
         <value xml:lang="en">POST</value>
         <value xml:lang="fr">POST</value>
         <value xml:lang="it">Inviare</value>
@@ -345,6 +375,7 @@
     </property>
     <property key="ContentBlogPreview">
         <value xml:lang="da">Vis</value>
+        <value xml:lang="de">Vorschau</value>
         <value xml:lang="en">Preview</value>
         <value xml:lang="fr">Visionner</value>
         <value xml:lang="it">Anteprima</value>
@@ -357,6 +388,7 @@
     </property>
     <property key="ContentBlogPublish">
         <value xml:lang="da">Publicer</value>
+        <value xml:lang="de">Publizieren</value>
         <value xml:lang="en">Publish</value>
         <value xml:lang="fr">Publier</value>
         <value xml:lang="it">Pubblica</value>
@@ -369,6 +401,7 @@
     </property>
     <property key="ContentBlogSummary">
         <value xml:lang="da">Resumé</value>
+        <value xml:lang="de">Zusammenfassung</value>
         <value xml:lang="en">Summary</value>
         <value xml:lang="fr">Summario</value>
         <value xml:lang="it">Sommario</value>
@@ -381,6 +414,7 @@
     </property>
     <property key="ContentBlogTopCenter">
         <value xml:lang="da">Midt for i toppen</value>
+        <value xml:lang="de">Oben Mitte</value>
         <value xml:lang="en">Top Center</value>
         <value xml:lang="fr">En haut au centre</value>
         <value xml:lang="it">Alto al centro</value>
@@ -393,6 +427,7 @@
     </property>
     <property key="ContentBlogTopLeft">
         <value xml:lang="da">Til venstre i toppen</value>
+        <value xml:lang="de">Oben Links</value>
         <value xml:lang="en">Top Left</value>
         <value xml:lang="fr">En haut à gauche</value>
         <value xml:lang="it">Alto a sinistra</value>
@@ -405,6 +440,7 @@
     </property>
     <property key="ContentBlogs">
         <value xml:lang="da">Blogs</value>
+        <value xml:lang="de">Blogs</value>
         <value xml:lang="en">Blogs</value>
         <value xml:lang="fr">Blogs</value>
         <value xml:lang="it">Blogs</value>
@@ -417,6 +453,7 @@
     </property>
     <property key="ContentBrowse">
         <value xml:lang="da">Browse</value>
+        <value xml:lang="de">Browse</value>
         <value xml:lang="en">Browse</value>
         <value xml:lang="fr">Consulter</value>
         <value xml:lang="it">Sfoglia</value>
@@ -428,12 +465,14 @@
         <value xml:lang="zh-TW">瀏覽</value>
     </property>
     <property key="ContentCMS">
+        <value xml:lang="de">CMS</value>
         <value xml:lang="en">CMS</value>
         <value xml:lang="zh">内容管理系统</value>
         <value xml:lang="zh-TW">內容管理系統</value>
     </property>
     <property key="ContentCMSAddSubContent">
         <value xml:lang="da">CMS indhold tilføj sub indhold</value>
+        <value xml:lang="de">CMS Inhalte - Unterinhalte hinzufügen</value>
         <value xml:lang="en">CMS Content Add Sub Content</value>
         <value xml:lang="fr">Ajout d'un sous-contenu au contenu de CMS</value>
         <value xml:lang="it">CMS aggiungi sotto contenuto</value>
@@ -446,6 +485,7 @@
     </property>
     <property key="ContentCMSEditPage">
         <value xml:lang="da">CMS indhold redigér side</value>
+        <value xml:lang="de">CMS Content Edit Page</value>
         <value xml:lang="en">CMS Content Edit Page</value>
         <value xml:lang="fr">Modifier la page du contenu de CMS</value>
         <value xml:lang="it">CMS aggiorna pagina</value>
@@ -472,6 +512,7 @@
     </property>
     <property key="ContentCMSSearchPage">
         <value xml:lang="da">CMS søge side</value>
+        <value xml:lang="de">CMS Search Page</value>
         <value xml:lang="en">CMS Search Page</value>
         <value xml:lang="fr">Recherche de la page de CMS</value>
         <value xml:lang="it">CMS pagina di ricerca</value>
@@ -483,6 +524,7 @@
         <value xml:lang="zh-TW">內容管理系統搜尋頁面</value>
     </property>
     <property key="ContentCannotFindContextFileWithEmptyContextRoot">
+        <value xml:lang="de">CONTEXT_FILE kann nicht mit einem leeren Kontextstamm gefunden werden!</value>
         <value xml:lang="en">Cannot find CONTEXT_FILE with an empty context root!</value>
         <value xml:lang="fr">Impossible de trouver CONTEXT_FILE avec un contexte racine vide !</value>
         <value xml:lang="it">Non è possibile trovare il CONTEXT_FILE con un contesto principale vuoto!</value>
@@ -493,6 +535,7 @@
         <value xml:lang="zh-TW">不能用一個空的CoNtext根找到CoNtext檔案(CONTEXT_FILE)！</value>
     </property>
     <property key="ContentCannotGenerateBlogRssFeed">
+        <value xml:lang="de">Kein RSS-Feed für Inhalte generieren: $ {contentId}</value>
         <value xml:lang="en">Not able to generate RSS feed for content: ${contentId}</value>
         <value xml:lang="fr">Impossible de générer le flux RSS pour le document : ${contentId}</value>
         <value xml:lang="it">Non è possibile generare il feed RSS per il contenuto: ${contentId}</value>
@@ -503,6 +546,7 @@
         <value xml:lang="zh-TW">無法為內容產生RSS:${contentId}</value>
     </property>
     <property key="ContentCannotProcessBothCharacterAndBinaryFile">
+        <value xml:lang="de">In dieser Datei können keine Zeichen- und Binärdaten verarbeitet werden</value>
         <value xml:lang="en">Cannot process both character and binary data in the same file</value>
         <value xml:lang="fr">Impossible de procéder avec la présence de données binaires et textuelles dans le même fichier</value>
         <value xml:lang="it">Non è possibile processare i dati di entrambi i file binari e carattere</value>
@@ -547,6 +591,7 @@
         <value xml:lang="zh-TW">字元集</value>
     </property>
     <property key="ContentClearAssociatedRenderCacheError">
+        <value xml:lang="de">Der zugehörige Render-Cache konnte nicht mit dataResourceId ${dataResourceId} gelöscht werden</value>
         <value xml:lang="en">Unable to clear associated render cache with dataResourceId ${dataResourceId}</value>
         <value xml:lang="fr">Impossible de nettoyer la mémoire cache pour la ressource référencée ${dataResourceId}</value>
         <value xml:lang="it">Non è possibile pulire la cache associata alla risorsa dati ${dataResourceId}</value>
@@ -558,6 +603,7 @@
     </property>
     <property key="ContentClip">
         <value xml:lang="da">Klip</value>
+        <value xml:lang="de">Clip</value>
         <value xml:lang="en">Clip</value>
         <value xml:lang="fr">Extraire</value>
         <value xml:lang="it">Taglia</value>
@@ -601,6 +647,7 @@
     </property>
     <property key="ContentCompDocAddDocumentInstancePageForTemplate">
         <value xml:lang="da">Tilføj sammensat dokument sideforekomst for skabelon</value>
+        <value xml:lang="de">Die Composite Document-Instanzseite zur Vorlage hinzufügen</value>
         <value xml:lang="en">Add Composite Document Instance Page for Template</value>
         <value xml:lang="fr">Ajouter une page, instance de document composite pour modèle</value>
         <value xml:lang="it">Aggiungi composizione documenti pagina istanza per template.</value>
@@ -613,6 +660,7 @@
     </property>
     <property key="ContentCompDocAfter">
         <value xml:lang="da">Agter</value>
+        <value xml:lang="de">Danach</value>
         <value xml:lang="en">+Aft</value>
         <value xml:lang="fr">+Après</value>
         <value xml:lang="it">+Dopo</value>
@@ -625,6 +673,7 @@
     </property>
     <property key="ContentCompDocApprovalStatus">
         <value xml:lang="da">Status for godkendelse</value>
+        <value xml:lang="de">Freigabestatus</value>
         <value xml:lang="en">Approval Status</value>
         <value xml:lang="fr">Statut de l'approbation</value>
         <value xml:lang="it">Stato approvazione</value>
@@ -664,6 +713,7 @@
     </property>
     <property key="ContentCompDocBefore">
         <value xml:lang="da">Før</value>
+        <value xml:lang="de">Vorheriges</value>
         <value xml:lang="en">+Bef</value>
         <value xml:lang="fr">+Avant</value>
         <value xml:lang="it">+Prima</value>
@@ -676,6 +726,7 @@
     </property>
     <property key="ContentCompDocChild">
         <value xml:lang="da">Barn</value>
+        <value xml:lang="de">+Child</value>
         <value xml:lang="en">+Child</value>
         <value xml:lang="fr">+Enfant</value>
         <value xml:lang="it">+Figlio</value>
@@ -687,6 +738,7 @@
     </property>
     <property key="ContentCompDocContentRoleEditPage">
         <value xml:lang="da">Indholdsrolle redigér side</value>
+        <value xml:lang="de">Content Role Edit Page</value>
         <value xml:lang="en">Content Role Edit Page</value>
         <value xml:lang="fr">Page d'étition des rôles de contenu</value>
         <value xml:lang="it">Pagina aggiornamento ruolo contenuto composizione documenti</value>
@@ -698,6 +750,7 @@
     </property>
     <property key="ContentCompDocCurrentInstance">
         <value xml:lang="da">Sammensat dokument nuværende instans</value>
+        <value xml:lang="de">Comp Doc Current Instance</value>
         <value xml:lang="en">Comp Doc Current Instance</value>
         <value xml:lang="fr">Instance courante de document composite</value>
         <value xml:lang="it">Istanza attuale</value>
@@ -709,6 +762,7 @@
     </property>
     <property key="ContentCompDocCurrentTemplate">
         <value xml:lang="da">Nuværende skabelon sammensat dokument</value>
+        <value xml:lang="de">Current Template CompDoc</value>
         <value xml:lang="en">Current Template CompDoc</value>
         <value xml:lang="fr">Modèle courant de document composite</value>
         <value xml:lang="it">Template attuale</value>
@@ -720,6 +774,7 @@
     </property>
     <property key="ContentCompDocDown">
         <value xml:lang="da">v Ned</value>
+        <value xml:lang="de">v Dn</value>
         <value xml:lang="en">v Dn</value>
         <value xml:lang="fr">v Bas</value>
         <value xml:lang="it">v Giù</value>
@@ -731,6 +786,7 @@
     </property>
     <property key="ContentCompDocGeneratePDF">
         <value xml:lang="da">Generer sammensat PDF</value>
+        <value xml:lang="de">Generate Composite PDF</value>
         <value xml:lang="en">Generate Composite PDF</value>
         <value xml:lang="fr">Générer un document PDF composite</value>
         <value xml:lang="it">Genera PDF composizione</value>
@@ -742,6 +798,7 @@
     </property>
     <property key="ContentCompDocGoBack">
         <value xml:lang="da">Gå tilbage til roden af sammensat dokument</value>
+        <value xml:lang="de">Go Back to CompDoc Root</value>
         <value xml:lang="en">Go Back to CompDoc Root</value>
         <value xml:lang="fr">Retourner à la racine du document composite</value>
         <value xml:lang="it">Torna indietro alla composizione documenti</value>
@@ -752,6 +809,7 @@
         <value xml:lang="zh-TW">返回複合檔根目錄</value>
     </property>
     <property key="ContentCompDocInstanceAlreadyExists">
+        <value xml:lang="de">Inhalt für ${parameter.rootInstanceContentId} existiert bereits</value>
         <value xml:lang="en">Instance compdoc Content for ${parameters.rootInstanceContentId} already exists</value>
         <value xml:lang="fr">L'instance de composition de document pour ${parameters.rootInstanceContentId} existe déjà</value>
         <value xml:lang="it">Istanza composizione documenti contenuto per ${parameters.rootInstanceContentId} esiste già</value>
@@ -762,7 +820,7 @@
         <value xml:lang="zh-TW">對應${parameters.rootInstanceContentId}的實例compdoc內容已經存在</value>
     </property>
     <property key="ContentCompDocParentContentId">
-        <value xml:lang="da">Forældre inholds id</value>
+        <value xml:lang="da">Forældre inholds ID</value>
         <value xml:lang="de">Übergeordneter Inhalt</value>
         <value xml:lang="en">Parent Content ID</value>
         <value xml:lang="fr">Contenu parent</value>
@@ -827,6 +885,7 @@
     </property>
     <property key="ContentCompDocStartApprovalProcess">
         <value xml:lang="da">Start godkendelsesprocess</value>
+        <value xml:lang="de">Freigabeprozess starten</value>
         <value xml:lang="en">Start Approval Proces</value>
         <value xml:lang="fr">Démarrer le processus d'approbation</value>
         <value xml:lang="it">Inizio processo approvazione</value>
@@ -838,6 +897,7 @@
     </property>
     <property key="ContentCompDocTemplateName">
         <value xml:lang="da">Sammensat dokument skabelonnavn</value>
+        <value xml:lang="de">Comp Doc Template Name</value>
         <value xml:lang="en">Comp Doc Template Name</value>
         <value xml:lang="fr">Nom du modèle de document composite</value>
         <value xml:lang="it">Nome template composizione documenti</value>
@@ -849,6 +909,7 @@
     </property>
     <property key="ContentCompDocUp">
         <value xml:lang="da">^ Op</value>
+        <value xml:lang="de">^ Hoch</value>
         <value xml:lang="en">^ Up</value>
         <value xml:lang="fr">^ Haut</value>
         <value xml:lang="it">^ Sù</value>
@@ -951,6 +1012,7 @@
         <value xml:lang="zh-TW">內容</value>
     </property>
     <property key="ContentContentCreatingError">
+        <value xml:lang="de">Fehler beim Erstellen des Inhalts in ${serviceName}</value>
         <value xml:lang="en">Error creating content in ${serviceName}</value>
         <value xml:lang="fr">Erreur de création du document dans le service ${serviceName}</value>
         <value xml:lang="it">Errore durante la creazione del contenuto in ${serviceName}</value>
@@ -961,7 +1023,8 @@
         <value xml:lang="zh-TW">在${serviceName}中新建內容時出錯</value>
     </property>
     <property key="ContentContentIdOrUploadFileIsMissing">
-        <value xml:lang="en">Content Id or Upload file is missing.</value>
+        <value xml:lang="de">Content ID oder Upload Datei fehlt.</value>
+        <value xml:lang="en">Content ID or Upload file is missing.</value>
         <value xml:lang="fr">La référence du document ou le fichier à charger est manquant.</value>
         <value xml:lang="it">Id contenuto o file da caricare è mancante.</value>
         <value xml:lang="ja">コンテンツIDまたはアップロードファイルが正しくありません。</value>
@@ -1005,6 +1068,7 @@
         <value xml:lang="zh-TW">內容管理應用程式</value>
     </property>
     <property key="ContentContentNoAccessToUploadImage">
+        <value xml:lang="de">Berechtigung zum Bildupload fehlt</value>
         <value xml:lang="en">no access to upload image</value>
         <value xml:lang="fr">Pas d'accès pour charger l'image</value>
         <value xml:lang="it">nessun accesso per caricare l'immagine</value>
@@ -1032,11 +1096,13 @@
         <value xml:lang="zh-TW">內容設定</value>
     </property>
     <property key="ContentContentShow">
+        <value xml:lang="de">Inhalt anzeigen (falls verfügbar)</value>
         <value xml:lang="en">Show Content (if visible else simply Id)</value>
         <value xml:lang="fr">Montre le contenu (si visible sinon uniquement la référence</value>
         <value xml:lang="zh">显示内容（如果可见的话，否则只显示内容标识）</value>
     </property>
     <property key="ContentContentToOrFromErrorRetriving">
+        <value xml:lang="de">Fehler beim Abrufen von Inhalt.</value>
         <value xml:lang="en">Error in retrieving content To or From.</value>
         <value xml:lang="fr">Erreur dans la récupération du document de destination ou d'origine.</value>
         <value xml:lang="it">Errore nel ricavare il contenuto a o da.</value>
@@ -1047,6 +1113,7 @@
         <value xml:lang="zh-TW">取得內容_起或內容_迄時出錯</value>
     </property>
     <property key="ContentContentToOrFromIsNull">
+        <value xml:lang="de">contentTo ${contentTo}/From ${contentFrom} ist null.</value>
         <value xml:lang="en">contentTo ${contentTo}/From ${contentFrom} is null.</value>
         <value xml:lang="fr">Document vers ${contentTo}/Depuis ${contentFrom} est inexistant.</value>
         <value xml:lang="it">Contenuto a ${contentTo}/da ${contentFrom} è nullo.</value>
@@ -1057,6 +1124,7 @@
         <value xml:lang="zh-TW">內容_迄(contentTo) ${contentTo}/內容_起(contentFrom) ${contentFrom} 是空的(null)</value>
     </property>
     <property key="ContentContentUpdatingError">
+        <value xml:lang="de">Fehler beim aktualisieren von Inhalten in ${serviceName}</value>
         <value xml:lang="en">Error updating content in ${serviceName}</value>
         <value xml:lang="fr">Erreur lors de la mise à jour du document ${serviceName}</value>
         <value xml:lang="it">Errore durante l'aggiornamento del contenuto in ${serviceName}</value>
@@ -1068,6 +1136,7 @@
     </property>
     <property key="ContentContents">
         <value xml:lang="ar">المحتويات</value>
+        <value xml:lang="de">Inhalte</value>
         <value xml:lang="en">Contents</value>
         <value xml:lang="fr">Contenus</value>
         <value xml:lang="ja">コンテンツ</value>
@@ -1090,6 +1159,7 @@
         <value xml:lang="zh-TW">結合到這個資料資源的內容記錄</value>
     </property>
     <property key="ContentConvertingDocumentByteBuffer">
+        <value xml:lang="de">Fehler beim Konvertieren des Dokumentbytepuffers: </value>
         <value xml:lang="en">Error converting document byte buffer: </value>
         <value xml:lang="fr">Erreur dans la conversion de document sur les tampons de donnée : </value>
         <value xml:lang="it">Errore durante la conversione del documento in byte buffer: </value>
@@ -1100,6 +1170,7 @@
         <value xml:lang="zh-TW">轉換檔時字元組緩衝區出錯:</value>
     </property>
     <property key="ContentConvertingDocumentError">
+        <value xml:lang="de">Fehler beim konvertieren des Dokuments: ${errorString}</value>
         <value xml:lang="en">Error converting document: ${errorString}</value>
         <value xml:lang="fr">Erreur dans la conversion du document : ${errorString}</value>
         <value xml:lang="it">Errore durante la conversione del documento: ${errorString}</value>
@@ -1109,7 +1180,12 @@
         <value xml:lang="zh">转换文档时出错：${errorString}</value>
         <value xml:lang="zh-TW">轉換檔時出錯:${errorString}</value>
     </property>
+    <property key="ContentConvertDocumentsTreeSuccessful">
+        <value xml:lang="de">Konvertierung erfolgreich. Gesamt : ${counterLine} Zeilen</value>
+        <value xml:lang="en">Convert Documents Tree Successful. Total : ${counterLine} rows</value>
+    </property>
     <property key="ContentCreateContentAssocMethodError">
+        <value xml:lang="de">Nicht 2 von ContentId / To / From</value>
         <value xml:lang="en">Not 2 out of ContentId/To/From</value>
         <value xml:lang="fr">Not 2 out of ContentId/To/From</value>
         <value xml:lang="it">Necessari 2 dei tre parametri ContentId/To/From necessari</value>
@@ -1120,6 +1196,7 @@
         <value xml:lang="zh-TW">內容_迄和內容_起的內容識別不是2個</value>
     </property>
     <property key="ContentCreateDateInvalidFormat">
+        <value xml:lang="de">Created Date ist kein gültiges Timestamp-Eingabeformat.</value>
         <value xml:lang="en">Created Date is not a valid Timestamp input format.</value>
         <value xml:lang="fr">La date de création n'est pas dans un format valide.</value>
         <value xml:lang="it">Data creazione non è nel formato valido.</value>
@@ -1131,7 +1208,7 @@
     </property>
     <property key="ContentCreateFile">
         <value xml:lang="da">Opret fil</value>
-        <value xml:lang="de">Datei erstellen</value>
+        <value xml:lang="de">Neue Datei</value>
         <value xml:lang="en">Create File</value>
         <value xml:lang="fr">Créer le fichier</value>
         <value xml:lang="it">Creare File</value>
@@ -1145,6 +1222,7 @@
     </property>
     <property key="ContentCreateNewBlog">
         <value xml:lang="da">Opret ny blog</value>
+        <value xml:lang="de">Neuer Blog</value>
         <value xml:lang="en">Create New Blog</value>
         <value xml:lang="fr">Créer un nouveau blog</value>
         <value xml:lang="it">Nuovo blog</value>
@@ -1157,6 +1235,7 @@
     </property>
     <property key="ContentCreateNewBlogArticle">
         <value xml:lang="da">Opret ny artikel</value>
+        <value xml:lang="de">Neuer Artikel</value>
         <value xml:lang="en">Create New Art.</value>
         <value xml:lang="fr">Créer un nouvel article</value>
         <value xml:lang="it">Creare nuovo articolo</value>
@@ -1169,6 +1248,7 @@
     </property>
     <property key="ContentCreateNewRootCompDocTemplate">
         <value xml:lang="da">Opret skabelon for nyt sammensat roddokument</value>
+        <value xml:lang="de">Create New Root CompDoc Template</value>
         <value xml:lang="en">Create New Root CompDoc Template</value>
         <value xml:lang="fr">Créer une nouvelle racine de modèle de document composite</value>
         <value xml:lang="it">Creare un nuovo template CompDoc Root</value>
@@ -1180,7 +1260,7 @@
     </property>
     <property key="ContentCreateNewWebSite">
         <value xml:lang="da">Opret ny Webside</value>
-        <value xml:lang="de">Schaffen neue Webseite</value>
+        <value xml:lang="de">Neue Webseite</value>
         <value xml:lang="en">Create New WebSite</value>
         <value xml:lang="fr">Créer un nouveau Site Web</value>
         <value xml:lang="it">Nuovo sito web</value>
@@ -1193,6 +1273,7 @@
     </property>
     <property key="ContentDataBaseText">
         <value xml:lang="da">Database tekst</value>
+        <value xml:lang="de">DataBase Text</value>
         <value xml:lang="en">DataBase Text</value>
         <value xml:lang="fr">Texte de base de données</value>
         <value xml:lang="it">Testo database</value>
@@ -1238,6 +1319,7 @@
         <value xml:lang="zh-TW">屬性</value>
     </property>
     <property key="ContentDataResourceHtml">
+        <value xml:lang="de">Html</value>
         <value xml:lang="en">Html</value>
         <value xml:lang="ja">HTML</value>
         <value xml:lang="pt">HTML</value>
@@ -1245,7 +1327,8 @@
         <value xml:lang="zh-TW">HTML</value>
     </property>
     <property key="ContentDataResourceId">
-        <value xml:lang="en">Data Resource Id</value>
+        <value xml:lang="de">Data Resource ID</value>
+        <value xml:lang="en">Data Resource ID</value>
         <value xml:lang="fr">Ressource de données</value>
         <value xml:lang="zh">数据资源标识</value>
     </property>
@@ -1267,6 +1350,7 @@
         <value xml:lang="zh-TW">圖像</value>
     </property>
     <property key="ContentDataResourceIsNull">
+        <value xml:lang="de">dataResourceId ist null.</value>
         <value xml:lang="en">dataResourceId is null.</value>
         <value xml:lang="fr">La référence de ressource est non présente.</value>
         <value xml:lang="it">dataResourceId è nullo.</value>
@@ -1277,6 +1361,7 @@
         <value xml:lang="zh-TW">資料資源識別(dataResourceId)是空的(null).</value>
     </property>
     <property key="ContentDataResourceNotFound">
+        <value xml:lang="de">Keine data ressource gefunden: ${parameters.dataResourceId}</value>
         <value xml:lang="en">No data resource found for ID: ${parameters.dataResourceId}</value>
         <value xml:lang="fr">Pas de donnée trouvée pour la ressource sous la référence : ${parameters.dataResourceId}</value>
         <value xml:lang="it">Nessuna risorsa dati trovata con ID: ${parameters.dataResourceId}</value>
@@ -1339,6 +1424,7 @@
     </property>
     <property key="ContentDataResourceUpload">
         <value xml:lang="da">Upload</value>
+        <value xml:lang="de">Upload</value>
         <value xml:lang="en">Upload</value>
         <value xml:lang="fr">Télécharger vers le serveur</value>
         <value xml:lang="it">Carica</value>
@@ -1381,6 +1467,7 @@
         <value xml:lang="zh-TW">資料類型</value>
     </property>
     <property key="ContentDataTypeNotYetSupported">
+        <value xml:lang="de">Der Datentyp ${dataResourceTypeId} wird noch nicht supported!</value>
         <value xml:lang="en">Data type ${dataResourceTypeId} is not yet supported!</value>
         <value xml:lang="fr">Le type de donnée ${dataResourceTypeId} n'est pas supporté !</value>
         <value xml:lang="it">Tipo dati ${dataResourceTypeId} non è ancora supportato!</value>
@@ -1392,6 +1479,7 @@
     </property>
     <property key="ContentDecorator">
         <value xml:lang="da">Dekoration</value>
+        <value xml:lang="de">Decorator</value>
         <value xml:lang="en">Decorator</value>
         <value xml:lang="fr">Décorateur</value>
         <value xml:lang="it">Decorazione</value>
@@ -1403,6 +1491,7 @@
     </property>
     <property key="ContentDeleteFolder">
         <value xml:lang="da">Slet folder</value>
+        <value xml:lang="de">Ordner löschen</value>
         <value xml:lang="en">Delete Folder</value>
         <value xml:lang="fr">Suppression de répertoire</value>
         <value xml:lang="it">Cancella cartella</value>
@@ -1415,6 +1504,7 @@
     </property>
     <property key="ContentDocumentType">
         <value xml:lang="da">Dokumenttype</value>
+        <value xml:lang="de">Dokumenttyp</value>
         <value xml:lang="en">Document Type</value>
         <value xml:lang="fr">Type de document</value>
         <value xml:lang="it">Tipo documento</value>
@@ -1427,6 +1517,7 @@
     </property>
     <property key="ContentDownload">
         <value xml:lang="da">Download</value>
+        <value xml:lang="de">Download</value>
         <value xml:lang="en">Download</value>
         <value xml:lang="fr">Télécharger</value>
         <value xml:lang="it">Scarica</value>
@@ -1436,6 +1527,19 @@
         <value xml:lang="vi">Tải về</value>
         <value xml:lang="zh">下载</value>
         <value xml:lang="zh-TW">下載</value>
+    </property>
+    <property key="ContentDownloadPending">
+        <value xml:lang="da">Download afventer</value>
+        <value xml:lang="de">Download ausstehend</value>
+        <value xml:lang="en">Download pending</value>
+        <value xml:lang="fr">Téléchargement en attente</value>
+        <value xml:lang="it">Scarica in sospeso</value>
+        <value xml:lang="ja">ダウンロード待ち</value>
+        <value xml:lang="nl">Download in behandeling</value>
+        <value xml:lang="pt">Download pendente</value>
+        <value xml:lang="vi">Đang chờ tải xuống</value>
+        <value xml:lang="zh">下载待定</value>
+        <value xml:lang="zh-TW">下載待定</value>
     </property>
     <property key="ContentEditProductStore">
         <value xml:lang="ar">تحرير مخزن المنتوج</value>
@@ -1456,6 +1560,7 @@
     </property>
     <property key="ContentEditingLatestRevision">
         <value xml:lang="da">Redigérer seneste revision</value>
+        <value xml:lang="de">Letzte Revision editieren</value>
         <value xml:lang="en">Editing Latest Revision</value>
         <value xml:lang="fr">Modification de la dernière version</value>
         <value xml:lang="it">Aggiorna ultima revisione</value>
@@ -1466,6 +1571,7 @@
         <value xml:lang="zh-TW">編輯最新修訂</value>
     </property>
     <property key="ContentElectronicTextNotFound">
+        <value xml:lang="de">Electronic Text nicht gefunden.</value>
         <value xml:lang="en">Electronic Text not found.</value>
         <value xml:lang="fr">Le texte n'a pas été trouvé.</value>
         <value xml:lang="it">Electronic Text non trovato.</value>
@@ -1526,18 +1632,20 @@
         <value xml:lang="zh-TW">檔案路徑</value>
     </property>
     <property key="ContentFileRelToOFBizHome">
-        <value xml:lang="da">Fil relativt til OFBIZ_HOME</value>
-        <value xml:lang="en">File Rel. to OFBIZ_HOME</value>
-        <value xml:lang="fr">Fichier au nom relatif à OFBIZ_HOME</value>
-        <value xml:lang="it">File relativo alla OFBIZ_HOME</value>
-        <value xml:lang="ja">OFBIZ_HOMEへの相対パス</value>
-        <value xml:lang="pt">Arquivo relativo a OFBIZ_HOME</value>
-        <value xml:lang="vi">Đường dẫn so với thư mục gốc OFBIZ_HOME</value>
-        <value xml:lang="zh">文件相对于OFBIZ_HOME</value>
-        <value xml:lang="zh-TW">檔案相對於OFBIZ_HOME</value>
+        <value xml:lang="da">Fil relativt til SCIPIO_HOME</value>
+        <value xml:lang="de">Datei relativ zum SCIPIO_HOME Verzeichnis</value>
+        <value xml:lang="en">File Rel. to SCIPIO_HOME</value>
+        <value xml:lang="fr">Fichier au nom relatif à SCIPIO_HOME</value>
+        <value xml:lang="it">File relativo alla SCIPIO_HOME</value>
+        <value xml:lang="ja">SCIPIO_HOMEへの相対パス</value>
+        <value xml:lang="pt">Arquivo relativo a SCIPIO_HOME</value>
+        <value xml:lang="vi">Đường dẫn so với thư mục gốc SCIPIO_HOME</value>
+        <value xml:lang="zh">文件相对于SCIPIO_HOME</value>
+        <value xml:lang="zh-TW">檔案相對於SCIPIO_HOME</value>
     </property>
     <property key="ContentFileRelToWebappRoot">
         <value xml:lang="da">Fil relativt til webapp rod</value>
+        <value xml:lang="de">Datei relativ zum webapp root Verzeichnis</value>
         <value xml:lang="en">File Rel. to webapp root</value>
         <value xml:lang="fr">Fichier au nom relatif à la racine de l'application (webapp)</value>
         <value xml:lang="it">File relativo alla webapp root</value>
@@ -1638,6 +1746,7 @@
     </property>
     <property key="ContentForumDescriptionThread">
         <value xml:lang="da">Beskrivelse af tråd</value>
+        <value xml:lang="de">Thread Beschreibung</value>
         <value xml:lang="en">Thread description</value>
         <value xml:lang="fr">Description du fil de discussion</value>
         <value xml:lang="it">Descrizione discussione</value>
@@ -1704,6 +1813,7 @@
     </property>
     <property key="ContentForums">
         <value xml:lang="da">Forummer</value>
+        <value xml:lang="de">Foren</value>
         <value xml:lang="en">Forums</value>
         <value xml:lang="fr">Forums</value>
         <value xml:lang="it">Forums</value>
@@ -1714,6 +1824,7 @@
         <value xml:lang="zh-TW">論壇</value>
     </property>
     <property key="ContentFromDateInvalidFormat">
+        <value xml:lang="de">fromDate ist kein valides date format</value>
         <value xml:lang="en">fromDate not a valid date format</value>
         <value xml:lang="fr">La date de début n'est pas dans un format valide</value>
         <value xml:lang="it">Data dal non è nel formato valido.</value>
@@ -1723,13 +1834,35 @@
         <value xml:lang="zh">开始日期（fromDate）不是有效的日期格式</value>
         <value xml:lang="zh-TW">開始日期(fromDate)不是有效的日期格式</value>
     </property>
+    <property key="ContentGenerateSeoUrlInfo">
+        <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
+        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
+    </property>
+    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
+        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
+        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
+    </property>
+    <property key="ContentGenerateSitemaps">
+        <value xml:lang="de">Sitemaps erstellen</value>
+        <value xml:lang="en">Generate Sitemaps</value>
+    </property>
+    <property key="ContentGenerateSitemapsInfo">
+        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
+        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
+    </property>
+    <property key="ContentGenerateType">
+        <value xml:lang="de">Typ generieren</value>
+        <value xml:lang="en">Generate Type</value>
+    </property>
     <property key="ContentGIF">
+        <value xml:lang="de">GIF</value>
         <value xml:lang="en">GIF</value>
         <value xml:lang="vi">Ảnh GIF</value>
         <value xml:lang="zh-TW">GIF</value>
     </property>
     <property key="ContentGoToContent">
         <value xml:lang="da">Gå til indhold</value>
+        <value xml:lang="de">Gehe zum Inhalt</value>
         <value xml:lang="en">Go to Content</value>
         <value xml:lang="fr">Aller au contenu</value>
         <value xml:lang="it">Vai al contenuto</value>
@@ -1759,6 +1892,7 @@
     </property>
     <property key="ContentGoToFind">
         <value xml:lang="da">Gå til søg</value>
+        <value xml:lang="de">Zur Suche</value>
         <value xml:lang="en">Goto Find</value>
         <value xml:lang="fr">Aller à la recherche</value>
         <value xml:lang="it">Torna alla ricerca</value>
@@ -1769,10 +1903,12 @@
         <value xml:lang="zh-TW">到尋找</value>
     </property>
     <property key="ContentHtml">
+        <value xml:lang="de">HTML</value>
         <value xml:lang="en">HTML</value>
     </property>
     <property key="ContentHtmlText">
         <value xml:lang="da">Html tekst</value>
+        <value xml:lang="de">Html Text</value>
         <value xml:lang="en">Html Text</value>
         <value xml:lang="fr">Texte HTML</value>
         <value xml:lang="it">Teso html</value>
@@ -1801,6 +1937,7 @@
         <value xml:lang="zh-TW">圖像</value>
     </property>
     <property key="ContentIncludeAllSubContents">
+        <value xml:lang="de">Alle Sub-Inhalte einschließen</value>
         <value xml:lang="en">Include all Sub-Contents</value>
         <value xml:lang="fr">Inclure tous les sous doucments</value>
         <value xml:lang="ja">すべてのサブコンテンツを含む</value>
@@ -1808,6 +1945,10 @@
         <value xml:lang="vi">Gồm tất cả các nội dung thành phần</value>
         <value xml:lang="zh">包含全部子内容</value>
         <value xml:lang="zh-TW">包含全部子內容</value>
+    </property>
+    <property key="ContentIncludeVariantProducts">
+        <value xml:lang="de">Inklusive Variantenprodukte</value>
+        <value xml:lang="en">Include Variant Products</value>
     </property>
     <property key="ContentIndex">
         <value xml:lang="ar">الدليل</value>
@@ -1857,6 +1998,7 @@
         <value xml:lang="zh-TW">為輸入的識別建立索引</value>
     </property>
     <property key="ContentIndexingTreeError">
+        <value xml:lang="de">Fehler bei der Indexierung: ${errorString}</value>
         <value xml:lang="en">Error indexing tree: ${errorString}</value>
         <value xml:lang="fr">Erreur dans l'indexation de l'arbre : ${errorString}</value>
         <value xml:lang="it">Errore di indicizzazione albero: ${errorString}</value>
@@ -1867,6 +2009,7 @@
         <value xml:lang="zh-TW">建立索引時出錯:${errorString}</value>
     </property>
     <property key="ContentJPEG">
+        <value xml:lang="de">JPEG</value>
         <value xml:lang="en">JPEG</value>
         <value xml:lang="vi">Ảnh JPEG</value>
     </property>
@@ -1949,6 +2092,7 @@
         <value xml:lang="zh-TW">關鍵字</value>
     </property>
     <property key="ContentLastModifiedDateInvalidFormat">
+        <value xml:lang="de">Letztes Änderungsdatum ist kein gültiges Zeitstempel-Eingabeformat.</value>
         <value xml:lang="en">Last Modified Date is not a valid Timestamp input format.</value>
         <value xml:lang="fr">La date de dernière modification n'est pas dans un format valide.</value>
         <value xml:lang="it">Data modifica non è nel formato valido.</value>
@@ -1959,6 +2103,7 @@
         <value xml:lang="zh-TW">最後修改日期不是有效的Timestamp格式.</value>
     </property>
     <property key="ContentLastUpdatedDateFilter">
+        <value xml:lang="de">Datumsfilter - letzte Aktualisierung</value>
         <value xml:lang="en">Last Updated Date Filter</value>
         <value xml:lang="fr">Dernière mise à jour du filtre de donnée</value>
         <value xml:lang="ja">最終更新日フィルタ</value>
@@ -2007,6 +2152,7 @@
         <value xml:lang="zh-TW">表列自建模板</value>
     </property>
     <property key="ContentLocalFileDoesNotPointToAbsoluteLocation">
+        <value xml:lang="de">DataResource LOCAL_FILE zeigt nicht auf einen absoluten Speicherort</value>
         <value xml:lang="en">DataResource LOCAL_FILE does not point to an absolute location</value>
         <value xml:lang="fr">La ressource LOCAL_FILE ne doit pas indiquer un emplacement absolu</value>
         <value xml:lang="it">La risorda dati LOCAL_FILE non punta ad una posizione assoluta</value>
@@ -2018,6 +2164,7 @@
     </property>
     <property key="ContentMSWord">
         <value xml:lang="da">MS Word</value>
+        <value xml:lang="de">MS Word</value>
         <value xml:lang="en">MS Word</value>
         <value xml:lang="fr">MS Word</value>
         <value xml:lang="it">MS Word</value>
@@ -2042,6 +2189,10 @@
         <value xml:lang="vi">Trang chủ</value>
         <value xml:lang="zh">首页</value>
         <value xml:lang="zh-TW">首頁</value>
+    </property>
+    <property key="ContentMainStcLocFieldInfo">
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
+        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
     </property>
     <property key="ContentMapKey">
         <value xml:lang="da">MapKey</value>
@@ -2127,6 +2278,10 @@
         <value xml:lang="zh">Mime类型模板</value>
         <value xml:lang="zh-TW">Mime類型模板</value>
     </property>
+    <property key="ContentMimeTypeNotSupported">
+        <value xml:lang="de">Mime Type nicht unterstützt</value>
+        <value xml:lang="en">Mime Type not supported</value>
+    </property>
     <property key="ContentNavigate">
         <value xml:lang="da">Naviger</value>
         <value xml:lang="de">Navigieren</value>
@@ -2142,6 +2297,7 @@
         <value xml:lang="zh-TW">導航</value>
     </property>
     <property key="ContentNeitherContentSupplied">
+        <value xml:lang="de">Weder content noch contentId angegeben.</value>
         <value xml:lang="en">Neither content nor contentId supplied.</value>
         <value xml:lang="fr">Ni le document ni sa référence ne sont fournis.</value>
         <value xml:lang="it">Nessuno contenuto specificato.</value>
@@ -2151,9 +2307,13 @@
         <value xml:lang="zh">没有提供内容或内容标识</value>
         <value xml:lang="zh-TW">沒有提供內容或內容識別</value>
     </property>
+    <property key="ContentNewContent">
+        <value xml:lang="de">Neuer Inhalt</value>
+        <value xml:lang="en">New Content</value>
+    </property>
     <property key="ContentNewContentInFolder">
         <value xml:lang="da">Nyt indhold i folder</value>
-        <value xml:lang="de">New Content in Folder</value>
+        <value xml:lang="de">Neuer Inhalt in Ordner</value>
         <value xml:lang="en">New Content in Folder</value>
         <value xml:lang="fr">New Content in Folder</value>
         <value xml:lang="it">New Content in Folder</value>
@@ -2166,7 +2326,7 @@
     </property>
     <property key="ContentNewFolder">
         <value xml:lang="da">Ny folder</value>
-        <value xml:lang="de">New Folder</value>
+        <value xml:lang="de">Neuer Ordner</value>
         <value xml:lang="en">New Folder</value>
         <value xml:lang="fr">New Folder</value>
         <value xml:lang="it">New Folder</value>
@@ -2177,7 +2337,21 @@
         <value xml:lang="zh">新建文件夹</value>
         <value xml:lang="zh-TW">新建檔案夾</value>
     </property>
+    <property key="ContentNewWebSite">
+        <value xml:lang="da">Opret ny Webside</value>
+        <value xml:lang="de">Neue Webseite</value>
+        <value xml:lang="en">New WebSite</value>
+        <value xml:lang="fr">Nouveau Site Web</value>
+        <value xml:lang="it">Nuovo sito web</value>
+        <value xml:lang="ja">新規Webサイトを作成</value>
+        <value xml:lang="nl">Nieuwe website</value>
+        <value xml:lang="pt">Novo site</value>
+        <value xml:lang="vi">Tạo mới trang thông tin</value>
+        <value xml:lang="zh">创建新网站</value>
+        <value xml:lang="zh-TW">新建網站</value>
+    </property>
     <property key="ContentNoContentFilePassed">
+        <value xml:lang="de">Kein Dateiinhalt wurde übergeben: ${fileName}</value>
         <value xml:lang="en">No file content passed for: ${fileName}</value>
         <value xml:lang="it">Nessun file contenuto passato per:  ${fileName}</value>
         <value xml:lang="ja">ファイルコンテンツが渡されませんでした: ${fileName}</value>
@@ -2187,6 +2361,7 @@
         <value xml:lang="zh-TW">沒有傳遞檔案內容:${fileName}</value>
     </property>
     <property key="ContentNoContentFound">
+        <value xml:lang="de">Inhaltsdatensatz nicht für ID gefunden ${contentId}</value>
         <value xml:lang="en">Content record not found for ID ${contentId}</value>
         <value xml:lang="it">Contenuto non trovato ${contentId}</value>
         <value xml:lang="ja">ID ${contentId} のコンテンツレコードが見つかりません</value>
@@ -2196,6 +2371,7 @@
         <value xml:lang="zh-TW">沒有找到內容記錄識別:${contentId}</value>
     </property>
     <property key="ContentNoQuestionsSurveyFound">
+        <value xml:lang="de">Keine Fragen für die Umfrage ID gefunden: ${survey.surveyId}</value>
         <value xml:lang="en">No questions found for survey ID: ${survey.surveyId}</value>
         <value xml:lang="it">Nessuna domanda sondaggio trovata con ID: ${surveyLookup.surveyId}</value>
         <value xml:lang="ja">評価ID: ${survey.surveyId} の質問がみつかりません</value>
@@ -2205,6 +2381,7 @@
         <value xml:lang="zh-TW">沒有找到問題,調查識別:${survey.surveyId}</value>
     </property>
     <property key="ContentNoSurveyFound">
+        <value xml:lang="de">Keine Umfrage gefunden für die Umfrage ID: ${surveyLookup.surveyId}</value>
         <value xml:lang="en">No survey found for survey ID: ${surveyLookup.surveyId}</value>
         <value xml:lang="it">Nessun sondaggio trovato con ID: ${surveyLookup.surveyId}</value>
         <value xml:lang="ja">評価ID: ${surveyLookup.surveyId} の評価がみつかりません</value>
@@ -2214,6 +2391,7 @@
         <value xml:lang="zh-TW">沒有找到調查,調查識別:${surveyLookup.surveyId}</value>
     </property>
     <property key="ContentNoUploadedContentFound">
+        <value xml:lang="de">Kein hochgeladener Inhalt im Kontext gefunden</value>
         <value xml:lang="en">No uploaded content found in context</value>
         <value xml:lang="it">Nessun contenuto caricato trovato</value>
         <value xml:lang="ja">コンテキストにアップロードされたコンテンツが見つかりません</value>
@@ -2254,6 +2432,7 @@
     </property>
     <property key="ContentPDFFile">
         <value xml:lang="da">PDF fil</value>
+        <value xml:lang="de">PDF Datei</value>
         <value xml:lang="en">PDF File</value>
         <value xml:lang="fr">Fichier PDF</value>
         <value xml:lang="it">File PDF</value>
@@ -2265,6 +2444,7 @@
     </property>
     <property key="ContentPDFFilePath">
         <value xml:lang="da">Indtast en sti til PDF fil til automatisk oprettelse af rundspørge</value>
+        <value xml:lang="de">Geben Sie einen PDF-Dateipfad ein, um automatisch eine Umfrage zu erstellen.</value>
         <value xml:lang="en">Enter a PDF file path to automatically create a survey.</value>
         <value xml:lang="fr">Entrez un chemin vers un fichier PDF pour créer automatiquement le sondage</value>
         <value xml:lang="it">Inserire un path file PDF che automaticamente creerà un sondaggio.</value>
@@ -2275,6 +2455,7 @@
         <value xml:lang="zh-TW">輸入PDF檔案路徑來自動新建一份調查.</value>
     </property>
     <property key="ContentPDFGeneratingError">
+        <value xml:lang="de">Fehler beim Generieren des PDF: ${errorString}</value>
         <value xml:lang="en">Error generating PDF: ${errorString}</value>
         <value xml:lang="it">Errore di generazione PDF: ${errorString}</value>
         <value xml:lang="ja">PDFの生成中にエラー: ${errorString}</value>
@@ -2285,6 +2466,7 @@
     </property>
     <property key="ContentPDFSurveyName">
         <value xml:lang="da">Rundspørge navn</value>
+        <value xml:lang="de">PDF/Umfrage Name</value>
         <value xml:lang="en">PDF/Survey Name</value>
         <value xml:lang="fr">PDF/Nom de sondage</value>
         <value xml:lang="it">PDF/Nome sondaggio</value>
@@ -2295,6 +2477,7 @@
         <value xml:lang="zh-TW">PDF/調查名稱</value>
     </property>
     <property key="ContentPNG">
+        <value xml:lang="de">PNG</value>
         <value xml:lang="en">PNG</value>
         <value xml:lang="vi">Ảnh PNG</value>
     </property>
@@ -2340,6 +2523,7 @@
     </property>
     <property key="ContentPathAliasList">
         <value xml:lang="da">Sti alias liste</value>
+        <value xml:lang="de">Pfad Aliasliste</value>
         <value xml:lang="en">Path Alias list</value>
         <value xml:lang="fr">Liste d'alias de chemin d'accès</value>
         <value xml:lang="it">Lista path alias</value>
@@ -2350,6 +2534,7 @@
         <value xml:lang="zh-TW">路徑別名清單</value>
     </property>
     <property key="ContentPermissionNotGranted">
+        <value xml:lang="de">Berechtigung fehlt.</value>
         <value xml:lang="en">Permission not granted.</value>
         <value xml:lang="fr">Permission non accordée.</value>
         <value xml:lang="it">Permesso non abilitato.</value>
@@ -2361,6 +2546,7 @@
     </property>
     <property key="ContentPlainText">
         <value xml:lang="da">Klartekst</value>
+        <value xml:lang="de">Klartext</value>
         <value xml:lang="en">Plain Text</value>
         <value xml:lang="fr">Texte simple</value>
         <value xml:lang="it">Testo fisso</value>
@@ -2371,6 +2557,7 @@
         <value xml:lang="zh-TW">純文字</value>
     </property>
     <property key="ContentPrinterNotAvailable">
+        <value xml:lang="de">Kein Drucker verfügbar</value>
         <value xml:lang="en">No printer available</value>
         <value xml:lang="fr">Pas d'imprimante disponible</value>
         <value xml:lang="it">Nessuna stampante disponibile</value>
@@ -2381,6 +2568,7 @@
         <value xml:lang="zh-TW">沒有可用的印表機</value>
     </property>
     <property key="ContentPrinterNotFound">
+        <value xml:lang="de">Kein Drucker mit dem Namen ${printerName} gefunden</value>
         <value xml:lang="en">No printer found with name: ${printerName}</value>
         <value xml:lang="fr">Pas d'imprimante disponible sous le nom ${printerName}</value>
         <value xml:lang="it">Nessuna stampante trovate con il nome: ${printerName}</value>
@@ -2391,6 +2579,7 @@
         <value xml:lang="zh-TW">沒有找到印表機,名稱:${printerName}</value>
     </property>
     <property key="ContentPrinterNotSupportDocFlavorFormat">
+        <value xml:lang="de">DocFlavor ${psInFormat} wird vom Drucker ${printerName} nicht unterstützt</value>
         <value xml:lang="en">DocFlavor ${psInFormat} not supported by printer: ${printerName}</value>
         <value xml:lang="fr">DocFlavor ${psInFormat} n'est pas supporté par l'imprimante ${printerName}</value>
         <value xml:lang="it">Il formato Doc Flavor ${psInFormat} non è supportato dalla stampante: ${printerName}</value>
@@ -2402,6 +2591,7 @@
     </property>
     <property key="ContentPublishToContent">
         <value xml:lang="da">Udgiv til indhold</value>
+        <value xml:lang="de">Inhalte veröffentlichen</value>
         <value xml:lang="en">Publish-to content</value>
         <value xml:lang="fr">Contenu à publier</value>
         <value xml:lang="it">Pubblica sul contenuto</value>
@@ -2427,6 +2617,7 @@
         <value xml:lang="zh-TW">輸入查詢參數</value>
     </property>
     <property key="ContentQuestionTypeRequiredField">
+        <value xml:lang="de">Fragentyp ${questionType} benötigt, dass das Feld ${requiredField} gesetzt ist</value>
         <value xml:lang="en">Question type ${questionType} requires ${requiredField} to be set</value>
         <value xml:lang="fr">Le type de question ${questionType} requiert le champ ${requiredField} pour être défini</value>
         <value xml:lang="it">Tipo domanda ${questionType} richiede ${requiredField} di essere impostato</value>
@@ -2451,6 +2642,7 @@
     </property>
     <property key="ContentRejected">
         <value xml:lang="da">Afslået</value>
+        <value xml:lang="de">Abgelehnt</value>
         <value xml:lang="en">Rejected</value>
         <value xml:lang="fr">Rejeté</value>
         <value xml:lang="it">Rifiutato</value>
@@ -2461,8 +2653,17 @@
         <value xml:lang="zh">被拒绝了</value>
         <value xml:lang="zh-TW">已被拒絕</value>
     </property>
+    <property key="ContentRemoveOldLocales">
+        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
+        <value xml:lang="en">Remove Old Locales</value>
+    </property>
+    <property key="ContentRemoveSeoUrlInfo">
+        <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
+        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
+    </property>
     <property key="ContentRenameFolder">
         <value xml:lang="da">Omdøb folder</value>
+        <value xml:lang="de">Ordner umbenennen</value>
         <value xml:lang="en">Rename Folder</value>
         <value xml:lang="fr">Renommer le répertoire</value>
         <value xml:lang="it">Rinomina cartella</value>
@@ -2474,6 +2675,7 @@
         <value xml:lang="zh-TW">重命名檔案夾</value>
     </property>
     <property key="ContentRenderingError">
+        <value xml:lang="de">Fehler beim rendering des ContentTypes ${contentType}: ${errorString}</value>
         <value xml:lang="en">Error rendering ${contentType}: ${errorString}</value>
         <value xml:lang="fr">Erreur lors du rendu pour ${contentType} : ${errorString}</value>
         <value xml:lang="it">Errore di rendering ${contentType}: ${errorString}</value>
@@ -2484,6 +2686,7 @@
         <value xml:lang="zh-TW">產生${contentType}時出錯:${errorString}</value>
     </property>
     <property key="ContentRequiredField">
+        <value xml:lang="de">Das Pflichtfeld ${requiredField} ist in der Methode ${resourceDescription} nicht gesetzt</value>
         <value xml:lang="en">Required field ${requiredField} is missing in simple method call ${resourceDescription}</value>
         <value xml:lang="fr">Le champ requis ${requiredField} est manquant dans l'appel d'une méthode simple : ${resourceDescription}</value>
         <value xml:lang="it">Campo ${requiredField} è richiesto ed è mancante nella chiamata a ${resourceDescription}</value>
@@ -2493,6 +2696,10 @@
         <!--value xml:lang="zh">在用简单方法调用 ${resourceDescription} 时，缺少必须的数据项 ${requiredField}</value-->
         <value xml:lang="zh">在呼叫簡單方法 ${resourceDescription} 時，缺少必要的欄位 ${requiredField}</value>
         <value xml:lang="zh-TW">在呼叫簡單方法 ${resourceDescription} 時,缺少必要的欄位 ${requiredField}</value>
+    </property>
+    <property key="ContentReplaceExisting">
+        <value xml:lang="de">Bestehende ersetzen</value>
+        <value xml:lang="en">Replace Existing</value>
     </property>
     <property key="ContentResourceAudio">
         <value xml:lang="da">Audio</value>
@@ -2587,6 +2794,7 @@
     </property>
     <property key="ContentRoot">
         <value xml:lang="da">Rod</value>
+        <value xml:lang="de">Root</value>
         <value xml:lang="en">Root</value>
         <value xml:lang="fr">Racine</value>
         <value xml:lang="it">Principale</value>
@@ -2597,11 +2805,13 @@
         <value xml:lang="zh-TW">根</value>
     </property>
     <property key="ContentSEO">
+        <value xml:lang="de">SEO</value>
         <value xml:lang="en">SEO</value>
         <value xml:lang="zh">搜索引擎优化</value>
         <value xml:lang="zh-TW">搜尋引擎優化</value>
     </property>
     <property key="ContentSearchContents">
+        <value xml:lang="de">Suchinhalte</value>
         <value xml:lang="en">Search Contents</value>
         <value xml:lang="fr">Recherche de documents</value>
         <value xml:lang="ja">コンテンツを検索</value>
@@ -2611,6 +2821,7 @@
         <value xml:lang="zh-TW">搜尋內容</value>
     </property>
     <property key="ContentSecurityCreatePermission">
+        <value xml:lang="de">Sicherheitswarning: um den Service ${resourceDescription} zu nutzen wird die Berechtigung CONTENTMGR_CREATE oder CONTENTMGR_ADMIN benötigt</value>
         <value xml:lang="en">Security Error: to run ${resourceDescription} you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission</value>
         <value xml:lang="it">Errore di sicurezza: per eseguire ${resourceDescription} devi avere il permesso CONTENTMGR_CREATE o CONTENTMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ${resourceDescription} の実行には CONTENTMGR_CREATE または CONTENTMGR_ADMIN 権限が必要です</value>
@@ -2620,6 +2831,7 @@
         <value xml:lang="zh-TW">安全錯誤:要執行${resourceDescription},您必須有 CONTENTMGR_CREATE 或 CONTENTMGR_ADMIN 權限</value>
     </property>
     <property key="ContentSecurityDeletePermission">
+        <value xml:lang="de">Sicherheitswarning: um den Service ${resourceDescription} zu nutzen wird die Berechtigung CONTENTMGR_DELETE oder CONTENTMGR_ADMIN benötigt</value>
         <value xml:lang="en">Security Error: to run ${resourceDescription} you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission</value>
         <value xml:lang="it">Errore di sicurezza: per eseguire ${resourceDescription} devi avere il permesso CONTENTMGR_DELETE o CONTENTMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ${resourceDescription} の実行には CONTENTMGR_DELETE または CONTENTMGR_ADMIN 権限が必要です</value>
@@ -2629,6 +2841,7 @@
         <value xml:lang="zh-TW">安全錯誤:要執行${resourceDescription},您必須有 CONTENTMGR_DELETE 或 CONTENTMGR_ADMIN 權限</value>
     </property>
     <property key="ContentSecurityUpdatePermission">
+        <value xml:lang="de">Sicherheitswarning: um den Service ${resourceDescription} zu nutzen wird die Berechtigung CONTENTMGR_UPDATE oder CONTENTMGR_ADMIN benötigt</value>
         <value xml:lang="en">Security Error: to run ${resourceDescription} you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission</value>
         <value xml:lang="it">Errore di sicurezza: per eseguire ${resourceDescription} devi avere il permesso CONTENTMGR_UPDATE o CONTENTMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ${resourceDescription} の実行には CONTENTMGR_UPDATE または CONTENTMGR_ADMIN 権限が必要です</value>
@@ -2639,6 +2852,7 @@
     </property>
     <property key="ContentSoftRejected">
         <value xml:lang="da">Soft afvist</value>
+        <value xml:lang="de">Soft abgelehnt</value>
         <value xml:lang="en">Soft Rejected</value>
         <value xml:lang="fr">Rejeté publiquement(?)</value>
         <value xml:lang="it">Rifiutato leggermente</value>
@@ -2649,6 +2863,7 @@
         <value xml:lang="zh-TW">柔和地拒絕</value>
     </property>
     <property key="ContentStatusUpdateError">
+        <value xml:lang="de">Problem beim Aktualisieren des Inhaltsstatus: ${errorString}</value>
         <value xml:lang="en">Problem updating content Status: ${errorString}</value>
         <value xml:lang="fr">Problème lors de la mise à jour du statut du document : ${errorString}</value>
         <value xml:lang="it">Problema durante l'aggiornamento dello stato del contenuto: ${errorString}</value>
@@ -2771,6 +2986,7 @@
         <value xml:lang="zh-TW">新建調查的多個回答的欄位</value>
     </property>
     <property key="ContentSurveyAlreadyResponded">
+        <value xml:lang="de">Sie haben bereits an dieser Umfrage teilgenommen. Mehrfachantworten sind nicht erlaubt</value>
         <value xml:lang="en">You have already responded to this survey; multiple responses are not allowed</value>
         <value xml:lang="fr">Vous avez déjà répondu au questionnaire. De multiples réponses ne sont pas autorisées</value>
         <value xml:lang="it">Tu hai già risposto a questo sondaggio; risposte multiple non sono consentite</value>
@@ -2781,6 +2997,7 @@
         <value xml:lang="zh-TW">你已經回應這個調查了;不允許多個回應</value>
     </property>
     <property key="ContentSurveyAnonymousResponse">
+        <value xml:lang="de">Anonyme Antwort auf diese Umfrage ist nicht erlaubt (Sie müssen angemeldet sein)</value>
         <value xml:lang="en">Anonymous response to this survey is not allowed (you must be logged in)</value>
         <value xml:lang="fr">Les réponses anonymes ne sont pas autorisées pour ce questionnaire (Vous devez être connecté)</value>
         <value xml:lang="it">Risposta anonima per questo sondaggio non è consentita (ti devi autenticare)</value>
@@ -2791,6 +3008,7 @@
         <value xml:lang="zh-TW">不允許對這個調查匿名回應(你必須登入)</value>
     </property>
     <property key="ContentSurveyAnswersNotFound">
+        <value xml:lang="de">Keine Antworten gefunden</value>
         <value xml:lang="en">No answers were found</value>
         <value xml:lang="fr">Pas de réponses trouvées</value>
         <value xml:lang="it">Nessuna risposta è stata trovata</value>
@@ -2939,6 +3157,7 @@
         <value xml:lang="zh-TW">編輯調查的多個回應的群組</value>
     </property>
     <property key="ContentSurveyErrorBuildingPDF">
+        <value xml:lang="de">Fehler beim Erstellen von PDF aus SurveyResponse: </value>
         <value xml:lang="en">Error building PDF from SurveyResponse: </value>
         <value xml:lang="fr">Erreur dans la construction du PDF des réponses du sondage : </value>
         <value xml:lang="it">Errore durante la creazione del PDF dalla risposta del sondaggio: </value>
@@ -2949,6 +3168,7 @@
         <value xml:lang="zh-TW">從調查回應(SurveyResponse)產生PDF時出錯:</value>
     </property>
     <property key="ContentSurveyErrorSettingAcroFields">
+        <value xml:lang="de">Fehler beim Setzen von AcroFields von SurveyResponse: </value>
         <value xml:lang="en">Error setting AcroFields from SurveyResponse: </value>
         <value xml:lang="fr">Erreur dans l'enregistrement des AcroFields des réponses du sondage: </value>
         <value xml:lang="it">Errore durante l'impostazioni di AcroFields dalla risposta del sondaggio: </value>
@@ -3097,6 +3317,7 @@
     </property>
     <property key="ContentSurveyQuestionNumber">
         <value xml:lang="da">Spørgsmål #</value>
+        <value xml:lang="de">Frage Nr.</value>
         <value xml:lang="en">Question #</value>
         <value xml:lang="fr">Question n°</value>
         <value xml:lang="it">Domanda #</value>
@@ -3107,6 +3328,7 @@
         <value xml:lang="zh-TW">問題 #</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAResponse">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine Antwort.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a response.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite une réponse.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede una risposta.</value>
@@ -3117,6 +3339,7 @@
         <value xml:lang="zh-TW">必須回應問題${surveyQuestionAndAppl.question}.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidCreditCardNumber">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide Kreditkartennrummer.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid credit-card number.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite un numéro de carte de crédit valide.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede una carta di credito valida.</value>
@@ -3127,6 +3350,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的信用卡識別回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidCurrencyAmount">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide Währungssumme.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid currency amount.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite un montant valide.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede un'importo in valuta valido.</value>
@@ -3137,6 +3361,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的金額回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidDate">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide Datumseingeabe (dd.mm.yyyy).</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid date string (mm/dd/yyyy).</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite une date valide (mm/jj/aaaa).</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede una data valida (mm/gg/aaaa).</value>
@@ -3147,6 +3372,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的日期字串(mm/dd/yyyy, 說明:按月/日/年的格式)回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidDecimalNumber">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine Dezimalzahl.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid decimal number.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite un nombre décimal.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede un numero con decimali valido.</value>
@@ -3157,6 +3383,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效數字回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidEmailAddress">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide Email-Adresse.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid email address.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite une adresse courriel valide.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede un'indirizzo e-mail valido.</value>
@@ -3167,6 +3394,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的電子郵件位址回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidGiftCardNumber">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide Geschenkgutschein-Nummer.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid gift-card number.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite un numéro de carte cadeau.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede una carta regalo valida.</value>
@@ -3177,6 +3405,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的禮物卡號回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidURL">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine valide URL.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid URL.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite une URL valide.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede un URL valido.</value>
@@ -3187,6 +3416,7 @@
         <value xml:lang="zh-TW">問題${surveyQuestionAndAppl.question}必須用一個有效的網址回答.</value>
     </property>
     <property key="ContentSurveyQuestionRequiresAValidWholeNumber">
+        <value xml:lang="de">Die Frage ${surveyQuestionAndAppl.question} benötigt eine ganze Zahl.</value>
         <value xml:lang="en">The question ${surveyQuestionAndAppl.question} requires a valid whole number.</value>
         <value xml:lang="fr">La question ${surveyQuestionAndAppl.question} nécessite un nombre entier.</value>
         <value xml:lang="it">La domanda ${surveyQuestionAndAppl.question} richiede un numero intero valido.</value>
@@ -3211,6 +3441,10 @@
         <value xml:lang="vi">Câu hỏi</value>
         <value xml:lang="zh">问题</value>
         <value xml:lang="zh-TW">問題</value>
+    </property>
+    <property key="ContentSurveyRenderProblem">
+        <value xml:lang="de">Problem beim Rendern der Umfrage.</value>
+        <value xml:lang="en">Problem rendering the survey.</value>
     </property>
     <property key="ContentSurveyResponse">
         <value xml:lang="ar">جواب</value>
@@ -3306,6 +3540,7 @@
         <value xml:lang="zh-TW">帶有問題</value>
     </property>
     <property key="ContentTIFF">
+        <value xml:lang="de">TIFF</value>
         <value xml:lang="en">TIFF</value>
         <value xml:lang="vi">Ảnh TIFF</value>
     </property>
@@ -3327,6 +3562,7 @@
     </property>
     <property key="ContentTemplateChild">
         <value xml:lang="da">Skabelon barn</value>
+        <value xml:lang="de">Vorlagen - Child</value>
         <value xml:lang="en">Template Child</value>
         <value xml:lang="fr">Modèle enfant</value>
         <value xml:lang="it">Template figlio</value>
@@ -3338,6 +3574,7 @@
     </property>
     <property key="ContentTemplateImageCentered">
         <value xml:lang="da">Billede centreret ovenover</value>
+        <value xml:lang="de">Bild oberhalb zentriert</value>
         <value xml:lang="en">Image centered above</value>
         <value xml:lang="fr">Image centrée au-dessus</value>
         <value xml:lang="it">Immagine centrata sopra</value>
@@ -3349,6 +3586,7 @@
     </property>
     <property key="ContentTemplateImageLeft">
         <value xml:lang="da">Billede til venstre, tekst flyder omkring</value>
+        <value xml:lang="de">Bild links, Text bricht um das Bild.</value>
         <value xml:lang="en">Image left, text flows around.</value>
         <value xml:lang="fr">Image à gauche, texte flottant autour</value>
         <value xml:lang="it">Immagine a sinistra.</value>
@@ -3360,6 +3598,7 @@
     </property>
     <property key="ContentTemplateInstanceChild">
         <value xml:lang="da">Forekomst af barn</value>
+        <value xml:lang="de">Instanz - Child</value>
         <value xml:lang="en">Instance Child</value>
         <value xml:lang="fr">Instance enfant</value>
         <value xml:lang="it">Istanza figlia</value>
@@ -3371,6 +3610,7 @@
     </property>
     <property key="ContentTemplateRoot">
         <value xml:lang="da">Rod skabelon</value>
+        <value xml:lang="de">Root Template</value>
         <value xml:lang="en">Root Template</value>
         <value xml:lang="fr">Racine du modèle</value>
         <value xml:lang="it">Template principale</value>
@@ -3382,6 +3622,7 @@
     </property>
     <property key="ContentTemplateRootInstance">
         <value xml:lang="da">Rod forekomst</value>
+        <value xml:lang="de">Root Instanz</value>
         <value xml:lang="en">Root Instance</value>
         <value xml:lang="fr">Instance racine</value>
         <value xml:lang="it">Istanza principale</value>
@@ -3393,6 +3634,7 @@
     </property>
     <property key="ContentTemplateTextOnly">
         <value xml:lang="da">Kun tekst</value>
+        <value xml:lang="de">Nur Text</value>
         <value xml:lang="en">Text only</value>
         <value xml:lang="fr">Texte seulement</value>
         <value xml:lang="it">Solo testo</value>
@@ -3435,6 +3677,7 @@
         <value xml:lang="zh-TW">本文</value>
     </property>
     <property key="ContentThruDateInvalidFormat">
+        <value xml:lang="de">thruDate ist kein valides Datumsformat</value>
         <value xml:lang="en">thruDate not a valid date format</value>
         <value xml:lang="fr">le champ thruDate n'est pas au bon format</value>
         <value xml:lang="it">Data al non è nel formato valido.</value>
@@ -3490,6 +3733,7 @@
         <value xml:lang="zh-TW">類型屬性</value>
     </property>
     <property key="ContentUnableObtainReferenceToFile">
+        <value xml:lang="de">Referenz für Datei ${objectInfo} nicht gefunden</value>
         <value xml:lang="en">Unable to obtain a reference to file ${objectInfo}</value>
         <value xml:lang="fr">Impossible d'obtenir la référence du fichier ${objectInfo}</value>
         <value xml:lang="it">Non è possibile ottenere un riferimento al file ${objectInfo}</value>
@@ -3500,6 +3744,7 @@
         <value xml:lang="zh-TW">無法取得檔案${objectInfo}的參照</value>
     </property>
     <property key="ContentUnableToOpenFileForWriting">
+        <value xml:lang="de">Die Datei ${fileName} konnte nicht zum Schreiben geöffnet werden</value>
         <value xml:lang="en">Unable to open file for writing: ${fileName}</value>
         <value xml:lang="fr">Impossible d'ouvrir le fichier ${fileName} en écriture</value>
         <value xml:lang="it">Non è possibile aprire il file in scrittura: ${fileName}</value>
@@ -3510,6 +3755,7 @@
         <value xml:lang="zh-TW">無法打開檔案來寫入:${fileName}</value>
     </property>
     <property key="ContentUnableWriteBinaryDataToFile">
+        <value xml:lang="de">Kann keine Binärdaten schreiben nach: ${fileName}</value>
         <value xml:lang="en">Unable to write binary data to: ${fileName}</value>
         <value xml:lang="fr">Impossible d'écrire les données binaires dans le fichier ${fileName}</value>
         <value xml:lang="it">Non è possibile scrivere i dati binari in: ${fileName}</value>
@@ -3520,6 +3766,7 @@
         <value xml:lang="zh-TW">無法把二進位制資料寫到:${fileName}</value>
     </property>
     <property key="ContentUnableWriteCharacterDataToFile">
+        <value xml:lang="de">Es konnten keine Zeichen in die Datei geschrieben werden: ${fileName}</value>
         <value xml:lang="en">Unable to write character data to: ${fileName}</value>
         <value xml:lang="fr">Impossible d'écrire les données dans le fichier ${fileName}</value>
         <value xml:lang="it">Non è possibile scrivere i dati carattere in: ${fileName}</value>
@@ -3544,7 +3791,8 @@
         <value xml:lang="zh-TW">你沒有檢視本頁面的權限.(需要具備"CONTENTMGR_UPDATE"或"CONTENTMGR_ADMIN")</value>
     </property>
     <property key="ContentUploadFileTypeNotMatch">
-        <value xml:lang="en">Upload file type not match your selected.</value>
+        <value xml:lang="de">Upload-Dateityp stimmt nicht mit dem ausgewählten überein.</value>
+        <value xml:lang="en">Upload file type does not match your selection.</value>
         <value xml:lang="fr">Le type de fichier chargé ne correspond pas avec votre selection.</value>
         <value xml:lang="it">Tipo file da caricare non corrisponde alla tua selezione.</value>
         <value xml:lang="ja">選択したアップロードファイルの種類が一致しません。</value>
@@ -3567,6 +3815,7 @@
         <value xml:lang="zh-TW">已上傳的檔案</value>
     </property>
     <property key="ContentUrl">
+        <value xml:lang="de">Url</value>
         <value xml:lang="en">Url</value>
         <value xml:lang="fr">URL</value>
         <value xml:lang="ja">URL</value>
@@ -3590,6 +3839,7 @@
         <value xml:lang="zh-TW">你沒有檢視本頁面的權限.(需要具備"CONTENTMGR_VIEW"或"CONTENTMGR_ADMIN")</value>
     </property>
     <property key="ContentVisitedSet">
+        <value xml:lang="de">visitedSet beinhaltet bereits: </value>
         <value xml:lang="en">visitedSet already contains: </value>
         <value xml:lang="fr">visitedSet contient déjà : </value>
         <value xml:lang="it">visitedSet contiene già: </value>
@@ -3598,6 +3848,10 @@
         <value xml:lang="vi">Nội dung đã xem:</value>
         <value xml:lang="zh">访问设置（visitedSet）已包含：</value>
         <value xml:lang="zh-TW">訪問集(visitedSet)已包含:</value>
+    </property>
+    <property key="ContentWebAppUiDeprecated">
+        <value xml:lang="de">Die ältere CMS-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
+        <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
     </property>
     <property key="ContentWebSite">
         <value xml:lang="ar">موقع الويب</value>
@@ -3681,6 +3935,7 @@
         <value xml:lang="zh-TW">附加到內容</value>
     </property>
     <property key="ContentWebSiteContactList">
+        <value xml:lang="de">Kontaktliste</value>
         <value xml:lang="en">Contact Lists</value>
         <value xml:lang="ja">連絡リスト</value>
         <value xml:lang="pt">Listas de contatos</value>
@@ -3689,6 +3944,7 @@
         <value xml:lang="zh-TW">聯絡清單</value>
     </property>
     <property key="ContentWebSiteContactListCreate">
+        <value xml:lang="de">Neue Kontaktliste</value>
         <value xml:lang="en">Create Contact List</value>
         <value xml:lang="ja">連絡リストを作成</value>
         <value xml:lang="pt">Criar lista de contatos</value>
@@ -3697,6 +3953,7 @@
         <value xml:lang="zh-TW">新建聯絡清單</value>
     </property>
     <property key="ContentWebSiteContactListView">
+        <value xml:lang="de">Kontaktliste betrachten</value>
         <value xml:lang="en">Contact Lists View</value>
         <value xml:lang="ja">連絡リスト表示</value>
         <value xml:lang="pt">Visualizar lista de contatos</value>
@@ -3724,7 +3981,20 @@
         <value xml:lang="zh">网站内容</value>
         <value xml:lang="zh-TW">網站內容</value>
     </property>
+    <property key="ContentWebSiteErrors">
+        <value xml:lang="de">Webseitenfehler</value>
+        <value xml:lang="en">Web Site Errors</value>
+    </property>
+    <property key="ContentWebSiteAddNewErrors">
+        <value xml:lang="de">Neuen Webseitenfehler hinzufügen</value>
+        <value xml:lang="en">Web Site Add New Errors</value>
+    </property>
+    <property key="ContentWebSiteAddError">
+        <value xml:lang="de">Neuer Webseitenfehler</value>
+        <value xml:lang="en">Web Site Add Error</value>
+    </property>
     <property key="ContentWebSiteGenerateMissingSeoUrl">
+        <value xml:lang="de">Fehlende sprechende (SEO) URLs generieren</value>
         <value xml:lang="en">Generate missing SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
         <value xml:lang="pt">Gerar urls necessárias para SEO</value>
@@ -3745,6 +4015,33 @@
         <value xml:lang="zh">网站菜单</value>
         <value xml:lang="zh-TW">網站選單</value>
     </property>
+    <property key="ContentWebSiteParties"><!-- FIXME: some language inexact -->
+        <value xml:lang="da">Webside parter</value>
+        <value xml:lang="de">Webseite Nutzer</value>
+        <value xml:lang="en">WebSite Parties</value>
+        <value xml:lang="fr">Acteurs du site web</value>
+        <value xml:lang="it">Aggiorna Soggetti Sito Web</value>
+        <value xml:lang="ja">Webサイト取引先を編集</value>
+        <value xml:lang="nl">Website partijen</value>
+        <value xml:lang="pt">Participantes do site</value>
+        <value xml:lang="ro">Actualizeaza Subiecti Sit Web</value>
+        <value xml:lang="th">แก้ไขกลุ่มผู้ใช้ WebSite</value>
+        <value xml:lang="vi">Cập nhật người dùng</value>
+        <value xml:lang="zh">编辑网站会员</value>
+        <value xml:lang="zh-TW">編輯網站團體</value>
+    </property>
+    <property key="ContentWebSitePathAlias"><!-- FIXME: some language inexact -->
+        <value xml:lang="da">Webside sti alias</value>
+        <value xml:lang="de">Webseite pfad Alias</value>
+        <value xml:lang="en">WebSite Path Alias</value>
+        <value xml:lang="fr">Alias de chemin d'accès du site web</value>
+        <value xml:lang="it">Path alias Sito Web</value>
+        <value xml:lang="ja">パス別名</value>
+        <value xml:lang="pt">Alias de caminho</value>
+        <value xml:lang="vi">Đường dẫn thay thế</value>
+        <value xml:lang="zh">路径别名</value>
+        <value xml:lang="zh-TW">路徑別名</value>
+    </property>
     <property key="ContentWebSites">
         <value xml:lang="ar">مواقع الويب</value>
         <value xml:lang="da">Websider</value>
@@ -3762,8 +4059,16 @@
         <value xml:lang="zh">网站</value>
         <value xml:lang="zh-TW">網站</value>
     </property>
+    <property key="ContentWebSiteSEO">
+        <value xml:lang="da">Webside SEO</value>
+        <value xml:lang="de">Webseite SEO</value>
+        <value xml:lang="en">WebSite SEO</value>
+        <value xml:lang="fr">SEO du site web</value>
+        <value xml:lang="it">SEO Sito Web</value>
+    </property>
     <property key="ContentWelcome">
         <value xml:lang="da">Velkommen til Content Manager</value>
+        <value xml:lang="de">Wilkommen im CMS!</value>
         <value xml:lang="en">Welcome to the Content Manager!</value>
         <value xml:lang="fr">Gestionnaire de contenu : bienvenue !</value>
         <value xml:lang="it">Benvenuti nella gestione contenuti!</value>
@@ -3783,6 +4088,11 @@
         <value xml:lang="vi">Lỗi khi tải nội dung !</value>
         <value xml:lang="zh">载入内容时发生错误！</value>
         <value xml:lang="zh-TW">載入內容時發生錯誤！</value>
+    </property>
+    <property key="ErrorMovingContent">
+        <value xml:lang="de">Ein Fehler beim Verschieben des Inhaltes ist aufgetreten!</value>
+        <value xml:lang="en">An error occured moving content!</value>
+        <value xml:lang="fr">Erreur durant le déplacement du document !</value>
     </property>
     <property key="FormFieldTitle_acroFormContentId">
         <value xml:lang="ar">AcroForm (PDF) Content ID</value>
@@ -3817,16 +4127,16 @@
     </property>
     <property key="FormFieldTitle_amountBaseUomId">
         <value xml:lang="ar">تعريف وحدة قياس قاعدة المبلغ</value>
-        <value xml:lang="da">Basisbeløb enheds id</value>
+        <value xml:lang="da">Basisbeløb enheds ID</value>
         <value xml:lang="de">Basisbetrag Einheit ID</value>
-        <value xml:lang="en">Amount Base Uom Id</value>
+        <value xml:lang="en">Amount Base Uom ID</value>
         <value xml:lang="fr">Unité de mesure de qantité de base</value>
         <value xml:lang="it">Udm Importo Base</value>
         <value xml:lang="ja">金額ベース単位ID</value>
         <value xml:lang="nl">Basisbedrag eenheid ID</value>
-        <value xml:lang="pt">Montante Base Uom Id</value>
+        <value xml:lang="pt">Montante Base Uom ID</value>
         <value xml:lang="ro">Udm Valoare Baza</value>
-        <value xml:lang="th">Amount Base Uom Id</value>
+        <value xml:lang="th">Amount Base Uom ID</value>
         <value xml:lang="vi">Đơn vị tính</value>
         <value xml:lang="zh">基数货币单位标识</value>
         <value xml:lang="zh-TW">金額基礎單位識別</value>
@@ -3848,8 +4158,9 @@
         <value xml:lang="zh-TW">核准日期</value>
     </property>
     <property key="FormFieldTitle_approvalStatusId">
-        <value xml:lang="da">Godkendelses status Id</value>
-        <value xml:lang="en">Approval Status Id</value>
+        <value xml:lang="da">Godkendelses status ID</value>
+        <value xml:lang="de">Bestätigungsstatus ID</value>
+        <value xml:lang="en">Approval Status ID</value>
         <value xml:lang="fr">Statut d'approbation</value>
         <value xml:lang="it">Stato approvazione</value>
         <value xml:lang="ja">承認ステータスID</value>
@@ -3863,22 +4174,22 @@
         <value xml:lang="ar">تعريف توقعة ارتباط المحتوى</value>
         <value xml:lang="da">Indholds assoc prædikat ID</value>
         <value xml:lang="de">Inhalt Zuordnung Prädikat ID</value>
-        <value xml:lang="en">Content Assoc Predicate Id</value>
+        <value xml:lang="en">Content Assoc Predicate ID</value>
         <value xml:lang="fr">Prédicat de contenu d'association</value>
         <value xml:lang="it">Predicato Associazione Contenuto</value>
         <value xml:lang="ja">コンテンツ関連付け属性ID</value>
         <value xml:lang="pt">ID de predicado de associação de conteúdo</value>
         <value xml:lang="ro">Predicat Asociatie Continut</value>
         <value xml:lang="th">รหัสหัวข้อแสดงความคิดเห็น</value>
-        <value xml:lang="vi">Content Assoc Predicate Id</value>
+        <value xml:lang="vi">Content Assoc Predicate ID</value>
         <value xml:lang="zh">内容关联谓词标识</value>
         <value xml:lang="zh-TW">內容結合述語識別</value>
     </property>
     <property key="FormFieldTitle_caContentIdTo">
         <value xml:lang="ar">المحتوى إلى</value>
         <value xml:lang="da">Indholds Id til</value>
-        <value xml:lang="de">Inhalt ID zu</value>
-        <value xml:lang="en">Content Id To</value>
+        <value xml:lang="de">Inhalts ID zu</value>
+        <value xml:lang="en">Content ID To</value>
         <value xml:lang="fr">Contenu vers</value>
         <value xml:lang="it">Contenuto A</value>
         <value xml:lang="ja">コンテンツID(先)</value>
@@ -3892,7 +4203,8 @@
     </property>
     <property key="FormFieldTitle_caCratedDate">
         <value xml:lang="da">Oprettet dato</value>
-        <value xml:lang="en">ca Created Date</value>
+        <value xml:lang="de">ca. erstellt am</value>
+        <value xml:lang="en">ca. Created Date</value>
         <value xml:lang="it">Data creazione</value>
         <value xml:lang="ja">CA作成日</value>
         <value xml:lang="nl">Datum aangemaakt</value>
@@ -3961,10 +4273,10 @@
         <value xml:lang="zh-TW">下級內容資源計數</value>
     </property>
     <property key="FormFieldTitle_coContentId">
-        <value xml:lang="da">Indholds Id</value>
+        <value xml:lang="da">Indholds ID</value>
         <value xml:lang="de">Inhalt ID</value>
-        <value xml:lang="en">Content Id</value>
-        <value xml:lang="fr">Contenu</value>
+        <value xml:lang="en">Content ID</value>
+        <value xml:lang="fr">Réf de contenu</value>
         <value xml:lang="it">Contenuto</value>
         <value xml:lang="ja">コンテンツID</value>
         <value xml:lang="nl">Content ID</value>
@@ -4020,9 +4332,9 @@
     </property>
     <property key="FormFieldTitle_committedByPartyId">
         <value xml:lang="ar">مرتكبة من طرف</value>
-        <value xml:lang="da">Udfært af Party Id</value>
+        <value xml:lang="da">Udfært af Party ID</value>
         <value xml:lang="de">Eingebracht von Nutzer ID</value>
-        <value xml:lang="en">Committed By Party Id</value>
+        <value xml:lang="en">Committed By Party ID</value>
         <value xml:lang="fr">Téléchargement par acteur</value>
         <value xml:lang="it">Registrato Dal Soggetto</value>
         <value xml:lang="ja">実行取引先ID</value>
@@ -4036,9 +4348,9 @@
     </property>
     <property key="FormFieldTitle_contentApprovalId">
         <value xml:lang="ar">تعريف موافقة المحتوى</value>
-        <value xml:lang="da">Indhold godkendelses Id</value>
+        <value xml:lang="da">Indhold godkendelses ID</value>
         <value xml:lang="de">Inhalt Genehmigung ID</value>
-        <value xml:lang="en">Content Approval Id</value>
+        <value xml:lang="en">Content Approval ID</value>
         <value xml:lang="fr">Contenu d'approbation</value>
         <value xml:lang="it">Codice Approvazione Contenuto</value>
         <value xml:lang="ja">コンテンツ承認ID</value>
@@ -4052,9 +4364,9 @@
     </property>
     <property key="FormFieldTitle_contentAssocPredicateId">
         <value xml:lang="ar">تعربف توقعة ارتباط المحتوى</value>
-        <value xml:lang="da">Indhold assoc prædikat Id</value>
+        <value xml:lang="da">Indhold assoc prædikat ID</value>
         <value xml:lang="de">Inhalt Zuordnung Prädikat ID</value>
-        <value xml:lang="en">Content Assoc Predicate Id</value>
+        <value xml:lang="en">Content Assoc Predicate ID</value>
         <value xml:lang="fr">Prédicat de contenu d'association</value>
         <value xml:lang="it">Predicato Associazione Contenuto</value>
         <value xml:lang="ja">コンテンツ関連付け属性ID</value>
@@ -4067,9 +4379,9 @@
     </property>
     <property key="FormFieldTitle_contentAssocTypeId">
         <value xml:lang="ar">تعريف نوع ارتباط المحتوى</value>
-        <value xml:lang="da">Indhold assoc type Id</value>
+        <value xml:lang="da">Indhold assoc type ID</value>
         <value xml:lang="de">Inhalt Zuordnungstyp ID</value>
-        <value xml:lang="en">Content Assoc Type Id</value>
+        <value xml:lang="en">Content Assoc Type ID</value>
         <value xml:lang="fr">Contenu d'association</value>
         <value xml:lang="it">Tipo Associazione Contenuto</value>
         <value xml:lang="ja">コンテンツ関連付け種類ID</value>
@@ -4082,9 +4394,9 @@
     </property>
     <property key="FormFieldTitle_contentId">
         <value xml:lang="ar">تعريف المحتوى</value>
-        <value xml:lang="da">Indhold Id</value>
+        <value xml:lang="da">Indhold ID</value>
         <value xml:lang="de">Inhalt ID</value>
-        <value xml:lang="en">Content Id</value>
+        <value xml:lang="en">Content ID</value>
         <value xml:lang="es">Código de contenido</value>
         <value xml:lang="fr">Contenu</value>
         <value xml:lang="it">Contenuto</value>
@@ -4102,7 +4414,7 @@
         <value xml:lang="ar">محتوى من</value>
         <value xml:lang="da">Indhold Id fra</value>
         <value xml:lang="de">Inhalt ID von</value>
-        <value xml:lang="en">Content Id From</value>
+        <value xml:lang="en">Content ID From</value>
         <value xml:lang="fr">Contenu depuis</value>
         <value xml:lang="it">Codice Contenuto A</value>
         <value xml:lang="ja">コンテンツID(元)</value>
@@ -4118,7 +4430,7 @@
         <value xml:lang="ar">محتوى إلى</value>
         <value xml:lang="da">Indhold Id fra</value>
         <value xml:lang="de">Inhalt ID zu</value>
-        <value xml:lang="en">Content Id To</value>
+        <value xml:lang="en">Content ID To</value>
         <value xml:lang="fr">Contenu vers</value>
         <value xml:lang="it">Codice Contenuto A</value>
         <value xml:lang="ja">コンテンツID(先)</value>
@@ -4150,9 +4462,9 @@
     </property>
     <property key="FormFieldTitle_contentOperationId">
         <value xml:lang="ar">تعريف عملية المحتوى</value>
-        <value xml:lang="da">Indhold operations Id</value>
+        <value xml:lang="da">Indhold operations ID</value>
         <value xml:lang="de">Inhalt Handhabung ID</value>
-        <value xml:lang="en">Content Operation Id</value>
+        <value xml:lang="en">Content Operation ID</value>
         <value xml:lang="fr">Opération de contenu</value>
         <value xml:lang="it">Operazione Contenuto</value>
         <value xml:lang="ja">コンテンツ操作ID</value>
@@ -4195,9 +4507,9 @@
     </property>
     <property key="FormFieldTitle_contentPurposeTypeId">
         <value xml:lang="ar">تعريف نوع هدف المحتوى</value>
-        <value xml:lang="da">Indholdsformål type Id</value>
+        <value xml:lang="da">Indholdsformål type ID</value>
         <value xml:lang="de">Inhalt Zweck Typ ID</value>
-        <value xml:lang="en">Content Purpose Type Id</value>
+        <value xml:lang="en">Content Purpose Type ID</value>
         <value xml:lang="es">Código Propósito de contenido</value>
         <value xml:lang="fr">Type de but de contenu</value>
         <value xml:lang="it">Tipo funzione contenuto</value>
@@ -4212,9 +4524,9 @@
     </property>
     <property key="FormFieldTitle_contentRevisionSeqId">
         <value xml:lang="ar">تعريف تسلسل مراجعة المحتوى</value>
-        <value xml:lang="da">Indholdsrevision sekv. Id</value>
+        <value xml:lang="da">Indholdsrevision sekv. ID</value>
         <value xml:lang="de">Inhalt Version Seq. ID</value>
-        <value xml:lang="en">Content Revision Seq Id</value>
+        <value xml:lang="en">Content Revision Seq ID</value>
         <value xml:lang="fr">Séq. de révision de contenu</value>
         <value xml:lang="it">Numero Sequenza Revisione Contenuto</value>
         <value xml:lang="ja">コンテンツリビジョン連番ID</value>
@@ -4226,8 +4538,9 @@
         <value xml:lang="zh-TW">內容修改序號</value>
     </property>
     <property key="FormFieldTitle_contentStatusId">
-        <value xml:lang="da">Status id</value>
-        <value xml:lang="en">Status Id</value>
+        <value xml:lang="da">Status ID</value>
+        <value xml:lang="de">Status ID</value>
+        <value xml:lang="en">Status ID</value>
         <value xml:lang="it">Stato</value>
         <value xml:lang="ja">ステータスID</value>
         <value xml:lang="nl">Status ID</value>
@@ -4256,9 +4569,9 @@
     </property>
     <property key="FormFieldTitle_contentTypeId">
         <value xml:lang="ar"> تعريف نوع المحتوى</value>
-        <value xml:lang="da">Indholdstype Id</value>
+        <value xml:lang="da">Indholdstype ID</value>
         <value xml:lang="de">Inhaltstyp ID</value>
-        <value xml:lang="en">Content Type Id</value>
+        <value xml:lang="en">Content Type ID</value>
         <value xml:lang="es">Código Tipo de contenido</value>
         <value xml:lang="fr">Type de contenu</value>
         <value xml:lang="it">Tipo Contenuto</value>
@@ -4292,9 +4605,9 @@
     </property>
     <property key="FormFieldTitle_dataCategoryId">
         <value xml:lang="ar">تعريف فئة المعلومات</value>
-        <value xml:lang="da">Datakategori Id</value>
+        <value xml:lang="da">Datakategori ID</value>
         <value xml:lang="de">Datenkategorie ID</value>
-        <value xml:lang="en">Data Category Id</value>
+        <value xml:lang="en">Data Category ID</value>
         <value xml:lang="es">Código Categoría de datos</value>
         <value xml:lang="fr">Catégorie de données</value>
         <value xml:lang="it">Categoria Dati</value>
@@ -4310,9 +4623,9 @@
     </property>
     <property key="FormFieldTitle_dataResourceId">
         <value xml:lang="ar">تعريف مورد المعلومات</value>
-        <value xml:lang="da">Dataressource Id</value>
+        <value xml:lang="da">Dataressource ID</value>
         <value xml:lang="de">Datenressource ID</value>
-        <value xml:lang="en">Data Resource Id</value>
+        <value xml:lang="en">Data Resource ID</value>
         <value xml:lang="es">Código Recurso de datos</value>
         <value xml:lang="fr">Ressource de données</value>
         <value xml:lang="it">Risorsa dati</value>
@@ -4362,9 +4675,9 @@
     </property>
     <property key="FormFieldTitle_dataResourceTypeId">
         <value xml:lang="ar">تعريف نوع  مورد المعلومات</value>
-        <value xml:lang="da">Dataressource type Id</value>
+        <value xml:lang="da">Dataressource type ID</value>
         <value xml:lang="de">Datenressource Typ ID</value>
-        <value xml:lang="en">Data Resource Type Id</value>
+        <value xml:lang="en">Data Resource Type ID</value>
         <value xml:lang="es">Código Tipo de recurso de datos</value>
         <value xml:lang="fr">Type de ressource de données</value>
         <value xml:lang="it">Tipo risorsa dati</value>
@@ -4380,9 +4693,9 @@
     </property>
     <property key="FormFieldTitle_dataSourceId">
         <value xml:lang="ar">تعريف مصدر المعلومات</value>
-        <value xml:lang="da">Data kilde Id</value>
+        <value xml:lang="da">Data kilde ID</value>
         <value xml:lang="de">Datenressource ID</value>
-        <value xml:lang="en">Data Source Id</value>
+        <value xml:lang="en">Data Source ID</value>
         <value xml:lang="es">Código Fuente de datos</value>
         <value xml:lang="fr">Source de données</value>
         <value xml:lang="it">Risorsa dati</value>
@@ -4398,9 +4711,9 @@
     </property>
     <property key="FormFieldTitle_dataTemplateTypeId">
         <value xml:lang="ar">تعريف نوع نموذج المعلومات</value>
-        <value xml:lang="da">Dataskabelon type Id</value>
+        <value xml:lang="da">Dataskabelon type ID</value>
         <value xml:lang="de">Datenvorlagetyp ID</value>
-        <value xml:lang="en">Data Template Type Id</value>
+        <value xml:lang="en">Data Template Type ID</value>
         <value xml:lang="es">Código Plantilla de datos</value>
         <value xml:lang="fr">Type de modèle de données</value>
         <value xml:lang="it">Tipo Template Dati</value>
@@ -4430,8 +4743,9 @@
         <value xml:lang="zh-TW">令已存在的失效</value>
     </property>
     <property key="FormFieldTitle_decoratorContentId">
-        <value xml:lang="da">Dekoratør indholds id</value>
-        <value xml:lang="en">Decorator Content Id</value>
+        <value xml:lang="da">Dekoratør indholds ID</value>
+        <value xml:lang="de">Decorator Content ID</value>
+        <value xml:lang="en">Decorator Content ID</value>
         <value xml:lang="fr">Ressource de décorateur</value>
         <value xml:lang="it">Decoratore contenuto</value>
         <value xml:lang="ja">デコレータコンテンツID</value>
@@ -4457,9 +4771,9 @@
     </property>
     <property key="FormFieldTitle_drCharacterSetId">
         <value xml:lang="ar">تعريف مجموعة الحروف</value>
-        <value xml:lang="da">Tegnsæt id</value>
+        <value xml:lang="da">Tegnsæt ID</value>
         <value xml:lang="de">Zeichensatz ID</value>
-        <value xml:lang="en">Character Set Id</value>
+        <value xml:lang="en">Character Set ID</value>
         <value xml:lang="fr">Jeu de caractères</value>
         <value xml:lang="it">Set di Caratteri</value>
         <value xml:lang="ja">キャラクタセットID</value>
@@ -4488,9 +4802,9 @@
     </property>
     <property key="FormFieldTitle_drDataResourceTypeId">
         <value xml:lang="ar">تعريف نوع  مورد المعلومات</value>
-        <value xml:lang="da">Dr dataressourctype id</value>
+        <value xml:lang="da">Dr dataressourctype ID</value>
         <value xml:lang="de">Datenressourcentyp ID (dr)</value>
-        <value xml:lang="en">Dr Data Resource Type Id</value>
+        <value xml:lang="en">Dr Data Resource Type ID</value>
         <value xml:lang="fr">Type de ressource de données (Dr)</value>
         <value xml:lang="it">Tipo Risorsa Dati</value>
         <value xml:lang="ja">DRデータリソース種類ID</value>
@@ -4519,9 +4833,9 @@
     </property>
     <property key="FormFieldTitle_drDataTemplateTypeId">
         <value xml:lang="ar">تعريف نوع نموذج المعلومات</value>
-        <value xml:lang="da">Dr dataskabelontype id</value>
+        <value xml:lang="da">Dr dataskabelontype ID</value>
         <value xml:lang="de">Datenvorlagetyp ID (Dr)</value>
-        <value xml:lang="en">Dr Data Template Type Id</value>
+        <value xml:lang="en">Dr Data Template Type ID</value>
         <value xml:lang="fr">Type de modèle de données (Dr)</value>
         <value xml:lang="it">Tipo Template Dati</value>
         <value xml:lang="ja">DRデータテンプレート種類ID</value>
@@ -4550,9 +4864,9 @@
     </property>
     <property key="FormFieldTitle_drMimeTypeId">
         <value xml:lang="ar">تعريف نوع  Mime</value>
-        <value xml:lang="da">Dr Mime type id</value>
+        <value xml:lang="da">Dr Mime type ID</value>
         <value xml:lang="de">Mime Typ ID (Dr)</value>
-        <value xml:lang="en">Dr Mime Type Id</value>
+        <value xml:lang="en">Dr Mime Type ID</value>
         <value xml:lang="es">Tipo de documento</value>
         <value xml:lang="fr">Type Mime (Dr)</value>
         <value xml:lang="it">Tipo Mime</value>
@@ -4601,9 +4915,9 @@
     </property>
     <property key="FormFieldTitle_durationUomId">
         <value xml:lang="ar">تعريف وحدة قياس المدة</value>
-        <value xml:lang="da">Varighed enheds id</value>
+        <value xml:lang="da">Varighed enheds ID</value>
         <value xml:lang="de">Dauer Einheit ID</value>
-        <value xml:lang="en">Duration Uom Id</value>
+        <value xml:lang="en">Duration Uom ID</value>
         <value xml:lang="fr">Durée UOM</value>
         <value xml:lang="it">Udm Durata</value>
         <value xml:lang="ja">存続期間単位ID</value>
@@ -4650,8 +4964,9 @@
         <value xml:lang="zh-TW">啟用Https</value>
     </property>
     <property key="FormFieldTitle_enumTypeId">
-        <value xml:lang="da">Nummereringstype id</value>
-        <value xml:lang="en">Enum Type Id</value>
+        <value xml:lang="da">Nummereringstype ID</value>
+        <value xml:lang="de">Aufzählungstyp ID</value>
+        <value xml:lang="en">Enum Type ID</value>
         <value xml:lang="fr">Type d'énumération</value>
         <value xml:lang="it">Tipo enumerazione</value>
         <value xml:lang="ja">種類ID</value>
@@ -4661,9 +4976,9 @@
         <value xml:lang="zh-TW">列舉類型識別</value>
     </property>
     <property key="FormFieldTitle_existContentId">
-        <value xml:lang="da">Eksisterende indholds id</value>
+        <value xml:lang="da">Eksisterende indholds ID</value>
         <value xml:lang="de">Vorhander Inhalt</value>
-        <value xml:lang="en">Existing Content Id</value>
+        <value xml:lang="en">Existing Content ID</value>
         <value xml:lang="fr">Document existant</value>
         <value xml:lang="it">Codice contenuto esitente</value>
         <value xml:lang="ja">既存のコンテンツID</value>
@@ -4674,9 +4989,9 @@
     </property>
     <property key="FormFieldTitle_fileExtensionId">
         <value xml:lang="ar">تعريف تتمة الملف</value>
-        <value xml:lang="da">Filendelse id</value>
+        <value xml:lang="da">Filendelse ID</value>
         <value xml:lang="de">Dateierweiterung ID</value>
-        <value xml:lang="en">File Extension Id</value>
+        <value xml:lang="en">File Extension ID</value>
         <value xml:lang="fr">Extension de fichier</value>
         <value xml:lang="it">Estensione File</value>
         <value xml:lang="ja">ファイル拡張子ID</value>
@@ -4689,6 +5004,7 @@
     </property>
     <property key="FormFieldTitle_formatString">
         <value xml:lang="da">Format streng</value>
+        <value xml:lang="de">Formatierungs-String</value>
         <value xml:lang="en">Format String</value>
         <value xml:lang="fr">Format chaîne de caractères</value>
         <value xml:lang="it">Formato Stringa</value>
@@ -4819,8 +5135,9 @@
         <value xml:lang="zh-TW">論壇</value>
     </property>
     <property key="FormFieldTitle_ftlContentId">
-        <value xml:lang="da">Ftl indholds id</value>
-        <value xml:lang="en">Ftl Content Id</value>
+        <value xml:lang="da">Ftl indholds ID</value>
+        <value xml:lang="de">Ftl Content ID</value>
+        <value xml:lang="en">Ftl Content ID</value>
         <value xml:lang="it">Contenuto ftl</value>
         <value xml:lang="ja">FTLコンテンツID</value>
         <value xml:lang="pt">Id de conteúdo FTL</value>
@@ -4876,6 +5193,7 @@
     </property>
     <property key="FormFieldTitle_httpPort">
         <value xml:lang="ar">بوابة Http</value>
+        <value xml:lang="de">Http Port</value>
         <value xml:lang="en">Http Port</value>
         <value xml:lang="es">Puerto Http</value>
         <value xml:lang="fr">Port HTTP</value>
@@ -4908,6 +5226,7 @@
     </property>
     <property key="FormFieldTitle_httpsPort">
         <value xml:lang="ar">Https بوابة</value>
+        <value xml:lang="de">Https Port</value>
         <value xml:lang="en">Https Port</value>
         <value xml:lang="es">Puerto Https</value>
         <value xml:lang="fr">Port HTTPS</value>
@@ -4987,9 +5306,9 @@
     </property>
     <property key="FormFieldTitle_instanceOfContentId">
         <value xml:lang="ar">كينونة لتعريف المحتوى</value>
-        <value xml:lang="da">Forekomst af indholds id</value>
+        <value xml:lang="da">Forekomst af indholds ID</value>
         <value xml:lang="de">Instanz von Inhalt ID</value>
-        <value xml:lang="en">Instance Of Content Id</value>
+        <value xml:lang="en">Instance Of Content ID</value>
         <value xml:lang="es">Código Instancia de contenido</value>
         <value xml:lang="fr">Exemple de contenu</value>
         <value xml:lang="it">Instanza Del Contenuto</value>
@@ -4998,7 +5317,7 @@
         <value xml:lang="ro">Instanta Continutului</value>
         <value xml:lang="ru">Код экземпляра контента</value>
         <value xml:lang="th">ตัวอย่างของรหัสหัวข้อ</value>
-        <value xml:lang="vi">Khởi tạo của nội dung với Id</value>
+        <value xml:lang="vi">Khởi tạo của nội dung với ID</value>
         <value xml:lang="zh">内容标识实例</value>
         <value xml:lang="zh-TW">內容識別實例</value>
     </property>
@@ -5020,11 +5339,15 @@
         <value xml:lang="zh">匿名</value>
         <value xml:lang="zh-TW">匿名</value>
     </property>
+    <property key="FormFieldTitle_isStoreDefault">
+        <value xml:lang="de">Ist Standard für Store</value>
+        <value xml:lang="en">Is Default for Store</value>
+    </property>
     <property key="FormFieldTitle_itemContentId">
         <value xml:lang="ar">تعريف محتوى البند</value>
-        <value xml:lang="da">Punkt indholds id</value>
+        <value xml:lang="da">Punkt indholds ID</value>
         <value xml:lang="de">Position Inhalt ID</value>
-        <value xml:lang="en">Item Content Id</value>
+        <value xml:lang="en">Item Content ID</value>
         <value xml:lang="fr">Contenu d'article</value>
         <value xml:lang="it">Numero Riga Contenuto</value>
         <value xml:lang="ja">アイテムコンテンツID</value>
@@ -5159,9 +5482,9 @@
     </property>
     <property key="FormFieldTitle_metaDataPredicateId">
         <value xml:lang="ar">تعريف توقع الميتا معلومات</value>
-        <value xml:lang="da">Metadata prædikat id</value>
+        <value xml:lang="da">Metadata prædikat ID</value>
         <value xml:lang="de">Metadaten Prädikat ID</value>
-        <value xml:lang="en">Meta Data Predicate Id</value>
+        <value xml:lang="en">Meta Data Predicate ID</value>
         <value xml:lang="fr">Prédicat de méta-données</value>
         <value xml:lang="it">Predicato Meta Data</value>
         <value xml:lang="ja">メタデータ属性ID</value>
@@ -5189,9 +5512,9 @@
     </property>
     <property key="FormFieldTitle_mimeTypeId">
         <value xml:lang="ar">نعريف نوع المايم</value>
-        <value xml:lang="da">Mime type id</value>
+        <value xml:lang="da">Mime type ID</value>
         <value xml:lang="de">Mimetyp ID</value>
-        <value xml:lang="en">Mime Type Id</value>
+        <value xml:lang="en">Mime Type ID</value>
         <value xml:lang="es">Tipo MIME</value>
         <value xml:lang="fr">Type MIME</value>
         <value xml:lang="it">Tipo Mime</value>
@@ -5236,9 +5559,9 @@
     </property>
     <property key="FormFieldTitle_newDataResourceId">
         <value xml:lang="ar">تعريف مورد معلومات جديد</value>
-        <value xml:lang="da">Nyt dataressource id</value>
+        <value xml:lang="da">Nyt dataressource ID</value>
         <value xml:lang="de">Neue Datenressource ID</value>
-        <value xml:lang="en">New Data Resource Id</value>
+        <value xml:lang="en">New Data Resource ID</value>
         <value xml:lang="fr">Nouvelle ressource de données</value>
         <value xml:lang="it">Nuovo Codice Risorsa Dati</value>
         <value xml:lang="ja">新規データリソースID</value>
@@ -5270,9 +5593,9 @@
     </property>
     <property key="FormFieldTitle_oldDataResourceId">
         <value xml:lang="ar">تعريف مورد معلومات قديم</value>
-        <value xml:lang="da">Gammelt dataressource id</value>
+        <value xml:lang="da">Gammelt dataressource ID</value>
         <value xml:lang="de">Alte Datenressource ID</value>
-        <value xml:lang="en">Old Data Resource Id</value>
+        <value xml:lang="en">Old Data Resource ID</value>
         <value xml:lang="fr">Ancienne ressource de données</value>
         <value xml:lang="it">Vecchio Codice Risorsa Dati</value>
         <value xml:lang="ja">旧データリソースID</value>
@@ -5286,11 +5609,11 @@
     </property>
     <property key="FormFieldTitle_ownerContentId">
         <value xml:lang="ar">تعريف صاحب المحتوى</value>
-        <value xml:lang="da">Ejer indholds id</value>
+        <value xml:lang="da">Ejer indholds ID</value>
         <value xml:lang="de">Besitzer Inhalt ID</value>
-        <value xml:lang="en">Owner Content Id</value>
+        <value xml:lang="en">Owner Content ID</value>
         <value xml:lang="es">Código del propietario</value>
-        <value xml:lang="fr">Contenu propriétaire</value>
+        <value xml:lang="fr">Propriétaire du contenu </value>
         <value xml:lang="it">Proprietario Contenuto</value>
         <value xml:lang="ja">所有者コンテンツID</value>
         <value xml:lang="nl">Eigenaar content ID</value>
@@ -5320,9 +5643,9 @@
     </property>
     <property key="FormFieldTitle_parentCategoryId">
         <value xml:lang="ar">تعريف فئة الوالد</value>
-        <value xml:lang="da">Forældre katagori id</value>
+        <value xml:lang="da">Forældre katagori ID</value>
         <value xml:lang="de">Übergeordnete Kategorie ID</value>
-        <value xml:lang="en">Parent Category Id</value>
+        <value xml:lang="en">Parent Category ID</value>
         <value xml:lang="fr">Catégorie parente</value>
         <value xml:lang="it">Categoria Padre</value>
         <value xml:lang="ja">上位(親)のカテゴリID</value>
@@ -5349,6 +5672,7 @@
     </property>
     <property key="FormFieldTitle_pathAlias">
         <value xml:lang="da">Sti alias</value>
+        <value xml:lang="de">Pfadalias</value>
         <value xml:lang="en">Path Alias</value>
         <value xml:lang="fr">Raccourci</value>
         <value xml:lang="it">Path alias</value>
@@ -5360,6 +5684,7 @@
     </property>
     <property key="FormFieldTitle_pathAliasTo">
         <value xml:lang="da">Sti alias til</value>
+        <value xml:lang="de">Pfadalias zu</value>
         <value xml:lang="en">Path Alias To</value>
         <value xml:lang="fr">Raccourci vers</value>
         <value xml:lang="it">Path alias a</value>
@@ -5386,14 +5711,14 @@
     </property>
     <property key="FormFieldTitle_privilegeEnumId">
         <value xml:lang="ar">تعريف تعداد الأفضلية</value>
-        <value xml:lang="da">Privilegie numerisk id</value>
+        <value xml:lang="da">Privilegie numerisk ID</value>
         <value xml:lang="de">Privileg Aufzählung ID</value>
-        <value xml:lang="en">Privilege Enum Id</value>
+        <value xml:lang="en">Privilege Enum ID</value>
         <value xml:lang="es">Tipo privilegio</value>
         <value xml:lang="fr">Enumération de privilège</value>
         <value xml:lang="it">Enumerazione Privilegio</value>
         <value xml:lang="ja">特権ID</value>
-        <value xml:lang="pt">Privilégio Enum Id</value>
+        <value xml:lang="pt">Privilégio Enum ID</value>
         <value xml:lang="ro">Enumerare Privilegiu</value>
         <value xml:lang="ru">Код привилегий</value>
         <value xml:lang="th">รหัสสิทธิพิเศษ</value>
@@ -5418,6 +5743,7 @@
     </property>
     <property key="FormFieldTitle_queryLine">
         <value xml:lang="da">Forespørgsel linie</value>
+        <value xml:lang="de">Suchzeile</value>
         <value xml:lang="en">Query Line</value>
         <value xml:lang="fr">Ligne de requête</value>
         <value xml:lang="it">Riga query</value>
@@ -5444,9 +5770,9 @@
     </property>
     <property key="FormFieldTitle_referenceId">
         <value xml:lang="ar">تعريف المرجع</value>
-        <value xml:lang="da">Reference id</value>
+        <value xml:lang="da">Reference ID</value>
         <value xml:lang="de">Referenz ID</value>
-        <value xml:lang="en">Reference Id</value>
+        <value xml:lang="en">Reference ID</value>
         <value xml:lang="fr">Référence</value>
         <value xml:lang="it">Numero Riferimento</value>
         <value xml:lang="ja">参照ID</value>
@@ -5459,9 +5785,9 @@
     </property>
     <property key="FormFieldTitle_relatedDetailId">
         <value xml:lang="ar">تعريف تفصيل المرجع</value>
-        <value xml:lang="da">Relateret detail id</value>
+        <value xml:lang="da">Relateret detail ID</value>
         <value xml:lang="de">Zugehöriges Detail ID</value>
-        <value xml:lang="en">Related Detail Id</value>
+        <value xml:lang="en">Related Detail ID</value>
         <value xml:lang="fr">Détail lié</value>
         <value xml:lang="it">Dettaglio Relativo</value>
         <value xml:lang="ja">関連詳細ID</value>
@@ -5546,6 +5872,7 @@
     </property>
     <property key="FormFieldTitle_section">
         <value xml:lang="da">Sektion</value>
+        <value xml:lang="de">Sektion</value>
         <value xml:lang="en">section</value>
         <value xml:lang="fr">section</value>
         <value xml:lang="it">sezione</value>
@@ -5660,9 +5987,9 @@
     </property>
     <property key="FormFieldTitle_surveyId">
         <value xml:lang="ar">تعريف التصويت</value>
-        <value xml:lang="da">Rundspørge id</value>
+        <value xml:lang="da">Rundspørge ID</value>
         <value xml:lang="de">Befragung ID</value>
-        <value xml:lang="en">Survey Id</value>
+        <value xml:lang="en">Survey ID</value>
         <value xml:lang="es">Código de encuesta</value>
         <value xml:lang="fr">Sondage</value>
         <value xml:lang="it">Numero sondaggio</value>
@@ -5678,9 +6005,9 @@
     </property>
     <property key="FormFieldTitle_surveyMultiRespColId">
         <value xml:lang="ar">تعريف عمود متعدد الجواب لتصويت</value>
-        <value xml:lang="da">Rundspørge multisvar kolonne id</value>
+        <value xml:lang="da">Rundspørge multisvar kolonne ID</value>
         <value xml:lang="de">Befragung Mehrfachantwort Kolonne ID</value>
-        <value xml:lang="en">Survey Multi Resp Col Id</value>
+        <value xml:lang="en">Survey Multi Resp Col ID</value>
         <value xml:lang="fr">Colonne (sondage multi réponse)</value>
         <value xml:lang="it">Colonna Risposta Multipla Sondaggio</value>
         <value xml:lang="ja">評価複数回答項目ID</value>
@@ -5693,9 +6020,9 @@
     </property>
     <property key="FormFieldTitle_surveyMultiRespId">
         <value xml:lang="ar">تعريف جواب متعدد لتصويت</value>
-        <value xml:lang="da">Rundspørge multisvar id</value>
+        <value xml:lang="da">Rundspørge multisvar ID</value>
         <value xml:lang="de">Befragung Mehrfachantwort ID</value>
-        <value xml:lang="en">Survey Multi Resp Id</value>
+        <value xml:lang="en">Survey Multi Resp ID</value>
         <value xml:lang="fr">Sondage multi réponse</value>
         <value xml:lang="it">Risposta Multipla Sondaggio</value>
         <value xml:lang="ja">評価複数回答ID</value>
@@ -5725,9 +6052,9 @@
     </property>
     <property key="FormFieldTitle_surveyPageSeqId">
         <value xml:lang="ar">تعريف تسلسل صفحة تصويت</value>
-        <value xml:lang="da">Rundspørge sidesekvens id</value>
+        <value xml:lang="da">Rundspørge sidesekvens ID</value>
         <value xml:lang="de">Befragungsseite Seq. ID</value>
-        <value xml:lang="en">Survey Page Seq Id</value>
+        <value xml:lang="en">Survey Page Seq ID</value>
         <value xml:lang="fr">Séq. de page de sondage</value>
         <value xml:lang="it">Numero Sequenza Pagina Sondaggio</value>
         <value xml:lang="ja">評価ページ連番ID</value>
@@ -5740,9 +6067,9 @@
     </property>
     <property key="FormFieldTitle_surveyQuestionCategoryId">
         <value xml:lang="ar">تعريف فئة سؤال تصويت</value>
-        <value xml:lang="da">Rundspørge spørgsmålskategori id</value>
+        <value xml:lang="da">Rundspørge spørgsmålskategori ID</value>
         <value xml:lang="de">Befragung Fragenkategorie ID</value>
-        <value xml:lang="en">Survey Question Category Id</value>
+        <value xml:lang="en">Survey Question Category ID</value>
         <value xml:lang="fr">Catégorie de question (sondage)</value>
         <value xml:lang="it">Categoria Domanda Sondaggio</value>
         <value xml:lang="ja">評価質問カテゴリID</value>
@@ -5755,9 +6082,9 @@
     </property>
     <property key="FormFieldTitle_surveyQuestionTypeId">
         <value xml:lang="ar">تعريف نوع سؤال تصويت</value>
-        <value xml:lang="da">Rundspørge spørgsmålstype id</value>
+        <value xml:lang="da">Rundspørge spørgsmålstype ID</value>
         <value xml:lang="de">Befragung Fragentyp ID</value>
-        <value xml:lang="en">Survey Question Type Id</value>
+        <value xml:lang="en">Survey Question Type ID</value>
         <value xml:lang="fr">Type de question (sondage)</value>
         <value xml:lang="it">Tipo Domanda Sondaggio</value>
         <value xml:lang="ja">評価質問種類ID</value>
@@ -5770,9 +6097,9 @@
     </property>
     <property key="FormFieldTitle_surveyResponseId">
         <value xml:lang="ar">تعريف جواب تصويت</value>
-        <value xml:lang="da">Rundspørge svar id</value>
+        <value xml:lang="da">Rundspørge svar ID</value>
         <value xml:lang="de">Befragung Antwort ID</value>
-        <value xml:lang="en">Survey Response Id</value>
+        <value xml:lang="en">Survey Response ID</value>
         <value xml:lang="fr">Réponse au sondage</value>
         <value xml:lang="it">Risposta sondaggio</value>
         <value xml:lang="ja">評価質問回答ID</value>
@@ -5815,9 +6142,9 @@
     </property>
     <property key="FormFieldTitle_templateDataResourceId">
         <value xml:lang="ar">تعريف مورد معلومات نموذج</value>
-        <value xml:lang="da">Skabelon dataressource id</value>
+        <value xml:lang="da">Skabelon dataressource ID</value>
         <value xml:lang="de">Vorlage Datenressource ID</value>
-        <value xml:lang="en">Template Data Resource Id</value>
+        <value xml:lang="en">Template Data Resource ID</value>
         <value xml:lang="es">Código Plantilla de fuente de datos</value>
         <value xml:lang="fr">Modèle de ressource de données</value>
         <value xml:lang="it">Template Risorsa Dati</value>
@@ -5845,6 +6172,7 @@
     </property>
     <property key="FormFieldTitle_templateTree">
         <value xml:lang="da">Skabelon træ</value>
+        <value xml:lang="de">Vorlagenbaum</value>
         <value xml:lang="en">Template Tree</value>
         <value xml:lang="fr">Modèle d'arbre</value>
         <value xml:lang="it">Albero template</value>
@@ -5872,6 +6200,7 @@
     </property>
     <property key="FormFieldTitle_topic">
         <value xml:lang="da">Emne</value>
+        <value xml:lang="de">Topic</value>
         <value xml:lang="en">Topic</value>
         <value xml:lang="fr">Sujet</value>
         <value xml:lang="it">Argomento</value>
@@ -5899,6 +6228,7 @@
     </property>
     <property key="FormFieldTitle_updateSurveyResponse">
         <value xml:lang="da">Opdater rundspørge svar</value>
+        <value xml:lang="de">Umfrageantwort aktualisieren</value>
         <value xml:lang="en">Update Survey Response</value>
         <value xml:lang="fr">Actualisation de la réponse du sondage</value>
         <value xml:lang="it">Aggiorna risposta sondaggio</value>
@@ -5925,6 +6255,7 @@
     </property>
     <property key="FormFieldTitle_visualThemeSetId">
         <value xml:lang="da">Visuelt temasæt</value>
+        <value xml:lang="de">Visual Theme Set</value>
         <value xml:lang="en">Visual Theme Set</value>
         <value xml:lang="fr">Ensemble de thèmes visuels</value>
         <value xml:lang="it">Set di temi grafici</value>
@@ -5935,10 +6266,25 @@
         <value xml:lang="zh">视觉效果集合</value>
         <value xml:lang="zh-TW">視覺主題集合</value>
     </property>
+    <property key="FormFieldTitle_visualThemeSelectorScript">
+        <value xml:lang="de">Visual Theme Selector Script</value>
+        <value xml:lang="en">Visual Theme Selector Script</value>
+        <value xml:lang="fr">Script sélecteur de thème visuel</value>
+    </property>
+    <property key="FormFieldTitle_webappPathPrefix">
+        <value xml:lang="de">Webapp-Pfadpräfix</value>
+        <value xml:lang="en">Webapp Path Prefix</value>
+        <value xml:lang="fr">Préfixe de chemin du Webapp</value>
+    </property>
+    <property key="ContentWebSiteWebappPathPrefixDesc">
+        <value xml:lang="de">Zusätzliches URL-Pfadpräfix, angehängt zwischen der Domäne / Port und dem Webapp-Kontextpfad in generierten Links, für Webapp- und Navigationslinks (@pageUrl); muss mit Schrägstrich beginnen, aber ohne Schrägstrich enden. Hauptsächlich für Frontend Load Balancer Mappings gedacht.</value>
+        <value xml:lang="en">Extra URL path prefix appended between the domain/port and the webapp context path in generated links, for webapp and navigation links (@pageUrl); must start with slash but end with no slash. Mainly intended for frontend load balancer mappings.</value>
+        <value xml:lang="fr">Ajout d'un préfixe de chemin d'URL supplémentaire entre le domaine / port et le chemin de contexte webapp dans les liens générés, pour les liens Webapp et de navigation (@pageUrl); doit commencer par une barre oblique mais se terminer par une barre oblique Principalement destiné aux mappages d'équilibreurs de charge frontaux.</value>
+    </property>
     <property key="FormFieldTitle_webSiteContentTypeId">
-        <value xml:lang="da">Web side indholdstype id</value>
+        <value xml:lang="da">Web side indholdstype ID</value>
         <value xml:lang="de">Webseite Inhaltstyp ID</value>
-        <value xml:lang="en">Web Site Content Type Id</value>
+        <value xml:lang="en">Web Site Content Type ID</value>
         <value xml:lang="fr">Type de contenu de site Web</value>
         <value xml:lang="it">Tipo Contenuto Sito Web</value>
         <value xml:lang="ja">WebサイトコンテンツタイプID</value>
@@ -5951,9 +6297,9 @@
     </property>
     <property key="FormFieldTitle_webSiteId">
         <value xml:lang="ar">تعريف موقع الويب</value>
-        <value xml:lang="da">Web side id</value>
+        <value xml:lang="da">Web side ID</value>
         <value xml:lang="de">Webseite ID</value>
-        <value xml:lang="en">Web Site Id</value>
+        <value xml:lang="en">Web Site ID</value>
         <value xml:lang="es">Código del sitio web</value>
         <value xml:lang="fr">Site web</value>
         <value xml:lang="it">Sito web</value>
@@ -6016,6 +6362,7 @@
     </property>
     <property key="PageTitleAddCompDocInstance">
         <value xml:lang="da">Tilføj sammensat dokument instans</value>
+        <value xml:lang="de">CompDoc Instanz hinzufügen</value>
         <value xml:lang="en">Add CompDoc Instance</value>
         <value xml:lang="fr">Ajouter une instance de document composite</value>
         <value xml:lang="it">Aggiungi Istanza CompDoc</value>
@@ -6027,6 +6374,7 @@
     </property>
     <property key="PageTitleAddCompositeDocumentInstance">
         <value xml:lang="da">Tilføj sammensat dokument instans del side</value>
+        <value xml:lang="de">Composite Document Instanz Teilseite hinzufügen </value>
         <value xml:lang="en">Add Composite Document Instance Part Page</value>
         <value xml:lang="fr">Ajouter une instance d'une partie de page de document composite</value>
         <value xml:lang="it">Aggiungi instanza composizione documenti</value>
@@ -6038,6 +6386,7 @@
     </property>
     <property key="PageTitleAddCompositeDocumentTemplate">
         <value xml:lang="da">Tilføj sammensat dokument skabelon side</value>
+        <value xml:lang="de">Composite Document Vorlage hinzufügen</value>
         <value xml:lang="en">Add Composite Document Template Page</value>
         <value xml:lang="fr">Ajouter une page de modèle de document composite</value>
         <value xml:lang="it">Aggiungi template composizione documenti</value>
@@ -6066,6 +6415,7 @@
         <value xml:lang="zh-TW">新建內容</value>
     </property>
     <property key="PageTitleAddContentKeyword">
+        <value xml:lang="de">Inhalts-Keywort hinzufügen</value>
         <value xml:lang="en">Add Content Keyword</value>
         <value xml:lang="fr">Ajout de mot clé document</value>
         <value xml:lang="ja">コンテンツキーワードを追加</value>
@@ -6091,6 +6441,7 @@
         <value xml:lang="zh-TW">新建資料源</value>
     </property>
     <property key="PageTitleAddDataResourceFromContent">
+        <value xml:lang="de">DataResource aus Inhalt hinzufügen</value>
         <value xml:lang="en">Add DataResource From Content</value>
         <value xml:lang="fr">Ajouter une ressource de données pour un contenu</value>
         <value xml:lang="ja">コンテンツからデータリソースを追加</value>
@@ -6340,6 +6691,7 @@
     </property>
     <property key="PageTitleEditBlogArticlePermissionError">
         <value xml:lang="da">Tilladelse til at rette artikel fejlede</value>
+        <value xml:lang="de">Fehlende Berechtigung um den Artikel zu bearbeiten</value>
         <value xml:lang="en">Permissions failed to edit Article</value>
         <value xml:lang="fr">Les autorisations ne permettent pas de modifier l'article</value>
         <value xml:lang="it">Aggiorna una associazione</value>
@@ -6483,6 +6835,7 @@
         <value xml:lang="zh-TW">編輯內容屬性</value>
     </property>
     <property key="PageTitleEditContentKeywords">
+        <value xml:lang="de">Keywörter bearbeiten</value>
         <value xml:lang="en">Edit Content Keywords</value>
         <value xml:lang="fr">Édition des mots-clés document</value>
         <value xml:lang="ja">コンテンツキーワードを編集</value>
@@ -7492,6 +7845,7 @@
     </property>
     <property key="PageTitleNavigateContent">
         <value xml:lang="da">Navigér i indhold</value>
+        <value xml:lang="de">Inhalt durchsuchen</value>
         <value xml:lang="en">Navigate Content</value>
         <value xml:lang="fr">Naviguer dans le contenu</value>
         <value xml:lang="it">Naviga contenuto</value>
@@ -7517,6 +7871,7 @@
     </property>
     <property key="PageTitlePleaseSelectData">
         <value xml:lang="da">Vælg data</value>
+        <value xml:lang="de">Bitte Daten auswählen</value>
         <value xml:lang="en">Please select data</value>
         <value xml:lang="fr">Merci de sélectionner une donnée</value>
         <value xml:lang="it">Perfacore seleziona i dati</value>
@@ -7526,8 +7881,13 @@
         <value xml:lang="zh">请选择数据</value>
         <value xml:lang="zh-TW">請選擇資料</value>
     </property>
+    <property key="PageTitleRemoveWebSiteSEO">
+        <value xml:lang="de">SEO-URLs entfernen</value>
+        <value xml:lang="en">Remove SEO URLs</value>
+    </property>
     <property key="PageTitleSearchContent">
         <value xml:lang="da">Søg indhold</value>
+        <value xml:lang="de">Inhalte durchsuchen</value>
         <value xml:lang="en">Search Content</value>
         <value xml:lang="fr">Recherche de contenu</value>
         <value xml:lang="it">Ricerca contenuti</value>
@@ -7555,6 +7915,7 @@
     </property>
     <property key="PageTitleViewCompDocContent">
         <value xml:lang="da">Vis sammensat dokument indhold</value>
+        <value xml:lang="de">CompDoc Inhalte betrachten</value>
         <value xml:lang="en">View CompDoc Content</value>
         <value xml:lang="fr">Voir le contenu du document composite</value>
         <value xml:lang="it">Mostra contenuto composizione documenti</value>
@@ -7566,6 +7927,7 @@
     </property>
     <property key="PageTitleViewCompDocContentBinary">
         <value xml:lang="da">Vis sammensat dokument binært</value>
+        <value xml:lang="de">CompDoc Binärdaten betrachten</value>
         <value xml:lang="en">View CompDoc Content Binary</value>
         <value xml:lang="fr">Voir le contenu du document composite au format binaire</value>
         <value xml:lang="it">Mostra contenuto binario CompDoc</value>
@@ -7577,6 +7939,7 @@
     </property>
     <property key="PageTitleViewCompDocContentHtml">
         <value xml:lang="da">Vis sammensat dokument Html</value>
+        <value xml:lang="de">CompDoc Html betrachten</value>
         <value xml:lang="en">View CompDoc Content Html</value>
         <value xml:lang="fr">Voir le contenu du document composite au format HTML</value>
         <value xml:lang="it">Mostra contenuto html CompDoc</value>
@@ -7588,6 +7951,7 @@
     </property>
     <property key="PageTitleViewCompDocTemplateTree">
         <value xml:lang="da">Vis skabelon træ</value>
+        <value xml:lang="de">Vorlagen- Baum betrachten</value>
         <value xml:lang="en">View Template Tree</value>
         <value xml:lang="fr">Voir l'arborescence modèle</value>
         <value xml:lang="it">Mostra albero template</value>
@@ -7599,6 +7963,7 @@
     </property>
     <property key="PageTitleViewCompDocTree">
         <value xml:lang="da">Vis træ</value>
+        <value xml:lang="de">Baum betrachten</value>
         <value xml:lang="en">View Tree</value>
         <value xml:lang="fr">Voir l'arborescence</value>
         <value xml:lang="it">Mostra albero</value>
@@ -7666,7 +8031,7 @@
         <value xml:lang="zh">网站内容</value>
         <value xml:lang="zh-TW">網站內容</value>
     </property>
-    <property key="PageTitleWebSiteSEO"><!-- SCIPIO: modified -->
+    <property key="PageTitleWebSiteSEO">
         <value xml:lang="de">SEO-URLs generieren</value>
         <value xml:lang="en">Generate SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
@@ -7674,114 +8039,5 @@
         <value xml:lang="vi">Sinh lại các URL dành cho SEO bị thiếu</value>
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh-TW">產生缺失的搜尋引擎優化的網址</value>
-    </property>
-    <!-- SCIPIO: NEW LABELS -->
-    <property key="ContentAltStcLocFieldInfo">
-        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
-        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
-    </property>
-    <property key="ContentGenerateSeoUrlInfo">
-        <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
-        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
-    </property>
-    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
-        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
-        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
-    </property>
-    <property key="ContentGenerateSitemaps">
-        <value xml:lang="de">Sitemaps erstellen</value>
-        <value xml:lang="en">Generate Sitemaps</value>
-    </property>
-    <property key="ContentGenerateSitemapsInfo">
-        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
-        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
-    </property>
-    <property key="ContentGenerateType">
-        <value xml:lang="de">Typ generieren</value>
-        <value xml:lang="en">Generate Type</value>
-    </property>
-    <property key="ContentIncludeVariantProducts">
-        <value xml:lang="de">Inklusive Variantenprodukte</value>
-        <value xml:lang="en">Include Variant Products</value>
-    </property>
-    <property key="ContentMainStcLocFieldInfo">
-        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
-        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
-    </property>
-    <property key="ContentNewContent">
-        <value xml:lang="de">Neuer Inhalt</value>
-        <value xml:lang="en">New Content</value>
-    </property>
-    <property key="ContentNewWebSite">
-        <value xml:lang="de">Neue Webseite</value>
-        <value xml:lang="da">Opret ny Webside</value>
-        <value xml:lang="en">New WebSite</value>
-        <value xml:lang="fr">Nouveau Site Web</value>
-        <value xml:lang="it">Nuovo sito web</value>
-        <value xml:lang="ja">新規Webサイトを作成</value>
-        <value xml:lang="nl">Nieuwe website</value>
-        <value xml:lang="pt">Novo site</value>
-        <value xml:lang="vi">Tạo mới trang thông tin</value>
-        <value xml:lang="zh">创建新网站</value>
-        <value xml:lang="zh-TW">新建網站</value>
-    </property>
-    <property key="ContentRemoveOldLocales">
-        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
-        <value xml:lang="en">Remove Old Locales</value>
-    </property>
-    <property key="ContentRemoveSeoUrlInfo">
-        <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
-        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
-    </property>
-    <property key="ContentReplaceExisting">
-        <value xml:lang="de">Bestehende ersetzen</value>
-        <value xml:lang="en">Replace Existing</value>
-    </property>
-    <property key="ContentWebAppUiDeprecated">
-        <value xml:lang="de">Die ältere CMS-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
-        <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
-    </property>
-    <property key="ContentWebSiteParties"><!-- FIXME: some language inexact -->
-        <value xml:lang="da">Webside parter</value>
-        <value xml:lang="de">Webseite Nutzer</value>
-        <value xml:lang="en">WebSite Parties</value>
-        <value xml:lang="fr">Acteurs du site web</value>
-        <value xml:lang="it">Aggiorna Soggetti Sito Web</value>
-        <value xml:lang="ja">Webサイト取引先を編集</value>
-        <value xml:lang="nl">Website partijen</value>
-        <value xml:lang="pt">Participantes do site</value>
-        <value xml:lang="ro">Actualizeaza Subiecti Sit Web</value>
-        <value xml:lang="th">แก้ไขกลุ่มผู้ใช้ WebSite</value>
-        <value xml:lang="vi">Cập nhật người dùng</value>
-        <value xml:lang="zh">编辑网站会员</value>
-        <value xml:lang="zh-TW">編輯網站團體</value>
-    </property>
-    <property key="ContentWebSitePathAlias"><!-- FIXME: some language inexact -->
-        <value xml:lang="da">Webside sti alias</value>
-        <value xml:lang="de">Webseite pfad Alias</value>
-        <value xml:lang="en">WebSite Path Alias</value>
-        <value xml:lang="fr">Alias de chemin d'accès du site web</value>
-        <value xml:lang="it">Path alias Sito Web</value>
-        <value xml:lang="ja">パス別名</value>
-        <value xml:lang="pt">Alias de caminho</value>
-        <value xml:lang="vi">Đường dẫn thay thế</value>
-        <value xml:lang="zh">路径别名</value>
-        <value xml:lang="zh-TW">路徑別名</value>
-    </property>
-    <property key="ContentWebSiteSEO">
-        <value xml:lang="da">Webside SEO</value>
-        <value xml:lang="de">Webseite SEO</value>
-        <value xml:lang="en">WebSite SEO</value>
-        <value xml:lang="fr">SEO du site web</value>
-        <value xml:lang="it">SEO Sito Web</value>
-    </property>
-    <property key="FormFieldTitle_visualThemeSelectorScript">
-        <value xml:lang="de">Visual Theme Selector Script</value>
-        <value xml:lang="en">Visual Theme Selector Script</value>
-        <value xml:lang="fr">Script sélecteur de thème visuel</value>
-    </property>
-    <property key="PageTitleRemoveWebSiteSEO">
-        <value xml:lang="de">SEO-URLs entfernen</value>
-        <value xml:lang="en">Remove SEO URLs</value>
     </property>
 </resource>

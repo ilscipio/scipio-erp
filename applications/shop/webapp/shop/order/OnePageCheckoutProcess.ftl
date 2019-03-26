@@ -1,25 +1,14 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@section relHeadingLevel=+1>
-  <#assign shoppingCart = sessionAttributes.shoppingCart! />
+  <#-- SCIPIO: Must use context or accessor
+  <#assign shoppingCart = sessionAttributes.shoppingCart!>-->
+  <#assign shoppingCart = getShoppingCart()!>
 
     <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
     
@@ -61,7 +50,7 @@ under the License.
 
 <#-- ============================================================= -->
           <div id="editShippingPanel" style="display: none;">
-            <form id="shippingForm" action="<@ofbizUrl>createUpdateShippingAddress</@ofbizUrl>" method="post">
+            <form id="shippingForm" action="<@pageUrl>createUpdateShippingAddress</@pageUrl>" method="post">
                 <fieldset>
                   <input type="hidden" id="shipToContactMechId" name="shipToContactMechId" value="${shipToContactMechId!}" />
                   <input type="hidden" id="billToContactMechIdInShipingForm" name="billToContactMechId" value="${billToContactMechId!}" />
@@ -149,7 +138,7 @@ under the License.
 
 <#-- ============================================================= -->
           <div id="editShippingOptionPanel" style="display: none;">
-            <form id="shippingOptionForm" action="<@ofbizUrl></@ofbizUrl>" method="post">
+            <form id="shippingOptionForm" action="" method="post">
               <fieldset>
                 <@alert type="error" containerId="shippingOptionFormServerError_container" containerStyle="display:none;">
                   <div id="shippingOptionFormServerError" class="errorMessage"></div>
@@ -199,7 +188,7 @@ under the License.
 <#-- ============================================================= -->
 
           <div id="editBillingPanel" style="display: none;">
-            <form id="billingForm" class="theform" action="<@ofbizUrl></@ofbizUrl>" method="post">
+            <form id="billingForm" class="theform" action="" method="post">
               <fieldset class="col">
                 <input type="hidden" id="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
                 <input type="hidden" id="shipToContactMechIdInBillingForm" name="shipToContactMechId" value="${shipToContactMechId!}" />
@@ -304,7 +293,7 @@ under the License.
 <#-- ========================================================================================================================== -->
         <@section title="${rawLabel('EcommerceStep')} 5: ${rawLabel('OrderSubmitOrder')}">
           <div id="orderSubmitPanel" style="display: none;">
-            <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
+            <form id="orderSubmitForm" action="<@pageUrl>onePageProcessOrder</@pageUrl>" method="post">
                 <#--<fieldset>-->
                   <@field type="submitarea">
                     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" id="processOrderButton" name="processOrderButton" text=uiLabelMap.OrderSubmitOrder />
@@ -322,7 +311,7 @@ under the License.
     <#assign sectionStyle><#if shoppingCart?has_content && (shoppingCart.size() > 0)>display: none;</#if></#assign>
     <@section id="emptyCartCheckoutPanel" style=sectionStyle>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
-        <p>You currently have no items in your cart. Click <a href="<@ofbizUrl>main</@ofbizUrl>">here</a> to view our products.</p>
+        <p>You currently have no items in your cart. Click <a href="<@pageUrl>main</@pageUrl>">here</a> to view our products.</p>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}</@heading>

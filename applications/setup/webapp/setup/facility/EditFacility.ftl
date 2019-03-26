@@ -15,17 +15,18 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
+<#if !facilityInfo??>
+  <@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
+</#if>
 
-
-<@section>
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+<#--<@section> already in screen-->
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
         
       <#if facilityInfo??>
         <@field type="display" label=uiLabelMap.FormFieldTitle_facilityId tooltip=uiLabelMap.ProductNotModificationRecrationFacility><#rt/>
-            <@setupExtAppLink uri="/facility/control/EditFacility?facilityId=${rawString(params.facilityId!)}" text=(params.facilityId!)/><#t/>
+            <@setupExtAppLink uri="/facility/control/EditFacility?facilityId=${raw(params.facilityId!)}" text=(params.facilityId!)/><#t/>
         </@field><#lt/>
         <@field type="hidden" name="facilityId" value=(params.facilityId!)/> 
       <#else>
@@ -52,7 +53,7 @@
         <@field type="hidden" name="partyId" value=(partyId!)/>
         
         <#if facilityInfo??>
-          <#assign addressManageUri = "/facility/control/settings?facilityId=${rawString(params.facilityId!)}">
+          <#assign addressManageUri = "/facility/control/settings?facilityId=${raw(params.facilityId!)}">
           <#assign addressLabelDetail>
             <@formattedContactMechPurposeDescs (shipAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
             (<@setupExtAppLink uri=addressManageUri text=uiLabelMap.CommonManage/>)
@@ -122,12 +123,25 @@
             <@field type="generic" label=(rawLabel('CommonOr')+":")>
                 <@modal id="setupFacility-selectShipAddr" linkClass="+${styles.link_nav!} ${styles.action_show!}" label=uiLabelMap.SetupSelectAddress>
                   <div class="setup-addresslist">
+                       <@script>
+                            function editFacilityAddrCloseModal(elemSel) {
+                                try {
+                                    $(elemSel).foundation('reveal', 'close');
+                                } catch(err) {
+                                    try {
+                                        $(elemSel).modal('hide');
+                                    } catch(err) {
+                                        //t.dispatchEvent(event);
+                                    }
+                                }
+                            }
+                        </@script>
                     <#list srcPostalAddressList as postalAddress>
-                      <div class="setup-addressentry">
+                      <div class="setup-addressentry" style="inline-block;">
                         <@formattedAddressBasic address=postalAddress 
-                            purposes=(srcContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
+                            purposes=(srcContactMechPurposeMap[raw(postalAddress.contactMechId)]!)
                             emphasis=true/><br/>
-                        <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);jQuery('#modal_setupFacility-selectShipAddr').foundation('reveal', 'close');void(0);"<#rt/> 
+                        <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);editFacilityAddrCloseModal('#modal_setupFacility-selectShipAddr');void(0);"<#rt/> 
                             <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>
                       </div>
                     </#list>
@@ -163,4 +177,4 @@
           </div>
         </@field>
     </@form>
-</@section>
+<#--</@section>-->

@@ -30,12 +30,14 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.widget.model.FormFactory.FormInitInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -50,13 +52,14 @@ import org.xml.sax.SAXException;
 public class GridFactory extends WidgetFactory {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final UtilCache<String, ModelGrid> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
-    private static final UtilCache<String, ModelGrid> gridWebappCache = UtilCache.createUtilCache("widget.grid.webappResource", 0, 0, false);
+    // SCIPIO: 2018-12-05: These caches are modified to hold whole file instead of individual ModelForm
+    private static final UtilCache<String, Map<String, ModelGrid>> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
+    private static final UtilCache<String, Map<String, ModelGrid>> gridWebappCache = UtilCache.createUtilCache("widget.grid.webappResource", 0, 0, false);
 
     public static GridFactory getGridFactory() { // SCIPIO: new
         return gridFactory;
     }
-    
+
     public static Map<String, ModelGrid> getGridsFromLocation(String resourceName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
         URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
@@ -69,7 +72,7 @@ public class GridFactory extends WidgetFactory {
     }
 
     /**
-     * Gets widget from location or exception. 
+     * Gets widget from location or exception.
      * <p>
      * SCIPIO: now delegating.
      */
@@ -77,55 +80,97 @@ public class GridFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         ModelGrid modelGrid = getGridFromLocationOrNull(resourceName, gridName, entityModelReader, dispatchContext);
         if (modelGrid == null) {
-            throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + resourceName + "]");
+            throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in resource [" + resourceName + "]");
         }
         return modelGrid;
     }
-    
+
     /**
      * SCIPIO: Gets widget from location or null if name not within the location.
      */
     public static ModelGrid getGridFromLocationOrNull(String resourceName, String gridName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
         StringBuilder sb = new StringBuilder(dispatchContext.getDelegator().getDelegatorName());
-        sb.append(":").append(resourceName).append("#").append(gridName);
+        sb.append(":").append(resourceName); // .append("#").append(gridName);
         String cacheKey = sb.toString();
-        ModelGrid modelGrid = gridLocationCache.get(cacheKey);
-        if (modelGrid == null) {
-            URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
-            Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
-            if (gridFileDoc == null) {
-                throw new IllegalArgumentException("Could not find resource [" + resourceName + "]");
+        Map<String, ModelGrid> modelGridMap = gridLocationCache.get(cacheKey);
+        if (modelGridMap == null) {
+            // SCIPIO: refactored
+            FormInitInfo formInitInfo = FormInitInfo.get();
+            if (formInitInfo != null) {
+                ModelGrid modelGrid = formInitInfo.getGrid(resourceName+"#"+gridName);
+                if (modelGrid != null) {
+                    return modelGrid;
+                }
+                Document doc = formInitInfo.docCache.get(resourceName);
+                if (doc != null) {
+                    return createModelGrid(doc, entityModelReader, dispatchContext, resourceName, gridName);
+                }
             }
-            // SCIPIO: New: Save original location as user data in Document
-            if (gridFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+            synchronized (GridFactory.class) {
+                modelGridMap = gridLocationCache.get(cacheKey);
+                if (modelGridMap == null) {
+                    URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
+                    if (gridFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve grid file location [" + resourceName + "]");
+                    }
+                    Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
+                    if (gridFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read grid file at resource [" + resourceName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+                    formInitInfo = FormInitInfo.begin(formInitInfo);
+                    formInitInfo.gridNestedLevel++;
+                    try {
+                        formInitInfo.docCache.put(resourceName, gridFileDoc);
+                        modelGridMap = readGridDocument(gridFileDoc, entityModelReader, dispatchContext, resourceName);
+                    } finally {
+                        FormInitInfo.end(formInitInfo);
+                        formInitInfo.gridNestedLevel--;
+                    }
+                    if (formInitInfo.gridNestedLevel <= 0) {
+                        gridLocationCache.put(cacheKey, modelGridMap);
+                    }
+                }
             }
-            modelGrid = createModelGrid(gridFileDoc, entityModelReader, dispatchContext, resourceName, gridName);
-            modelGrid = gridLocationCache.putIfAbsentAndGet(cacheKey, modelGrid);
         }
-        return modelGrid;
+        // SCIPIO: done by non-*OrNull method
+        //if (modelGrid == null) {
+        //    throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + resourceName + "]");
+        //}
+        return modelGridMap.get(gridName);
     }
 
     public static ModelGrid getGridFromWebappContext(String resourceName, String gridName, HttpServletRequest request)
             throws IOException, SAXException, ParserConfigurationException {
         String webappName = UtilHttp.getApplicationName(request);
-        String cacheKey = webappName + "::" + resourceName + "::" + gridName;
-        ModelGrid modelGrid = gridWebappCache.get(cacheKey);
-        if (modelGrid == null) {
-            ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
-            Delegator delegator = (Delegator) request.getAttribute("delegator");
-            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            URL gridFileUrl = servletContext.getResource(resourceName);
-            Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
-            // SCIPIO: New: Save original location as user data in Document
-            if (gridFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+        String cacheKey = webappName + "::" + resourceName; // + "::" + gridName;
+        Map<String, ModelGrid> modelGridMap = gridWebappCache.get(cacheKey);
+        if (modelGridMap == null) {
+            // SCIPIO: refactored
+            synchronized (GridFactory.class) {
+                modelGridMap = gridWebappCache.get(cacheKey);
+                if (modelGridMap == null) {
+                    ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+                    Delegator delegator = (Delegator) request.getAttribute("delegator");
+                    LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+                    URL gridFileUrl = servletContext.getResource(resourceName);
+                    if (gridFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve grid file location [" + resourceName + "] in the webapp [" + webappName + "]");
+                    }
+                    Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
+                    if (gridFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read grid file at resource [" + resourceName + "] in the webapp [" + webappName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);
+                    modelGridMap = readGridDocument(gridFileDoc, delegator.getModelReader(), dispatcher.getDispatchContext(), resourceName);
+                    gridWebappCache.put(cacheKey, modelGridMap);
+                }
             }
-            Element gridElement = UtilXml.firstChildElement(gridFileDoc.getDocumentElement(), "grid", "name", gridName);
-            modelGrid = createModelGrid(gridElement, delegator.getModelReader(), dispatcher.getDispatchContext(), resourceName, gridName);
-            modelGrid = gridWebappCache.putIfAbsentAndGet(cacheKey, modelGrid);
         }
+        ModelGrid modelGrid = modelGridMap.get(gridName);
         if (modelGrid == null) {
             throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in webapp resource [" + resourceName + "] in the webapp [" + webappName + "]");
         }
@@ -133,19 +178,27 @@ public class GridFactory extends WidgetFactory {
     }
 
     public static Map<String, ModelGrid> readGridDocument(Document gridFileDoc, ModelReader entityModelReader, DispatchContext dispatchContext, String gridLocation) {
-        Map<String, ModelGrid> modelGridMap = new HashMap<String, ModelGrid>();
+        Map<String, ModelGrid> modelGridMap = new HashMap<>();
         if (gridFileDoc != null) {
             // read document and construct ModelGrid for each grid element
             Element rootElement = gridFileDoc.getDocumentElement();
-            List<? extends Element> gridElements = UtilXml.childElementList(rootElement, "grid");
+            // SCIPIO: Fixed missing stock backward-compat for "form" here
+            //List<? extends Element> gridElements = UtilXml.childElementList(rootElement, "grid");
+            List<? extends Element> gridElements = UtilXml.childElementList(rootElement);
             for (Element gridElement : gridElements) {
+                if (!("grid".equals(gridElement.getTagName()) || "form".equals(gridElement.getTagName()))) { // SCIPIO
+                    continue;
+                }
                 String gridName = gridElement.getAttribute("name");
+                /* SCIPIO: don't cache at this level
                 String cacheKey = gridLocation + "#" + gridName;
                 ModelGrid modelGrid = gridLocationCache.get(cacheKey);
                 if (modelGrid == null) {
                     modelGrid = createModelGrid(gridElement, entityModelReader, dispatchContext, gridLocation, gridName);
                     modelGrid = gridLocationCache.putIfAbsentAndGet(cacheKey, modelGrid);
                 }
+                */
+                ModelGrid modelGrid = createModelGrid(gridElement, entityModelReader, dispatchContext, gridLocation, gridName);
                 modelGridMap.put(gridName, modelGrid);
             }
         }
@@ -162,14 +215,30 @@ public class GridFactory extends WidgetFactory {
     }
 
     public static ModelGrid createModelGrid(Element gridElement, ModelReader entityModelReader, DispatchContext dispatchContext, String gridLocation, String gridName) {
-        return new ModelGrid(gridElement, gridLocation, entityModelReader, dispatchContext);
+        // SCIPIO: Due to changes in initialization method, this may be empty...
+        if (UtilValidate.isEmpty(gridLocation)) {
+            gridLocation = WidgetDocumentInfo.retrieveAlways(gridElement).getResourceLocation();
+        }
+        // SCIPIO: refactored for ThreadLocal
+        FormInitInfo formInitInfo = FormInitInfo.get();
+        if (formInitInfo != null) {
+            ModelGrid modelGrid = formInitInfo.getGrid(gridLocation+"#"+gridName);
+            if (modelGrid != null) {
+                return modelGrid;
+            }
+        }
+        ModelGrid modelGrid = new ModelGrid(gridElement, gridLocation, entityModelReader, dispatchContext);
+        if (formInitInfo != null) {
+            formInitInfo.set(gridLocation+"#"+gridName, modelGrid);
+        }
+        return modelGrid;
     }
 
     @Override
-    public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+    public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+            return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator().getModelReader(), dctx);
         } catch (SAXException e) {
             throw new IOException(e);
@@ -179,10 +248,10 @@ public class GridFactory extends WidgetFactory {
     }
 
     @Override
-    public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+    public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException { // SCIPIO
         try {
             DispatchContext dctx = getDefaultDispatchContext();
-            return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+            return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(),
                     dctx.getDelegator().getModelReader(), dctx);
         } catch (SAXException e) {
             throw new IOException(e);

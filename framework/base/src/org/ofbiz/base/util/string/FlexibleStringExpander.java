@@ -31,6 +31,7 @@ import javax.el.PropertyNotFoundException;
 import org.ofbiz.base.lang.IsEmpty;
 import org.ofbiz.base.lang.SourceMonitored;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -41,11 +42,11 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /** Expands String values that contain Unified Expression Language (JSR 245)
- * syntax. This class also supports the execution of bsh scripts by using the
- * 'bsh:' prefix, and Groovy scripts by using the 'groovy:' prefix.
+ * syntax. This class also supports the execution of Groovy scripts
+ * by using the 'groovy:' prefix.
  * Further it is possible to control the output by specifying the suffix
- * '?currency(XXX)' to format the output according to the supplied locale
- * and specified (XXX) currency.<p>This class extends the UEL by allowing
+ * '?currency(XX)' to format the output according to the supplied locale
+ * and specified (XX) currency.<p>This class extends the UEL by allowing
  * nested expressions.</p>
  */
 @SourceMonitored
@@ -104,6 +105,38 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                 }
             }
         }
+        return false;
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>fse</code> is only a <code>String</code> constant,
+     * with no interpreted expressions or scripts (by this class).
+     * <p>
+     * Added 2018-09-19.
+     * @param fse The <code>FlexibleStringExpander</code> to test
+     * @return <code>true</code> if <code>fse</code> contains a <code>String</code> constant
+     */
+    public static boolean isConstant(FlexibleStringExpander fse) {
+        return (fse != null && fse.isConstant());
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>this</code> is only a <code>String</code> constant,
+     * with no interpreted expressions or scripts (by this class).
+     * <p>
+     * NOTE: We make the assumption that if fse were parsed to Elements,
+     * one of them would always end up being a non-constant expression, so we can
+     * avoid checking Elements recursively.
+     * Basically this method is roughly the same as checking if the original contains an open bracket.
+     * <p>
+     * DEV NOTE: This is overridden to return true in the Const* subclasses below.
+     * The others don't need to do anything. This makes this check basically free.
+     * <p>
+     * Added 2018-09-19.
+     * @param fse The <code>FlexibleStringExpander</code> to test
+     * @return <code>true</code> if <code>fse</code> contains a <code>String</code> constant
+     */
+    public boolean isConstant() {
         return false;
     }
 
@@ -237,6 +270,18 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         return fse;
     }
 
+    /**
+     * SCIPIO: Returns an instance that produces null on {@link FlexibleStringExpander#get}
+     * and empty string on {@link FlexibleStringExpander#expandString}.
+     * <p>
+     * This is the same as <code>getInstance("")</code> but cleaner.
+     * <p>
+     * Added 2018-09-20.
+     */
+    public static FlexibleStringExpander getEmptyExpr() {
+        return nullExpr;
+    }
+
     private static abstract class Key {
         @Override
         public final boolean equals(Object o) {
@@ -313,6 +358,10 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                 strElems.add(new ConstOffsetElem(chars, currentInd, (escapedExpression ? start -1 : start) - currentInd));
             }
             if (expression.indexOf("bsh:", start + 2) == start + 2 && !escapedExpression) {
+                // SCIPIO: 2018-09-19: This should be avoided at all costs from now on
+                Debug.logWarning("Deprecated Beanshell script prefix (${bsh:...}) detected in "
+                        + "Flexible expression; this is a compatibility mode only (runs as Groovy); "
+                        + "please update code to use ${groovy:...}", module);
                 // checks to see if this starts with a "bsh:", if so treat the rest of the expression as a bsh scriptlet
                 strElems.add(new ScriptElem(chars, start, Math.min(end + 1, start + length) - start, start + 6, end - start - 6));
             } else if (expression.indexOf("groovy:", start + 2) == start + 2 && !escapedExpression) {
@@ -444,7 +493,8 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                     buffer.append(ObjectType.simpleTypeConvert(obj, "String", null, timeZone, locale, true));
                 }
             }
-        } catch (Exception e) {
+        } catch (GeneralException | RuntimeException e) {
+            Debug.log(e, module);
             buffer.append(obj);
         }
         if (buffer.length() > this.hint) {
@@ -562,6 +612,11 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         protected Object get(Map<String, ? extends Object> context, TimeZone timeZone, Locale locale) {
             return isEmpty() ? null : getOriginal();
         }
+
+        @Override
+        public boolean isConstant() { // SCIPIO: Added 2018-09-19
+            return true;
+        }
     }
 
     /** An object that represents a <code>String</code> constant portion of an expression. */
@@ -578,6 +633,11 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
         @Override
         public String expandString(Map<String, ? extends Object> context, TimeZone timeZone, Locale locale) {
             return new String(this.chars, this.offset, this.length);
+        }
+
+        @Override
+        public boolean isConstant() { // SCIPIO: Added 2018-09-19
+            return true;
         }
     }
 
@@ -604,9 +664,8 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                     // SCIPIO: 2017-01-13: added BigDecimal instanceof check to avoid string overhead and potential loss of information
                     if (obj instanceof BigDecimal) {
                         return UtilFormatOut.formatCurrency((BigDecimal) obj, currencyCode, locale);
-                    } else {
-                        return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
                     }
+                    return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
                 }
             } catch (PropertyNotFoundException e) {
                 if (Debug.verboseOn()) {

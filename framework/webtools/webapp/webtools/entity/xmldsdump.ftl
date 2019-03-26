@@ -1,28 +1,15 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#if tobrowser?? && tobrowser>
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
 <p>${uiLabelMap.WebtoolsXMLExportSingleInfo!""}</p>
 <hr />
-<#if security.hasPermission("ENTITY_MAINT", session)>
+<#if security.hasPermission("ENTITY_MAINT", request)>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
   <@commonMsg type="error">${uiLabelMap.WebtoolsPermissionMaint}</@commonMsg>
@@ -31,8 +18,8 @@ under the License.
 <#macro displayButtonBar>
   <@menu type="button">
     <@menuitem type="submit" text=uiLabelMap.WebtoolsExport class="+${styles.action_run_sys!} ${styles.action_export!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text=uiLabelMap.WebtoolsCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsdump?checkAll=true") text=uiLabelMap.WebtoolsCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsdump") text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
   </@menu>
 </#macro>
 
@@ -40,7 +27,7 @@ under the License.
 <@alert type="info">${uiLabelMap.WebtoolsXMLExportInfo}</@alert>
 
 
-<#if security.hasPermission("ENTITY_MAINT", session)>
+<#if security.hasPermission("ENTITY_MAINT", request)>
   <#if exportList?has_content>
       <#--
          # Format Number of Bytes in SI Units
@@ -50,7 +37,7 @@ under the License.
         <#return byteStr />
       </#function>
       <@section title=uiLabelMap.WebtoolsResults> 
-          <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+          <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1>
               <@thead>
                 <@tr>
                   <@th>${uiLabelMap.File}</@th>
@@ -64,7 +51,7 @@ under the License.
                     <#list exportList as record>
                         <@tr>
                             <@td width="100">
-                                <#assign exportUrl=makeOfbizWebappUrl("/export?exportId=" + record.exportId!"") />
+                                <#assign exportUrl=makeAppUrl("/export?exportId=" + raw(record.exportId!)) />
                                 <a href="${exportUrl!""}" target="_blank">${uiLabelMap.FormFieldTitle_downloadAction}</a>
                             </@td>
                             
@@ -79,7 +66,10 @@ under the License.
                                 ${record.description!""}
                             </@td>
                             <@td>
-                               <#-- <a href="">${uiLabelMap.CommonDelete}</a>-->
+                                <form method="post" action="<@pageUrl uri="deleteEntityExport"/>" id="EntityExport_remove_${record?index}">
+                                  <input type="hidden" name="exportId" value="${record.exportId!}"/>
+                                  <a href="javascript:jQuery('#EntityExport_remove_${record?index}').submit();void(0);">${uiLabelMap.CommonDelete}</a>
+                                </form>
                             </@td>
                         </@tr>
                     </#list>
@@ -101,7 +91,7 @@ under the License.
       </@section>
   </#if>
   
-  <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
+  <form method="post" action="<@pageUrl>xmldsdump</@pageUrl>" name="entityExport">
 
   <@section title=uiLabelMap.WebtoolsExport>
       

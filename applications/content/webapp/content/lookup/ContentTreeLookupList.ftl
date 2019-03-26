@@ -35,7 +35,7 @@
 <#--<hr />-->
 
 <#if contentAssoc?has_content>  
-<@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+<@table type="data-list" autoAltRows=true>
     <#if activeSubMenuItem=="ListContentTree">
     <#--Form ListContentTree-->
     <@thead>
@@ -72,18 +72,18 @@
       <#elseif activeSubMenuItem=="ListDocument">
           <#--Form ListDocument-->
           <@tr>
-              <@td><a class="plain" href="<@ofbizInterWebappUrl>/content/control/editContent?contentId=${contentData.contentId!}</@ofbizInterWebappUrl>">${contentData.contentName!}[${contentData.contentId!}]</a></@td>
-              <@td><a class="plain" href="<@ofbizInterWebappUrl>/content/control/showContent?contentId=${contentData.contentId!}</@ofbizInterWebappUrl>" target="_blank">${uiLabelMap.CommonView}</a></@td>
+              <@td><a class="plain" href="<@serverUrl>/content/control/editContent?contentId=${contentData.contentId!}</@serverUrl>">${contentData.contentName!}[${contentData.contentId!}]</a></@td>
+              <@td><a class="plain" href="<@serverUrl>/content/control/showContent?contentId=${contentData.contentId!}</@serverUrl>" target="_blank">${uiLabelMap.CommonView}</a></@td>
               <@td>${contentData.contentTypeId!}</@td>
               <@td>${contentData.mimeTypeId!}</@td>
               <@td>${contentData.statusId!}</@td>
               <#if contentData.caFromDate?has_content>
-             <#assign caFromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(contentData.caFromDate, "dd/MM/yyyy")/>
+             <#assign caFromDate = UtilDateTime.toDateString(contentData.caFromDate, "dd/MM/yyyy")/>
             </#if> 
               <@td>${caFromDate!}</@td>
               <@td><a href="javascript:document.listDocumentForm_${listcount}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
           </@tr>
-          <form action="<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>" name="listDocumentForm_${listcount}" method="post">
+          <form action="<@pageUrl>removeDocumentFromTree</@pageUrl>" name="listDocumentForm_${listcount}" method="post">
             <input type="hidden" name="contentId" value="${contentData.contentIdStart!}"/>
             <input type="hidden" name="contentIdTo" value="${contentData.contentId!}"/>
             <input type="hidden" name="contentAssocTypeId" value="${contentData.caContentAssocTypeId!}"/>

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <p>NOTE: These report are for demonstration purposes only.
@@ -23,7 +10,7 @@ they are good examples of creating detailed reports that you have a lot of
 control over. special thanks for Britton LaRoche for creating the first pass of
 these reports and helping to improve them.</p>
 
-<form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
+<form method="post" name="orderreportform" action="<@pageUrl>orderreportjasper.pdf</@pageUrl>" target="OrderReport">
   <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate1"/>
   <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate1"/>
 <#--
@@ -40,7 +27,7 @@ these reports and helping to improve them.</p>
   <@field type="submit" tabindex="16" name="GoReport" text="Order Report" class="+${styles.link_run_sys!} ${styles.action_export!}"/>
 </form>
 
-<form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
+<form method="post" name="itemreportform" action="<@pageUrl>orderitemreportjasper.pdf</@pageUrl>" target="OrderReport">
   <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate2"/>
   <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate2"/>
 <#--

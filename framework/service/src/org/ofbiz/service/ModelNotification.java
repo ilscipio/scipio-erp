@@ -19,6 +19,7 @@
 
 package org.ofbiz.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,8 @@ import org.ofbiz.service.config.model.Notify;
 /**
  * ModelNotification
  */
-public class ModelNotification {
+@SuppressWarnings("serial")
+public class ModelNotification implements Serializable { // SCIPIO: added Serializable
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -81,8 +83,8 @@ public class ModelNotification {
         }
 
         // template context
-        Map<String, Object> notifyContext = new HashMap<String, Object>();
-        Map<String, Object> bodyParams = new HashMap<String, Object>();
+        Map<String, Object> notifyContext = new HashMap<>();
+        Map<String, Object> bodyParams = new HashMap<>();
         bodyParams.put("serviceContext", context);
         bodyParams.put("serviceResult", result);
         bodyParams.put("service", model);
@@ -139,7 +141,7 @@ public class ModelNotification {
     }
 
     private List<String> getAddressesByType(NotificationGroup group, String type) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         for (Notify n : group.getNotifyList()) {
             if (n.getType().equals(type)) {
                 l.add(n.getContent());

@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -127,17 +114,17 @@ under the License.
         <response name="success" type="request" value="viewprofile"/>
         <response name="error" type="view" value="MergeLeads"/>
     </request-map>
-    <!-- SCIPIO: Commneted out for now -->
-    <!-- <request-map uri="NewLeadFromVCard">
+    <!-- SCIPIO: WARN: VCard functions are currently unsupported! -->
+    <request-map uri="NewLeadFromVCard">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewLeadFromVCard"/>
     </request-map>
     <request-map uri="createLeadFromVCard">
         <security https="true" auth="true"/>
         <event type="service" invoke="importVCard"/>
-        <response name="success" type="request" value="viewprofile"/>What would be the view in case a vCard has more than one contact
+        <response name="success" type="view" value="ViewPartiesCreatedByVCard"/>
         <response name="error" type="view" value="NewLeadFromVCard"/>
-    </request-map> -->
+    </request-map>
     <request-map uri="quickAddLead">
         <security https="true" auth="true"/>
         <event type="service" invoke="createLead"/>
@@ -177,23 +164,23 @@ under the License.
         <response name="success" type="request" value="viewprofile"/>
         <response name="error" type="view" value="MergeContacts"/>
     </request-map>
-    <!-- SCIPIO: Commneted out for now -->
-<!--     <request-map uri="NewContactFromVCard">
+    <!-- SCIPIO: WARN: VCard functions are currently unsupported! -->
+    <request-map uri="NewContactFromVCard">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewContactFromVCard"/>
     </request-map>
     <request-map uri="createContactFromVCard">
         <security https="true" auth="true"/>
         <event type="service" invoke="importVCard"/>
-        <response name="success" type="request" value="viewprofile"/>What would be the view in case a vCard contains more than one contact
+        <response name="success" type="view" value="ViewPartiesCreatedByVCard"/>
         <response name="error" type="view" value="NewContactFromVCard"/>
     </request-map>
     <request-map uri="createVCardFromContact">
         <security https="true" auth="true"/>
         <event type="service" invoke="exportVCard"/>
-        <response name="success" type="view" value="FindContacts"/>This need to be fixed
+        <response name="success" type="view" value="FindContacts"/><!-- This need to be fixed -->
         <response name="error" type="view" value="FindContacts"/>
-    </request-map> -->
+    </request-map>
     <request-map uri="quickAddContact">
         <security https="true" auth="true"/>
         <event type="service" invoke="createContact"/>
@@ -252,12 +239,13 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="Events" save-home-view="true"/>
     </request-map>
+    <!-- SCIPIO: This request would require projectmgr addon for the service, but nothing is using this anyway
     <request-map uri="updateTaskAssigment">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTaskAssigment"/>
         <response name="success" type="view-home"/>
         <response name="error" type="view-home"/>
-    </request-map>
+    </request-map>-->
     <request-map uri="EditEvent">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEvent" save-home-view="true"/>
@@ -290,13 +278,15 @@ under the License.
     <!-- SCIPIO: New root entries -->
     <request-map uri="MyCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="MyCommunicationEvents"/></request-map>
     <!-- already defined above: <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>-->
-    <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
+    <!-- SCIPIO: TODO: REVIEW: no Analytics view exists 
+    <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>-->   
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
     <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>    
     <request-map uri="DataSources"><security https="true" auth="true"/><response name="success" type="view" value="FindDataSource"/></request-map>
     
     <!-- SCIPIO: Services entries -->
-    <request-map uri="Communication"><security https="true" auth="true"/><response name="success" type="view" value="Communication"/></request-map>
+    <!-- SCIPIO: TODO: REVIEW: no Communication view exists 
+    <request-map uri="Communication"><security https="true" auth="true"/><response name="success" type="view" value="Communication"/></request-map>-->
    
     <!-- <request-map uri="Request"><security https="true" auth="true"/><response name="success" type="view" value="Request"/></request-map> -->
     
@@ -421,15 +411,14 @@ under the License.
     <view-map name="CloneLead" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#CloneLead"/>
     <view-map name="ConvertLead" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#ConvertLead"/>
     <view-map name="MergeLeads" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#MergeLeads"/>
-    <!-- SCIPIO: Commneted out for now -->
-    <!-- <view-map name="NewLeadFromVCard" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#NewLeadFromVCard"/> -->
+    <view-map name="NewLeadFromVCard" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#NewLeadFromVCard"/>
     <view-map name="AddRelatedCompany" type="screen" page="component://marketing/widget/sfa/LeadScreens.xml#AddRelatedCompany"/>
 
     <view-map name="FindContacts" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#FindContacts"/>
     <view-map name="NewContact" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContact"/>
     <view-map name="MergeContacts" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#MergeContacts"/>
-    <!-- SCIPIO: Commneted out for now -->
-    <!-- <view-map name="NewContactFromVCard" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContactFromVCard"/> -->
+    <view-map name="NewContactFromVCard" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#NewContactFromVCard"/>
+    <view-map name="ViewPartiesCreatedByVCard" type="screen" page="component://marketing/widget/sfa/ContactScreens.xml#ViewPartiesCreatedByVCard"/>
 
     <view-map name="FindSalesForecast" type="screen" page="component://marketing/widget/sfa/ForecastScreens.xml#FindSalesForecast"/>
     <view-map name="EditSalesForecast" type="screen" page="component://marketing/widget/sfa/ForecastScreens.xml#EditSalesForecast"/>
@@ -471,10 +460,10 @@ under the License.
     
     
     <view-map name="AnalyticsSales" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsSales"/>
-    <view-map name="AnalyticsLeads" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsLeads"/>
-    <view-map name="AnalyticsSegments" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsSegments"/>
+    <!--<view-map name="AnalyticsLeads" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsLeads"/> // SCIPIO: removed -->
+    <!--<view-map name="AnalyticsSegments" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsSegments"/> // SCIPIO: removed -->
     <view-map name="AnalyticsTracking" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsTracking"/>
-    <view-map name="AnalyticsForecast" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsForecast"/>
+    <!--<view-map name="AnalyticsForecast" type="screen" page="component://marketing/widget/sfa/AnalyticsScreens.xml#AnalyticsForecast"/> // SCIPIO: removed -->
 
     <!-- end of view mappings -->
 </site-conf>

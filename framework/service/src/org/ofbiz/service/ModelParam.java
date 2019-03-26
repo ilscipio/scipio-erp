@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Part;
-import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
 import org.ofbiz.base.util.Debug;
@@ -93,6 +92,9 @@ public class ModelParam implements Serializable {
     /** Is this Parameter set internally? */
     public boolean internal = false;
 
+    // SCIPIO
+    boolean typeConvert = false;
+    
     public ModelParam() {}
 
     public ModelParam(ModelParam param) {
@@ -108,13 +110,17 @@ public class ModelParam implements Serializable {
         this.stringMapPrefix = param.stringMapPrefix;
         this.stringListSuffix = param.stringListSuffix;
         this.validators = param.validators;
-        if (param.defaultValue != null) this.setDefaultValue(param.defaultValue);
+        if (param.defaultValue != null) {
+            this.setDefaultValue(param.defaultValue);
+        }
         this.optional = param.optional;
         this.overrideOptional = param.overrideOptional;
         this.formDisplay = param.formDisplay;
         this.overrideFormDisplay = param.overrideFormDisplay;
         this.allowHtml = param.allowHtml;
         this.internal = param.internal;
+        // SCIPIO
+        this.typeConvert = param.typeConvert;
     }
 
     public void addValidator(String className, String methodName, String failMessage) {
@@ -128,9 +134,8 @@ public class ModelParam implements Serializable {
     public String getPrimaryFailMessage(Locale locale) {
         if (UtilValidate.isNotEmpty(validators)) {
             return validators.get(0).getFailMessage(locale);
-        } else {
-            return null;
         }
+        return null;
     }
 
     public String getShortDisplayDescription() {
@@ -166,11 +171,11 @@ public class ModelParam implements Serializable {
     }
 
     public boolean isIn() {
-        return "IN".equals(this.mode) || "INOUT".equals(this.mode);
+        return ModelService.IN_PARAM.equals(this.mode) || ModelService.IN_OUT_PARAM.equals(this.mode);
     }
 
     public boolean isOut() {
-        return "OUT".equals(this.mode) || "INOUT".equals(this.mode);
+        return ModelService.OUT_PARAM.equals(this.mode) || ModelService.IN_OUT_PARAM.equals(this.mode);
     }
 
     public boolean isOptional() {
@@ -205,8 +210,19 @@ public class ModelParam implements Serializable {
         this.setDefaultValue(param.defaultValue);
     }
 
+    public boolean isTypeConvert() { // SCIPIO
+        return typeConvert;
+    }
+
     public boolean equals(ModelParam model) {
         return model.name.equals(this.name);
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ModelParam)) {
+            return false;
+        }
+        return equals((ModelParam) obj);
     }
 
     @Override
@@ -227,19 +243,20 @@ public class ModelParam implements Serializable {
         buf.append(allowHtml).append("::");
         buf.append(defaultValue).append("::");
         buf.append(internal);
-        if (validators != null)
+        if (validators != null) {
             buf.append(validators.toString()).append("::");
+        }
         return buf.toString();
     }
 
-    public Part getWSDLPart(Definition def) throws WSDLException {
+    public Part getWSDLPart(Definition def) {
         Part part = def.createPart();
         part.setName(this.name);
         part.setTypeName(new QName(ModelService.TNS, this.java2wsdlType()));
         return part;
     }
 
-    protected String java2wsdlType() throws WSDLException {
+    protected String java2wsdlType() {
         if (ObjectType.instanceOf(java.lang.Character.class, this.type)) {
             return "std-String";
         } else if (ObjectType.instanceOf(java.lang.String.class, this.type)) {
@@ -283,8 +300,6 @@ public class ModelParam implements Serializable {
         } else {
             return "cus-obj";
         }
-
-        //throw new WSDLException(WSDLException.OTHER_ERROR, "Service cannot be described with WSDL (" + this.name + " / " + this.type + ")");
     }
 
     static class ModelParamValidator implements Serializable {
@@ -313,10 +328,9 @@ public class ModelParam implements Serializable {
         public String getFailMessage(Locale locale) {
             if (failMessage != null) {
                 return this.failMessage;
-            } else {
-                if (failResource != null && failProperty != null) {
-                    return UtilProperties.getMessage(failResource, failProperty, locale);
-                }
+            }
+            if (failResource != null && failProperty != null) {
+                return UtilProperties.getMessage(failResource, failProperty, locale);
             }
             return null;
         }

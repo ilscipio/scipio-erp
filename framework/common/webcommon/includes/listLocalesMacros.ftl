@@ -21,7 +21,7 @@
         <#local rawLocale = "false">
       </#if>
     <#else>
-      <#local rawLocale = rawString(currentLocale)>
+      <#local rawLocale = raw(currentLocale)>
       <#if rawLocale == "true">
         <#local currentLocale = "">
       </#if>
@@ -29,12 +29,12 @@
     <#if availableLocales?is_boolean>
       <#if expandCountries>
         <#if requireCountries>
-          <#local availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocalesExpandedCountryRequired()/><#-- NEW Scipio method -->
+          <#local availableLocales = UtilMisc.availableLocalesExpandedCountryRequired()/><#-- NEW Scipio method -->
         <#else>
-          <#local availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocalesExpandedCountryOptional()/><#-- NEW Scipio method -->
+          <#local availableLocales = UtilMisc.availableLocalesExpandedCountryOptional()/><#-- NEW Scipio method -->
         </#if>
       <#else>
-        <#local availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/><#-- stock ofbiz method -->
+        <#local availableLocales = UtilMisc.availableLocales()/><#-- stock ofbiz method -->
       </#if>
     </#if>
     <#local localeFound = false>
@@ -45,7 +45,7 @@
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#local langDir = "rtl">
         </#if>
-        <#local localeSelected = (rawLocale == rawString(availableLocale.toString()))>
+        <#local localeSelected = (rawLocale == raw(availableLocale.toString()))>
         <#if localeSelected>
           <#local localeFound = true>
         </#if>
@@ -54,7 +54,7 @@
     </#list>
     </#local>
     <#if allowExtra && !localeFound && rawLocale?has_content && rawLocale != "false">
-        <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawLocale)!>
+        <#local availableLocale = UtilMisc.parseLocale(rawLocale)!>
         <#local langAttr = availableLocale.toString()?replace("_", "-")>
         <#local langDir = "ltr">
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>

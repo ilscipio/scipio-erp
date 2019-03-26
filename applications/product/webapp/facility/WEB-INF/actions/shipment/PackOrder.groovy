@@ -23,6 +23,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.entity.condition.EntityCondition;
 
+final module = "PackOrder.groovy";
 
 facilityId = parameters.facilityId;
 if (facilityId) {
@@ -70,7 +71,7 @@ clear = parameters.clear;
 if (!packSession) {
     packSession = new org.ofbiz.shipment.packing.PackingSession(dispatcher, userLogin);
     session.setAttribute("packingSession", packSession);
-    Debug.log("Created NEW packing session!!");
+    Debug.logInfo("Created NEW packing session", module); // SCIPIO: fixed logging
 } else {
     if (packSession.getStatus() == 0) {
         OrderReadHelper orh = new OrderReadHelper(delegator, orderId);

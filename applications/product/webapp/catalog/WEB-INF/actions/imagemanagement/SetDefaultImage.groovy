@@ -31,6 +31,8 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.product.image.ScaleImage;
 
+module = "SetDefaultImage.groovy"
+
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 imageManagementPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
@@ -110,12 +112,15 @@ if (fileType) {
 
     defaultFileName = "temp_" + dataResourceName;
     checkPathFile = imageManagementPath + "/" + productId + "/" + dataResourceName;
+    BufferedImage bufImg;
     if (checkPathFile.equals(productContentList.get(0).drObjectInfo)) {
-        BufferedImage bufImg = ImageIO.read(new File(imageManagementPath + "/" + productId + "/" + dataResourceName));
+        bufImg = ImageIO.read(new File(imageManagementPath + "/" + productId + "/" + dataResourceName));
     } else {
-        BufferedImage bufImg = ImageIO.read(new File(productContentList.get(0).drObjectInfo));
+        bufImg = ImageIO.read(new File(productContentList.get(0).drObjectInfo));
     }
-    ImageIO.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName));
+    if (bufImg != null) { // SCIPIO: may be null
+        ImageIO.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName));
+    }
 
     clientFileName = dataResourceName;
     if (clientFileName) {
@@ -132,7 +137,7 @@ if (fileType) {
         context.clientFileName = clientFileName;
         context.filenameToUse = filenameToUse;
 
-        characterEncoding = request.getCharacterEncoding();
+        characterEncoding = "UTF-8"; // SCIPIO: ALWAYS use UTF-8 for filenames, not request encoding: characterEncoding = request.getCharacterEncoding();
         imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
 
         try {
@@ -155,11 +160,11 @@ if (fileType) {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("error deleting existing file (not neccessarily a problem)");
+                Debug.logError(e, "error deleting existing file (not neccessarily a problem)", module);
             }
             file.renameTo(file1);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
         }
 
         if (imageUrl && imageUrl.length() > 0) {

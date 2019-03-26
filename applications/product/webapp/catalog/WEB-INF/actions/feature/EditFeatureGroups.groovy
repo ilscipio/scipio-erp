@@ -17,6 +17,6 @@
  * under the License.
  */
 
-context.hasPermission = security.hasEntityPermission("CATALOG", "_VIEW", session)
+context.hasPermission = security.hasEntityPermission("CATALOG", "_VIEW", request)
 
 context.productFeatureGroups = from("ProductFeatureGroup").queryList();

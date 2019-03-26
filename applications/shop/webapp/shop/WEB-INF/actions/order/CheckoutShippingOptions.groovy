@@ -24,7 +24,7 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.shipping.*;
 
-cart = session.getAttribute("shoppingCart");
+cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 party = userLogin?.getRelatedOne("Party", false); // SCIPIO: Prevent NPE
 productStore = ProductStoreWorker.getProductStore(request);
 

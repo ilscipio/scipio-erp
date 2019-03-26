@@ -24,6 +24,9 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transaction;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -82,7 +85,7 @@ public class PayPalServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingErrorUiLabels";
-    
+
     // Used to maintain a weak reference to the ShoppingCart for customers who have gone to PayPal to checkout
     // so that we can quickly grab the cart, perform shipment estimates and send the info back to PayPal.
     // The weak key is a simple wrapper for the checkout token String and is stored as a cart attribute. The value
@@ -94,13 +97,13 @@ public class PayPalServices {
         ShoppingCart cart = (ShoppingCart) context.get("cart");
         Locale locale = cart.getLocale();
         if (cart == null || cart.items().size() <= 0) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalShoppingCartIsEmpty", locale));
         }
 
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
 
@@ -138,7 +141,7 @@ public class PayPalServices {
             addCartDetails(encoder, cart);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalErrorDuringRetrievingCartDetails", locale));
         }
 
@@ -254,10 +257,10 @@ public class PayPalServices {
             }
             String estimateLabel = shipMethod.getString("partyId") + " - " + shipMethod.getString("description");
             encoder.add("L_SHIPINGPOPTIONLABEL" + line, estimateLabel);
-            encoder.add("L_SHIPPINGOPTIONAMOUNT" + line, estimate.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            encoder.add("L_SHIPPINGOPTIONAMOUNT" + line, estimate.setScale(2, RoundingMode.HALF_UP).toPlainString());
             // Just make this first one default for now
             encoder.add("L_SHIPPINGOPTIONISDEFAULT" + line, line == 0 ? "true" : "false");
-            encoder.add("L_TAXAMT" + line, cart.getTotalSalesTax().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            encoder.add("L_TAXAMT" + line, cart.getTotalSalesTax().setScale(2, RoundingMode.HALF_UP).toPlainString());
             line++;
         }
         String responseMsg = null;
@@ -273,10 +276,8 @@ public class PayPalServices {
                 Debug.logError(e, module);
             }
 
-            try {
-                Writer writer = response.getWriter();
+            try (Writer writer = response.getWriter()) {
                 writer.write(responseMsg);
-                writer.close();
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
@@ -317,14 +318,14 @@ public class PayPalServices {
         for (ShoppingCartItem item : cart.items()) {
             encoder.add("L_NUMBER" + line, item.getProductId());
             encoder.add("L_NAME" + line, item.getName());
-            encoder.add("L_AMT" + line, item.getBasePrice().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            encoder.add("L_AMT" + line, item.getBasePrice().setScale(2, RoundingMode.HALF_UP).toPlainString());
             encoder.add("L_QTY" + line, item.getQuantity().toBigInteger().toString());
             line++;
             BigDecimal otherAdjustments = item.getOtherAdjustments();
             if (otherAdjustments.compareTo(BigDecimal.ZERO) != 0) {
                 encoder.add("L_NUMBER" + line, item.getProductId());
                 encoder.add("L_NAME" + line, item.getName() + " Adjustments");
-                encoder.add("L_AMT" + line, otherAdjustments.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                encoder.add("L_AMT" + line, otherAdjustments.setScale(2, RoundingMode.HALF_UP).toPlainString());
                 encoder.add("L_QTY" + line, "1");
                 line++;
             }
@@ -333,7 +334,7 @@ public class PayPalServices {
         if (otherAdjustments.compareTo(BigDecimal.ZERO) != 0) {
             encoder.add("L_NUMBER" + line, "N/A");
             encoder.add("L_NAME" + line, "Order Adjustments");
-            encoder.add("L_AMT" + line, otherAdjustments.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            encoder.add("L_AMT" + line, otherAdjustments.setScale(2, RoundingMode.HALF_UP).toPlainString());
             encoder.add("L_QTY" + line, "1");
             line++;
         }
@@ -353,7 +354,7 @@ public class PayPalServices {
         ShoppingCart cart = (ShoppingCart) context.get("cart");
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
 
@@ -363,7 +364,7 @@ public class PayPalServices {
         if (UtilValidate.isNotEmpty(token)) {
             encoder.add("TOKEN", token);
         } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalTokenNotFound", locale));
         }
 
@@ -458,8 +459,8 @@ public class PayPalServices {
                     // No email found so we'll need to create one but first check if it should be PRIMARY or just BILLING
                     long primaryEmails = EntityQuery.use(delegator)
                             .from("PartyContactWithPurpose")
-                            .where("partyId", partyId, 
-                                    "contactMechTypeId", "EMAIL_ADDRESS", 
+                            .where("partyId", partyId,
+                                    "contactMechTypeId", "EMAIL_ADDRESS",
                                     "contactMechPurposeTypeId", "PRIMARY_EMAIL")
                             .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate")
                             .queryCount();
@@ -600,9 +601,9 @@ public class PayPalServices {
             try {
                 GenericValue shipmentMethod = EntityQuery.use(delegator)
                         .from("ProductStoreShipmentMethView")
-                        .where("productStoreId", cart.getProductStoreId(), 
-                                "partyId", shipMethodSplit[0], 
-                                "roleTypeId", "CARRIER", 
+                        .where("productStoreId", cart.getProductStoreId(),
+                                "partyId", shipMethodSplit[0],
+                                "roleTypeId", "CARRIER",
                                 "description", shippingMethodTypeDesc)
                         .queryFirst();
                 cart.setAllShipmentMethodTypeId(shipmentMethod.getString("shipmentMethodTypeId"));
@@ -621,8 +622,12 @@ public class PayPalServices {
         cart.cleanUpShipGroups();
         cart.setAllShippingContactMechId(postalContactId);
         Map<String, Object> result = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, cart, 0);
-        if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
-            return ServiceUtil.returnError((String) result.get(ModelService.ERROR_MESSAGE));
+        // SCIPIO: bad check
+        //if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+        //    return ServiceUtil.returnError((String) result.get(ModelService.ERROR_MESSAGE));
+        //}
+        if (ServiceUtil.isError(result)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
         }
 
         BigDecimal shippingTotal = (BigDecimal) result.get("shippingTotal");
@@ -657,7 +662,7 @@ public class PayPalServices {
         String paymentMethodId = (String) outMap.get("paymentMethodId");
 
         cart.clearPayments();
-        BigDecimal maxAmount = cart.getGrandTotal().setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal maxAmount = cart.getGrandTotal().setScale(2, RoundingMode.HALF_UP);
         cart.addPaymentAmount(paymentMethodId, maxAmount, true);
 
         return ServiceUtil.returnSuccess();
@@ -695,9 +700,9 @@ public class PayPalServices {
         encoder.add("AMT", processAmount.setScale(2).toPlainString());
         encoder.add("CURRENCYCODE", orh.getCurrency());
         BigDecimal grandTotal = orh.getOrderGrandTotal();
-        BigDecimal shippingTotal = orh.getShippingTotal().setScale(2, BigDecimal.ROUND_HALF_UP);
-        BigDecimal taxTotal = orh.getTaxTotal().setScale(2, BigDecimal.ROUND_HALF_UP);
-        BigDecimal subTotal = grandTotal.subtract(shippingTotal).subtract(taxTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal shippingTotal = orh.getShippingTotal().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal taxTotal = orh.getTaxTotal().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal subTotal = grandTotal.subtract(shippingTotal).subtract(taxTotal).setScale(2, RoundingMode.HALF_UP);
         encoder.add("ITEMAMT", subTotal.toPlainString());
         encoder.add("SHIPPINGAMT", shippingTotal.toPlainString());
         encoder.add("TAXAMT", taxTotal.toPlainString());
@@ -710,7 +715,7 @@ public class PayPalServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -759,7 +764,7 @@ public class PayPalServices {
         NVPEncoder encoder = new NVPEncoder();
         encoder.add("METHOD", "DoAuthorization");
         encoder.add("TRANSACTIONID", payPalPaymentMethod.getString("transactionId"));
-        encoder.add("AMT", processAmount.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+        encoder.add("AMT", processAmount.setScale(2, RoundingMode.HALF_UP).toPlainString());
         encoder.add("TRANSACTIONENTITY", "Order");
         String currency = (String) context.get("currency");
         if (currency == null) {
@@ -776,7 +781,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -816,7 +821,7 @@ public class PayPalServices {
         NVPEncoder encoder = new NVPEncoder();
         encoder.add("METHOD", "DoCapture");
         encoder.add("AUTHORIZATIONID", authTrans.getString("referenceNum"));
-        encoder.add("AMT", captureAmount.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+        encoder.add("AMT", captureAmount.setScale(2, RoundingMode.HALF_UP).toPlainString());
         encoder.add("CURRENCYCODE", authTrans.getString("currencyUomId"));
         encoder.add("COMPLETETYPE", "NotComplete");
 
@@ -829,7 +834,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -860,7 +865,7 @@ public class PayPalServices {
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         Locale locale = (Locale) context.get("locale");
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
@@ -877,7 +882,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -909,7 +914,7 @@ public class PayPalServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue payPalConfig = getPaymentMethodGatewayPayPal(dctx, context, null);
         if (payPalConfig == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalPaymentGatewayConfigCannotFind", locale));
         }
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
@@ -920,7 +925,7 @@ public class PayPalServices {
         encoder.add("TRANSACTIONID", captureTrans.getString("referenceNum"));
         encoder.add("REFUNDTYPE", "Partial");
         encoder.add("CURRENCYCODE", captureTrans.getString("currencyUomId"));
-        encoder.add("AMT", refundAmount.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+        encoder.add("AMT", refundAmount.setScale(2, RoundingMode.HALF_UP).toPlainString());
         encoder.add("NOTE", "Order #" + orderPaymentPreference.getString("orderId"));
         NVPDecoder decoder = null;
         try {
@@ -931,7 +936,7 @@ public class PayPalServices {
         }
 
         if (decoder == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPayPalUnknownError", locale));
         }
 
@@ -1046,7 +1051,7 @@ public class PayPalServices {
         GenericValue geoAssocAndGeoTo = null;
         try {
             geoAssocAndGeoTo = EntityQuery.use(delegator).from("GeoAssocAndGeoTo").where(cond).cache().queryFirst();
-            
+
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }

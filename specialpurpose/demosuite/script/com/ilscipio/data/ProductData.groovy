@@ -4,24 +4,70 @@ import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
+import org.ofbiz.product.store.ProductStoreWorker
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataGeneratorUtil
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.MockarooDataGenerator
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
 
-
-
+@DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class ProductData extends DataGeneratorGroovyBaseScript {
+    private static final String module = "ProductData.groovy";
+    
+    public String getDataType() {
+        return DataTypeEnum.PRODUCT;
+    }
 
     ProductData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", module);
     }
 
     public void init() {
-        // FIXME: I'm not sure about this, maybe a different service data generator for categories and even catalogs may be better
-        //        boolean createNewCategories = (context.createNewCategories) ? context.createNewCategories: false;
-        GenericValue productStore = checkProductStore(productStoreIds);
+        productStoreCount = from("ProductStore").queryCount();
+        if (productStoreCount == 0) {
+            throw new Exception("This service depends on product store data to be present. Please load or create product store data.");
+        }
+        totalProductStoreCount = (productStoreCount  < Integer.MAX_VALUE) ? (int) productStoreCount : Integer.MAX_VALUE - 1;
+
+        context.totalProductStoreCount = totalProductStoreCount;
+
+        String prodCatalogId = context.prodCatalogId ?: null;
+        String productStoreId = context.productStoreId ?: null;
+
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setMaxRows(1);
+
+        // Check if we got a valid ProductStore
+        if (!productStoreId) {
+            efo.setOffset(UtilRandom.getRandomInt(0, context.totalProductStoreCount - 1));
+            //            Debug.log("productStoreId offset ======> " + efo.getOffset());
+            productStores = from("ProductStore").query(efo);
+            if (productStores) {
+                productStoreId = productStores[0].productStoreId;
+            }
+            if (!prodCatalogId && productStoreId) {
+                productStoreCatalog = EntityUtil.getFirst(EntityUtil.filterByDate(from("ProductStoreCatalog").where("productStoreId", productStoreId).queryList()));
+                prodCatalogId = productStoreCatalog.getString("prodCatalogId");
+            }
+        } else {
+            if (!ProductStoreWorker.getProductStore(productStoreId, delegator)) {
+                productStoreId = null;
+            }
+        }
+        if (!productStoreId) {
+            throw new Exception("Product store not found or invalid.");
+        }
+
+        // Check if we got a valid WebSite
+        GenericValue webSite = from("WebSite").where("productStoreId", productStoreId).queryFirst();
+        if (!webSite) {
+            throw new Exception("Website not found or invalid.");
+        }
+
+
         GenericValue prodCatalog = checkProdCatalog();
         GenericValue productCategory = checkProductCategory();
 
@@ -34,84 +80,38 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         } else if (prodCatalog) {
             //  If productCategory is empty, try with an explicit prodCatalog
             productCategoryIds = getCatalogRelatedCategoryIds(prodCatalog);
-        } else if (productStore) {
+        } else if (productStoreId) {
             // Ultimately check for productStore, if nothing has been passed for that too, a random one taken from productStoreIds will be used
             // Find Catalogs
-            productStoreCatalogs = EntityUtil.filterByDate(productStore.getRelated("ProductStoreCatalog", null, null, true));
+            productStoreCatalogs = from("ProductStoreCatalog").where("productStoreId", productStoreId).queryList();
             //      productCatalogs = productStoreCatalog.getRelated("ProductCatalog", true);
             for (productStoreCatalog in productStoreCatalogs) {
                 prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
                 productCategoryIds += getCatalogRelatedCategoryIds(prodCatalog);
             }
         }
-        int numRecords = getNumRecordsToBeGenerated();
-        List<DemoDataProduct> generatedProducts = [];
         if (productCategoryIds) {
             String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";
             String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
-			// FIXME: This is no longer valid. Use a custom helper for each provider.
-//            generatedProducts = DemoSuiteDataGeneratorUtil.generateProduct(numRecords, MockarooDataGenerator.class);
         }
-        context.generatedProducts = generatedProducts;
+        context.productStoreId = productStoreId;
         context.productCategoryIds = productCategoryIds;
+        context.productCategoryTypeId = productCategoryTypeId;
+        context.prodCatalogCategoryTypeId = prodCatalogCategoryTypeId;
     }
 
-    final List<String> prodCatalogCategoryTypes = [
-        "CCT_ADMIN_ALLW",
-        "PCCT_BROWSE_ROOT",
-        "PCCT_MOST_POPULAR",
-        "PCCT_OTHER_SEARCH",
-        "PCCT_PROMOTIONS",
-        "PCCT_PURCH_ALLW",
-        "PCCT_QUICK_ADD",
-        "PCCT_SEARCH",
-        "PCCT_VIEW_ALLW",
-        "PCCT_WHATS_NEW"
-    ]
-
-    final List<String> productTypes = [
-        //TODO: Gotta figure how to handle these two types
-        //        "AGGREGATED",
-        //        "AGGREGATED_CONF",
-        "ASSET_USAGE",
-        "DIGITAL_GOOD",
-        "FINDIG_GOOD",
-        "FINISHED_GOOD",
-        "GOOD",
-        "MARKETING_PKG_PICK",
-        "MARKETING_PKG_AUTO",
-        "RAW_MATERIAL",
-        "SERVICE",
-        "SUBASSEMBLY",
-        "WIP"
-    ]
-
-    final List<String> productStoreIds = [
-        "ScipioShop",
-        "RentalStore"
-    ]
-
-    List prepareData(int index) throws Exception {
-        Debug.log("prepareData");
+    List prepareData(int index, AbstractDataObject productData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> productItems = new ArrayList<GenericValue>();
-        if (context.generatedProducts) {
-            DemoDataProduct demoDataProduct = context.generatedProducts.get(index);
-            // Create Product
-            String productId = "GEN_" + delegator.getNextSeqId("demo-product");
-            productCategoryId = context.productCategoryIds.get(UtilRandom.random(context.productCategoryIds));
-            productTypeId = productTypes.get(UtilRandom.random(productTypes));
-            introductionDate = UtilRandom.generateRandomTimestamp(context);
 
-            fields = UtilMisc.toMap("productId", productId, "productTypeId", productTypeId, "productName", demoDataProduct.getName(), "description", demoDataProduct.getDescription(),
-                    "longDescription", demoDataProduct.getLongDescription(), "introductionDate", introductionDate);
-            GenericValue product = delegator.makeValue("Product", fields);
-            toBeStored.add(product);
+        AbstractDataGenerator generator = context.generator;
 
-            fields = UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", introductionDate);
-            GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", fields);
-            toBeStored.add(productCategoryMember);
-        }
+        productFields = UtilMisc.toMap("productId", productData.getId(), "productTypeId", productData.getType(), "productName", productData.getName(), "description", productData.getDescription(),
+                "longDescription", productData.getLongDescription(), "introductionDate", productData.getIntroductionDate());
+        toBeStored.add(delegator.makeValue("Product", productFields));
+
+        productCategoryMemberFields = UtilMisc.toMap("productId", productData.getId(), "productCategoryId", productData.getCategory(), "fromDate", productData.getIntroductionDate())
+        toBeStored.add(delegator.makeValue("ProductCategoryMember", productCategoryMemberFields));
         return toBeStored;
     }
 
@@ -128,10 +128,11 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         return prodCatalog;
     }
 
-    private GenericValue checkProductCategory(productStoreIds) {
+    private GenericValue checkProductCategory() {
         String productCategoryId = (context.productCategoryId) ? context.productCategoryId : null;
-        if (!productCategoryId)
+        if (!productCategoryId) {
             return productCategoryId;
+        }
         GenericValue productCategory;
         try {
             productCategory = delegator.findOne("ProductCategory", ["productCategoryId" :  productCategoryId],true);
@@ -140,19 +141,6 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         }
         return productCategory;
 
-    }
-
-    private GenericValue checkProductStore(productStoreIds) {
-        String productStoreId = (context.productStoreId) ? context.productStoreId : null;
-        if (!productStoreId)
-            productStoreId = productStoreIds.get(UtilRandom.random(productStoreIds));
-        GenericValue productStore;
-        try {
-            productStore = delegator.findOne("ProductStore", ["productStoreId" :  productStoreId],true);
-        } catch (Exception e) {
-            return null;
-        }
-        return productStore;
     }
 
     private List<String> getCatalogRelatedCategoryIds(GenericValue prodCatalog) {

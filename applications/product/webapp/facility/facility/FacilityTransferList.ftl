@@ -5,10 +5,10 @@
 </#if>
 <#if transferList?has_content>
     <@section menuContent=menuContent title=uiLabelMap.ProductInventoryTransfers>
-        <form action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" method="post">
+        <form action="<@pageUrl>UpdateInventoryTransfer</@pageUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId!}" />        
         
-            <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1>
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
@@ -33,10 +33,10 @@
                     <#assign product = delegator.findOne("Product", { "productId" : inventoryItem.productId}, false)!>
                     <#assign statusItem = delegator.findOne("StatusItem", { "statusId" : transfer.statusId }, true) />
                     <@tr>
-                        <@td><a href="<@ofbizUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@ofbizUrl>">${transfer.inventoryTransferId}</a></@td>
-                        <@td><a href="<@ofbizUrl>EditFacilityInventoryItems?inventoryItemId=${transfer.inventoryItemId}</@ofbizUrl>">${transfer.inventoryItemId}</a></@td>
-                        <@td><a href="<@ofbizUrl>EditFacility?facilityId=${transfer.facilityId}</@ofbizUrl>">${facility.facilityName!}</a></@td>                                                 
-                        <@td><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}</@ofbizInterWebappUrl>">${product.productId}</a></@td>
+                        <@td><a href="<@pageUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@pageUrl>">${transfer.inventoryTransferId}</a></@td>
+                        <@td><a href="<@pageUrl>EditFacilityInventoryItems?inventoryItemId=${transfer.inventoryItemId}</@pageUrl>">${transfer.inventoryItemId}</a></@td>
+                        <@td><a href="<@pageUrl>EditFacility?facilityId=${transfer.facilityId}</@pageUrl>">${facility.facilityName!}</a></@td>                                                 
+                        <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}</@serverUrl>">${product.productId}</a></@td>
                         <@td>${product.productName!}</@td>
                         <@td><#if statusItem?has_content>${statusItem.description!}</#if></@td>                      
                         <@td>${inventoryItem.serialNumber!}</@td>
@@ -44,7 +44,7 @@
                         <@td>${inventoryItem.availableToPromiseTotal!}/${inventoryItem.quantityOnHandTotal!}</@td>
                         <@td>${transfer.sendDate!}</@td>
                         <@td>${transfer.receiveDate!}</@td>
-                        <@td><a href=<@ofbizUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@ofbizUrl>")>${uiLabelMap.CommonUpdate}</a></@td>
+                        <@td><a href=<@pageUrl>TransferInventoryItem?inventoryItemId=${transfer.inventoryItemId}&inventoryTransferId=${transfer.inventoryTransferId}&facilityId=${transfer.facilityId}</@pageUrl>")>${uiLabelMap.CommonUpdate}</a></@td>
                     </@tr>
                 </#list>
             </@table>    

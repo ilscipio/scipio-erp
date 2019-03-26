@@ -8,7 +8,7 @@
             <#list mapKeys(bestSellingProducts) as dateIntervals>
                 <#assign dateBeginText = dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()) />
                 <#assign dateEndText = dateIntervals.getDateFormatter().format(dateIntervals.getDateEnd()) />
-                <@chart title="${rawString(dateBeginText)} - ${rawString(dateEndText)}" type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>                
+                <@chart title="${raw(dateBeginText)} - ${raw(dateEndText)}" type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>                
                     <#assign currData = bestSellingProducts.get(dateIntervals) />                
                     <#if currData?has_content> 
                         <#if datasets == 1>             

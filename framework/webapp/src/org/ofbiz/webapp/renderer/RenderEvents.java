@@ -25,7 +25,7 @@ import org.ofbiz.webapp.view.ViewHandlerException;
 public abstract class RenderEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static final String RENDER_VIEW_ATTR_PREFIX = "renderView_";
 
     protected RenderEvents() {
@@ -53,21 +53,21 @@ public abstract class RenderEvents {
         //if (renderTargetExpr != null) {
         //    request.setAttribute("scpRenderTargetExpr", renderTargetExpr);
         //}
-        
+
         HttpServletRequest req = request;
         HttpServletResponse resp = response;
         try {
             if (UtilValidate.isEmpty(view)) {
                 throw new RequestHandlerException("View name is empty");
             }
-            
+
             RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
             ViewFactory viewFactory = rh.getViewFactory();
             ControllerConfig config = rh.getControllerConfig();
             ViewAsJsonConfig viewAsJsonConfig = config.getViewAsJsonConfigOrDefault();
-            
+
             // SCIPIO: FIXME?: DUPLICATED FROM RequestHandler.renderView - should de-duplicate
-            
+
             ConfigXMLReader.ViewMap viewMap = null;
             try {
                 viewMap = (view == null ? null : config.getViewMapMap().get(view));
@@ -86,10 +86,10 @@ public abstract class RenderEvents {
             } else {
                 nextPage = viewMap.page;
             }
-            
+
             // before mapping the view, set a request attribute so we know where we are
             req.setAttribute("_CURRENT_VIEW_", view);
-            
+
             if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + " sessionId=" + UtilHttp.getSessionId(req), module);
 
             //long viewStartTime = System.currentTimeMillis();
@@ -140,12 +140,12 @@ public abstract class RenderEvents {
 
                 throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
             }
-            
+
             // NOTE: extra params may be in scpOutParams req attr map or named in scipioOutAttrNames req attr list
         } catch(RequestHandlerException e) {
             Debug.logError(e, "Request handler error while rendering view: " + view, module);
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
-            return "error"; 
+            return "error";
         } catch(Exception e) {
             Debug.logError(e, "Error while rendering view: " + view, module);
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
@@ -153,10 +153,10 @@ public abstract class RenderEvents {
         } finally {
             ViewAsJsonUtil.addDefaultRenderOutAttrNames(request);
         }
-        
+
         return "success";
     }
-    
+
     private static String getStrParam(HttpServletRequest request, String name, String attrPrefix) {
         String param = (String) request.getAttribute(attrPrefix + name);
         if (param != null) {
@@ -165,5 +165,5 @@ public abstract class RenderEvents {
             return request.getParameter(name);
         }
     }
-  
+
 }

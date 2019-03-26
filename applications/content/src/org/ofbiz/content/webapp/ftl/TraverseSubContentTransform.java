@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilMisc;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -83,36 +81,14 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
     }
 
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         final Map<String, Object> templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        //FreeMarkerWorker.convertContext(templateCtx);
         final Map<String, Object> savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
-/*
-        final String editTemplate = FreeMarkerWorker.getArg(args, "editTemplate", ctx);
-        final String wrapTemplateId = FreeMarkerWorker.getArg(args, "wrapTemplateId", ctx);
-        //final String mapKey = FreeMarkerWorker.getArg(args, "mapKey", ctx);
-        final String templateContentId = FreeMarkerWorker.getArg(args, "templateContentId", ctx);
-        final String subDataResourceTypeId = FreeMarkerWorker.getArg(args, "subDataResourceTypeId", ctx);
-        final String contentId = FreeMarkerWorker.getArg(args, "contentId", ctx);
-        final String subContentId = FreeMarkerWorker.getArg(args, "subContentId", ctx);
-        final String rootDir = FreeMarkerWorker.getArg(args, "rootDir", ctx);
-        final String webSiteId = FreeMarkerWorker.getArg(args, "webSiteId", ctx);
-        final String https = FreeMarkerWorker.getArg(args, "https", ctx);
-        final String viewSize = FreeMarkerWorker.getArg(args, "viewSize", ctx);
-        final String viewIndex = FreeMarkerWorker.getArg(args, "viewIndex", ctx);
-        final String listSize = FreeMarkerWorker.getArg(args, "listSize", ctx);
-        final String highIndex = FreeMarkerWorker.getArg(args, "highIndex", ctx);
-        final String lowIndex = FreeMarkerWorker.getArg(args, "lowIndex", ctx);
-        final String queryString = FreeMarkerWorker.getArg(args, "queryString", ctx);
-        final Locale locale = FreeMarkerWorker.getWrappedObject("locale", env);
-        final String mimeTypeId = FreeMarkerWorker.getArg(args, "mimeTypeId", ctx);
-*/
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-        //final GenericValue userLogin = FreeMarkerWorker.getWrappedObject("userLogin", env);
         GenericValue view = FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
         final Integer indent = (templateCtx.get("indent") == null) ? Integer.valueOf(0) : (Integer)templateCtx.get("indent");
 
@@ -168,8 +144,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             @Override
             public void write(char cbuf[], int off, int len) {
-                //StringBuilder ctxBuf = (StringBuilder) templateContext.get("buf");
-                //ctxBuf.append(cbuf, off, len);
                 buf.append(cbuf, off, len);
             }
 
@@ -180,27 +154,15 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             @Override
             public int onStart() throws TemplateModelException, IOException {
-                //templateContext.put("buf", new StringBuilder());
                 List<Map<String, Object>> nodeTrail = new LinkedList<Map<String, Object>>();
                 traverseContext.put("nodeTrail", nodeTrail);
-                // GenericValue content = null;
-/*
-                if (UtilValidate.isNotEmpty(contentId)) {
-                    try {
-                        content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).queryOne();
-                    } catch (GenericEntityException e) {
-                        // TODO: Not sure what to put here.
-                        throw new RuntimeException(e.getMessage());
-                    }
-                }
-*/
                 Map<String, Object> rootNode = ContentWorker.makeNode(subContentDataResourceView);
                 ContentWorker.traceNodeTrail("1", nodeTrail);
                 ContentWorker.selectKids(rootNode, traverseContext);
                 ContentWorker.traceNodeTrail("2", nodeTrail);
                 nodeTrail.add(rootNode);
                 boolean isPick = checkWhen(subContentDataResourceView, (String)traverseContext.get("contentAssocTypeId"));
-                rootNode.put("isPick", Boolean.valueOf(isPick));
+                rootNode.put("isPick", isPick);
                 if (!isPick) {
                     ContentWorker.traceNodeTrail("3", nodeTrail);
                     isPick = ContentWorker.traverseSubContent(traverseContext);
@@ -217,9 +179,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             @Override
             public int afterBody() throws TemplateModelException, IOException {
-                //out.write(buf.toString());
-                //buf.setLength(0);
-                //templateContext.put("buf", new StringBuilder());
                 List<Map<String, Object>> nodeTrail = UtilGenerics.checkList(traverseContext.get("nodeTrail"));
                 ContentWorker.traceNodeTrail("6",nodeTrail);
                 boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
@@ -236,7 +195,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
             public void close() throws IOException {
                 String wrappedFTL = buf.toString();
                 String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
-                if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
+                if (UtilValidate.isEmpty(encloseWrappedText) || "false".equalsIgnoreCase(encloseWrappedText)) {
                     out.write(wrappedFTL);
                     wrappedFTL = null; // So it won't get written again below.
                 }
@@ -244,19 +203,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                     templateCtx.put("wrappedFTL", wrappedFTL);
                     Map<String, Object> templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-/*
-                    templateRoot.put("viewSize", viewSize);
-                    templateRoot.put("viewIndex", viewIndex);
-                    templateRoot.put("listSize", listSize);
-                    templateRoot.put("highIndex", highIndex);
-                    templateRoot.put("lowIndex", lowIndex);
-                    templateRoot.put("queryString", queryString);
-                    templateRoot.put("wrapDataResourceTypeId", subDataResourceTypeId);
-                    templateRoot.put("wrapContentIdTo", contentId);
-                    templateRoot.put("wrapMimeTypeId", mimeTypeId);
-                    //templateRoot.put("wrapMapKey", mapKey);
-
-*/
                     templateRoot.put("context", templateCtx);
                     String mimeTypeId = (String) templateCtx.get("mimeTypeId");
                     Locale locale = (Locale) templateCtx.get("locale");
@@ -268,16 +214,6 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                         Debug.logError(e, "Error rendering content", module);
                         throw new IOException("Error rendering content" + e.toString());
                     }
-/*
-                    Map resultsCtx = FreeMarkerWorker.getWrappedObject("context", env);
-                    templateContext.put("contentId", contentId);
-                    templateContext.put("locale", locale);
-                    templateContext.put("mapKey", null);
-                    templateContext.put("subContentId", null);
-                    templateContext.put("templateContentId", null);
-                    templateContext.put("subDataResourceTypeId", null);
-                    templateContext.put("mimeTypeId", null);
-*/
                 } else {
                     if (UtilValidate.isNotEmpty(wrappedFTL))
                         out.write(wrappedFTL);
@@ -293,19 +229,12 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                     contentAssocTypeId = "";
                 }
                 assocContext.put("contentAssocTypeId", contentAssocTypeId);
-                // assocContext.put("contentTypeId", assocValue.get("contentTypeId"));
-                // String assocRelation = null;
                 String thisDirection = (String)templateCtx.get("direction");
                 String thisContentId = (String)templateCtx.get("thisContentId");
-                // String relatedDirection = null;
                 if (thisDirection != null && thisDirection.equalsIgnoreCase("From")) {
                     assocContext.put("contentIdFrom", thisContentId);
-                    // assocRelation = "FromContent";
-                    // relatedDirection = "From";
                 } else {
                     assocContext.put("contentIdTo", thisContentId);
-                    // assocRelation = "ToContent";
-                    // relatedDirection = "To";
                 }
                 assocContext.put("content", thisContent);
                 List<Object> purposes = ContentWorker.getPurposes(thisContent);
@@ -319,10 +248,9 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 }
                 assocContext.put("typeAncestry", contentTypeAncestry);
                 Map<String, Object> whenMap = UtilGenerics.checkMap(traverseContext.get("whenMap"));
-                // String pickWhen = (String)whenMap.get("pickWhen");
                 List<Map<String, ? extends Object>> nodeTrail = UtilGenerics.checkList(traverseContext.get("nodeTrail"));
-                int indentSz = indent.intValue() + nodeTrail.size();
-                assocContext.put("indentObj", Integer.valueOf(indentSz));
+                int indentSz = indent + nodeTrail.size();
+                assocContext.put("indentObj", indentSz);
                 isPick = ContentWorker.checkWhen(assocContext, (String)whenMap.get("pickWhen"));
                 return isPick;
             }
@@ -331,13 +259,11 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 List<Map<String, Object>> nodeTrail = UtilGenerics.checkList(traverseContext.get("nodeTrail"));
                 int sz = nodeTrail.size();
                 Map<String, Object> node = nodeTrail.get(sz - 1);
-                // GenericValue content = (GenericValue)node.get("value");
                 String contentId = (String)node.get("contentId");
-                // String subContentId = (String)node.get("subContentId");
                 templateContext.put("subContentId", contentId);
                 templateContext.put("subContentDataResourceView", null);
-                int indentSz = indent.intValue() + nodeTrail.size();
-                templateContext.put("indent", Integer.valueOf(indentSz));
+                int indentSz = indent + nodeTrail.size();
+                templateContext.put("indent", indentSz);
                 if (sz >= 2) {
                     Map<String, Object> parentNode = nodeTrail.get(sz - 2);
                     GenericValue parentContent = (GenericValue)parentNode.get("value");

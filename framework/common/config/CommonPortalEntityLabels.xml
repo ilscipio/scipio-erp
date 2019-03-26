@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE">
+        <value xml:lang="de">Dashboard</value>
         <value xml:lang="en">Main</value>
         <value xml:lang="es">Principal</value>
         <value xml:lang="fr">Accueil</value>
@@ -31,6 +32,7 @@
         <value xml:lang="zh-TW">首頁</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE0">
+        <value xml:lang="de">Meine Kommunikation</value>
         <value xml:lang="en">My Comms</value>
         <value xml:lang="fr">Mes communications</value>
         <value xml:lang="ja">私の通信</value>
@@ -40,6 +42,7 @@
         <value xml:lang="zh-TW">我的通訊</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE1">
+        <value xml:lang="de">Mein Profil</value>
         <value xml:lang="en">My Profile</value>
         <value xml:lang="es">Mi perfil</value>
         <value xml:lang="fr">Mon profil</value>
@@ -51,6 +54,7 @@
         <value xml:lang="zh-TW">我的基本資料</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE2">
+        <value xml:lang="de">Andere Kommunikation</value>
         <value xml:lang="en">Other Party Comms</value>
         <value xml:lang="fr">Autres communications</value>
         <value xml:lang="ja">その他取引先の通信</value>
@@ -60,6 +64,7 @@
         <value xml:lang="zh-TW">其他團體的通訊</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE4">
+        <value xml:lang="de">Mein Time Sheet</value>
         <value xml:lang="en">My Time Sheet</value>
         <value xml:lang="es">Mi hoja de tiempos</value>
         <value xml:lang="fr">Mes feuilles de temps</value>
@@ -71,6 +76,7 @@
         <value xml:lang="zh-TW">我的工作報告</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE5">
+        <value xml:lang="de">Meine Tasks</value>
         <value xml:lang="en">My Tasks</value>
         <value xml:lang="fr">Mes tâches</value>
         <value xml:lang="ja">私のタスク</value>
@@ -80,6 +86,7 @@
         <value xml:lang="zh-TW">我的任務</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE6">
+        <value xml:lang="de">Meine Abwesenheit</value>
         <value xml:lang="en">My Leave</value>
         <value xml:lang="fr">Mes congés</value>
         <value xml:lang="ja">私の休暇</value>
@@ -89,6 +96,7 @@
         <value xml:lang="zh-TW">我的休假</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE7">
+        <value xml:lang="de">Meine Fortbildungen</value>
         <value xml:lang="en">My trainings</value>
         <value xml:lang="fr">Mes formations</value>
         <value xml:lang="ja">私のトレーニング</value>
@@ -98,6 +106,7 @@
         <value xml:lang="zh-TW">我的教育訓練</value>
     </property>
     <property key="PortalPage.portalPageName.MYPORTAL_EMPLOYEE8">
+        <value xml:lang="de">Meine Zahlungen</value>
         <value xml:lang="en">My Payments</value>
         <value xml:lang="fr">Mes paiements</value>
         <value xml:lang="ja">私の支払</value>

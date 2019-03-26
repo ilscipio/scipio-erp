@@ -32,16 +32,20 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.SortKeywordRelevancy;
-import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
+import org.ofbiz.entity.Delegator;
 
+/**
+ * ContentSearchSession.
+ * <p>
+ * SCIPIO: WARNING: FIXME?: This class is not thread-safe - see ProductSearchSession (and ProductSearch).
+ */
 public class ContentSearchSession {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     @SuppressWarnings("serial")
     public static class ContentSearchOptions implements java.io.Serializable {
         protected List<ContentSearchConstraint> constraintList = null;
@@ -223,7 +227,7 @@ public class ContentSearchSession {
         String sortAscending = (String) parameters.get("sortAscending");
         boolean ascending = !"N".equals(sortAscending);
         if (sortOrder != null) {
-            if (sortOrder.equals("SortKeywordRelevancy")) {
+            if ("SortKeywordRelevancy".equals(sortOrder)) {
                 searchSetSortOrder(new ContentSearch.SortKeywordRelevancy(), session);
             } else if (sortOrder.startsWith("SortContentField:")) {
                 String fieldName = sortOrder.substring("SortContentField:".length());
@@ -244,7 +248,7 @@ public class ContentSearchSession {
             } catch (Exception e) {
                 Debug.logError(e, "Error formatting VIEW_INDEX, setting to 0", module);
                 // we could just do nothing here, but we know something was specified so we don't want to use the previous value from the session
-                contentSearchOptions.setViewIndex(Integer.valueOf(0));
+                contentSearchOptions.setViewIndex(0);
             }
         }
 
@@ -254,7 +258,7 @@ public class ContentSearchSession {
                 contentSearchOptions.setViewSize(Integer.valueOf(viewSizeStr));
             } catch (Exception e) {
                 Debug.logError(e, "Error formatting VIEW_SIZE, setting to 20", module);
-                contentSearchOptions.setViewSize(Integer.valueOf(20));
+                contentSearchOptions.setViewSize(20);
             }
         }
     }

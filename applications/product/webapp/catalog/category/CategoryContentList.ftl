@@ -1,14 +1,14 @@
 <@section>
     <#if productCategoryContentList?has_content>  
          <#list productCategoryContentList as productCategoryContent>
-            <form name="removeContentFromCategory_${productCategoryContent_index}" method="post" action="<@ofbizUrl>removeContentFromCategory</@ofbizUrl>">
+            <form name="removeContentFromCategory_${productCategoryContent_index}" method="post" action="<@pageUrl>removeContentFromCategory</@pageUrl>">
                   <input name="productCategoryId" type="hidden" value="${parameters.productCategoryId}"/>
                   <input name="contentId" type="hidden" value="${productCategoryContent.contentId}"/>
                   <input name="prodCatContentTypeId" type="hidden" value="${productCategoryContent.prodCatContentTypeId}"/>
                   <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate}"/>
             </form>
         </#list>
-        <@table type="data-list" autoAltRows=true responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
             <#-- Header Begins -->
             <@thead>
                 <@tr class="header-row-2">
@@ -27,7 +27,7 @@
                     <#assign productCategoryContentType = (productCategoryContent.getRelatedOne("ProductCategoryContentType", true))!>
                     <@tr>
                         <@td>
-                            <form id="EditCategoryContentAssoc_${productCategoryContent_index}" name="EditCategoryContentAssoc_${productCategoryContent_index}" method="get" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
+                            <form id="EditCategoryContentAssoc_${productCategoryContent_index}" name="EditCategoryContentAssoc_${productCategoryContent_index}" method="get" action="<@pageUrl>EditCategoryContent</@pageUrl>">
                                 <input name="productCategoryId" type="hidden" value="${parameters.productCategoryId}"/>
                                 <input name="contentId" type="hidden" value="${productCategoryContent.contentId}"/>
                                 <input name="prodCatContentTypeId" type="hidden" value="${productCategoryContent.prodCatContentTypeId}"/>
@@ -39,7 +39,7 @@
                         <@td>${productCategoryContent.fromDate?string("yyyy-MM-dd")}</@td>
                       <#-- SCIPIO: TODO: REVIEW
                         <@td>
-                            <a href="<@ofbizInterWebappUrl extLoginKey=true>/content/control/EditContent?contentId=${productCategoryContent.contentId}</@ofbizInterWebappUrl>" class="${styles.link_nav} ${styles.action_update}">${uiLabelMap.CommonEdit}</a>
+                            <a href="<@serverUrl extLoginKey=true>/content/control/EditContent?contentId=${productCategoryContent.contentId}</@serverUrl>" class="${styles.link_nav} ${styles.action_update}">${uiLabelMap.CommonEdit}</a>
                         </@td>
                       -->
                         <@td>

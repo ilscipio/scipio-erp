@@ -31,22 +31,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-public class UrlServletHelper extends ContextFilter {
-    
+public final class UrlServletHelper extends ContextFilter {
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     public static void setRequestAttributes(ServletRequest request, Delegator delegator, ServletContext servletContext) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         // check if multi tenant is enabled
@@ -58,7 +56,7 @@ public class UrlServletHelper extends ContextFilter {
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 delegator = getDelegator(servletContext);
 
-                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant 
+                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant
                 Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
                 GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
 
@@ -72,7 +70,7 @@ public class UrlServletHelper extends ContextFilter {
                     delegator = DelegatorFactory.getDelegator(tenantDelegatorName);
                     servletContext.setAttribute("delegator", delegator);
                 }
-                
+
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Unable to get Tenant", module);
             }
@@ -87,7 +85,7 @@ public class UrlServletHelper extends ContextFilter {
             httpRequest.getSession().setAttribute("webSiteId", httpRequest.getServletContext().getAttribute("webSiteId")); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         }
     }
-    
+
     public static void setViewQueryParameters(ServletRequest request, StringBuilder urlBuilder) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         if (UtilValidate.isEmpty(httpRequest.getServletPath())) {
@@ -98,7 +96,7 @@ public class UrlServletHelper extends ContextFilter {
         String viewSize = null;
         String viewSort = null;
         String searchString = null;
-        
+
         int queryStringIndex = pathInfo.indexOf("?");
         if (queryStringIndex >= 0) {
             List<String> queryStringTokens = StringUtil.split(pathInfo.substring(queryStringIndex + 1), "&");
@@ -106,7 +104,7 @@ public class UrlServletHelper extends ContextFilter {
                 int equalIndex = queryStringToken.indexOf("=");
                 String name = queryStringToken.substring(0, equalIndex - 1);
                 String value = queryStringToken.substring(equalIndex + 1, queryStringToken.length() - 1);
-                
+
                 if ("viewIndex".equals(name)) {
                     viewIndex = value;
                 } else if ("viewSize".equals(name)) {
@@ -118,7 +116,7 @@ public class UrlServletHelper extends ContextFilter {
                 }
             }
         }
-        
+
         if (UtilValidate.isNotEmpty(httpRequest.getParameter("viewIndex"))) {
             viewIndex = httpRequest.getParameter("viewIndex");
         }
@@ -131,7 +129,7 @@ public class UrlServletHelper extends ContextFilter {
         if (UtilValidate.isNotEmpty(httpRequest.getParameter("searchString"))) {
             searchString = httpRequest.getParameter("searchString");
         }
-        
+
         //Set query string parameters to url
         if(UtilValidate.isNotEmpty(viewIndex)){
             urlBuilder.append("/~VIEW_INDEX=" + viewIndex);
@@ -177,9 +175,7 @@ public class UrlServletHelper extends ContextFilter {
                 try {
                     rd.forward(request, response);
                     return;
-                } catch (ServletException e) {
-                    Debug.logWarning(e, module);
-                } catch (IOException e) {
+                } catch (ServletException | IOException e) {
                     Debug.logWarning(e, module);
                 }
             }
@@ -194,14 +190,12 @@ public class UrlServletHelper extends ContextFilter {
                     httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND, "Not Found");
                     return;
                 }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            } catch (IOException e) {
+            } catch (GenericEntityException | IOException e) {
                 Debug.logError(e, module);
             }
         }
     }
-    
+
     public static String invalidCharacter(String str) {
         str = str.replace("&", "-");
         str = str.replace("\"", "-");

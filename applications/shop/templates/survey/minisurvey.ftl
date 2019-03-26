@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if additionalFields?has_content>
   <#list additionalFields.keySet() as field>
-    <input type="hidden" name="${field}" value="${additionalFields.get(field)}"/>
+    <input type="hidden" name="${field}" value="${additionalFields.get(raw(field))}"/>
   </#list>
 </#if>
 
@@ -36,7 +23,10 @@ under the License.
 <#-- survey ID -->
 <input type="hidden" name="surveyId" value="${survey.surveyId}"/>
 
-<@table type="data-complex"> <#-- orig: width="100%" border="0" cellpadding="2" cellspacing="0" -->
+<#-- SCIPIO: An extra flag to detect successful survey submits (along with POST check) -->
+<input type="hidden" name="surveySubmit" value="Y"/>
+
+<@table type="data-complex">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>
@@ -46,9 +36,9 @@ under the License.
     <@tr>
       <#-- standard question options -->
       <@td align='left'>
-        <div>${surveyQuestionAndAppl.question!}</div>
+        <label>${surveyQuestionAndAppl.question!} <#if (surveyQuestionAndAppl.requiredField!"N") == "Y">*</#if></label>
         <#if surveyQuestionAndAppl.hint?has_content>
-          <div>${surveyQuestionAndAppl.hint}</div>
+          <div><em>${surveyQuestionAndAppl.hint}</em></div>
         </#if>
       </@td>
     </@tr>
@@ -56,13 +46,13 @@ under the License.
       <@tr>
         <@td align="center">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
-            <#assign selectedOption = (answer.booleanResponse)?default("Y")>
+            <#assign selectedOption = (answer.booleanResponse)!"Y">
             <select name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
-              <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
+              <#if (surveyQuestionAndAppl.requiredField!"N") != "Y">
                 <option value=""></option>
               </#if>
-              <option value="Y" <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
-              <option value="N" <#if "N" == selectedOption>selected="selected"</#if>>N</option>
+              <option value="Y"<#if "Y" == selectedOption> selected="selected"</#if>>Y</option>
+              <option value="N"<#if "N" == selectedOption> selected="selected"</#if>>N</option>
             </select>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
             <textarea cols="40" rows="5" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">${(answer.textResponse)!}</textarea>
@@ -90,29 +80,23 @@ under the License.
             <input type="password" size="30" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)!}"/>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
-            <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
+            <#assign selectedOption = (answer.surveyOptionSeqId)!("_NA_")>
             <select name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
-              <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
+              <#if (surveyQuestionAndAppl.requiredField!"N") != "Y">
                 <option value=""></option>
               </#if>
               <#if options?has_content>
                 <#list options as option>
-                  <option value="${option.surveyOptionSeqId}" <#if option.surveyOptionSeqId == selectedOption>selected="selected"</#if>>${option.description!}</option>
+                  <option value="${option.surveyOptionSeqId}"<#if option.surveyOptionSeqId == selectedOption> selected="selected"</#if>>${option.description!}</option>
                 </#list>
               <#else>
-                <option value="">Nothing to choose</option>
+                <option value="">${uiLabelMap.CommonNoOptionsLabel}</option>
               </#if>
             </select>
           <#else>
             <div>Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>
-          <#if surveyQuestionAndAppl.requiredField?default("N") == "Y">
-            <span>*</span>
-          <#else>
-            <span>[optional]</span>
-          </#if>
         </@td>
-
     </@tr>
   </#list>
   <@tr>

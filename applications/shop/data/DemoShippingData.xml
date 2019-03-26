@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <entity-engine-xml>
@@ -44,7 +31,7 @@ under the License.
     <ShipmentMethodType description="Next Afternoon" shipmentMethodTypeId="NEXT_PM"/>
     <ShipmentMethodType description="Same Day" shipmentMethodTypeId="SAME_DAY"/>
     <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
-    <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+    <ShipmentMethodType description="Airmail" shipmentMethodTypeId="AIR"/>
     <ShipmentMethodType description="Third Day" shipmentMethodTypeId="THIRD_DAY"/>
     <ShipmentMethodType description="International Express" shipmentMethodTypeId="INT_EXPRESS"/>
 
@@ -201,23 +188,25 @@ under the License.
     <QuantityBreak fromQuantity="0.0" quantityBreakId="9008" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
     <QuantityBreak fromQuantity="0.0" quantityBreakId="9009" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
 
+    <!-- SCIPIO: 2019-03-05: Added quantityUnitPrice to all to keep results more realistic (weightUnitPrice is not enough for low-weight items)
+        FIXME: Missing *UomId fields -->
     <ShipmentCostEstimate productStoreId="ScipioShop" orderFlatPrice="5.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
-    <ShipmentCostEstimate productStoreShipMethId="9002" productStoreId="ScipioShop" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9000" shipmentMethodTypeId="AIR" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9000" weightUnitPrice="0.2"/>
-    <ShipmentCostEstimate productStoreShipMethId="9001" productStoreId="ScipioShop" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9001" shipmentMethodTypeId="GROUND" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9001" weightUnitPrice="0.1"/>
-    <ShipmentCostEstimate productStoreShipMethId="9003" productStoreId="ScipioShop" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9003" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9002" weightUnitPrice="0.35"/>
+    <ShipmentCostEstimate productStoreShipMethId="9002" productStoreId="ScipioShop" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9000" shipmentMethodTypeId="AIR" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9000" weightUnitPrice="0.2" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9001" productStoreId="ScipioShop" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9001" shipmentMethodTypeId="GROUND" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9001" weightUnitPrice="0.1" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9003" productStoreId="ScipioShop" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9003" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9002" weightUnitPrice="0.35" quantityUnitPrice="1.0"/>
     <ShipmentCostEstimate productStoreShipMethId="9000" productStoreId="ScipioShop" shipmentCostEstimateId="9004" shipmentMethodTypeId="STANDARD" carrierPartyId="_NA_" carrierRoleTypeId="CARRIER" orderFlatPrice="0.0" orderPricePercent="20.0" orderItemFlatPrice="0.0"/>
     <ShipmentCostEstimate productStoreShipMethId="9000" productStoreId="ScipioShop" shipmentCostEstimateId="9005" shipmentMethodTypeId="NO_SHIPPING" carrierPartyId="_NA_" carrierRoleTypeId="CARRIER" orderFlatPrice="0.0" orderPricePercent="0.0" orderItemFlatPrice="0.0"/>
-    <ShipmentCostEstimate productStoreShipMethId="9006" productStoreId="ScipioShop" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9100" shipmentMethodTypeId="EXPRESS" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9003" weightUnitPrice="0.2"/>
-    <ShipmentCostEstimate productStoreShipMethId="9007" productStoreId="ScipioShop" orderFlatPrice="9.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9101" shipmentMethodTypeId="NEXT_PM" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9004" weightUnitPrice="0.2"/>
-    <ShipmentCostEstimate productStoreShipMethId="9008" productStoreId="ScipioShop" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9102" shipmentMethodTypeId="SECOND_DAY" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9005" weightUnitPrice="0.2"/>
-    <ShipmentCostEstimate productStoreShipMethId="9009" productStoreId="ScipioShop" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9103" shipmentMethodTypeId="GROUND" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9006" weightUnitPrice="0.1"/>
-    <ShipmentCostEstimate productStoreShipMethId="9010" productStoreId="ScipioShop" orderFlatPrice="55.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9203" shipmentMethodTypeId="NEXT_AM" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9011" productStoreId="ScipioShop" orderFlatPrice="26.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9204" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9012" productStoreId="ScipioShop" orderFlatPrice="24.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9205" shipmentMethodTypeId="NEXT_PM" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9013" productStoreId="ScipioShop" orderFlatPrice="16.50" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9206" shipmentMethodTypeId="SECOND_DAY" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9014" productStoreId="ScipioShop" orderFlatPrice="14.83" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9207" shipmentMethodTypeId="EXPRESS_SAVER" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9015" productStoreId="ScipioShop" orderFlatPrice="8.66" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9208" shipmentMethodTypeId="GROUND" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
-    <ShipmentCostEstimate productStoreShipMethId="9016" productStoreId="ScipioShop" orderFlatPrice="9.62" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9209" shipmentMethodTypeId="GROUND_HOME" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER"/>
+    <ShipmentCostEstimate productStoreShipMethId="9006" productStoreId="ScipioShop" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9100" shipmentMethodTypeId="EXPRESS" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9003" weightUnitPrice="0.2" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9007" productStoreId="ScipioShop" orderFlatPrice="9.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9101" shipmentMethodTypeId="NEXT_PM" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9004" weightUnitPrice="0.2" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9008" productStoreId="ScipioShop" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9102" shipmentMethodTypeId="SECOND_DAY" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9005" weightUnitPrice="0.2" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9009" productStoreId="ScipioShop" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9103" shipmentMethodTypeId="GROUND" carrierPartyId="DHL" carrierRoleTypeId="CARRIER" weightBreakId="9006" weightUnitPrice="0.1" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9010" productStoreId="ScipioShop" orderFlatPrice="55.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9203" shipmentMethodTypeId="NEXT_AM" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9011" productStoreId="ScipioShop" orderFlatPrice="26.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9204" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9012" productStoreId="ScipioShop" orderFlatPrice="24.59" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9205" shipmentMethodTypeId="NEXT_PM" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9013" productStoreId="ScipioShop" orderFlatPrice="16.50" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9206" shipmentMethodTypeId="SECOND_DAY" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9014" productStoreId="ScipioShop" orderFlatPrice="14.83" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9207" shipmentMethodTypeId="EXPRESS_SAVER" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9015" productStoreId="ScipioShop" orderFlatPrice="8.66" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9208" shipmentMethodTypeId="GROUND" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
+    <ShipmentCostEstimate productStoreShipMethId="9016" productStoreId="ScipioShop" orderFlatPrice="9.62" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9209" shipmentMethodTypeId="GROUND_HOME" carrierPartyId="FEDEX" carrierRoleTypeId="CARRIER" weightUnitPrice="0.15" quantityUnitPrice="1.0"/>
                           
     <ShipmentBoxType shipmentBoxTypeId="FXENV" description="FedEx Envelope" dimensionUomId="LEN_in" boxLength="9.5" boxWidth="12.5" boxHeight="0"/>
     <ShipmentBoxType shipmentBoxTypeId="FXENV_LGL" description="FedEx Envelope (Legal)" dimensionUomId="LEN_in" boxLength="10" boxWidth="15.75" boxHeight="0"/>

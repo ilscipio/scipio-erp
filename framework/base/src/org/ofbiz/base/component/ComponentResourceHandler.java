@@ -18,16 +18,19 @@
  *******************************************************************************/
 package org.ofbiz.base.component;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
-import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.Debug;
-
+import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Contains resource information and provides for loading data
@@ -51,7 +54,9 @@ public class ComponentResourceHandler implements ResourceHandler {
         this.componentName = componentName;
         this.loaderName = loaderName;
         this.location = location;
-        if (Debug.verboseOn()) Debug.logVerbose("Created " + this.toString(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Created " + this.toString(), module);
+        }
     }
 
     public String getLoaderName() {
@@ -65,11 +70,7 @@ public class ComponentResourceHandler implements ResourceHandler {
     public Document getDocument() throws GenericConfigException {
         try {
             return UtilXml.readXmlDocument(this.getStream(), this.getFullLocation(), true);
-        } catch (org.xml.sax.SAXException e) {
-            throw new GenericConfigException("Error reading " + this.toString(), e);
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new GenericConfigException("Error reading " + this.toString(), e);
-        } catch (java.io.IOException e) {
+        } catch (SAXException | ParserConfigurationException | IOException  e) {
             throw new GenericConfigException("Error reading " + this.toString(), e);
         }
     }

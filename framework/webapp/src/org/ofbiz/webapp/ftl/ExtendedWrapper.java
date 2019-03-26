@@ -1,22 +1,10 @@
 package org.ofbiz.webapp.ftl;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.EscapingModel;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioModelFactory;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioObjectWrapper;
 
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.CollectionModel;
-import freemarker.ext.beans.StringModel;
-import freemarker.ext.util.ModelFactory;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 
 /**
@@ -37,8 +25,8 @@ public abstract class ExtendedWrapper extends BeansWrapper implements ScipioExte
 
     protected final String lang;
     protected final SimpleEncoder encoder;
-    
-    // SCIPIO: 2017-04-03: this is now PRIVATE - use 
+
+    // SCIPIO: 2017-04-03: this is now PRIVATE - use
     private ExtendedWrapper(Version version, String lang) {
         super(version);
         this.lang = lang;
@@ -57,5 +45,5 @@ public abstract class ExtendedWrapper extends BeansWrapper implements ScipioExte
 //        }
 //        return super.wrap(object);
 //    }
-    
+
 }

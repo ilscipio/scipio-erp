@@ -1,34 +1,21 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#-- TODO: Convert hard-coded text to UI label properties -->
 
-<#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
+<#if security.hasEntityPermission("PAYPROC", "_VIEW", request)>
 
     <#macro menuContent menuArgs={}>
       <@menu type="button" class="+button-style-1" args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Payment Setup" selected=true class="+${styles.action_nav!} ${styles.action_configure!}" />
+        <@menuitem type="link" href=makePageUrl("paysetup") text="Payment Setup" selected=true class="+${styles.action_nav!} ${styles.action_configure!}" />
       </@menu>
     </#macro>
     <@section title="Payment Processor Setup" menuContent=menuContent>
         <#if paymentSetups?has_content> 
-          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_spacing_small_hint!}"> <#-- orig: cellpadding="2" cellspacing="2" --> <#-- orig: border="0" -->
+          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_spacing_small_hint!}">
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>
@@ -57,11 +44,11 @@ under the License.
                     <@td>${paymentSetting.paymentRefundService!}</@td>
                     <@td>${paymentSetting.paymentConfiguration!}</@td>
                     <@td nowrap="nowrap">&nbsp;
-                      <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
-                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>&nbsp;
+                      <#if security.hasEntityPermission("PAYPROC", "_UPDATE", request)>
+                        <a href="<@pageUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>&nbsp;
                       </#if>
-                      <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
-                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;
+                      <#if security.hasEntityPermission("PAYPROC", "_DELETE", request)>
+                        <a href="<@pageUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;
                       </#if>
                       </@td>
                   </@tr>
@@ -73,11 +60,11 @@ under the License.
         </#if>
     </@section>
 
-<#if security.hasEntityPermission("PAYPROC", "_CREATE", session)>
+<#if security.hasEntityPermission("PAYPROC", "_CREATE", request)>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
       <#if webSitePayment?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Add New" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("paysetup") text="Add New" class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
       </@menu>
     </#macro>
@@ -87,7 +74,7 @@ under the License.
       <#assign sectionTitle = "Add New Setting">
     </#if>
     <@section title=sectionTitle menuContent=menuContent>
-        <#assign formAction><#if webSitePayment?has_content><@ofbizUrl escapeAs='html'>updateWebSitePaymentSetting</@ofbizUrl><#else><@ofbizUrl escapeAs='html'>createWebSitePaymentSetting</@ofbizUrl></#if></#assign>
+        <#assign formAction><#if webSitePayment?has_content><@pageUrl escapeAs='html'>updateWebSitePaymentSetting</@pageUrl><#else><@pageUrl escapeAs='html'>createWebSitePaymentSetting</@pageUrl></#if></#assign>
         <form method="post" action="${formAction}">
 
         <#if webSitePayment?has_content>

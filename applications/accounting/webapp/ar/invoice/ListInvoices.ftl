@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <@script>
 
@@ -122,7 +109,7 @@ under the License.
     <div align="right">
       <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
-        <option value="<@ofbizUrl>PrintInvoices</@ofbizUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
+        <option value="<@pageUrl>PrintInvoices</@pageUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
         <option value="massInvoicesToApprove">${uiLabelMap.AccountingInvoiceStatusToApproved}</option>
         <option value="massInvoicesToSent">${uiLabelMap.AccountingInvoiceStatusToSent}</option>
         <option value="massInvoicesToReady">${uiLabelMap.AccountingInvoiceStatusToReady}</option>
@@ -138,10 +125,10 @@ under the License.
       <input type="hidden" name="thruInvoiceDate" value="${parameters.thruInvoiceDate!}"/>
       <input type="hidden" name="fromDueDate" value="${parameters.fromDueDate!}"/>
       <input type="hidden" name="thruDueDate" value="${parameters.thruDueDate!}"/>
-      <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
+      <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@pageUrl>massChangeInvoiceStatus</@pageUrl>"/>
     </div>
 
-    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row-2">
           <@td>${uiLabelMap.AccountingInvoice}</@td>
@@ -160,10 +147,10 @@ under the License.
       </@thead>
       <@tbody>
         <#list invoiceList as invoice>
-          <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
+          <#assign invoicePaymentInfoList = runService("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
             <@tr valign="middle">
-              <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+              <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@pageUrl>">${invoice.get("invoiceId")}</a></@td>
               <@td>${(invoice.invoiceDate?date?string.short)!}</@td>
               <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
             
@@ -176,8 +163,8 @@ under the License.
                 ${statusItem.description!invoice.statusId}
               </@td>
               <@td>${(invoice.description)!}</@td>
-              <@td><a class="${styles.link_nav_info_idname!}" href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}]</a></@td>
-              <@td><a class="${styles.link_nav_info_idname!}" href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
+              <@td><a class="${styles.link_nav_info_idname!}" href="<@serverUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@serverUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}]</a></@td>
+              <@td><a class="${styles.link_nav_info_idname!}" href="<@serverUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@serverUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
               <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>

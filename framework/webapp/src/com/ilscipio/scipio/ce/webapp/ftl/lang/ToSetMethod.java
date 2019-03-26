@@ -21,10 +21,6 @@ package com.ilscipio.scipio.ce.webapp.ftl.lang;
 import java.util.HashSet;
 import java.util.List;
 
-import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
-
-import freemarker.core.Environment;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -36,26 +32,22 @@ public class ToSetMethod implements TemplateMethodModelEx {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    /*
-     * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
-     */
-    @SuppressWarnings("unchecked")
     @Override
-    public Object exec(List args) throws TemplateModelException {
+    public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
         if (args == null || args.size() < 0 || args.size() > 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 0-1)");
         }
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-        
+        //Environment env = CommonFtlUtil.getCurrentEnvironment();
+
         if (args.size() > 0) {
             TemplateModel object = (TemplateModel) args.get(0);
-    
-            ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
-            return LangFtlUtil.toSet(object, objectWrapper);
+
+            //ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
+            return LangFtlUtil.toSet(object);
         }
         else {
             return new HashSet<Object>();
         }
     }
-    
+
 }

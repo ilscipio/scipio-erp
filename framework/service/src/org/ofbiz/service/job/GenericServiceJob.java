@@ -27,7 +27,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.service.semaphore.SemaphoreFailException;
+import org.ofbiz.service.semaphore.SemaphoreWaitException;
 /**
  * A generic async-service job.
  */
@@ -92,7 +93,9 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
      * Method is called prior to running the service.
      */
     protected void init() throws InvalidJobException {
-        if (Debug.verboseOn()) Debug.logVerbose("Async-Service initializing.", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Async-Service initializing.", module);
+        }
     }
 
     /**
@@ -103,7 +106,9 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
             throw new InvalidJobException("Illegal state change");
         }
         currentState = State.FINISHED;
-        if (Debug.verboseOn()) Debug.logVerbose("Async-Service finished.", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Async-Service finished.", module);
+        }
     }
 
     /**
@@ -111,11 +116,12 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
      * @param t Throwable
      */
     protected void failed(Throwable t) throws InvalidJobException {
-        if (currentState != State.RUNNING) {
-            throw new InvalidJobException("Illegal state change");
+        if (t instanceof SemaphoreWaitException || t instanceof SemaphoreFailException) {
+            Debug.logError("Async-Service failed due to " + t, module);
+        } else {
+            Debug.logError(t, "Async-Service failed.", module);
         }
         currentState = State.FAILED;
-        Debug.logError(t, "Async-Service failed.", module);
     }
 
     /**

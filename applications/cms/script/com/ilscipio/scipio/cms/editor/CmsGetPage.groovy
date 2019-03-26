@@ -29,7 +29,11 @@ final String module = "CmsGetPage.groovy";
 /*Parameters*/
 pageId = parameters.pageId;
 primaryPath = parameters.primaryPath ?: parameters.path;
-webSiteId = parameters.webSiteId;
+// NOTE: currentWebSiteId is a workaround for forms that need to submit a webSiteId to something else
+def webSiteId = parameters.currentWebSiteId;
+if (webSiteId == null) {
+    webSiteId = parameters.webSiteId ?: null;
+}
 versionId = parameters.versionId;
 
 isNewPage = "Y".equals(parameters.isNewPage); // this forces new form, always
@@ -43,8 +47,8 @@ pageModel = null;
 
 /*Process request information*/
 if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId or primary path
-    context.webSiteId=webSiteId;
-    context.versionId=versionId;
+    //context.webSiteId = webSiteId; // Don't do this now; it must will be verified by service first
+    context.versionId = versionId;
     context.pagePrimaryPath = primaryPath;
     
     servCtx = [

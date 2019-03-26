@@ -39,10 +39,8 @@ import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.model.DelegatorElement;
@@ -52,7 +50,9 @@ import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.eca.ServiceEcaRule;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
@@ -67,6 +67,13 @@ public class ArtifactInfoFactory {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, ArtifactInfoFactory> artifactInfoFactoryCache = UtilCache.createUtilCache("ArtifactInfoFactory");
+
+    private static final String localDispatcherName; // SCIPIO
+    static {
+        String name = ExtWebappInfo.fromEffectiveComponentWebappName("webtools", "admin")
+                .getContextParams().get("localDispatcherName");
+        localDispatcherName = (name != null) ? name : "default";
+    }
 
     public static final String EntityInfoTypeId = "entity";
     public static final String ServiceInfoTypeId = "service";
@@ -115,16 +122,32 @@ public class ArtifactInfoFactory {
     public Map<String, Set<ScreenWidgetArtifactInfo>> allScreenInfosReferringToRequest = new ConcurrentHashMap<String, Set<ScreenWidgetArtifactInfo>>();
     public Map<String, Set<ControllerRequestArtifactInfo>> allRequestInfosReferringToRequest = new ConcurrentHashMap<String, Set<ControllerRequestArtifactInfo>>();
 
-    public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName) throws GeneralException {
+    public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName, boolean useCache, Boolean resetCache) throws GeneralException { // SCIPIO: added useCache
         if (UtilValidate.isEmpty(delegatorName)) {
             delegatorName = "default";
         }
 
+        if (!useCache) { // SCIPIO
+            ArtifactInfoFactory aif = new ArtifactInfoFactory(delegatorName);
+            if (Boolean.TRUE.equals(resetCache)) {
+                artifactInfoFactoryCache.put(delegatorName, aif);
+            }
+            return aif;
+        }
         ArtifactInfoFactory aif = artifactInfoFactoryCache.get(delegatorName);
         if (aif == null) {
-            aif = artifactInfoFactoryCache.putIfAbsentAndGet(delegatorName, new ArtifactInfoFactory(delegatorName));
+            if (Boolean.TRUE.equals(resetCache)) { // SCIPIO
+                aif = new ArtifactInfoFactory(delegatorName);
+                artifactInfoFactoryCache.put(delegatorName, aif);
+            } else {
+                aif = artifactInfoFactoryCache.putIfAbsentAndGet(delegatorName, new ArtifactInfoFactory(delegatorName));
+            }
         }
         return aif;
+    }
+
+    public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName) throws GeneralException {
+        return getArtifactInfoFactory(delegatorName, true, false);
     }
 
     protected ArtifactInfoFactory(String delegatorName) throws GeneralException {
@@ -139,14 +162,17 @@ public class ArtifactInfoFactory {
         }
         // since we do not associate a dispatcher to this DispatchContext, it is important to set a name of an existing entity model reader:
         // in this way it will be possible to retrieve the service models from the cache
-        this.dispatchContext = new DispatchContext(modelName, this.getClass().getClassLoader(), null);
+        // SCIPIO: Corrected: No, we can't have a DispatchContext without a dispatcher, our widget factories will crash
+        //this.dispatchContext = new DispatchContext(modelName, this.getClass().getClassLoader(), null);
+        this.dispatchContext = new DispatchContext(modelName, this.getClass().getClassLoader(),
+                ServiceDispatcher.getLocalDispatcher(localDispatcherName, DelegatorFactory.getDelegator(delegatorName)));
 
         this.prepareAll();
     }
 
     public void prepareAll() throws GeneralException {
         Debug.logInfo("Loading artifact info objects...", module);
-        List<Future<Void>> futures = new ArrayList<Future<Void>>();
+        List<Future<Void>> futures = new ArrayList<>();
         Set<String> entityNames = this.getEntityModelReader().getEntityNames();
         for (String entityName: entityNames) {
             this.getEntityArtifactInfo(entityName);
@@ -160,7 +186,7 @@ public class ArtifactInfoFactory {
 
         Collection<ComponentConfig> componentConfigs = ComponentConfig.getAllComponents();
         ExecutionPool.getAllFutures(futures);
-        futures = new ArrayList<Future<Void>>();
+        futures = new ArrayList<>();
         for (ComponentConfig componentConfig: componentConfigs) {
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(prepareTaskForComponentAnalysis(componentConfig)));
         }
@@ -280,6 +306,9 @@ public class ArtifactInfoFactory {
         if (requestUri == null) {
             throw new GeneralException("Got a null requestUri for controller: " + controllerXmlUrl);
         }
+        if (requestUri.startsWith("${")) { // SCIPIO: Value may be a script; can't evaluate here
+            return null;
+        }
         ControllerRequestArtifactInfo curInfo = this.allControllerRequestInfos.get(controllerXmlUrl.toExternalForm() + "#" + requestUri);
         if (curInfo == null) {
             curInfo = new ControllerRequestArtifactInfo(controllerXmlUrl, requestUri, this);
@@ -290,6 +319,9 @@ public class ArtifactInfoFactory {
     }
 
     public ControllerViewArtifactInfo getControllerViewArtifactInfo(URL controllerXmlUrl, String viewUri) throws GeneralException {
+        if (viewUri.startsWith("${")) { // SCIPIO: Value may be a script; can't evaluate here
+            return null;
+        }
         ControllerViewArtifactInfo curInfo = this.allControllerViewInfos.get(controllerXmlUrl.toExternalForm() + "#" + viewUri);
         if (curInfo == null) {
             curInfo = new ControllerViewArtifactInfo(controllerXmlUrl, viewUri, this);
@@ -341,12 +373,21 @@ public class ArtifactInfoFactory {
             for (Map.Entry<String, EntityArtifactInfo> curEntry: allEntityInfos.entrySet()) {
                 if (curEntry.getKey().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
                     aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check location; explicit check needed
+                } else if (curEntry.getValue().getModelEntity().getLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
                 }
             }
         }
         if (UtilValidate.isEmpty(type) || "service".equals(type)) {
             for (Map.Entry<String, ServiceArtifactInfo> curEntry: allServiceInfos.entrySet()) {
                 if (curEntry.getKey().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check definition location; explicit check needed
+                } else if (curEntry.getValue().getLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check implementation location; explicit check needed
+                } else if (curEntry.getValue().getImplementationLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
                     aiBaseSet.add(curEntry.getValue());
                 }
             }
@@ -384,11 +425,10 @@ public class ArtifactInfoFactory {
     }
 
     // private methods
-    @SuppressWarnings("unchecked")
     private Callable<Void> prepareTaskForServiceAnalysis(final String serviceName) {
-        return new Callable() {
+        return new Callable<Void>() {
             @Override
-            public Callable<Void> call() throws Exception {
+            public Void call() throws Exception {
                 try {
                     getServiceArtifactInfo(serviceName);
                 } catch(Exception exc) {
@@ -399,11 +439,10 @@ public class ArtifactInfoFactory {
         };
     }
 
-    @SuppressWarnings("unchecked")
     private Callable<Void> prepareTaskForComponentAnalysis(final ComponentConfig componentConfig) {
-        return new Callable() {
+        return new Callable<Void>() {
             @Override
-            public Callable<Void> call() throws Exception {
+            public Void call() throws Exception {
                 String componentName = componentConfig.getGlobalName();
                 String rootComponentPath = componentConfig.getRootLocation();
                 List<File> screenFiles = new ArrayList<File>();

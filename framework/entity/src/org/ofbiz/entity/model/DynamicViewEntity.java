@@ -26,9 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
@@ -37,6 +34,8 @@ import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAliasAll;
 import org.ofbiz.entity.model.ModelViewEntity.ModelMemberEntity;
 import org.ofbiz.entity.model.ModelViewEntity.ModelViewLink;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 /**
  * This class is used for declaring Dynamic View Entities, to be used and thrown away.
  * A special method exists on the Delegator to accept a DynamicViewEntity instead

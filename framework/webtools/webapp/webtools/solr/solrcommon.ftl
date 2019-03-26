@@ -1,7 +1,7 @@
 <#include "component://webtools/webapp/webtools/service/servicecommon.ftl">
 
 <#macro solrServiceForm>
-  <form name="${SERVICE_NAME}SchedForm" method="post" action="<@ofbizUrl>${runServiceTarget!"runSolrService"}</@ofbizUrl>">
+  <form name="${SERVICE_NAME}SchedForm" method="post" action="<@pageUrl>${runServiceTarget!"runSolrService"}</@pageUrl>">
     <#nested>
   </form>
 </#macro>

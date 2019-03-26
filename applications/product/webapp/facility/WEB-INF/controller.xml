@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -369,6 +356,7 @@ under the License.
     </request-map>
  -->
     <!-- ================ Facility Role Requests ================= -->
+    <!-- SCIPIO: EditFacilityParties screen is removed
     <request-map uri="EditFacilityParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityParties"/>
@@ -385,10 +373,11 @@ under the License.
         <response name="success" type="view" value="EditFacilityParties"/>
         <response name="error" type="view" value="EditFacilityParties"/>
     </request-map>
+    -->
 
     <!-- ================ Inventory Item Labels Requests ================= -->
-   <!-- SCIPIO: to be removed -->
-   <!--  <request-map uri="EditInventoryItemLabelTypes">
+    <!-- SCIPIO: Removed screens -->
+    <!--<request-map uri="EditInventoryItemLabelTypes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditInventoryItemLabelTypes"/>
     </request-map>
@@ -457,7 +446,7 @@ under the License.
         <event type="service" path="" invoke="deleteInventoryItemLabelAppl"/>
         <response name="success" type="view" value="EditInventoryItemLabelAppls"/>
         <response name="error" type="view" value="EditInventoryItemLabelAppls"/>
-    </request-map> -->
+    </request-map>-->
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditInventoryItem">
         <security https="true" auth="true"/>
@@ -1142,8 +1131,10 @@ under the License.
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
     <!-- note: this is an insecure version of above for purposes of rendering via fop, which cannot access over https -->
+    <!-- SCIPIO: NOTE: 2018-10-07: This request must now be accessed using an access token; see code -->
     <request-map uri="viewShipmentLabel">
-        <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
+        <security https="false" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
+        <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImageUnsafe"/><!-- SCIPIO: 2018-10-17: security: points to new method -->
         <response name="success" type="none" value=""/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
@@ -1318,10 +1309,12 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
 
+    <!-- SCIPIO: EditFacilityAgreements screen removed
     <request-map uri="EditFacilityAgreements">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityAgreements"/>
     </request-map>
+    -->
     <request-map uri="GetPartyGeoLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GetPartyGeoLocation"/>
@@ -1368,8 +1361,8 @@ under the License.
     <view-map name="ViewFacilityInventoryByProductSimple" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewFacilityInventoryByProductSimple"/>
     <view-map name="ViewFacilityInventoryByProductReport" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#ViewFacilityInventoryByProductReport" content-type="application/pdf" encoding="none"/>
     <view-map name="ViewFacilityInventoryByProductExport" type="screenxml" page="component://product/widget/facility/FacilityScreens.xml#ViewFacilityInventoryByProductReport" content-type="text/xml"/>
-    <view-map name="EditFacilityGroups" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityGroups"/>
-    <view-map name="EditFacilityParties" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityParties"/>
+    <!--<view-map name="EditFacilityGroups" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityGroups"/> - SCIPIO: removed -->
+    <!--<view-map name="EditFacilityParties" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityParties"/> - SCIPIO: removed -->
     <view-map name="ViewContactMechs" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>
     <view-map name="EditContactMech" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditContactMech"/>
 
@@ -1394,14 +1387,14 @@ under the License.
     <view-map name="ReviewOrdersNotPickedOrPacked" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ReviewOrdersNotPickedOrPacked"/>
 
     <!-- SCIPIO: Commented out for now -->
-    <!--    <view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
+    <!--<view-map name="FindFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#FindFacilityGroup"/>
     <view-map name="EditFacilityGroup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroup"/>
     <view-map name="EditFacilityGroupMembers" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupMembers"/>
     <view-map name="EditFacilityGroupRollup" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRollup"/>
     <view-map name="EditFacilityGroupRoles" type="screen" page="component://product/widget/facility/FacilityGroupScreens.xml#EditFacilityGroupRoles"/> -->
 
-    <!-- SCIPIO: To be removed -->
-<!--     <view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
+    <!-- SCIPIO: Removed -->
+    <!--<view-map name="EditInventoryItemLabelTypes" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelTypes"/>
     <view-map name="FindInventoryItemLabels" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#FindInventoryItemLabels"/>
     <view-map name="EditInventoryItemLabel" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabel"/>
     <view-map name="EditInventoryItemLabelAppls" type="screen" page="component://product/widget/facility/InventoryItemLabelScreens.xml#EditInventoryItemLabelAppls"/> -->
@@ -1418,7 +1411,7 @@ under the License.
     <view-map name="Labels" type="screen" page="component://product/widget/facility/FacilityScreens.xml#Labels"/>
     <view-map name="BatchPrintShippingLabels" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#BatchPrintShippingLabels" content-type="application/pdf" encoding="none"/>
 
-    <view-map name="EditFacilityContent" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityContent"/>
+    <!--<view-map name="EditFacilityContent" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityContent"/> - SCIPIO: removed? -->
     <view-map name="EditFacilityGeoPoint" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityGeoPoint"/>
 
     <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
@@ -1464,7 +1457,7 @@ under the License.
     <view-map name="FindShipmentGatewayConfigTypes" page="component://product//widget/facility/ShipmentGatewayConfigScreens.xml#FindShipmentGatewayConfigTypes" type="screen"/>
     <view-map name="EditShipmentGatewayConfigType" page="component://product//widget/facility/ShipmentGatewayConfigScreens.xml#EditShipmentGatewayConfigType" type="screen"/>
 
-    <view-map name="EditFacilityAgreements" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityAgreements"/>
+    <!--<view-map name="EditFacilityAgreements" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityAgreements"/> - SCIPIO: removed -->
     
     <!-- Settings -->
     <view-map name="FacilitySettings" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewContactMechs"/>

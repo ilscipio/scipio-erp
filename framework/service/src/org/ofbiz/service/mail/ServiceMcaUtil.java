@@ -33,10 +33,12 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 
-public class ServiceMcaUtil {
+public final class ServiceMcaUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ServiceMcaRule> mcaCache = UtilCache.createUtilCache("service.ServiceMCAs", 0, 0, false);
+
+    private ServiceMcaUtil() {}
 
     public static void reloadConfig() {
         mcaCache.clear();
@@ -87,7 +89,7 @@ public class ServiceMcaUtil {
     }
 
     public static void evalRules(LocalDispatcher dispatcher, MimeMessageWrapper wrapper, GenericValue userLogin) throws GenericServiceException {
-        Set<String> actionsRun = new TreeSet<String>();
+        Set<String> actionsRun = new TreeSet<>();
         for (ServiceMcaRule rule: getServiceMcaRules()) {
             rule.eval(dispatcher, wrapper, actionsRun, userLogin);
         }

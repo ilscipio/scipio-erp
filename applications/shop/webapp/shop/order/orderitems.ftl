@@ -1,22 +1,10 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- SCIPIO: TODO?: Create shopping list from order (commented) -->
 <#-- SCIPIO: TODO: This is unable to list selected config product options (harder than showcart) -->
@@ -39,7 +27,6 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 
-
 <#-- SCIPIO: extra dummy column by default
 <#assign numColumns = 8>-->
 <#assign numColumns = 9>
@@ -53,7 +40,7 @@ under the License.
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
           <#-- SCIPIO: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
-          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
+          <@menuitem type="link" href=makePageUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
       </#if>
     </@menu>
 </#macro>
@@ -96,6 +83,49 @@ under the License.
         </@tr>
         </@thead>
         <@tbody>
+
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo orderItem>
+            <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
+            <#if orderItemProdCfgMap??>
+              <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+            <#else>
+              <#local cfgWrp = false><#-- TODO -->
+            </#if>
+            <#if !cfgWrp?is_boolean>
+              <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+              <#if selectedOptions?has_content>
+                <ul class="order-item-attrib-list">
+                <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#if orderItemAttrMap??>
+              <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+            <#else>
+              <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+            </#if>
+            <#if orderItemAttributes?has_content>
+                <ul class="order-item-attrib-list">
+                <#list orderItemAttributes as orderItemAttribute>
+                    <li>
+                        ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
+                    </li>
+                </#list>
+                </ul>
+            </#if>
+        </#macro>
+        
+        <#macro orderItemGiftCardActInfo gcInfoList>
+            <ul class="order-item-attrib-list order-item-gift-card-info">
+              <#list gcInfoList as gcInfo>
+                <li>${uiLabelMap.AccountingCardNumber} : ${acctlib.getGiftCardDisplayNumber(gcInfo.cardNumber!)}</li>
+              </#list>
+            </ul>
+        </#macro>
+
         <#list orderItems as orderItem>
          
           <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
@@ -125,29 +155,29 @@ under the License.
     
             <#-- SCIPIO: Use a cancel link form toggle to prevent cluttering up things by default -->
             <#assign cancelItemLabel = getLabel("StatusValidChange.transitionName.ITEM_APPROVED.ITEM_CANCELLED", "CommonEntityLabels")?replace(" ", "&nbsp;")>
-            <#macro cancelItemForm>
+            <#macro cancelItemForm><#-- FIXME: Move this out of the loop and add params -->
                 <#-- SCIPIO: FIXME: -->
                 <@alert type="warning">${uiLabelMap.CommonWarning}: Cancel may fail for some payment methods</@alert>
                 
-                <@field type="select" name="irm_${orderItem.orderItemSeqId}" label=uiLabelMap.OrderReturnReason>
+                <@field type="select" name="irm_${raw(orderItem.orderItemSeqId)}" label=uiLabelMap.OrderReturnReason>
                   <#-- SCIPIO: Usually stores want a reason...<option value=""></option>-->
                   <#list orderItemChangeReasons as reason>
                     <option value="${reason.enumId}"<#if (parameters["irm_${orderItem.orderItemSeqId}"]!) == reason.enumId> selected="selected"</#if>>${reason.get("description",locale)!(reason.enumId)}</option>
                   </#list>
                 </@field>
-                <@field type="text" name="icm_${orderItem.orderItemSeqId}" value=(parameters["icm_${orderItem.orderItemSeqId}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
-                <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
+                <@field type="text" name="icm_${raw(orderItem.orderItemSeqId)}" value=(parameters["icm_${raw(orderItem.orderItemSeqId)}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
+                <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 <#-- SCIPIO: Extra hidden input to help with hide/show logic -->
                 <input type="hidden" name="cancelitem_${orderItem.orderItemSeqId}" value="Y"/>
             </#macro>
     
-            <#macro cancelLinkContent>
+            <#macro cancelLinkContent><#-- FIXME: Move this out of the loop and add params -->
               <#-- SCIPIO: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
-              <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
+              <a href="javascript:jQuery('#row_orderitem_cancel_${escapeVal(orderItem.orderItemSeqId, 'js-html')}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
               <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
-                <@section title="${rawString(cancelItemLabel)}: ${rawString(orderItem.itemDescription!)}">
+                <@section title="${raw(cancelItemLabel)}: ${raw(orderItem.itemDescription!)}">
                   <@cancelItemForm />
                 </@section>
               </@modal>-->
@@ -158,47 +188,38 @@ under the License.
               <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
             </#if>
             <#if !orderItem.productId?? || orderItem.productId == "_?_">
+              <#assign product = {}><#-- SCIPIO -->
               <#-- non-product item -->
               <@td>
                 ${escapeVal(orderItem.itemDescription!"", 'htmlmarkup', {"allow":"internal"})} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
-                <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
-                <#if orderItemAttributes?has_content>
-                    <ul>
-                    <#list orderItemAttributes as orderItemAttribute>
-                        <li>
-                            ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
-                        </li>
-                    </#list>
-                    </ul>
+                <@orderItemAttrInfo orderItem=orderItem/>
+                <#-- SCIPIO: Show purchased account brief/masked info -->
+                <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem)!>
+                <#if gcInfoList?has_content>
+                  <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
                 </#if>
+                <#-- SCIPIO: show application survey response QA list for this item -->
+                <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
               </@td>
             <#else>
               <#-- product item -->
               <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
               <@td>
-                <#if !printable><a href="<@ofbizCatalogAltUrl fullPath=true productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+                <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.productId, false)!"">
+                <#if !printable>
+                    <#-- SCIPIO -->
+                    <a href="<@catalogAltUrl productId=origProductId?has_content?then(origProductId, orderItem.productId)/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
+                </#if><#lt/>${orderItem.productId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!""}<#if !printable></a></#if>
                 <#-- SCIPIO: Link to downloads to consume -->
                 <#-- TODO: delegate status tests -->
                 <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
                   <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                     <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
-                    <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
-                        <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
+                    <a href="<#if dlAvail><@pageUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
+                        <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[<#if dlAvail>${uiLabelMap.ContentDownload}<#else>${uiLabelMap.ContentDownloadPending}</#if>]</a><#lt/>
                   </#if>
                 </#if>
-    
-                <#-- SCIPIO: TODO: LIST CONFIG OPTIONS HERE -->
-    
-                <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
-                <#if orderItemAttributes?has_content>
-                    <ul>
-                    <#list orderItemAttributes as orderItemAttribute>
-                        <li>
-                            ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
-                        </li>
-                    </#list>
-                    </ul>
-                </#if>
+                <@orderItemAttrInfo orderItem=orderItem/>
                 <#if showDetailed && product?has_content>
                   <#if product.piecesIncluded?? && product.piecesIncluded?long != 0>
                       [${uiLabelMap.OrderPieces}: ${product.piecesIncluded}]
@@ -224,6 +245,15 @@ under the License.
                       [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)!(product.depthUomId))!}]
                   </#if>
                 </#if>
+
+                <#-- SCIPIO: Show purchased account brief/masked info -->
+                <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem, "", product)!>
+                <#if gcInfoList?has_content>
+                  <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
+                </#if>
+                <#-- SCIPIO: show application survey response QA list for this item -->
+                <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
+
                 <#if maySelect>
                   <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
                   <#if returns?has_content>

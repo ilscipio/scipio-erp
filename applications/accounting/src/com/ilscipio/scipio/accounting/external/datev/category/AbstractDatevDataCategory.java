@@ -51,7 +51,7 @@ public abstract class AbstractDatevDataCategory {
 
             this.datevFieldDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition").where(datevFieldCommonCond).queryList();
             this.datevFieldNames = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldName", true);
-            
+
             List<String> datevFieldIds = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldId", true);
             Map<String, GenericValue> datevFieldMappingsByField = new HashMap<>();
             List<GenericValue> datevFieldMappings = EntityQuery.use(delegator).from("DatevFieldMapping").where(datevFieldCommonCond).queryList();

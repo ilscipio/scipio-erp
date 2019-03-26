@@ -389,7 +389,7 @@
     </property>
     <property key="GoodIdentificationType.description.GOOGLE_ID">
         <value xml:lang="de">Google Id</value>
-        <value xml:lang="en">Google Id</value>
+        <value xml:lang="en">Google ID</value>
         <value xml:lang="fr">Identifiant Google</value>
         <value xml:lang="it">Codice Google</value>
         <value xml:lang="ja">Google ID</value>
@@ -1319,10 +1319,12 @@
         <value xml:lang="zh-TW">用途</value>
     </property>
     <property key="ProductContentType.description.DEFAULT_IMAGE">
+        <value xml:lang="de">Standardbild</value>
         <value xml:lang="en">Defaut Image</value>
         <value xml:lang="fr">Image par défaut</value>
     </property>
     <property key="ProductContentType.description.ALTERNATIVE_URL">
+        <value xml:lang="de">Alternative URL</value>
         <value xml:lang="en">Alternative URL</value>
         <value xml:lang="fr">URL de remplacement</value>
     </property>
@@ -1558,18 +1560,22 @@
         <value xml:lang="zh-TW">增加到購物車圖像</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_DETAIL">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Detail)</value>
         <value xml:lang="en">Image - Additional View Detail</value>
         <value xml:lang="fr">Image - Vue supplémentaire(Détaillée)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_LARGE">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Groß)</value>
         <value xml:lang="en">Image - Additional View Large</value>
         <value xml:lang="fr">Image - Vue supplémentaire(grande)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_MEDIUM">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Mittel)</value>
         <value xml:lang="en">Image - Additional View Medium</value>
         <value xml:lang="fr">Image - Vue supplémentaire(moyenne)</value>
     </property>
     <property key="ProductContentType.description.XTRA_IMG_L_SMALL">
+        <value xml:lang="de">Bild - Zusätzliche Ansicht (Klein)</value>
         <value xml:lang="en">Image - Additional View Small</value>
         <value xml:lang="fr">Image - Vue supplémentaire(petite)</value>
     </property>
@@ -1942,22 +1948,27 @@
         <value xml:lang="zh-TW">警告</value>
     </property>
     <property key="ProductContentType.description.EBAY_DESCRIPTION">
+        <value xml:lang="de">Detailseite für eBay Auctions</value>
         <value xml:lang="en">Detail Page for eBay Auctions</value>
         <value xml:lang="fr">Page de ventes aux enchères eBay.</value>
     </property>
     <property key="ProductContentType.description.META_DESCRIPTION">
+        <value xml:lang="de">Meta Beschreibung</value>
         <value xml:lang="en">Meta Description</value>
         <value xml:lang="fr">Description méta</value>
     </property>
     <property key="ProductContentType.description.META_KEYWORD">
+        <value xml:lang="de">Meta Keywords</value>
         <value xml:lang="en">Meta Keywords</value>
         <value xml:lang="fr">Mots-clés méta</value>
     </property>
     <property key="ProductContentType.description.PAGE_TITLE">
+        <value xml:lang="de">Seitentitel</value>
         <value xml:lang="en">Page Title</value>
         <value xml:lang="fr">Page de titre</value>
     </property>
     <property key="ProductContentType.description.SPECIFICATION">
+        <value xml:lang="de">Spezification</value>
         <value xml:lang="en">Specification</value>
         <value xml:lang="fr">Spécification</value>
     </property>
@@ -3303,6 +3314,18 @@
         <value xml:lang="zh">总代理价</value>
         <value xml:lang="zh-TW">總代理價</value>
     </property>
+    <property key="ProductStore.authDeclinedMessage.DefaultShop">
+        <value xml:lang="de">Es ist ein Problem mit Ihrer Zahlungsmethode aufgetreten. Versuchen Sie es mit einer anderen Methode oder rufen Sie den Kundendienst an.</value>
+        <value xml:lang="en">There has been a problem with your method of payment. Please try a different method or call customer service.</value>
+    </property>
+    <property key="ProductStore.authFraudMessage.DefaultShop">
+        <value xml:lang="de">Ihre Bestellung wurde abgelehnt und Ihr Konto wurde aufgrund von Betrug deaktiviert.</value>
+        <value xml:lang="en">Your order has been rejected and your account has been disabled due to fraud.</value>
+    </property>
+    <property key="ProductStore.authErrorMessage.DefaultShop">
+        <value xml:lang="de">Problem beim Verbinden mit dem Zahlungsprozessor; Wir werden es weiterhin versuchen und Sie per E-Mail benachrichtigen.</value>
+        <value xml:lang="en">Problem connecting to payment processor; we will continue to retry and notify you by email.</value>
+    </property>
     <property key="ProductStoreGroup.description._NA_">
         <value xml:lang="de">Nicht anwendbar</value>
         <value xml:lang="en">Not Applicable</value>
@@ -3373,6 +3396,7 @@
         <value xml:lang="zh-TW">固定資產用途</value>
     </property>
     <property key="ProductType.description.ASSET_USAGE_OUT_IN">
+        <value xml:lang="de">Aktive Vermietung</value>
         <value xml:lang="en">Asset Rental</value>
         <value xml:lang="fr">Actif location</value>
         <value xml:lang="nl">Verhuur productiemiddel</value>
@@ -4299,9 +4323,9 @@
         <value xml:lang="zh-TW">如果是,則不會發送任何新建的訂單,也不會對信用卡收費等.</value>
     </property>
     <property key="FieldDescription.ProductStore.isImmediatelyFulfilled">
-        <value xml:lang="de">Wenn eingeschaltet, werden Bestellungen sofort durch systemgenerierte Prozesse ausgeführt (z.B. für POS Käufe). Wenn ausgeschaltet, werden sie für eine manuelle Prüfung zurückgehalten.</value>
-        <value xml:lang="en">If Yes, the order will be immediately fulfilled through system-generated processes in ofbiz (e.g. for POS sales).  If no, it will be held for manual review.</value>
-        <value xml:lang="fr">Si Oui, toutes les commandes seront automatiquement remplies par le système (e.g. Les ventes du POS). Si Non, les commandes seront retenues à des fins de traitement manuel.</value>
+        <value xml:lang="de">Wenn eingeschaltet, werden Bestellungen sofort durch systemgenerierte Prozesse ausgeführt. Wenn ausgeschaltet, werden sie für eine manuelle Prüfung zurückgehalten.</value>
+        <value xml:lang="en">If Yes, the order will be immediately fulfilled through system-generated processes in ofbiz.  If no, it will be held for manual review.</value>
+        <value xml:lang="fr">Si Oui, toutes les commandes seront automatiquement remplies par le système. Si Non, les commandes seront retenues à des fins de traitement manuel.</value>
         <value xml:lang="ja">はいの場合、ofbizではシステムに生成されるプロセスで注文がすぐ実行されます。いいえの場合は、手動で確認されるまで保留されます。</value>
         <value xml:lang="vi">Nếu có, đặt hàng sẽ được tự động điền đầy đủ ngay lập tức thông qua hệ thống xử lý của Ofbiz (ví dụ như hệ thống bán hàng POS). Nếu không, nó sẽ dẫn đến phần xem xét thủ công</value>
         <value xml:lang="zh">如果是，则会在SCIPIO中通过系统生成过程立即执行（如POS销售）。如果否，则会等待人工检查。</value>
@@ -4405,6 +4429,7 @@
         <value xml:lang="zh-TW">如果沒有指定,使用哪個國家的幣種.使用Web工具尋找非美國的地區代碼.</value>
     </property>
     <property key="FieldDescription.ProductStore.defaultTimeZoneString">
+        <value xml:lang="de">Gibt an welche Zeitzone verwendet wird. Wenn keine angegeben ist, wird die Maschinenzeitzone verwendet.</value>
         <value xml:lang="en">Which time zone will be used. If none is specified the machine time zone will be used.</value>
         <value xml:lang="fr">Utilise ce fuseau horaire. Si aucun n'est spécifié le fuseau horaire de la machine sera utilisé.</value>
     </property>

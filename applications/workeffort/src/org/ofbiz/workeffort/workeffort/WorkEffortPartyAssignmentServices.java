@@ -30,6 +30,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * WorkEffortPartyAssignmentServices - Services to handle form input and other data changes.
@@ -60,9 +61,9 @@ public class WorkEffortPartyAssignmentServices {
                 // accept the activity assignment
                 try {
                     Map<String, Object> results = dispatcher.runSync("wfAcceptAssignment", context);
-
-                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                    if (!ServiceUtil.isSuccess(results)) { // SCIPIO: 2018-10-04: Fixed logging condition here
                         Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e, module);
                 }
@@ -70,9 +71,9 @@ public class WorkEffortPartyAssignmentServices {
                 // complete the activity assignment
                 try {
                     Map<String, Object> results = dispatcher.runSync("wfCompleteAssignment", context);
-
-                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                    if (!ServiceUtil.isSuccess(results)) { // SCIPIO: 2018-10-04: Fixed logging condition here
                         Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e, module);
                 }
@@ -80,13 +81,12 @@ public class WorkEffortPartyAssignmentServices {
                 // decline the activity assignment
                 try {
                     Map<String, Object> results = dispatcher.runSync("wfDeclineAssignment", context);
-
-                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                    if (!ServiceUtil.isSuccess(results)) { // SCIPIO: 2018-10-04: Fixed logging condition here
                         Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e, module);
                 }
-            } else {// do nothing...
             }
         }
     }

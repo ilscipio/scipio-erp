@@ -38,8 +38,8 @@ import org.w3c.dom.Element;
 
 /**
  * Implements the &lt;call-object-method&gt; element.
- * 
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mini-language+Reference#Mini-languageReference-{{%3Ccallobjectmethod%3E}}">Mini-language Reference</a>
+ *
+ * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Reference</a>
  */
 public final class CallObjectMethod extends MethodOperation {
 
@@ -53,7 +53,9 @@ public final class CallObjectMethod extends MethodOperation {
     public CallObjectMethod(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.handleError("<call-object-method> element is deprecated (use <script>)", simpleMethod, element);
+            if (MiniLangValidate.deprecatedCommonOn()) { // SCIPIO
+                MiniLangValidate.handleError("<call-object-method> element is deprecated (use <script>)", simpleMethod, element);
+            }
             MiniLangValidate.attributeNames(simpleMethod, element, "obj-field", "method-name", "ret-field");
             MiniLangValidate.constantAttributes(simpleMethod, element, "method-name");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "obj-field", "method-name");

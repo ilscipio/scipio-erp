@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.thirdparty.securepay;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class SecurePayPaymentServices {
         // generate the request/properties
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -67,13 +68,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
-            newAmount = new BigDecimal(processAmount.setScale(0, BigDecimal.ROUND_HALF_UP)+".00");
+        if ("Y".equals(enableamountround)) {
+            newAmount = new BigDecimal(processAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = processAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -106,24 +107,24 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1) {
                 Txn resp = payment.getTxn(0);
                 boolean approved = resp.getApproved();
                 if (approved == false){
-                    result.put("authResult", new Boolean(false));
+                    result.put("authResult", Boolean.FALSE);
                     result.put("authRefNum", "N/A");
                     result.put("processAmount", BigDecimal.ZERO);
                 } else {
                     result.put("authRefNum", resp.getTxnId());
-                    result.put("authResult", new Boolean(true));
+                    result.put("authResult", Boolean.TRUE);
                     result.put("processAmount", processAmount);
                 }
                 result.put("authCode", resp.getResponseCode());
                 result.put("authMessage", resp.getResponseText());
-            } 
+            }
         }
         return result;
     }
@@ -141,13 +142,13 @@ public class SecurePayPaymentServices {
             authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotCapture", locale));
         }
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -162,13 +163,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
-            newAmount = new BigDecimal(captureAmount.setScale(0, BigDecimal.ROUND_HALF_UP)+".00");
+        if ("Y".equals(enableamountround)) {
+            newAmount = new BigDecimal(captureAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = captureAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -188,7 +189,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -220,13 +221,13 @@ public class SecurePayPaymentServices {
             authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRelease", locale));
         }
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -241,13 +242,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
-            newAmount = new BigDecimal(releaseAmount.setScale(0, BigDecimal.ROUND_HALF_UP)+".00");
+        if ("Y".equals(enableamountround)) {
+            newAmount = new BigDecimal(releaseAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = releaseAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -267,7 +268,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -296,7 +297,7 @@ public class SecurePayPaymentServices {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingPaymentTransactionAuthorizationNotFoundCannotRefund", locale));
         }
 
@@ -308,12 +309,12 @@ public class SecurePayPaymentServices {
                     .queryFirst();
             referenceNum = paymentGatewayResponse != null ? paymentGatewayResponse.get("referenceNum") : authTransaction.getString("referenceNum");
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
         }
 
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -327,14 +328,14 @@ public class SecurePayPaymentServices {
         BigDecimal multiplyAmount = new BigDecimal(100);
         BigDecimal newAmount = null;
 
-        if (enableamountround.equals("Y")) {
-            newAmount = new BigDecimal(refundAmount.setScale(0, BigDecimal.ROUND_HALF_UP)+".00");
+        if ("Y".equals(enableamountround)) {
+            newAmount = new BigDecimal(refundAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = refundAmount;
         }
 
         int amont;
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -354,7 +355,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1){
@@ -383,7 +384,7 @@ public class SecurePayPaymentServices {
         // generate the request/properties
         Properties props = buildScProperties(context, delegator);
         if (props == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayNotProperlyConfigurated", locale));
         }
 
@@ -400,13 +401,13 @@ public class SecurePayPaymentServices {
         BigDecimal newAmount = null;
         int amont;
 
-        if (enableamountround.equals("Y")) {
-            newAmount = new BigDecimal(creditAmount.setScale(0, BigDecimal.ROUND_HALF_UP)+".00");
+        if ("Y".equals(enableamountround)) {
+            newAmount = new BigDecimal(creditAmount.setScale(0, RoundingMode.HALF_UP)+".00");
         } else {
             newAmount = creditAmount;
         }
 
-        if (currency.equals("JPY")) {
+        if ("JPY".equals(currency)) {
             amont = newAmount.intValue();
         } else {
             amont = newAmount.multiply(multiplyAmount).intValue();
@@ -433,7 +434,7 @@ public class SecurePayPaymentServices {
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         if (UtilValidate.isEmpty(processed)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "AccountingSecurityPayPaymentWasNotSent", locale));
         } else {
             if (payment.getCount() == 1) {

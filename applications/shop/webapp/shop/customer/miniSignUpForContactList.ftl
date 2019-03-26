@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -31,24 +18,25 @@ under the License.
 <@script>
     function unsubscribe() {
         var form = document.getElementById("signUpForContactListForm");
-        form.action = "<@ofbizUrl>unsubscribeContactListParty</@ofbizUrl>"
+        form.action = "<@pageUrl>unsubscribeContactListParty</@pageUrl>"
         document.getElementById("statusId").value = "CLPT_UNSUBS_PENDING";
         form.submit();
     }
     function unsubscribeByContactMech() {
         var form = document.getElementById("signUpForContactListForm");
-        form.action = "<@ofbizUrl>unsubscribeContactListPartyContachMech</@ofbizUrl>"
+        form.action = "<@pageUrl>unsubscribeContactListPartyContachMech</@pageUrl>"
         document.getElementById("statusId").value = "CLPT_UNSUBS_PENDING";
         form.submit();
     }
 </@script>
 
 <@section title=uiLabelMap.EcommerceSignUpForContactList id="miniSignUpForContactList">
-  <#if sessionAttributes.autoName?has_content>
+  <#assign autoName = sessionAttributes.autoName!><#-- SCIPIO: Access session only once -->
+  <#if autoName?has_content>
   <#-- The visitor potentially has an account and party id -->
     <#if userHasAccount>
     <#-- They are logged in so lets present the form to sign up with their email address -->
-      <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
+      <form method="post" action="<@pageUrl>createContactListParty</@pageUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
         <fieldset>
           <#assign contextPath = request.getContextPath()>
           <input type="hidden" name="baseLocation" value="${contextPath}"/>
@@ -75,12 +63,12 @@ under the License.
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->
       <p>${uiLabelMap.EcommerceSignUpForContactListLogIn}</p>
-      <p><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a> ${sessionAttributes.autoName}</p>
-      <p>(${uiLabelMap.CommonNotYou}? <a href="<@ofbizUrl>autoLogout</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
+      <p><a href="<@pageUrl>${checkLoginUrl}</@pageUrl>">${uiLabelMap.CommonLogin}</a> ${autoName}</p>
+      <p>(${uiLabelMap.CommonNotYou}? <a href="<@pageUrl>autoLogout</@pageUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
     </#if>
   <#else>
   <#-- There is no party info so just offer an anonymous (non-partyId) related newsletter sign up -->
-    <form method="post" action="<@ofbizUrl>signUpForContactList</@ofbizUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
+    <form method="post" action="<@pageUrl>signUpForContactList</@pageUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
       <fieldset>
         <#assign contextPath = request.getContextPath()>
         <input type="hidden" name="baseLocation" value="${contextPath}"/>

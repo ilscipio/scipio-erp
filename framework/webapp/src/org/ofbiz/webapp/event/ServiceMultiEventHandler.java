@@ -192,14 +192,14 @@ public class ServiceMultiEventHandler implements EventHandler {
 
             // now loop throw the rows and prepare/invoke the service for each
             for (int i = 0; i < rowCount; i++) {
-                String curSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+                String curSuffix = UtilHttp.getMultiRowDelimiter() + i;
                 boolean rowSelected = false;
-                if (UtilValidate.isNotEmpty(request.getAttribute(UtilHttp.ROW_SUBMIT_PREFIX + i))) {
-                    rowSelected = request.getAttribute(UtilHttp.ROW_SUBMIT_PREFIX + i) == null ? false :
-                    "Y".equalsIgnoreCase((String)request.getAttribute(UtilHttp.ROW_SUBMIT_PREFIX + i));
+                if (UtilValidate.isNotEmpty(request.getAttribute(UtilHttp.getRowSubmitPrefix() + i))) {
+                    rowSelected = request.getAttribute(UtilHttp.getRowSubmitPrefix() + i) == null ? false :
+                    "Y".equalsIgnoreCase((String)request.getAttribute(UtilHttp.getRowSubmitPrefix() + i));
                 } else {
-                    rowSelected = request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i) == null ? false :
-                    "Y".equalsIgnoreCase(request.getParameter(UtilHttp.ROW_SUBMIT_PREFIX + i));
+                    rowSelected = request.getParameter(UtilHttp.getRowSubmitPrefix() + i) == null ? false :
+                    "Y".equalsIgnoreCase(request.getParameter(UtilHttp.getRowSubmitPrefix() + i));
                 }
 
                 // make sure we are to process this row
@@ -317,7 +317,11 @@ public class ServiceMultiEventHandler implements EventHandler {
                 // invoke the service
                 Map<String, Object> result = null;
                 try {
+                    /* SCIPIO: 2018-11-23: Refactored
                     result = dispatcher.runSync(serviceName, serviceContext);
+                    */
+                    result = invokeService(dispatcher, modelService, serviceName, serviceContext, mode,
+                            event, requestMap, request, response);
                 } catch (ServiceAuthException e) {
                     // not logging since the service engine already did
                     errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
@@ -347,13 +351,13 @@ public class ServiceMultiEventHandler implements EventHandler {
                     }
 
                     // get the success messages
-                    if (!UtilValidate.isEmpty(result.get(ModelService.SUCCESS_MESSAGE))) {
+                    if (UtilValidate.isNotEmpty(result.get(ModelService.SUCCESS_MESSAGE))) {
                         String newSuccessMessage = (String)result.get(ModelService.SUCCESS_MESSAGE);
                         if (!successMessages.contains(newSuccessMessage)) {
                             successMessages.add(newSuccessMessage);
                         }
                     }
-                    if (!UtilValidate.isEmpty(result.get(ModelService.SUCCESS_MESSAGE_LIST))) {
+                    if (UtilValidate.isNotEmpty(result.get(ModelService.SUCCESS_MESSAGE_LIST))) {
                         List<String> newSuccessMessages = UtilGenerics.<String>checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
                         for (int j = 0; j < newSuccessMessages.size(); j++) {
                             String newSuccessMessage = newSuccessMessages.get(j);
@@ -369,9 +373,11 @@ public class ServiceMultiEventHandler implements EventHandler {
                         String resultKey = rme.getKey();
                         Object resultValue = rme.getValue();
 
-                        if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                                !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                                !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                        // SCIPIO: This is ridiculous
+                        //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                        //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                        //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                        if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
                             //set the result to request w/ and w/o a suffix to handle both cases: to have the result in each iteration and to prevent its overriding
                             request.setAttribute(resultKey + curSuffix, resultValue);
                             request.setAttribute(resultKey, resultValue);
@@ -415,5 +421,15 @@ public class ServiceMultiEventHandler implements EventHandler {
         }
 
         return returnString;
+    }
+
+    /**
+     * SCIPIO: Core service invocation, overridable.
+     * Refactored from {@link #invoke(Event, RequestMap, HttpServletRequest, HttpServletResponse)}.
+     * Added 2018-11-23.
+     */
+    protected Map<String, Object> invokeService(LocalDispatcher dispatcher, ModelService modelService, String serviceName, Map<String, Object> serviceContext, String mode,
+            Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return dispatcher.runSync(serviceName, serviceContext);
     }
 }

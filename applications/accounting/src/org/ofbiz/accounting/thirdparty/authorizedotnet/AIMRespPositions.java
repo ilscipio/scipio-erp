@@ -34,18 +34,18 @@ public class AIMRespPositions extends AuthorizeResponse.RespPositions {
         positions.put(AuthorizeResponse.AVS_RESULT_CODE, 6);
         positions.put(AuthorizeResponse.CVV_RESULT_CODE, 39);
         positions.put(AuthorizeResponse.TRANSACTION_ID, 7);
-        positions.put(AuthorizeResponse.AMOUNT, 10);               
+        positions.put(AuthorizeResponse.AMOUNT, 10);
     }
-    
+
     @Override
     public int getPosition(String name) {
         if (positions.containsKey(name)) {
             return positions.get(name);
         } else {
             return -1;
-        }              
+        }
     }
-    
+
     @Override
     public String getApprovalString() {
         return "1";

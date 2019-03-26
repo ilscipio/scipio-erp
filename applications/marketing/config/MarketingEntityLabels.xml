@@ -20,6 +20,7 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ContactListType.description.ANNOUNCEMENT">
+        <value xml:lang="de">Bekanntmachung</value>
         <value xml:lang="en">Announcement</value>
         <value xml:lang="es">Anuncio</value>
         <value xml:lang="fr">Annonce</value>
@@ -34,6 +35,7 @@
         <value xml:lang="zh-TW">聲明</value>
     </property>
     <property key="ContactListType.description.MARKETING">
+        <value xml:lang="de">Marketing</value>
         <value xml:lang="en">Marketing</value>
         <value xml:lang="es">Marketing</value>
         <value xml:lang="fr">Marketing</value>
@@ -48,6 +50,7 @@
         <value xml:lang="zh-TW">行銷</value>
     </property>
     <property key="ContactListType.description.NEWSLETTER">
+        <value xml:lang="de">Newsletter</value>
         <value xml:lang="en">Newsletter</value>
         <value xml:lang="es">Carta de información</value>
         <value xml:lang="fr">Lettre d'information</value>
@@ -62,6 +65,7 @@
         <value xml:lang="zh-TW">新聞</value>
     </property>
     <property key="SegmentGroupType.description.MARKET_SEGMENT">
+        <value xml:lang="de">Marktsegment</value>
         <value xml:lang="en">Market Segment</value>
         <value xml:lang="es">Segmento de marketing</value>
         <value xml:lang="fr">Segment de marché</value>
@@ -76,6 +80,7 @@
         <value xml:lang="zh-TW">市場分區</value>
     </property>
     <property key="SegmentGroupType.description.SALES_SEGMENT">
+        <value xml:lang="de">Sales Segment</value>
         <value xml:lang="en">Sales Segment</value>
         <value xml:lang="es">Segmento de ventas</value>
         <value xml:lang="fr">Segment de vente</value>
@@ -90,6 +95,7 @@
         <value xml:lang="zh-TW">銷售分區</value>
     </property>
     <property key="TrackingCodeType.description.ACCESS">
+        <value xml:lang="de">Zugangs-Code</value>
         <value xml:lang="en">Access Code</value>
         <value xml:lang="fr">Code d'accès</value>
         <value xml:lang="it">Codice di accesso</value>
@@ -100,6 +106,7 @@
         <value xml:lang="zh-TW">存取碼</value>
     </property>
     <property key="TrackingCodeType.description.EXTERNAL">
+        <value xml:lang="de">Extern</value>
         <value xml:lang="en">External</value>
         <value xml:lang="es">Externo</value>
         <value xml:lang="fr">Externe</value>
@@ -114,6 +121,7 @@
         <value xml:lang="zh-TW">外部</value>
     </property>
     <property key="TrackingCodeType.description.INTERNAL">
+        <value xml:lang="de">Intern</value>
         <value xml:lang="en">Internal</value>
         <value xml:lang="es">Interno</value>
         <value xml:lang="fr">Interne</value>
@@ -128,6 +136,7 @@
         <value xml:lang="zh-TW">內部</value>
     </property>
     <property key="TrackingCodeType.description.PARTNER_MGD">
+        <value xml:lang="de">Unter Partner Verwaltung</value>
         <value xml:lang="en">Partner Managed</value>
         <value xml:lang="es">Partner</value>
         <value xml:lang="fr">Géré par un tiers</value>

@@ -1,67 +1,55 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- ToDo: Refactor - these artifacts seem like a copy and paste job to me. The only thing changing is really just the title... -->
 
-<#if sessionAttributes.recentArtifactInfoList?has_content>
-  <@panel title="Recently Viewed Artifacts:">
-    <#assign highRef = sessionAttributes.recentArtifactInfoList.size() - 1/>
-    <#if (highRef > 19)><#assign highRef = 19/></#if>
-    <ol><#list sessionAttributes.recentArtifactInfoList[0..highRef] as recentArtifactInfo>
-        <li>${recentArtifactInfo.type}: <@displayArtifactInfoLink type=recentArtifactInfo.type uniqueId=recentArtifactInfo.uniqueId displayName=recentArtifactInfo.displayName/></li>
-    </#list></ol>
-  </@panel>
-</#if>
+<@menu type="button">
+    <@menuitem type="link" href=makePageUrl("ArtifactInfo") text=uiLabelMap.CommonFind class="+${styles.action_nav!} ${styles.action_find!}"/>
+    <@menuitem type="link" href=makePageUrl("ArtifactInfo?reloadArtifacts=Y") text=uiLabelMap.CommonReload class="+${styles.action_run_session!} ${styles.action_reload!}"/>
+    <@menuitem type="generic">
+      <@modal id="artifacts_recent" label="Recently Viewed" linkClass="+${styles.menu_button_item_link!} ${styles.action_run_local!} ${styles.action_show!}">
+        <#-- SCIPIO: simplified list and moved under modal -->
+        <#if recentArtifactInfoList?has_content>
+          <@panel title="Recently Viewed Artifacts">
+            <ol><#list recentArtifactInfoList as recentArtifactInfo>
+                <li>${recentArtifactInfo.type}: <@displayArtifactInfoLink type=recentArtifactInfo.type uniqueId=recentArtifactInfo.uniqueId displayName=recentArtifactInfo.displayName/></li>
+            </#list></ol>
+          </@panel>
+        </#if>
+      </@modal>
+    </@menuitem>
+</@menu>
 
 <#if !artifactInfo??>
 
+    <#assign artifactTypes = ["entity", "service", "form", "screen", "request", "view"]>
+
     <#-- add form here to specify artifact info name. -->
-    <@section>
-      <form name="ArtifactInfoByName" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>" class="basic-form">
-        Search Names/Locations: <input type="text" name="name" value="${parameters.name!}" size="40"/>
-        <select name="type">
-          <option></option>
-          <option>entity</option>
-          <option>service</option>
-          <option>form</option>
-          <option>screen</option>
-          <option>request</option>
-          <option>view</option>
-        </select>
-        <input type="hidden" name="findType" value="search"/>
-        <input type="submit" name="submitButton" value="Find" class="${styles.link_run_sys!} ${styles.action_find!}"/>
+    <@section title="Search Names/Locations">
+      <form name="ArtifactInfoByName" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>">
+        <@field type="text" name="name" value=(parameters.name!) size="40" label="Names/Locations"/>
+        <@field type="select" name="type" label="Type">
+          <@field type="option" value=""/>
+          <#list artifactTypes as artifactType>
+            <@field type="option" value=artifactType>${artifactType}</@field>
+          </#list>
+        </@field>
+        <@field type="hidden" name="findType" value="search"/>
+        <@field type="submit" name="submitButton" value="Find" class="${styles.link_run_sys!} ${styles.action_find!}"/>
       </form>
     </@section>
-    <@section>
-      <form name="ArtifactInfoByNameAndType" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>" class="basic-form">
-        <div>Name: <input type="text" name="name" value="${parameters.name!}" size="40"/></div>
-        <div>Location: <input type="text" name="location" value="${parameters.location!}" size="60"/></div>
-        <div>Type:
-          <select name="type">
-            <option>entity</option>
-            <option>service</option>
-            <option>form</option>
-            <option>screen</option>
-            <option>request</option>
-            <option>view</option>
-          </select>
-          <input type="submit" name="submitButton" value="Lookup" class="${styles.link_run_sys!} ${styles.action_find!}"/>
-        </div>
+    <@section title="Search By Name and Type">
+      <form name="ArtifactInfoByNameAndType" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>">
+          <@field type="text" name="name" value=(parameters.name!) size="40" label="Name"/>
+          <@field type="text" name="location" value=(parameters.location!) size="60" label="Location"/>
+          <@field type="select" name="type" label="Type">
+            <#list artifactTypes as artifactType>
+              <@field type="option" value=artifactType>${artifactType}</@field>
+            </#list>
+          </@field>
+          <@field type="submit" name="submitButton" value="Lookup" class="${styles.link_run_sys!} ${styles.action_find!}"/>
       </form>
     </@section>
 
@@ -79,16 +67,31 @@ under the License.
 
 <#else>
 
+    <#-- SCIPIO -->
+    <#macro artifactInfoFileLink id type location text class="">
+        <form name="${id}_form" id="${id}_form" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>" style="display:inline;">
+            <input type="hidden" name="name" value="${location}"/>
+            <input type="hidden" name="type" value="${type}"/>
+            <input type="hidden" name="findType" value="search"/>
+            <@field inline=true type="submit" submitType="link" href="javascript:$('#${escapeVal(id, 'js')}_form').submit(); void(0);"
+                class="+${styles.action_run_sys!} ${styles.action_find!}" text=text/>
+        </form>
+    </#macro>
+
     <@heading>${uiLabelMap.WebtoolsArtifactInfo} (${artifactInfo.getDisplayType()}): ${artifactInfo.getDisplayName()}</@heading>
     <#if artifactInfo.getLocationURL()??>
-        <@section title="Definition">Defined in: <a href="${artifactInfo.getLocationURL()}">${artifactInfo.getLocationURL()}</a></@section>
+        <#-- SCIPIO: Fixed href with new form + use relative locations -->
+        <@section title="Definition">Defined in: 
+            <@artifactInfoFileLink id="ArtifactInfoFile" type=artifactInfo.type location=("/"+artifactInfo.getRelativeLocation())
+                class="+${styles.action_run_sys!} ${styles.action_find!}" text=artifactInfo.getRelativeLocation()/>
+        </@section>
     </#if>
 
     <#if artifactInfo.getType() == "entity">
         <#if artifactInfo.modelEntity.getFieldsUnmodifiable()?has_content>
             <@section title="Entity Fields">
-                <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
-                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                <a href="<@pageUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">All Entity Data</a>
+                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
                 <#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
                     <@tr><@td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></@td><@td>${modelField.getType()}</@td><@td>${modelField.getDescription()!}</@td></@tr>
                 </#list>
@@ -140,12 +143,20 @@ under the License.
         <@section title="Service Info">
             Description: ${artifactInfo.modelService.description}<br/>
             Run (${artifactInfo.modelService.engineName}): ${artifactInfo.modelService.location} :: ${artifactInfo.modelService.invoke}<br/>
-            Impl Location: <a href="${artifactInfo.getImplementationLocationURL()!}">${artifactInfo.getImplementationLocationURL()!}</a>
+            <#-- SCIPIO: Fixed link; added fallback for java -->
+            <#assign servImplLoc = raw((artifactInfo.getImplementationLocation())!)>
+            Impl Location: 
+            <#if servImplLoc?has_content>
+              <@artifactInfoFileLink id="ArtifactInfoServImplFile" type=artifactInfo.type location=servImplLoc
+                  class="+${styles.action_run_sys!} ${styles.action_find!}" text=servImplLoc/>
+            <#else>
+              ${uiLabelMap.CommonNA}
+            </#if>
         </@section>
         
         <#if artifactInfo.modelService.getAllParamNames()?has_content>
             <@section title="Service Parameters">
-                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
                     <@thead><@tr><@td>Name</@td><@td>Type</@td><@td>Optional</@td><@td>Mode</@td><@td>Entity.field</@td></@tr></@thead>
                   <#list artifactInfo.modelService.getAllParamNames() as paramName>
                     <#assign modelParam = artifactInfo.modelService.getParam(paramName)/>
@@ -437,10 +448,10 @@ under the License.
     </#if>
     <#if serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList()?has_content>
         <h4>ECA Rule Actions</h4>
-        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
         <#list serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList() as ecaAction>
             <@tr>
-                <@td><a href="<@ofbizUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@ofbizUrl>">${ecaAction.getServiceName()}</a></@td>
+                <@td><a href="<@pageUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@pageUrl>">${ecaAction.getServiceName()}</a></@td>
                 <@td>${ecaAction.getServiceMode()}<#if ecaAction.isPersist()>-persisted</#if></@td>
             </@tr>
         </#list>
@@ -485,5 +496,7 @@ under the License.
 </#macro>
 
 <#macro displayArtifactInfoLink type uniqueId displayName>
-<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>
+<#-- SCIPIO: This hardcoded encoding was probably due to stock hadn't configured the default yet...
+<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@pageUrl>">${displayName}</a>-->
+<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${raw(uniqueId)?url}</@pageUrl>">${displayName}</a>
 </#macro>

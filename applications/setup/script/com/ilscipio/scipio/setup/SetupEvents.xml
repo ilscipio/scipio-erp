@@ -7,9 +7,9 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-    
+
     http://www.apache.org/licenses/LICENSE-2.0
-    
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,13 +19,23 @@
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
-          
+
+    <simple-method method-name="createOrganization" short-description="Create Organization" login-required="true">
+        <set field="isPartyUpdate" type="Boolean" value="false"/>
+        <call-simple-method method-name="createOrganization" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyOrganizationCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
+    </simple-method>
+
     <simple-method method-name="updateOrganization" short-description="Update Organization" login-required="true">
+        <set field="isPartyUpdate" type="Boolean" value="true"/>
         <!-- verify fields -->
         <call-simple-method method-name="verifyOrganizationFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
 
@@ -33,7 +43,7 @@
         <set-service-fields service-name="updatePartyGroup" map="parameters" to-map="updatePartyGroupCtx"/>
         <call-service service-name="updatePartyGroup" in-map-name="updatePartyGroupCtx"/>
         <check-errors/>
-        
+
         <!-- SCIPIO: DEV NOTE: ALL ORG CODE BELOW WILL ONLY UPDATE IF A CONTACTMECHID WAS PASSED
             This is non-ideal because it means confusing error if user modified contact mechs using
             a different screen while he left ours open.
@@ -41,64 +51,78 @@
             we could instead cause the user to silently update the wrong contact mechs, which
             ends up being even more confusing or even corrupt a profile.
          -->
-        
+
         <set field="partyId" from-field="parameters.partyId"/>
-        
+
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
             <else>
-                <set field="cutn" value="" set-if-null="true"/>
+                <set field="cutn" value="" set-if-null="true" type="NewMap" />
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
+                <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
+                <script lang="groovy"><![CDATA[
+                    if (parameters.USER_ADDR_PURPOSE) {
+                        cutn.contactMechPurposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                        cutn.exactPurposes = true;
+                    } else {
+                        cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.ORGANIZATION_MAINADDR_PURPOSES as List;
+                    }
+                ]]></script>
                 <set field="cutn.contactCtx" from-field="addressContext"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
                 <call-simple-method method-name="createUpdatePartyPostalAddress"/>
                 <check-errors/>
             </else>
         </if-compare>
-        
+
         <!-- home phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_HOME_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_HOME_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_HOME"/>
         <set field="cutn.contactCtx" from-field="homePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_WORK_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
         <set field="cutn.contactCtx" from-field="workPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_FAX_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
         <set field="cutn.contactCtx" from-field="faxPhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_MOBILE_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobilePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_EMAIL_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
         <set field="cutn.contactCtx" from-field="emailContext"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyOrganizationUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     <simple-method method-name="createUpdatePartyPostalAddress">
         <!-- WARN: this one might be too specific for general use; no deletion support for now -->
@@ -110,83 +134,140 @@
             partyId
         -->
         <if-not-empty field="cutn.contactMechId">
-            <!-- TODO? support deletion (for organization we don't want delete for now)
             <if>
                 <condition>
                     <and>
-                        <if-empty field="cutn.contactCtx..."/>
+                        <!-- NOTE: here we have to ignore country/state... just detect using required address fields -->
+                        <if-empty field="cutn.contactCtx.address1"/>
+                        <if-empty field="cutn.contactCtx.city"/>
+                        <if-empty field="cutn.contactCtx.postalCode"/>
                     </and>
                 </condition>
                 <then>
-                    <set field="deleteCtx" value="" set-if-null="true"/>
-                    <set field="deleteCtx.partyId" from-field="partyId"/>
-                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
-                    <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    <if-compare field="cutn.updateIgnoreEmpty" operator="not-equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Deleting party '${partyId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
+                        <set field="deleteCtx" value="" set-if-null="true"/>
+                        <set field="deleteCtx.partyId" from-field="partyId"/>
+                        <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                        <else>
+                            <log level="info" message="Setup: Skipping deleting party '${partyId}' postal address '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is set"/>
+                        </else>
+                    </if-compare>
                 </then>
                 <else>
-                    <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx"/>
-                    <!- - NOTE: leaves purpose unchanged - ->
-                </else>
-            </if>-->
-            <log level="info" message="Setup: Updating party '${partyId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-            <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-            <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-            <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx">
-                <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
-                    if we don't do this then the purpose updates may associate the purposes with
-                    an expired contact mech! -->
-                <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
-            </call-service>
-            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-empty field="purposes">
-                        <log level="info" message="Setup: Creating party '${partyId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+                    <log level="info" message="Setup: Updating party '${partyId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
+                    <entity-one entity-name="PostalAddress" value-field="oldPostalAddress">
+                        <field-map field-name="contactMechId" from-field="cutn.contactMechId"/>
+                    </entity-one>
+                    <if-empty field="oldPostalAddress">
+                        <set field="contactMechId" from-field="cutn.contactMechId"/>
+                        <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_postal_address_id_not_found"/></add-error>
+                        <check-errors/>
+                    </if-empty>
+                    <set field="updateAddrCtx" value="" set-if-null="true"/>
+                    <!-- IMPORTANT: 2018-10-24: Any PostalAddress fields not specified (no map key) in contactCtx must be read from the existing value,
+                        otherwise any fields not handled by the screen will get lost and will trigger an expire/create even if
+                        nothing appears to have changed from the user's perspective -->
+                    <set-service-fields service-name="updatePartyPostalAddress" map="oldPostalAddress" to-map="updateAddrCtx"/>
+                    <set-service-fields service-name="updatePartyPostalAddress" map="cutn.contactCtx" to-map="updateAddrCtx"/>
+                    <set field="updateAddrCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <set field="updateAddrCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="updatePartyPostalAddress" in-map-name="updateAddrCtx">
+                        <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
+                            if we don't do this then the purpose updates may associate the purposes with
+                            an expired contact mech! -->
+                        <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
+                    </call-service>
+                    <if-compare field="cutn.exactPurposes" operator="equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Setting party '${partyId}' postal address '${cutn.contactMechId}' purposes: ${cutn.contactMechPurposeTypeIdList}"/>
                         <set field="purposeCtx" value="" set-if-null="true"/>
                         <set field="purposeCtx.partyId" from-field="partyId"/>
                         <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
-                        <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
-                    </if-empty>
-                </iterate>
-            </if-compare>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.exact" type="Boolean" value="true"/>
+                        <set field="purposeCtx.conflictMode" value="error"/><!-- if roles are already on another contact mech, return error -->
+                        <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
+                        <else>
+                            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                                <log level="info" message="Setup: Checking and creating party '${partyId}' postal address '${cutn.contactMechId}' missing purposes: ${cutn.contactMechPurposeTypeIdList}"/>
+                                <set field="purposeCtx" value="" set-if-null="true"/>
+                                <set field="purposeCtx.partyId" from-field="partyId"/>
+                                <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                                <set field="purposeCtx.exact" type="Boolean" value="false"/>
+                                <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                                <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
+                            </if-compare>
+                        </else>
+                    </if-compare>
+                </else>
+            </if>
             <else>
-                <log level="info" message="Setup: Creating party '${partyId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-                <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
-                    in that case fail and tell user to resubmit because we're creating a duplicate
-                    and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-not-empty field="purposes">
-                        <set field="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
-                        <check-errors/>
-                    </if-not-empty>
-                </iterate>
-                
-                <!-- Create -->
-                <set field="purposeCtx" value="" set-if-null="true"/>
-                <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                <call-service service-name="createPartyPostalAddress" in-map-name="cutn.contactCtx">
-                    <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
-                </call-service>
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
-                    <set field="purposeCtx.partyId" from-field="partyId"/>
-                    <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
-                </iterate>
+                <if>
+                    <condition>
+                        <and>
+                            <if-compare field="isPartyUpdate" operator="equals" type="Boolean" value="true"/>
+                            <if-compare field="cutn.updateIgnoreEmpty" operator="equals" type="Boolean" value="true"/>
+                            <!-- NOTE: here we have to ignore country/state... just detect using required address fields -->
+                            <if-empty field="cutn.contactCtx.address1"/>
+                            <if-empty field="cutn.contactCtx.city"/>
+                            <if-empty field="cutn.contactCtx.postalCode"/>
+                        </and>
+                    </condition>
+                    <then>
+                        <!-- Special case: here have user with  -->
+                        <log level="info" message="Setup: Skipping creating party '${partyId}' postal address because was left empty"/>
+                    </then>
+                    <else>
+                        <log level="info" message="Setup: Creating party '${partyId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
+                        <!-- 2018-10-31: removed, for postal address this is too complicated; here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                        <!- - EMERGENCY CHECK: make sure there's no contactmech having this role;
+                            in that case fail and tell user to resubmit because we're creating a duplicate
+                            and we wouldn't know what we'd be replacing if we edit the re-queried one
+                            NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. - ->
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.entity.*;
+                            import org.ofbiz.entity.condition.*;
+                            import org.ofbiz.entity.util.*;
+                            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", partyId),
+                                EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));
+                            context.purposes = from("PartyContactMechAndPurpose").where(cond)
+                                .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                        ]]></script>
+                        <if-not-empty field="purposes">
+                            <set field="contactMechPurposeTypeId" from-field="purposes[0].contactMechPurposeTypeId"/>
+                            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
+                            <check-errors/>
+                        </if-not-empty>
+                        -->
+
+                        <!-- Create -->
+                        <set field="purposeCtx" value="" set-if-null="true"/>
+                        <set field="createAddressCtx" value="" set-if-null="true"/>
+                        <set-service-fields service-name="createPartyPostalAddress" map="cutn.contactCtx" to-map="createAddressCtx"/>
+                        <set field="createAddressCtx.partyId" from-field="partyId"/>
+                        <call-service service-name="createPartyPostalAddress" in-map-name="createAddressCtx">
+                            <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
+                        </call-service>
+                        <!-- 2018-10-31: removed, here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                        <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
+                            <set field="purposeCtx.partyId" from-field="partyId"/>
+                            <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                            <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
+                        </iterate>-->
+                        <set field="purposeCtx.partyId" from-field="partyId"/>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                        <call-service service-name="ensurePartyContactMechPurposes" in-map-name="purposeCtx"/>
+                    </else>
+                </if>
             </else>
         </if-not-empty>
     </simple-method>
     <simple-method method-name="createUpdatePartyTelecomNumber">
         <!-- REQUIRES:
-            cutn.contactMechPurposeTypeId 
+            cutn.contactMechPurposeTypeId
             cutn.contactCtx
             cutn.contactMechId
             partyId
@@ -202,17 +283,36 @@
                     </and>
                 </condition>
                 <then>
-                    <log level="info" message="Setup: Deleting party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="deleteCtx" value="" set-if-null="true"/>
-                    <set field="deleteCtx.partyId" from-field="partyId"/>
-                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
-                    <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    <if-compare field="cutn.updateIgnoreEmpty" operator="not-equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Deleting party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
+                        <set field="deleteCtx" value="" set-if-null="true"/>
+                        <set field="deleteCtx.partyId" from-field="partyId"/>
+                        <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                        <else>
+                            <log level="info" message="Setup: Skipping deleting party '${partyId}' telecom number '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is set"/>
+                        </else>
+                    </if-compare>
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' telecom number '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="updatePartyTelecomNumber" in-map-name="cutn.contactCtx"/>
+                    <entity-one entity-name="TelecomNumber" value-field="oldTelecomNumber">
+                        <field-map field-name="contactMechId" from-field="cutn.contactMechId"/>
+                    </entity-one>
+                    <if-empty field="oldTelecomNumber">
+                        <set field="contactMechId" from-field="cutn.contactMechId"/>
+                        <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_telecom_number_id_not_found"/></add-error>
+                        <check-errors/>
+                    </if-empty>
+                    <set field="updateNumberCtx" value="" set-if-null="true"/>
+                    <!-- IMPORTANT: 2018-10-24: Any TelecomNumber fields not specified (no map key) in contactCtx must be read from the existing value,
+                        otherwise any fields not handled by the screen will get lost and will trigger an expire/create even if
+                        nothing appears to have changed from the user's perspective -->
+                    <set-service-fields service-name="updatePartyTelecomNumber" map="oldTelecomNumber" to-map="updateNumberCtx"/>
+                    <set-service-fields service-name="updatePartyTelecomNumber" map="cutn.contactCtx" to-map="updateNumberCtx"/>
+                    <set field="updateNumberCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <set field="updateNumberCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="updatePartyTelecomNumber" in-map-name="updateNumberCtx"/>
                     <!-- NOTE: leaves purpose unchanged -->
                 </else>
             </if>
@@ -221,21 +321,24 @@
                     <log level="info" message="Setup: Creating party '${partyId}' telecom number (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
                     <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                         in that case fail and tell user to resubmit because we're creating a duplicate
-                        and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
-                    </entity-and>
+                        and we wouldn't know what we'd be replacing if we edit the re-queried one
+                        NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposes = from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", cutn.contactMechPurposeTypeId)
+                            .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                    ]]></script>
                     <if-not-empty field="purposes">
                         <set field="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                         <check-errors/>
                     </if-not-empty>
-                
+
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="createPartyTelecomNumber" in-map-name="cutn.contactCtx">
+                    <set field="createNumberCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="createPartyTelecomNumber" map="cutn.contactCtx" to-map="createNumberCtx" />
+                    <set field="createNumberCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="createPartyTelecomNumber" in-map-name="createNumberCtx">
                         <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                     </call-service>
                     <set field="purposeCtx.partyId" from-field="partyId"/>
@@ -250,7 +353,7 @@
     </simple-method>
     <simple-method method-name="createUpdatePartyEmailAddress">
         <!-- REQUIRES:
-            cutn.contactMechPurposeTypeId 
+            cutn.contactMechPurposeTypeId
             cutn.contactCtx
             cutn.contactMechId
             partyId
@@ -263,17 +366,24 @@
                     </and>
                 </condition>
                 <then>
-                    <log level="info" message="Setup: Deleting party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="deleteCtx" value="" set-if-null="true"/>
-                    <set field="deleteCtx.partyId" from-field="partyId"/>
-                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
-                    <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                    <if-compare field="cutn.updateIgnoreEmpty" operator="not-equals" type="Boolean" value="true">
+                        <log level="info" message="Setup: Deleting party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
+                        <set field="deleteCtx" value="" set-if-null="true"/>
+                        <set field="deleteCtx.partyId" from-field="partyId"/>
+                        <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <call-service service-name="deletePartyContactMech" in-map-name="deleteCtx"/>
+                        <else>
+                            <log level="info" message="Setup: Skipping deleting party '${partyId}' email address '${cutn.contactMechId}' because cutn.updateIgnoreEmpty is not set"/>
+                        </else>
+                    </if-compare>
                 </then>
                 <else>
                     <log level="info" message="Setup: Updating party '${partyId}' email address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
-                    <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="updatePartyEmailAddress" in-map-name="cutn.contactCtx"/>
+                    <set field="updateEmailCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="updatePartyEmailAddress" map="cutn.contactCtx" to-map="updateEmailCtx"/>
+                    <set field="updateEmailCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <set field="updateEmailCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="updatePartyEmailAddress" in-map-name="updateEmailCtx"/>
                     <!-- NOTE: leaves purpose unchanged -->
                 </else>
             </if>
@@ -282,21 +392,24 @@
                     <log level="info" message="Setup: Creating party '${partyId}' email address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeId})"/>
                     <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
                         in that case fail and tell user to resubmit because we're creating a duplicate
-                        and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="partyId" from-field="partyId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
-                    </entity-and>
+                        and we wouldn't know what we'd be replacing if we edit the re-queried one
+                        NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. -->
+                    <script lang="groovy"><![CDATA[
+                        context.purposes = from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", cutn.contactMechPurposeTypeId)
+                            .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                    ]]></script>
                     <if-not-empty field="purposes">
                         <set field="contactMechPurposeTypeId" from-field="cutn.contactMechPurposeTypeId"/>
                         <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
                         <check-errors/>
                     </if-not-empty>
-                
+
                     <!-- Create -->
                     <set field="purposeCtx" value="" set-if-null="true"/>
-                    <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-                    <call-service service-name="createPartyEmailAddress" in-map-name="cutn.contactCtx">
+                    <set field="createEmailCtx" value="" set-if-null="true"/>
+                    <set-service-fields service-name="createPartyEmailAddress" map="cutn.contactCtx" to-map="createEmailCtx"/>
+                    <set field="createEmailCtx.partyId" from-field="partyId"/>
+                    <call-service service-name="createPartyEmailAddress" in-map-name="createEmailCtx">
                         <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                     </call-service>
                     <set field="purposeCtx.partyId" from-field="partyId"/>
@@ -311,6 +424,7 @@
     </simple-method>
 
     <simple-method method-name="createUser" short-description="Create Owner User" login-required="true">
+        <set field="isPartyUpdate" type="Boolean" value="false"/>
         <set field="require_email" value="true"/>
         <set field="require_phone" value="false"/>
         <set field="require_login" value="false"/>
@@ -319,153 +433,441 @@
         <!-- <set field="parameters.roleTypeId" from-field="parameters.roleT"/> -->
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
-        <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+        <call-simple-method method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+
+        <!-- 2018-10-24: Using system here is not right, should use the userLogin from session attributes (admin)...
+        <entity-one value-field="actingUserLogin" entity-name="UserLogin" use-cache="true">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>-->
+        <session-to-field field="actingUserLogin" session-name="userLogin"/>
+
         <if>
             <condition>
                 <and>
-                    <not><if-empty field="tempMap.partyId" /></not>
-                    <not><if-empty field="parameters.roleTypeId" /></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId" /></not>
+                    <not><if-empty field="tempMap.partyId"/></not>
+                    <not><if-empty field="parameters.roleTypeId"/></not>
+                    <!-- Not a required field on PartyRelationship
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>-->
                 </and>
             </condition>
             <then>
-	            <field-to-request request-name="userPartyId" field="tempMap.partyId" />	
-	            <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
-	            <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-	            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-	            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-	            <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-	            <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" /> 
-	            <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-	            <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />   
-            </then>         
-         </if>
+                <field-to-request request-name="userPartyId" field="tempMap.partyId" />                
+                <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
+                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" />
+                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="actingUserLogin" />
+                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />
+            </then>
+        </if>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyPartyCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
-    
+
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
+        <set field="isPartyUpdate" type="Boolean" value="true"/>
         <call-simple-method method-name="validateUser"/>
         <!-- see if we should continue now... -->
         <check-errors/>
-        
-        <if>
-            <condition>
-	            <and>
-	                <not><if-empty field="parameters.PASSWORD" /></not>
-	                <not><if-empty field="parameters.CONFIRM_PASSWORD" /></not>
-	            </and>
-            </condition>
-            <then>
-		        <entity-one value-field="userUserLogin" entity-name="UserLogin">
-		            <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
-		        </entity-one>
-		        
-		        <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
-		        <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
-		        <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
-		        <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
-		        <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"></call-service>
-		        <check-errors/>
-           </then>
-        </if>
-        
-        
+
+        <!-- Some simple-method calls below need this to be set: -->
+        <set field="tempMap.partyId" from-field="parameters.userPartyId"/>
+
+        <!-- 2018-10-24: Using system here is not right, should use the userLogin from session attributes (admin)...
+        <entity-one value-field="actingUserLogin" entity-name="UserLogin" use-cache="true">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>-->
+        <session-to-field field="actingUserLogin" session-name="userLogin"/>
+
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
+        <now-timestamp field="nowTimestamp"/>
+
+        <if-empty field="parameters.userPartyId">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupMissingPartyId"/></add-error>
+            <check-errors/>
+        </if-empty>
+        <entity-one entity-name="Party" value-field="userParty">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
+        <if-empty field="userParty">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupInvalidPartyId"/></add-error>
+            <check-errors/>
+        </if-empty>
+
         <if>
             <condition>
                 <and>
-                    <not><if-empty field="parameters.roleTypeId" /></not>
-                    <not><if-empty field="parameters.partyRelationshipTypeId" /></not>
+                    <not><if-empty field="parameters.PASSWORD"/></not>
+                    <not><if-empty field="parameters.CONFIRM_PASSWORD"/></not>
                 </and>
             </condition>
             <then>
-                <!-- DEV NOTE: We only allow one role to be set in the setup User step. 
-                Too much implication in UI if we want to allow more than one -->
-                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>                
-                <set field="createNewPartyRelationShipAndRole" value="false" type="Boolean" />
-                <if-compare-field to-field="parameters.partyRelationshipTypeId" operator="not-equals" field="parameters.oldUserPartyRelationshipTypeId">
-                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
-                </if-compare-field>
-                <if-compare-field to-field="parameters.roleTypeId" operator="not-equals" field="parameters.oldUserPartyRoleId">
-                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />                          
-                </if-compare-field>                
-                <if-compare operator="equals" value="true" field="createNewPartyRelationShipAndRole" type="Boolean">                    
-                    <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
-                    <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />                    
-                    <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-                    <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                    <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />                    
-                    <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />                
+                <entity-one entity-name="UserLogin" value-field="userUserLogin">
+                    <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
+                </entity-one>
+                <if-not-empty field="userUserLogin">
+                    <set field="updatePasswordCtx" value="" set-if-null="true"/>
+                    <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
+                    <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
+                    <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
+                    <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
+                    <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"/>
+                    <else>
+                        <call-simple-method method-name="makeNewUserLogin" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+                        <check-errors/>
+                        <log level="info" message="newUserLogin: ${newUserLogin.userLoginId}"/>
+                        <set field="snulSkipSetCurrent" type="Boolean" value="true"/><!-- TODO: REVIEW -->
+                        <call-simple-method method-name="storeNewUserLogin" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+                        <check-errors/>
+                    </else>
+                </if-not-empty>
+           </then>
+        </if>
+
+        <!-- DEV NOTE: We only allow one role to be set in the setup User step.
+            Too much implication in UI if we want to allow more than one -->
+        <if-not-empty field="parameters.roleTypeId">
+            <set field="ensurePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
+            <set field="ensurePartyRoleCtx.roleTypeId" from-field="parameters.roleTypeId" />
+            <set field="ensurePartyRoleCtx.userLogin" from-field="actingUserLogin" />
+            <call-service service-name="ensurePartyRole" in-map-name="ensurePartyRoleCtx" />
+        </if-not-empty>
+
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.roleTypeId"/></not>
+                    <!-- Not a required field on PartyRelationship
+                    <not><if-empty field="parameters.partyRelationshipTypeId"/></not>-->
+                </and>
+            </condition>
+            <then>
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare-field field="parameters.oldUserPartyRelationshipTypeId" operator="not-equals" to-field="parameters.partyRelationshipTypeId"/>
+                            <if-compare-field field="parameters.oldUserPartyRoleId" operator="not-equals" to-field="parameters.roleTypeId"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <log level="info" message="Deleting old PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId}"/>
+                        <set field="deletePartyRelationshipCtx" value="" set-if-null="true"/>
+                        <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
+                        <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
+                        <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                        <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                        <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />
+                        <set field="deletePartyRelationshipCtx.userLogin" from-field="actingUserLogin" />
+                        <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />
+
+                        <log level="info" message="Creating new ${parameters.partyRelationshipTypeId} PartyRelationship from organization ${organizationPartyId} to party ${parameters.userPartyId} using roleTypeId (${parameters.roleTypeId})"/>
+                        <set field="createPartyRelationshipCtx" value="" set-if-null="true"/>
+                        <set field="createPartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
+                        <set field="createPartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                        <set field="createPartyRelationshipCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+                        <set field="createPartyRelationshipCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+                        <set field="createPartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />
+                        <set field="createPartyRelationshipCtx.userLogin" from-field="actingUserLogin" />
+                        <call-service service-name="createPartyRelationship" in-map-name="createPartyRelationshipCtx" />
+                    </then>
+                </if>
+            </then>
+        </if>
+
+        <!-- Update ProductStoreRole, IF changed
+            If only the roleTypeId was changed, it is covered by the case further below...  -->
+        <if>
+            <condition>
+                <if-compare-field field="parameters.PRODUCT_STORE_ID" operator="not-equals" to-field="parameters.oldUserPsrProductStoreId"/>
+            </condition>
+            <then>
+                <!-- NOTE: The previous ProductStoreRole removal is still reliant on screen parameters
+                    TODO?: Could try to redetect ones to remove server-side, but could have side effects... -->
+                <if>
+                    <condition>
+                        <and>
+                            <not><if-empty field="parameters.oldUserPsrProductStoreId"/></not>
+                            <not><if-empty field="parameters.oldUserPsrRoleTypeId"/></not>
+                        </and>
+                    </condition>
+                    <then>
+                        <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="true">
+                            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                            <field-map field-name="productStoreId" from-field="parameters.oldUserPsrProductStoreId"/>
+                            <field-map field-name="roleTypeId" from-field="parameters.oldUserPsrRoleTypeId"/>
+                        </entity-and>
+                        <if-not-empty field="psrList">
+                            <iterate list="psrList" entry="psr">
+                                <log level="info" message="Removing party ${parameters.userPartyId} old ProductStoreRole for store '${parameters.oldUserPsrProductStoreId}' and role '${parameters.oldUserPsrRoleTypeId}'"/>
+                                <set field="removePsrCtx" value="" set-if-null="true"/>
+                                <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
+                                <set field="removePsrCtx.userLogin" from-field="actingUserLogin" />
+                                <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
+                            </iterate>
+                            <else>
+                                <log level="warning" message="Could not remove old ProductStoreRole for party ${parameters.userPartyId} store '${parameters.oldUserPsrProductStoreId}' and role '${parameters.oldUserPsrRoleTypeId}' because not found; they might have been deleted or expired already; ignoring"/>
+                            </else>
+                        </if-not-empty>
+                    </then>
+                </if>
+                <if>
+                    <condition>
+                        <not><if-empty field="parameters.PRODUCT_STORE_ID"/></not>
+                    </condition>
+                    <then>
+                        <log level="info" message="Creating party ${parameters.userPartyId} ProductStoreRole for store '${parameters.PRODUCT_STORE_ID}' and role '${parameters.roleTypeId}'"/>
+                        <set field="createPsrCtx" value="" set-if-null="true"/>
+                        <set field="createPsrCtx.partyId" from-field="parameters.userPartyId"/> 
+                        <set field="createPsrCtx.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
+                        <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
+                        <set field="createPsrCtx.fromDate" from-field="nowTimestamp"/>
+                        <set field="createPsrCtx.userLogin" from-field="actingUserLogin" />
+                        <call-service service-name="ensureProductStoreRole" in-map-name="createPsrCtx" />
+                    </then>
+                </if>
+            </then>
+        </if>
+
+        <!-- 2018-10-23: Combined switch to try to simplify the options... -->
+        <if-not-empty field="parameters.relRoleChgUpdExpDelPrev">
+            <if-empty field="parameters.relRoleChgUpdExp">
+                <set field="parameters.relRoleChgUpdExp" from-field="parameters.relRoleChgUpdExpDelPrev"/>
+            </if-empty>
+            <if-empty field="parameters.relRoleChgDelPrev">
+                <set field="parameters.relRoleChgDelPrev" from-field="parameters.relRoleChgUpdExpDelPrev"/>
+            </if-empty>
+        </if-not-empty>
+
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/></not>
+                    <if-compare-field field="parameters.oldUserPartyRelationshipRoleTypeIdTo" operator="not-equals" to-field="parameters.roleTypeId"/>
+                </and>
+            </condition>
+            <then>
+                <if>
+                    <condition>
+                        <and>
+                            <!-- NOTE: We could actually allow making PartyContactMech.roleTypeId null (no empty check),
+                                but for non-expired records it is a dangerously irreversible operation, so don't risk it for now. -->
+                            <not><if-empty field="parameters.roleTypeId"/></not>
+                            <if-compare field="parameters.relRoleChgUpdRec" operator="equals" value="true" type="Boolean"/>
+                        </and>
+                    </condition>
+                    <then>
+                        <!-- TODO: REVIEW: Currently, for both PartyContactMech and ProductStoreRole, 
+                            active records are edited in-place, instead of expiring the records and creating new ones; 
+                            I am leaving it this way for now because Setup User step will usually be used to setup new users with fresh records
+                            rather than trying to preserve the history of old users... but could make this a checkbox option... -->
                     
-                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
-                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
-                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
-                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />        
-                    
-                    <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
-	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
-	                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
-	                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />	                 
-	                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-	                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" /> 
-	                <check-errors/>
-                </if-compare> 
-            </then>         
-         </if>
-                    
-        <set field="personMap.partyId" from-field="parameters.userPartyId" />
-        <call-service service-name="updatePerson" in-map-name="personMap" />
-        <check-errors/>
-        
+                        <!-- Update PartyContactMech -->
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
+                            <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, and removing old role from expired records"/>
+                            <entity-and entity-name="PartyContactMech" list="pcmList" filter-by-date="false">
+                                <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                            </entity-and>
+                            <iterate list="pcmList" entry="pcm">
+                                <!-- Remove the roleTypeId for expired records (is changed again below for non-expired) -->
+                                <set field="pcm.roleTypeId" value="" set-if-null="true"/>
+                            </iterate>
+                            <filter-list-by-date list="pcmList" valid-date="nowTimestamp" to-list="pcmActiveList"/>
+                            <iterate list="pcmActiveList" entry="pcm">
+                                <!-- Set new roleTypeId for non-expired records (NOTE: in-place edit) -->
+                                <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
+                            </iterate>
+                            <store-list list="pcmList"/>
+                            <else>
+                                <log level="info" message="Updating party ${parameters.userPartyId} PartyContactMechs roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, not changing expired records"/>
+                                <entity-and entity-name="PartyContactMech" list="pcmList" filter-by-date="true">
+                                    <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                    <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                                </entity-and>
+                                <iterate list="pcmList" entry="pcm">
+                                    <!-- Set new roleTypeId for non-expired records (NOTE: in-place edit) -->
+                                    <set field="pcm.roleTypeId" from-field="parameters.roleTypeId"/>
+                                </iterate>
+                                <store-list list="pcmList"/>
+                            </else>
+                        </if-compare>
+
+                        <!-- Update remaining ProductStoreRoles (notably expired)
+                            NOTE: roleTypeId is part of the PK, so can't just change in-place... 
+                            For now, we'll simply delete any expired ones, and recreate the living ones... 
+                            TODO: REVIEW: Ignoring PRODUCT_STORE_ID for now -->
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
+                            <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, removing expired records"/>
+                            <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="false">
+                                <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                            </entity-and>
+                            <else>
+                                <log level="info" message="Updating party ${parameters.userPartyId} ProductStoreRoles roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} to new role ${parameters.roleTypeId}, not changing expired records"/>
+                                <entity-and entity-name="ProductStoreRole" list="psrList" filter-by-date="true">
+                                    <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+                                    <field-map field-name="roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                                </entity-and>
+                            </else>
+                        </if-compare>
+                        <iterate list="psrList" entry="psr">
+                            <set field="removePsrCtx" value="" set-if-null="true"/>
+                            <set-service-fields service-name="removeProductStoreRole" to-map="removePsrCtx" map="psr"/>
+                            <set field="removePsrCtx.userLogin" from-field="actingUserLogin" />
+                            <!-- NOTE: For active records, we delete the record here for now; but could choose to expire it instead; see comment above -->
+                            <call-service service-name="removeProductStoreRole" in-map-name="removePsrCtx" />
+                        </iterate>
+
+                        <!-- We'll only recreate the ones that weren't expired... -->
+                        <if-compare field="parameters.relRoleChgUpdExp" operator="equals" value="true" type="Boolean">
+                            <filter-list-by-date list="psrList" valid-date="nowTimestamp" to-list="psrActiveList"/>
+                            <else>
+                                <set field="psrActiveList" from-field="psrList"/>
+                            </else>
+                        </if-compare>
+                        <iterate list="psrActiveList" entry="psr">
+                            <set field="createPsrCtx" value="" set-if-null="true"/>
+                            <set-service-fields service-name="createProductStoreRole" to-map="createPsrCtx" map="psr"/>
+                            <set field="createPsrCtx.roleTypeId" from-field="parameters.roleTypeId"/>
+                            <set field="createPsrCtx.userLogin" from-field="actingUserLogin" />
+                            <call-service service-name="ensureProductStoreRole" in-map-name="createPsrCtx" />
+                        </iterate>
+                    </then>
+                    <else>
+                        <log level="info" message="Skipping updating party ${parameters.userPartyId} PartyContactMechs and ProductStoreRoles (not requested)"/>
+                    </else>
+                </if>
+
+                <!-- Delete old party role, IF requested
+                    UNSAFE: Cannot always delete old PartyRole automatically by default because the PartyRole may be reused by more than
+                    one related entity/function, included being manually depended upon by the client.
+                    Even if could check the 78 database relations to PartyRole, it could still be needed
+                    in a secondary purpose by the client for manual use. -->
+                <if-compare field="parameters.relRoleChgDelPrev" operator="equals" value="true" type="Boolean">
+                    <log level="info" message="Attempting to delete party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo}"/>
+                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo"/>
+                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId"/>
+                    <set field="deletePartyRoleCtx.userLogin" from-field="actingUserLogin" />
+                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx"/>
+                    <check-errors/>
+                    <else>
+                        <log level="info" message="Not deleting party ${parameters.userPartyId} old PartyRole for roleTypeId ${parameters.oldUserPartyRelationshipRoleTypeIdTo} (not requested)"/>
+                    </else>
+                </if-compare>
+            </then>
+        </if>
+
+        <entity-one entity-name="Person" value-field="oldPerson">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
+
+        <set field="updatePersonCtx" value="" set-if-null="true"/>
+        <set-service-fields service-name="updatePerson" map="personMap" to-map="updatePersonCtx"/>
+        <set field="updatePersonCtx.partyId" from-field="parameters.userPartyId"/>
+        <set field="updatePersonCtx.userLogin" from-field="actingUserLogin"/>
+        <call-service service-name="updatePerson" in-map-name="updatePersonCtx"/>
+
+        <entity-one entity-name="Person" value-field="newPerson">
+            <field-map field-name="partyId" from-field="parameters.userPartyId"/>
+        </entity-one>
+
         <set field="partyId" from-field="parameters.userPartyId"/>
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
             <else>
+                <!-- SPECIAL: 2018-10-24: toName is based on the createUser behavior
+                    We'll only update it if the name changed... -->
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare-field field="oldPerson.firstName" operator="not-equals" to-field="newPerson.firstName"/>
+                            <if-compare-field field="oldPerson.middleName" operator="not-equals" to-field="newPerson.middleName"/>
+                            <if-compare-field field="oldPerson.lastName" operator="not-equals" to-field="newPerson.lastName"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <map-to-map map="newPerson" to-map="newPersonMap"/><!-- GenericValue field kludge due to fullName -->
+                        <call-map-processor in-map-name="newPersonMap" out-map-name="addressMap">
+                            <simple-map-processor name="address">
+                                <make-in-string field="fullName">
+                                    <in-field field="firstName"/><constant> </constant>
+                                    <in-field field="middleName"/><constant> </constant>
+                                    <in-field field="lastName"/>
+                                </make-in-string>
+                                <!-- NOTE: fullName is not an actual PostalAddress field, it is added conditionally by caller -->
+                                <process field="fullName"><copy to-field="toName"/></process>
+                            </simple-map-processor>
+                        </call-map-processor>
+                    </then>
+                </if>
+
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
-                <!-- <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/> -->
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
+                <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
+                <script lang="groovy"><![CDATA[
+                    if (parameters.USER_ADDR_PURPOSE) {
+                        cutn.contactMechPurposeTypeIdList = (parameters.USER_ADDR_PURPOSE instanceof List) ? parameters.USER_ADDR_PURPOSE : [parameters.USER_ADDR_PURPOSE];
+                        cutn.exactPurposes = true;
+                    } else {
+                        cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.USER_MAINADDR_PURPOSES as List;
+                    }
+                ]]></script>
                 <set field="cutn.contactCtx" from-field="addressMap"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
                 <call-simple-method method-name="createUpdatePartyPostalAddress"/>
                 <check-errors/>
             </else>
         </if-compare>
-        
+
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_MOBILE_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobileMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- work phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_WORK_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
         <set field="cutn.contactCtx" from-field="workPhoneMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- fax phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_FAX_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
         <set field="cutn.contactCtx" from-field="faxMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
-        
+
         <!-- email address -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
+        <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_EMAIL_UPDIGNEMPTY"/>
         <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
         <set field="cutn.contactCtx" from-field="emailMap"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
+
+        <property-to-field field="successMessage" resource="PartyUiLabels" property="PartyPartyUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
+    </simple-method>
+
+    <simple-method method-name="createFacilityAndContactMech" short-description="create Facility and ContactMech">
+        <call-simple-method method-name="createFacilityAndContactMech" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="FacilityFacilityCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     
     <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">
@@ -476,19 +878,23 @@
         <set-service-fields service-name="updateFacility" map="parameters" to-map="updateFacilityCtx"/>
         <call-service service-name="updateFacility" in-map-name="updateFacilityCtx"/>
         <check-errors/>
-        
+
         <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
             <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
                 <set field="cutn" value="" set-if-null="true"/>
                 <set field="cutn.contactMechId" from-field="parameters.shipAddress_contactMechId"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIPPING_LOCATION"/>
-                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIP_ORIG_LOCATION"/>
                 <set field="cutn.contactCtx" from-field="shipAddressContext"/>
                 <set field="cutn.createMissingPurposes" from-field="parameters.createMissingShipAddressPurposes"/>
+                <script lang="groovy"><![CDATA[
+                    cutn.contactMechPurposeTypeIdList = com.ilscipio.scipio.setup.SetupDataUtil.FACILITY_MAINADDR_PURPOSES as List;
+                ]]></script>
                 <call-simple-method method-name="createUpdateFacilityPostalAddress"/>
                 <check-errors/>
             </if-compare>
         </if-compare>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="FacilityFacilityUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
     <simple-method method-name="createUpdateFacilityPostalAddress">
         <!-- REQUIRES:
@@ -517,72 +923,93 @@
                 </else>
             </if>-->
             <log level="info" message="Setup: Updating facility '${facilityId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-            <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
-            <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
-            <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx">
+            <set field="updateAddressCtx" value="" set-if-null="true"/>
+            <set-service-fields service-name="updateFacilityPostalAddress" map="cutn.contactCtx" to-map="updateAddressCtx"/>
+            <set field="updateAddressCtx.contactMechId" from-field="cutn.contactMechId"/>
+            <set field="updateAddressCtx.facilityId" from-field="facilityId"/>
+            <call-service service-name="updateFacilityPostalAddress" in-map-name="updateAddressCtx">
                 <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
                     if we don't do this then the purpose updates may associate the purposes with
                     an expired contact mech! -->
                 <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
             </call-service>
-            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
-                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="facilityId" from-field="facilityId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-empty field="purposes">
-                        <log level="info" message="Setup: Creating facility '${facilityId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+            <if-compare field="cutn.exactPurposes" operator="equals" type="Boolean" value="true">
+                <log level="info" message="Setup: Setting facility '${facilityId}' postal address '${cutn.contactMechId}' purposes: ${cutn.contactMechPurposeTypeIdList}"/>
+                <set field="purposeCtx" value="" set-if-null="true"/>
+                <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                <set field="purposeCtx.exact" type="Boolean" value="true"/>
+                <set field="purposeCtx.conflictMode" value="error"/><!-- if roles are already on another contact mech, return error -->
+                <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
+                <else>
+                    <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                        <log level="info" message="Setup: Checking and creating facility '${facilityId}' postal address '${cutn.contactMechId}' missing purposes: ${cutn.contactMechPurposeTypeIdList}"/>
                         <set field="purposeCtx" value="" set-if-null="true"/>
                         <set field="purposeCtx.facilityId" from-field="facilityId"/>
                         <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
-                        <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
-                    </if-empty>
-                </iterate>
+                        <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                        <set field="purposeCtx.exact" type="Boolean" value="false"/>
+                        <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                        <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
+                    </if-compare>
+                </else>
             </if-compare>
             <else>
                 <log level="info" message="Setup: Creating facility '${facilityId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
-                <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
+                <!-- 2018-10-31: removed, for postal address this is too complicated; here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                <!- - EMERGENCY CHECK: make sure there's no contactmech having this role;
                     in that case fail and tell user to resubmit because we're creating a duplicate
-                    and we wouldn't know what we'd be replacing if we edit the re-queried one -->
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
-                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
-                        <field-map field-name="facilityId" from-field="facilityId"/>
-                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                    </entity-and>
-                    <if-not-empty field="purposes">
-                        <set field="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
-                        <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
-                        <check-errors/>
-                    </if-not-empty>
-                </iterate>
-                
+                    and we wouldn't know what we'd be replacing if we edit the re-queried one
+                    NOTE: 2018-10-30: We must filter by BOTH the purpose and the contact dates. - ->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.*;
+                    import org.ofbiz.entity.condition.*;
+                    import org.ofbiz.entity.util.*;
+                    EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("facilityId", facilityId),
+                        EntityOperator.AND, EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, cutn.contactMechPurposeTypeIdList));
+                    context.purposes = from("FacilityContactMechAndPurpose").where(cond)
+                        .filterByDate("contactFromDate", "contactThruDate", "purposeFromDate", "purposeThruDate").queryList();
+                ]]></script>
+                <if-not-empty field="purposes">
+                    <set field="contactMechPurposeTypeId" from-field="purposes[0].contactMechPurposeTypeId"/>
+                    <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
+                    <check-errors/>
+                </if-not-empty>
+                -->
+
                 <!-- Create -->
                 <set field="purposeCtx" value="" set-if-null="true"/>
-                <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
-                <call-service service-name="createFacilityPostalAddress" in-map-name="cutn.contactCtx">
+                <set field="createAddressCtx" value="" set-if-null="true"/>
+                <set-service-fields service-name="createFacilityPostalAddress" map="cutn.contactCtx" to-map="createAddressCtx"/>
+                <set field="createAddressCtx.facilityId" from-field="facilityId"/>
+                <call-service service-name="createFacilityPostalAddress" in-map-name="createAddressCtx">
                     <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
                 </call-service>
-                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                <!-- 2018-10-31: removed, here will just do ensurePartyContactMechPurposes with conflictMode Skip, less frustrating for user
+                <iterate list="cutn.contactMechPurposeTypeIdList" entry="contactMechPurposeTypeId">
                     <set field="purposeCtx.facilityId" from-field="facilityId"/>
                     <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
                     <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
-                </iterate>
+                </iterate>-->
+                <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                <set field="purposeCtx.contactMechPurposeTypeIds" from-field="cutn.contactMechPurposeTypeIdList"/>
+                <set field="purposeCtx.conflictMode" value="skip"/><!-- skip: don't set roles if already set on another contact mechs -->
+                <call-service service-name="ensureFacilityContactMechPurposes" in-map-name="purposeCtx"/>
             </else>
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="createProductStoreWithDefaultSettingAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
+    <simple-method method-name="createProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <call-simple-method method-name="createProductStoreWithDefaultSetting" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
         <check-errors/>
-        
+
         <request-to-field field="productStoreId" request-name="productStoreId"/>
         <set field="parameters.productStoreId" from-field="productStoreId"/>
-        
+
         <!-- SPECIAL: name conflict on visualThemeId field -->
         <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
-        
+
         <if-compare field="parameters.isCreateWebsite" operator="equals" value="Y">
             <call-simple-method method-name="createWebSite"/>
             <check-errors/>
@@ -590,16 +1017,19 @@
                 <log message="isCreateWebsite is not specified; skipping WebSite creation" level="info"/>
             </else>
         </if-compare>
+        
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="ProductProductStoreCreatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
-    
+
     <simple-method method-name="updateProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <set-service-fields service-name="updateProductStore" map="parameters" to-map="updateProductStoreCtx"/>
         <call-service service-name="updateProductStore" in-map-name="updateProductStoreCtx"/>
         <check-errors/>
-        
+
         <!-- SPECIAL: name conflict on visualThemeId field -->
         <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
-        
+
         <!-- TODO: REVIEW: isCreateWebsite switch delegates the create-vs-update decision to the form;
             although it's better to handle server-side, for setup it might be better to be explicit
             so the behavior is exactly what the user sees and we can't accidentally update the wrong record
@@ -618,8 +1048,11 @@
                 </if-not-empty>
             </else>
         </if-compare>
+
+        <property-to-field field="successMessage" resource="ProductUiLabels" property="ProductProductStoreUpdatedSuccessfully"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
-    
+
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
     <simple-method method-name="createWebSite" short-description="Create a WebSite, default webSiteId is ScipioWebStore.">
         <!-- SCIPIO: new check needed to make sure productStoreId was passed -->
@@ -629,7 +1062,7 @@
             </add-error>
             <check-errors/>
         </if-empty>
-        
+
         <if-empty field="parameters.webSiteId">
             <property-to-field resource="scipiosetup" property="website.defaultInitialWebSiteId" field="defaultInitialWebSiteId"/>
             <if-not-empty field="defaultInitialWebSiteId">
@@ -645,9 +1078,10 @@
             </if-empty>
             <else>
                 <!-- check if already exists so can give friendlier message -->
-                <entity-one entity-name="WebSite" value-field="webSite">
+                <entity-and entity-name="WebSite" list="webSites" >
                     <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
-                </entity-one>
+                    <field-map field-name="productStoreId" from-field="productStoreId"/>
+                </entity-and>
                 <if-not-empty field="webSite">
                     <add-error>
                         <fail-property resource="ScipioSetupErrorUiLabels" property="SetupWebSiteIdAlreadyInUse"/>
@@ -656,7 +1090,8 @@
                 </if-not-empty>
             </else>
         </if-empty>
-        <call-service service-name="createWebSite" in-map-name="parameters"/>
+        <set-service-fields service-name="createWebSite" to-map="createWebSiteCtx" map="parameters"/>
+        <call-service service-name="createWebSite" in-map-name="createWebSiteCtx"/>
         <field-to-request request-name="webSiteId" field="parameters.webSiteId"/>
     </simple-method>
 
@@ -667,25 +1102,25 @@
         <!-- setup the party/person -->
         <call-map-processor in-map-name="parameters" out-map-name="personMap">
             <simple-map-processor name="person">
-                <process field="USER_TITLE">                    
+                <process field="USER_TITLE">
                     <copy to-field="personalTitle"/>
                 </process>
-                <process field="USER_FIRST_NAME">                    
+                <process field="USER_FIRST_NAME">
                     <copy to-field="firstName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty>
                 </process>
                 <process field="USER_LAST_NAME">
-                    
+
                     <copy to-field="lastName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty>
                 </process>
             </simple-map-processor>
-        </call-map-processor>        
+        </call-map-processor>
 
         <!-- setup the email -->
         <call-map-processor in-map-name="parameters" out-map-name="emailMap">
             <simple-map-processor name="email">
-                <process field="USER_EMAIL">                    
+                <process field="USER_EMAIL">
                     <copy to-field="emailAddress"/>
                     <validate-method method="isEmail"><fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></validate-method>
                 </process>
@@ -694,34 +1129,75 @@
         </call-map-processor>
 
         <!-- setup the Postal Address -->
-        <call-map-processor in-map-name="parameters" out-map-name="addressMap">        
-            <simple-map-processor name="address">
-                <process field="USER_ADDRESS1">
-                    <copy to-field="address1"/>                    
-                    <not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1MissingError"/></not-empty>
-                </process>
-                <process field="USER_ADDRESS2">                    
-                    <copy to-field="address2" />
-                </process>
-                <process field="USER_CITY">
-                    <copy to-field="city"/>
-                    <not-empty><fail-property resource="PartyUiLabels" property="PartyCityMissing"/></not-empty>
-                </process>
-                <process field="USER_STATE">
-                    <copy to-field="stateProvinceGeoId"/>
-                </process>
-                <process field="USER_POSTAL_CODE">
-                    <copy to-field="postalCode"/>
-                    <not-empty><fail-property resource="PartyUiLabels" property="PartyZipCodeMissing"/></not-empty>
-                </process>
-                <process field="USER_COUNTRY">
-                    <copy to-field="countryGeoId"/>
-                    <not-empty><fail-property resource="CommonUiLabels" property="CommonCountryMissing"/></not-empty>
-                </process>
-                <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
-            </simple-map-processor>
-        </call-map-processor>
-       
+        <if>
+            <condition>
+                <and>
+                    <if-compare field="isPartyUpdate" operator="equals" type="Boolean" value="true"/>
+                    <if-compare field="parameters.USER_ADDRESS_UPDIGNEMPTY" operator="equals" type="Boolean" value="true"/>
+                    <!-- NOTE: We don't check country/state here because the drop-down pre-selects a default... 
+                        just detect using the other required address fields -->
+                    <if-empty field="parameters.USER_ADDRESS1"/>
+                    <if-empty field="parameters.USER_CITY"/>
+                    <if-empty field="parameters.USER_POSTAL_CODE"/>
+                </and>
+            </condition>
+            <then>
+                <!-- Special case: no required fields, do not crash here --> 
+                <call-map-processor in-map-name="parameters" out-map-name="addressMap">
+                    <simple-map-processor name="address">
+                        <process field="USER_ADDRESS1">
+                            <copy to-field="address1"/>
+                        </process>
+                        <process field="USER_ADDRESS2">
+                            <copy to-field="address2" />
+                        </process>
+                        <process field="USER_CITY">
+                            <copy to-field="city"/>
+                        </process>
+                        <process field="USER_STATE">
+                            <copy to-field="stateProvinceGeoId"/>
+                        </process>
+                        <process field="USER_POSTAL_CODE">
+                            <copy to-field="postalCode"/>
+                        </process>
+                        <process field="USER_COUNTRY">
+                            <copy to-field="countryGeoId"/>
+                        </process>
+                        <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                    </simple-map-processor>
+                </call-map-processor>
+            </then>
+            <else>
+                <call-map-processor in-map-name="parameters" out-map-name="addressMap">
+                    <simple-map-processor name="address">
+                        <process field="USER_ADDRESS1">
+                            <copy to-field="address1"/>
+                            <not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1MissingError"/></not-empty>
+                        </process>
+                        <process field="USER_ADDRESS2">
+                            <copy to-field="address2" />
+                        </process>
+                        <process field="USER_CITY">
+                            <copy to-field="city"/>
+                            <not-empty><fail-property resource="PartyUiLabels" property="PartyCityMissing"/></not-empty>
+                        </process>
+                        <process field="USER_STATE">
+                            <copy to-field="stateProvinceGeoId"/>
+                        </process>
+                        <process field="USER_POSTAL_CODE">
+                            <copy to-field="postalCode"/>
+                            <not-empty><fail-property resource="PartyUiLabels" property="PartyZipCodeMissing"/></not-empty>
+                        </process>
+                        <process field="USER_COUNTRY">
+                            <copy to-field="countryGeoId"/>
+                            <not-empty><fail-property resource="CommonUiLabels" property="CommonCountryMissing"/></not-empty>
+                        </process>
+                        <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                    </simple-map-processor>
+                </call-map-processor>
+            </else>
+        </if>
+
         <!-- Setup the Work Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="workPhoneMap">
             <simple-map-processor name="workPhone">
@@ -749,31 +1225,46 @@
                 <process field="USER_MOBILE_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        
+
         <!-- Setup the Mobile Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="faxMap">
             <simple-map-processor name="fax">
                 <process field="USER_FAX_COUNTRY"><copy to-field="countryCode"/></process>
                 <process field="USER_FAX_AREA"><copy to-field="areaCode"/></process>
                 <process field="USER_FAX_CONTACT">
-                    <copy to-field="contactNumber"/>                    
+                    <copy to-field="contactNumber"/>
                     <!-- <not-empty><fail-property resource="PartyUiLabels" property="PartyFaxPhoneContactNumberMissing"/></not-empty> -->
                 </process>
                 <process field="USER_FAX_EXT"><copy to-field="extension"/></process>
                 <process field="USER_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
-        </call-map-processor>        
+        </call-map-processor>
     </simple-method>
-    
+
     <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true">
-    	<!-- TODO -->
+        <!-- TODO -->
     </simple-method>
-    
+
     <simple-method method-name="importDefaultGL" short-description="Import default GL Accounts" login-required="true">
         <!-- TODO -->
         <request-to-field field="predefinedGLAccountId" request-name="importPredefinedGL" />
-        <log level="always" message="predefinedGLAccountId =======> ${predefinedGLAccountId}" />
+    </simple-method>
+    
+    <simple-method method-name="createTaxAuthority" short-description="Creates PartyGroup, PartyRole and TaxAuthority" login-required="true">
+        <if-empty field="parameters.taxAuthPartyId">
+            <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupTaxAuthPartyIdMissing"/></add-error>
+        </if-empty>
+        <set-service-fields service-name="createSetupTaxAuthority" map="parameters" to-map="createSetupTaxAuthorityCtx" />        
+        <set field="createSetupTaxAuthorityCtx.partyTypeId" value="PARTY_GROUP" />
+        <set field="createSetupTaxAuthorityCtx.roleTypeId" value="TAX_AUTHORITY" />
+        <set field="createSetupTaxAuthorityCtx.partyId" from-field="parameters.taxAuthPartyId" />
+        <call-service service-name="createSetupTaxAuthority" in-map-name="createSetupTaxAuthorityCtx" />      
         
+        <!-- Has to be invoked separately because of partyId being different -->
+        <set-service-fields service-name="createPartyTaxAuthInfo" map="parameters" to-map="createPartyTaxAuthInfoCtx" />
+        <now-timestamp field="createPartyTaxAuthInfoCtx.fromDate" />
+        <set field="createPartyTaxAuthInfoCtx.partyId" from-field="parameters.orgPartyId" />
+        <call-service service-name="createPartyTaxAuthInfo" in-map-name="createPartyTaxAuthInfoCtx" />
     </simple-method>
 
 </simple-methods>

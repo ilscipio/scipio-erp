@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#-- SCIPIO: Duplicated (forcefully) from component://order/webapp/ordermgr/entry/checkoutshippingaddress.ftl -->
 
@@ -27,19 +14,19 @@ under the License.
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutshippingaddress</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutshippingaddress</@pageUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@pageUrl>";
         form.submit();
     }
 }
@@ -106,7 +93,7 @@ function toggleBillingAccount(box) {
         However, it is probably acceptable to require an account for more advanced shipping features. -->
   <#-- TODO?: Implement split ship page and uncomment here
     <#if userHasAccount>
-      <@menuitem type="link" href=makeOfbizUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
+      <@menuitem type="link" href=makePageUrl("splitship") class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.OrderSplitShipment />
     </#if>
   -->
     <#-- SCIPIO: This old link becomes redundant with the addition of an inlined form (below). 
@@ -262,7 +249,7 @@ function toggleBillingAccount(box) {
                 <#list agreements as agreement>
                   <#-- SCIPIO: I don't know why this was the condition: checked=checkThisAddress -->
                   <#assign fieldLabel>${agreement.description!} will be used for this order. 
-                    <@modal id="agreement_info_${rawString(agreement.agreementId!)}" label=uiLabelMap.CommonClickHereDetails>
+                    <@modal id="agreement_info_${raw(agreement.agreementId!)}" label=uiLabelMap.CommonClickHereDetails>
                         <#-- SCIPIO: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
                         ${agreement.description!}
                     </@modal>

@@ -30,7 +30,6 @@ import org.apache.catalina.valves.ValveBase;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -81,7 +80,9 @@ public class CrossSubdomainSessionValve extends ValveBase {
                         break;
                     }
                 }
-                if (isIpAddress) return;
+                if (isIpAddress) {
+                    return;
+                }
             }
             if (domainArray.length > 2) {
                 cookieDomain = "." + domainArray[domainArray.length - 2] + "." + domainArray[domainArray.length - 1];
@@ -101,6 +102,7 @@ public class CrossSubdomainSessionValve extends ValveBase {
                 newCookie.setComment(cookie.getComment());
             }
             newCookie.setSecure(cookie.getSecure());
+            newCookie.setHttpOnly(cookie.isHttpOnly());
 
             // if the response has already been committed, our replacement strategy will have no effect
             if (response.isCommitted()) {
@@ -114,8 +116,8 @@ public class CrossSubdomainSessionValve extends ValveBase {
                     MessageBytes value = mimeHeaders.getValue(i);
                     if (value.indexOf(cookie.getName()) >= 0) {
                         String newCookieValue = request.getContext().getCookieProcessor().generateHeader(newCookie);
-                        Debug.logVerbose("CrossSubdomainSessionValve: old Set-Cookie value: " + value.toString(), module);
-                        Debug.logVerbose("CrossSubdomainSessionValve: new Set-Cookie value: " + newCookieValue, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("CrossSubdomainSessionValve: old Set-Cookie value: " + value.toString(), module);
+                        if (Debug.verboseOn()) Debug.logVerbose("CrossSubdomainSessionValve: new Set-Cookie value: " + newCookieValue, module);
                         value.setString(newCookieValue);
                     }
                 }

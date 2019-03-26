@@ -19,11 +19,11 @@
 
 package org.ofbiz.common.authentication.example;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.authentication.api.Authenticator;
 import org.ofbiz.common.authentication.api.AuthenticatorException;
-import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * LocalAuthenticator

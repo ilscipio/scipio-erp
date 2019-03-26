@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -34,6 +21,7 @@ under the License.
         <attribute name="body" type="String" mode="OUT" optional="true"/>
         <attribute name="sendTo" type="String" mode="IN" optional="true"/>
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
         <attribute name="note" type="String" mode="IN" optional="true"/>
         <attribute name="temporaryAnonymousUserLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="OUT" optional="true"/>
@@ -67,6 +55,18 @@ under the License.
         <implements service="orderNotificationInterface"/>
     </service>
 
+    <!--SCIPIO: new payment notification services -->
+    <service name="sendOrderPayChangeNotification" engine="java" require-new-transaction="true" max-retry="3"
+             location="org.ofbiz.order.order.OrderServices" invoke="sendOrderPayChangeNotification">
+        <description>Send a order notification</description>
+        <implements service="orderNotificationInterface"/>
+    </service>
+    <service name="sendOrderPayCompleteNotification" engine="java" require-new-transaction="true" max-retry="3"
+             location="org.ofbiz.order.order.OrderServices" invoke="sendOrderPayCompleteNotification">
+        <description>Send a order notification</description>
+        <implements service="orderNotificationInterface"/>
+    </service>
+
     <service name="sendProcessNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.order.order.OrderServices" invoke="sendProcessNotification">
         <description>Limit Service for order processing workflow; sends activitiy notifications</description>
@@ -76,9 +76,10 @@ under the License.
         <attribute name="assignedRoleTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="createOrderNotificationLog" engine="simple"
+    <service name="createOrderNotificationLog" engine="simple" default-entity-name="OrderNotification"
             location="component://order/script/org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createNotificationLog">
         <description>Logs when a notification was sent</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
@@ -151,6 +152,7 @@ under the License.
     </service>
     <service name="createOrderFromShoppingCart" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="createOrderFromShoppingCart" auth="false">
+        <property name="shoppingCart.update" type="Boolean" value="true"><description>SCIPIO: This service modifies the passed shoppingCart</description></property>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="INOUT" optional="false"/>
         <attribute name="orderId" type="String" mode="OUT" optional="false"/>
     </service>
@@ -672,12 +674,12 @@ under the License.
     <service name="createCommunicationEventOrder" engine="simple"
             location="component://order/script/org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="createCommunicationEventOrder" auth="true">
         <description>Create a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN"/>
     </service>
     <service name="removeCommunicationEventOrder" engine="simple"
             location="component://order/script/org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventOrder" auth="true">
         <description>Remove a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN"/>
     </service>
 
     <!-- Order Shipping and Contacts -->
@@ -788,7 +790,7 @@ under the License.
         <attribute name="invoicedQuantity" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
 
-    <!-- SCIPIO: orig findOrders interface has been refactored -->
+    <!-- SCIPIO: Original findOrders interface has been refactored -->
     <!-- order lookup services -->
     <service name="findOrdersCommon" engine="interface">
         <description>Common order search fields</description>
@@ -1224,5 +1226,47 @@ under the License.
          <attribute name="oldContactMechId" type="String" mode="IN" optional="true"/>
          <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
          <attribute name="shipmentMethod" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- OrderContent services -->
+    <service name="createOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderContent</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="expireOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="expire" auth="true">
+         <description>Expire a OrderContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductOrderItem services -->
+    <service name="createProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductOrderItem</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

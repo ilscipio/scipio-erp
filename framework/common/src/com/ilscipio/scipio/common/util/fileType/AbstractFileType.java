@@ -13,7 +13,7 @@ import org.ofbiz.entity.GenericValue;
 public abstract class AbstractFileType {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     protected abstract List<MagicNumber> getMagicNumbers();
 
     public static class MagicNumber {
@@ -79,7 +79,7 @@ public abstract class AbstractFileType {
         public String getDescription() {
             return description;
         }
-        
+
         /**
          * WARN: this does not perform coercions such as video/ prefix to audio/ and vice versa...
          * see FileTypeResolver.adjustMediaTypeManual.

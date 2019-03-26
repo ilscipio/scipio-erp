@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#assign docLangAttr = locale.toString()?replace("_", "-")>
 <#assign langDir = "ltr">
@@ -39,7 +26,7 @@ under the License.
       padding: 10px 0 10px 0;
     }
     </style>
-    <@table type="fields"> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
+    <@table type="fields">
       <#-- Work Effort Info -->
       <@tr><@td>${uiLabelMap.CommonDate}</@td><@td>${parameters.eventDateTime?default("&nbsp;")}</@td></@tr>
       <@tr><@td>${uiLabelMap.CommonName}</@td><@td>${workEffort.workEffortName?default("&nbsp;")}</@td></@tr>
@@ -51,7 +38,7 @@ under the License.
     </@table>
     <#if partyAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</b></div>
-      <@table type="data-list" class="+${styles.table_spacing_small_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 --> <#-- orig: border=1 -->
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}">
         <@thead><@tr>
           <@th>${uiLabelMap.PartyParty}</@th>
           <@th>${uiLabelMap.PartyRole}</@th>
@@ -76,7 +63,7 @@ under the License.
     </#if>
     <#if fixedAssetAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortFixedAssetAssigns}</b></div>
-      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 --> <#-- orig: border=1 -->
+      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
         <@thead><@tr>
           <@th>${uiLabelMap.AccountingFixedAsset}</@th>
           <@th>${uiLabelMap.CommonFromDate}</@th>

@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -41,7 +28,7 @@ under the License.
          page-width="210mm" page-height="297mm"
          margin-top="0.35cm"   margin-bottom="0.35cm"
          margin-left="20mm"  margin-right="20mm">
-              <fo:region-body   margin-top="105mm" margin-left="5mm" margin-right="10mm"/>
+              <fo:region-body   margin-top="35mm" margin-left="5mm" margin-right="10mm"/>
               <!--<fo:region-before extent="3cm" margin="45mm" space-after="2.5cm"/>-->
               <fo:region-after  extent="2cm" />
               <fo:region-start  extent="0cm"/>
@@ -63,7 +50,7 @@ under the License.
               page-width="203mm" page-height="297mm"
               margin-top="0.35cm" margin-bottom="35mm"
               margin-left="35mm" margin-right="35mm">
-            <fo:region-body margin-top="0cm" margin-bottom="0cm" space-after="2.5cm"/>
+            <fo:region-body margin-top="35mm" margin-bottom="0cm" space-after="2.5cm"/>
             <!--<fo:region-before extent="3cm"/>-->
             <fo:region-after extent="2cm"/>
             <fo:region-end    extent="0cm"/>
@@ -92,12 +79,12 @@ under the License.
         -->
         <fo:static-content flow-name="xsl-region-before">
             <fo:table table-layout="fixed" width="100%" >
-                <fo:table-column column-number="1" column-width="proportional-column-width(66)" padding-right="10mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
-                <fo:table-column column-number="2" column-width="proportional-column-width(33)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+                <fo:table-column column-number="1" padding-right="10mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+                <fo:table-column column-number="2" column-width="80mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-body>
                     <fo:table-row>
-                        <fo:table-cell>${sections.render("topLeft")}</fo:table-cell>
-                        <fo:table-cell>${sections.render("topRight")}</fo:table-cell>
+                        <fo:table-cell><fo:block>${sections.render("topLeft")}</fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block>${sections.render("topRight")}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
             </fo:table>

@@ -1,16 +1,18 @@
 <!-- Demo data for SCIPIO_FOUNDATION_1 ProductStore -->
-<ProductStore productStoreId="SCIPIO_FOUNDATION_1" storeName="Scipio Foundation - OFBiz E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+<ProductStore productStoreId="SCIPIO_FOUNDATION_1" storeName="Scipio Foundation - E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
         subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+        <!-- SCIPIO: 2019-03-07: These now default to localized values in OrderEntityLabels.xml:
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
-        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
-    
+        -->
+        
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_1" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
@@ -27,6 +29,11 @@
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="SCIPIO ERP - Backorder Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="SCIPIO ERP - Order Change Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+
+<!-- SCIPIO: Payment status mails-->
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_PAY_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_PAY_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice" subject="SCIPIO ERP - Order Payment Completed #${orderId}" fromAddress="test@scipioerp.com"/>
+
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="SCIPIO ERP - Shipment Complete Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_1" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="SCIPIO ERP - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
@@ -97,18 +104,20 @@
 <ProductCategoryRollup fromDate="2016-01-12 00:00:00.0" parentProductCategoryId="SCIPIO_70000" productCategoryId="SCIPIO_90000"/>
 
 <!-- Demo data for SCIPIO_FOUNDATION_2 ProductStore -->
-<ProductStore productStoreId="SCIPIO_FOUNDATION_2" storeName="Scipio Foundation - OFBiz Alternative E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
+<ProductStore productStoreId="SCIPIO_FOUNDATION_2" storeName="Scipio Foundation - Alternative E-Commerce Store" companyName="Ilscipio Gmbh" title="Your Business"
         subtitle="Our Passion" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+        <!-- SCIPIO: 2019-03-07: These now default to localized values in OrderEntityLabels.xml:
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
-        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
-    
+        -->
+
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease" paymentCustomMethodId="CC_RELEASE_TEST"/>
 <ProductStorePaymentSetting productStoreId="SCIPIO_FOUNDATION_2" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture" paymentCustomMethodId="CC_CAPTURE_TEST"/>
@@ -124,6 +133,11 @@
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_BACKORDER" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#BackorderNotice" subject="SCIPIO ERP - Backorder Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice" subject="SCIPIO ERP - Order Change Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_PAYRETRY" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+
+<!-- SCIPIO: Payment status mails-->
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_PAY_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
+<ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_PAY_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice" subject="SCIPIO ERP - Order Payment Completed #${orderId}" fromAddress="test@scipioerp.com"/>
+
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="SCIPIO ERP - Shipment Complete Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>
 <ProductStoreEmailSetting productStoreId="SCIPIO_FOUNDATION_2" emailType="PRDS_RTN_COMPLETE" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnComplete" subject="SCIPIO ERP - Return Completed #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>

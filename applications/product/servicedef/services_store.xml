@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -101,6 +88,19 @@ under the License.
         <permission-service service-name="productStoreGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <!-- SCIPIO: ensureProductStoreRole: new service, analogous to ensurePartyRole, but with extra complication due to fromDate and sequenceNum -->
+    <service name="ensureProductStoreRole" default-entity-name="ProductStoreRole" engine="simple" 
+        location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="ensureProductStoreRole" auth="true">
+        <description>Ensure ProductStoreRole</description>
+        <permission-service service-name="productStoreGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="updateOptFields" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, optional fields such as sequenceNum will be updated on the existing record if different;
+                otherwise they are only set if creating a new record</description>
+        </attribute>
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- NOTE: fromDate is only used if new role record created -->
     </service>
 
     <!-- Product Store Catalog Services -->
@@ -345,6 +345,10 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="deleteProductStoreGroupRollup" default-entity-name="ProductStoreGroupRollup" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupRollup</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="checkProductStoreGroupRollup" engine="simple"
             location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="checkProductStoreGroupRollup" auth="true">
         <description>Check if a productStoreGroupId with a primaryParentGroupId has related productStoreGroupRollup or for first ProductStoreGroupRollup on a ProductStoreGroup set relation on primaryParentGroupId</description>
@@ -358,5 +362,37 @@ under the License.
     <service name="productStoreGenericPermission" engine="simple"
         location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="productStoreGenericPermission">
         <implements service="permissionInterface"/>
+    </service>
+    <service name="createProductStoreGroupRole" default-entity-name="ProductStoreGroupRole" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductStoreGroupRole</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductStoreGroupRole" default-entity-name="ProductStoreGroupRole" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductStoreGroupType" default-entity-name="ProductStoreGroupType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductStoreGroupType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="setProductStoreDefaultWebSite" engine="java"
+            location="org.ofbiz.product.store.ProductStoreServices" invoke="setProductStoreDefaultWebSite" auth="true">
+        <description>SCIPIO: Change the default WebSite for the given ProductStore</description>
+        <permission-service service-name="productStoreGenericPermission" main-action="UPDATE"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
     </service>
 </services>

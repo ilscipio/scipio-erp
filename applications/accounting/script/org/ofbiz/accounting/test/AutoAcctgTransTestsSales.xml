@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -56,12 +43,12 @@ under the License.
         <set field="serviceCtx.quantity" from-field="quantity"/>
         <call-service service-name="issueOrderItemShipGrpInvResToShipment" in-map-name="serviceCtx"/>
 
-        <entity-condition list="acctgTransList" entity-name="AcctgTrans">
+        <entity-condition entity-name="AcctgTrans" list="acctgTransList">
             <condition-expr field-name="shipmentId" from-field="shipmentId"/>
             <order-by field-name="-postedDate"/>
         </entity-condition>
         <assert><not><if-empty field="acctgTransList"/></not></assert>
-        <first-from-list entry="acctgTrans" list="acctgTransList"/>
+        <first-from-list list="acctgTransList" entry="acctgTrans"/>
 
         <assert><if-compare field="acctgTrans.glJournalId" operator="not-equals" value="ERROR_JOURNAL"/></assert>
 
@@ -109,7 +96,7 @@ under the License.
                    shipment to the packed status (precondition 4).  Additionally it doesn't seem to be necessary to set the invoice status
                    to ready because the invoice is created in that state.
         -->
-        
+
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
@@ -119,12 +106,12 @@ under the License.
         <set field="serviceCtx.statusId" value="SHIPMENT_PACKED"/>
         <call-service service-name="updateShipment" in-map-name="serviceCtx"/>
 
-        <entity-condition list="shipmentItemBillings" entity-name="ShipmentItemBilling">
+        <entity-condition entity-name="ShipmentItemBilling" list="shipmentItemBillings">
             <condition-expr field-name="shipmentId" value="9998"/>
             <order-by field-name="-createdStamp"/>
         </entity-condition>
         <assert><not><if-empty field="shipmentItemBillings"/></not></assert>
-        <first-from-list entry="shipmentItemBilling" list="shipmentItemBillings"/>
+        <first-from-list list="shipmentItemBillings" entry="shipmentItemBilling"/>
         <set field="invoiceId" from-field="shipmentItemBilling.invoiceId"/>
 
         <entity-one entity-name="Invoice" value-field="invoice">
@@ -136,7 +123,7 @@ under the License.
         <!-- Check the invoice transaction -->
         <set field="acctgTransFilter.acctgTransTypeId" value="SALES_INVOICE"/>
         <filter-list-by-and to-list="salesAcctgTransList" list="acctgTransList" map="acctgTransFilter"/>
-        <first-from-list entry="salesAcctgTrans" list="salesAcctgTransList"/>
+        <first-from-list list="salesAcctgTransList" entry="salesAcctgTrans"/>
 
         <assert><if-compare field="salesAcctgTrans.glJournalId" operator="not-equals" value="ERROR_JOURNAL"/></assert>
 
@@ -160,7 +147,7 @@ under the License.
         <clear-field field="acctgTransEntryFilter"/>
         <set field="acctgTransFilter.acctgTransTypeId" value="PAYMENT_APPL"/>
         <filter-list-by-and to-list="paymentAcctgTransList" list="acctgTransList" map="acctgTransFilter"/>
-        <first-from-list entry="paymentAcctgTrans" list="paymentAcctgTransList"/>
+        <first-from-list list="paymentAcctgTransList" entry="paymentAcctgTrans"/>
 
         <assert><if-compare field="paymentAcctgTrans.glJournalId" operator="not-equals" value="ERROR_JOURNAL"/></assert>
 
@@ -192,17 +179,17 @@ under the License.
         -->
 
         <!-- Creating a payment from scratch rather than using the demo data -->
-        
+
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="serviceCtx.userLogin" from-field="userLogin"/>
 
         <!-- Find a customer -->
-        <entity-and list="customerRoles" entity-name="PartyRole">
+        <entity-and entity-name="PartyRole" list="customerRoles">
             <field-map field-name="roleTypeId" value="CUSTOMER"/>
         </entity-and>
-        <first-from-list entry="customerRole" list="customerRoles"/>
+        <first-from-list list="customerRoles" entry="customerRole"/>
         <set field="serviceCtx.partyIdFrom" from-field="customerRole.partyId"/>
         <set field="serviceCtx.amount" value="100.00" type="BigDecimal"/>
         <set field="serviceCtx.partyIdTo" value="Company"/>
@@ -214,7 +201,7 @@ under the License.
             <result-to-field result-name="paymentId"/>
         </call-service>
 
-        <entity-and list="acctgTransList" entity-name="AcctgTrans">
+        <entity-and entity-name="AcctgTrans" list="acctgTransList">
             <field-map field-name="paymentId"/>
             <field-map field-name="acctgTransTypeId" value="INCOMING_PAYMENT"/>
         </entity-and>
@@ -228,7 +215,7 @@ under the License.
 
         <call-simple-method method-name="UtilCheckEntriesBalance" xml-resource="component://accounting/script/org/ofbiz/accounting/test/AutoAcctgTransTestsPurchase.xml"/>
 
-        <iterate entry="acctgTransEntry" list="acctgTransEntryList">
+        <iterate list="acctgTransEntryList" entry="acctgTransEntry">
             <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
                <assert>
                     <if-compare field="acctgTransEntry.glAccountTypeId" operator="equals" value="ACCREC_UNAPPLIED"/>

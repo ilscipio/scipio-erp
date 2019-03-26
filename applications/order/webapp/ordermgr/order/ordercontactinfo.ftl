@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#macro updateOrderContactMech orderHeader contactMechTypeId contactMechList contactMechPurposeTypeId contactMechAddress>
   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
     <@modal label="(${rawLabel('CommonEdit')})" id="modal_updateOrderContactMech_${contactMechTypeId}">
-        <form name="updateOrderContactMech" method="post" action="<@ofbizUrl>updateOrderContactMech</@ofbizUrl>">
+        <form name="updateOrderContactMech" method="post" action="<@pageUrl>updateOrderContactMech</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}" />
           <input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurpose.contactMechPurposeTypeId!}" />
           <input type="hidden" name="oldContactMechId" value="${contactMech.contactMechId!}" />
@@ -74,30 +61,30 @@ under the License.
   </#if>
 </#macro>
 
-<#if displayParty?has_content || orderContactMechValueMaps?has_content>
+<#if displayParty?has_content || orderContactMechValueMaps?has_content || partyId?has_content><#-- SCIPIO: Allow partyId display -->
  <#-- The usefulness of this information is limited. Uncomment and add as menuContent to section in order to add these functions back in
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry?partyId=${partyId}&orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+        <@menuitem type="link" href=makePageUrl("orderentry?partyId=${partyId}&orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
         <@menuitem type="link" href="javascript:document.searchOtherOrders.submit()" text=uiLabelMap.OrderOtherOrders class="+${styles.action_nav!} ${styles.action_find!}" />
     </@menu>
   </#macro>
   -->  
   <@section title=uiLabelMap.OrderContactInformation>
-      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="fields">
         <#-- the setting of shipping method is only supported for sales orders at this time -->
         <@tr>
           <@td class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td colspan="3">
-                <#if partyId?? && displayParty?has_content>
-                    <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                    <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
-                    <#else>
-                    <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
+                <#if displayParty?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
+                    <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName!partyId!}</a><#-- SCIPIO: show ID as fallback: ("[${uiLabelMap.OrderPartyNameNotFound}]") -->
+                <#elseif partyId?has_content>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
                 </#if>
                 <#--
                 <#if (orderHeader.salesChannelEnumId)?? && orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
-                  <form name="searchOtherOrders" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
+                  <form name="searchOtherOrders" method="post" action="<@pageUrl>searchorders</@pageUrl>">
                     <input type="hidden" name="lookupFlag" value="Y"/>
                     <input type="hidden" name="hideFields" value="Y"/>
                     <input type="hidden" name="partyId" value="${partyId}" />
@@ -118,8 +105,8 @@ under the License.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
-                                                          (<a target="_BLANK" href="<@ofbizInterWebappUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
+                          ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                                                          (<a target="_BLANK" href="<@serverUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
                         </@row>
                         <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
@@ -132,7 +119,7 @@ under the License.
                               <#if "UPS" == ((shipmentRouteSegment.carrierPartyId)!)>
                                 <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_nav_info_id!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
                               </#if>
-                              <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">
+                              <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@pageUrl>upsEmailReturnLabelOrder</@pageUrl>">
                                 <input type="hidden" name="orderId" value="${orderId}"/>
                                 <input type="hidden" name="shipmentId" value="${shipment.shipmentId}"/>
                                 <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
@@ -145,7 +132,8 @@ under the License.
                 </@td>
               </@tr>
            </#if>
-        </#list> 
+        </#list>
+      <#if orderContactMechValueMaps?has_content>
         <#list orderContactMechValueMaps as orderContactMechValueMap>
           <#assign contactMech = orderContactMechValueMap.contactMech>
           <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
@@ -176,8 +164,8 @@ under the License.
                 ${contactMech.infoString} <@updateOrderContactMech orderHeader=(orderHeader!) contactMechTypeId=contactMech.contactMechTypeId contactMechList=(emailContactMechList!) contactMechPurposeTypeId=(contactMechPurpose.contactMechPurposeTypeId!) contactMechAddress=(contactMech!) />
                   
                   <#-- ToDo: Validate usefulness
-                      <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
-                         <a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_update!}" >${uiLabelMap.OrderSendConfirmationEmail}</a>
+                      <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", request)>
+                         <a href="<@pageUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_update!}" >${uiLabelMap.OrderSendConfirmationEmail}</a>
                       <#else>
                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.OrderSendEmail})</a>
                       </#if>
@@ -195,6 +183,7 @@ under the License.
             </@td>
           </@tr>
         </#list>
+      </#if>
       </@table>
   </@section>
 </#if>

@@ -1,23 +1,20 @@
-import java.sql.Timestamp
-
-import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime
-import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilProperties
-import org.ofbiz.base.util.UtilRandom
-import org.ofbiz.entity.*
-import org.ofbiz.entity.util.*
-import org.ofbiz.service.ServiceUtil
-
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
-
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilRandom
+import org.ofbiz.entity.GenericValue
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 
 public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
-
+    private static final String module = "TrackingCodeVisitData.groovy";
     private final static String DEFAULT_WEBAPP_NAME = "shop";
 
+    public String getDataType() {
+        return null;
+    }
+
     TrackingCodeVisitData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING VISIT DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING VISIT DATA-=-=-=-", module);
     }
 
     public void init() {
@@ -25,7 +22,7 @@ public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
         context.trackingCodeSourceList = trackingCodeSourceList;
     }
 
-    List prepareData(int index) throws Exception {
+    public List prepareData(int index, AbstractDataObject data) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
 
         if (context.trackingCodeSourceList) {

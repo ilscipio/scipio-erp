@@ -18,8 +18,6 @@
  */
 package org.ofbiz.webapp.event;
 
-import groovy.lang.Script;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +42,8 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+
+import groovy.lang.Script;
 
 public class GroovyEventHandler implements EventHandler {
 
@@ -95,7 +95,19 @@ public class GroovyEventHandler implements EventHandler {
                 if (scriptHelper != null) {
                     context.put(ScriptUtil.SCRIPT_HELPER_KEY, scriptHelper);
                 }
-                Script script = InvokerHelper.createScript(GroovyUtil.getScriptClassFromLocation(event.path), GroovyUtil.getBinding(context));
+                // SCIPIO: 2019-02-05: Added support for inline groovy script body:
+                //   <event type="groovy"><script><![CDATA[...]]></script></event>
+                Class<?> scriptClass;
+                if (event.getScriptBody() != null) {
+                    if (event.getCompiledScript() == null) {
+                        scriptClass = GroovyUtil.GroovyLangVariant.EVENT.getCommonGroovyClassLoader().parseClass(event.getScriptBody());
+                        event.setCompiledScript(scriptClass);
+                    }
+                    scriptClass = (Class<?>) event.getCompiledScript();  
+                } else {
+                    scriptClass = GroovyUtil.getScriptClassFromLocation(event.path);
+                }
+                Script script = InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context));
                 if (UtilValidate.isEmpty(event.invoke)) {
                     result = script.run();
                 } else {
@@ -111,7 +123,7 @@ public class GroovyEventHandler implements EventHandler {
             }
             // check the result
             if (result instanceof Map) {
-                Map resultMap = (Map)result;
+                Map<?, ?> resultMap = (Map<?, ?>)result;
                 String successMessage = (String)resultMap.get("_event_message_");
                 if (successMessage != null) {
                     request.setAttribute("_EVENT_MESSAGE_", successMessage);

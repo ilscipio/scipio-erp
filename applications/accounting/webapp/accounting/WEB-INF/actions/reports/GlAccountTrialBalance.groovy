@@ -32,7 +32,7 @@ if (organizationPartyId) {
         context.timePeriod = customTimePeriodList.first().customTimePeriodId;
     }
     decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
-    rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
+    rounding = UtilNumber.getRoundingMode("ledger.rounding");
     context.currentOrganization = from("PartyNameView").where("partyId", organizationPartyId).queryOne();
     if (parameters.glAccountId) {
         glAccount = from("GlAccount").where("glAccountId", parameters.glAccountId).queryOne();

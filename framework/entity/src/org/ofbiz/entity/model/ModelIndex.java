@@ -18,9 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.entity.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.UtilValidate;
@@ -38,7 +40,7 @@ public final class ModelIndex extends ModelChild {
 
     /**
      * Returns a new <code>ModelIndex</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this index is a member of.
      * @param description The index description.
      * @param name The index name.
@@ -62,7 +64,7 @@ public final class ModelIndex extends ModelChild {
 
     /**
      * Returns a new <code>ModelIndex</code> instance, initialized with the specified values.
-     * 
+     *
      * @param modelEntity The <code>ModelEntity</code> this index is a member of.
      * @param indexElement The <code>&lt;index&gt;</code> element containing the values for this index.
      */
@@ -73,11 +75,12 @@ public final class ModelIndex extends ModelChild {
         List<Field>fields = Collections.emptyList();
         List<? extends Element> elementList = UtilXml.childElementList(indexElement, "index-field");
         if (!elementList.isEmpty()) {
-            fields = new ArrayList<Field>(elementList.size());
+            fields = new ArrayList<>(elementList.size());
             for (Element indexFieldElement : elementList) {
                 String fieldName = indexFieldElement.getAttribute("name").intern();
                 String function = indexFieldElement.getAttribute("function").intern();
-                fields.add(new Field(fieldName, UtilValidate.isNotEmpty(function) ? Function.valueOf(function.toUpperCase()) : null));
+                fields.add(new Field(fieldName, UtilValidate.isNotEmpty(function) ? Function.valueOf(function
+                        .toUpperCase(Locale.getDefault())) : null));
             }
             fields = Collections.unmodifiableList(fields);
         }
@@ -141,7 +144,7 @@ public final class ModelIndex extends ModelChild {
         return root;
     }
 
-    public static final class Field {
+    public static final class Field implements Serializable { // SCIPIO: added Serializable
         private final String fieldName;
         private final Function function;
 

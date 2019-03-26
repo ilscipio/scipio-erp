@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -144,6 +131,7 @@ under the License.
         <response name="error" type="view" value="FindMarketingCampaign"/>
     </request-map>
 
+    <!-- SCIPIO: removed
     <request-map uri="EditMarketingCampaignRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditMarketingCampaignRoles"/>
@@ -164,6 +152,7 @@ under the License.
         <response name="success" type="view" value="ListMarketingCampaignRoles"/>
         <response name="error" type="view" value="ListMarketingCampaignRoles"/>
     </request-map>
+    -->
 
     <!--  SegmentGroup requests -->
     <request-map uri="viewSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="viewSegmentGroup"/></request-map>
@@ -690,10 +679,12 @@ under the License.
     <view-map name="EditTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#EditTrackingCodeType"/>
     <view-map name="FindTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCodeType"/>
 
-    <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaign"/>
+    <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#FindMarketingCampaign"/>
     <view-map name="EditMarketingCampaign" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaign"/>
+    <!-- SCIPIO: removed
     <view-map name="ListMarketingCampaignRoles"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaignRoles"/>
     <view-map name="EditMarketingCampaignRoles" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaignRoles"/>
+    -->
 
     <view-map name="FindSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#FindSegmentGroup"/>
     <view-map name="viewSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroup"/>
@@ -730,12 +721,15 @@ under the License.
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupContactMech" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupContactMech"/>
 
+    <!-- SCIPIO: LookupUserLoginAndPartyDetails -->
+    <view-map name="LookupUserLoginAndPartyDetails" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupUserLoginAndPartyDetails"/>
+
     <view-map name="TrackingCodeReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#TrackingCodeReport"/>
     <view-map name="MarketingCampaignReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#MarketingCampaignReport"/>
     <view-map name="EmailStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#EmailStatusReport"/>
     <view-map name="PartyStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#PartyStatusReport"/>
 
-    <!-- SCIPIO: Request mappings -->
+    <!-- SCIPIO: View mappings -->
     <!-- SCIPIO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
@@ -747,5 +741,7 @@ under the License.
     <view-map name="EditProductStorePromos" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePromos"/>
     <view-map name="FindPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#FindProductPriceRule"/>
     <view-map name="EditProductPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#EditProductPriceRules"/>
+    <view-map name="listMiniproduct" type="screen" page="component://product/widget/catalog/CommonScreens.xml#listMiniproduct"/>
+
 <!-- end of view mappings -->
 </site-conf>

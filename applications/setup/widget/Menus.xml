@@ -21,13 +21,14 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
     <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item-alias name="entityExportAll" for="export"/>
         <!-- SCIPIO: not wanted?
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
             <!- - SCIPIO: link to wizard with no parameters for now so goes to create new org
             <link target="initialsetup"/>- ->
             <link target="setupWizardNew" link-type="anchor"/>
         </menu-item>-->
-        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
+        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard}" sort-mode="off">
             <!-- TODO: REVIEW: for now linking this to the "current" step (instead of starting over),
                     but could want setupWizardNew here instead... -->
             <link target="setupWizard" link-type="anchor">
@@ -45,7 +46,7 @@
             <sub-menu name="SetupSteps" include="SetupStepsSideBar"/>
         </menu-item>
     </menu>
-    
+
     <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
             <condition>
@@ -92,11 +93,11 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SetupTabBar" recursive="includes-only" />
     </menu>
-    
+
     <menu name="FirstProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="productcatalog">
         <menu-item name="productcatalog" title="${uiLabelMap.SetupProductCatalog}">
@@ -115,7 +116,7 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <menu name="personUpdate">
         <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
             <link target="editperson">
@@ -132,7 +133,7 @@
             </link>
         </menu-item>
     </menu>
-    
+
     <!-- SCIPIO: menu entries for wizard -->
     <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         items-sort-mode="off">
@@ -180,12 +181,5 @@
                 <parameter-map from-field="setupStepStates.user.stepParams"/>
             </link>
         </menu-item>
-        <!-- 
-        <menu-item name="website" title="${uiLabelMap[setupStepTitlePropMap['website']]}" disabled="${context.setupStepDisabledMap.website == true}" widget-style="+${context.stepStyles.website}">
-            <link target="setupWebsite" link-type="anchor">
-                <parameter-map from-field="setupStepStates.website.stepParams"/>
-            </link>
-        </menu-item>
-        -->
     </menu>
 </menus>

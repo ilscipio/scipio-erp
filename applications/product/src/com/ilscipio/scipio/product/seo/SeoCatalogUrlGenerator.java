@@ -24,9 +24,9 @@ import org.ofbiz.service.ServiceUtil;
 public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+
     static final String logPrefix = "Seo: Alt URLs: ";
-    
+
     public SeoCatalogUrlGenerator(Delegator delegator, LocalDispatcher dispatcher, GenTraversalConfig travConfig) throws GeneralException {
         super(delegator, dispatcher, travConfig);
         this.reset();
@@ -43,7 +43,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
          * in some cases can simply be set to the caller's service context (not modified).
-         * NOTE: If this was passed empty to constructor, any errors from sub-services 
+         * NOTE: If this was passed empty to constructor, any errors from sub-services
          * are guaranteed to not be localized.
          */
         public Map<String, ?> getServCtxOpts() {
@@ -63,7 +63,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             this.doChildProducts = doChildProducts;
             return this;
         }
-        
+
         public boolean isIncludeVariant() {
             return includeVariant;
         }
@@ -72,7 +72,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             this.includeVariant = includeVariant;
             return this;
         }
-        
+
         public boolean isGenerateFixedIds() {
             return generateFixedIds;
         }
@@ -100,7 +100,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return this;
         }
     }
-    
+
     @Override
     public GenTraversalConfig newTravConfig() {
         return new GenTraversalConfig();
@@ -110,8 +110,8 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     public GenTraversalConfig getTravConfig() {
         return (GenTraversalConfig) travConfig;
     }
-    
-    
+
+
     @Override
     public void reset() throws GeneralException {
         super.reset();
@@ -139,7 +139,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("fixedIdPat", getTravConfig().getCatFixedIdPat());
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-        
+
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
                 getStats().categorySuccess++;
@@ -148,12 +148,12 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             }
         } else {
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for category '" 
+            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for category '"
             //        + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             getStats().categoryError++;
         }
     }
-    
+
     public void generateProductAltUrls(GenericValue product) throws GeneralException {
         Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
 
@@ -162,9 +162,9 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
             return;
         }
-        
+
         String productId = product.getString("productId");
-        
+
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("product", product);
         servCtx.put("productId", productId);
@@ -187,7 +187,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             if (numError != null) getStats().productError += numError;
             else getStats().productError++; // couldn't return count
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '" 
+            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '"
             //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
         Collection<String> visitedProductIds = UtilGenerics.checkCollection(recordResult.get("visitedProductIds"));

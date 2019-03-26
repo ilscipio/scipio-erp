@@ -1,25 +1,12 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
 <@section title=uiLabelMap.EcommerceAddressBook>
-  <form id="refreshRequestForm" method="post" action="<@ofbizUrl>manageAddress</@ofbizUrl>">
+  <form id="refreshRequestForm" method="post" action="<@pageUrl>manageAddress</@pageUrl>">
   </form>
     <#-- Add address -->
     <a class="${styles.link_run_sys!} ${styles.action_add!}" id="addAddress" href="javascript:void(0)">${uiLabelMap.EcommerceAddNewAddress}</a>
@@ -246,7 +233,7 @@ under the License.
               <div>
                 <span>
                   <a id="update_${contactMech.contactMechId}" href="javascript:void(0)" class="${styles.link_nav!} ${styles.action_update!} popup_link" onclick="showState('${contactMech.contactMechId}')">${uiLabelMap.CommonEdit}</a></span>
-                  <form id="deletePostalAddress_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deletePostalAddress</@ofbizUrl>">
+                  <form id="deletePostalAddress_${contactMech.contactMechId}" method="post" action="<@pageUrl>deletePostalAddress</@pageUrl>">
                     <fieldset>
                       <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}" />
                     </fieldset>

@@ -18,15 +18,18 @@
  *******************************************************************************/
 package org.ofbiz.webapp.website;
 
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 
 /**
  * WebSiteWorker - Worker class for web site related functionality
@@ -35,10 +38,13 @@ public class WebSiteWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * Gets the webSiteId for the current webapp, from the web.xml configuration.
+     * <p>
+     * SCIPIO: 2018-07-31: This is now safe to use from early filters.
+     */
     public static String getWebSiteId(ServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-
-        if (application == null) return null;
+        ServletContext application = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         return application.getInitParameter("webSiteId");
     }
 
@@ -48,7 +54,7 @@ public class WebSiteWorker {
             return null;
         }
 
-        return findWebSite((Delegator) request.getAttribute("delegator"), webSiteId);
+        return findWebSite((Delegator) request.getAttribute("delegator"), webSiteId, true);
     }
 
     /**
@@ -68,7 +74,7 @@ public class WebSiteWorker {
      * @param delegator
      * @param webSiteId
      * @param useCache
-     * @return
+     * @return GenericValue
      */
     public static GenericValue findWebSite(Delegator delegator, String webSiteId, boolean useCache) {
         GenericValue result = null;
@@ -79,5 +85,60 @@ public class WebSiteWorker {
             Debug.logError("Error looking up website with id " + webSiteId, module);
         }
         return result;
+    }
+
+    /**
+     * SCIPIO: Extracts the webSiteId from the given context according to its render environment type.
+     * <p>
+     * NOTE: Partly based on {@link org.ofbiz.common.email.NotificationServices#setBaseUrl}.
+     * <p>
+     * Added 2018-08-02.
+     */
+    public static String getWebSiteIdFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+        if (renderEnvType.isStatic()) { // NOTE: for now we assume email and non-email static should all be similar...
+            String webSiteId = (String) context.get("webSiteId");
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                return webSiteId;
+            }
+            webSiteId = (String) context.get("baseWebSiteId");
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                return webSiteId;
+            }
+        } else if (renderEnvType.isWebapp()) {
+            ServletRequest request = (ServletRequest) context.get("request");
+            if (request != null) return getWebSiteId(request);
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Extracts the webSiteId from the given context according to its render environment type
+     * automatically determined from the context itself (best-effort).
+     * <p>
+     * NOTE: Partly based on {@link org.ofbiz.common.email.NotificationServices#setBaseUrl}.
+     * <p>
+     * Added 2018-08-17.
+     */
+    public static String getWebSiteIdFromContext(Map<String, Object> context) {
+        return getWebSiteIdFromContext(context, RenderEnvType.fromContext(context));
+    }
+
+    /**
+     * SCIPIO: Gets WebSite from context.
+     */
+    public static GenericValue getWebSiteFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+        String webSiteId = getWebSiteIdFromContext(context);
+        if (webSiteId == null) {
+            return null;
+        }
+
+        return findWebSite((Delegator) context.get("delegator"), webSiteId);
+    }
+
+    /**
+     * SCIPIO: Gets WebSite from context.
+     */
+    public static GenericValue getWebSiteFromContext(Map<String, Object> context) {
+        return getWebSiteFromContext(context, RenderEnvType.fromContext(context));
     }
 }

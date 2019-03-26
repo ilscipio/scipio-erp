@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,11 +58,11 @@ public abstract class EntityOperator<L, R, T> extends EntityConditionBase {
     public static final int ID_NOT_LIKE = 14;
 
     private static final AtomicInteger dynamicId = new AtomicInteger();
-    private static HashMap<String, EntityOperator<?,?,?>> registry = new HashMap<String, EntityOperator<?,?,?>>();
+    private static HashMap<String, EntityOperator<?,?,?>> registry = new HashMap<>();
 
     private static <L,R,T> void registerCase(String name, EntityOperator<L,R,T> operator) {
-        registry.put(name.toLowerCase(), operator);
-        registry.put(name.toUpperCase(), operator);
+        registry.put(name.toLowerCase(Locale.getDefault()), operator);
+        registry.put(name.toUpperCase(Locale.getDefault()), operator);
     }
 
     public static <L,R,T> void register(String name, EntityOperator<L,R,T> operator) {
@@ -76,15 +77,17 @@ public abstract class EntityOperator<L, R, T> extends EntityConditionBase {
 
     public static <L,R> EntityComparisonOperator<L,R> lookupComparison(String name) {
         EntityOperator<?,?,Boolean> operator = lookup(name);
-        if (!(operator instanceof EntityComparisonOperator<?,?>))
+        if (!(operator instanceof EntityComparisonOperator<?,?>)) {
             throw new IllegalArgumentException(name + " is not a comparison operator");
+        }
         return UtilGenerics.cast(operator);
     }
 
     public static EntityJoinOperator lookupJoin(String name) {
         EntityOperator<?,?,Boolean> operator = lookup(name);
-        if (!(operator instanceof EntityJoinOperator))
+        if (!(operator instanceof EntityJoinOperator)) {
             throw new IllegalArgumentException(name + " is not a join operator");
+        }
         return UtilGenerics.cast(operator);
     }
 
@@ -98,10 +101,8 @@ public abstract class EntityOperator<L, R, T> extends EntityConditionBase {
         @Override
         protected void makeRHSWhereString(ModelEntity entity, List<EntityConditionParam> entityConditionParams, StringBuilder sb, ModelField field, Object rhs, Datasource datasourceInfo) {
             if (rhs == null || rhs == GenericEntity.NULL_FIELD) {
-                //Debug.logInfo("makeRHSWhereString: field IS NULL: " + field.getName(), module);
                 sb.append(" IS NULL");
             } else {
-                //Debug.logInfo("makeRHSWhereString: field not null, doing super: " + field.getName() + ", type: " + rhs.getClass().getName() + ", value: " + rhs, module);
                 super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs, datasourceInfo);
             }
         }
@@ -209,9 +210,8 @@ public abstract class EntityOperator<L, R, T> extends EntityConditionBase {
     public String getCode() {
         if (codeString == null) {
             return "null";
-        } else {
-            return codeString;
         }
+        return codeString;
     }
 
     public int getId() {
@@ -300,7 +300,9 @@ public abstract class EntityOperator<L, R, T> extends EntityConditionBase {
 
     public static final Comparable<?> WILDCARD = new Comparable<Object>() {
         public int compareTo(Object obj) {
-            if (obj != WILDCARD) throw new ClassCastException();
+            if (obj != WILDCARD) {
+                throw new ClassCastException();
+            }
             return 0;
         }
 

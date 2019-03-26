@@ -24,7 +24,6 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.GenericRequester;
@@ -40,9 +39,12 @@ import org.ofbiz.service.ModelService;
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static boolean exportAll = false;
 
-    protected LocalDispatcher dispatcher = null;
+    // SCIPIO: Make thread-safe; and see no reason this should be static
+    //private static boolean exportAll = false;
+    private final boolean exportAll;
+
+    protected final LocalDispatcher dispatcher; // SCIPIO: Made final for thread safety
 
     public RemoteDispatcherImpl(LocalDispatcher dispatcher, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(0, csf, ssf);

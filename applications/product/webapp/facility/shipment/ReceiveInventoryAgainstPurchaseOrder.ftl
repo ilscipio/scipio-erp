@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
     <#-- JS to populate the quantity_o_# field required by the chained issueOrderItemToShipment service -->
@@ -51,7 +38,7 @@ under the License.
     </#if>
 </#if>
 
-<form name="ReceiveInventoryAgainstPurchaseOrder" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
+<form name="ReceiveInventoryAgainstPurchaseOrder" action="<@pageUrl>ReceiveInventoryAgainstPurchaseOrder</@pageUrl>">
     <input type="hidden" name="clearAll" value="Y"/>
     <div>
         <@field type="input" size="20" name="shipmentId" value=(shipmentId!) label=uiLabelMap.ProductShipmentId />
@@ -69,13 +56,13 @@ under the License.
             <br />
             <#assign rowCount = 0>
             <#assign totalReadyToReceive = 0/>
-            <form action="<@ofbizUrl>issueOrderItemToShipmentAndReceiveAgainstPO?clearAll=Y</@ofbizUrl>" method="post" name="selectAllForm">
+            <form action="<@pageUrl>issueOrderItemToShipmentAndReceiveAgainstPO?clearAll=Y</@pageUrl>" method="post" name="selectAllForm">
               <@fields type="default-manual-widgetonly">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <input type="hidden" name="shipmentId" value="${shipmentId}" />
                 <input type="hidden" name="_useRowSubmit" value="Y"/>
-                <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-list" autoAltRows=true>
                     <@thead>
                     <@tr class="header-row">
                         <@th>${uiLabelMap.ProductProduct}</@th>
@@ -163,7 +150,7 @@ under the License.
                                     </@field>
                                 </@td>
                                 <@td align="right">
-                                    <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
+                                    <@field type="submit" submitType="link" href=makePageUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
                                 </@td>
                                 <@td align="right">
                                   <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onClick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -176,7 +163,7 @@ under the License.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
+                                <@field type="submit" submitType="link" href=makePageUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
                             </@td>
                             <@td align="right">
                                 <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();" text=uiLabelMap.ProductReceiveItem />
@@ -184,7 +171,7 @@ under the License.
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makeOfbizUrl("completePurchaseOrder?orderId=${orderId}&facilityId=${facilityId}&shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
+                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makePageUrl("completePurchaseOrder?orderId=${orderId}&facilityId=${facilityId}&shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
                             </@td>
                         </@tr>
                       </@tfoot>
@@ -197,7 +184,7 @@ under the License.
         </#if>
         <#if itemsAvailableToReceive && (totalReadyToReceive < totalAvailableToReceive)>
             <@section title=uiLabelMap.ProductReceiveInventoryAddProductToReceive>
-            <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
+            <form name="addProductToReceive" method="post" action="<@pageUrl>ReceiveInventoryAgainstPurchaseOrder</@pageUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <@field type="generic" label="${rawLabel('ProductProductId')}/${rawLabel('ProductGoodIdentification')}">

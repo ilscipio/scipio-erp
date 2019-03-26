@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -66,7 +53,7 @@ under the License.
                 <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
                 <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
-                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>                    
+                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
                     <copy to-field="currentPasswordVerify"/>
                 </process>
                 <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -87,12 +74,12 @@ under the License.
         <set from-field="userLoginContext.passwordHint" field="newUserLogin.passwordHint"/>
 
         <!-- Check the password, etc for validity -->
-        <call-bsh><![CDATA[
+        <script lang="groovy"><![CDATA[
             String password = (String) userLoginContext.get("currentPassword");
             String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
             String passwordHint = (String) userLoginContext.get("passwordHint");
             org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-        ]]></call-bsh>
+        ]]></script>
 
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
@@ -290,7 +277,7 @@ under the License.
         <!-- the above copy is okay since we checked already that they are the same -->
         <call-service service-name="createPersonAndUserLogin" in-map-name="personUserLoginContext">
             <result-to-field result-name="partyId" field="tempMap.partyId"/>
-            <result-to-field field="createdUserLogin" result-name="newUserLogin"/>
+            <result-to-field result-name="newUserLogin" field="createdUserLogin"/>
         </call-service>
         <set-current-user-login value-field="createdUserLogin"/>
 
@@ -383,10 +370,10 @@ under the License.
             <set from-field="tempMap.partyId" field="personLookup.partyId"/>
             <find-by-primary-key map="personLookup" value-field="personVo" entity-name="Person"/>
             <if-empty field="parameters.CLUB_NUMBER">
-                <call-bsh><![CDATA[
+                <script lang="groovy"><![CDATA[
                     clubId = org.ofbiz.party.party.PartyWorker.createClubId(delegator, "999", 13);
                     parameters.put("CLUB_NUMBER", clubId);
-                ]]></call-bsh>
+                ]]></script>
             </if-empty>
             <set from-field="parameters.CLUB_NUMBER" field="personVo.memberId"/>
             <store-value value-field="personVo"/>
@@ -394,15 +381,22 @@ under the License.
 
         <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
         <if-compare field="allowPassword" operator="equals" value="Y">
-            <call-bsh><![CDATA[
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.order.shoppingcart.*;
                 org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-                session = request.getSession();
-                cart = session.getAttribute("shoppingCart");
-                if (cart != null) {
+
+                CartUpdate cartUpdate = CartUpdate.updateSection(request);
+                try { // SCIPIO
+                    cart = cartUpdate.getCartForUpdate();
+                    
                     cart.setOrderPartyId(tempMap.get("partyId"));
+                    
+                    cart = cartUpdate.commit(cart); // SCIPIO
+                } finally {
+                    cartUpdate.close();
                 }
-            ]]></call-bsh>
+            ]]></script>
         </if-compare>
 
         <!-- Associated to Product Store -->
@@ -432,10 +426,12 @@ under the License.
                 <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
                 <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
                 <set field="emailParams.emailType" from-field="storeEmailLookup.emailType"/>
+                <!-- SCIPIO: Determine webSiteId for store email -->
+                <set field="emailParams.webSiteId" value="${groovy:org.ofbiz.webapp.website.WebSiteWorker.getWebSiteId(request)}"/>
                 <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams" include-user-login="true"/>
             </if-not-empty>
         </if-not-empty>
-        
+
         <!-- security for manage profile  -->
         <set field="securityParams.userLoginId" from-field="createdUserLogin.userLoginId"/>
         <set field="securityParams.groupId" value="ECOMMERCE_CUSTOMER"/>
@@ -451,7 +447,7 @@ under the License.
     <!-- ======== Anonymous Checkout Events ======== -->
     <!-- =========================================== -->
 
-    <!-- SCIPIO: This is currently a simple wrapper around processCustomerSettings. 
+    <!-- SCIPIO: This is currently a simple wrapper around processCustomerSettings.
         It will enable if the form contained an input createUpdateAnonUser with value "Y".
         It should work as long as there are no field name conflicts with the form being submitted
         (whose real target may be another event). -->
@@ -473,7 +469,16 @@ under the License.
         <!-- see if we should continue now... -->
         <check-errors/>
         <log level="info" message="Setting up party ${tempMap.partyId} and shipping address ${addressPurposeContext} in cart"/>
-        <session-to-field field="cart" session-name="shoppingCart"/>
+        
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+
         <session-to-field field="userLogin"/>
         <log level="info" message="userLogin in Env ${userLogin} in parameters.userLogin ${parameters.userLogin}"/>
         <if-empty field="userLogin">
@@ -486,14 +491,14 @@ under the License.
             </call-object-method>
             <check-errors/>
             <if-not-empty field="cart">
-                <call-bsh><![CDATA[
+                <script lang="groovy"><![CDATA[
                     // clear out the login fields from the cart
                     try {
                         if (cart!=null) cart.setAutoUserLogin(null, dispatcher);
-                    } catch (CartItemModifyException e) {
+                    } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                         Debug.logError(e, module);
                     }
-                ]]></call-bsh>
+                ]]></script>
             </if-not-empty>
             <set from-field="tempMap.partyId" field="partyId"/>
             <if-not-empty field="partyId">
@@ -506,14 +511,14 @@ under the License.
                         <call-object-method obj-field="cart" method-name="setOrderPartyId">
                             <field field="partyId"/>
                         </call-object-method>
-                        <call-bsh><![CDATA[
+                        <script lang="groovy"><![CDATA[
                             // clear out the login fields from the cart
                             try {
                                 if (cart!=null) cart.setUserLogin(userLogin, dispatcher);
-                            } catch (CartItemModifyException e) {
+                            } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                                 Debug.logError(e, module);
                             }
-                        ]]></call-bsh>
+                        ]]></script>
                         <!-- call-object-method obj-field="cart"  method-name="setUserLogin">
                             <field field="userLogin"  type="org.ofbiz.entity.GenericValue"/>
                             <field field="dispatcher" map-name="request" type="org.ofbiz.service.LocalDispatcher"/>
@@ -523,17 +528,29 @@ under the License.
             </if-not-empty>
         </if-empty>
         <check-errors/>
+
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
+
         <log level="info" message="If anonymous, user-login has been activated"/>
         <!-- SCIPIO: Don't show a success message, it only looks odd during checkout -->
         <set field="_event_message_" value="" set-if-empty="true" set-if-null="true"/>
         <field-to-result field="_event_message_" result-name="_event_message_"/>
         <set field="_event_message_list_" type="List" value="" set-if-empty="true" set-if-null="true"/>
         <field-to-result field="_event_message_list_" result-name="_event_message_list_"/>
-        <call-bsh><![CDATA[
+        <script><![CDATA[groovy:
             // SCIPIO: Also have to clear the previous request attribs manually because the above is not enough (both required)
             request.removeAttribute("_EVENT_MESSAGE_");
             request.removeAttribute("_EVENT_MESSAGE_LIST_");
-        ]]></call-bsh>
+        ]]></script>
     </simple-method>
 
 
@@ -745,7 +762,7 @@ under the License.
             <!-- call create userLogin -->
             <!-- call reset password (to email a password) -->
         </if-not-empty>
-        
+
     </simple-method>
 
     <simple-method method-name="processShipSettings" short-description="Process Ship Settings; to be called as a Request Event" login-required="false">
@@ -820,7 +837,16 @@ under the License.
                 <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
             </else>
         </if-not-empty>
-        <session-to-field field="cart" session-name="shoppingCart"/>
+
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+
         <if-not-empty field="cart">
             <call-object-method obj-field="cart" method-name="addContactMech">
                 <string value="SHIPPING_LOCATION"/>
@@ -830,18 +856,38 @@ under the License.
                 <field field="addressContext.contactMechId"/>
             </call-object-method>
         </if-not-empty>
+
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
-       <call-bsh><![CDATA[
+        <script lang="groovy"><![CDATA[
            shipmentMethod = parameters.get("shipping_method");
            if(shipmentMethod != null){
               parameters.put("shipmentMethodTypeId", shipmentMethod.substring(0, shipmentMethod.indexOf("@")));
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
-       ]]></call-bsh>
-       <session-to-field field="cart" session-name="shoppingCart"/>
-       <if-not-empty field="cart">
+       ]]></script>
+       
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+       
+       <if-not-empty field="cart">        
            <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
            <call-object-method obj-field="cart" method-name="setAllShipmentMethodTypeId">
                <field field="shipmentMethodTypeId"/>
@@ -887,13 +933,29 @@ under the License.
            </call-object-method>
            </if-not-empty>
        </if-not-empty>
+       
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
     </simple-method>
 
     <!-- One page checkout process  -->
     <simple-method method-name="createUpdateUserLogin" short-description="Create and update a user login" login-required="false">
         <!-- Check if for this user still an anonymus user login exists and remove it -->
         <session-to-field field="user" session-name="userLogin"/>
-        <session-to-field field="cart" session-name="shoppingCart"/>
+        <!-- SCIPIO: don't do this
+        <session-to-field field="cart" session-name="shoppingCart"/>-->
+        <script lang="groovy"><![CDATA[
+            cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO
+            context.cart = cart;
+        ]]></script>
 
         <if>
             <condition>
@@ -938,12 +1000,12 @@ under the License.
             <set field="newUserLogin.currentPassword" from-field="userLoginMap.currentPassword"/>
             <set field="newUserLogin.passwordHint" from-field="userLoginMap.passwordHint"/>
             <!-- Check the password, etc for validity -->
-            <call-bsh><![CDATA[
+            <script lang="groovy"><![CDATA[
                 String password = (String) userLoginMap.get("currentPassword");
                 String confirmPassword = (String) userLoginMap.get("currentPasswordVerify");
                 String passwordHint = (String) userLoginMap.get("passwordHint");
                 org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-            ]]></call-bsh>
+            ]]></script>
             <check-errors/>
             <set-service-fields service-name="createUserLogin"  map="userLoginMap" to-map="userLoginCtx"/>
 
@@ -957,12 +1019,10 @@ under the License.
             </entity-one>
 
             <!-- now finished, log in the user and set the cart's partyId -->
-            <call-bsh>
-                <![CDATA[
+            <script lang="groovy"><![CDATA[
                     org.ofbiz.webapp.control.LoginWorker.doBasicLogin(userLogin, request);
                     org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-                ]]>
-            </call-bsh>
+            ]]></script>
             <set field="parameters.userLogin" from-field="userLogin"/>
         <else>
             <if>
@@ -995,17 +1055,18 @@ under the License.
 
     <simple-method method-name="getShipOptions" short-description="Get shipping options" login-required="false">
         <set field="dispatcher" from-field="parameters.dispatcher" type="Object"/>
+        <!-- SCIPIO: don't do this (groovy below)
         <set field="shoppingCart" from-field="parameters.shoppingCart"/>
         <if-empty field="shoppingCart">
             <session-to-field field="shoppingCart"/>
-        </if-empty>
-        <call-bsh>
-            <![CDATA[
+        </if-empty>-->
+        <script lang="groovy"><![CDATA[
                 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
+                shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO
+                context.shoppingCart = shoppingCart;
                 shippingEstWpr = ShippingEstimateWrapper.getWrapper(dispatcher, shoppingCart, 0);
                 parameters.put("shippingEstWpr", shippingEstWpr);
-            ]]>
-        </call-bsh>
+        ]]></script>
         <set field="shippingEstWpr" from-field="parameters.shippingEstWpr"/>
         <call-object-method obj-field="shippingEstWpr" method-name="getShippingMethods" ret-field="carrierShipmentMethodList"/>
         <call-object-method obj-field="shoppingCart" method-name="getShipmentMethodTypeId" ret-field="shipmentMethodTypeId"/>
@@ -1021,17 +1082,26 @@ under the License.
                 <field field="carrierShipmentMethod" type="org.ofbiz.entity.GenericValue"/>
             </call-object-method>
             <if-empty field="shippingEst">
-                <set field="shippingEst" value="-1" type="Integer"/>
+                <set field="shippingEst" value="-1" type="BigDecimal"/>
             </if-empty>
-            <set field="negValue" value="-1" type="Integer"/>
+            <set field="negValue" value="-1" type="BigDecimal"/>
             <set field="shippingMethod" value="${carrierShipmentMethod.shipmentMethodTypeId}@${carrierShipmentMethod.partyId}"/>
-
             <if-compare-field field="shippingEst" operator="greater" to-field="negValue">
-                <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
+                <set field="shippingDesc" value="${carrierShipmentMethod.description} - ${shippingEst?currency(${currency})}"/>
                 <else>
-                    <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${carrierShipmentMethod.description} - ${uiLabelMap.OrderCalculatedOffline}"/>
+                    <property-to-field resource="OrderUiLabels" property="OrderCalculatedOffline" field="calcOfflineLabel"/>
+                    <if-compare field="carrierShipmentMethod.shipmentMethodTypeId" operator="equals" value="NO_SHIPPING"><!-- SCIPIO: 2018-11-12: NO_SHIPPING check -->
+                        <set field="shippingDesc" value="${carrierShipmentMethod.description}"/>
+                        <else>
+                            <set field="shippingDesc" value="${carrierShipmentMethod.description} - ${calcOfflineLabel}"/>
+                        </else>
+                    </if-compare>
                 </else>
             </if-compare-field>
+            <!-- SCIPIO: 2018-11-12: Only add carrier party if not _NA_ -->
+            <if-compare field="carrierShipmentMethod.partyId" operator="not-equals" value="_NA_">
+                <set field="shippingDesc" value="${carrierShipmentMethod.partyId} ${shippingDesc}"/>
+            </if-compare>
             <set field="shippingOptionMap.shippingMethod" from-field="shippingMethod"/>
             <set field="shippingOptionMap.shippingDesc" from-field="shippingDesc"/>
             <if-not-empty field="carrierShipmentMethod.productStoreShipMethId">
@@ -1045,8 +1115,9 @@ under the License.
     </simple-method>
 
     <simple-method method-name="setShippingOption" short-description="Set shipping method" login-required="false">
-        <call-bsh><![CDATA[
-            shippingMethod = parameters.get("shipMethod");
+        <script lang="groovy"><![CDATA[
+            String shippingMethod = parameters.get("shipMethod");
+            String carrierPartyId = "";
             if(shippingMethod != null) {
                 shipmentMethodTypeId = shippingMethod.substring(0, shippingMethod.indexOf("@"));
                 if (shippingMethod.indexOf(":") != -1) {
@@ -1059,7 +1130,7 @@ under the License.
                 parameters.put("shipmentMethodTypeId", shipmentMethodTypeId);
                 parameters.put("carrierPartyId", carrierPartyId);
             }
-        ]]></call-bsh>
+        ]]></script>
         <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
         <set field="carrierPartyId" from-field="parameters.carrierPartyId"/>
         <set field="productStoreShipMethId" from-field="parameters.productStoreShipMethId"/>
@@ -1072,12 +1143,20 @@ under the License.
             <field-map field-name="partyId" from-field="carrierPartyId"/>
             <field-map field-name="roleTypeId" value="CARRIER"/>
         </entity-one>
-        <field-to-request field="shipmentMethod.description" request-name="shippingDescription"/>
+        <!-- SCIPIO: 2018-11-12: this is missing half the info - set further below
+        <field-to-request field="shipmentMethod.description" request-name="shippingDescription"/>-->
 
-        <set field="shoppingCart" from-field="parameters.shoppingCart"/>
-        <if-empty field="shoppingCart">
-            <session-to-field field="shoppingCart"/>
-        </if-empty>
+        <!-- SCIPIO: Synchronized cart updates -->
+        <try>
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.order.shoppingcart.*;
+            CartUpdate cartUpdate = CartUpdate.updateSection(request);
+            context.cartUpdate = cartUpdate;
+            context.cart = cartUpdate.getCartForUpdate();
+        ]]></script>
+
+        <set field="shoppingCart" from-field="cart"/>
+
         <call-object-method obj-field="shoppingCart" method-name="setAllShipmentMethodTypeId">
             <field field="shipmentMethodTypeId"/>
         </call-object-method>
@@ -1092,8 +1171,25 @@ under the License.
         <set field="delegator" from-field="parameters.delegator" type="Object"/>
         <set field="locale" from-field="parameters.locale" type="Object"/>
 
-        <call-bsh><![CDATA[
+        <!-- SCIPIO: 2018-11-12: Ensure ship estimate is valid, return error otherwise! -->
+        <script lang="groovy"><![CDATA[
+            import org.ofbiz.service.ServiceUtil;
             Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
+            context.shipCost = shipCost;
+            shipCostErrorMsg = null;
+            if (ServiceUtil.isError(shipCost)) {
+                shipCostErrorMsg = ServiceUtil.getErrorMessage(shipCost);
+            }
+            context.shipCostErrorMsg = shipCostErrorMsg;
+        ]]></script>
+        <if-not-empty field="shipCostErrorMsg">
+            <add-error><fail-message message="${shipCostErrorMsg}"/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        <script lang="groovy"><![CDATA[
+            // SCIPIO
+            //Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
+            Map shipCost = context.shipCost;
             shippingTotal = shipCost.get("shippingTotal");
             if (shippingTotal == null) {
                 shippingTotal = java.math.BigDecimal.ZERO;
@@ -1111,17 +1207,39 @@ under the License.
 
             cartGrandTotal = org.ofbiz.base.util.UtilFormatOut.formatCurrency(shoppingCart.getGrandTotal(), isoCode, locale);
             parameters.put("cartGrandTotal", cartGrandTotal);
-        ]]></call-bsh>
+        ]]></script>
         <call-class-method method-name="doPromotions" class-name="org.ofbiz.order.shoppingcart.product.ProductPromoWorker">
             <field field="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
         </call-class-method>
+
+        <!-- SCIPIO: Commit cart update -->
+        <script lang="groovy"><![CDATA[
+            cart = cartUpdate.commit(cart);
+        ]]></script>
+        <finally>
+            <script lang="groovy"><![CDATA[
+                context.cartUpdate?.close();
+            ]]></script>
+        </finally>
+        </try>
+
         <field-to-request field="parameters.shippingTotal" request-name="shippingTotal"/>
         <field-to-request field="parameters.cartGrandTotal" request-name="cartGrandTotal"/>
         <field-to-request field="parameters.totalSalesTax" request-name="totalSalesTax"/>
         <log level="info" message="Shipping total is : ${parameters.shippingTotal}"/>
         <log level="info" message="Cart Grand total is : ${parameters.cartGrandTotal}"/>
         <log level="info" message="Total sale tax is : ${parameters.totalSalesTax}"/>
+
+        <!-- SCIPIO: 2018-11-12: Show the selected ship method correctly -->
+        <set field="shippingDescription" value="${shipmentMethod.description}"/>
+        <if-compare field="shipmentMethod.partyId" operator="not-equals" value="_NA_">
+            <set field="shippingDescription" value="${shipmentMethod.partyId} ${shippingDescription}"/>
+        </if-compare>
+        <if-not-empty field="shipCost.shippingTotal">
+            <set field="shippingDescription" value="${shippingDescription} - ${shipCost.shippingTotal?currency(${isoCode})}"/>
+        </if-not-empty>
+        <field-to-request field="shippingDescription" request-name="shippingDescription"/>
     </simple-method>
 
     <simple-method method-name="createCustomerProfile" short-description="create a customer profile" login-required="false">
@@ -1267,12 +1385,10 @@ under the License.
                 <result-to-field result-name="newUserLogin"/>
             </call-service>
             <set-current-user-login value-field="newUserLogin"/>
-            <call-bsh>
-                <![CDATA[
+            <script lang="groovy"><![CDATA[
                     org.ofbiz.webapp.control.LoginWorker.doBasicLogin(newUserLogin, request);
                     org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-                ]]>
-            </call-bsh>
+            ]]></script>
             <!-- disabledDateTime/disableForYears set time until a user login remains disabled -->
             <if-not-empty field="parameters.disabledDateTime">
                 <set field="disabledDateTime" from-field="parameters.disabledDateTime" type="Date"/>
@@ -1288,7 +1404,13 @@ under the License.
         </if-compare-field>
     </simple-method>
     <simple-method method-name="createAnonContact" short-description="Create a non Contact" login-required="false">
-        <entity-one value-field="systemUserLogin" entity-name="UserLogin">
+        <!-- SCIPIO: 2019-02-04: This service was erroneously checking and setting partyId instead of partyIdFrom,
+            so we switch it to use partyIdFrom and maintain backward support for partyId. -->
+        <if-empty field="parameters.partyIdFrom">
+           <set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
+        </if-empty>
+    
+        <entity-one entity-name="UserLogin" value-field="systemUserLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="parameters.userLogin" from-field="systemUserLogin"/>
@@ -1309,18 +1431,22 @@ under the License.
                 </if-validate-method>
             </else>
         </if-empty>
+        <if-empty field="parameters.captcha"><!-- SCIPIO: Added missing empty check (this can crash otherwise) -->
+            <add-error><fail-property resource="PartyErrorUiLabels" property="PartyCaptchaMissingError"/></add-error>
+            <check-errors/>
+        </if-empty>
         <call-object-method obj-field="parameters.captcha" method-name="toLowerCase" ret-field="submittedCaptcha"/>
-        <script>groovy: context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()</script>
-        <if-compare-field operator="not-equals" field="submittedCaptcha" to-field="actualCaptcha">
-            <add-error><fail-property resource="MyPortalUiLabels" property="MyPortalCaptchaMissingError"/></add-error>
+        <script lang="groovy"><![CDATA[ context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()]]></script>
+        <if-compare-field field="submittedCaptcha" operator="not-equals" to-field="actualCaptcha">
+            <add-error><fail-property resource="PartyErrorUiLabels" property="PartyCaptchaMissingError"/></add-error>
         </if-compare-field>
         <check-errors/>
-        <if-empty field="parameters.partyId">
-            <set-service-fields service-name="createPerson" to-map="newPerson" map="parameters"/>
+        <if-empty field="parameters.partyIdFrom"><!-- SCIPIO: fixed: field="parameters.partyId"> -->
+            <set-service-fields service-name="createPerson" map="parameters" to-map="newPerson"/>
             <call-service service-name="createPerson" in-map-name="newPerson">
-                <result-to-field result-name="partyId" field="parameters.partyId"/>
+                <result-to-field result-name="partyId" field="parameters.partyIdFrom"/><!-- SCIPIO: fixed: field="parameters.partyId"> -->
             </call-service>
-            <set-service-fields service-name="createPartyContactMech" to-map="newContact" map="parameters"/>
+            <set-service-fields service-name="createPartyContactMech" map="parameters" to-map="newContact"/>
             <set field="newContact.infoString" from-field="parameters.emailAddress"/>
             <set field="newContact.contactMechTypeId" value="EMAIL_ADDRESS"/>
             <set field="newContact.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
@@ -1329,17 +1455,37 @@ under the License.
             </call-service>
             <else>
                 <set field="parameters.contactMechIdFrom" from-field="contact.contactMechId"/>
+
+                <!-- SCIPIO: Security: 2019-02-04: Ensure the current user has permissions to use the given partyId -->
+                <set-service-fields service-name="partyIdPermissionCheck" map="parameters" to-map="partyIdPermCheckMap"/>
+                <set field="partyIdPermCheckMap.mainAction" value="VIEW"/>
+                <set field="partyIdPermCheckMap.partyId" value="parameters.partyIdFrom"/>
+                <call-service service-name="partyIdPermissionCheck" in-map-name="partyIdPermCheckMap">
+                    <result-to-field result-name="hasPermission" field="hasPartyIdPerm"/>
+                </call-service>
+                <if-compare field="hasPartyIdPerm" operator="not-equals" type="Boolean" value="true">
+                    <property-to-field resource="PartyUiLabels" property="PartyPermissionErrorForThisParty" field="partyErrMsg"/>
+                    <property-to-field resource="CommonUiLabels" property="CommonTryLoginAgainContactSupport" field="reloginErrMsg"/>
+                    <add-error><fail-message message="${partyErrMsg} (${reloginErrMsg})"/></add-error>
+                    <check-errors/>
+                </if-compare>
             </else>
         </if-empty>
-        <set-service-fields service-name="sendContactUsEmailToCompany" to-map="newComm" map="parameters"/>
+        <set-service-fields service-name="sendContactUsEmailToCompany" map="parameters" to-map="newComm"/>
         <set field="newComm.emailType" value="CONT_NOTI_EMAIL"/>
-        <call-service service-name="sendContactUsEmailToCompany" in-map-name="newComm">
-            <default-message property="ThankYouForContactingUs" resource="EcommerceUiLabels"></default-message>
+        <!-- SCIPIO: 2019-02-05: Modified so that it returns a generic message in case of error -->
+        <call-service service-name="sendContactUsEmailToCompany" in-map-name="newComm" break-on-error="false" >
+            <default-message property="EcommerceThankYouForContactingUsResponseSoon" resource="EcommerceUiLabels"></default-message>
+            <results-to-map map-name="sendResult"/>
         </call-service>
+        <if-compare field="${groovy:org.ofbiz.service.ServiceUtil.isSuccess(context.sendResult)}" operator="equals" type="Boolean" value="false">
+            <add-error><fail-property resource="CommonErrorUiLabels" property="CommonErrorOccurredContactTryAgain"/></add-error>
+            <check-errors/>
+        </if-compare>
     </simple-method>
-    <simple-method method-name="fromSetSessionLocale" 
+    <simple-method method-name="fromSetSessionLocale"
       short-description="Add field to request for redirection after SetSessionLocale" login-required="false">
         <set field="fromSetSessionLocale" value="true"/>
         <field-to-request field="fromSetSessionLocale" request-name="fromSetSessionLocale"/>
-    </simple-method>    
+    </simple-method>
 </simple-methods>

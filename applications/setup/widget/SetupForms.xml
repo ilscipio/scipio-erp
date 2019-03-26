@@ -38,7 +38,10 @@
     
     <form name="ViewOrganization" extends="ViewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
     </form>
-    
+
+    <form name="NewCustomer" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    </form>
+
     <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}" >        
     </form>

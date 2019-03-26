@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -28,14 +15,14 @@ under the License.
     <service name="createSecurityGroup" engine="entity-auto" invoke="create" default-entity-name="SecurityGroup" auth="true">
         <description>Create an SecurityGroup</description>
         <permission-service service-name="securityPermissionCheck" main-action="CREATE"/>
-        <attribute name="groupId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateSecurityGroup" engine="entity-auto" invoke="update" default-entity-name="SecurityGroup" auth="true">
         <description>Update a SecurityGroup</description>
         <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
-        <attribute name="groupId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <!-- SecurityPermission services -->
@@ -59,6 +46,19 @@ under the License.
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="permissionId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="updateSecurityPermissionToSecurityGroup" engine="entity-auto" invoke="update" default-entity-name="SecurityGroupPermission" auth="true">
+        <description>Update a SecurityPermission from a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <attribute name="groupId" type="String" mode="IN" optional="false"/>
+        <attribute name="permissionId" type="String" mode="IN" optional="false"/>
+    </service>
+    <!-- SCIPIO: 2018-09-10: TODO?: no fromDate/thruDate on SecurityGroupPermission yet
+    <service name="expireSecurityPermissionToSecurityGroup" engine="entity-auto" invoke="expire" default-entity-name="SecurityGroupPermission" auth="true">
+        <description>Expire a SecurityPermission from a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    -->
     <service name="removeSecurityPermissionFromSecurityGroup" engine="entity-auto" invoke="delete" default-entity-name="SecurityGroupPermission" auth="true">
         <description>Remove a SecurityPermission from a SecurityGroup</description>
         <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
@@ -82,6 +82,11 @@ under the License.
         <attribute name="groupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="expireUserLoginSecurityGroup" engine="entity-auto" invoke="expire" default-entity-name="UserLoginSecurityGroup" auth="true">
+        <description>Expire UserLoginSecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
     <service name="removeUserLoginToSecurityGroup" engine="entity-auto" invoke="delete" default-entity-name="UserLoginSecurityGroup" auth="true">
         <description>Remove a UserLogin to SecurityGroup Appl</description>
@@ -124,4 +129,25 @@ under the License.
         <attribute name="primaryPermission" type="String" mode="IN" optional="true" default-value="SECURITY"/>
     </service>
     
+    <service name="createUserLoginSecurityQuestion" engine="entity-auto" invoke="create" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Create a UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateUserLoginSecurityQuestion" engine="entity-auto" invoke="update" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Update a UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeUserLoginSecurityQuestion" engine="entity-auto" invoke="delete" default-entity-name="UserLoginSecurityQuestion" auth="true">
+        <description>Remove UserLoginSecurityQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteSecurityGroup" default-entity-name="SecurityGroup" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SecurityGroup</description>
+        <permission-service service-name="securityPermissionCheck" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

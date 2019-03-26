@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.widget.model.IterateSectionWidget;
 import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.model.ModelScreenWidget;
@@ -60,7 +61,7 @@ public class WidgetFactory {
     /**
      * Returns a <code>ModelScreenWidget</code> instance that implements the specified
      * XML element.
-     * 
+     *
      * @param modelScreen The containing screen for the widget
      * @param element The widget XML element
      * @return a <code>ModelScreenWidget</code> instance that implements the specified
@@ -69,9 +70,10 @@ public class WidgetFactory {
      */
     public static ModelScreenWidget getModelScreenWidget(ModelScreen modelScreen, Element element) {
         Assert.notNull("modelScreen", modelScreen, "element", element);
-        Constructor<? extends ModelScreenWidget> widgetConst = screenWidgets.get(element.getTagName());
+        String tagName = UtilXml.getTagNameIgnorePrefix(element);
+        Constructor<? extends ModelScreenWidget> widgetConst = screenWidgets.get(tagName);
         if (widgetConst == null) {
-            throw new IllegalArgumentException("ModelScreenWidget class not found for element " + element.getTagName());
+            throw new IllegalArgumentException("ModelScreenWidget class not found for element " + tagName);
         }
         try {
             return widgetConst.newInstance(modelScreen, element);
@@ -97,7 +99,9 @@ public class WidgetFactory {
                             Class<? extends ModelScreenWidget> widgetClass = UtilGenerics.cast(clz);
                             registerScreenWidget(fieldObject.toString(), widgetClass);
                         }
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                        Debug.logError(e, module);
+                    }
                 }
             } catch (Exception e) {
                 Debug.logError(e, module);
@@ -115,7 +119,7 @@ public class WidgetFactory {
      * registered, the new widget replaces the existing one.<p>The class supplied
      * to the method must have a public two-argument constructor that takes a
      * <code>ModelScreen</code> instance and an <code>Element</code> instance.</p>
-     * 
+     *
      * @param tagName The XML element tag name for this widget
      * @param widgetClass The class that implements the widget element
      * @throws SecurityException

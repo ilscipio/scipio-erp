@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,6 +33,8 @@ under the License.
     <common-settings>
         <request-map-settings>
             <response-settings>
+                <!-- SCIPIO: 2018-10-26: default view for view-last, view-last-noparam and view-home when not found by other means -->
+                <view-last default-view="main"/>
                 <!-- SCIPIO: 2018-06: When the response view-name matches "Lookup*", 
                     set allow-view-save to false instead of true, to prevent interference with "view-last" responses -->
                 <allow-view-save-default>
@@ -54,6 +43,8 @@ under the License.
             </response-settings>
         </request-map-settings>
     </common-settings>
+
+    <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->
 
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
@@ -75,10 +66,11 @@ under the License.
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="login"/>
         <response name="success" type="view" value="main"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
-         <response name="loggedIn" type="view-last" value="main" />
+        <response name="loggedIn" type="view-last" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="error">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
@@ -98,7 +90,7 @@ under the License.
         <response name="success" type="view" value="requirePasswordChange"/>
     </request-map>
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>
     </request-map>
     <request-map uri="views">
@@ -154,14 +146,17 @@ under the License.
     </request-map>
 
     <request-map uri="main">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <response name="success" type="view" value="main"/>
     </request-map>
 
     <request-map uri="viewBlocked">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <response name="success" type="view" value="viewBlocked"/>
     </request-map>
 
     <request-map uri="LookupTimeDuration">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <response name="success" type="view" value="LookupTimeDuration"/>
     </request-map>
 
@@ -228,7 +223,7 @@ under the License.
     </request-map>
 
     <request-map uri="showHelpPublic">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="showHelp"/>
     </request-map>
 
@@ -239,7 +234,7 @@ under the License.
 
     <!-- Common captcha image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
     <request-map uri="captcha.jpg">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getCaptcha"/>
         <response name="success" type="none"/>
     </request-map>
@@ -251,7 +246,7 @@ under the License.
     
     <!--========================== AJAX events =====================-->
     <!-- Get states related to a country -->
-    <request-map uri="getAssociatedStateList">
+    <request-map uri="getAssociatedStateList" track-serverhit="false"><!-- SCIPIO: 2018-08-28: don't track for now, concurrent ServerHits on some pages (TODO: REVIEW) -->
         <security https="true" auth="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>
@@ -314,9 +309,16 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
-    <request-map uri="qrcode">
-        <security auth="true" https="false" />
+
+    <request-map uri="getServerTimestampAsString"><!-- SCIPIO: added 2018-08-28 -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getServerTimestampAsString"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="qrcode" track-serverhit="false"><!-- SCIPIO: 2018-11-07: Don't track due to ajax -->
+        <security auth="true" https="true" /><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
         <response name="success" type="none" />
         <response name="error" type="none" />

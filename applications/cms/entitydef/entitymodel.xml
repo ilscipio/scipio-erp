@@ -45,7 +45,9 @@
       <field name="pagePath" type="long-varchar"></field>-->
       <field name="pageName" type="name"></field>
       <field name="description" type="very-long"></field>
-      
+      <field name="txTimeout" type="very-long"><description>Transaction timeout; accepts any integer; -1 for default; 0 to disable transaction begin.
+            Default: -1. Supports flexible expressions that return an integer.</description></field>
+
       <prim-key field="pageId" />
 
       <relation type="one" fk-name="CMSPAGE_TMPL" rel-entity-name="CmsPageTemplate">
@@ -209,9 +211,11 @@
       <field name="description" type="very-long"></field>
       <field name="createdBy" type="id"></field>
       <field name="lastUpdatedBy" type="id"></field>
-      
-      <field name="activeContentId" type="id"><description>Optimization: Direct reference to the active template contentId; if null, forces regular full version lookup.</description></field>
 
+      <field name="activeContentId" type="id"><description>Optimization: Direct reference to the active template contentId; if null, forces regular full version lookup.</description></field>
+      <field name="txTimeout" type="very-long"><description>Transaction timeout; accepts any integer; -1 for default; 0 to disable transaction begin.
+            Default: -1. Supports flexible expressions that return an integer.</description></field>
+        
       <prim-key field="pageTemplateId" />
       
       <relation type="one" fk-name="CMSPTMP_ACNTNTID" rel-entity-name="Content">
@@ -315,8 +319,11 @@
       <field name="contentTypeId" type="id"><description>Points to a ContentType having parentTypeId SCP_TEMPLATE_PART</description></field>
       <field name="createdBy" type="id"></field>
       <field name="lastUpdatedBy" type="id"></field>
-      
+
       <field name="activeContentId" type="id"><description>Optimization: Direct reference to the active template contentId; if null, forces regular full version lookup.</description></field>
+      <field name="txTimeout" type="very-long"><description>Transaction timeout; accepts any integer; -1 for default; 0 to disable transaction begin.
+            Default: -1. Supports flexible expressions that return an integer. NOTE: Will usually not have much effect on asset templates,
+            but can be used to ensure a transaction of certain length if ever rendered outside a transaction</description></field>
 
       <prim-key field="assetTemplateId" />
       
@@ -392,7 +399,7 @@
     </entity>
 
     <entity entity-name="CmsAttributeTemplate" package-name="com.ilscipio.scipio.cms.template"
-        title="Attribute Template Entity" author="Ilscipio GmbH" version="1.0">
+        title="Attribute Template" author="Ilscipio GmbH" version="1.0">
       <field name="attributeTemplateId" type="id-ne"></field>
       <!-- Either assetTemplateId or pageTemplateId should be not-null -->
       <field name="assetTemplateId" type="id"></field>
@@ -433,9 +440,10 @@
     </entity>
 
     <entity entity-name="CmsScriptTemplate" package-name="com.ilscipio.scipio.cms.template"
-        title="Script Template Entity" author="Ilscipio GmbH" version="1.0">
+        title="Script Template" author="Ilscipio GmbH" version="1.0">
       <field name="scriptTemplateId" type="id-ne"></field>
-      
+      <!-- 2019: NOTE: Unlike CmsPage.webSiteId, this field is not mandatory and basically not used. -->
+      <field name="webSiteId" type="id"><description>Organizational and editing page webSiteId (not used in rendering)</description></field>
       <field name="templateName" type="name"></field>
       <field name="description" type="very-long"></field>
       <field name="scriptLang" type="id">
@@ -461,7 +469,7 @@
     <!-- ========================================================= -->
 
     <entity entity-name="CmsViewMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="View to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="View to Page Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="viewMappingId" type="id-ne"></field>
       
       <!-- webSiteId+targetServletPath+targetViewName is the main candidate key -->
@@ -497,7 +505,7 @@
     </entity>
 
     <entity entity-name="CmsProcessMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="Process to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="Process to Page Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="processMappingId" type="id-ne"></field>
       
       <!-- 2016: NOTE: as per index below, sourceWebSiteId+sourcePath+sourceFromContextRoot is a candidate key and must be unique and non-null -->
@@ -587,14 +595,16 @@
         <member-entity entity-alias="PG" entity-name="CmsPage"/>
         <member-entity entity-alias="PPM" entity-name="CmsProcessMapping"/>
         <alias-all entity-alias="PG"/>
-        <alias-all entity-alias="PPM"/>
+        <alias-all entity-alias="PPM">
+            <exclude field="pageId"/>
+        </alias-all>
         <view-link entity-alias="PG" rel-entity-alias="PPM">
             <key-map field-name="pageId" rel-field-name="primaryForPageId"/>
         </view-link>
     </view-entity>
 
     <entity entity-name="CmsProcessViewMapping" package-name="com.ilscipio.scipio.cms.control"
-        title="Process View Mapping Entity" author="Ilscipio GmbH" version="1.0">
+        title="Process View Mapping" author="Ilscipio GmbH" version="1.0">
       <field name="processViewMappingId" type="id-ne"></field>
       
       <field name="processMappingId" type="id-ne" not-null="true"><description>Parent process mapping</description></field>
@@ -687,9 +697,7 @@
     <!--  Media entities -->
     <!-- ========================================================= -->
 
-    <!-- NOTE: DataResourceFileView currently relies on the datastructure outlined by the content component. As the rest of the content component
-        is rather superfluous by now, it is possible that the datamodel may be migrated to this component in future releases. -->
-    <view-entity entity-name="DataResourceMediaFileView" title="DataResource View Entity"
+    <view-entity entity-name="DataResourceMediaFileView" title="DataResource Media File View"
         package-name="com.ilscipio.scipio.cms.media">
       <member-entity entity-alias="DR" entity-name="DataResource"/>
       <member-entity entity-alias="CNT" entity-name="Content"/>
@@ -738,8 +746,7 @@
       </view-link>
 
       <relation type="one-nofk" rel-entity-name="Content">
-        <!--<key-map field-name="contentId"/>-->
-        <key-map field-name="dataResourceId"/>
+        <key-map field-name="contentId"/>
       </relation>
 
       <relation type="many" rel-entity-name="DataResourceAttribute">

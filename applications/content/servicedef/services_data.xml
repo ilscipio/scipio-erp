@@ -45,7 +45,11 @@
         <description>Create a DataResource and link this data to the content present</description>
         <permission-service service-name="genericDataResourcePermission" main-action="CREATE"/>
         <implements service="createDataResource" optional="true"/>
-        <attribute name="contentId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="contentId" type="String" mode="INOUT" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingContentId"/>
+            </type-validate>
+        </attribute>
         <attribute name="templateDataResource" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateDataResource" engine="simple" default-entity-name="DataResource" auth="true"
@@ -53,7 +57,11 @@
         <description>Update a DataResource</description>
         <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <attribute name="dataResourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="dataResourceId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingDataResourceId"/>
+            </type-validate>
+        </attribute>
         <attribute name="targetOperationList" type="List" mode="IN" optional="true"/>
         <attribute name="contentPurposeList" type="List" mode="IN" optional="true"/>
         <attribute name="skipPermissionCheck" type="String" mode="IN" optional="true"/>
@@ -120,6 +128,25 @@
     <service name="updateElectronicText" default-entity-name="ElectronicText" engine="simple"
             location="component://content/script/org/ofbiz/content/data/DataServices.xml" invoke="updateElectronicText" auth="true">
         <description>Update a ElectronicText</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contentId" mode="INOUT" optional="true" type="String"/><!-- to optionaly know where this text is belonging to -->
+        <override name="textData" allow-html="any"/>
+    </service>
+    <service name="createElectronicTextForm" default-entity-name="ElectronicText" engine="simple"
+            location="component://content/script/org/ofbiz/content/data/DataServices.xml" invoke="createElectronicTextForm" auth="true">
+        <description>Create a ElectronicText with Form code</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="CREATE"/>
+        <implements service="createDataResource"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="dataResourceTypeId" default-value="ELECTRONIC_TEXT"/>
+        <override name="textData" allow-html="any"/>
+    </service>
+    <service name="updateElectronicTextForm" default-entity-name="ElectronicText" engine="simple"
+            location="component://content/script/org/ofbiz/content/data/DataServices.xml" invoke="updateElectronicTextForm" auth="true">
+        <description>Update a ElectronicText with Form code</description>
         <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -229,6 +256,44 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- Data Resource Meta Services -->
+    <service name="createDataResourceMetaData" engine="entity-auto" default-entity-name="DataResourceMetaData" auth="true" invoke="create">
+        <description>Create an DataResourceMetaData</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDataResourceMetaData" engine="entity-auto" default-entity-name="DataResourceMetaData" auth="true" invoke="update">
+        <description>Update an DataResourceMetaData</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeDataResourceMetaData" engine="entity-auto" default-entity-name="DataResourceMetaData" auth="true" invoke="delete">
+        <description>Remove an DataResourceMetaData</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Data Resource Purpose Services -->
+    <service name="createDataResourcePurpose" engine="entity-auto" default-entity-name="DataResourcePurpose" auth="true" invoke="create">
+        <description>Create an DataResourcePurpose</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDataResourcePurpose" engine="entity-auto" default-entity-name="DataResourcePurpose" auth="true" invoke="update">
+        <description>Update an DataResourcePurpose</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeDataResourcePurpose" engine="entity-auto" default-entity-name="DataResourcePurpose" auth="true" invoke="delete">
+        <description>Remove an DataResourcePurpose</description>
+        <permission-service service-name="genericDataResourcePermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- File services -->
     <service name="createFile" engine="java"
             location="org.ofbiz.content.data.DataServices" invoke="createFile" auth="true">
@@ -268,6 +333,21 @@
     <service name="clearAssociatedRenderCache" engine="java" auth="true" default-entity-name="DataResource"
             location="org.ofbiz.content.data.DataServices" invoke="clearAssociatedRenderCache">
         <auto-attributes include="pk" mode="IN" />
+    </service>
+    
+    <service name="createDataTemplateType" engine="entity-auto" invoke="create" default-entity-name="DataTemplateType" auth="true">
+        <description>Create a Data Template Type</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDataTemplateType" engine="entity-auto" invoke="update" default-entity-name="DataTemplateType" auth="true">
+        <description>Update a Data Template Type</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDataTemplateType" engine="entity-auto" invoke="delete" default-entity-name="DataTemplateType" auth="true">
+        <description>Delete a Data Template Type</description>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
 
 </services>

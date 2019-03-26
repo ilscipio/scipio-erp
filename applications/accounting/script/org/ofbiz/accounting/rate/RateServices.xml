@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="updateRateAmount" short-description="update/create a rate amount value">
-        <set value="_CREATE" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <!-- set defaults -->
         <if-empty field="parameters.rateCurrencyUomId">
             <property-to-field resource="general.properties" property="currency.uom.id.default" field="parameters.rateCurrencyUomId"/>
@@ -57,10 +38,10 @@ under the License.
 
         <!-- end existing value -->
         <if-not-empty field="rateAmounts">
-            <first-from-list entry="rateAmount" list="rateAmounts"/>
+            <first-from-list list="rateAmounts" entry="rateAmount"/>
             <if-compare-field field="rateAmount.rateAmount" operator="not-equals" to-field="parameters.rateAmount">
-                <set-service-fields service-name="deleteRateAmount" map="rateAmount" to-map="delRateAmount"/>
-                <call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
+                <set-service-fields service-name="expireRateAmount" map="rateAmount" to-map="delRateAmount"/>
+                <call-service service-name="expireRateAmount" in-map-name="delRateAmount"/>
             </if-compare-field>
         </if-not-empty>
 
@@ -72,13 +53,7 @@ under the License.
         <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="deleteRateAmount" short-description="update/create a rate amount value">
-        <set value="_CREATE" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
+    <simple-method method-name="expireRateAmount" short-description="expire a rate amount value">
         <!-- set defaults -->
         <if-empty field="parameters.rateCurrencyUomId">
             <property-to-field resource="general.properties" property="currency.uom.id.default" field="parameters.rateCurrencyUomId"/>
@@ -112,12 +87,13 @@ under the License.
 
     </simple-method>
 
-    <simple-method method-name="getRateAmount" short-description="Get the applicable rate amount value">
-        <set value="_READ" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
+    <!-- SCIPIO: 2018-09-10: DEPRECATED: this is a placeholder for the old method, simply delegates to expire, in reality it always expired, the name was simply misleading... -->
+    <simple-method method-name="deleteRateAmount" short-description="delete (expire) a rate amount value">
+        <call-simple-method method-name="expireRateAmount"/>
         <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="getRateAmount" short-description="Get the applicable rate amount value">
         <!--
            Search for the applicable rate from most specific to most general in the RateAmount entity
            Defaults for periodTypeId is per hour and default currency is the currency in general.properties
@@ -212,7 +188,7 @@ under the License.
 
         <!-- We narrowed as much as we could the result, now returning the first record of the list -->
         <if-not-empty field="parameters.ratesList">
-            <first-from-list entry="amount" list="parameters.ratesList"/>
+            <first-from-list list="parameters.ratesList" entry="amount"/>
             <if-empty field="amount.rateAmount">
                 <set field="amount.rateAmount" value="0" type="BigDecimal"/>
             </if-empty>
@@ -225,12 +201,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="getRatesAmountsFromWorkEffortId" short-description="Get all the rateAmount for a given workEffortId">
-        <set value="_READ" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-and entity-name="RateAmount" list="amounts" filter-by-date="true">
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
             <field-map field-name="workEffortId" from-field="parameters.workEffortId"/>
@@ -254,12 +224,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="getRatesAmountsFromPartyId" short-description="Get all the rateAmount for a given partyId">
-        <set value="_READ" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-and entity-name="RateAmount" list="amounts" filter-by-date="true">
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -282,12 +246,6 @@ under the License.
     </simple-method>
 
     <simple-method method-name="getRatesAmountsFromEmplPositionTypeId" short-description="Get all the rateAmount for a given emplPositionTypeId">
-        <set value="_READ" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <entity-and entity-name="RateAmount" list="amounts" filter-by-date="true">
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
             <field-map field-name="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
@@ -370,24 +328,18 @@ under the License.
 
     <!-- party rate services -->
     <simple-method method-name="updatePartyRate" short-description="Update/Create PartyRate">
-        <set value="_CREATE" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
         <!-- check if already exist is so expire current record -->
         <entity-and entity-name="PartyRate" list="partyRates" filter-by-date="true">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
         </entity-and>
         <if-not-empty field="partyRates">
-            <first-from-list entry="partyRate" list="partyRates"/>
+            <first-from-list list="partyRates" entry="partyRate"/>
             <now-timestamp field="partyRate.thruDate"/>
             <store-value value-field="partyRate"/>
         </if-not-empty>
 
-        <make-value value-field="newEntity" entity-name="PartyRate"/>
+        <make-value entity-name="PartyRate" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.fromDate"><now-timestamp field="newEntity.fromDate"/></if-empty>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -412,53 +364,48 @@ under the License.
                 <field-map field-name="defaultRate" value="Y"/>
             </entity-and>
             <if-not-empty field="rates">
-                <first-from-list entry="rate" list="rates"/>
+                <first-from-list list="rates" entry="rate"/>
                 <set field="rate.defaultRate" value="N"/>
                 <store-value value-field="rate"/>
             </if-not-empty>
         </if-compare>
     </simple-method>
-    <simple-method method-name="deletePartyRate" short-description="Delete PartyRate">
-        <set value="_UPDATE" field="securityAction"/>
-        <check-permission permission="ACCOUNTING" action="${securityAction}">
-            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
-        </check-permission>
-        <check-errors/>
-
+    <!-- SCIPIO: 2018-09-10: Renamed from deletePartyRate -->
+    <simple-method method-name="expirePartyRate" short-description="Expire PartyRate">
         <entity-one entity-name="PartyRate" value-field="lookedUpValue"/>
         <now-timestamp field="lookedUpValue.thruDate"/>
         <store-value value-field="lookedUpValue"/>
 
-        <set-service-fields service-name="deleteRateAmount" map="parameters" to-map="delRateAmount"/>
+        <set-service-fields service-name="expireRateAmount" map="parameters" to-map="delRateAmount"/>
         <set field="delRateAmount.fromDate" from-field="parameters.rateAmountFromDate"/>
-        <call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
+        <call-service service-name="expireRateAmount" in-map-name="delRateAmount"/>
     </simple-method>
 
     <!-- migrate service -->
     <simple-method method-name="migrateRateFactor" short-description="migrate the several entities which were change in the rate refactor activity">
         <entity-condition entity-name="OldEmplPositionTypeRate" list="posRates"/>
-        <iterate entry="posRate" list="posRates">
-            <make-value value-field="emplPositionTypeRate" entity-name="EmplPositionTypeRate"/>
-            <set-pk-fields value-field="posRate" map="emplPositionTypeRate"/>
-            <set-nonpk-fields value-field="posRate" map="emplPositionTypeRate"/>
+        <iterate list="posRates" entry="posRate">
+            <make-value entity-name="EmplPositionTypeRate" value-field="emplPositionTypeRate"/>
+            <set-pk-fields map="emplPositionTypeRate" value-field="posRate"/>
+            <set-nonpk-fields map="emplPositionTypeRate" value-field="posRate"/>
             <create-value value-field="emplPositionTypeRate"/>
-            <make-value value-field="rateAmount" entity-name="RateAmount"/>
-            <set-pk-fields value-field="posRate" map="rateAmount"/>
-            <set-nonpk-fields value-field="posRate" map="rateAmount"/>
+            <make-value entity-name="RateAmount" value-field="rateAmount"/>
+            <set-pk-fields map="rateAmount" value-field="posRate"/>
+            <set-nonpk-fields map="rateAmount" value-field="posRate"/>
             <set field="rateAmount.workeffortId" value="_NA_"/>
             <set field="rateAmount.partyId" value="_NA_"/>
             <property-to-field resource="general.properties" property="currency.uom.id.default" field="rateAmount.rateCurrencyUomId"/>
             <create-value value-field="rateAmount"/>
         </iterate>
         <entity-condition entity-name="OldPartyRate" list="partyRates"/>
-        <iterate entry="oldPartyRate" list="oldPartyRates">
-            <make-value value-field="partyRate" entity-name="PartyRate"/>
-            <set-pk-fields value-field="oldPartyRate" map="partyRate"/>
-            <set-nonpk-fields value-field="oldPartyRate" map="partyRate"/>
+        <iterate list="oldPartyRates" entry="oldPartyRate">
+            <make-value entity-name="PartyRate" value-field="partyRate"/>
+            <set-pk-fields map="partyRate" value-field="oldPartyRate"/>
+            <set-nonpk-fields map="partyRate" value-field="oldPartyRate"/>
             <create-value value-field="partyRate"/>
-            <make-value value-field="rateAmount" entity-name="RateAmount"/>
-            <set-pk-fields value-field="oldPartyRate" map="rateAmount"/>
-            <set-nonpk-fields value-field="oldPartyRate" map="rateAmount"/>
+            <make-value entity-name="RateAmount" value-field="rateAmount"/>
+            <set-pk-fields map="rateAmount" value-field="oldPartyRate"/>
+            <set-nonpk-fields map="rateAmount" value-field="oldPartyRate"/>
             <set field="rateAmount.workeffortId" value="_NA_"/>
             <set field="rateAmount.emplPositionTypeId" value="_NA_"/>
             <set field="rateAmount.periodTypeId" value="RATE_HOUR"/>

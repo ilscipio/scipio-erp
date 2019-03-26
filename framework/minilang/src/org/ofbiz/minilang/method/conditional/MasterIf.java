@@ -121,7 +121,7 @@ public final class MasterIf extends MethodOperation {
     }
 
     /**
-     * A &lt;if&gt; element factory. 
+     * A &lt;if&gt; element factory.
      */
     public static final class MasterIfFactory implements Factory<MasterIf> {
         public MasterIf createMethodOperation(Element element, SimpleMethod simpleMethod) throws MiniLangException {

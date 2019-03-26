@@ -14,7 +14,7 @@ public class ContentTraversalException extends GeneralException {
     public ContentTraversalException(String msg, Throwable nested) { super(msg, nested); }
     public ContentTraversalException(String msg) { super(msg); }
     public ContentTraversalException(Throwable nested) { super(nested); }
-    
+
     /**
      * CLEAN STOP - Visitor or Traverser may call this to request a clean stop to traversal; not an error; not logged.
      */

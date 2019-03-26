@@ -1,27 +1,14 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makePageUrl("authview/${donePage}?facilityId=${facilityId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text=uiLabelMap.ProductNewContactMech class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("EditContactMech?facilityId=${facilityId}") text=uiLabelMap.ProductNewContactMech class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>
@@ -34,7 +21,7 @@ under the License.
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
 
-    <form method="post" action="<@ofbizUrl>EditContactMech</@ofbizUrl>" name="createcontactmechform">
+    <form method="post" action="<@pageUrl>EditContactMech</@pageUrl>" name="createcontactmechform">
       <input type="hidden" name="facilityId" value="${facilityId}" />
       <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
@@ -61,7 +48,7 @@ under the License.
     </#if>
       
     <#if !mechMap.contactMech?has_content>
-        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="DONE_PAGE" value="${donePage}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />
@@ -80,7 +67,7 @@ under the License.
         <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label=uiLabelMap.PartyContactPurposes>
           <@fields type="default-manual-widgetonly" ignoreParentField=true>
-            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+            <@table type="data-list" autoAltRows=true>
             <#if mechMap.facilityContactMechPurposes?has_content>
               <#list mechMap.facilityContactMechPurposes as facilityContactMechPurpose>
                 <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
@@ -95,7 +82,7 @@ under the License.
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
                       <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                   
-                    <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
+                    <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@pageUrl>deleteFacilityContactMechPurpose</@pageUrl>">
                       <input type="hidden" name="facilityId" value="${facilityId!}" />
                       <input type="hidden" name="contactMechId" value="${contactMechId!}" />
                       <input type="hidden" name="contactMechPurposeTypeId" value="${(facilityContactMechPurpose.contactMechPurposeTypeId)!}" />
@@ -110,7 +97,7 @@ under the License.
             <@tfoot>
               <@tr>
                 <@td>
-                  <form method="post" action="<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>" name="newpurposeform">
+                  <form method="post" action="<@pageUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@pageUrl>" name="newpurposeform">
                   <input type="hidden" name="facilityId" value="${facilityId}" />
                   <input type="hidden" name="contactMechId" value="${contactMechId!}" />
                     <@field type="select" name="contactMechPurposeTypeId">
@@ -128,7 +115,7 @@ under the License.
           </@fields>
         </@field>
         </#if>
-        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="contactMechId" value="${contactMechId}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />

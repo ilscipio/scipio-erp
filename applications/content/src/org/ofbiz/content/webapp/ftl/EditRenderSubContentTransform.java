@@ -75,8 +75,9 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, Map args) {
+    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = FreeMarkerWorker.getWrappedObject("context", env);
@@ -96,8 +97,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final GenericValue userLogin = FreeMarkerWorker.getWrappedObject("userLogin", env);
         GenericValue subContentDataResourceViewTemp = FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
-        //final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
-        
+
         ctx.put("mapKey", mapKey);
         ctx.put("subDataResourceTypeIdTemp", subDataResourceTypeIdTemp);
         ctx.put("contentId", contentId);
@@ -110,7 +110,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         // is gotten here and made available to underlying transforms to save overall
         // processing time.
         GenericValue parentContent = null;
-        //ctx.put("userLogin", userLogin);
         List<String> assocTypes = UtilMisc.toList("SUB_CONTENT");
         Timestamp fromDate = UtilDateTime.nowTimestamp();
         if (subContentDataResourceViewTemp == null) {
@@ -155,13 +154,10 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
             ctx.put("drDataResourceId", null);
             ctx.put("subContentDataResourceView", null);
             ctx.put("mimeTypeId", null);
-            //request.setAttribute("drDataResourceId", null);
         }
 
         final String dataResourceId = dataResourceIdTemp;
         final String subContentIdSub = subContentIdSubTemp;
-        //final GenericValue finalSubContentView = subContentDataResourceView;
-        //final GenericValue content = parentContent;
         final Map<String, Object> templateContext = ctx;
         final String mimeTypeId = mimeTypeIdTemp;
         final String subDataResourceTypeId = subDataResourceTypeIdTemp;
@@ -181,11 +177,9 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
             @Override
             public void close() throws IOException {
                 String wrappedFTL = buf.toString();
-                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
+                if (editTemplate != null && "true".equalsIgnoreCase(editTemplate)) {
                     if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                         templateContext.put("wrappedFTL", wrappedFTL);
-                        //ServletContext servletContext = (ServletContext)request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-                        //String rootDir = servletContext.getRealPath("/");
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);
                         templateContext.put("rootDir", rootDir);
@@ -201,12 +195,9 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
                         try {
                             ContentWorker.renderContentAsText(dispatcher, delegator, wrapTemplateId, out, templateRoot, locale, mimeTypeId, null, null, false);
-                        } catch (IOException e) {
+                        } catch (IOException | GeneralException e) {
                             Debug.logError(e, "Error rendering content" + e.getMessage(), module);
                             throw new IOException("Error rendering content" + e.toString());
-                        } catch (GeneralException e2) {
-                            Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
-                            throw new IOException("Error rendering content" + e2.toString());
                         }
 
                         FreeMarkerWorker.getWrappedObject("context", env);

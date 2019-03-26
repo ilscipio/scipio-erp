@@ -1,20 +1,7 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#assign shoppingCartOrderType = "">
@@ -31,17 +18,18 @@ under the License.
   </#if>
 </#if>
 <#-- Sales Order Entry -->
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request)>
   <#if shoppingCartOrderType != "PURCHASE_ORDER">
     <#assign sectionTitle>${rawLabel('OrderSalesOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${raw(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
     <@section class="${styles.grid_large!}9" title=sectionTitle menuContent=menuContent>
-      <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+      <form method="post" name="salesentryform" action="<@pageUrl>initorderentry</@pageUrl>">
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="SALES_ORDER"/>
@@ -64,7 +52,7 @@ under the License.
             </#if>
             <option value="">${uiLabelMap.OrderNoChannel}</option>
             <#list salesChannels as salesChannel>
-              <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected="selected"</#if>>${salesChannel.get("description",locale)}</option>
+              <option value="${salesChannel.enumId}"<#if (salesChannel.enumId == currentChannel)> selected="selected"</#if>>${salesChannel.get("description",locale)}</option>
             </#list>
         </@field>
         <#if partyId??>
@@ -80,17 +68,18 @@ under the License.
 </#if>
 
 <#-- Purchase Order Entry -->
-<#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
   <#if shoppingCartOrderType != "SALES_ORDER">
     <#assign sectionTitle>${rawLabel('OrderPurchaseOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />
+        <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${raw(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>
-      <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+      <form method="post" name="poentryform" action="<@pageUrl>initorderentry</@pageUrl>">
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="PURCHASE_ORDER"/>
         <#if partyId??>

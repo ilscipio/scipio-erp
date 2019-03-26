@@ -1,26 +1,13 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <#if glAcctgTrialBalanceList?has_content>
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&timePeriod=${parameters.timePeriod}&isPosted=${parameters.isPosted}&glAccountId=${parameters.glAccountId}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+            <@menuitem type="link" href=makePageUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&timePeriod=${parameters.timePeriod}&isPosted=${parameters.isPosted}&glAccountId=${parameters.glAccountId}") text=uiLabelMap.AccountingInvoicePDF target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
         </@menu>
     </#macro>
     <@section menuContent=menuContent>
@@ -29,7 +16,7 @@ under the License.
             <@heading>${uiLabelMap.FormFieldTitle_companyName} : ${(currentOrganization.groupName)!}</@heading>
             <@heading>${uiLabelMap.AccountingTimePeriod} : <#if currentTimePeriod?has_content>${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</#if></@heading>
             <@heading>${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</@heading>
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" responsive=true scrollable=true> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border=2 -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" responsive=true scrollable=true>
                 <@thead>
                     <@tr>
                         <@th align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></@th>

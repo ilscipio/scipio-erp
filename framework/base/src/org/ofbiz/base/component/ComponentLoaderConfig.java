@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  */
-public class ComponentLoaderConfig {
+public final class ComponentLoaderConfig {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String COMPONENT_LOAD_XML_FILENAME = "component-load.xml";
@@ -52,7 +52,7 @@ public class ComponentLoaderConfig {
 
     public static List<ComponentDef> getRootComponents(String configFile) throws ComponentException {
         // SCIPIO: some changes to this method to prevent synchronization errors
-        List<ComponentDef> result = componentsToLoad; 
+        List<ComponentDef> result = componentsToLoad;
         if (result == null) {
             synchronized (ComponentLoaderConfig.class) {
                 result = componentsToLoad;

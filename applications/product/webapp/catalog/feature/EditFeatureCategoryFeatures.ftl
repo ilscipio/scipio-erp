@@ -1,28 +1,15 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('ProductEditFeaturesForFeatureCategory')} \"${rawString((curProductFeatureCategory.description)!)}\"" menuContent=menuContent>
-    <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
+<@section title="${rawLabel('ProductEditFeaturesForFeatureCategory')} \"${raw((curProductFeatureCategory.description)!)}\"" menuContent=menuContent>
+    <form action="<@pageUrl>QuickAddProductFeatures</@pageUrl>" method="post">
       <div>
         ${uiLabelMap.CommonAdd}
         <input type="text" name="featureNum" value="1" size="3" />
@@ -39,12 +26,12 @@ under the License.
     <#if productId?has_content>
       <#assign productString = "&amp;productId=" + productId>
     </#if>
-    <@paginate mode="content" url=makeOfbizUrl("EditFeatureCategoryFeatures") paramStr="productFeatureCategoryId=${productFeatureCategoryId!}${productString!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-      <form method="post" action="<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>" name="selectAllForm">
+    <@paginate mode="content" url=makePageUrl("EditFeatureCategoryFeatures") paramStr="productFeatureCategoryId=${productFeatureCategoryId!}${productString!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
+      <form method="post" action="<@pageUrl>UpdateProductFeatureInCategory</@pageUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
            <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>
@@ -67,7 +54,7 @@ under the License.
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
             <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
               <@td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
+              <a href="<@pageUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@pageUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
               <@td><input type="text" size="15" name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
               <@td><select name="productFeatureTypeId_o_${rowCount}" size="1">
                 <#if productFeature.productFeatureTypeId?has_content>

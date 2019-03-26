@@ -45,11 +45,13 @@ import org.w3c.dom.Element;
 /**
  * EntityEcaUtil
  */
-public class EntityEcaUtil {
+public final class EntityEcaUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Map<String, Map<String, List<EntityEcaRule>>>> entityEcaReaders = UtilCache.createUtilCache("entity.EcaReaders", 0, 0, false);
+
+    private EntityEcaUtil () {}
 
     public static Map<String, Map<String, List<EntityEcaRule>>> getEntityEcaCache(String entityEcaReaderName) {
         Map<String, Map<String, List<EntityEcaRule>>> ecaCache = entityEcaReaders.get(entityEcaReaderName);
@@ -76,7 +78,7 @@ public class EntityEcaUtil {
         return delegatorInfo.getEntityEcaReader();
     }
 
-    protected static void readConfig(String entityEcaReaderName, Map<String, Map<String, List<EntityEcaRule>>> ecaCache) {
+    private static void readConfig(String entityEcaReaderName, Map<String, Map<String, List<EntityEcaRule>>> ecaCache) {
         EntityEcaReader entityEcaReaderInfo = null;
         try {
             entityEcaReaderInfo = EntityConfig.getInstance().getEntityEcaReader(entityEcaReaderName);
@@ -119,6 +121,11 @@ public class EntityEcaUtil {
                         eventMap.put(eventName, rules);
                     }
                 }
+                //remove the old rule if found and keep the recent one
+                //This will prevent duplicate rule execution along with enabled/disabled eca workflow
+                if (rules.remove(rule)) {
+                    Debug.logWarning("Duplicate Entity ECA [" + entityName + "]" + "for operation [ "+ rule.getOperationName() + "] " + "on [" + eventName + "] ", module);
+                }
                 rules.add(rule);
             }
         }
@@ -144,7 +151,7 @@ public class EntityEcaUtil {
         return rules;
     }
 
-    protected static Callable<List<EntityEcaRule>> createEcaLoaderCallable(final ResourceHandler handler) {
+    private static Callable<List<EntityEcaRule>> createEcaLoaderCallable(final ResourceHandler handler) {
         return new Callable<List<EntityEcaRule>>() {
             public List<EntityEcaRule> call() throws Exception {
                 return getEcaDefinitions(handler);

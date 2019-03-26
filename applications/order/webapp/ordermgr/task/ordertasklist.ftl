@@ -1,49 +1,36 @@
 <#--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <@script>
     function viewOrder(form) {
         if (form.taskStatus.value == "WF_NOT_STARTED") {
             if (form.delegate.checked) {
-                form.action = "<@ofbizUrl>acceptassignment</@ofbizUrl>";
+                form.action = "<@pageUrl>acceptassignment</@pageUrl>";
             } else {
-                form.action = "<@ofbizUrl>orderview</@ofbizUrl>";
+                form.action = "<@pageUrl>orderview</@pageUrl>";
             }
         } else {
             if (form.delegate.checked) {
-                form.action = "<@ofbizUrl>delegateassignment</@ofbizUrl>";
+                form.action = "<@pageUrl>delegateassignment</@pageUrl>";
             } else {
-                form.action = "<@ofbizUrl>orderview</@ofbizUrl>";
+                form.action = "<@pageUrl>orderview</@pageUrl>";
             }
         }
         form.submit();
     }
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
   <#assign tasksFound = false>
   <@section title=uiLabelMap.OrderOrderNeedingAttention>
 
     <#if poList?has_content>
       <#assign tasksFound = true>
       <@section title=uiLabelMap.OrderOrderPurchaseToBeScheduled>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.OrderOrderNumber}</@th>
@@ -61,7 +48,7 @@ under the License.
             <#assign statusItem = orderHeaderAndRole.getRelatedOne("StatusItem", true)>
             <#assign placingParty = orh.getPlacingParty()!>
             <@tr valign="middle">
-              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeaderAndRole.orderId}</a></@td>
+              <@td><a href="<@pageUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderHeaderAndRole.orderId}</a></@td>
               <@td>
                   <#assign partyId = "_NA_">
                   <#if placingParty?has_content>
@@ -89,7 +76,7 @@ under the License.
               <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=(orderHeaderAndRole.currencyUom!)/></@td>
               <@td width="1">&nbsp;&nbsp;</@td>
               <@td align='right'>
-                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>
+                <a href="<@pageUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>
               </@td>
             </@tr>
           </#list>
@@ -100,30 +87,30 @@ under the License.
     <#if partyTasks?has_content>
       <#assign tasksFound = true>
       <@section title=uiLabelMap.OrderWorkflow>
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=name</@ofbizUrl>">${uiLabelMap.CommonName}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderDate</@ofbizUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
-            <@th width="1" align="right"><a href="<@ofbizUrl>tasklist?sort=grandTotal</@ofbizUrl>">Total</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderId</@pageUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=name</@pageUrl>">${uiLabelMap.CommonName}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderDate</@pageUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
+            <@th width="1" align="right"><a href="<@pageUrl>tasklist?sort=grandTotal</@pageUrl>">Total</a></@th>
             <@th width="1">&nbsp;&nbsp;</@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=actualStartDate</@ofbizUrl>">${uiLabelMap.OrderStartDateTime}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=priority</@ofbizUrl>">${uiLabelMap.CommonPriority}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=currentStatusId</@ofbizUrl>">${uiLabelMap.CommonMyStatus}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=actualStartDate</@pageUrl>">${uiLabelMap.OrderStartDateTime}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=priority</@pageUrl>">${uiLabelMap.CommonPriority}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=currentStatusId</@pageUrl>">${uiLabelMap.CommonMyStatus}</a></@th>
           </@tr>
           </@thead>
           <#list partyTasks as task>
             <@tr valign="middle">
               <@td>
                 <#assign orderStr = "orderId=" + task.orderId + "&amp;partyId=" + userLogin.partyId + "&amp;roleTypeId=" + task.roleTypeId + "&amp;workEffortId=" + task.workEffortId + "&amp;fromDate=" + task.get("fromDate").toString()>
-                <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+                <a href="<@pageUrl>orderview?${orderStr}</@pageUrl>" class="${styles.link_nav_info_id!}">
                   ${task.orderId}
                 </a>
               </@td>
               <@td>
                   <#if task.customerPartyId??>
-                    <a href="${customerDetailLink}${task.customerPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                    <a href="${customerDetailLink}${task.customerPartyId}${raw(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                   <#else>
                     ${uiLabelMap.CommonNA}
                   </#if>
@@ -143,7 +130,7 @@ under the License.
               </@td>
               <@td>${task.priority!"0"}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
+                <a href="<@serverUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${raw(externalKeyParam)}</@serverUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                   ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                 </a>
               </@td>
@@ -157,19 +144,19 @@ under the License.
       <#assign tasksFound = true>
       <@section title=uiLabelMap.CommonWorkflowActivityUserRole>
         <@fields type="default-manual">
-        <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=name</@ofbizUrl>">${uiLabelMap.CommonName}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderDate</@ofbizUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
-            <@th width="1" align="right"><a href="<@ofbizUrl>tasklist?sort=grandTotal</@ofbizUrl>">${uiLabelMap.CommonTotal}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderId</@pageUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=name</@pageUrl>">${uiLabelMap.CommonName}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderDate</@pageUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
+            <@th width="1" align="right"><a href="<@pageUrl>tasklist?sort=grandTotal</@pageUrl>">${uiLabelMap.CommonTotal}</a></@th>
             <@th width="1">&nbsp;&nbsp;</@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=actualStartDate</@ofbizUrl>">${uiLabelMap.CommonStartDateTime}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=wepaPartyId</@ofbizUrl>">${uiLabelMap.PartyParty}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=roleTypeId</@ofbizUrl>">${uiLabelMap.PartyRole}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=priority</@ofbizUrl>">${uiLabelMap.CommonPriority}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=currentStatusId</@ofbizUrl>">${uiLabelMap.CommonStatus}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=actualStartDate</@pageUrl>">${uiLabelMap.CommonStartDateTime}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=wepaPartyId</@pageUrl>">${uiLabelMap.PartyParty}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=roleTypeId</@pageUrl>">${uiLabelMap.PartyRole}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=priority</@pageUrl>">${uiLabelMap.CommonPriority}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=currentStatusId</@pageUrl>">${uiLabelMap.CommonStatus}</a></@th>
             <@th>&nbsp;</@th>
           </@tr>
           </@thead>
@@ -180,7 +167,7 @@ under the License.
                 </@td>
                 <@td>
                   <#if task.customerPartyId??>
-                    <a href="${customerDetailLink}${task.customerPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                    <a href="${customerDetailLink}${task.customerPartyId}${raw(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                   </#if>
                 </@td>
                 <@td>
@@ -200,13 +187,13 @@ under the License.
                   <#if task.wepaPartyId == "_NA_">
                     ${uiLabelMap.CommonNA}
                   <#else>
-                    <a href="${customerDetailLink}${task.wepaPartyId}${rawString(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_id!}">${task.wepaPartyId}</a>
+                    <a href="${customerDetailLink}${task.wepaPartyId}${raw(externalKeyParam)}" target="partymgr" class="${styles.link_nav_info_id!}">${task.wepaPartyId}</a>
                   </#if>
                 </@td>
                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>
                 <@td>${task.priority!"0"}</@td>
                 <@td>
-                  <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
+                  <a href="<@serverUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}</@serverUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                     ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                   </a>
                 </@td>

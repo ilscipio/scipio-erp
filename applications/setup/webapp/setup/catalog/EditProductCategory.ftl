@@ -61,7 +61,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupCategoryForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -77,7 +77,7 @@
     <#else>
       <#if formActionType == "edit">
         <@field type="display" label=uiLabelMap.FormFieldTitle_productCategoryId><#rt/>
-            <span class="ect-managefield ect-managefield-for-productCategoryId"><@setupExtAppLink uri="/catalog/control/EditCategory?productCategoryId=${rawString(params.productCategoryId!)}" text=params.productCategoryId!/></span><#t/>
+            <span class="ect-managefield ect-managefield-for-productCategoryId"><@setupExtAppLink uri="/catalog/control/EditCategory?productCategoryId=${raw(params.productCategoryId!)}" text=params.productCategoryId!/></span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="productCategoryId" value=(params.productCategoryId!) class="+ect-inputfield"/>
       <#else>
@@ -89,7 +89,7 @@
       <#if formActionType != "add">
         <@field type="select" name="productCategoryTypeId" label=uiLabelMap.ProductProductCategoryType class="+ect-inputfield" required=true>
             <#list productCategoryTypes as productCategoryTypeData>
-                <option<#if rawString(params.productCategoryTypeId!) == rawString(productCategoryTypeData.productCategoryTypeId!)> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description", locale)}</option>
+                <option<#if raw(params.productCategoryTypeId!) == raw(productCategoryTypeData.productCategoryTypeId!)> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description", locale)}</option>
             </#list>
         </@field>
       </#if>
@@ -105,14 +105,14 @@
         <@field type="select" disabled=true label=uiLabelMap.ProductCatalogCategoryType class="+ect-inputfield ect-inputfield-for-prodCatalogCategoryTypeId" containerClass="+epc-field-prodCatalogCategoryTypeId" required=true
             tooltip=uiLabelMap.ProductRecreateAssociation>
           <#list prodCatalogCategoryTypes as prodCatalogCategoryTypeData>                       
-            <option<#if rawString(params.prodCatalogCategoryTypeId!) == rawString(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
+            <option<#if raw(params.prodCatalogCategoryTypeId!) == raw(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
           </#list>
         </@field>
         <@field type="hidden" name="prodCatalogCategoryTypeId" value=(params.prodCatalogCategoryTypeId!) class="+ect-inputfield"/>
       <#else>
         <@field type="select" label=uiLabelMap.ProductCatalogCategoryType name="prodCatalogCategoryTypeId" class="+ect-inputfield" containerClass="+epc-field-prodCatalogCategoryTypeId" required=true>
           <#list prodCatalogCategoryTypes as prodCatalogCategoryTypeData>                       
-            <option<#if rawString(params.prodCatalogCategoryTypeId!) == rawString(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
+            <option<#if raw(params.prodCatalogCategoryTypeId!) == raw(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
           </#list>
         </@field>
       </#if>
@@ -151,7 +151,7 @@
                     });
                 });
             </@script>
-            <@catalogStcLocFields objectType="category" params=params/>
+            <@cataloglib.catalogStcLocFields objectType="category" params=params/>
         </@fieldset>
       </#if>
     </@form>
@@ -202,7 +202,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteCategoryForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
@@ -228,7 +228,7 @@
   <@setupDeleteCategoryForm id="ect-removecategoryassoc-form" target="setupDeleteCategory" isDeleteRecord=false/>
   
 <#macro setupCopyMoveAssocCategoryForm id target formActionType>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

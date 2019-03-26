@@ -32,16 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -101,7 +98,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
     public static String getProductContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, null, null, null, null, dispatcher, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -116,7 +113,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
     public static String getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, true, encoderType);
     }
-    
+
     /**
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
@@ -151,15 +148,11 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
                 productPromoContentCache.put(cacheKey, outString);
             }
             return outString;
-        } catch (GeneralException e) {
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, "Error rendering ProductPromoContent, inserting empty String", module);
             String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
             return candidateOut == null? "" : encoder.sanitize(candidateOut);
-        } catch (IOException e) {
-            Debug.logError(e, "Error rendering ProductPromoContent, inserting empty String", module);
-            String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.sanitize(candidateOut);
-        }
+       }
     }
 
     public static void getProductPromoContentAsText(String productPromoId, GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
@@ -183,7 +176,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
-        List<EntityExpr> exprs = new ArrayList<EntityExpr>();
+        List<EntityExpr> exprs = new ArrayList<>();
         exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
         exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
 
@@ -203,7 +196,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, productPromoContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, cache);
             return;
         }
-        
+
         String candidateFieldName = ModelUtil.dbNameToVarName(productPromoContentTypeId);
         ModelEntity productModel = delegator.getModelEntity("ProductPromo");
         if (productModel.isField(candidateFieldName)) {
@@ -215,7 +208,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
                 if (UtilValidate.isNotEmpty(candidateValue)) {
                     outWriter.write(candidateValue);
                     return;
-                } 
+                }
             }
         }
     }

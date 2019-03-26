@@ -1,4 +1,4 @@
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)=Y
@@ -45,7 +45,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         "link_internal" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
         "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
     };
-    var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
+    var editorBaseUrl = '<@pageUrl escapeAs='js'>menus</@pageUrl>';
     var menuId='';
     var websiteId = 'cmsSite';
     var elData= {
@@ -175,7 +175,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         var data = {menuName:menuName,menuJson:"[]"};
         $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>saveMenu</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>saveMenu</@pageUrl>",
                   data: data,
                   cache:false,
                   async:true,
@@ -197,7 +197,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         var data = {menuId:menuId};
         $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>getMenu</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>getMenu</@pageUrl>",
                   data: data,
                   cache:false,
                   async:true,
@@ -218,7 +218,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         }
         $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>saveMenu</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>saveMenu</@pageUrl>",
                   data: data,
                   cache:false,
                   async:true,
@@ -234,7 +234,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             var data = {menuId:menuId};
             $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>deleteMenu</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>deleteMenu</@pageUrl>",
                   data: data,
                   cache:false,
                   async:true,
@@ -390,7 +390,7 @@ function($node) {
             </#list>
         </@field>
         <@menuitem type="generic">
-            <@modal id="create-menu-dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_create!}">
+            <@modal id="create-menu-dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.CmsWebSiteAddMenu}</@heading>
                     <@form id="create_menu_form">
                         <@field type="input" id="menuname" name="menuName" value="" label=uiLabelMap.CmsMenuName placeholder="menu name" required=true/>

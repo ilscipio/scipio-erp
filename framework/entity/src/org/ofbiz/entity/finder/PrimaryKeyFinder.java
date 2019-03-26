@@ -83,11 +83,9 @@ public class PrimaryKeyFinder extends Finder {
         if (modelEntity == null) {
             throw new IllegalArgumentException("No entity definition found for entity name [" + entityName + "]");
         }
-        
+
         GenericValue valueOut = runFind(modelEntity, context, delegator, useCacheBool, autoFieldMapBool, this.fieldMap, this.selectFieldExpanderList);
 
-        //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
-        //Debug.logInfo("PrimaryKeyFinder: going into=" + this.valueNameAcsr.getOriginalName(), module);
         if (!valueNameAcsr.isEmpty()) {
            this.valueNameAcsr.put(context, valueOut);
         } else {
@@ -101,7 +99,7 @@ public class PrimaryKeyFinder extends Finder {
             Map<FlexibleMapAccessor<Object>, Object> fieldMap, List<FlexibleStringExpander> selectFieldExpanderList) throws GeneralException {
 
         // assemble the field map
-        Map<String, Object> entityContext = new HashMap<String, Object>();
+        Map<String, Object> entityContext = new HashMap<>();
         if (autoFieldMap) {
             // try a map called "parameters", try it first so values from here are overridden by values in the main context
             Object parametersObj = context.get("parameters");
@@ -112,7 +110,7 @@ public class PrimaryKeyFinder extends Finder {
                 ModelField curField = iter.next();
                 String fieldName = curField.getName();
                 Object fieldValue = null;
-                if (parametersObjExists) {        
+                if (parametersObjExists) {
                     fieldValue = ((Map<?, ?>) parametersObj).get(fieldName);
                 }
                 if (context.containsKey(fieldName)) {
@@ -122,9 +120,8 @@ public class PrimaryKeyFinder extends Finder {
             }
         }
         EntityFinderUtil.expandFieldMapToContext(fieldMap, context, entityContext);
-        //Debug.logInfo("PrimaryKeyFinder: entityContext=" + entityContext, module);
         // then convert the types...
-        
+
         // need the timeZone and locale for conversion, so add here and remove after
         entityContext.put("locale", context.get("locale"));
         entityContext.put("timeZone", context.get("timeZone"));
@@ -156,7 +153,9 @@ public class PrimaryKeyFinder extends Finder {
                     }
                 }
             } else {
-                if (Debug.infoOn()) Debug.logInfo("Returning null because found incomplete primary key in find: " + entityPK, module);
+                if (Debug.infoOn()) {
+                    Debug.logInfo("Returning null because found incomplete primary key in find: " + entityPK, module);
+                }
             }
 
             return valueOut;

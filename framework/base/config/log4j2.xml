@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
 <Configuration monitorInterval="60">
     <!--
       Default configuration for logging; for customizations refer to http://logging.apache.org/log4j/2.x/manual/configuration.html.
@@ -46,6 +51,7 @@
         <logger name="org.ofbiz.base.converter.Converters" level="warn"/>
         <logger name="org.apache" level="warn"/>
         <logger name="freemarker" level="warn"/>
+        <logger name="FOP" level="warn"/>
 
         <!-- SCIPIO: filter third-party libraries -->
         <logger name="net.fortuna.ical4j" level="warn"/>
@@ -61,6 +67,25 @@
 
         <!-- SCIPIO: Scipio Solr auth/security plugins -->
         <logger name="com.ilscipio.scipio.solr.plugin.security" level="info"/>
+
+        <!-- SCIPIO: Scipio Camel plugins (max verbosity) 
+            NOTE: This is only needed because some Camel superclasses and utilities
+            log directly to log4j under our name; otherwise our Scipio code checks the enabled ofbiz log levels (info, verbose, etc.).
+            There is a small chance you may need to change these to "warn" on production systems. -->
+        <logger name="com.ilscipio.scipio.camel.endpoint" level="info"/>
+        <logger name="com.ilscipio.scipio.camel.route" level="info"/>
+
+        <!-- 
+            CUSTOM loggers
+
+            To avoid merge conflicts in client projects, custom
+            loggers may be defined below this comment.
+        -->
+
+
+        <!-- 
+            /CUSTOM loggers (END)
+        -->
 
         <Root level="all">
             <AppenderRef ref="async"/>

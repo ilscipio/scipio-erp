@@ -25,11 +25,11 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
         public FtlWriterOnlyFetcher(Appendable writer, MapStack<String> context) {
             super(writer, context);
         }
-        
+
         public FtlWriterOnlyFetcher() {
             super(null, null);
         }
-        
+
         @Override
         public Appendable getWriter() {
             Appendable writer = getWriterFromEnvironment(FreeMarkerWorker.getCurrentEnvironment());
@@ -47,11 +47,11 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
         public FtlFullFetcher(Appendable writer, MapStack<String> context) {
             super(writer, context);
         }
-        
+
         public FtlFullFetcher() {
             super(null, null);
         }
-        
+
         @Override
         public MapStack<String> getContext() {
             MapStack<String> context = getContextFromEnvironment(FreeMarkerWorker.getCurrentEnvironment());
@@ -67,18 +67,18 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
         public FallbackFtlWriterOnlyFetcher(Appendable writer, MapStack<String> context) {
             super(writer, context);
         }
-        
+
         public FallbackFtlWriterOnlyFetcher() {
             super(null, null);
         }
-        
+
         @Override
         public Appendable getWriter() {
             if (writer != null) return writer;
             return getWriterFromEnvironment(FreeMarkerWorker.getCurrentEnvironment());
         }
     }
-    
+
     /**
      * FTL context fetcher that only gets writer from Environment if it was null,
      * and also fetches the context from Environment if it was null.
@@ -87,7 +87,7 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
         public FallbackFtlFullFetcher(Appendable writer, MapStack<String> context) {
             super(writer, context);
         }
-        
+
         public FallbackFtlFullFetcher() {
             super(null, null);
         }
@@ -108,7 +108,7 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     public static MapStack<String> getContextFromEnvironment(Environment env) {
         if (env != null) {

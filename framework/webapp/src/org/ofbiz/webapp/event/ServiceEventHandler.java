@@ -221,7 +221,7 @@ public class ServiceEventHandler implements EventHandler {
                             }
                         }
                         multiPartMap.put(fieldName, ByteBuffer.wrap(item.get()));
-                        multiPartMap.put("_" + fieldName + "_size", Long.valueOf(item.getSize()));
+                        multiPartMap.put("_" + fieldName + "_size", item.getSize());
                         multiPartMap.put("_" + fieldName + "_fileName", fileName);
                         multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());
                     }
@@ -310,7 +310,7 @@ public class ServiceEventHandler implements EventHandler {
 
         // get only the parameters for this service - converted to proper type
         // TODO: pass in a list for error messages, like could not convert type or not a proper X, return immediately with messages if there are any
-        List<Object> errorMessages = new LinkedList<Object>();
+        List<Object> errorMessages = new LinkedList<>();
         serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, errorMessages, timeZone, locale);
         if (errorMessages.size() > 0) {
             // uh-oh, had some problems...
@@ -336,11 +336,15 @@ public class ServiceEventHandler implements EventHandler {
         // invoke the service
         Map<String, Object> result = null;
         try {
+            /* SCIPIO: 2018-11-23: Refactored
             if (ASYNC.equalsIgnoreCase(mode)) {
                 dispatcher.runAsync(serviceName, serviceContext);
             } else {
                 result = dispatcher.runSync(serviceName, serviceContext);
             }
+            */
+            result = invokeService(dispatcher, model, serviceName, serviceContext, mode,
+                    event, requestMap, request, response);
         } catch (ServiceAuthException e) {
             // not logging since the service engine already did
             request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
@@ -372,19 +376,17 @@ public class ServiceEventHandler implements EventHandler {
             }
 
             // set the messages in the request; this will be picked up by messages.ftl and displayed
-            request.setAttribute("_ERROR_MESSAGE_LIST_", result.get(ModelService.ERROR_MESSAGE_LIST));
-            request.setAttribute("_ERROR_MESSAGE_MAP_", result.get(ModelService.ERROR_MESSAGE_MAP));
-            request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+            EventUtil.setRequestMessagesFromService(request, result); // SCIPIO: Factored out
 
-            request.setAttribute("_EVENT_MESSAGE_LIST_", result.get(ModelService.SUCCESS_MESSAGE_LIST));
-            request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
-            
-            // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...) 
+            // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
-            if (responseString.equals(ModelService.RESPOND_SUCCESS) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
-                    && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {
-                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale));
-
+            // 2019-03-06: We now also don't add this if there was already an error message from a prior service.
+            // NOTE: See also org.ofbiz.webapp.control.RequestHandler#cleanupEventMessages for the code that handles _DEF_EVENT_MSG_; it unsets
+            // _EVENT_MESSAGE_ if an error message exists and _EVENT_MESSAGE_ is still set to _DEF_EVENT_MSG_ by the time the events are done.
+            if (ModelService.RESPOND_SUCCESS.equals(responseString) && !EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
+                String defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale);
+                request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
+                request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
             }
 
             // set the results in the request
@@ -392,9 +394,11 @@ public class ServiceEventHandler implements EventHandler {
                 String resultKey = rme.getKey();
                 Object resultValue = rme.getValue();
 
-                if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                // SCIPIO: This is ridiculous
+                //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+                //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+                //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+                if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
                     request.setAttribute(resultKey, resultValue);
                 }
             }
@@ -404,9 +408,26 @@ public class ServiceEventHandler implements EventHandler {
         return responseString;
     }
 
+    /**
+     * SCIPIO: Core service invocation, overridable.
+     * Refactored from {@link #invoke(Event, RequestMap, HttpServletRequest, HttpServletResponse)}.
+     * Added 2018-11-23.
+     */
+    protected Map<String, Object> invokeService(LocalDispatcher dispatcher, ModelService modelService, String serviceName, Map<String, Object> serviceContext, String mode,
+            Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        Map<String, Object> result = null;
+        if (ASYNC.equalsIgnoreCase(mode)) {
+            dispatcher.runAsync(serviceName, serviceContext);
+        } else {
+            result = dispatcher.runSync(serviceName, serviceContext);
+        }
+        return result;
+    }
+
     public static void checkSecureParameter(RequestMap requestMap, Set<String> urlOnlyParameterNames, String name, HttpSession session, String serviceName, Delegator delegator) throws EventHandlerException {
         // special case for security: if this is a request-map defined as secure in controller.xml then only accept body parameters coming in, ie don't allow the insecure URL parameters
-        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true, but we can't just look at the request.isSecure() method here because it is allowed to send secure requests for request-map with https=false
+        // NOTE: the RequestHandler will check the HttpSerletRequest security to make sure it is secure if the request-map -> security -> https=true,
+        // but we can't just look at the request.isSecure() method here because it is allowed to send secure requests for request-map with https=false
         if (requestMap != null && requestMap.securityHttps) {
             if (urlOnlyParameterNames.contains(name)) {
                 String errMsg = "Found URL parameter [" + name + "] passed to secure (https) request-map with uri ["
@@ -415,9 +436,9 @@ public class ServiceEventHandler implements EventHandler {
                     + "(a form field) instead of the request URL."
                     + " Moreover it would be kind if you could create a Jira sub-task of https://issues.apache.org/jira/browse/OFBIZ-2330 "
                     + "(check before if a sub-task for this error does not exist)."
-                    + " If you are not sure how to create a Jira issue please have a look before at http://cwiki.apache.org/confluence/x/JIB2"
+                    + " If you are not sure how to create a Jira issue please have a look before at https://cwiki.apache.org/confluence/display/OFBIZ/OFBiz+Contributors+Best+Practices"
                     + " Thank you in advance for your help.";
-                Debug.logError("=============== " + errMsg + "; In session [" + ControlActivationEventListener.showSessionId(session) + "]; Note that this can be changed using the service.http.parameters.require.encrypted property in the url.properties file", module);
+                Debug.logError("=============== " + errMsg + "; In session " + ControlActivationEventListener.getSessionIdForLog(session) + "; Note that this can be changed using the service.http.parameters.require.encrypted property in the url.properties file", module);
 
                 // the default here is true, so anything but N/n is true
                 boolean requireEncryptedServiceWebParameters = !EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "service.http.parameters.require.encrypted", "N", delegator);

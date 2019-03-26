@@ -59,6 +59,7 @@
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonErrorUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
@@ -143,7 +144,17 @@
     <screen name="CommonPartyDecorator">
         <section>
             <widgets>
-                <decorator-screen name="CommonSetupDecorator"/>
+                <section>
+                    <condition>
+                        <if-true field="useSetupWizardDec"/>
+                    </condition>
+                    <widgets>
+                        <decorator-screen name="CommonSetupWizardDecorator"/>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="CommonSetupDecorator"/>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>
@@ -161,7 +172,7 @@
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <and>
                         <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                        <not><if-empty field="taxAuthority"/></not>
+                        <not><if-empty field="taxAuthority"/></not><!-- SCIPIO: TODO: REVIEW: WHY was this needed? -->
                     </and>
                 </condition-to-field>
             </actions>
@@ -227,7 +238,14 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/><!-- fallback only; screens should set it themselves -->
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.base.util.*;
-                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) || context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
+                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) ||
+                        UtilMisc.booleanValue(context.setupForce, false) ||
+                        context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
+                    // SPECIAL: record the "current" orgPartyId in session, ONLY so stock-like
+                    // screens such as editcontactmech can access it (do not use if from scipio-code step screens!)
+                    if (context.setupSessionOrgSet != false) {
+                        session.setAttribute("scpSetupOrgPartyId", context.orgPartyId);
+                    }
                 ]]></script>
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
@@ -247,7 +265,7 @@
                                 <platform-specific>
                                     <html>
                                         <html-template><![CDATA[
-                                          <@heading>${uiLabelMap[rawString(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${uiLabelMap.CommonPartyId}: ${orgPartyGroup.partyId}]<#t/>
+                                          <@heading>${uiLabelMap[raw(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${uiLabelMap.CommonPartyId}: ${orgPartyGroup.partyId}]<#t/>
                                             <#t/><#if productStore?has_content> - ${productStore.storeName!productStore.productStoreId}</#if></@heading>
                                         ]]></html-template>
                                     </html>
@@ -259,6 +277,7 @@
                                 <if-compare field="setupStepAllowed" type="Boolean" operator="equals" value="true"/>
                             </condition>
                             <widgets>
+                                <decorator-section-include name="setup-pre-body"/>
                                 <decorator-section-include name="body"/>
                                 <section>
                                     <condition>
@@ -351,13 +370,18 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="entityExportAll"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
                 <set field="results" from-field="parameters.results"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <platform-specific><html><html-template><![CDATA[
+                                <@alert type="info"><a href="<@serverUrl uri="/admin/control/xmldsdump" extLoginKey=true/>"><#rt/>
+                                    <#lt/>${uiLabelMap.SetupExportAdvancedInfo}</a></@alert>
+                            ]]></html-template></html></platform-specific>
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/entity/EntityExportAll.ftl"/></html>
                             </platform-specific>
@@ -409,6 +433,48 @@
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonSetupAccountingTabsAction">    
+        <section>
+            <actions>
+                <set field="setupStep" value="accounting"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>
+            
+                <property-map resource="ScipioSetupErrorUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ScipioSetupUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SetupUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonErrorUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" default-value="true"/>
+            </actions>
+            <!-- <widgets>       
+                <section>
+                    <condition>
+                        <if-true field="commonSetupAppBasePermCond"/>
+                    </condition>
+                    <widgets>
+                        <decorator-section-include name="body"/>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
+                </section>
+            </widgets> -->
         </section>
     </screen>
     

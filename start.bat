@@ -1,21 +1,8 @@
 echo off
 rem #####################################################################
-rem Licensed to the Apache Software Foundation (ASF) under one
-rem or more contributor license agreements.  See the NOTICE file
-rem distributed with this work for additional information
-rem regarding copyright ownership.  The ASF licenses this file
-rem to you under the Apache License, Version 2.0 (the
-rem "License"); you may not use this file except in compliance
-rem with the License.  You may obtain a copy of the License at
-rem
-rem http://www.apache.org/licenses/LICENSE-2.0
-rem
-rem Unless required by applicable law or agreed to in writing,
-rem software distributed under the License is distributed on an
-rem "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-rem KIND, either express or implied.  See the License for the
-rem specific language governing permissions and limitations
-rem under the License.
+rem This file is subject to the terms and conditions defined in the\n
+rem files 'LICENSE' and 'NOTICE', which are part of this source\n
+rem code package.
 rem #####################################################################
 
 %~d0
@@ -28,7 +15,7 @@ rem ### Delete the last log
 rem del %OFBIZ_LOG%
 
 rem ### VM args block ##################################################
-rem set MEMIF=-Xms128M -Xmx512M -XX:MaxPermSize=512m
+rem set MEMIF=-Xms128M -Xmx512M
 rem # RMI settings
 rem set DEBUG=-Dsun.rmi.server.exceptionTrace=true
 rem # Automatic IP address for Windows
@@ -50,13 +37,13 @@ rem ### start ofbiz with previous set VMARGS
 rem "%JAVA_HOME%\bin\java" %VMARGS% -jar ofbiz.jar > %OFBIZ_LOG%
 
 rem ### This one is for more of a debugging mode
-rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar ofbiz.jar > runtime\logs\console.log
+rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar ofbiz.jar > runtime\logs\console.log
 
 rem ### Simple easy to read line
 cd %OFBIZ_HOME%
 echo on
-"%JAVA_HOME%\bin\java" -Xms128M -Xmx3512M -XX:MaxPermSize=1024m -Xdebug -Xnoagent -Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/ -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091 -jar ofbiz.jar
+"%JAVA_HOME%\bin\java" -Xms128M -Xmx3512M -Xdebug -Xnoagent -Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/ -Dsolr.lock.type=single -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091 -jar ofbiz.jar
 echo off
 rem ### If you would prefer the console output to be logged rather than displayed switch out the above line for this one
-rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -jar ofbiz.jar > runtime\logs\console.log
+rem "%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -jar ofbiz.jar > runtime\logs\console.log
  

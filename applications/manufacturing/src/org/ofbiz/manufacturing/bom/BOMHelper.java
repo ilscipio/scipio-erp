@@ -21,6 +21,7 @@ package org.ofbiz.manufacturing.bom;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -29,13 +30,15 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /** Helper class containing static method useful when dealing
  * with product's bills of materials.
  * These methods are also available as services (see {@link BOMServices}).
  */
-public class BOMHelper {
+public final class BOMHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -65,7 +68,7 @@ public class BOMHelper {
         if (inDate == null) inDate = new Date();
         int maxDepth = 0;
         List<GenericValue> productNodesList = EntityQuery.use(delegator).from("ProductAssoc")
-                .where("productIdTo", productId, 
+                .where("productIdTo", productId,
                         "productAssocTypeId", bomType)
                 .cache().filterByDate(inDate).queryList();
         int depth = 0;
@@ -109,7 +112,7 @@ public class BOMHelper {
             productIdKeys.add(productIdKey);
         }
         List<GenericValue> productNodesList = EntityQuery.use(delegator).from("ProductAssoc")
-                .where("productIdTo", productId, 
+                .where("productIdTo", productId,
                         "productAssocTypeId", bomType)
                 .cache().filterByDate(inDate).queryList();
         GenericValue duplicatedNode = null;
@@ -149,8 +152,18 @@ public class BOMHelper {
                 Debug.logError("Production Run for order item (" + orderItem.getString("orderId") + "/" + orderItem.getString("orderItemSeqId") + ") not created.", module);
                 continue;
             }
-            dispatcher.runSync("createProductionRunsForOrder", UtilMisc.<String, Object>toMap("quantity", shipmentPlan.getBigDecimal("quantity"), "orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId"), "shipGroupSeqId", shipmentPlan.getString("shipGroupSeqId"), "shipmentId", shipmentId, "userLogin", userLogin));
+            Map<String, Object> result = dispatcher.runSync("createProductionRunsForOrder", UtilMisc.<String, Object>toMap("quantity", shipmentPlan.getBigDecimal("quantity"), "orderId", 
+                    shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId"), "shipGroupSeqId", shipmentPlan.getString("shipGroupSeqId"), "shipmentId", 
+                    shipmentId, "userLogin", userLogin));
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return "error";
+            }
         }
+        } catch (GenericEntityException|GenericServiceException ge) {
+            Debug.logWarning(ge, module);
         } catch (Exception e) {
             // if there is an exception for either, the other probably wont work
             Debug.logWarning(e, module);

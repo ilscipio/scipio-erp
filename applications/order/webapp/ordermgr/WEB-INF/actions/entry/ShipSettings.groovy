@@ -26,14 +26,23 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityUtil;
 
-
-cart = session.getAttribute("shoppingCart");
-
-if (cart) {
 createNewShipGroup = request.getParameter("createNewShipGroup");
 if ("Y".equals(createNewShipGroup)) {
-    cart.addShipInfo();
+    CartUpdate cartUpdate = CartUpdate.updateSection(request);
+    try { // SCIPIO
+        cart = cartUpdate.getCartForUpdate();
+
+        cart.addShipInfo();
+
+        cart = cartUpdate.commit(cart); // SCIPIO
+    } finally {
+        cartUpdate.close();
+    }
+} else {
+    cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 }
+
+if (cart) {
 
 orderPartyId = cart.getPartyId();
 shipToPartyId = parameters.shipToPartyId;

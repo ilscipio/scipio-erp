@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+    
+    <include location="component://*/webapp/hooks/backend-controller-post.xml" optional="true" order="post-local"/>
     
     <!-- All controller entries were exported to external controller files, to simplify the work whilst reviewing all entries -->
     <description>Accounting Manager Module Site Configuration File</description>
@@ -71,7 +60,10 @@ under the License.
     <request-map uri="massChangeInvoiceStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="massChangeInvoiceStatus"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
+        <!-- SCIPIO: Does not exist
+        <response name="success" type="view" value="FindPurchaseInvoices"/>-->
+        <!-- SCIPIO: FIXME?: response should depend on whether changing sales or purchase invoices... -->
+        <response name="success" type="view" value="FindApInvoices"/>
     </request-map>
     <request-map uri="cancelCheckRunPayments">
         <security https="true" auth="true"/>
@@ -105,13 +97,12 @@ under the License.
         <response name="success" type="view" value="NewPurchaseInvoice"/>
     </request-map>
     
-     <!-- Check for duplicates
+    <!-- SCIPIO: Check for duplicates (?)
     
     <request-map uri="FindPurchaseInvoices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPurchaseInvoices"/>
     </request-map>
-    
 
     <request-map uri="processMassCheckRun">
         <security https="true" auth="true"/>
@@ -145,11 +136,7 @@ under the License.
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="NewOutgoingPayment"/>
     </request-map>
-    
-     -->
-
-
-
+    -->
 
     <!-- 
     **************
@@ -356,6 +343,13 @@ under the License.
     <request-map uri="GlAccountNavigate">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
+    </request-map>
+    
+    <request-map uri="getGlAccountExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getGlAccountAndAssocs"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
 
     <!-- TO BE REMOVED
@@ -754,10 +748,10 @@ under the License.
     
     <!-- 
     **************
-    * Conntracts
+    * Contracts
     **************
      -->
-     <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
+    <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
     <request-map uri="cancelAgreement">
         <security https="true" auth="true"/>
         <event type="service" invoke="cancelAgreement"/>
@@ -1020,6 +1014,7 @@ under the License.
         <response name="success" type="view" value="EditAgreementRoles"/>
         <response name="error" type="view" value="EditAgreementRoles"/>
     </request-map>
+
     
     <!-- 
     **************
@@ -1114,11 +1109,13 @@ under the License.
         <response name="success" type="view" value="editInvoiceApplications"/>
         <response name="error" type="view" value="editInvoiceApplications"/>
     </request-map>
+    <!-- SCIPIO: screen "InvoiceStatus" removed
     <request-map uri="invoiceStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="invoiceStatus"/>
     </request-map>
-    
+    -->
+
     <!-- re Invoice Roles -->
     <request-map uri="invoiceRoles">
         <security https="true" auth="true"/>
@@ -1177,6 +1174,7 @@ under the License.
     </request-map>
     -->
     <request-map uri="getInvoiceRunningTotal">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="service" invoke="getInvoiceRunningTotal"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
@@ -1450,11 +1448,12 @@ under the License.
     </request-map>
 
     <!-- Fixed Asset GeoLocation-->
+    <!-- SCIPIO: TODO: REVIEW: view no longer exists...
     <request-map uri="FixedAssetGeoLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FixedAssetGeoLocation"/>
         <response name="error" type="view" value="EditFixedAsset"/>
-    </request-map>
+    </request-map>-->
     
 
     <!--
@@ -1613,12 +1612,13 @@ under the License.
         <response name="success" type="view" value="BankReconciliation"/>
     </request-map>
     <request-map uri="getFinAccountTransRunningTotalAndBalances">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="service-multi" invoke="getFinAccountTransRunningTotalAndBalances"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
     <request-map uri="reconcileFinAccountTrans">
-        <security https="true" auth="false"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: switched to auth true -->
         <event type="service-multi" invoke="reconcileFinAccountTrans"/>
         <response name="success" type="view" value="BankReconciliation"/>
         <response name="error" type="view" value="BankReconciliation"/>
@@ -1738,9 +1738,43 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="journals"/>
     </request-map>
+    <request-map uri="createGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
+    <request-map uri="updateGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
+    <request-map uri="deleteGlJournal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteGlJournal"/>
+        <response name="success" type="view" value="journals"/>
+        <response name="error" type="view" value="journals"/>
+    </request-map>
+    
+    <!-- 
+    **************
+    * Transactions
+    **************
+    -->
+    <request-map uri="Transactions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Transactions"/>
+    </request-map>
+    
+    <!-- 
+    **************
+    * Reports
+    **************
+    -->
     <request-map uri="TransactionReports">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="TransactionReports"/>
+        <response name="success" type="view" value="TransactionTotals"/>
     </request-map>
     <!--
     <request-map uri="FinancialTransactionReport">
@@ -1802,6 +1836,7 @@ under the License.
         <response name="error" type="view" value="PaymentsDepositWithdraw"/>
     </request-map>
     <request-map uri="getPaymentRunningTotal">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="service" invoke="getPaymentRunningTotal"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
@@ -1997,6 +2032,62 @@ under the License.
             <redirect-parameter name="daysOffset"/>
         </response>
     </request-map>
+    
+        <!-- SCIPIO (02/01/2019): Transaction page requests readded -->
+    <request-map uri="FindGatewayResponses">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGatewayResponses"/>
+    </request-map>
+    <request-map uri="ViewGatewayResponse">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+    </request-map>
+    <request-map uri="AuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AuthorizeTransaction"/>
+    </request-map>
+    <request-map uri="CaptureTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CaptureTransaction"/>
+    </request-map>
+
+    <request-map uri="ManualTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="manualETx">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processManualCcTx">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="manualForcedCcTransaction"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processAuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="authOrderPaymentPreference"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processCaptureTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="captureOrderPayments"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processReleaseTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="releaseOrderPaymentPreference"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processRefundTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="refundOrderPaymentPreference"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
 
     <!-- Payment Group requests -->
     <request-map uri="FindPaymentGroup">
@@ -2092,19 +2183,19 @@ under the License.
     </request-map>
     <request-map uri="TimePeriods">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="createCustomTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustomTimePeriod"/>
-        <response name="success" type="view" value="TimePeriods"/>
-        <response name="error" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="closeFinancialTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="closeFinancialTimePeriod"/>
-        <response name="success" type="view" value="TimePeriods"/>
-        <response name="error" type="view" value="TimePeriods"/>
+        <response name="success" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     <request-map uri="PartyAcctgPreference">
         <security https="true" auth="true"/>
@@ -2242,9 +2333,15 @@ under the License.
         <response name="error" type="view" value="ViewRateAmounts"/>
     </request-map>
 
-    <request-map uri="deleteRateAmount">
+    <request-map uri="deleteRateAmount"><!-- SCIPIO: legacy request for backward-compat; it doesn't delete, it expires -->
         <security https="true" auth="true"/>
-        <event type="service" invoke="deleteRateAmount"/>
+        <event type="service" invoke="expireRateAmount"/><!-- SCIPIO: NOTE: there was no such thing as deletion, was always expire -->
+        <response name="success" type="view" value="ViewRateAmounts"/>
+        <response name="error" type="view" value="ViewRateAmounts"/>
+    </request-map>
+    <request-map uri="expireRateAmount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expireRateAmount"/>
         <response name="success" type="view" value="ViewRateAmounts"/>
         <response name="error" type="view" value="ViewRateAmounts"/>
     </request-map>
@@ -2398,10 +2495,6 @@ under the License.
     </request-map>
     
     <!-- CustomTimePeriod requests -->
-    <request-map uri="EditCustomTimePeriod">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCustomTimePeriod"/>
-    </request-map>
     <request-map uri="AddCustomTimePeriod">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AddCustomTimePeriod"/>
@@ -2710,6 +2803,7 @@ under the License.
     <!-- SCIPIO: new lookups -->
     <request-map uri="LookupTaxAuthorityGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityGeo"/></request-map>
     <request-map uri="LookupTaxAuthorityPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityPartyName"/></request-map>
+    <request-map uri="LookupOrderPaymentPreference"><security auth="true" https="true"/><response name="success" type="view" value="LookupOrderPaymentPreference"/></request-map>
 
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
 
@@ -2831,15 +2925,10 @@ under the License.
     <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindApPaymentGroups"/>
     <view-map name="FindApInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindApInvoices"/>
     <view-map name="FindApPayments" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindApPayments"/>
-    <view-map name="FindPurchaseInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindPurchaseInvoices"/>
+    <!--<view-map name="FindPurchaseInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindPurchaseInvoices"/> - SCIPIO: removed -->
     <view-map name="NewPurchaseInvoice" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#NewPurchaseInvoice"/>
-    <view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#NewOutgoingPayment"/>
+    <!--<view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#NewOutgoingPayment"/> - SCIPIO: removed -->
 
-     
-    <!--
-    <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupInvoice"/>
-    <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupPayment"/>-->
-    
     <!--
     **************
     * Accounts Receivable
@@ -2854,11 +2943,6 @@ under the License.
     <view-map name="ListARReports" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#ListARReports"/>
     <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindArInvoices"/>
     <view-map name="FindArPayments" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindArPayments"/>
-    
-    <!-- 
-        
-    <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>
-    <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupPayment"/>-->
     
     <!-- 
     **************
@@ -2909,7 +2993,7 @@ under the License.
     <!-- Party Accounts -->
     <view-map name="PartyAccountsSummary" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#PartyAccountsSummary"/>
     <view-map name="FindAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindAcctgTrans"/>
-    <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/scipio/ledger/widget/GlScreens.xml#CreateAcctgTransAndEntries"/>
+    <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#CreateAcctgTransAndEntries"/>
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#EditAcctgTrans"/>
     <view-map name="FindAcctgTransEntries" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindAcctgTransEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#ListUnpostedAcctgTrans"/>
@@ -2931,6 +3015,7 @@ under the License.
     <view-map name="ListAgreementItemTerms" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemTerms"/>
     <view-map name="EditAgreementItemTerm" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementItemTerm"/>
 
+    <view-map name="EditAgreementRoles" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementRoles"/>
     <view-map name="ListAgreementItemProducts" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemProducts"/>
     <view-map name="ListAgreementItemProductsReport" type="screenfop" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemProductsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EditAgreementItemProduct" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementItemProduct"/>
@@ -2982,7 +3067,7 @@ under the License.
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountAuths"/>
-    <view-map name="EditFinAccountTypeGlAccounts" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditFinAccountTypeGlAccounts"/>
+    <view-map name="EditFinAccountTypeGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditFinAccountTypeGlAccounts"/>
     <view-map name="FindFinAccountTrans" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#FindFinAccountTrans"/>
     <view-map name="BankReconciliation" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#BankReconciliation"/>
     <view-map name="EditFinAccountReconciliations" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#EditFinAccountReconciliations"/>
@@ -3006,7 +3091,7 @@ under the License.
     <view-map name="EditFixedAssetMaint" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMaint"/>
     <view-map name="ListFixedAssetMaints" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#ListFixedAssetMaints"/>
     <view-map name="EditFixedAssetMeters" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMeters"/>
-    <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/scipio/assets/widget/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
+    <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
     <view-map name="calendar" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#Calendar"/>
     <view-map name="WorkEffortSummary" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#WorkEffortSummary"/>
 
@@ -3023,14 +3108,14 @@ under the License.
     <view-map name="editInvoice" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoice"/>
     <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceItems"/>
     <view-map name="editInvoiceTimeEntries" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceTimeEntries"/>
-    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceStatus"/>
+    <!--<view-map name="invoiceStatus" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceStatus"/> - SCIPIO: removed -->
     <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceApplications"/>
     <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceRoles"/>
     <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
     <view-map name="invoiceTerms" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceTerms"/>
     -->
     <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#SendPerEmail"/>
-    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/invoice/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
+    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
 
     <view-map name="CommissionRun" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#CommissionRun"/> <!-- Migrated from ap/InvoiceScreens -->
     
@@ -3051,14 +3136,24 @@ under the License.
     <view-map name="ExportTransactionCsv" type="screencsv" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportTransactionCsv" content-type="text/csv" encoding="none"/>
     <view-map name="ExportTransactions" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportTransactions"/>
     
+     <!-- 
+    **************
+    * Transactions
+    **************-->
+    <view-map name="Transactions" page="component://accounting/widget/journals/JournalScreens.xml#Transactions" type="screen"/>    
+    
     <!-- 
     **************
     * Journals
     **************-->
-     <view-map name="journals" type="screen" page="component://accounting/widget/journals/JournalScreens.xml#Journals"/>
-     <view-map name="TransactionReports" page="component://accounting/widget/journals/JournalScreens.xml#TransactionReports" type="screen"/>
+     <view-map name="journals" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#Journals"/>     
      <!--<view-map name="FinancialTransactionReport" page="component://accounting/widget/journals/JournalScreens.xml#FinancialTransactionReport" type="screen"/> -->
    
+    <!-- 
+    **************
+    * Reports
+    **************
+     -->
     <view-map name="FinancialSummaryReportOptions" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#FinancialSummaryReportOptions"/>
     <view-map name="SalesInvoiceByProductCategorySummary" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#SalesInvoiceByProductCategorySummary"/>
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#TrialBalance"/>
@@ -3101,8 +3196,6 @@ under the License.
     <view-map name="GlAccountTrialBalanceReportPdf" type="screenfop" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalanceReportPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>
 
-
-
     
     <!-- 
     **************
@@ -3118,6 +3211,11 @@ under the License.
     <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
     <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
 
+    <view-map name="FindGatewayResponses" page="component://accounting/widget/payments/PaymentScreens.xml#FindGatewayResponses" type="screen"/>
+    <view-map name="ViewGatewayResponse" page="component://accounting/widget/payments/PaymentScreens.xml#ViewGatewayResponse" type="screen"/>
+    <view-map name="AuthorizeTransaction" page="component://accounting/widget/payments/PaymentScreens.xml#AuthorizeTransaction" type="screen"/>
+    <view-map name="CaptureTransaction" page="component://accounting/widget/payments/PaymentScreens.xml#CaptureTransaction" type="screen"/>
+
     <!-- Payment Group -->
     <view-map name="FindPaymentGroup" type="screen" page="component://accounting/widget/payments/PaymentGroupScreens.xml#FindPaymentGroup"/>
     <view-map name="EditPaymentGroup" type="screen" page="component://accounting/widget/payments/PaymentGroupScreens.xml#EditPaymentGroup"/>
@@ -3131,7 +3229,7 @@ under the License.
     **************-->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#ListCompanies"/>
     <view-map name="AddCompany" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#AddCompany"/>
-    <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/>
+    
     <view-map name="AddCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#AddCustomTimePeriod"/>
     <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>    
 
@@ -3143,7 +3241,7 @@ under the License.
     <view-map name="GlAccountTypeDefaults" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountTypeDefaults"/>
     <view-map name="GlAccountPurInvoice" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountPurInvoice"/>
     <view-map name="GlAccountSalInvoice" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountSalInvoice"/>
-    <view-map name="GlAccountTypePaymentType" type="screen" page="component:title//accounting/widget/settings/GlSetupScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountTypePaymentType"/>
     <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountNrPaymentMethod"/>
     <view-map name="EditProductGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditProductGlAccounts"/>
     <view-map name="EditProductCategoryGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditProductCategoryGlAccounts"/>
@@ -3216,6 +3314,7 @@ under the License.
     <!-- SCIPIO: new lookups -->
     <view-map name="LookupTaxAuthorityGeo" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityGeo"/>
     <view-map name="LookupTaxAuthorityPartyName" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityPartyName"/>
+    <view-map name="LookupOrderPaymentPreference" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupOrderPaymentPreference"/>
 
     <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
     <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#NewDepositSlip"/>

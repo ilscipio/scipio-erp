@@ -93,6 +93,8 @@ public class TruitionCoReg {
                 tru.setDomain(domainName);
                 tru.setPath(cookiePath);
                 tru.setMaxAge(time);
+                tru.setSecure(true); // SCIPIO: added 2018-07-10
+                tru.setHttpOnly(true); // SCIPIO: added 2018-07-10
                 resp.addCookie(tru);
                 Debug.logInfo("Set Truition Cookie [" + tru.getName() + "/" + tru.getDomain() + " @ " + tru.getPath() + "] - " + tru.getValue(), module);
             } catch (UnsupportedEncodingException e) {

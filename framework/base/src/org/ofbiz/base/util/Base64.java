@@ -18,14 +18,23 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.nio.charset.Charset;
+
 /**
  * Base64 implements Base64 encoding and Base 64 decoding.
- *
+ * <p>
+ * SCIPIO: NOTE: 2018-09-13: All methods in this class that perform
+ * String<->byte[] encoding conversions (using <code>String.getBytes<code> 
+ * and <code>String</code> byte[] constructors) use UTF-8 encoding.
+ * Old stock code in the past did not ensure this and may have been using
+ * system charset instead - which was an error. If you use this class,
+ * please make sure you do not need encoding using system or other charset,
+ * and that UTF-8 is appropriate. Methods that do not perform such conversions 
+ * (or where such conversions are not significant) are noted in comments.
  */
-
 public class Base64 {
 
-    private static byte[] Base64EncMap, Base64DecMap;
+    private static byte[] base64EncMap, base64DecMap;
     static {
         // rfc-2045: Base64 Alphabet
         byte[] map =
@@ -94,10 +103,10 @@ public class Base64 {
                 (byte) '9',
                 (byte) '+',
                 (byte) '/' };
-        Base64EncMap = map;
-        Base64DecMap = new byte[128];
-        for (int idx = 0; idx < Base64EncMap.length; idx++) {
-            Base64DecMap[Base64EncMap[idx]] = (byte) idx;
+        base64EncMap = map;
+        base64DecMap = new byte[128];
+        for (int idx = 0; idx < base64EncMap.length; idx++) {
+            base64DecMap[base64EncMap[idx]] = (byte) idx;
         }
     }
 
@@ -110,6 +119,8 @@ public class Base64 {
      */
     public final static byte[] base64Decode(byte[] data) {
         if (data == null) {
+            // SCIPIO: 2018-09-13: This was clearly always intended to return null
+            //return new byte[0];
             return null;
         }
 
@@ -122,7 +133,7 @@ public class Base64 {
 
         // ascii printable to 0-63 conversion
         for (int idx = 0; idx < data.length; idx++) {
-            data[idx] = Base64DecMap[data[idx]];
+            data[idx] = base64DecMap[data[idx]];
         }
 
         // 4-byte to 3-byte conversion
@@ -145,14 +156,57 @@ public class Base64 {
     /**
      * This method decodes the given string using the base64-encoding
      * specified in RFC-2045 (Section 6.8).
+     * <p>
+     * SCIPIO: NOTE: 2018-09-13: This method assumes the decoded byte content
+     * is to be interpreted as UTF-8. If you need another charset,
+     * try {@link #base64DecodeToBytes(String)}.
      *
      * @param  str the base64-encoded string.
      * @return the decoded str.
      */
     public final static String base64Decode(String str) {
-        if (str == null) return null;
-        
-        return new String(base64Decode(str.getBytes()));
+        return base64Decode(str, UtilIO.getUtf8());
+    }
+
+    /**
+     * SCIPIO: This method decodes the given string using the base64-encoding
+     * specified in RFC-2045 (Section 6.8), returning as a String in the given charset
+     * used for byte[]->String decoding.
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  str the base64-encoded string.
+     * @param  charset the charset to use for byte[]->String decoding after the base64 decoding.
+     * @return the decoded str.
+     */
+    public final static String base64Decode(String str, Charset charset) {
+        if (str == null) {
+            return null;
+        }
+
+        // SCIPIO: NOTE: The UTF-8 passed to getBytes is cosmetic only; str should be a simple base64 char range only.
+        return new String(base64Decode(str.getBytes(UtilIO.getUtf8())), charset);
+    }
+
+    /**
+     * SCIPIO: This method decodes the given string using the base64-encoding
+     * specified in RFC-2045 (Section 6.8).
+     * <p>
+     * NOTE: This method avoids handling charsets (or charset usage is non-significant).
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  str the base64-encoded string.
+     * @return the decoded bytes.
+     */
+    public final static byte[] base64DecodeToBytes(String str) {
+        if (str == null) {
+            return null;
+        }
+
+        // SCIPIO: NOTE: The UTF-8 passed to getBytes is cosmetic only; the string should
+        // be a limited character range only.
+        return base64Decode(str.getBytes(UtilIO.getUtf8()));
     }
 
     /**
@@ -164,6 +218,8 @@ public class Base64 {
      */
     public final static byte[] base64Encode(byte[] data) {
         if (data == null) {
+            // SCIPIO: 2018-09-13: This was clearly always intended to return null
+            //return new byte[0];
             return null;
         }
 
@@ -172,18 +228,19 @@ public class Base64 {
 
         // 3-byte to 4-byte conversion + 0-63 to ascii printable conversion
         for (sidx = 0, didx = 0; sidx < data.length - 2; sidx += 3) {
-            dest[didx++] = Base64EncMap[(data[sidx] >>> 2) & 077];
-            dest[didx++] = Base64EncMap[(data[sidx + 1] >>> 4) & 017 | (data[sidx] << 4) & 077];
-            dest[didx++] = Base64EncMap[(data[sidx + 2] >>> 6) & 003 | (data[sidx + 1] << 2) & 077];
-            dest[didx++] = Base64EncMap[data[sidx + 2] & 077];
+            dest[didx++] = base64EncMap[(data[sidx] >>> 2) & 077];
+            dest[didx++] = base64EncMap[(data[sidx + 1] >>> 4) & 017 | (data[sidx] << 4) & 077];
+            dest[didx++] = base64EncMap[(data[sidx + 2] >>> 6) & 003 | (data[sidx + 1] << 2) & 077];
+            dest[didx++] = base64EncMap[data[sidx + 2] & 077];
         }
         if (sidx < data.length) {
-            dest[didx++] = Base64EncMap[(data[sidx] >>> 2) & 077];
+            dest[didx++] = base64EncMap[(data[sidx] >>> 2) & 077];
             if (sidx < data.length - 1) {
-                dest[didx++] = Base64EncMap[(data[sidx + 1] >>> 4) & 017 | (data[sidx] << 4) & 077];
-                dest[didx++] = Base64EncMap[(data[sidx + 1] << 2) & 077];
-            } else
-                dest[didx++] = Base64EncMap[(data[sidx] << 4) & 077];
+                dest[didx++] = base64EncMap[(data[sidx + 1] >>> 4) & 017 | (data[sidx] << 4) & 077];
+                dest[didx++] = base64EncMap[(data[sidx + 1] << 2) & 077];
+            } else {
+                dest[didx++] = base64EncMap[(data[sidx] << 4) & 077];
+            }
         }
 
         // add padding
@@ -197,14 +254,58 @@ public class Base64 {
     /**
      * This method encodes the given string using the base64-encoding
      * specified in RFC-2045 (Section 6.8).
+     * <p>
+     * SCIPIO: NOTE: 2018-09-13: This method assumes the string content should
+     * be encoded to bytes using UTF-8 before being made into base64. If you need
+     * another charset, try {@link #base64EncodeToString(byte[])}.
      *
      * @param  str the string
      * @return the base64-encoded str
      */
     public final static String base64Encode(String str) {
+        return base64Encode(str, UtilIO.getUtf8()); // SCIPIO: now delegating
+    }
+
+    /**
+     * SCIPIO: This method encodes the given string using the base64-encoding
+     * specified in RFC-2045 (Section 6.8), with String->byte[] encoding done
+     * in the specific charset prior to base64 encoding.
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  str the string
+     * @param  charset the charset for String->byte[] encoding prior to base64 encoding
+     * @return the base64-encoded str
+     */
+    public final static String base64Encode(String str, Charset charset) {
         if (str == null) {
             return null;
         }
-        return new String(base64Encode(str.getBytes()));
+
+        // SCIPIO: 2018-09-13: Add charset to String constructor
+        // NOTE: The UTF-8 for String constructor is cosmetic only; the string will
+        // be a limited base64 character range.
+        return new String(base64Encode(str.getBytes(charset)), UtilIO.getUtf8());
+    }
+
+    /**
+     * SCIPIO: This method encodes the given byte array using the base64-encoding
+     * specified in RFC-2045 (Section 6.8).
+     * <p>
+     * NOTE: This method avoids handling charsets (or charset usage is non-significant).
+     * <p>
+     * Added 2018-09-13.
+     *
+     * @param  data the data
+     * @return the base64-encoded str
+     */
+    public final static String base64EncodeToString(byte[] data) {
+        if (data == null) {
+            return null;
+        }
+
+        // NOTE: The UTF-8 for String constructor is cosmetic only; the string will
+        // be a limited base64 character range.
+        return new String(base64Encode(data), UtilIO.getUtf8());
     }
 }

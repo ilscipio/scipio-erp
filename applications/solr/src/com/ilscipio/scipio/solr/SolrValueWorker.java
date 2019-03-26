@@ -20,13 +20,13 @@ public class SolrValueWorker {
     private final Locale currentLocale;
     private final Locale fallbackLocale;
     private final List<Locale> lookupLocales;
-    
-    /* 
+
+    /*
      ******************************************
      * Constructors
      ******************************************
      */
-    
+
     protected SolrValueWorker(SolrDocument solrDoc, Locale currentLocale, Locale fallbackLocale) {
         this.solrDoc = solrDoc;
         this.currentLocale = currentLocale;
@@ -35,31 +35,31 @@ public class SolrValueWorker {
     }
 
     public static SolrValueWorker getWorker(SolrDocument solrDoc, Locale currentLocale, Locale fallbackLocale) {
-        return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(currentLocale), SolrLocaleUtil.getCompatibleLocale(fallbackLocale)); 
+        return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(currentLocale), SolrLocaleUtil.getCompatibleLocale(fallbackLocale));
     }
-    
+
     public static SolrValueWorker getWorker(SolrDocument solrDoc, Locale currentLocale, GenericValue productStore) {
-        return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(currentLocale), SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)); 
+        return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(currentLocale), SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore));
     }
-    
+
     public static SolrValueWorker getWorker(SolrDocument solrDoc) {
-        return new SolrValueWorker(solrDoc, null, null); 
+        return new SolrValueWorker(solrDoc, null, null);
     }
-    
+
     public SolrDocument getSolrDoc() {
         return solrDoc;
     }
 
-    /* 
+    /*
      ******************************************
      * Delegate methods
      ******************************************
      */
-    
+
     public Object getFieldValue(String name) {
         return solrDoc.getFieldValue(name);
     }
-    
+
     public Collection<String> getFieldNames() {
         return solrDoc.getFieldNames();
     }
@@ -80,13 +80,13 @@ public class SolrValueWorker {
         return solrDoc.getFirstValue(name);
     }
 
-    
-    /* 
+
+    /*
      ******************************************
      * Custom methods
      ******************************************
      */
-    
+
     /**
      * Abstracted helper method to return the default field value or if not set its <code>*_i18n_*</code> version.
      * THIS EMULATES THE {@link org.ofbiz.product.product.ProductContentWrapper} BEHAVIOR!
@@ -96,12 +96,12 @@ public class SolrValueWorker {
     public Object getFieldValueI18nForDisplay(String name) {
         return getFieldValueI18nOrGeneral(name);
     }
-    
+
     /**
      * Abstracted method to return appropriate-locale value for one of the <code>*_i18n_*</code>
      * or equivalent fields for the given locale.
      * This version NEVER returns a language other than the ones passed to this worker's constructor.
-     * name is the first part of the field name without underscores, 
+     * name is the first part of the field name without underscores,
      * e.g. "title", "description", "longdescription".
      */
     public Object getFieldValueI18nStrict(String name) {
@@ -111,20 +111,20 @@ public class SolrValueWorker {
         }
         return null;
     }
-    
+
     /**
      * Abstracted method to return the default non-localized version of the given <code>*_i18n_*</code> field.
      */
     public Object getFieldValueGeneral(String name) {
         return solrDoc.getFieldValue(name + "_i18n_" + SolrLocaleUtil.I18N_GENERAL);
     }
-    
+
     /**
      * Abstracted method to return appropriate-locale value for one of the <code>*_i18n_*</code>
      * or equivalent fields for the given locale.
      * If the languages passed to this constructor are unavailable or don't have values, this will
      * return a default text in another language (if possible) as a default/fallback.
-     * name is the first part of the field name without underscores, 
+     * name is the first part of the field name without underscores,
      * e.g. "title", "description", "longdescription".
      */
     public Object getFieldValueI18nOrGeneral(String name) {
@@ -133,12 +133,12 @@ public class SolrValueWorker {
         return getFieldValueGeneral(name);
     }
 
-    /* 
+    /*
      ******************************************
      * Internal helpers
      ******************************************
      */
-    
+
     @SafeVarargs
     static <T> List<T> makeNonNullList(T... values) {
         List<T> res = new ArrayList<>();
@@ -147,5 +147,5 @@ public class SolrValueWorker {
         }
         return res;
     }
-    
+
 }

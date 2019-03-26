@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
@@ -33,7 +20,7 @@ under the License.
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="${styles.link_nav} ${styles.action_add}"/>
+                            <link target="EditQuote" text="${uiLabelMap.OrderNewQuote}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>
                         <screenlet>
                             <include-form name="FindQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>
@@ -205,7 +192,7 @@ under the License.
 
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteRole" list="quoteRoles">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
 
             </actions>
@@ -259,7 +246,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteItem" list="quoteItems">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                     <order-by field-name="quoteItemSeqId"/>
                 </entity-and>
 
@@ -321,7 +308,7 @@ under the License.
 
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteAttribute" list="quoteAttributes">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -376,7 +363,7 @@ under the License.
 
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteCoefficient" list="quoteCoefficients">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -434,13 +421,13 @@ under the License.
 
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteItem" list="quoteItems">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                     <order-by field-name="custRequestId"/>
                     <order-by field-name="custRequestItemSeqId"/>
                     <order-by field-name="quoteItemSeqId"/>
                 </entity-and>
                 <entity-and entity-name="QuoteCoefficient" list="quoteCoefficients">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
                 <set from-field="quote.quoteId" field="quoteId"/>
 
@@ -478,7 +465,7 @@ under the License.
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteAdjustment" list="quoteAdjustments">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -541,13 +528,13 @@ under the License.
                 
                 <entity-one entity-name="Quote" value-field="quote" auto-field-map="true"/>
                 <entity-and entity-name="QuoteItem" list="quoteItems">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                     <order-by field-name="custRequestId"/>
                     <order-by field-name="custRequestItemSeqId"/>
                     <order-by field-name="quoteItemSeqId"/>
                 </entity-and>
                 <entity-and entity-name="QuoteCoefficient" list="quoteCoefficients">
-                    <field-map from-field="quote.quoteId" field-name="quoteId"/>
+                    <field-map field-name="quoteId" from-field="quote.quoteId"/>
                 </entity-and>
                 <set from-field="quote.quoteId" field="quoteId"/>
                 
@@ -600,10 +587,13 @@ under the License.
                 <label text="${note}"/>
                 <include-screen name="ViewQuoteInfo"/>
                 <container style="clear"/>
+                <include-screen name="ViewQuoteItemInfo"/>
+                <!-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+                <!-- 
                 <screenlet title="${uiLabelMap.CommonItems}">
                     <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="QuoteItemsSubTabBar"/>
-                    <include-screen name="ViewQuoteItemInfo"/>
                 </screenlet>
+                -->
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error">${uiLabelMap.OrderNoQuoteFound}</label>
@@ -689,10 +679,10 @@ under the License.
                 <not><if-empty field="quoteItems"/></not>
             </condition>
             <actions>
-                <entity-and list="quoteItemList" entity-name="QuoteItem">
+                <entity-and entity-name="QuoteItem" list="quoteItemList">
                     <field-map field-name="quoteId" from-field="parameters.quoteId"/>
                 </entity-and>
-                <entity-one value-field="quote" entity-name="Quote">
+                <entity-one entity-name="Quote" value-field="quote">
                     <field-map field-name="quoteId" from-field="parameters.quoteId"/>
                 </entity-one>
                 <set field="quoteStatusId" from-field="quote.statusId"/>

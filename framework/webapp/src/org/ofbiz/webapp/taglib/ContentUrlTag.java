@@ -272,7 +272,7 @@ public class ContentUrlTag {
         if (type == null || type.isEmpty()) {
             type = isXslFo ? "local" : null;
         }
-        if (type != null) {
+        if (type != null && !"default".equals(type)) {
             if (secure) {
                 String prefix = (useSysProp && delegator != null) ?
                         EntityUtilProperties.getPropertyValue("url", type+".content.url.prefix.secure", delegator) :

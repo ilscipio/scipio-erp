@@ -1090,7 +1090,8 @@
                 </if-not-empty>
             </else>
         </if-empty>
-        <call-service service-name="createWebSite" in-map-name="parameters"/>
+        <set-service-fields service-name="createWebSite" to-map="createWebSiteCtx" map="parameters"/>
+        <call-service service-name="createWebSite" in-map-name="createWebSiteCtx"/>
         <field-to-request request-name="webSiteId" field="parameters.webSiteId"/>
     </simple-method>
 

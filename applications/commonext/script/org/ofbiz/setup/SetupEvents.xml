@@ -808,7 +808,8 @@
         <!-- SCIPIO: don't override the webSiteId if one is passed
         <set field="parameters.webSiteId" value="ScipioWebStore"/>-->
         <set field="parameters.webSiteId" from-field="parameters.webSiteId" default-value="ScipioWebStore"/><!-- SCIPIO: new default value -->
-        <call-service service-name="createWebSite" in-map-name="parameters"/>
+        <set-service-fields service-name="createWebSite" to-map="createWebSiteCtx" map="parameters"/>
+        <call-service service-name="createWebSite" in-map-name="createWebSiteCtx"/>
     </simple-method>
 
 </simple-methods>

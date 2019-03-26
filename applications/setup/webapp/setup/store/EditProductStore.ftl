@@ -341,7 +341,9 @@
                <#-- SCIPIO: Dropdown will be rendered only when we got webSiteIds defined in shop web.xml that do not exist in DB yet. 
                     Alternatively, we provide a text input so user can add a new one that doesn't exist in DB and web.xml -->
                <#if webappWebsiteMap?has_content || existingDBWebsiteIds?has_content>
-                   <a id="showHideNewWebSiteId" href="#">${uiLabelMap.SetupNewWebSiteId}</a><br/>
+                   <@menu type="button">
+                       <@menuitem contentId="showHideNewWebSiteId" type="link" href="#" text=uiLabelMap.SetupNewWebSiteId class="+${styles.action_run_sys!} ${styles.action_create!}"/>
+                   </@menu>
                    <@script>
                         $(document).ready(function() {
                             var existingDBWebsiteIds = [<#list existingDBWebsiteIds as dbWebSiteId>'${dbWebSiteId}'<#sep>,</#list>];
@@ -351,24 +353,22 @@
                                     $('#newWebSiteId').show();
                                     $('input[name=isCreateWebsite]').val('Y');
                                     $('#showHideNewWebSiteId').text('${uiLabelMap.SetupNewWebSiteId}');
-                                    $('#availableWebSiteId select[name=webSiteId]').attr('disable', true);
-                                    $('#newWebSiteId input[name=webSiteId]').attr('disable', false);
+                                    $('select[name=webSiteId]').prop('disabled', true);
+                                    $('input[name=webSiteId]').prop('disabled', false);
                                 } else {
                                     $('#availableWebSiteId').show();
                                     $('#newWebSiteId').hide();
                                     $('input[name=isCreateWebsite]').val('N');
                                     $('#showHideNewWebSiteId').text('${uiLabelMap.SetupUseExistingWebSiteId}');
-                                    $('#availableWebSiteId select[name=webSiteId]').attr('disable', false);
-                                    $('#newWebSiteId input[name=webSiteId]').attr('disable', true);
+                                    $('select[name=webSiteId]').prop('disabled', false);
+                                    $('input[name=webSiteId]').prop('disabled', true);
                                 }
                             });
                             $('#${submitFormId}').submit(function(e) {
-                                   console.log("submitting form");
                                    webSiteIdVal = $('#availableWebSiteId').val();
                                    if (webSiteIdVal) {
                                        webSiteExists = $.inArray(webSiteIdVal, existingDBWebsiteIds);
                                        if (!webSiteExists) {
-                                           console.log("website doesn't exist in DB ==> " + newWebSiteId);
                                            $('input[name=isCreateWebsite]').val('Y');
                                        }
                                    }
@@ -406,7 +406,7 @@
                         </#list>
                     </@field>
                </#if>
-               <@field containerId="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) containerStyle="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true />
+               <@field containerId="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) containerStyle="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true disabled=true/>
           </#if>
             
           <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}")  required=true size="30" maxlength="60"/>

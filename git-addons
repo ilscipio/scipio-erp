@@ -420,6 +420,10 @@ git-addons-config-local file (ignored by git). See './git-addons help' and the g
 }
 
 determine_scipio_branch() {
+  SCIPIO_BRANCH=$(grep '^scipio.release.vcbranch=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
+  if [ ! -z "${SCIPIO_BRANCH}" ]; then
+    return 0
+  fi
   local SCPVER=$(grep '^scipio.release.branch=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
   if [ "${SCPVER}" == "dev" ]; then
     SCIPIO_BRANCH="master"

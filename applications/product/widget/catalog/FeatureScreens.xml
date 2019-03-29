@@ -205,8 +205,8 @@
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <!--<set field="titleProperty" value="PageTitleEditProductFeatureCategories"/>-->
-                <set field="titleProperty" value="ProductFeatureCategories"/>
                 <set field="activeSubMenuItem" value="FeatureCategory"/>
+                <set field="titleProperty" value="ProductFeatureCategories"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE_1" type="Integer" default-value="10"/>
             </actions>

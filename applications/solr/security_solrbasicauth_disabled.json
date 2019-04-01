@@ -15,7 +15,7 @@
       {"name":"collection-admin-read","role":"*"},
       {"name":"metrics-read","role":"*"},
       {"name":"core-admin-read","role":"*"},
-      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"path":"/admin/ping","role":"*"},
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],

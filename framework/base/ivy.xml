@@ -348,17 +348,19 @@
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.13" conf="base,sources"/>
         <dependency org="org.apache.poi" name="poi" rev="4.0.1" conf="base,sources"/>
 
-        <!-- solr component (applications/solr/ivy.xml) -->
-        <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.5" conf="base,sources"><!-- NOTE: at least 10 deps -->
+        <!-- solr component (applications/solr/ivy.xml)
+            Based on solr-provided JAR libraries found in solr-7.x.x.tgz package (solr-7.x.x/server/lib/)
+            and enhanced with Scipio security patches. -->
+        <dependency org="org.apache.solr" name="solr-solrj" rev="7.7.1" conf="base,sources"><!-- NOTE: at least 10 deps -->
             <!-- TODO: REVIEW: we cannot allow jcl-over-slf4j on the classpath just like that;
                 it intentionally tries to replace (has same class names as) apache commons-logging classes -->
             <exclude org="org.slf4j" module="jcl-over-slf4j"/>
         </dependency>
         <dependency org="info.ganglia.gmetric4j" name="gmetric4j" rev="1.0.7" conf="base,sources"/><!-- undeclared solr dependency -->
-        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.2" conf="base,sources"/><!-- undeclared solr dependency -->
-        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.2" conf="base,sources"/><!-- undeclared solr dependency -->
-        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.2" conf="base,sources"/><!-- undeclared solr dependency -->
-        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.2" conf="base,sources"/><!-- undeclared solr dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.6" conf="base,sources"/><!-- undeclared solr dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.6" conf="base,sources"/><!-- undeclared solr dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.6" conf="base,sources"/><!-- undeclared solr dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.6" conf="base,sources"/><!-- undeclared solr dependency -->
 
         <!--
             SPECIALPURPOSE COMPONENT DEPENDENCIES

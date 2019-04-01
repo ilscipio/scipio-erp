@@ -29,6 +29,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryResponseParser;
 import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.V2Request;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.Base64;
 import org.apache.solr.common.util.NamedList;
@@ -56,6 +57,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
     protected final String solrUsername;
     protected final String solrPassword;
 
+    @SuppressWarnings("deprecation")
     protected ScipioHttpSolrClient(String baseURL, HttpClient httpClient, ResponseParser parser, boolean allowCompression,
             ModifiableSolrParams invariantParams, String solrUsername, String solrPassword) {
         super(baseURL, httpClient, parser, allowCompression, invariantParams);
@@ -70,6 +72,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      * DEV NOTE: Implementation must be maintained with the superclass; the default values
      * are taken from {@link HttpSolrClient.Builder} and are subject to change at solrj updates.
      */
+    @SuppressWarnings("deprecation")
     public static HttpSolrClient create(String baseURL, HttpClient httpClient, String solrUsername, String solrPassword,
             Integer maxConnections, Integer maxConnectionsPerHost, Integer connectTimeout, Integer socketTimeout) {
 
@@ -105,15 +108,18 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      * <p>
      * DEV NOTE: This is copied from superclass,
      */
-    @SuppressWarnings("rawtypes")
     @Override
-    public NamedList<Object> request(final SolrRequest request, final ResponseParser processor, String collection)
+    public NamedList<Object> request(@SuppressWarnings("rawtypes") final SolrRequest request, final ResponseParser processor, String collection)
             throws SolrServerException, IOException {
         HttpRequestBase method = createMethod(request, collection);
         setBasicAuthHeaderScipio(request, method);
-        return executeMethod(method, processor);
+        return executeMethod(method, processor, isV2ApiRequest(request));
     }
 
+    private boolean isV2ApiRequest(@SuppressWarnings("rawtypes") final SolrRequest request) {
+        return request instanceof V2Request || request.getPath().contains("/____v2");
+    }
+    
     /**
      * Sets basic auth header to either the one in the SolrRequest or the one stored in this client.
      * <p>

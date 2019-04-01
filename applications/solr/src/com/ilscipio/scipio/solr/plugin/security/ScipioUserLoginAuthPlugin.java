@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.http.auth.BasicUserPrincipal;
-import org.apache.solr.api.ApiBag;
+import org.apache.solr.common.util.Utils;
 import org.apache.solr.common.util.ValidatingJsonMap;
 import org.apache.solr.security.BasicAuthPlugin;
 import org.ofbiz.base.util.Debug;
@@ -307,7 +307,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
 
         @Override
         public ValidatingJsonMap getSpec() {
-            return ApiBag.getSpec("cluster.security.BasicAuth.Commands").getSpec();
+            return Utils.getSpec("cluster.security.BasicAuth.Commands").getSpec();
         }
 
         @Override

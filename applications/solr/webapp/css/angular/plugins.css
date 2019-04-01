@@ -25,17 +25,16 @@ limitations under the License.
 #content #plugins #navigation .cache a { background-image: url( ../../img/ico/disk-black.png ); }
 #content #plugins #navigation .core a { background-image: url( ../../img/ico/wooden-box.png ); }
 #content #plugins #navigation .other a { background-image: url( ../../img/ico/zone.png ); }
-#content #plugins #navigation .highlighting a { text-decoration: line-through; background-image: url( ../../img/ico/highlighter-text.png ); }
-#content #plugins #navigation .highlighter a { background-image: url( ../../img/ico/highlighter-text.png ); }
-#content #plugins #navigation .updatehandler a{ text-decoration: line-through; background-image: url( ../../img/ico/arrow-circle.png ); }
-#content #plugins #navigation .update a{ background-image: url( ../../img/ico/arrow-circle.png ); }
-#content #plugins #navigation .queryhandler a { text-decoration: line-through; background-image: url( ../../img/ico/magnifier.png ); }
-#content #plugins #navigation .query a { background-image: url( ../../img/ico/magnifier.png ); }
+#content #plugins #navigation .highlighting a { background-image: url( ../../img/ico/highlighter-text.png ); }
+#content #plugins #navigation .updatehandler a{ background-image: url( ../../img/ico/arrow-circle.png ); }
+#content #plugins #navigation .queryhandler a { background-image: url( ../../img/ico/magnifier.png ); }
 #content #plugins #navigation .queryparser a { background-image: url( ../../img/ico/asterisk.png ); }
 
 #content #plugins #navigation .PLUGINCHANGES { margin-top: 20px; }
 #content #plugins #navigation .PLUGINCHANGES a { background-image: url( ../../img/ico/eye.png ); }
 #content #plugins #navigation .RELOAD a { background-image: url( ../../img/ico/arrow-circle.png ); }
+#content #plugins #navigation .NOTE { margin-top: 20px; }
+#content #plugins #navigation .NOTE p { color: #4D4D4D; font-style: italic; }
 
 
 #content #plugins #navigation a
@@ -128,14 +127,14 @@ limitations under the License.
 #content #plugins #frame .entry .stats span
 {
   float: left;
-  width: 11%;
+  width: 9%;
 }
 
 #content #plugins #frame .entry dd,
 #content #plugins #frame .entry .stats ul
 {
   float: right;
-  width: 88%;
+  width: 90%;
 }
 
 #content #plugins #frame .entry .stats ul
@@ -147,12 +146,12 @@ limitations under the License.
 
 #content #plugins #frame .entry .stats dt
 {
-  width: 27%;
+  width: 40%;
 }
 
 #content #plugins #frame .entry .stats dd
 {
-  width: 72%;
+  width: 59%;
 }
 
 #content #plugins #frame .entry.expanded a.linker {

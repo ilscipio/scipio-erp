@@ -370,6 +370,9 @@ code package.
         <attribute mode="IN" optional="true" name="solrPassword" type="String">
             <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
         </attribute>
+        <attribute mode="IN" name="lowercaseOperators" optional="true" type="Boolean">
+            <description>For edismax: If true, "and" and "or" in queries are treated same as "AND" and "OR" (default: true in Scipio)</description>
+        </attribute>
         <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>
         <attribute name="errorType" type="String" mode="OUT" optional="true">
             <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
@@ -498,6 +501,9 @@ code package.
         </attribute>
         <attribute mode="IN" optional="true" name="solrPassword" type="String">
             <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
+        <attribute mode="IN" name="lowercaseOperators" optional="true" type="Boolean">
+            <description>For edismax: If true, "and" and "or" in queries are treated same as "AND" and "OR" (default: true in Scipio)</description>
         </attribute>
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">

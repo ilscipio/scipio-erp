@@ -823,6 +823,11 @@ public abstract class SolrProductSearch {
                 solrQuery.set("qf", queryFields);
             }
 
+            Boolean lowercaseOperators = (Boolean) context.get("lowercaseOperators");
+            if (lowercaseOperators != null) {
+                solrQuery.set("lowercaseOperators", lowercaseOperators);
+            }
+
             Map<String, ?> queryParams = UtilGenerics.checkMap(context.get("queryParams"));
             if (queryParams != null) {
                 for(Map.Entry<String, ?> entry : queryParams.entrySet()) {

@@ -8,12 +8,13 @@ that was originally submitted to the Ofbiz project many years ago (around Solr 4
 Please note that the Scipio Solr component may differ substantially with large improvements 
 from the one now provided in the Ofbiz plugins project.
 
-Currently, the component implements Solr 6. Its native documentation can be found at:
+Currently, the component implements Solr 7. Its native documentation can be found at:
 
-  https://lucene.apache.org/solr/guide/6_6/
+  https://lucene.apache.org/solr/guide/7_7/
 
 This stock component focuses on indexing Product data.
 
+NOTE: For important document updates, see section 8.
 
 Contents:
 
@@ -45,17 +46,17 @@ NOTE: 2017-12: The Solr ECA system was recently significantly overhauled, and no
   more reliably than the old component.
 
 * Scipio configurations:
- * System properties:
-  * ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
- * Config files:
-  * config/solrconfig.properties - Scipio solr service behavior control
-  * ofbiz-component.xml - Standard Scipio component config
+  * System properties:
+    * ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
+  * Config files:
+    * config/solrconfig.properties - Scipio solr service behavior control
+    * ofbiz-component.xml - Standard Scipio component config
 
 * Apache Solr configurations:
- * Config files:
-  * solr.xml - Base solr config
-  * configsets/*/conf/managed-schema - Solr index schema
-  * webapp/WEB-INF/web.xml - Dual Scipio/Solr webapp config
+  * Config files:
+    * solr.xml - Base solr config
+    * configsets/*/conf/managed-schema - Solr index schema
+    * webapp/WEB-INF/web.xml - Dual Scipio/Solr webapp config
 
 
 -----------------------------------------------------
@@ -76,7 +77,7 @@ access from within intranet, using one of the methods below.
 Basic Solr authentication - independent from the Scipio login system and users - can be configured
 following:
 
-  https://lucene.apache.org/solr/guide/6_6/basic-authentication-plugin.html
+  https://lucene.apache.org/solr/guide/7_7/basic-authentication-plugin.html
 
 It requires specifying a pair of logins in solrconfig.properties and in the file (you may need to create it):
 
@@ -106,12 +107,15 @@ security.json (from security_solrbasicauth_disabled.json):
       {"name":"collection-admin-read","role":"*"},
       {"name":"metrics-read","role":"*"},
       {"name":"core-admin-read","role":"*"},
-      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"path":"/admin/ping","role":"*"},
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
    "user-role":{"solradmin":"admin","admin":"admin","solrupdate":"update","solrquery":"query"}
 }}
+
+NOTE: 2019-04-01: For Solr 7, the part ',"collection":null' has been removed from /admin/ping;
+  otherwise non-admin users may not be able to pint it.
 
 solrconfig.properties:
 
@@ -135,6 +139,11 @@ and providing support for external login keys (auto login from /admin).
 
 It allows only login to users having and SOLRADM_* permissions 
 (as defined in ofbiz-component.xml).
+
+Like the basic plugin, it requires specifying connect logins in solrconfig.properties and 
+confuring the file (you may need to create it):
+
+  applications/solr/security.json
 
 WARNING: 2018-05-17: The ScipioRuleBasedAuthorizationPlugin below only processes the scipioPermSolrRoles
   mappings at server load time or if manually re-triggered, due to code design limitations
@@ -201,7 +210,7 @@ security.json (from security_scipiouserlogin_disabled.json):
       {"name":"collection-admin-read","role":"*"},
       {"name":"metrics-read","role":"*"},
       {"name":"core-admin-read","role":"*"},
-      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"path":"/admin/ping","role":"*"},
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
@@ -209,6 +218,8 @@ security.json (from security_scipiouserlogin_disabled.json):
    "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
 }}
 
+NOTE: 2019-04-01: For Solr 7, the part ',"collection":null' has been removed from /admin/ping;
+  otherwise non-admin users may not be able to pint it.
 
 solrconfig.properties:
 
@@ -368,7 +379,7 @@ it is NOT recommended to use the UI interface to modify the Solr schema, because
 is then restructured and all comments and formatting are lost. In fact, it is perfectly safe
 to edit the file by hand AS LONG AS the server is stopped (the following is a quote):
 
-  https://lucene.apache.org/solr/guide/6_6/schema-api.html#schema-api
+  https://lucene.apache.org/solr/guide/7_7/schema-api.html#schema-api
   
     "Why is hand editing of the managed schema discouraged?
 
@@ -408,10 +419,21 @@ uncommenting the appropriate line in:
 
 * In general, solr services can only successfully run in contexts where the solr webapp
   is loaded and accessible. This means it is impossible to index data during load-demo/load-* targets.
+
 * On fast systems, the rebuildSolrIndexAuto service may fail to connect to Solr on server startup 
   when Solr is slower to load than Scipio, which will cause errors in the log; however this is already
   accounted for and the service should reschedule and attempt another check/reindex every few moments
   thereafter.
+
+* 2019-04-01: For Solr 7, in security.json, the ',"collection":null' part must be removed from the line:
+    {"path":"/admin/ping","collection":null,"role":"*"}
+  to give:
+    {"path":"/admin/ping","role":"*"}
+  Otherwise, solr webapp ping check (https://localhost:8443/admin/control/SolrStatus) may fail
+  for the query user.
+
+* 2019-04-01: The Solr 7 backend UI may be less responsive when authentication is enabled,
+  due to a UI ajax polling change.
 
 ***
 

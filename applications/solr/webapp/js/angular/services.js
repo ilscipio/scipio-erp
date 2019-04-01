@@ -19,8 +19,12 @@ var solrAdminServices = angular.module('solrAdminServices', ['ngResource']);
 
 solrAdminServices.factory('System',
   ['$resource', function($resource) {
-    return $resource('admin/info/system', {"wt":"json", "_":Date.now()});
+    return $resource('admin/info/system', {"wt":"json", "nodes": "@nodes", "_":Date.now()});
   }])
+.factory('Metrics',
+    ['$resource', function($resource) {
+      return $resource('admin/metrics', {"wt":"json", "nodes": "@nodes", "prefix":"@prefix", "_":Date.now()});
+    }])
 .factory('Collections',
   ['$resource', function($resource) {
     return $resource('admin/collections',
@@ -35,8 +39,7 @@ solrAdminServices.factory('System',
     "deleteReplica": {params:{action: "DELETEREPLICA"}},
     "addReplica": {params:{action: "ADDREPLICA"}},
     "deleteShard": {params:{action: "DELETESHARD"}},
-    "reload": {method: "GET", params:{action:"RELOAD", core: "@core"}},
-    "optimize": {params:{}}
+    "reload": {method: "GET", params:{action:"RELOAD", core: "@core"}}
     });
   }])
 .factory('Cores',
@@ -49,8 +52,7 @@ solrAdminServices.factory('System',
     "unload": {params:{action: "UNLOAD", core: "@core"}},
     "rename": {params:{action: "RENAME"}},
     "swap": {params:{action: "SWAP"}},
-    "reload": {method: "GET", params:{action:"RELOAD", core: "@core"}, headers:{doNotIntercept: "true"}},
-    "optimize": {params:{}}
+    "reload": {method: "GET", params:{action:"RELOAD", core: "@core"}, headers:{doNotIntercept: "true"}}
     });
   }])
 .factory('Logging',
@@ -65,7 +67,6 @@ solrAdminServices.factory('System',
   ['$resource', function($resource) {
     return $resource('admin/zookeeper', {wt:'json', _:Date.now()}, {
       "simple": {},
-      "dump": {params: {dump: "true"}},
       "liveNodes": {params: {path: '/live_nodes'}},
       "clusterState": {params: {detail: "true", path: "/clusterstate.json"}},
       "detail": {params: {detail: "true", path: "@path"}},
@@ -78,6 +79,12 @@ solrAdminServices.factory('System',
           return {aliases: {}};
         }
       }}
+    });
+  }])
+.factory('ZookeeperStatus',
+  ['$resource', function($resource) {
+    return $resource('admin/zookeeper/status', {wt:'json', _:Date.now()}, {
+      "monitor": {}
     });
   }])
 .factory('Properties',
@@ -106,7 +113,6 @@ solrAdminServices.factory('System',
 .factory('Update',
   ['$resource', function($resource) {
     return $resource(':core/:handler', {core: '@core', wt:'json', _:Date.now(), handler:'update'}, {
-      "optimize": {params: { optimize: "true"}},
       "commit": {params: {commit: "true"}},
       "post": {headers: {'Content-type': 'application/json'}, method: "POST", params: {handler: '@handler'}},
       "postJson": {headers: {'Content-type': 'application/json'}, method: "POST", params: {handler: '@handler'}},
@@ -229,7 +235,7 @@ solrAdminServices.factory('System',
            for (key in params) {
                if (key != "core" && key != "handler") {
                    for (var i in params[key]) {
-                       qs.push(key + "=" + params[key][i]);
+                       qs.push(key + "=" + encodeURIComponent(params[key][i]));
                    }
                }
            }
@@ -256,4 +262,26 @@ solrAdminServices.factory('System',
      return $resource(':core/config', {wt: 'json', core: '@core', _:Date.now()}, {
        get: {method: "GET"}
      })
-}]);
+}])
+.factory('AuthenticationService',
+    ['base64', function (base64) {
+        var service = {};
+
+        service.SetCredentials = function (username, password) {
+          var authdata = base64.encode(username + ':' + password);
+
+          sessionStorage.setItem("auth.header", "Basic " + authdata);
+          sessionStorage.setItem("auth.username", username);
+        };
+
+        service.ClearCredentials = function () {
+          sessionStorage.removeItem("auth.header");
+          sessionStorage.removeItem("auth.scheme");
+          sessionStorage.removeItem("auth.realm");
+          sessionStorage.removeItem("auth.username");
+          sessionStorage.removeItem("auth.wwwAuthHeader");
+          sessionStorage.removeItem("auth.statusText");
+        };
+
+        return service;
+      }]);

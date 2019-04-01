@@ -442,7 +442,7 @@ code package.
             <actions>
                 <!-- SCIPIO: 2017-05-22: it turns out, the features sub-menu SHOULD always expand... 
                     this is because -->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductFeatures" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>

@@ -724,10 +724,8 @@ code package.
         </menu-item>
         <!-- SCIPIO: NOTE: we set disabled attribute because always-expand-selected-or-ancestor="true"
             may be set, which will bypass the condition. but currently there may not be a product ID, and in that case
-            the target EditProductFeatures will not work, so must disable in that case. 
-            FIXME?: bigger issue is the feature screens in the sub-menu have no relation to Product and don't pass around a productId,
-            so there's a disconnect. BUT as long as those screens are accesible then they must show in the
-            sidebar somewhere, and this is the workaround. -->
+            the target EditProductFeatures will not work, so must disable in that case.
+        -->
         <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
                 <not>

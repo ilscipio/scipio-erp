@@ -5,12 +5,6 @@ code package.
 -->
 <#if productId??>
 
-<#-- SCIPIO: 2017-05-22: added link to new feature -->
-<#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-        <@menuitem type="link" href=makePageUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
-    </@menu>
-</#macro>
 <@section title=uiLabelMap.PageTitleEditProductFeatures menuContent=menuContent>
   <#if productFeatureAndAppls?has_content>
     <form method="post" action="<@pageUrl>UpdateFeatureToProductApplication</@pageUrl>" name="selectAllForm">

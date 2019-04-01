@@ -9796,6 +9796,13 @@
         <value xml:lang="zh">编辑特征</value>
         <value xml:lang="zh-TW">修改特性</value>
     </property>
+    <property key="PageTitleEditFeatures">
+        <value xml:lang="de">Eigenschaften</value>
+        <value xml:lang="en">Features</value>
+        <value xml:lang="es">Características</value>
+        <value xml:lang="fr">Caractéristiques</value>
+        <value xml:lang="it">Caratteristiche</value>
+    </property>
     <property key="PageTitleEditFeatureCategoryFeatures">
         <value xml:lang="de">Merkmalkategorie Merkmale bearbeiten</value>
         <value xml:lang="en">Edit Feature Category Features</value>

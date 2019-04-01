@@ -25,8 +25,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
-                <set field="activeSubMenuItem" value="Feature"/>
-                <set field="activeSubMenuItem2" value="Feature"/>
+                <set field="activeSubMenuItem" value="ListFeatures"/>
                 <set field="productFeatureId" from-field="parameters.productFeatureId"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
@@ -388,8 +387,7 @@
             <actions>
                 <set field="titleProperty" value="PageTitleEditFeature"/>
                 <set field="labelTitleProperty" value="ProductFeature"/>
-                <set field="activeSubMenuItem" value="Feature"/>
-                <set field="activeSubMenuItem2" value="Feature"/>
+                <set field="activeSubMenuItem" value="ListFeatures"/>
                 <entity-one entity-name="ProductFeature" value-field="productFeature" auto-field-map="true"/>
                 <entity-and entity-name="SupplierProductFeature" list="supplierProductFeatures">
                     <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>
@@ -412,21 +410,21 @@
     <screen name="ListFeatures">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListFeatures"/>
+                <set field="titleProperty" value="PageTitleEditFeatures"/>
                 <set field="labelTitleProperty" value="ProductFeature"/>
                 <set field="activeSubMenuItem" value="ListFeatures"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE_1" type="Integer" default-value="10"/>
-                <!--<entity-and entity-name="ProductFeature" list="productFeatures" />-->
-                <!--<set field="labelTitleProperty" value="${groovy: isCreateFeature ? 'ProductNewFeature' : 'ProductFeature'}"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!--<platform-specific>-->
-                            <!--<html><html-template location="component://product/webapp/catalog/feature/ProductFeatureList.ftl"/></html>-->
-                        <!--</platform-specific>-->
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="CreateFeature" text="${uiLabelMap.ProductNewFeature}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindProductFeature" location="component://product/widget/catalog/FeatureForms.xml"/>
                             </decorator-section>

@@ -491,9 +491,15 @@ public class CatalinaContainer implements Container {
         }
         return new Callable<Context>() {
             public Context call() throws ContainerException, LifecycleException {
-                StandardContext context = configureContext(engine, host, appInfo);
-                host.addChild(context);
-                return context;
+                try {
+                    StandardContext context = configureContext(engine, host, appInfo);
+                    host.addChild(context);
+                    return context;
+                } catch(Exception e) {
+                    // SCIPIO: Added exception to 
+                    throw new ContainerException(e.getMessage() + " [webapp: " + appInfo.name
+                            + ", component: " + appInfo.componentConfig.getGlobalName() + "]", e);
+                }
             }
         };
     }

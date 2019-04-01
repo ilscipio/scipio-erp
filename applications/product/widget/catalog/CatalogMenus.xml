@@ -15,7 +15,7 @@ code package.
         <menu-item name="promos" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromo"/></menu-item>
         <menu-item name="subscriptions" title="${uiLabelMap.ProductSubscriptions}"><link target="FindSubscription"/></menu-item>
         <menu-item name="carriers" title="${uiLabelMap.ProductCarriers}"><link target="ListCarrierShipmentMethods"/></menu-item>
-        <menu-item name="features" title="${uiLabelMap.ProductFeatures}"><link target="EditFeatureCategories"/></menu-item>
+        <menu-item name="features" title="${uiLabelMap.ProductFeatures}"><link target="ListFeatures"/></menu-item>
         <!-- SCIPIO - Remove; will be replaced with content app features -->
         <!-- <menu-item name="Imagemanagement" title="${uiLabelMap.CommonMedia}"><link target="Imagemanagement"/></menu-item> -->
     </menu>
@@ -110,12 +110,9 @@ code package.
     </menu>
 
     <menu name="FeaturesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- SCIPIO: 2017-05-22: it turns out, the features sub-menu SHOULD always expand... 
-            because FeaturesTabBar and so the Type, Category, Group, and Interaction links used to be top-level elements
-            so they don't associate with anything. -->
-        <!--<menu-item-alias name="EditProductFeatures" for="PARENT-WITHSUB"/>-->
 
-        <!--<menu-item name="Feature" title="${uiLabelMap.ProductFeature}">-->
+
+        <menu-item name="ListFeatures" title="${uiLabelMap.ProductFeature}">
             <!--&lt;!&ndash; SCIPIO: always show this for now because otherwise there's a consistency issue-->
             <!--<condition>-->
                 <!--<or>-->
@@ -123,10 +120,11 @@ code package.
                     <!--<not><if-empty field="productFeatureId"/></not>-->
                 <!--</or>-->
             <!--</condition>&ndash;&gt;-->
-            <!--<link target="EditFeature">-->
+            <link target="ListFeatures">
                 <!--<parameter param-name="productFeatureId"/>-->
-            <!--</link>-->
-        <!--</menu-item>-->
+            </link>
+        </menu-item>
+
         <menu-item name="FeatureType" title="${uiLabelMap.ProductFeatureType}">
             <link target="EditFeatureTypes">
                 <!-- does nothing

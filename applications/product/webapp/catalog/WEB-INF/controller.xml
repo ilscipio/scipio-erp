@@ -1180,6 +1180,10 @@ code package.
         <response name="success" type="view" value="QuickAddProductFeatures"/>
     </request-map>
 
+    <request-map uri="ListFeatures">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFeatures"/>
+    </request-map>
     <request-map uri="EditFeature">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFeature"/>
@@ -3254,6 +3258,7 @@ code package.
     <view-map name="EditSubscriptionCommEvent" type="screen" page="component://product/widget/catalog/SubscriptionScreens.xml#EditSubscriptionCommEvent"/>
 
 
+    <view-map name="ListFeatures" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#ListFeatures"/>
     <view-map name="EditFeature" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeature"/>
     <view-map name="EditFeatureCategories" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategories"/>
     <view-map name="EditFeatureCategoryFeatures" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategoryFeatures"/>

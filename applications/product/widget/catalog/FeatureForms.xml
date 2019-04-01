@@ -298,14 +298,16 @@
         </field>
     </form>
 
-    <form name="FindProductFeature" type="single" target="EditFeatureCategories"
+    <!-- SCIPIO (2019-04-01): FindProductFeature renamed to FindProductFeatureCategory -->
+    <form name="FindProductFeatureCategory" type="single" target="EditFeatureCategories"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><text-find size="20" maxlength="255"></text-find></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"></text-find></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
 
-    <form name="ListProductFeature" type="list" list-name="listIt" paginate-target="EditFeatureCategories" target="UpdateFeatureCategory"
+    <!-- SCIPIO (2019-04-01): ListProductFeature renamed to FindProductFeatureCategory -->
+    <form name="ListProductFeatureCategory" type="list" list-name="listIt" paginate-target="EditFeatureCategories" target="UpdateFeatureCategory"
         odd-row-style="alternate-row" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
@@ -388,4 +390,42 @@
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
+
+
+    <!-- SCIPIO (2019-04-01): FindProductFeature is now used for ProductFeatures not ProductFeatureCategories -->
+    <form name="FindProductFeature" type="single" target="ListFeatures"
+          header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><lookup target-form-name="ListFeatures"></lookup></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"></text-find></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
+    </form>
+
+    <!-- SCIPIO (2019-04-01): ListProductFeature renamed to FindProductFeatureCategory -->
+    <form name="ListProductFeature" type="list" list-name="listIt" paginate-target="EditProductFeature" target="UpdateProductFeature"
+          odd-row-style="alternate-row" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="parameters.noConditionFind" value="Y"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ProductFeature"/>
+                <field-map field-name="orderBy" value="productFeatureId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="productFeatureId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
+            <hyperlink target="EditFeature" description="${productFeatureId}">
+                <parameter param-name="productFeatureId"/>
+            </hyperlink>
+        </field>
+        <field name="productFeatureTypeId" title="${uiLabelMap.CommonTypeId}"><display/></field>
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonCategoryId}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
+        <field name="uomId"><display/></field>
+        <field name="numberSpecified"><display/></field>
+        <field name="abrev"><display/></field>
+        <field name="idCode"><display/></field>
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+    </form>
+
 </forms>

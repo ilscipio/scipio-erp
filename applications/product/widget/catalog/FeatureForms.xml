@@ -246,10 +246,11 @@
         <field name="description"><text-find size="25"></text-find></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
-    <form name="CreateFeatureGroup" type="single" target="CreateFeatureGroup"
-          header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+    <form name="CreateFeatureGroup" type="single" target="UpdateProductFeatureGroup"
+          header-row-style="header-row" default-entity-name="ProductFeatureGroup" default-map-name="productFeatureGroup"> <!-- orig: default-table-style=-style="basic-table" -->
+        <alt-target use-when="productFeatureGroup==null" target="CreateProductFeatureGroup"/>
         <field name="productFeatureGroupId"><text/></field>
-        <field name="description"><textarea/></field>
+        <field name="description"><text/></field>
         <field use-when="productFeatureGroup!=null&amp;&amp;productFeatureGroupId!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field use-when="productFeatureGroup==null&amp;&amp;productFeatureGroupId==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
@@ -426,13 +427,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <!-- SCIPIO: now redundant (in sub tab bar)
-        <field name="categoryAction" title=" " use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" widget-style="${styles.link_nav} ${styles.action_update}">
-            <hyperlink target="EditFeatureCategoryFeatures" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
-                <parameter param-name="productFeatureCategoryId" from-field="productFeature.productFeatureCategoryId"/>
-            </hyperlink>
-        </field>
-        -->
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"/></field>
         <field name="uomId" title="${uiLabelMap.ProductUnitOfMeasureId}"><text-find size="25"/></field>
         <field name="idCode" title="${uiLabelMap.ProductIdCode}"><text-find size="25"/></field>

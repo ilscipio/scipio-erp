@@ -41,10 +41,18 @@ code package.
             </Policies>
             <DefaultRolloverStrategy max="3"/>
         </RollingFile>
+        <Sentry name="scipiosentry">
+            <Filters>
+                <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/><!-- SCIPIO: don't log OFF level in error log -->
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Sentry>
         <Async name="async">
             <AppenderRef ref="ofbiz"/>
             <AppenderRef ref="stdout"/>
             <AppenderRef ref="error"/>
+            <!-- SCIPIO: Uncomment to enable sentry.io logging - you must set dsn= in sentry.properties for this
+            <AppenderRef ref="scipiosentry"/>-->
         </Async>
     </Appenders>
     <Loggers>

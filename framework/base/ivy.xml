@@ -127,6 +127,7 @@
         <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.9.1" conf="base,sources"/>
         <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.11.1" conf="base,sources"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.8.0-beta2" conf="base,sources"/><!-- 1.8 required by log4j 2.11+ (https://www.slf4j.org/faq.html#changesInVersion18) -->
+        <dependency org="io.sentry" name="sentry-log4j2" rev="1.7.16" conf="base,sources"/><!-- Error reporting: https://sentry.io -->
         <dependency org="com.sun.mail" name="javax.mail" rev="1.6.2" conf="base,sources"/>
         <dependency org="xerces" name="xercesImpl" rev="2.12.0" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base,sources"/>

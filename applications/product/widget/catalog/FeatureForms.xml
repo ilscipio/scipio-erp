@@ -210,7 +210,7 @@
                 <parameter param-name="productFeatureIdTo"/>
             </hyperlink>
         </field>
-        </form>
+    </form>
     <form name="EditFeatureInterAction" type="single" target="createProductFeatureIactn" title="" default-map-name="productFeatureIactn"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="isCreate"><hidden value="true"/></field><!-- SCIPIO: new -->
@@ -238,6 +238,20 @@
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="FindFeatureGroup" type="single" target="EditFeatureGroups"
+          header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productFeatureGroupId"><text-find size="25"></text-find></field>
+        <field name="description"><text-find size="25"></text-find></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
+    </form>
+    <form name="CreateFeatureGroup" type="single" target="CreateFeatureGroup"
+          header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="productFeatureGroupId"><text/></field>
+        <field name="description"><textarea/></field>
+        <field use-when="productFeatureGroup!=null&amp;&amp;productFeatureGroupId!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field use-when="productFeatureGroup==null&amp;&amp;productFeatureGroupId==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListFeatureGroupAppls" type="multi" use-row-submit="false" list-name="productFeatureGroupAndAppls" target="UpdateProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}" title=""
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->

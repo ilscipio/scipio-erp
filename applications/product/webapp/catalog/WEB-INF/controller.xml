@@ -1211,6 +1211,10 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFeatureGroups"/>
     </request-map>
+    <request-map uri="EditProductFeatureGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFeatureGroup"/>
+    </request-map>
     <request-map uri="CreateProductFeatureGroup">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProductFeatureGroup"/>
@@ -3263,6 +3267,7 @@ code package.
     <view-map name="EditFeatureCategories" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategories"/>
     <view-map name="EditFeatureCategoryFeatures" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategoryFeatures"/>
     <view-map name="EditFeatureGroups" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroups"/>
+    <view-map name="EditFeatureGroup" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroup"/>
     <view-map name="EditFeatureGroupAppls" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroupAppls"/>
     <view-map name="EditFeatureTypes" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureTypes"/>
     <view-map name="EditFeatureType" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureType"/>

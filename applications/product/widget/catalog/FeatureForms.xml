@@ -410,8 +410,35 @@
     <!-- SCIPIO (2019-04-01): FindProductFeature is now used for ProductFeatures not ProductFeatureCategories -->
     <form name="FindProductFeature" type="single" target="ListFeatures"
           header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
-        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><lookup target-form-name="ListFeatures"></lookup></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"></text-find></field>
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><text-find size="25"/></field>
+
+        <field name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductFeatureType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productFeatureCategoryId" title="${uiLabelMap.ProductFeatureCategory}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductFeatureCategory" description="${description} [${productFeatureCategoryId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- SCIPIO: now redundant (in sub tab bar)
+        <field name="categoryAction" title=" " use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" widget-style="${styles.link_nav} ${styles.action_update}">
+            <hyperlink target="EditFeatureCategoryFeatures" description="${uiLabelMap.ProductGoToFeatureCategory} ${productFeature.productFeatureCategoryId}" also-hidden="false">
+                <parameter param-name="productFeatureCategoryId" from-field="productFeature.productFeatureCategoryId"/>
+            </hyperlink>
+        </field>
+        -->
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"/></field>
+        <field name="uomId" title="${uiLabelMap.ProductUnitOfMeasureId}"><text-find size="25"/></field>
+        <field name="idCode" title="${uiLabelMap.ProductIdCode}"><text-find size="25"/></field>
+        <field name="abbrev" title="${uiLabelMap.ProductAbbreviation}"><text-find size="25"/></field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"/></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
 

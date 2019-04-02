@@ -95,15 +95,30 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, UtilHttp.getLocale(request), "text/html", null, null, productPromo.getDelegator(), dispatcher, encoderType);
     }
 
+    /**
+     *
+     * @deprecated SCIPIO (2019-04-02): Deprecated in order to avoid confusion with ProductContentWrapper@getProductContentAsText
+     * Use getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) instead.
+     */
+    @Deprecated
     public static String getProductContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, null, null, null, null, dispatcher, encoderType);
     }
+    public static String getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
+        return getProductContentAsText(productPromo, productPromoContentTypeId, locale, dispatcher, encoderType);
+    }
 
     /**
-     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     *
+     * @deprecated SCIPIO (2019-04-02): Deprecated in order to avoid confusion with ProductContentWrapper@getProductContentAsText
+     * Use getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) instead.
      */
+    @Deprecated
     public static String getProductContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         return getProductPromoContentAsText(productPromo, productPromoContentTypeId, locale, null, null, null, null, dispatcher, useCache, encoderType);
+    }
+    public static String getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getProductContentAsText(productPromo, productPromoContentTypeId, locale, dispatcher, useCache, encoderType);
     }
 
     /**

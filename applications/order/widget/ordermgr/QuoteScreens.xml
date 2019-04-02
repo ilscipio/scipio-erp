@@ -137,22 +137,27 @@ code package.
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                    </decorator-section>
-                    <!-- at the top right of every page we put the order information -->
-                    <decorator-section name="topRight">
-                        <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
-                        </platform-specific>
-                    </decorator-section>
-                    <decorator-section name="body">
                         <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
                         <platform-specific>
                             <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportContactMechs.fo.ftl"/></xsl-fo>
                         </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="topRight">
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                    <!-- at the top right of every page we put the order information -->
+                    <decorator-section name="body">
                         <!-- quote items and totals -->
                         <platform-specific>
                             <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportBody.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="footer">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderFooter.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

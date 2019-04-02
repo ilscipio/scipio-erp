@@ -37,6 +37,7 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
@@ -63,6 +64,8 @@ import freemarker.ext.servlet.ServletContextHashModel;
 public class ControlServlet extends HttpServlet {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private Boolean errorFallbackPrint = UtilProperties.getPropertyAsBoolean("general", "render.global.error.fallback.print", null); // SCIPIO
 
     public ControlServlet() {
         super();
@@ -107,6 +110,10 @@ public class ControlServlet extends HttpServlet {
             getRequestHandler();
         } catch(Exception e) {
             Debug.logError(e, "init: Error initializing RequestHandler for webapp [" + config.getServletContext().getContextPath() + "]", module);
+        }
+        Boolean errorFallbackPrint = UtilMisc.booleanValueVersatile(config.getInitParameter("errorFallbackPrint"));
+        if (errorFallbackPrint != null) {
+            this.errorFallbackPrint = errorFallbackPrint;
         }
     }
 
@@ -300,13 +307,18 @@ public class ControlServlet extends HttpServlet {
                 try {
                     rd.forward(request, response); // SCIPIO: Changed from include to forward so that the response can be handled appropriately
                 } catch (Throwable t) {
-                    Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
-
                     // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
                     String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
                     String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + causeMsg;
                     // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
-                    if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
+                    if (Boolean.FALSE.equals(errorFallbackPrint)) {
+                        Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.error.fallback.print == false): " + t.toString(), module);
+                    } else if (Boolean.TRUE.equals(errorFallbackPrint) || UtilRender.RenderExceptionMode.isDebug(UtilRender.getRenderExceptionMode(request))) {
+                        if (Boolean.TRUE.equals(errorFallbackPrint)) {
+                            Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.error.fallback.print == true): " + t.toString(), module);
+                        } else {
+                            Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.exception.mode == DEBUG*): " + t.toString(), module);
+                        }
                         try {
                             response.getWriter().print(errorMessage);
                         } catch (Throwable t2) {
@@ -320,6 +332,9 @@ public class ControlServlet extends HttpServlet {
                             }
                         }
                     } else {
+                        Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.exception.mode != DEBUG*): " + t.toString(), module);
+                        /* SCIPIO: 2019-04-02: Do not print anything if we are not in debug mode, because it is usually
+                         * either a security issue or needlessly confusing/ugly for live users:
                         // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
                         final String genericErrorMessage = RequestUtil.getGenericErrorMessage();
                         try {
@@ -335,6 +350,7 @@ public class ControlServlet extends HttpServlet {
                                 throw new IllegalStateException(genericErrorMessage);
                             }
                         }
+                        */
                     }
                 }
 

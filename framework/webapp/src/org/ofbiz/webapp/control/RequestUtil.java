@@ -42,7 +42,7 @@ public abstract class RequestUtil {
      * Added 2017-05-12.
      */
     public static String getSecureErrorMessage(HttpServletRequest request, String msg) {
-        if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
+        if (UtilRender.RenderExceptionMode.isDebug(UtilRender.getRenderExceptionMode(request))) {
             return msg;
         } else {
             return getGenericErrorMessage(request);

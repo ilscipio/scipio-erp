@@ -367,7 +367,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             return renderLinkUniqueItemIdNum;
         } catch (Exception e) {
             Debug.logError(e, "Widget renderer: Could not get next unique item name id num: " + e.getMessage(), module);
-            if (UtilRender.getRenderExceptionMode(context) != UtilRender.RenderExceptionMode.DEBUG) {
+            if (UtilRender.RenderExceptionMode.isDebug(UtilRender.getRenderExceptionMode(context))) {
                 throw new IllegalStateException("Widget renderer: Could not get next unique item name id num: " + e.getMessage(), e);
             }
             return 0;

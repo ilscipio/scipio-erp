@@ -186,12 +186,14 @@ public class HtmlWidget extends ModelScreenWidget {
     // TODO: We can make this more fancy, but for now this is very functional
     public static void writeError(Appendable writer, String message, Throwable ex, Map<String, ?> context) {
         // SCIPIO: modified so that if rethrow mode is enabled, propagates instead of printing
-        if (UtilRender.getRenderExceptionMode(context) == UtilRender.RenderExceptionMode.DEBUG) {
+        UtilRender.RenderExceptionMode exMode = UtilRender.getRenderExceptionMode(context);
+        if (UtilRender.RenderExceptionMode.isDebug(exMode)) {
             try {
                 writer.append(message);
             } catch (IOException e) {
             }
-        } else {
+        }
+        if (exMode != UtilRender.RenderExceptionMode.DEBUG) { // Stock ofbiz case (debug only - no throw)
             // TODO: REVIEW: we should be throwing the same exception types as
             // org.ofbiz.widget.renderer.macro.MacroScreenRenderer.handleError(Appendable, Map<String, Object>, Throwable)
             throw new RuntimeException(ex);

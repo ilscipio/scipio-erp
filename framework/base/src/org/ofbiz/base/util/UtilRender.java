@@ -27,22 +27,42 @@ public abstract class UtilRender {
         /**
          * Exceptions are rethrown (and logged); no details are printed to output (secure mode).
          */
-        RETHROW,
+        RETHROW {
+            @Override
+            public boolean isDebug() {
+                return false;
+            }
+        },
         /**
          * Exceptions are printed out directly to output in Freemarker templates (insecure).
          */
-        DEBUG,
+        DEBUG {
+            @Override
+            public boolean isDebug() {
+                return true;
+            }
+        },
         /**
          * Where possible (e.g. from Freemarker error handler), exceptions are logged
          * but nothing is printed; otherwise performs RETHROW (security trade-off, whether acceptable
          * may depend on application).
          */
-        BLANK,
+        BLANK {
+            @Override
+            public boolean isDebug() {
+                return false;
+            }
+        },
         /**
          * Prints the output and then rethrows it.
          * NOTE: This may produce very heavy log errors.
          */
-        DEBUG_RETHROW;
+        DEBUG_RETHROW {
+            @Override
+            public boolean isDebug() {
+                return true;
+            }
+        };
 
         /**
          * Gets value permissively or null for any invalid value.
@@ -80,6 +100,12 @@ public abstract class UtilRender {
         public static RenderExceptionMode valueOfPermissive(Object val, RenderExceptionMode defaultVal) {
             RenderExceptionMode mode = valueOfPermissive(val);
             return mode != null ? mode : defaultVal;
+        }
+
+        public abstract boolean isDebug();
+
+        public static boolean isDebug(RenderExceptionMode mode) {
+            return mode != null && mode.isDebug();
         }
     }
 

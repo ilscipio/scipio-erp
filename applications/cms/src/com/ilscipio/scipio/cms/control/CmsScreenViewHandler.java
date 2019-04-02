@@ -423,7 +423,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         if (renderMode == CmsCallType.OFBIZ_PREVIEW) {
             rethrowViewHandlerExceptionDetailed(request, ex);
         } else {
-            if (CmsRenderUtil.getLiveExceptionMode(request.getServletContext()) == UtilRender.RenderExceptionMode.DEBUG) {
+            if (UtilRender.RenderExceptionMode.isDebug(CmsRenderUtil.getLiveExceptionMode(request.getServletContext()))) {
                 rethrowViewHandlerExceptionDetailed(request, ex);
             } else {
                 // OLD CODE: this was secure, but prevented controller from handling the error...

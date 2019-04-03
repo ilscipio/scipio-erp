@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.base.util.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,7 +90,7 @@ public abstract class GenericMapCollection<K, V, M extends Map<K, V>, I> impleme
     }
 
     public Object[] toArray() {
-        List<I> list = new LinkedList<>();
+        List<I> list = new ArrayList<>(size()); // SCIPIO: Switched to ArrayList: LinkedList
         Iterator<I> it = iterator(false);
         while (it.hasNext()) {
             list.add(it.next());
@@ -99,10 +99,12 @@ public abstract class GenericMapCollection<K, V, M extends Map<K, V>, I> impleme
     }
 
     public <T> T[] toArray(T[] array) {
-        List<Object> list = new LinkedList<>();
+        // SCIPIO: Compiler dislikes this
+        //List<Object> list = new LinkedList<>();
+        List<I> list = new ArrayList<>(size()); // SCIPIO: Switched to ArrayList: LinkedList
         Iterator<I> it = iterator(false);
         while (it.hasNext()) {
-            list.add(it.next());
+            list.add(it.next()); // SCIPIO: Added cast
         }
         return list.toArray(array);
     }

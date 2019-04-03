@@ -83,7 +83,7 @@ public final class UtilHttp {
 
     /**
      * SCIPIO: The name of a session attribute that contains an object to synchronize on for
-     * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpSession)}.
+     * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpServletRequest)}.
      */
     public static final String SESSION_SYNCOBJ = "scpSessSyncObj";
     @Deprecated
@@ -91,7 +91,7 @@ public final class UtilHttp {
 
     /**
      * SCIPIO: The name of a servlet context attribute that contains an object to synchronize on for
-     * whole-session synchronization. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     * whole-session synchronization. Should be accessed using {@link #getServletContextSyncObject(HttpServletRequest)}.
      */
     public static final String SERVLETCONTEXT_SYNCOBJ = "scpApplSyncObj";
     @Deprecated
@@ -99,7 +99,7 @@ public final class UtilHttp {
 
     /**
      * SCIPIO: The name of a servlet context attribute that contains names of session attributes which
-     * should not be persisted. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     * should not be persisted. Should be accessed using {@link #getServletContextSyncObject(HttpServletRequest)}.
      */
     public static final String SESSION_NOPERSIST_ATTRLIST = "scpSessAttrNoPersist";
 
@@ -413,7 +413,7 @@ public final class UtilHttp {
     }
 
     /**
-     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getPathInfoOnlyParameterMap(String)}.
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getPathInfoOnlyParameterMap}.
      * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
      */
     public static Object getPathInfoOnlyParam(HttpServletRequest request, String name) {
@@ -2045,20 +2045,20 @@ public final class UtilHttp {
      * Added 2018-12-03.
      */
     public static Object getServletContextSyncObject(ServletContext context) {
-        Object syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+        Object syncObj = context.getAttribute(SERVLETCONTEXT_SYNCOBJ);
         if (syncObj != null) {
             return syncObj;
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpServletContext here, but it is likely to do nothing.
         synchronized(context) {
-            syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+            syncObj = context.getAttribute(SERVLETCONTEXT_SYNCOBJ);
             if (syncObj != null) {
                 return null;
             }
             syncObj = createServletContextSyncObject();
-            context.setAttribute(SERVLETCONTEXT_SYNC_OBJECT, syncObj);
-            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNC_OBJECT
+            context.setAttribute(SERVLETCONTEXT_SYNCOBJ, syncObj);
+            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNCOBJ
                     + ") not found in servlet context attributes; creating", module); // log after to minimize exposure
         }
         return syncObj;
@@ -2100,7 +2100,7 @@ public final class UtilHttp {
             if (Debug.infoOn()) { // Log this one as info, because important to know Tomcat in fact picked up this listener
                 Debug.logInfo("Initialized servlet context sync object", module);
             }
-            sce.getServletContext().setAttribute(SERVLETCONTEXT_SYNC_OBJECT, createServletContextSyncObject());
+            sce.getServletContext().setAttribute(SERVLETCONTEXT_SYNCOBJ, createServletContextSyncObject());
         }
         @Override
         public void contextDestroyed(ServletContextEvent sce) {

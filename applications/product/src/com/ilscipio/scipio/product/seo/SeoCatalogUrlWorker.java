@@ -1285,7 +1285,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         String urlSuffix = getUrlSuffix();
         if (UtilValidate.isNotEmpty(urlSuffix)) {
             if (pathInfo.endsWith(urlSuffix)) {
-                pathInfo = pathInfo.substring(0, pathInfo.length() - pathInfo.length());
+                pathInfo = pathInfo.substring(0, pathInfo.length() - urlSuffix.length());
             } else {
                 return null;
             }

@@ -226,7 +226,9 @@ public final class UtilObject {
                 return instance;
             }
         }
-        throw new ClassNotFoundException(factoryInterface.getClass().getName());
+        // SCIPIO: 2019-04-03: stock bug
+        //throw new ClassNotFoundException(factoryInterface.getClass().getName());
+        throw new ClassNotFoundException(factoryInterface.getName());
     }
 
     /**

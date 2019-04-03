@@ -91,7 +91,7 @@ public final class UtilProperties implements Serializable {
     private static final UtilCache<String, Properties> propResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesPropResourceCache");
 
     /**
-     * SCIPIO: A cache for Properties instances loaded with {@link #getPropertiesFromAllComponents(String)}.
+     * SCIPIO: A cache for Properties instances loaded with {@link #getMergedPropertiesFromAllComponents(String)}.
      */
     private static final UtilCache<String, Properties> allComponentsPropResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesAllComponentsPropResourceCache");
 
@@ -148,7 +148,7 @@ public final class UtilProperties implements Serializable {
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file.
      * If the specified property name or properties file is not found, the defaultValue is returned.
      * Added 2018-07-12.
-     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param properties The properties
      * @param name The name of the property in the properties file
      * @param defaultValue The value to return if the property is not found
      * @return The value of the property in the properties file, or if not found then the defaultValue
@@ -450,7 +450,7 @@ public final class UtilProperties implements Serializable {
 
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file
      * Added 2018-07-12.
-     * @param resource The name of the resource - can be a file, class, or URL
+     * @param properties The properties
      * @param name The name of the property in the properties file
      * @return The value of the property in the properties file
      */
@@ -487,7 +487,7 @@ public final class UtilProperties implements Serializable {
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
      * or null if it is absent or empty.
      * Added 2018-07-12.
-     * @param resource The name of the resource - can be a file, class, or URL
+     * @param properties The properties
      * @param name The name of the property in the properties file
      * @return The value of the property in the properties file
      */
@@ -2481,7 +2481,7 @@ public final class UtilProperties implements Serializable {
     /**
      * SCIPIO: Returns a view of of the given properties as a Map, copied and sorted alphabetically by keys.
      * NOTE: This may return an adapter around the original properties OR a copy; if you need a copy
-     * always, use {@link #makeSortedPropertyMap(Properties)}.
+     * always, use {@link #makeSortedMap(Properties)}.
      * Added 2019-01-31.
      */
     public static Map<String, String> asSortedMap(Properties properties) {

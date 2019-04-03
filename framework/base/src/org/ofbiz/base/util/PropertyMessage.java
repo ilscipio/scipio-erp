@@ -112,7 +112,7 @@ public abstract class PropertyMessage implements Serializable {
 
     /**
      * Evaluates message in default sys locale.
-     * @deprecated 2017-11: ambiguous; use appropriate method above instead ({@link #getDefaultSystemLocaleMessage}, {@link #getLogMessage}, etc.).
+     * @deprecated 2017-11: ambiguous; use appropriate method above instead ({@link #getDefSysLocaleMessage}, {@link #getLogMessage}, etc.).
      */
     @Deprecated
     public String getMessage() {

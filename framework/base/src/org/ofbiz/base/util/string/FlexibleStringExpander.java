@@ -133,8 +133,7 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
      * The others don't need to do anything. This makes this check basically free.
      * <p>
      * Added 2018-09-19.
-     * @param fse The <code>FlexibleStringExpander</code> to test
-     * @return <code>true</code> if <code>fse</code> contains a <code>String</code> constant
+     * @return <code>true</code> if this expander contains a <code>String</code> constant
      */
     public boolean isConstant() {
         return false;

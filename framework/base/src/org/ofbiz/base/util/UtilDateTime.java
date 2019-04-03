@@ -501,7 +501,7 @@ public final class UtilDateTime {
     /**
      * SCIPIO: Converts a timestamp  into a Date
      *
-     * @param dateTime a Timestamp
+     * @param timestamp a Timestamp
      * @return The corresponding Date
      */
     public static java.util.Date toDate(Timestamp timestamp) {

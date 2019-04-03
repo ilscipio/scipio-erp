@@ -67,10 +67,6 @@ public final class UtilJavaParse {
         entityMethodNames.add("removeByAnd");
         entityMethodNames.add("removeByCondition");
 
-        entityMethodNames.add("create");
-        entityMethodNames.add("createSingle");
-        entityMethodNames.add("removeByAnd");
-        entityMethodNames.add("removeByCondition");
         entityMethodNames.add("storeByCondition");
         entityMethodNames.add("removeAll");
         entityMethodNames.add("findOne");

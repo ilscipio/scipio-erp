@@ -21,6 +21,7 @@
   <inspection_tool class="CloneDeclaresCloneNotSupported" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="CodeBlock2Expr" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="CollectionAddAllCanBeReplacedWithConstructor" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CollectionAddedToSelf" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ComparatorCombinators" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ConditionCoveredByFurtherCondition" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ConditionalBreakInInfiniteLoop" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
@@ -32,8 +33,12 @@
   <inspection_tool class="Convert2Diamond" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="Convert2Lambda" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="Convert2MethodRef" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CopyConstructorMissesField" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="DanglingJavadoc" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
   <inspection_tool class="DeprecatedIsStillUsed" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="Deprecation" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="IGNORE_IN_SAME_OUTERMOST_CLASS" value="true" />
+  </inspection_tool>
   <inspection_tool class="DialogTitleCapitalization" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="DoubleNegation" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="DuplicateCondition" enabled="true" level="WEAK WARNING" enabled_by_default="true">
@@ -47,6 +52,7 @@
   </inspection_tool>
   <inspection_tool class="EmptyTryBlock" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="EqualsWhichDoesntCheckParameterClass" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="EqualsWithItself" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ExcessiveLambdaUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ExtendsObject" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="FieldCanBeLocal" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
@@ -58,6 +64,10 @@
   </inspection_tool>
   <inspection_tool class="FunctionalExpressionCanBeFolded" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="FuseStreamOperations" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="GrMethodMayBeStatic" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="GrUnnecessaryPublicModifier" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="GrUnnecessarySemicolon" enabled="false" level="WARNING" enabled_by_default="false" />
+  <inspection_tool class="GroovyUnusedCatchParameter" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="Guava" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="HighlightVisitorInternal" enabled="false" level="TYPO" enabled_by_default="false" />
   <inspection_tool class="IdempotentLoopBody" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
@@ -117,6 +127,7 @@
   <inspection_tool class="LoopStatementsThatDontLoop" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ManualArrayCopy" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ManualArrayToCollectionCopy" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="MismatchedArrayReadWrite" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="MismatchedCollectionQueryUpdate" enabled="true" level="WEAK WARNING" enabled_by_default="true">
     <option name="queryNames">
       <value />
@@ -195,7 +206,15 @@
   <inspection_tool class="SuspiciousMethodCalls" enabled="true" level="WARNING" enabled_by_default="true">
     <option name="REPORT_CONVERTIBLE_METHOD_CALLS" value="false" />
   </inspection_tool>
+  <inspection_tool class="SuspiciousNameCombination" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+    <group names="x,width,left,right" />
+    <group names="y,height,top,bottom" />
+    <ignored>
+      <option name="METHOD_MATCHER_CONFIG" value="java.io.PrintStream,println,java.io.PrintWriter,println,java.lang.System,identityHashCode,java.sql.PreparedStatement,set.*,java.sql.ResultSet,update.*,java.sql.SQLOutput,write.*,java.lang.Integer,compare.*,java.lang.Long,compare.*,java.lang.Short,compare,java.lang.Byte,compare,java.lang.Character,compare,java.lang.Boolean,compare,java.lang.Math,.*,java.lang.StrictMath,.*" />
+    </ignored>
+  </inspection_tool>
   <inspection_tool class="SuspiciousPackagePrivateAccess" enabled="false" level="TYPO" enabled_by_default="false" />
+  <inspection_tool class="SuspiciousToArrayCall" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="SwitchStatementWithTooFewBranches" enabled="true" level="WEAK WARNING" enabled_by_default="true">
     <option name="m_limit" value="2" />
   </inspection_tool>
@@ -205,11 +224,14 @@
     <option name="reportMethodParameters" value="true" />
   </inspection_tool>
   <inspection_tool class="SynchronizeOnNonFinalField" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="ThrowFromFinallyBlock" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="ThrowableNotThrown" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ThrowablePrintedToSystemOut" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ToArrayCallWithZeroLengthArrayArgument" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="TrivialFunctionalExpressionUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="TrivialIf" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="TryFinallyCanBeTryWithResources" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="TryWithIdenticalCatches" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="TypeParameterExtendsObject" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
   <inspection_tool class="UnnecessaryBoxing" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="UnnecessaryBreak" enabled="true" level="WEAK WARNING" enabled_by_default="true" />

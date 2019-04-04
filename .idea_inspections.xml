@@ -267,6 +267,7 @@
     <option name="SUGGEST_PRIVATE_FOR_INNERS" value="false" />
   </inspection_tool>
   <inspection_tool class="WhileCanBeForeach" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="WrapperTypeMayBePrimitive" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="unused" enabled="true" level="WEAK WARNING" enabled_by_default="true">
     <option name="LOCAL_VARIABLE" value="true" />
     <option name="FIELD" value="true" />

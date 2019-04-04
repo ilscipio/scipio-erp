@@ -185,10 +185,10 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         if (dataGeneratorProvider) {
             context.dataGeneratorProvider = dataGeneratorProvider;
             try {
-                Class<? extends AbstractDemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass") as String);
+                Class<?> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass") as String);
                 AbstractDemoDataHelper helper = (AbstractDemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
                 try {
-                    Class<? extends AbstractDataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass") as String);
+                    Class<?> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass") as String);
                     AbstractDataGenerator generator = (AbstractDataGenerator) clazz.getConstructor(AbstractDemoDataHelper.class).newInstance(helper);
                     context.generator = generator;
                 } catch (Exception e) {

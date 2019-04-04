@@ -186,6 +186,7 @@
   <inspection_tool class="RegExpRedundantEscape" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ReplaceInefficientStreamCount" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ReplaceNullCheck" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="ReturnFromFinallyBlock" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="SameParameterValue" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="SameReturnValue" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="ShiftOutOfRange" enabled="true" level="WEAK WARNING" enabled_by_default="true" />

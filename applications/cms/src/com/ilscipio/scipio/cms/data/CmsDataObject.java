@@ -91,7 +91,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * USING setIfEmpty=false IN WRONG PLACES CAN CAUSE EXTREMELY DIFFICULT
      * ERRORS TO TRACK DOWN.
      * <p>
-     * Analogous to the {@link #CmsTemplate(Delegator, Map)} constructor
+     * Analogous to the {@link #CmsDataObject(Delegator, Map)} constructor
      * that performs the create operation.
      * @param setIfEmpty if true, updates field as long as the key is present (containsKey);
      *                   if false, key must be present and value non-empty for update (isNotEmpty)
@@ -702,7 +702,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
          * Returns names of candidate PK fields that (despite terminology) may accept
          * empty values.
          * <p>
-         * Must be a subset of {@link #getLogicalPkFieldNames()}.
+         * Must be a subset of {@link #getLogicalPkFieldNames(Delegator)}.
          */
         public List<String> getLogicalPkFieldsAllowedEmptyNames(Delegator delegator) {
             return Collections.emptyList();
@@ -828,8 +828,6 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
          * <p>
          * 2016: NOTE: I removed a webSiteId check that seems like it doesn't belong here, and
          * changed the lone caller instead.
-         *
-         * @param dataObjectClass
          * @return List of data objects of the given class
          * @throws CmsException
          */
@@ -876,9 +874,6 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         /**
          * Finds the first (and usually only) entity matching the fields and wraps
          * it into a data object of the given class.
-         *
-         * @param fields
-         * @param dataObjectClass
          * @return Data object of the given class
          * @throws CmsException
          */

@@ -1153,7 +1153,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
 
         /**
          * Marks finished, which prevents further rendering output at the least.
-         * NOTE: Normally, {@link #handleFinished} should decide this.
+         * NOTE: Normally, {@link ExecutionInfo#handleFinished} should decide this.
          */
         public void markFinished() {
             this.finished = true;

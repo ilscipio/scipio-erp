@@ -155,7 +155,7 @@ public class CartSync implements AutoCloseable, Serializable {
     }
 
     /**
-     * SCIPIO: Create a new lock object for {@link #setLockObject} and the
+     * SCIPIO: Create a new lock object for cart sync lock object and the
      * shoppingCartLock session attribute.
      */
     public static CartSync createLockObject() {

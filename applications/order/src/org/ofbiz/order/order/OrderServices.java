@@ -6335,10 +6335,6 @@ public class OrderServices {
      * This service should be called after updateOrderItemShipGroupAssoc
      * test if orderItem quantity equals OrderItemShipGroupAssocs quantities
      * if not then get the last orderItemShipgroupAssoc estimated shipDate and add quantity to this OrderItemShipGroupAssoc
-     * @param ctx
-     * @param context
-     * @return
-     * @throws GeneralException
      */
     private static String validateOrderItemShipGroupAssoc(Delegator delegator, LocalDispatcher dispatcher, GenericValue orderItem, BigDecimal totalQuantity, GenericValue lastOISGAssoc, GenericValue userLogin, Locale locale)
            throws GeneralException {

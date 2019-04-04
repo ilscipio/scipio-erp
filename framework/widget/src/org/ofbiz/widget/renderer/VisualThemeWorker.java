@@ -61,7 +61,7 @@ public class VisualThemeWorker {
     /**
      * SCIPIO: Loads visual theme resources from context, best-effort, using as generalized logic as possible.
      * <p>
-     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest, HttpServletResponse, Map<String, Object>, Writer)}.
+     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers}.
      * Original code only checked for preference of userPreferences.
      */
     public static Map<String, List<String>> loadVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
@@ -113,8 +113,7 @@ public class VisualThemeWorker {
     /**
      * SCIPIO: Gets resources from user preferences already in context.
      * <p>
-     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers(HttpServletRequest,
-     * HttpServletResponse, Map<String, Object>, Writer)}.
+     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers}.
      * @throws GenericServiceException
      */
     public static Map<String, List<String>> getVisualThemeResourcesFromUserPrefs(Map<String, Object> context) throws GenericServiceException {

@@ -129,7 +129,7 @@ public class DependencyGraph<T> {
      * <code>element1=dependency1;dependency2;dependency3:element2=dependency1;dependency2;dependency3</code>
      * where <code>:</code> is entryDelim parameter, <code>=</code> is elemDelim parameter and <code>;</code> is depDelim parameter.
      * <p>
-     * Rules are same as {@link #fromStringDependencyList(Collection, String, String)}.
+     * Rules are same as {@link #fromStringDependencyList(Collection, String, String, boolean, boolean)}.
      */
     public static DependencyGraph<String> fromStringDependencyList(String strDepGraph, String entryDelim, String elemDelim, String depDelim, boolean strict, boolean useEmpty) {
         String[] entries = strDepGraph.split(Pattern.quote(entryDelim));
@@ -300,7 +300,7 @@ public class DependencyGraph<T> {
             System.out.print(join(resolved, outDelim));
 
         } else {
-            throw new IllegalArgumentException("Unrecognized function name. Supported: " + supportedFuncs.toString());
+            throw new IllegalArgumentException("Unrecognized function name. Supported: " + Arrays.toString(supportedFuncs));
         }
     }
 

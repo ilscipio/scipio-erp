@@ -626,7 +626,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
      * Splits text into a list of maps (titles) and strings (regular text).
      * <p>
      * Notes are hard to handle, they occur almost anywhere and need to treat specially.
-     * NOTE: This does not combine notes and lists, see {@link #combineMarkupElems}
+     * NOTE: This does not combine notes and lists, see {@link #combineStructuralElems}
      * <p>
      * Also, notes will always consume the whitespace that comes before them, and whitespace
      * around value on same line.
@@ -707,7 +707,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
 
         msgHandler.logDebug(
                 "====================================\n" +
-                "combineMarkupElems: entry count: " + elemList.size() + "\n" +
+                "combineStructuralElems: entry count: " + elemList.size() + "\n" +
                 "====================================");
 
         while(i < elemList.size()) {

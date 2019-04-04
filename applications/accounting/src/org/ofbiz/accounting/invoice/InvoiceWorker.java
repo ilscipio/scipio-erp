@@ -1050,8 +1050,6 @@ public final class InvoiceWorker {
     /**
      * SCIPIO: getInvoiceTaxTotalForTaxGlAccount.
      * @param invoice GenericValue object representing the invoice
-     * @param taxAuthPartyId
-     * @param taxAuthGeoId
      * @return The invoice tax total for a given tax authority and geo location
      */
     public static BigDecimal getInvoiceTaxTotalForTaxGlAccount(GenericValue invoice, String glAccountId) {

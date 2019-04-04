@@ -1222,7 +1222,6 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     /** Writes XML text with an attribute or CDATA element for each field of the entity
      *@param writer A PrintWriter to write to
      *@param prefix A prefix to put in front of the entity name in the tag name
-     *@param alwaysCdataFields Names of fields which should always be printed as CDATA blocks
      */
     public void writeXmlText(PrintWriter writer, String prefix) {
         writeXmlText(writer, prefix, null);

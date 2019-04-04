@@ -45,7 +45,7 @@ import freemarker.template.TemplateModelException;
  * where no Freemarker environment is available, in cases where Scipio Freemarker additions extend
  * outside of Freemarker (e.g. <code>set/getRequestVar</code>). Those are not facades but simply
  * ensure correctness and calls without Freemarker environment classes needed. See
- * {@link com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil#pushRequestStack} for example.
+ * {@link com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil#pushRequestStack(String, Object, Environment)} for example.
  */
 public abstract class CommonFtlUtil {
 

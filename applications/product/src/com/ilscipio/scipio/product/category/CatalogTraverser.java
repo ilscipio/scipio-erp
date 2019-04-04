@@ -518,7 +518,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     /**
      * Traverse categories using depth-first search algorithm.
-     * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
+     * @param categoryOrAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @return true if went through entire category tree; false if stopped prematurely at some point.
      */
     public boolean traverseCategoriesDepthFirst(List<GenericValue> categoryOrAssocList) throws GeneralException {
@@ -527,8 +527,8 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     /**
      * Traverse categories using depth-first search algorithm.
-     * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
-     * @param categoryDepth if non-null, overrides the physical category depth the algorithm should assume;
+     * @param categoryOrAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
+     * @param physicalDepth if non-null, overrides the physical category depth the algorithm should assume;
      *                      [TODO: NOT IMPLEMENTED] if null, determines the depth automatically (extra step);
      *                      if -1, don't calculate or use physicalDepth at all (optimize out)
      * @return true if went through entire category tree; false if stopped prematurely at some point.

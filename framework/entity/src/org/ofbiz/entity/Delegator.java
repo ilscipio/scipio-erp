@@ -990,8 +990,8 @@ public interface Delegator {
 
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
-     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(entityName)</code>; this is an alias for {@link #fromUnsafe()} for
-     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(entityName)</code>; this is an alias for {@link #fromUnsafe} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe} is invoked instead.
      */
     default EntityQuery from(String entityName) {
         return query().from(entityName);
@@ -999,8 +999,8 @@ public interface Delegator {
 
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
-     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(dynamicViewEntity)</code>; this is an alias for {@link #fromUnsafe()} for
-     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(dynamicViewEntity)</code>; this is an alias for {@link #fromUnsafe} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe} is invoked instead.
      */
     default EntityQuery from(DynamicViewEntity dynamicViewEntity) {
         return query().from(dynamicViewEntity);
@@ -1008,8 +1008,8 @@ public interface Delegator {
 
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
-     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
-     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe} is invoked instead.
      */
     default EntityQuery select(Set<String> fieldsToSelect) {
         return query().select(fieldsToSelect);
@@ -1017,8 +1017,8 @@ public interface Delegator {
 
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
-     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
-     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe} is invoked instead.
      */
     default EntityQuery select(String... fieldsToSelect) {
         return query().select(fieldsToSelect);

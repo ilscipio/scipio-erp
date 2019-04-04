@@ -580,7 +580,6 @@ public class GiftCertificateServices {
 
             result.put("processAmount", amount);
             result.put("authResult", processResult);
-            result.put("processAmount", amount);
             result.put("authFlag", "2");
             result.put("authCode", "A");
             result.put("captureCode", "C");

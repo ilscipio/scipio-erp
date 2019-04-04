@@ -24,6 +24,7 @@ import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -826,7 +827,7 @@ public class LoginWorker {
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
-        if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + cookies, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + Arrays.toString(cookies), module); // SCIPIO: Fixed array print
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(getAutoLoginCookieName(request))) {

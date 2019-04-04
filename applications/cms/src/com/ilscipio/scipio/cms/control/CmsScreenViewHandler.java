@@ -49,8 +49,6 @@ import freemarker.template.TemplateException;
  * FIXME: 2016: This should be changed to not extend MacroScreenViewHandler and instead only
  * implement the basic interface and delegate to an instance of MacroScreenViewHandler instead, which
  * can then be configurable.
- *
- * @see com.ilscipio.scipio.cms.control.cmscall.CmsCallParams
  */
 public class CmsScreenViewHandler extends MacroScreenViewHandler implements ViewHandlerExt {
 

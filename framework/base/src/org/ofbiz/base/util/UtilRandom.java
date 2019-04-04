@@ -90,8 +90,9 @@ public class UtilRandom {
         for(int i=0; i<len;i++){
             password[i]=passSymbols.charAt(rnd.nextInt(passSymbols.length()));
         }
-      return password.toString();
-
+        // SCIPIO: Invalid
+        //return password.toString();
+        return new String(password);
     }
 
     public static int random(List<?> myList) {

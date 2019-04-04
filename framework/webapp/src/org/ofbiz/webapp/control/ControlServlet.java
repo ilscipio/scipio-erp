@@ -481,7 +481,7 @@ public class ControlServlet extends HttpServlet {
      * if does not appear to be present.
      * Best-effort operation.
      * <p>
-     * Factored out and modified from stock method {@link #getControlServletPath(WebappInfo, boolean)}.
+     * Factored out and modified from stock method {@link org.ofbiz.webapp.WebAppUtil#getControlServletPath(WebappInfo, boolean)}.
      * <p>
      * SCIPIO: 2017-12-05: Adds subclass support, oddly missing from stock ofbiz code.
      * <p>

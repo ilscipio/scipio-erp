@@ -221,7 +221,7 @@ public abstract class SolrUtil {
      * <p>
      * NOTE: true does NOT mean that solr webapp is fully loaded and pingable,
      * because the webapp may be remote and such a check must be done physically using
-     * waitSolrReady service, {@link #isSolrWebappPingOk()} or {@link #isSolrWebappReady()}.
+     * waitSolrReady service, {@link #isSolrWebappPingOk(HttpSolrClient)} or {@link #isSolrWebappReady(HttpSolrClient)}.
      */
     public static boolean isSystemInitialized() {
         return isSolrEnabled() && (Start.getInstance().getCurrentState() == ServerState.RUNNING);
@@ -547,7 +547,7 @@ public abstract class SolrUtil {
 
     /**
      * Returns a new Solr client for making read-only queries.
-     * @deprecated 2018-04-27: now ambiguous; use {@link #makeQueryHttpSolrClient(String) instead
+     * @deprecated 2018-04-27: now ambiguous; use {@link #makeQueryHttpSolrClientFromUrl} or other instead
      */
     @Deprecated
     public static HttpSolrClient makeHttpSolrClientFromUrl(String url) {

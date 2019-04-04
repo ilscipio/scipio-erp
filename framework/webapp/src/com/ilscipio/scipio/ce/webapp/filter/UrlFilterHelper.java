@@ -54,8 +54,8 @@ public class UrlFilterHelper {
      * Name of optionally-present request attribute containing the FullWebappInfo
      * for the link currently being processed by outbound-rules.
      * <p>
-     * Currently this is set by {@link org.ofbiz.webapp.control.RequestHandler#doLinkURLEncode}
-     * as optimization (though practically necessary because it is complicated by webappPathPrefix when in URL).
+     * Currently this is set by <code>org.ofbiz.webapp.control.RequestHandler#doLinkURLEncode}</code>
+     * as an optimization (though practically necessary because it is complicated by webappPathPrefix when in URL).
      */
     public static final String OUT_URL_WEBAPP = "scpUrlOutWebapp";
 

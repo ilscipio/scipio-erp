@@ -39,15 +39,15 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * It is meant to be called within a loop in run() n times, where n is determined by getNumRecordsToBeGenerated().
      * @param toBeStored
      */
-    private void storeData(List toBeStored) {
+    private void storeData(List<GenericValue> toBeStored) {
         Map result = [:];
         if (toBeStored) {
-            Locale locale = (Locale) context.get("locale");
+            //Locale locale = (Locale) context.get("locale");
             for (GenericValue value : toBeStored) {
                 String entityName = value.getEntityName();
                 DataGeneratorStat stat;
                 if (result.containsKey(entityName)) {
-                    stat = result.get(entityName);
+                    stat = result.get(entityName) as DataGeneratorStat;
                 } else {
                     stat = new DataGeneratorStat(entityName);
                 }
@@ -130,7 +130,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         } catch (Exception e) {
             logError("Fatal error while generating data (aborted): " + e.getMessage());
             // TODO: localize (but exception message cannot be localized)
-            return error("Fatal error while generating data (aborted): " + e.getMessage());
+            return error("Fatal error while generating data (aborted): " + e.getMessage()) as Map;
         }
         // TODO: localize
         Map result = (totalFailed > 0) ? failure("Failed to store " + totalFailed
@@ -185,10 +185,10 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         if (dataGeneratorProvider) {
             context.dataGeneratorProvider = dataGeneratorProvider;
             try {
-                Class<? extends AbstractDemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass"));
+                Class<? extends AbstractDemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass") as String);
                 AbstractDemoDataHelper helper = (AbstractDemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
                 try {
-                    Class<? extends AbstractDataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass"));
+                    Class<? extends AbstractDataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass") as String);
                     AbstractDataGenerator generator = (AbstractDataGenerator) clazz.getConstructor(AbstractDemoDataHelper.class).newInstance(helper);
                     context.generator = generator;
                 } catch (Exception e) {

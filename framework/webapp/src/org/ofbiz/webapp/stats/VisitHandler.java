@@ -20,6 +20,7 @@ package org.ofbiz.webapp.stats;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -231,7 +232,7 @@ public class VisitHandler {
                             // first try to get the current ID from the visitor cookie
                             String cookieVisitorId = null;
                             Cookie[] cookies = request.getCookies();
-                            if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + cookies, module);
+                            if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + Arrays.toString(cookies), module); // SCIPIO: Fixed array print
                             if (cookies != null) {
                                 for (int i = 0; i < cookies.length; i++) {
                                     if (cookies[i].getName().equals(visitorCookieName)) {

@@ -42,7 +42,7 @@ import org.ofbiz.webapp.control.LoginWorker;
  * It does not implement all aspects of LoginWorker such as visit handling.
  * <p>
  * IMPORTANT: This "filter" must not call the method ServletRequest.getParameter.
- * See {@link #getRequestParameterSafe} for details.
+ * See {@link #getRawRequestParameter} for details.
  * <p>
  * TODO: 2018-05-10: several aspects missing to work correctly:
  * * userTenantId (must be hardcoded into username)
@@ -289,7 +289,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
     }
 
     /**
-     * ScipioUserLoginAuthenticationProvider, derived from {@link org.apache.solr.security.Sha256AuthenticationProvider}.
+     * ScipioUserLoginAuthenticationProvider, derived from <code>org.apache.solr.security.Sha256AuthenticationProvider}</code>.
      */
     public class ScipioUserLoginAuthenticationProvider implements AuthenticationProvider {
         private String realm;

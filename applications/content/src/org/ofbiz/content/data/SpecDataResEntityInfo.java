@@ -100,7 +100,7 @@ public class SpecDataResEntityInfo {
     }
 
     /**
-     * @deprecated too confusing; use {@link #getMediaResourceValuefromDataResource} instead.
+     * @deprecated too confusing; use {@link #getMediaDataResourceFromDataResource} instead.
      */
     @Deprecated
     public GenericValue getSpecValuefromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {

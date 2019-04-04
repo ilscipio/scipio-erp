@@ -34,7 +34,7 @@ public interface ImageVariantSelector {
         ImageVariantSelector fromImagePropertiesMap(String name, String sourceType, String location, Map<String, Map<String, String>> imgPropsMap);
 
         /**
-         * @param location
+         * @param imgPropsPath
          * @param locale
          * @return
          * @throws IOException

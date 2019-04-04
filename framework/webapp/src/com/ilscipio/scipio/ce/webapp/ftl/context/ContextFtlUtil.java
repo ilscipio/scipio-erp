@@ -61,8 +61,8 @@ public abstract class ContextFtlUtil {
      * <strong>WARN</strong>: These names are subject to change; never rely on them. Nor should ever need to
      *     access them directly outside of this code.
      *
-     * @see pushRequestStack
-     * @see getRequestVar
+     * @see #pushRequestStack
+     * @see #getRequestVar
      */
     public static final String REQUEST_VAR_MAP_NAME_REQATTRIBS = "scipioTmplReqVarsAttr";
     public static final String REQUEST_VAR_MAP_NAME_GLOBALCONTEXT = "scipioTmplReqVarsCtx";
@@ -364,12 +364,12 @@ public abstract class ContextFtlUtil {
     /**
      * Method for getting request-scope variables, with fallback to globals.
      * <p>
-     * Must and should only be used to read values set by {@link setRequestVar}.
+     * Must and should only be used to read values set by {@link #setRequestVar}.
      * <p>
      * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
-     * Can use {@link com.ilscipio.scipio.ce.webapp.ftl.TransformFtlUtil} <code>unwrapXxx</code> methods.
+     * Can use {@link com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil} <code>unwrapXxx</code> methods.
      *
-     * @see setRequestVar
+     * @see #setRequestVar
      */
     static Object getRequestVar(String name, HttpServletRequest request,
             Map<String, Object> context, Environment env) throws TemplateModelException {
@@ -415,7 +415,7 @@ public abstract class ContextFtlUtil {
      * <p>
      * <strong>Do not access underlying structure directly.</strong>
      *
-     * @see setRequestVar
+     * @see #setRequestVar
      */
     static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request,
             Map<String, Object> context, Environment env) throws TemplateModelException {
@@ -507,7 +507,7 @@ public abstract class ContextFtlUtil {
      * <p>
      * <strong>Do not access underlying structure directly.</strong>
      *
-     * @see setRequestVar
+     * @see #setRequestVar
      */
     static void setLastRequestStack(String name, Object value, HttpServletRequest request,
             Map<String, Object> context, Environment env) throws TemplateModelException {
@@ -534,7 +534,7 @@ public abstract class ContextFtlUtil {
      * <p>
      * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
      *
-     * @see setRequestVar
+     * @see #setRequestVar
      */
     static Object readRequestStack(String name, HttpServletRequest request,
             Map<String, Object> context, Environment env) throws TemplateModelException {
@@ -618,7 +618,7 @@ public abstract class ContextFtlUtil {
      * <p>
      * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
      *
-     * @see setRequestVar
+     * @see #setRequestVar
      */
     static Object popRequestStack(String name, HttpServletRequest request,
             Map<String, Object> context, Environment env) throws TemplateModelException {

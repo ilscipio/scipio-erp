@@ -349,7 +349,7 @@ public final class ProductPromoWorker {
                 GenericValue productPromo = EntityQuery.use(delegator).from("ProductPromo").where("productPromoId", promoUse.getProductPromoId()).cache().queryOne();
                 GenericValue newProductPromo = (GenericValue)productPromo.clone();
                 if (!usesPerPromo.containsKey(promoUse.getProductPromoId())) {
-                    usesPerPromo.put(promoUse.getProductPromoId(), 0l);
+                    usesPerPromo.put(promoUse.getProductPromoId(), 0L);
                 }
                 long uses = usesPerPromo.get(promoUse.getProductPromoId());
                 uses = uses + 1;

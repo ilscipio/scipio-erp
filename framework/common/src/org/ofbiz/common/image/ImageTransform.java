@@ -458,9 +458,8 @@ public class ImageTransform {
      * <p>
      * Transform from an Image instance to a BufferedImage instance (FIXED IMAGE TYPE).
      * <p>
-     * SCIPIO: NOTE: This does NOT preserve the image type such as index or color model; always creates as fixed
-     * system default type (previously was hardcoded as TYPE_INT_ARGB_PRE; see {@link #DEFAULT_BUFIMAGE_TYPE}
-     * for current value).
+     * SCIPIO: NOTE: This does NOT preserve the image type such as index or color model; rather always creates as fixed
+     * system default type (previously was hardcoded as TYPE_INT_ARGB_PRE; see imagecommon.properties for current default).
      *
      * @param image             Source image
      * @return BufferedImage

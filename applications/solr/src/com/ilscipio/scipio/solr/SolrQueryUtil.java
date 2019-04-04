@@ -46,8 +46,8 @@ public abstract class SolrQueryUtil {
     }
 
     /**
-     * Checks if the exception extracted by {@link #getSolrNestedException} is a syntax error.
-     * FIXME: AWFUL HEURISTIC
+     * Checks if the given Solr exception is a syntax error.
+     * FIXME: AWFUL HEURISTIC.
      */
     public static boolean isSolrQuerySyntaxError(Throwable t) {
         // exception message usually contains the string: "org.apache.solr.search.SyntaxError"

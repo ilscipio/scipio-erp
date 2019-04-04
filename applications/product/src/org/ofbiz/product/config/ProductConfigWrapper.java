@@ -202,7 +202,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     /**
-     * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+     * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
     public void ensureExactEquals(ProductConfigWrapper other) {
@@ -617,7 +617,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         /**
-         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(ConfigItem other) {
@@ -887,7 +887,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         /**
-         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(ConfigOption other) {

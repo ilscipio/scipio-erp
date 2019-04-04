@@ -95,8 +95,6 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
 
     /**
      * Commits the template version and any other necessary data.
-     * <p>
-     * @see org.CmsDataObject.cms.data.CmsDataObject#store()
      */
     @Override
     public void store() throws CmsException {

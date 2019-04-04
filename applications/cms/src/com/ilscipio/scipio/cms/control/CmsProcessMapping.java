@@ -984,10 +984,6 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
 
     /**
      * Checks if process source path matches request path (from servlet context root). Assumes all normalized.
-     * <p>
-     * Also see {@link #findByRequest} (implementations must match!).
-     *
-     * @see #findByRequest
      */
     public static boolean sourceMatchesRequestPath(String sourcePath, String requestPath) {
         //return StringUtils.equals(sourcePath, requestPath);

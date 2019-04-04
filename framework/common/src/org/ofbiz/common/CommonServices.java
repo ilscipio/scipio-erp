@@ -132,7 +132,7 @@ public class CommonServices {
     public static Map<String, Object> blockingTestService(DispatchContext dctx, Map<String, ?> context) {
         Long duration = (Long) context.get("duration");
         if (duration == null) {
-            duration = 30000l;
+            duration = 30000L;
         }
         Debug.logInfo("-----SERVICE BLOCKING----- : " + duration/1000d +" seconds", module);
         try {

@@ -66,7 +66,6 @@ public final class WidgetContextCacheKey {
         fieldNamesToSkip.add("request");
         fieldNamesToSkip.add("response");
         fieldNamesToSkip.add("application");
-        fieldNamesToSkip.add("formStringRenderer");
         fieldNamesToSkip.add("null");
         fieldNamesToSkip.add("sections");
         fieldNamesToSkip.add("uiLabelMap");

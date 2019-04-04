@@ -187,11 +187,6 @@ public abstract class CmsRenderUtil {
         return handleDirectiveError(label, t, sysMsg, userMsg, (pageContext != null ? pageContext.isPreview() : false), liveExMode, module);
     }
 
-    public static boolean handleDirectiveError(String label, Throwable t, String msg,
-            boolean isPreview, RenderExceptionMode liveExMode, String module) throws CmsTemplateException {
-        return handleDirectiveError(label, t, msg, isPreview, liveExMode, module);
-    }
-
     public static boolean handleDirectiveError(String label, Throwable t, String sysMsg, String userMsg,
             boolean isPreview, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws CmsTemplateException {
         String msg;

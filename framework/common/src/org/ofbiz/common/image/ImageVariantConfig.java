@@ -258,7 +258,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     /**
      * Fitting mode - influences best-image selection - meant
      * to be used in conjunction with css background-size property ("contain", "cover") or equivalent.
-     * @see ImageVariantConfig#getCanvasBestVariant
+     * @see ImageVariantConfig#getCanvasBestFitVariant
      */
     public enum FitMode {
         /**

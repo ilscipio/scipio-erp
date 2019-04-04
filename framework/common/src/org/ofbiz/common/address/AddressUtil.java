@@ -19,7 +19,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
  * SCIPIO: Common address/telecom/phone utilities.
  * <p>
  * Some validation utilities require Delegator, which is not available from
- * {@link org.ofbiz.base.util#UtilValidate} at this time, so some stock
+ * {@link org.ofbiz.base.util.UtilValidate} at this time, so some stock
  * utilities originally from that class may be moved here instead.
  * <p>
  * NOTE: This util is meant to be ContactMech-agnostic or unaware of the business schema.
@@ -36,7 +36,7 @@ public final class AddressUtil {
     /**
      * Validates phone numbers (using external library).
      * <p>
-     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util#UtilValidate}
+     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util.UtilValidate}
      * due to dependency issues.
      */
     public static boolean isValidPhoneNumber(String phoneNumber, Delegator delegator) {
@@ -47,7 +47,7 @@ public final class AddressUtil {
     /**
      * Validates phone numbers (using external library).
      * <p>
-     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util#UtilValidate}
+     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util.UtilValidate}
      * due to dependency issues.
      */
     public static boolean isValidPhoneNumber(String phoneNumber, String geoId, Delegator delegator) {
@@ -69,7 +69,7 @@ public final class AddressUtil {
     /**
      * Splits phone number (using external library).
      * <p>
-     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util#UtilMisc}
+     * SCIPIO: 2018-08-30: Stock method moved here from {@link org.ofbiz.base.util.UtilMisc}
      * due to dependency issues (and really did not belong there).
      */
     public static Map<String, String> splitPhoneNumber(String phoneNumber, Delegator delegator) {

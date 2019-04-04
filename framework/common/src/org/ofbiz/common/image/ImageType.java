@@ -1062,7 +1062,7 @@ public class ImageType implements Serializable {
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
-     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType(int, BufferedImage)}.
+     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType}.
      */
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType, BufferedImage srcImage) {
         return imageType.imageMatchesRequestedType(imageToTest, srcImage);
@@ -1071,7 +1071,7 @@ public class ImageType implements Serializable {
     /**
      * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
      * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
-     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType(int, BufferedImage)}.
+     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType}.
      */
     public static boolean imageMatchesRequestedType(BufferedImage imageToTest, Integer targetPixelType, ColorModel targetColorMode, BufferedImage srcImage) {
         // THIS IS THE ACTUAL IMPLEMENTATION

@@ -2970,7 +2970,7 @@ public class RequestHandler {
 
     /**
      * SCIPIO: getDefaultNotSaveRequestAttr.
-     * @deprecated 2019-01: Use {@link RequestSavingAttrNamePolicy#from(HttpServletRequest))} instead.
+     * @deprecated 2019-01: Use {@link RequestAttrNamePolicy#from(HttpServletRequest))} instead.
      */
     @Deprecated
     public static Collection<String> getDefaultNotSaveRequestAttr(HttpServletRequest request) {

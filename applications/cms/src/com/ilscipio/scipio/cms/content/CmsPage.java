@@ -58,7 +58,7 @@ import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
 /**
  * Represents a CMS page.
  * <p>
- * 2016: IMPORTANT: If you add any cached fields, you MUST update the {@link #preloadContent} method.
+ * 2016: IMPORTANT: If you add any cached fields, you MUST update the {@link #preload} method.
  * <p>
  * FIXME: 2017: there is significant duplication of the CmsPage<->CmsPageVersion logic
  * because this is unable to extend CmsVersionedComplexTemplate<->CmsTemplateVerison that
@@ -965,7 +965,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 }
             }
         } catch (GenericEntityException e) {
-            new CmsException("Could not remove product links from page.", e);
+            throw new CmsException("Could not remove product links from page.", e);
         }
     }
 
@@ -989,8 +989,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the version with the given version id as live version.
-     *
-     * @param versionId
      */
     public void setActiveVersion(String versionId) {
         this.activeVersionId = (versionId != null) ? versionId : "";
@@ -998,9 +996,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of a page as map.
-     *
-     * @param content
-     * @throws IOException
      */
     public void setContent(Map<String, ?> content) throws IOException {
         setContent(JSON.from(content).toString());
@@ -1008,8 +1003,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of a page as CmsPageContent object.
-     *
-     * @param content
      */
     public void setContent(CmsPageContent content) {
         try{
@@ -1024,8 +1017,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the content of the page as json string.
-     *
-     * @param jsonContent
      */
     public void setContent(String jsonContent) {
         addVersion(jsonContent);
@@ -1033,8 +1024,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets the name of the page.
-     *
-     * @param name
      */
     public void setName(String name) {
         entity.setString("pageName", name);
@@ -1042,9 +1031,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     /**
      * Sets id of pageTemplate to which the page belongs.
-     *
-     * @param pageTemplate
-     *            id
      */
     public void setPageTemplateId(String pageTemplateId) {
         entity.setString("pageTemplateId", pageTemplateId);
@@ -1055,8 +1041,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * The path is normalized and any trailing slashs are removed.
      * <p>
      * FIXME: setIfEmpty IS NOT CURRENTLY HONORED HERE
-     *
-     * @param path
      */
     public void setPrimaryProcessMappingFields(Map<String, ?> fields, boolean setIfEmpty) {
         String webSiteId = (String) fields.get("webSiteId");
@@ -1149,8 +1133,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     /**
      * Sets the template of this page. The page has to be stored to persist this
      * change.
-     *
-     * @param template
      */
     public void setTemplate(CmsPageTemplate template) {
         entity.set("templateId", template.getId());
@@ -1944,9 +1926,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
          * <p>
          * NOTE: 2016: this creates a deep copy of content model so as not to affect
          * the page instance.
-         *
-         * @param context
-         * @return
          */
         public void processAndRender(Writer out, CmsPageContext pageContext, String versionId) {
             CmsPageContent content = page.getContentModel(pageContext, versionId);
@@ -1962,7 +1941,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
 
     }
-
 
     @Override
     public PageWorker getWorkerInst() {

@@ -135,7 +135,8 @@ public class GatewayResponse {
         Node rootnode = doc.getDocumentElement();
         String root = rootnode.getNodeName();
 
-        if (root != "ewayResponse") {
+        //if (root != "ewayResponse") { // SCIPIO: bad
+        if (!"ewayResponse".equals(root)) {
             throw new Exception("Bad root element in response: " + root);
         }
 
@@ -145,7 +146,8 @@ public class GatewayResponse {
         for (int i = 0; i < length; i++) {
             Node node = list.item(i);
             String name = node.getNodeName();
-            if (name == "ewayResponse") {
+            //if (name == "ewayResponse") { // SCIPIO: bad
+            if ("ewayResponse".equals(name)) {
                 continue;
             }
             Text textnode = (Text) node.getFirstChild();

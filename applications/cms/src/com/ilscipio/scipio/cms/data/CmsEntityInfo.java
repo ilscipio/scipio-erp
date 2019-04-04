@@ -307,7 +307,7 @@ public class CmsEntityInfo {
      * Returns the CMS model entities set.
      * If this instance is pref-ordering - such as all instances returned by the {@link #getInst} methods,
      * this set is ordered (LinkedHashSet) and follows the preferred entity ordering determined
-     * mostly by {@link #getCmsEntityNamesPrefOrder}, but with further enforced dependency checking.
+     * mostly by cmsEntityNamesPrefOrder, but with further enforced dependency checking.
      */
     public Set<ModelEntity> getCmsModelEntities() {
         return cmsModelEntities;

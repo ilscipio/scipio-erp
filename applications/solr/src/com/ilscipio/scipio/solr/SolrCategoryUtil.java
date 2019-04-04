@@ -157,7 +157,7 @@ public abstract class SolrCategoryUtil {
     /**
      * Returns categoryName with trail.
      * @deprecated You should usually call the overload
-     * with currentTrail instead {@link #getCategoryNameWithTrail(String, DispatchContext, List)}.
+     * with currentTrail instead {@link #getCategoryNameWithTrail(String, String, Boolean, DispatchContext, List)}.
      */
     @Deprecated
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
@@ -167,7 +167,7 @@ public abstract class SolrCategoryUtil {
     /**
      * Returns categoryName with trail.
      * @deprecated You should usually call the overload
-     * with currentTrail instead {@link #getCategoryNameWithTrail(String, Boolean, DispatchContext, List)}.
+     * with currentTrail instead {@link #getCategoryNameWithTrail(String, String, Boolean, DispatchContext, List)}.
      */
     @Deprecated
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {

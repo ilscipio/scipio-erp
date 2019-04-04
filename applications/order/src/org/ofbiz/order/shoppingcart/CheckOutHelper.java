@@ -1635,7 +1635,7 @@ public class CheckOutHelper {
      * SCIPIO: WARN: The stock code in this method does not only check the validity of current pay methods in cart; it
      * also updates pay meth amounts for those that were previously left null.
      * <p>
-     * SCIPIO: NOTE: Logic must reflect that of {@link ShoppingCart#isPaymentAdequate()}.
+     * SCIPIO: NOTE: Logic must reflect that of {@link ShoppingCart#isPaymentsAdequate()}.
      */
     public Map<String, Object> validatePaymentMethods() {
         String errMsg = null;

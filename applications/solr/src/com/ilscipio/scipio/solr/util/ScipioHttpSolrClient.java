@@ -123,7 +123,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
     /**
      * Sets basic auth header to either the one in the SolrRequest or the one stored in this client.
      * <p>
-     * DEV NOTE: Derived from {@link HttpSolrClient#setBasicAuthHeader}, which is private in superclass.
+     * DEV NOTE: Derived from <code>HttpSolrClient#setBasicAuthHeader</code>, which is private in superclass.
      */
     @SuppressWarnings("rawtypes")
     protected void setBasicAuthHeaderScipio(SolrRequest request, HttpRequestBase method) throws UnsupportedEncodingException {
@@ -137,7 +137,7 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
     /**
      * Sets basic auth header to the given username and password.
      * <p>
-     * DEV NOTE: Derived from {@link HttpSolrClient#setBasicAuthHeader}, which is private in superclass.
+     * DEV NOTE: Derived from <code>HttpSolrClient#setBasicAuthHeader</code>, which is private in superclass.
      */
     protected void setBasicAuthHeader(HttpRequestBase method, String username, String password) throws UnsupportedEncodingException {
         String userPass = username + ":" + password;

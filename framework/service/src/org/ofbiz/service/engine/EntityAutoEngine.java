@@ -510,7 +510,6 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
      * @param parameters
      * @param modelService
      * @param modelEntity
-     * @param lookedUpValue
      * @param allPksInOnly
      * @return
      * @throws GeneralException

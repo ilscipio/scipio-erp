@@ -64,9 +64,9 @@ public abstract class SolrExprUtil {
      * <em>not</em> enclosed in quotes (single term).
      * At current time, this includes at least:
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-     * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
+     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeTermForQuote} for that.
      * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
-     * @see SolrUtil#escapeTermForQuote
+     * @see #escapeTermForQuote
      */
     public static String escapeTermPlain(String term) {
         return ClientUtils.escapeQueryChars(term);
@@ -96,7 +96,7 @@ public abstract class SolrExprUtil {
      * Escapes all special solr/query characters in the given query term intended to be
      * enclosed in double-quotes (phrase).
      * At current time, this escapes the backslash and double-quote characters only.
-     * @see escapeTermPlain
+     * @see #escapeTermPlain
      */
     public static String escapeTermForQuote(String term) {
         final String s = term;
@@ -116,7 +116,7 @@ public abstract class SolrExprUtil {
     }
 
     /**
-     * Escapes the term using {@link escapeTermForQuote} and returns it within double-quotes.
+     * Escapes the term using {@link #escapeTermForQuote} and returns it within double-quotes.
      * Convenience method.
      */
     public static String escapeTermAndQuote(String term) {
@@ -124,15 +124,15 @@ public abstract class SolrExprUtil {
     }
 
     /**
-     * ABSTRACTED escaping method that will fully escape the given term using either {@link escapeTermAndQuote}
-     * or {@link escapeTermPlain} or another, at its own discretion or based on configuration.
+     * ABSTRACTED escaping method that will fully escape the given term using either {@link #escapeTermAndQuote}
+     * or {@link #escapeTermPlain} or another, at its own discretion or based on configuration.
      * The result should NOT and NEVER be placed in quotes; it should be treated as containing its own quotes, even
      * if the escaping method is changed.
      * <p>
      * DEV NOTE: this is to factor out the escaping code to simplify things later, because solr is not
      * honoring <code>escapeTermPlain</code> as expected.
      * <p>
-     * 2017-07-21: At current time, uses {@link escapeTermPlain} - SEE KNOWN ISSUES.
+     * 2017-07-21: At current time, uses {@link #escapeTermPlain} - SEE KNOWN ISSUES.
      */
     public static String escapeTermFull(String term) {
         return escapeTermPlain(term);

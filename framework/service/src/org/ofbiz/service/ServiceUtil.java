@@ -941,7 +941,9 @@ public final class ServiceUtil {
                 throw new IllegalArgumentException("Arg(" + i + "), value(" + args[i] + ") is not a string.");
             }
         }
-        return UtilGenerics.checkMap(UtilMisc.toMap(args));
+        // SCIPIO: Redundant
+        //return UtilGenerics.checkMap(UtilMisc.toMap(args));
+        return UtilMisc.toMap(args);
     }
 
     public static Map<String, Object> resetJob(DispatchContext dctx, Map<String, Object> context) {

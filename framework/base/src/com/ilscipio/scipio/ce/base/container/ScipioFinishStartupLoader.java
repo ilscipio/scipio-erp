@@ -22,7 +22,7 @@ import com.ilscipio.scipio.ce.base.event.ScipioEventDefs;
  * see the SOLR_REBUILD_INIT job in applications/solr/data/SolrScheduledServiceData.xml.
  * <p>
  * DEV NOTE: For the official "FRAMEWORK IS LOADED" post-startup complete message,
- * see {@link org.ofbiz.base.start.Start#printStartupReadyMessage}.
+ * see <code>org.ofbiz.base.start.Start#printStartupReadyMessage</code>.
  * These are intentionally separated.
  * <p>
  * Added 2018-05-22.

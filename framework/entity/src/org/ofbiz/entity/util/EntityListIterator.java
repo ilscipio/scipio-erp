@@ -556,7 +556,7 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
     /**
      * Closes the {@link EntityListIterator} and logs a warning if it isn't already closed.
      *
-     * If you don't want to handle the {@link GenericEntityException} thrown by {@link #close()}, use {@link #tryCloseWithWarning()}.
+     * If you don't want to handle the {@link GenericEntityException} thrown by {@link #close()}, use {@link #tryCloseWithWarning(String)}.
      *
      * @param warningMessage
      *            the warning to be logged.
@@ -573,7 +573,7 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
     /**
      * Tries to close the {@link EntityListIterator} and logs a warning if it isn't already closed.
      *
-     * Catches the {@link GenericEntityException} thrown by {@link #close()} and logs it. If you want to handle the exception yourself, use {@link #closeWithWarning()}.
+     * Catches the {@link GenericEntityException} thrown by {@link #close()} and logs it. If you want to handle the exception yourself, use {@link #closeWithWarning(String)}.
      *
      * @param warningMessage
      *            the warning to be logged.

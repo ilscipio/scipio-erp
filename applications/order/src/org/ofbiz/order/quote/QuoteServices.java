@@ -193,7 +193,6 @@ public class QuoteServices {
             Map<String, Object> quoteIn = UtilMisc.toMap("quoteTypeId", quoteTypeId, "partyId", partyId, "issueDate", issueDate, "statusId", statusId, "currencyUomId", currencyUomId);
             quoteIn.put("productStoreId", productStoreId);
             quoteIn.put("salesChannelEnumId", salesChannelEnumId);
-            quoteIn.put("productStoreId", productStoreId);
             quoteIn.put("validFromDate", validFromDate);
             quoteIn.put("validThruDate", validThruDate);
             quoteIn.put("quoteName", quoteName);

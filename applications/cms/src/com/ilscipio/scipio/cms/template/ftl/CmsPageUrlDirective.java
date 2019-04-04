@@ -295,9 +295,7 @@ public class CmsPageUrlDirective implements TemplateDirectiveModel, Serializable
      * NOTE: like RequestHandler.makeLinkAuto, this version does not throw exceptions.
      * <p>
      * NOTE: The webSiteId should already be normalized, so it may be either null, the string "null", or a real webSiteId.
-     *
      * @param context the current page context (may be created from context for non-CMS renderers)
-     * @param pageId the target page to link to
      * @return complete url with protocol scheme and port (if necessary)
      */
     public static String makeLinkAutoByName(CmsPageContext context, String pageName, Boolean interWebapp, String webSiteId,

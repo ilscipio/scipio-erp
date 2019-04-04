@@ -134,7 +134,6 @@ public class UploadContentAndImage {
             String contentTypeId = (String)passedParams.get("contentTypeId");
             ftlContext.put("contentTypeId", contentTypeId);
             ftlContext.put("statusId", passedParams.get("statusId"));
-            ftlContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeList")));
             ftlContext.put("contentPurposeList", contentPurposeList);
             ftlContext.put("targetOperationList",targetOperationList);
             ftlContext.put("contentName", passedParams.get("contentName"));

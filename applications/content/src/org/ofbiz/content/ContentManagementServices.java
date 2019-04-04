@@ -221,7 +221,6 @@ public class ContentManagementServices {
         results.put("contentId", content.get("contentId"));
         results.put("dataResourceId", dataResource.get("dataResourceId"));
         results.put("drDataResourceId", dataResource.get("dataResourceId"));
-        results.put("drDataResourceId", dataResource.get("dataResourceId"));
         results.put("caContentIdTo", contentAssoc.get("contentIdTo"));
         results.put("caContentId", contentAssoc.get("contentId"));
         results.put("caFromDate", contentAssoc.get("fromDate"));

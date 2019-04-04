@@ -87,7 +87,7 @@ public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttr
      * <ul>
      * <li>Map modification methods such as {@link #put} and {@link #remove}
      *     break the Map contract and do NOT return the previous/old value; they return null or a dummy default instead.</li>
-     * <li>{@link #keySet}, {@link #values()} and {@link entrySet} are considered unmodifiable and may
+     * <li>{@link #keySet}, {@link #values()} and {@link #entrySet()} are considered unmodifiable and may
      *     either throw exception or simply fail without notice at any modification attempt to the elements;
      *     they may also be either adapted or copied collections, and change without notice.</li>
      * </ul>
@@ -104,7 +104,7 @@ public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttr
      * <ul>
      * <li>Map modification methods such as {@link #put} and {@link #remove}
      *     break the Map contract and do NOT return the previous/old value; they return null or a dummy default instead.</li>
-     * <li>{@link #keySet}, {@link #values()} and {@link entrySet} are considered unmodifiable and may
+     * <li>{@link #keySet}, {@link #values()} and {@link #entrySet()} are considered unmodifiable and may
      *     either throw exception or simply fail without notice at any modification attempt to the elements;
      *     they may also be either adapted or copied collections, and change without notice.</li>
      * </ul>
@@ -121,7 +121,7 @@ public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttr
      * <ul>
      * <li>Map modification methods such as {@link #put} and {@link #remove}
      *     break the Map contract and do NOT return the previous/old value; they return null or a dummy default instead.</li>
-     * <li>{@link #keySet}, {@link #values()} and {@link entrySet} are considered unmodifiable and may
+     * <li>{@link #keySet}, {@link #values()} and {@link #entrySet()} are considered unmodifiable and may
      *     either throw exception or simply fail without notice at any modification attempt to the elements;
      *     they may also be either adapted or copied collections, and change without notice.</li>
      * </ul>
@@ -463,12 +463,12 @@ public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttr
 
     /**
      * ExtendedMap interface method for "fast" implementations.
-     * <strong>WARNING:</strong> These implementations <em>intentionally</em> violate the {@link #Map} interface!
+     * <strong>WARNING:</strong> These implementations <em>intentionally</em> violate the {@link Map} interface!
      * <p>
      * <ul>Characteristics:</ul>
      * <li>Map modification methods such as {@link #put} and {@link #remove}
      *     break the Map contract and do NOT return the previous/old value; they return null or a dummy default instead.</li>
-     * <li>{@link #keySet}, {@link #values()} and {@link entrySet} are considered unmodifiable and may
+     * <li>{@link #keySet()}, {@link #values()} and {@link #entrySet()} are considered unmodifiable and may
      *     either throw exception or simply fail without notice at any modification attempt to the elements;
      *     they may also be either adapted or copied collections, and change without notice.</li>
      */

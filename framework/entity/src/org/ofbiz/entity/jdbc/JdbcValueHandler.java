@@ -152,7 +152,6 @@ public abstract class JdbcValueHandler<T> implements Serializable { // SCIPIO: a
         // java-type will be used to select the correct data type
         result.put("LONGVARCHAR", Types.LONGVARCHAR);
         result.put("LONG VARCHAR", Types.LONGVARCHAR);
-        result.put("BIGINT", Types.BIGINT);
         result.put("TEXT", Types.LONGVARCHAR);
         result.put("IMAGE", Types.BLOB);
         result.put("BINARY", Types.BINARY);

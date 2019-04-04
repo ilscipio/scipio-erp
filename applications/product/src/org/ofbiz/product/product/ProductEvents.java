@@ -519,7 +519,7 @@ public class ProductEvents {
      * find a specific feature in a given list, then update it or create it if it doesn't exist.
      * @param delegator
      * @param productId
-     * @param existingFeatures
+     * @param currentProductFeatureAndAppls
      * @param uomId
      * @param productFeatureTypeId
      * @param numberSpecified

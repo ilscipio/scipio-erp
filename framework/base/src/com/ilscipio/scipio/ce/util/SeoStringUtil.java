@@ -24,8 +24,8 @@ public class SeoStringUtil {
      * WARNING: FIXME?: 2018-09: This uses md5, fast but insecure.
      * @deprecated 2018-09: Use {@link #getHash(String, Charset)} instead.
      *
-     * @param plainText
-     * @return md5-hash
+     * @param plain
+     * @return md5 hash
      */
     public static String getHash(String plain) {
         return getHash(plain, StandardCharsets.ISO_8859_1);

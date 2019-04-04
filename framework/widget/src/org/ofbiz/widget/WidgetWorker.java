@@ -328,7 +328,7 @@ public final class WidgetWorker {
 
     /**
      * @deprecated SCIPIO: 2018-10-18: The macro form renderer (Freemarker) makeHiddenFormLinkForm macro must be used instead
-     * (via {@link org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkForm}); this method may be unmaintained and insecure.
+     * (via <code>org.ofbiz.widget.renderer.macro.MacroFormRenderer#makeHiddenFormLinkForm</code>); this method may be unmaintained and insecure.
      */
     @Deprecated
     public static void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {

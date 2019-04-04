@@ -454,7 +454,7 @@ public class HashCrypt {
     /**
      * digestHashOldFunnyHex.
      * @deprecated SCIPIO: This method should not called by anything other than
-     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}, and
+     * <code>org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler</code>, and
      * it encrypts using the system charset, which is not necessarily UTF-8.
      */
     @Deprecated
@@ -466,7 +466,7 @@ public class HashCrypt {
      * digestHashOldFunnyHex.
      * <p>
      * SCIPIO: <strong>WARNING:</strong> This method is intended only for
-     * {@link org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler}
+     * <code>org.ofbiz.entity.util.EntityCrypto#OldFunnyHashStorageHandler</code>
      * and its use anywhere else is unsupported. If code is null, the system
      * charset is used, which is not necessarily UTF-8.
      */

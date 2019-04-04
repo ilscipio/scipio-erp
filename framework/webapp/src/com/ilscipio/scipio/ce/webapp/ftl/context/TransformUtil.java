@@ -363,7 +363,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContext(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
@@ -374,7 +374,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
@@ -400,7 +400,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContext(List<?> args, int position, Environment env) throws TemplateModelException {
@@ -411,7 +411,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, int position, Environment env) throws TemplateModelException {
@@ -437,7 +437,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContext(List<?> args, String key, int position, Environment env) throws TemplateModelException {
@@ -448,7 +448,7 @@ public abstract class TransformUtil {
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
-     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link #getOfbizLocaleArgOrCurrent} instead.
      */
     @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, String key, int position, Environment env) throws TemplateModelException {

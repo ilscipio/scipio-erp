@@ -316,7 +316,7 @@ public class NotificationServices {
 
     /**
      * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them.
-     * NOTE: You probably want to call the abstracted method {@link #checkSetWebSiteIdAndRelated} instead.
+     * NOTE: You probably want to call the abstracted method {@link #checkSetWebSiteFields} instead.
      * @return the effective webSiteId
      */
     public static String checkSetBaseUrlAndWebSiteId(Delegator delegator, String webSiteId, Map<String, Object> context) {
@@ -326,7 +326,7 @@ public class NotificationServices {
 
     /**
      * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them,
-     * and along with anything related (abstraction method).
+     * and along with anything related (abstraction).
      * @return the effective webSiteId
      */
     public static String checkSetWebSiteFields(Delegator delegator, String webSiteId, Map<String, Object> context) {

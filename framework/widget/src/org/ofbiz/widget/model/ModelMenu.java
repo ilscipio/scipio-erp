@@ -1520,8 +1520,6 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
 
     /**
      * Gets menu item for sub-menu (or its parent if PARENT applies), applying all the name translations as needed.
-     * <p>
-     * @see #resolveMenuItem(String, ModelSubMenu, boolean, boolean)
      */
     public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName, boolean mapNames) {
         if (isMenuNameTopMenu(subMenuName)) {
@@ -1662,7 +1660,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
     /**
      * Returns selected menu item context field name.
      * @deprecated SCIPIO: because this now supports multiple values and extended syntax,
-     *   must use {@link #getSelectedMenuItemContextFieldNameExpr} or
+     *   must use {@link #getSelectedMenuItemContextFieldNameExprStr} or
      *   {@link #getSelectedMenuItemContextFieldNameFirst} to disambiguate.
      */
     @Deprecated

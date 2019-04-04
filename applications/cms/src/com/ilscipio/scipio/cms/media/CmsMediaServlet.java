@@ -82,7 +82,7 @@ public class CmsMediaServlet extends HttpServlet {
      * <p>
      * TODO: still missing an "auto" best-size selection based on width and height
      * TODO: this isn't looking at the global debug flag yet for the error msgs
-     * WARN: autoVariant logic has severe limitations - see {@link CmsMediaWorker#selectBestImageVariant}
+     * WARN: autoVariant logic has severe limitations - see {@link CmsMediaWorker}.
      * TODO: REVIEW: Should this method be enclosed in a transaction? Mitigated for now using useCache.
      */
     @Override

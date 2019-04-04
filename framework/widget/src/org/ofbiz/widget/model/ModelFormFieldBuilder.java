@@ -310,6 +310,7 @@ public class ModelFormFieldBuilder {
         this.tabindex = modelFormField.getTabindex();
         this.conditionGroup = modelFormField.getConditionGroup();
         this.attribsExpr = modelFormField.getAttribsExpr(); // SCIPIO
+        this.ignoreWhen = modelFormField.getIgnoreWhen(); // SCIPIO: Added missing
     }
 
     public ModelFormFieldBuilder(ModelFormFieldBuilder builder) {
@@ -356,6 +357,8 @@ public class ModelFormFieldBuilder {
         this.tabindex = builder.getTabindex();
         this.conditionGroup = builder.getConditionGroup();
         this.attribsExpr = builder.getAttribsExpr(); // SCIPIO
+        this.ignoreWhen = builder.getIgnoreWhen(); // SCIPIO: Added missing
+        this.fieldType = builder.getFieldType(); // SCIPIO: Added missing
     }
 
     public ModelFormFieldBuilder addOnChangeUpdateArea(UpdateArea onChangeUpdateArea) {

@@ -17,8 +17,8 @@ import org.ofbiz.service.ServiceUtil;
  * <p>
  * NOTE: this is not done in a single static method because calling Debug.log(...)
  * from a central location has messed up call stack details before, so it must be
- * left to the caller to do the actual Debug.log call using {@link #getLogMsg()} as
- * message below. See services for examples.
+ * left to the caller to do the actual Debug.log call using the getters/formatters
+ * below to get the log message. See services for examples.
  */
 @SuppressWarnings("serial")
 public class ServiceErrorFormatter implements Serializable {

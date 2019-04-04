@@ -46,7 +46,7 @@ public final class ServletMapEntryAdapters {
      * <p>
      * Characteristics:
      * <ul>
-     * <li>{@link #setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
+     * <li>{@link StdServletMapEntryAdapter#setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
      *     it may returns null or a dummy default instead.</li>
      * </ul>
      */
@@ -60,7 +60,7 @@ public final class ServletMapEntryAdapters {
      * <p>
      * Characteristics:
      * <ul>
-     * <li>{@link #setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
+     * <li>{@link StdServletMapEntryAdapter#setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
      *     it may returns null or a dummy default instead.</li>
      * </ul>
      */
@@ -74,7 +74,7 @@ public final class ServletMapEntryAdapters {
      * <p>
      * Characteristics:
      * <ul>
-     * <li>{@link #setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
+     * <li>{@link StdServletMapEntryAdapter#setValue} intentionally breaks the Map contract and does NOT return the previous/old value;
      *     it may returns null or a dummy default instead.</li>
      * </ul>
      */

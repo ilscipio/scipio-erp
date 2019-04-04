@@ -266,7 +266,6 @@ public class FinAccountPaymentServices {
             result.put("processAmount", amount);
             result.put("authMessage", authMessage);
             result.put("authResult", processResult);
-            result.put("processAmount", amount);
             result.put("authFlag", "1");
             result.put("authCode", "A");
             result.put("authRefNum", refNum);

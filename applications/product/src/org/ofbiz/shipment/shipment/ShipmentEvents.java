@@ -46,7 +46,7 @@ public class ShipmentEvents {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * SCIPIO: Provides safe (usually session-scoped) access to the {@link #viewShipmentPackageRouteSegLabelImageOpenAccess} event 
+     * SCIPIO: Provides safe (usually session-scoped) access to the {@link #viewShipmentPackageRouteSegLabelImageUnsafe} event
      * using a token.
      * Added 2018-10-17.
      */

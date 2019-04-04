@@ -51,14 +51,14 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     }
 
     /**
-     * Returns the result of call to entry's {@link #setValue()} method, or null if entry is null.
+     * Returns the result of call to entry's {@link #setValue} method, or null if entry is null.
      */
     public static <K, V> V setValue(Map.Entry<K, V> entry, V value) {
         return (entry != null) ? entry.setValue(value) : null;
     }
 
     /**
-     * Calls entry's {@link #setValueOnly()} method.
+     * Calls entry's {@link #setValueOnly} method.
      */
     public static <K, V> void setValueOnly(MapEntryAdapter<K, V> entry, V value) {
         if (entry != null) {
@@ -67,7 +67,7 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     }
 
     /**
-     * Calls entry's {@link #setValueOnly()} method IF it is an instance of MapEntryAdapter.
+     * Calls entry's {@link #setValueOnly} method IF it is an instance of MapEntryAdapter.
      */
     public static <K, V> void setValueOnly(Map.Entry<K, V> entry, V value) {
         if (entry instanceof MapEntryAdapter) {

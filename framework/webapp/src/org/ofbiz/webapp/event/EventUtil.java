@@ -188,7 +188,7 @@ public final class EventUtil {
 
     /**
      * Alternative to {@link ServiceUtil#getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
-     * Unlike {@link #appendMessageLists(HttpServletRequest, Map)}, all existing messages are completely replaced, efficiently.
+     * All existing messages are completely replaced, efficiently.
      */
     public static void setRequestMessagesFromService(HttpServletRequest request, Map<String, ? extends Object> serviceResult) {
         ServiceUtil.setRequestMessages(request, serviceResult);

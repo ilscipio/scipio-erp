@@ -48,7 +48,7 @@ abstract class GroovyBaseScript extends Script {
     }
 
     Map runService(String serviceName, Map serviceCtx) throws ExecutionServiceException {
-        LocalDispatcher dispatcher = binding.getVariable('dispatcher');
+        LocalDispatcher dispatcher = binding.getVariable('dispatcher') as LocalDispatcher;
         DispatchContext dctx = dispatcher.getDispatchContext();
         /* SCIPIO: 2019-01-31: security: These were flawed and potentially dangerous due to
          * 'parameters' map potentially containing request parameters; also flawed presence checks.
@@ -65,7 +65,7 @@ abstract class GroovyBaseScript extends Script {
         // SCIPIO: NOTE: We ONLY use the request/session for default fields (userLogin, locale, timeZone) 
         // as backward-compatibility IF their keys are not set in current context, as the renderer should have set them.
         ServiceUtil.checkSetServiceContextDefaults(serviceCtx, ModelService.COMMON_INTERNAL_IN_FIELDS,
-            getBindingVarSafe('context'), getBindingVarSafe('request'))
+            (Map<String, Object>) getBindingVarSafe('context'), (HttpServletRequest) getBindingVarSafe('request'))
         Map serviceContext = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, serviceCtx)
         Map result = dispatcher.runSync(serviceName, serviceContext)
         if (ServiceUtil.isError(result)) {
@@ -136,11 +136,12 @@ abstract class GroovyBaseScript extends Script {
             }
             return 'error'
         } else {
-            if (message) {
-                return ServiceUtil.returnError(message)
-            } else {
-                return ServiceUtil.returnError()
-            }
+            // SCIPIO: There is no zero-parameter overload
+            //if (message) {
+            return ServiceUtil.returnError(message)
+            //} else {
+            //    return ServiceUtil.returnError()
+            //}
         }
     }
     def logInfo(String message) {

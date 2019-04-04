@@ -18,9 +18,8 @@ import freemarker.template.TemplateModelException;
 public abstract class TemplateModelContainer {
 
     /**
-     * SCIPIO: This is the half-reverse of
-     * {@link freemarker.template.DefaultMapAdapter.DefaultMapAdapter(Map, ObjectWrapper)};
-     * except that {@link #get(Object)} returns TemplateModels, not unwrapped objects.
+     * SCIPIO: This is the half-reverse of {@link freemarker.template.DefaultMapAdapter} except that {@link #get(Object)}
+     * returns TemplateModels, not unwrapped objects.
      * <p>
      * WARNING: This implementation is partial only! Some methods throw UnsupportedOperationException
      * even if violates {@link java.util.Map} interface.

@@ -318,7 +318,7 @@ public abstract class AccessTokenProvider<V> {
      * NOTE: there is no value parameter, which indicates this cannot create token.
      * <p>
      * WARN: Even if this returns non-null, it is not guaranteed the token is properly
-     * registered in the provider! Use {@link #getEnsureSessionToken} to guarantee that.
+     * registered in the provider! Use {@link #getSessionToken} to guarantee that.
      */
     public AccessToken getLocalSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
         AccessToken token;

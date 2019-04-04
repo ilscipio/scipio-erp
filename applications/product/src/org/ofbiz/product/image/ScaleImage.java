@@ -81,7 +81,6 @@ public class ScaleImage {
      * @throws  IllegalArgumentException    Any parameter is null
      * @throws  ImagingOpException          The transform is non-invertible
      * @throws  IOException                 Error prevents the document from being fully parsed
-     * @throws  JDOMException               Errors occur in parsing
      */
     public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber)
         throws IllegalArgumentException, ImagingOpException, IOException {

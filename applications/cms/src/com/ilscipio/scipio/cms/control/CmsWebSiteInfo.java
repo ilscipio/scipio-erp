@@ -63,11 +63,8 @@ public class CmsWebSiteInfo implements Serializable {
     }
 
     /**
-     * @param webSiteId
-     * @param context
+     * makeForWebSiteContext.
      * @param hasControllerHint  true if caller knows a controller has to exist
-     * @return
-     * @throws InvalidWebappException
      */
     static CmsWebSiteInfo makeForWebSiteContext(String webSiteId, ServletContext servletContext, boolean hasControllerHint) throws InvalidWebappException {
         URL controllerConfigURL = ConfigXMLReader.getControllerConfigURL(servletContext);

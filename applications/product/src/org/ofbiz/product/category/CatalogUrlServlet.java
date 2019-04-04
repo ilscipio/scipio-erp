@@ -56,7 +56,7 @@ public class CatalogUrlServlet extends HttpServlet {
 
     public static final String CATALOG_URL_MOUNT_POINT = "products";
     /**
-     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
+     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(ServletRequest)}.
      */
     @Deprecated
     public static final String CONTROL_MOUNT_POINT = "control";

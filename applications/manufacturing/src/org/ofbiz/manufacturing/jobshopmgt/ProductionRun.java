@@ -482,7 +482,7 @@ public class ProductionRun {
     /**
      * Utility method to easily retrieve the worker (party) out of a production run task
      * @param delegator
-     * @param routingTaskId
+     * @param routingTask
      * @return
      * @throws GenericEntityException
      */

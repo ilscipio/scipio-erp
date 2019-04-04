@@ -80,7 +80,6 @@ public interface LocalDispatcher {
      * Added 2019-01-30.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
-     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
      * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
      * @return Map of name, value pairs composing the result.
      * @throws ServiceAuthException
@@ -96,8 +95,6 @@ public interface LocalDispatcher {
      * Added 2019-01-30.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
-     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
-     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
      * @return Map of name, value pairs composing the result.
      * @throws ServiceAuthException
      * @throws ServiceValidationException

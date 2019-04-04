@@ -577,7 +577,7 @@ public abstract class LangFtlUtil {
      * Shallow-copies map or list. Note: won't preserve order for maps.
      *
      * @param object
-     * @param toSimpleType if true, converts to simple FTL type instead of beans, where possible
+     * @param targetType if true, converts to simple FTL type instead of beans, where possible
      * @return
      * @throws TemplateModelException
      */
@@ -1474,7 +1474,7 @@ public abstract class LangFtlUtil {
      * <p>
      * TODO: replace tests with a filter class similar to FtlVarHandler.
      * <p>
-     * @see copyMapToSimple
+     * @see #copyMapToSimple
      */
     public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include,
             FtlVarHandler varHandler, Environment env) throws TemplateModelException {
@@ -1521,7 +1521,7 @@ public abstract class LangFtlUtil {
     /**
      * Puts all values in hash into FTL globals (#global).
      * <p>
-     * @see copyMapToSimple
+     * @see #copyMapToSimple
      */
     public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, new GlobalFtlVarHandler(env), env);
@@ -1530,7 +1530,7 @@ public abstract class LangFtlUtil {
     /**
      * Puts all values in hash into FTL globals (#global).
      * <p>
-     * @see copyMapToSimple
+     * @see #copyMapToSimple
      */
     public static void globalsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, null, null, new GlobalFtlVarHandler(env), env);
@@ -1539,7 +1539,7 @@ public abstract class LangFtlUtil {
     /**
      * Puts all values in hash into FTL current namespace vars (#assign).
      * <p>
-     * @see copyMapToSimple
+     * @see #copyMapToSimple
      */
     public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, new CurrentFtlVarHandler(env), env);
@@ -1552,7 +1552,7 @@ public abstract class LangFtlUtil {
     /**
      * Puts all values in hash into FTL locals (#local).
      * <p>
-     * @see copyMapToSimple
+     * @see #copyMapToSimple
      */
     public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, new LocalFtlVarHandler(env), env);
@@ -1569,7 +1569,7 @@ public abstract class LangFtlUtil {
      * WARN (TODO?: REVIEW?): this can crash when model is CollectionModel or MapModel, childs of TemplateScalarModel.
      * we let it crash because non-strict typing may be dangerous and hide errors...
      *
-     * @see org.ofbiz.webapp.ftl.EscapingModel
+     * @see EscapingModel
      */
     public static String getAsStringNonEscaping(TemplateScalarModel model) throws TemplateModelException {
         if (model instanceof EscapingModel) {
@@ -1582,7 +1582,7 @@ public abstract class LangFtlUtil {
     /**
      * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels.
      *
-     * @see org.ofbiz.webapp.ftl.EscapingModel
+     * @see EscapingModel
      */
     public static String getAsString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
         if (nonEscaping && (model instanceof EscapingModel)) {
@@ -1599,7 +1599,7 @@ public abstract class LangFtlUtil {
      * NOTE: this behaves similar to {@link #toRawString}, but returns a String.
      * They are almost the same.
      *
-     * @see org.ofbiz.webapp.ftl.EscapingModel
+     * @see EscapingModel
      */
     public static String getAsOrToString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
         if (nonEscaping && (model instanceof EscapingModel)) {
@@ -1937,7 +1937,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Avoids local variables and emulates a simple Freemarker var read in the main namespace.
      * <p>
-     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * Similar to {@link freemarker.core.Environment#getVariable(String)} but skips local
      * variables and always main namespace instead of current namespace.
      * <p>
      * NOTE: This probably makes the most sense to call from transforms as a means to read
@@ -1957,7 +1957,7 @@ public abstract class LangFtlUtil {
      * <p>
      * Avoids local variables and emulates a simple Freemarker var read in the current namespace.
      * <p>
-     * Similar to {@link freemarker.core.Environment.getVariable(String)} but skips local
+     * Similar to {@link freemarker.core.Environment#getVariable(String)} but skips local
      * variables.
      */
     public static TemplateModel getCurrentNsOrGlobalVar(String name, Environment env) throws TemplateModelException {

@@ -65,7 +65,7 @@ public class CatalogUrlFilter extends ContextFilter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
+     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(ServletRequest)}.
      */
     @Deprecated
     public static final String CONTROL_MOUNT_POINT = "control";

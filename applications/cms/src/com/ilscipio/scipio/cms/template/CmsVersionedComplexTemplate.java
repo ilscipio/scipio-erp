@@ -150,7 +150,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
      * Stores the template record itself (and active version if any was set).
      * <p>
      * NOTE: 2017-11: this also stores <code>this.lastVersion</code>, for the copy case,
-     * but ONLY if it was not already fully persisted. See {@link #copyVersionToNewTemplate}.
+     * but ONLY if it was not already fully persisted.
      */
     @Override
     public void store() throws CmsException {
@@ -610,15 +610,10 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
 
         /**
          * Removes all template versions for a given page template procedurally. If none, causes no issue.
-         *
-         * @param delegator
-         * @param pageTemplateId
-         * @throws GenericEntityException
          */
         public int removeAllTemplateVersions(Delegator delegator, String templateId) throws GenericEntityException {
             return getActiveVersionWorker().removeRecord(delegator, templateId) +
                     delegator.removeByAnd(getVersionEntityName(), UtilMisc.toMap(getTemplateIdFieldName(), templateId));
         }
     }
-
 }

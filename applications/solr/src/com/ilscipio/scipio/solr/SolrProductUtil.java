@@ -670,7 +670,7 @@ public abstract class SolrProductUtil {
      * in the cases where getProductCategoryIds returns nothing.
      * NOTE: The categoryIds returned do NOT necessarily indicate the product belongs to them; it is mainly used
      * to determine the productStoreIds for the product.
-     * NOTE: This re-runs the check on "this" product and its virtual; use {@link #getProductCategoryIdsAggressiveNoSelfOrVirtual} to skip that.
+     * NOTE: This re-runs the check on "this" product and its virtual.
      */
     protected static void getProductCategoryIdsAggressive(Collection<String> productCategoryIds, Collection<String> productIds, Set<String> productsCatChecked, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
             List<GenericValue> productAssocFromList, List<GenericValue> productAssocToList, boolean firstFoundOnly, boolean useCache) throws GenericEntityException {

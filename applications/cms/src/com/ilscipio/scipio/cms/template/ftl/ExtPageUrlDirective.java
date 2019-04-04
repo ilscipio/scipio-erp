@@ -16,8 +16,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * SCIPIO: Delegates to either {@link PageUrlDirective} or
- * {@link org.ofbiz.webapp.ftl.OfbizUrlTransform.OfbizUrlTransform()} as appropriate.
+ * SCIPIO: Delegates to either <code>PageUrlDirective</code> or <code>CmsPageUrlDirective</code> as appropriate.
  */
 public class ExtPageUrlDirective implements TemplateDirectiveModel {
 
@@ -49,8 +48,8 @@ public class ExtPageUrlDirective implements TemplateDirectiveModel {
     }
 
     /**
-     * SCIPIO: Delegates to either {@link Method} or
-     * {@link org.ofbiz.webapp.ftl.Method} as appropriate.
+     * SCIPIO: Delegates to either <code>PageUrlDirective</code> or <code>CmsPageUrlDirective</code> as appropriate;
+     * method wrapper.
      */
     public static class Method implements TemplateMethodModelEx {
         public static class Factory implements FtlTransformFactory { // SCIPIO

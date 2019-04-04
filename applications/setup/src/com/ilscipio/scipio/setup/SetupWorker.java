@@ -420,7 +420,7 @@ public abstract class SetupWorker implements Serializable {
      * In all cases, if the EFF_SETUP_STEP_ATTR is set, everything else is ignored.
      * <p>
      * NOTE: Upon review, screens don't need to call this (only events); they set a context var and just
-     * need to validate it with {@link #isStepEffectiveSafe}.
+     * need to validate it.
      * <p>
      * If submitted step is used, whether to stay or go to next step is controlled by the
      * <code>setupContinue=Y/N</code> request parameter (default: Y).
@@ -441,7 +441,7 @@ public abstract class SetupWorker implements Serializable {
      * same as <code>determineStep(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE)</code>.
      * <p>
      * NOTE: Upon review, screens don't need to call this (only events); they set a context var and just
-     * need to validate it with {@link #isSetupStepEffectiveSafe}.
+     * need to validate it.
      */
     public abstract String determineStepAndUpdate();
 

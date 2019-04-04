@@ -17,8 +17,8 @@ import com.ilscipio.scipio.cms.data.Preloadable.PreloadWorker;
  * NOTE: See CmsObject for caching-related flags.
  * <p>
  * NOTE: 2016: The put method of the cache will achieve thread safety for its object by calling
- * {@link CmsObject#preloadContent}.
- * ALL OBJECTS MUST DILIGENTLY IMPLEMENT THE {@link CmsObject#preloadContent} METHOD!
+ * {@link CmsObject#preload}.
+ * ALL OBJECTS MUST DILIGENTLY IMPLEMENT THE {@link CmsObject#preload} METHOD!
  * <p>
  * WARN: OBJECTS STORED IN CACHE MUST NOT BE MODIFIED BY CALLER AFTERWARD! Otherwise thread safety is lost.
  */

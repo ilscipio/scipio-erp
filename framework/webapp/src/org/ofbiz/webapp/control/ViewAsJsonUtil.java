@@ -193,7 +193,7 @@ public abstract class ViewAsJsonUtil {
 
     /**
      * Checks if viewAsJson is enabled in the system && this webapp.
-     * WARN: does NOT check if enabled in the request (use {@link #isViewAsJson(HttpServletRequest)}).
+     * WARN: does NOT check if enabled in the request (use {@link #isViewAsJson(HttpServletRequest, ViewAsJsonConfig)}).
      */
     public static boolean isViewAsJsonEnabled(HttpServletRequest request, ViewAsJsonConfig config) {
         return config.isEnabled();
@@ -219,7 +219,7 @@ public abstract class ViewAsJsonUtil {
 
     /**
      * Checks if view updating session is enabled.
-     * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest)}).
+     * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest, ViewAsJsonConfig)}).
      */
     public static boolean isViewAsJsonUpdateSession(HttpServletRequest request, ViewAsJsonConfig config) {
         Boolean updateSession = (Boolean) request.getAttribute(VIEWASJSONUSESESSION_REQPARAM);
@@ -229,7 +229,7 @@ public abstract class ViewAsJsonUtil {
 
     /**
      * Checks if view updating session is enabled.
-     * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest)}).
+     * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest, ViewAsJsonConfig)}).
      */
     public static boolean isViewAsJsonRegularLogin(HttpServletRequest request, ViewAsJsonConfig config) {
         Boolean regLogin = (Boolean) request.getAttribute(VIEWASJSONREGLOGIN_REQPARAM);

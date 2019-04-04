@@ -98,7 +98,7 @@ public abstract class ImageUtil {
                     scaler = factory.getImageOpInst(name, defaultOptions);
                     if (!imageOpCls.isAssignableFrom(scaler.getClass())) {
                         throw new IllegalArgumentException("Invalid or broken image op factory: factory [" + scaler.getClass().getName()
-                                + "] did not produce image op instance of expected type [" + imageOpCls.getClass().getName()
+                                + "] did not produce image op instance of expected type [" + imageOpCls.getName()
                                 + "]; instead got instance of type [" + scaler.getClass().getName() + "]");
                     }
                 } catch (Exception e) {

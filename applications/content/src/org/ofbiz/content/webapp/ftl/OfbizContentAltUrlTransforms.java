@@ -55,12 +55,12 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
     @Override
     public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") final Map args)
             throws TemplateModelException, IOException {
-        final StringBuilder buf = new StringBuilder();
+        //final StringBuilder buf = new StringBuilder(); // SCIPIO: Does nothing
         return new Writer(out) {
 
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
-                buf.append(cbuf, off, len);
+                //buf.append(cbuf, off, len);
             }
 
             @Override

@@ -240,7 +240,7 @@ public class CommonServices {
      * Render Partial Screen
      *
      * @param dctx The DispatchContext that this service is operating in
-     * @param context Map containing the input parameters
+     * @param rServiceContext Map containing the input parameters
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> renderPartialScreen(DispatchContext dctx, Map<String, ?> rServiceContext) {

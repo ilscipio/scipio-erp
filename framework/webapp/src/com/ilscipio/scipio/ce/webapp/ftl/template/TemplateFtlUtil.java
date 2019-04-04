@@ -605,7 +605,7 @@ public abstract class TemplateFtlUtil {
 
     /**
      * Makes param string (no starting delimiter), based on
-     * {@link org.ofbiz.webapp.control.RequestLinkUtil.makeParamString(Map<String, Object>, String)}.
+     * {@link org.ofbiz.webapp.control.RequestLinkUtil#makeParamString(Map, String)}.
      * DEV NOTE: keep both methods in sync.
      */
     public static String makeParamString(TemplateHashModelEx params, String delim, boolean nonEscaping) throws TemplateModelException {

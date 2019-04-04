@@ -37,6 +37,7 @@ import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.transaction.TransactionFactoryLoader;

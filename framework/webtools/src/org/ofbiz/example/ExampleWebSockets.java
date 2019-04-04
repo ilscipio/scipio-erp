@@ -54,7 +54,7 @@ public class ExampleWebSockets {
      */
     private static final int MAX_CLIENTS = 25;
 
-    private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
+    private static final Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
 
     @OnMessage
     public void onMessage(Session session, String msg, boolean last) {

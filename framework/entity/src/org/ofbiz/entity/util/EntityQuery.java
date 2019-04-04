@@ -197,7 +197,7 @@ public class EntityQuery {
      * <p>
      * SCIPIO: New, added 2018-05-17.
      * @param conditions - A list of EntityCondition objects to be combined together as the WHERE clause for the query
-     * @param operation - The join operator
+     * @param operator - The join operator
      * @return this EntityQuery object, to enable chaining
      */
     public <T extends EntityCondition> EntityQuery where(List<T> conditions, EntityJoinOperator operator) {
@@ -424,7 +424,7 @@ public class EntityQuery {
      * easy error to make, and otherwise can cause needless critical failures on small errors
      * during upgrades.
      *
-     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @param enable - Enable or disable the filter-by-date filter.
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable) {
@@ -481,7 +481,8 @@ public class EntityQuery {
      * easy error to make, and otherwise can cause needless critical failures on small errors
      * during upgrades.
      *
-     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @param enable Enable or disable the filter-by-date filter.
+     * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, String... filterByFieldName) {
@@ -498,8 +499,9 @@ public class EntityQuery {
      * easy error to make, and otherwise can cause needless critical failures on small errors
      * during upgrades.
      *
+     * @param enable Enable or disable the filter-by-date filter.
      * @param moment - Timestamp representing the moment in time that the values should be active during
-     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @param filterByFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery filterByDate(boolean enable, Timestamp moment, String... filterByFieldName) {

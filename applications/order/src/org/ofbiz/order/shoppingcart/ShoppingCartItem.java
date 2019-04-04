@@ -212,7 +212,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @param shipBeforeDate Request that the shipment be made before this date
      * @param shipAfterDate Request that the shipment be made after this date
      * @param cancelBackOrderDate The date which if crossed causes order cancellation
-     * @param extraItemArgs see {@link ExtraPurchaseOrderInitArgs}
+     * @param extraInitArgs see {@link ExtraPurchaseOrderInitArgs}
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
@@ -986,7 +986,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /**
-     * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+     * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify exact code code.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
     void ensureExactEquals(ShoppingCartItem other) {

@@ -74,7 +74,7 @@ public abstract class CmsEntityVisit {
         boolean shouldEnter(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj);
 
         /**
-         * Entity value visit callback. Performs both {@link #visitRecordStateOnly} and {@link #visitStateless} in one call.
+         * Entity value visit callback. Performs both {@link #visitRecordOnly} and {@link #visitWriteOnly} in one call.
          */
         public void visit(GenericValue value, VisitRelation relation, GenericValue relValue, CmsMajorObject majorDataObj) throws Exception;
 
@@ -319,7 +319,7 @@ public abstract class CmsEntityVisit {
          * NOTE: the settings are all on the visitor itself.
          *
          * @param relValue the related value we are coming from
-         * @param relationName related value relation name to this object FIXME: usually getting null
+         * @param relValueRelation related value relation name to this object FIXME: usually getting null
          * @param majorDataObj the last major data object, changes only across boundaries
          */
         public void acceptEntityDepsVisitor(CmsEntityVisitor visitor, GenericValue relValue, VisitRelation relValueRelation, CmsMajorObject majorDataObj) throws Exception;
@@ -781,7 +781,7 @@ public abstract class CmsEntityVisit {
         }
 
         /**
-         * Wraps a {@link VisitRelations#Builder} invocations to handle errors.
+         * Wraps a {@link VisitRelations.Builder} invocations to handle errors.
          */
         public static abstract class BuildPlan {
             private final String majorEntityName;
@@ -820,7 +820,7 @@ public abstract class CmsEntityVisit {
             }
             protected VisitRelations.Builder newBuilder(Delegator delegator) { return VisitRelations.newBuilder(delegator); }
             /**
-             * Provides the plan definition, in the form of a new {@link VisitRelations#Builder}.
+             * Provides the plan definition, in the form of a new {@link VisitRelations.Builder}.
              */
             protected abstract VisitRelations.Builder planDefinition(Delegator delegator) throws Exception;
 

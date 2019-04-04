@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -30,8 +30,8 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
     //private static final CmsObjectCache<CmsProcessViewMapping> pathAndNameCache = getNewMappingCache();
 
     // NOTE: 2016: Optional is needed (?) for thread safety (preload)
-    private Optional<CmsProcessMapping> parentProcessMapping = null;
-    private Optional<CmsPage> page = null;
+    private SafeOptional<CmsProcessMapping> parentProcessMapping = null;
+    private SafeOptional<CmsPage> page = null;
 
     protected CmsProcessViewMapping(GenericValue entity) {
         super(entity);
@@ -157,16 +157,16 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
     }
 
     public CmsProcessMapping getParentProcessMapping() throws CmsException {
-        Optional<CmsProcessMapping> parentProcessMapping = this.parentProcessMapping;
+        SafeOptional<CmsProcessMapping> parentProcessMapping = this.parentProcessMapping;
         if (parentProcessMapping == null) {
             String parentProcMappingId = getParentProcessMappingId();
             if (UtilValidate.isNotEmpty(parentProcMappingId)) {
-                parentProcessMapping = Optional.ofNullable(CmsProcessMapping.getWorker().findOne(getDelegator(),
+                parentProcessMapping = SafeOptional.ofNullable(CmsProcessMapping.getWorker().findOne(getDelegator(),
                         UtilMisc.toMap("processMappingId", parentProcMappingId),
                         false));
             } else {
                 Debug.logError("Cms: CmsProcessViewMapping '" + getId() + "' is missing reference to parent CmsProcessMapping", module);
-                parentProcessMapping = Optional.empty();
+                parentProcessMapping = SafeOptional.empty();
             }
             this.parentProcessMapping = parentProcessMapping;
         }
@@ -178,7 +178,7 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
     }
 
     public CmsPage getPage(boolean useCache) throws CmsException {
-        Optional<CmsPage> page = this.page;
+        SafeOptional<CmsPage> page = this.page;
         if (page == null) {
             String pageId = getPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
@@ -186,18 +186,18 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
                 // OPTIMIZATION: check if parent already has a reference to our page (avoid double instances)
                 CmsProcessMapping parent = getParentProcessMapping();
                 if (parent != null) {
-                    page = Optional.ofNullable(parent.findPageById(pageId, useCache));
+                    page = SafeOptional.ofNullable(parent.findPageById(pageId, useCache));
                 } else {
                     // NOTE: this case should not happen...
-                    page = Optional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
+                    page = SafeOptional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
                 }
             } else {
                 // here, we have no explicit pageId and we must check the default pageId on parent
                 CmsProcessMapping parent = getParentProcessMapping();
                 if (parent != null) {
-                    page = Optional.ofNullable(parent.getPage(useCache));
+                    page = SafeOptional.ofNullable(parent.getPage(useCache));
                 } else {
-                    page = Optional.empty();
+                    page = SafeOptional.empty();
                 }
             }
             this.page = page;
@@ -237,7 +237,7 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
     }
 
     protected void setParentProcessMappingRefOnly(CmsProcessMapping processMapping) {
-        this.parentProcessMapping = Optional.ofNullable(processMapping);
+        this.parentProcessMapping = SafeOptional.ofNullable(processMapping);
     }
 
     public void setParentProcessMapping(CmsProcessMapping processMapping) {

@@ -7,10 +7,10 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig;
@@ -76,8 +76,8 @@ public class ExtWebappInfo implements Serializable {
     private final String controlServletMapping; // single slash for root
     private final String fullControlPath; // with context root and trailing slash
 
-    private Optional<Boolean> forwardRootControllerUris;
-    private Optional<Boolean> forwardRootControllerUrisValid;
+    private SafeOptional<Boolean> forwardRootControllerUris;
+    private SafeOptional<Boolean> forwardRootControllerUrisValid;
 
     private final boolean urlRewriteFilter;
     private final String urlRewriteConfPath;
@@ -451,7 +451,7 @@ public class ExtWebappInfo implements Serializable {
      * on, off, or undetermined (null).
      */
     public Boolean getForwardRootControllerUris() {
-        Optional<Boolean> forwardRootControllerUris = this.forwardRootControllerUris;
+        SafeOptional<Boolean> forwardRootControllerUris = this.forwardRootControllerUris;
         if (forwardRootControllerUris == null) {
             Boolean setting;
             try {
@@ -461,7 +461,7 @@ public class ExtWebappInfo implements Serializable {
                         + e.getMessage(), module);
                 setting = null;
             }
-            forwardRootControllerUris = Optional.ofNullable(setting);
+            forwardRootControllerUris = SafeOptional.ofNullable(setting);
             this.forwardRootControllerUris = forwardRootControllerUris;
         }
         return forwardRootControllerUris.orElse(null);
@@ -473,7 +473,7 @@ public class ExtWebappInfo implements Serializable {
      * against the current control mount and potentially other settings.
      */
     public Boolean getForwardRootControllerUrisValidated() {
-        Optional<Boolean> forwardRootControllerUrisValid = this.forwardRootControllerUrisValid;
+        SafeOptional<Boolean> forwardRootControllerUrisValid = this.forwardRootControllerUrisValid;
         if (forwardRootControllerUrisValid == null) {
             Boolean setting;
             try {
@@ -483,7 +483,7 @@ public class ExtWebappInfo implements Serializable {
                         + e.getMessage(), module);
                 setting = null;
             }
-            forwardRootControllerUrisValid = Optional.ofNullable(setting);
+            forwardRootControllerUrisValid = SafeOptional.ofNullable(setting);
             this.forwardRootControllerUrisValid = forwardRootControllerUrisValid;
         }
         return forwardRootControllerUrisValid.orElse(null);

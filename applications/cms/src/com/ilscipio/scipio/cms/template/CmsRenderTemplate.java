@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -41,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
@@ -162,7 +162,7 @@ public interface CmsRenderTemplate extends Serializable {
         }
 
         // NOTE: Template not serializable!
-        protected transient Optional<Template> fmTemplate = null; // NOTE: 2016: Optional is required for thread safety (preload)
+        protected transient SafeOptional<Template> fmTemplate = null; // NOTE: 2016: Optional is required for thread safety (preload)
         protected final T template;
 
         public TemplateRenderer(T template) {
@@ -256,12 +256,12 @@ public interface CmsRenderTemplate extends Serializable {
         }
 
         protected Template getFreeMarkerTemplate() {
-            Optional<Template> fmTemplate = this.fmTemplate;
+            SafeOptional<Template> fmTemplate = this.fmTemplate;
             if (fmTemplate == null) {
                 try {
                     // UID trick, same as used by widgets to generate unique names
                     String name = template.getName() + "_" + new UID().toString();
-                    fmTemplate = Optional.ofNullable(new Template(name, new StringReader(template.getTemplateBody()), fmConfig));
+                    fmTemplate = SafeOptional.ofNullable(new Template(name, new StringReader(template.getTemplateBody()), fmConfig));
                 } catch (IOException e) {
                     throw new CmsException("Freemarker template could not be retrieved from database", e);
                 }

@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -45,7 +45,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
 
     protected static final String ACTIVE_INITIAL_VALUE = "Y";
 
-    private Optional<CmsPage> page = null; // NOTE: 2016: Optional is required for thread safety (preload)
+    private SafeOptional<CmsPage> page = null; // NOTE: 2016: Optional is required for thread safety (preload)
 
     protected CmsViewMapping(GenericValue entity) {
         super(entity);
@@ -217,13 +217,13 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
     }
 
     public CmsPage getPage(boolean useCache) throws CmsException {
-        Optional<CmsPage> page = this.page;
+        SafeOptional<CmsPage> page = this.page;
         if (page == null) {
             String pageId = getPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
-                page = Optional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
+                page = SafeOptional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
             } else {
-                page = Optional.empty();
+                page = SafeOptional.empty();
             }
             this.page = page;
         }

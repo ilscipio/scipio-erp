@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -123,7 +123,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
 
         // SPECIAL CASE: discard the active version reference, because here the renderer
         // already loaded the template
-        this.activeVersion = Optional.empty();
+        this.activeVersion = SafeOptional.empty();
     }
 
     @Override

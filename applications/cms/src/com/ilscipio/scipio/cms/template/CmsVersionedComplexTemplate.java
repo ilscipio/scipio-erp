@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -32,8 +32,8 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // NOTE: these must be Optionals (emulated) for caching/thread safety reasons
-    protected Optional<V> activeVersion; // NOTE: this is only temporarily cached in live render but then gets discarded by the subclasses
-    protected Optional<V> lastVersion; // NOTE: not cached in live render
+    protected SafeOptional<V> activeVersion; // NOTE: this is only temporarily cached in live render but then gets discarded by the subclasses
+    protected SafeOptional<V> lastVersion; // NOTE: not cached in live render
 
     // 2016: REMOVED - the parent class's tmplBodySrc is reused instead
     //private TemplateBodySource nextDisplayVersionTmplBodySrc = null; // This is set if the calling code wants to update the "current" template body for compatibility purposes
@@ -254,9 +254,9 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     public V getLastVersion() {
         preventIfImmutable();
 
-        Optional<V> lastVersion = this.lastVersion;
+        SafeOptional<V> lastVersion = this.lastVersion;
         if (lastVersion == null) {
-            lastVersion = Optional.ofNullable(getVerComTemplateWorkerInst().findLastTemplateVersion(entity.getDelegator(), getTemplate()));
+            lastVersion = SafeOptional.ofNullable(getVerComTemplateWorkerInst().findLastTemplateVersion(entity.getDelegator(), getTemplate()));
             this.lastVersion = lastVersion;
         }
         return lastVersion.orElse(null);
@@ -265,7 +265,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     void setLastVersion(V version) {
         preventIfImmutable();
 
-        this.lastVersion = Optional.ofNullable(version);
+        this.lastVersion = SafeOptional.ofNullable(version);
     }
 
     public V getFirstVersion() {
@@ -274,16 +274,16 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     }
 
     public V getActiveVersion() {
-        Optional<V> activeVersion = this.activeVersion;
+        SafeOptional<V> activeVersion = this.activeVersion;
         if (activeVersion == null) {
-            activeVersion = Optional.ofNullable(readActiveVersion());
+            activeVersion = SafeOptional.ofNullable(readActiveVersion());
             this.activeVersion = activeVersion;
         }
         return activeVersion.orElse(null);
     }
 
     void setActiveVersion(V version) {
-        this.activeVersion = Optional.ofNullable(version);
+        this.activeVersion = SafeOptional.ofNullable(version);
     }
 
     protected V readActiveVersion() { // skips cache

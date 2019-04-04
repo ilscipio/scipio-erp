@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -45,7 +45,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
     private CmsPage page;
     private Map<String, ?> content = null;
-    protected Optional<String> contentString = null; // NOTE: this is left null in live render; for create/update only
+    protected SafeOptional<String> contentString = null; // NOTE: this is left null in live render; for create/update only
     private String versionComment = null; // Content.description
 
     protected CmsPageVersion(GenericValue entity) {
@@ -72,7 +72,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             setEntityPageId(this.page.getId());
         }
         // copy the content to memory
-        this.contentString = Optional.ofNullable(other.getContentBody());
+        this.contentString = SafeOptional.ofNullable(other.getContentBody());
         // not sure would want to preserve version comment
         //this.versionComment = other.getVersionComment();
         this.versionComment = null;
@@ -119,11 +119,11 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
     protected void setContentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
         if (setIfEmpty) {
             if (fields.containsKey("content")) {
-                contentString = Optional.ofNullable((String) fields.get("content"));
+                contentString = SafeOptional.ofNullable((String) fields.get("content"));
             }
         } else {
             if (UtilValidate.isNotEmpty((String) fields.get("content"))) {
-                contentString = Optional.ofNullable((String) fields.get("content"));
+                contentString = SafeOptional.ofNullable((String) fields.get("content"));
             }
         }
     }

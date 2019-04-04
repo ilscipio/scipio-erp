@@ -28,11 +28,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 import javax.servlet.ServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -611,14 +611,14 @@ public class PartyWorker {
     }
 
     private static class OrgMemberRoleTypeSpecs { // SCIPIO
-        static Map<String, Optional<EntityCondition>> roleGroupConditions = Collections.emptyMap();
+        static Map<String, SafeOptional<EntityCondition>> roleGroupConditions = Collections.emptyMap();
 
         static EntityCondition getRoleTypesForGroupCondition(Delegator delegator, String roleGroup) {
-            Map<String, Optional<EntityCondition>> condMap = roleGroupConditions;
-            Optional<EntityCondition> cond = condMap.get(roleGroup);
+            Map<String, SafeOptional<EntityCondition>> condMap = roleGroupConditions;
+            SafeOptional<EntityCondition> cond = condMap.get(roleGroup);
             if (cond == null) {
                 // NOTE: no need to synchronize
-                cond = Optional.ofNullable(makeOrganizationMemberRoleTypesCondition(delegator, roleGroup));
+                cond = SafeOptional.ofNullable(makeOrganizationMemberRoleTypesCondition(delegator, roleGroup));
                 condMap = new HashMap<>(condMap);
                 condMap.put(roleGroup, cond);
                 roleGroupConditions = Collections.unmodifiableMap(condMap);

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.entity.GenericValue;
 
 
@@ -140,7 +140,7 @@ public interface Preloadable {
          * NOTE: for this overload, the return value is always the same as the parameter, so it
          * can be discarded.
          */
-        public <T extends Preloadable> Optional<T> preload(Optional<T> preloadable) {
+        public <T extends Preloadable> SafeOptional<T> preload(SafeOptional<T> preloadable) {
             if (preloadable != null && preloadable.isPresent()) {
                 preload(preloadable.get());
             }

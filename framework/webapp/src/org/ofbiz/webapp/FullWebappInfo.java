@@ -3,10 +3,10 @@ package org.ofbiz.webapp;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.UtilValidate;
@@ -54,11 +54,11 @@ public class FullWebappInfo {
     private ExtWebappInfo extWebappInfo;
     private WebSiteProperties webSiteProperties;
 
-    private Optional<ControllerConfig> controllerConfig;
+    private SafeOptional<ControllerConfig> controllerConfig;
     private OfbizUrlBuilder ofbizUrlBuilder;
 
     protected FullWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo, WebSiteProperties webSiteProperties,
-            Optional<ControllerConfig> controllerConfig, OfbizUrlBuilder ofbizUrlBuilder) {
+                             SafeOptional<ControllerConfig> controllerConfig, OfbizUrlBuilder ofbizUrlBuilder) {
         //this.delegator = delegator; // can be null if all others are non-null
         this.extWebappInfo = extWebappInfo;
         this.webSiteProperties = webSiteProperties;
@@ -78,7 +78,7 @@ public class FullWebappInfo {
             this.ofbizUrlBuilder = OfbizUrlBuilder.from(request);
             this.extWebappInfo = ExtWebappInfo.fromRequest(request);
             this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
-            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
+            this.controllerConfig = SafeOptional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
         } catch (GenericEntityException e) {
             throw new IllegalArgumentException(e);
         } catch (WebAppConfigurationException e) {
@@ -93,7 +93,7 @@ public class FullWebappInfo {
             this.ofbizUrlBuilder = OfbizUrlBuilder.from(extWebappInfo, request);
             this.extWebappInfo = extWebappInfo;
             this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
-            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
+            this.controllerConfig = SafeOptional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
         } catch (GenericEntityException e) {
             throw new IllegalArgumentException(e);
         } catch (WebAppConfigurationException e) {
@@ -112,7 +112,7 @@ public class FullWebappInfo {
             this.ofbizUrlBuilder = OfbizUrlBuilder.from(extWebappInfo, delegator);
             this.extWebappInfo = extWebappInfo;
             this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
-            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
+            this.controllerConfig = SafeOptional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
         } catch (GenericEntityException e) {
             throw new IllegalArgumentException(e);
         } catch (WebAppConfigurationException e) {
@@ -428,9 +428,9 @@ public class FullWebappInfo {
      * Returns the ControllerConfig for this webapp or null if it has none.
      */
     public ControllerConfig getControllerConfig() {
-        Optional<ControllerConfig> controllerConfig = this.controllerConfig;
+        SafeOptional<ControllerConfig> controllerConfig = this.controllerConfig;
         if (controllerConfig == null) {
-            controllerConfig = Optional.ofNullable(extWebappInfo.getControllerConfig());
+            controllerConfig = SafeOptional.ofNullable(extWebappInfo.getControllerConfig());
             this.controllerConfig = controllerConfig;
         }
         return controllerConfig.orElse(null);

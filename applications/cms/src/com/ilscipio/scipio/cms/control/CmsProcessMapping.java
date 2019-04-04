@@ -10,12 +10,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -81,7 +81,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             new ConcurrentHashMap<String, CacheEntry<CmsProcessViewMapping>>();
 
     // NOTE: 2016: Optional is required for thread safety (preload)
-    private Optional<CmsPage> defaultPage = null;
+    private SafeOptional<CmsPage> defaultPage = null;
 
     /**
      * WARN: 2016-12: in live rendering, it is possible that the page linked here does not contain ourselves
@@ -90,7 +90,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
      * It is done this way so that the page can be cached globally; otherwise we would have to
      * modify it after loading to point back to us, which would force us to disable page caching.
      */
-    private Optional<CmsPage> primaryForPage = null;
+    private SafeOptional<CmsPage> primaryForPage = null;
 
     protected CmsProcessMapping(GenericValue entity) {
         super(entity);
@@ -104,7 +104,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
                         + "primary process mapping with a page that does not match the mapping's primaryForPageId field");
             }
         }
-        this.primaryForPage = Optional.ofNullable(primaryForPage);
+        this.primaryForPage = SafeOptional.ofNullable(primaryForPage);
     }
 
     public CmsProcessMapping(Delegator delegator, Map<String, ?> fields) {
@@ -455,7 +455,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
      * related CmsProcess(View)Mapping.
      */
     protected CmsPage findPageById(String pageId, boolean useCache) {
-        Optional<CmsPage> page = this.primaryForPage;
+        SafeOptional<CmsPage> page = this.primaryForPage;
         if (page != null && page.isPresent() && pageId.equals(page.get().getId())) {
             return page.get();
         }
@@ -746,18 +746,18 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     }
 
     public CmsPage getPage(boolean useCache) throws CmsException {
-        Optional<CmsPage> page = this.defaultPage;
+        SafeOptional<CmsPage> page = this.defaultPage;
         if (page == null) {
             String pageId = getPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
-                page = Optional.ofNullable(findPageById(pageId, useCache));
+                page = SafeOptional.ofNullable(findPageById(pageId, useCache));
                 // do NOT do this, for same reasons as below
 //                // ENSURE the page has us as backreference to us if we are its primary
 //                if (page.isPresent()) {
 //                    page.get().checkAddPrimaryProcessMapping(this);
 //                }
             } else {
-                page = Optional.empty();
+                page = SafeOptional.empty();
             }
             this.defaultPage = page;
         }
@@ -769,11 +769,11 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     }
 
     public CmsPage getPrimaryForPage(boolean useCache) throws CmsException {
-        Optional<CmsPage> page = this.primaryForPage;
+        SafeOptional<CmsPage> page = this.primaryForPage;
         if (page == null) {
             String pageId = getPrimaryForPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
-                page = Optional.ofNullable(findPageById(pageId, useCache));
+                page = SafeOptional.ofNullable(findPageById(pageId, useCache));
                 // do NOT do this, because it prevents us from exploiting the pageId global cache,
                 // and it will probably be okay if we don't do it; it just means an extra
                 // CmsProcessMapping instance in memory, but that is less costly than extra CmsPage instances
@@ -782,7 +782,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
 //                    page.get().checkAddPrimaryProcessMapping(this);
 //                }
             } else {
-                page = Optional.empty();
+                page = SafeOptional.empty();
             }
             this.primaryForPage = page;
         }

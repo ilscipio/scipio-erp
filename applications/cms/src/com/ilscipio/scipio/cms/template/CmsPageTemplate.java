@@ -9,9 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -138,7 +138,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
 
         // SPECIAL CASE: discard the active version reference, because here the renderer
         // already loaded the template
-        this.activeVersion = Optional.empty();
+        this.activeVersion = SafeOptional.empty();
     }
 
     @Override

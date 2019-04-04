@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -81,12 +81,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public static final UserRole DEFAULT_USER_ROLE = UserRole.CMS_VISITOR;
 
     // NOTE: 2016: Optional is required for thread safety (preload)
-    private Optional<CmsPageTemplate> template = null;
+    private SafeOptional<CmsPageTemplate> template = null;
     private CmsPageContent activeContentModel = null; // don't need Optional because once get called, can't be null
     private Map<String, Map<String, ?>> products = null;
 
-    private Optional<CmsPageVersion> lastVersion = null; // NOTE: NOT cached when live.
-    private Optional<CmsPageVersion> activeVersion = null; // NOTE: NOT cached when live.
+    private SafeOptional<CmsPageVersion> lastVersion = null; // NOTE: NOT cached when live.
+    private SafeOptional<CmsPageVersion> activeVersion = null; // NOTE: NOT cached when live.
 
     private String activeVersionId = null; // NOTE: NOT cached when live. // 2016: this is no longer stored on CmsPage. NOTE: empty string "" means cache checked OR unset active upon store().
     protected transient FlexibleStringExpander txTimeoutExdr; // Optimization (cached FlexibleExpression)
@@ -408,10 +408,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * Returns the page version currently active for this page.
      */
     protected CmsPageVersion getActiveVersion(boolean cacheActiveVersion) {
-        Optional<CmsPageVersion> activeVersion = this.activeVersion;
+        SafeOptional<CmsPageVersion> activeVersion = this.activeVersion;
         if (activeVersion == null) {
             String versionId = getActiveVersionId(cacheActiveVersion);
-            activeVersion = Optional.ofNullable(versionId != null ? CmsPageVersion.getWorker().findByIdAlways(getDelegator(), versionId, false) : null);
+            activeVersion = SafeOptional.ofNullable(versionId != null ? CmsPageVersion.getWorker().findByIdAlways(getDelegator(), versionId, false) : null);
             if (cacheActiveVersion) {
                 // NOTE: we should NOT cache active version in live render - waste of space - we make a CmsPageContent from it and ditch it
                 preventIfImmutable();
@@ -666,10 +666,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public CmsPageVersion getLastVersion() {
         preventIfImmutable();
 
-        Optional<CmsPageVersion> lastVersion = this.lastVersion;
+        SafeOptional<CmsPageVersion> lastVersion = this.lastVersion;
         if (lastVersion == null) {
             CmsPageVersion version = CmsPageVersion.getWorker().findLast(getDelegator(), this.getId(), false);
-            lastVersion = Optional.ofNullable(version);
+            lastVersion = SafeOptional.ofNullable(version);
             this.lastVersion = lastVersion;
         }
         return lastVersion.orElse(null);
@@ -678,7 +678,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     void setLastVersion(CmsPageVersion version) {
         preventIfImmutable();
 
-        this.lastVersion = Optional.ofNullable(version);
+        this.lastVersion = SafeOptional.ofNullable(version);
     }
 
     /**
@@ -796,7 +796,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * Returns the template for this page.
      */
     public CmsPageTemplate getTemplate() {
-        Optional<CmsPageTemplate> template = this.template;
+        SafeOptional<CmsPageTemplate> template = this.template;
         if (template == null) {
 //            GenericValue templateEntity;
 //            try {
@@ -806,7 +806,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //                        + entity.getString("pageTemplateId"), e);
 //            }
 //            template = new CmsPageTemplate(templateEntity);
-            template = Optional.ofNullable(CmsPageTemplate.getWorker().findByIdAlways(getDelegator(), getPageTemplateId(), false));
+            template = SafeOptional.ofNullable(CmsPageTemplate.getWorker().findByIdAlways(getDelegator(), getPageTemplateId(), false));
             this.template = template;
         }
         return template.orElse(null);
@@ -1136,7 +1136,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      */
     public void setTemplate(CmsPageTemplate template) {
         entity.set("templateId", template.getId());
-        this.template = Optional.ofNullable(template);
+        this.template = SafeOptional.ofNullable(template);
     }
 
     public void setUserAuthorization(String userId, String roleTypeId) {

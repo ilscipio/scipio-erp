@@ -123,7 +123,7 @@ public final class EntityUtilProperties implements Serializable {
                 if (value.isEmpty() && !Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
                     // keep isExistInDb "N" and value "" (above)
                 } else {
-                    results = Optional.of(value);
+                    results = Optional.ofNullable(value);
                 }
             }
         } catch (GenericEntityException e) {

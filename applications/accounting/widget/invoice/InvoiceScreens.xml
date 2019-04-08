@@ -419,7 +419,6 @@ code package.
         </section>
     </screen>
 
-    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream) -->
     <screen name="InvoiceTerms">
         <section>
             <actions>

@@ -643,4 +643,45 @@ code package.
             </drop-down>
         </field>
     </form>
+
+    <!-- SCIPIO (2019-04-08): Brought back since this is needed in many situations while editing a given invoice -->
+    <form name="ListInvoiceTerms" list-name="invoiceTerms" target="" title="" type="list"
+          odd-row-style="alternate-row">
+        <auto-fields-entity entity-name="InvoiceTerm" default-field-type="display"/>
+        <field name="invoiceId"><hidden/></field>
+        <field name="invoiceTermId"><display/></field>
+        <field name="termTypeId">
+            <display-entity entity-name="TermType"/>
+        </field>
+        <field name="termDays" widget-area-style="align-right" title-area-style="align-right">
+            <display/>
+        </field>
+        <field name="uomId" title="${uiLabelMap.Uom}">
+            <display-entity entity-name="Uom"/>
+        </field>
+    </form>
+
+    <!-- SCIPIO (2019-04-08): Brought back since this is needed in many situations while editing a given invoice -->
+    <form name="EditInvoiceTerm" type="single" target="createInvoiceTerm" title="${uiLabelMap.PageTitleNewInvoiceTerm}"
+          header-row-style="header-row">
+        <auto-fields-entity entity-name="InvoiceTerm"/>
+        <field name="invoiceId"><hidden/></field>
+        <field name="termTypeId">
+            <drop-down>
+                <entity-options entity-name="TermType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description"><textarea/></field>
+        <field name="uomId" title="${uiLabelMap.Uom}">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
 </forms>

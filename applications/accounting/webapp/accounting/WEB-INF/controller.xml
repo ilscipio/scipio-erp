@@ -1140,9 +1140,7 @@ code package.
         <response name="success" type="view" value="invoiceOverview"/>
         <response name="error" type="view" value="invoiceOverview"/>
     </request-map>
-    
-    <!-- re Invoice Terms -->
-    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
+
     <request-map uri="invoiceTerms">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="invoiceTerms"/>
@@ -1153,8 +1151,7 @@ code package.
         <response name="success" type="view" value="invoiceTerms"/>
         <response name="error" type="view" value="invoiceTerms"/>
     </request-map>
-    -->
-    
+
     <request-map uri="sendPerEmail">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="sendPerEmail"/>
@@ -3111,9 +3108,9 @@ code package.
     <!--<view-map name="invoiceStatus" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceStatus"/> - SCIPIO: removed -->
     <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceApplications"/>
     <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceRoles"/>
-    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
+
     <view-map name="invoiceTerms" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceTerms"/>
-    -->
+
     <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#SendPerEmail"/>
     <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
 

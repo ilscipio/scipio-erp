@@ -101,7 +101,7 @@
             <sub-menu name="FixedAssets" include="FixedAssetsSideBar"/>
         </menu-item>
         <menu-item name="ListInvoices">
-            <sub-menu name="Invoice" include="InvoiceSideBar"/>
+            <sub-menu name="Invoices" include="InvoicesSideBar"/>
         </menu-item>
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
@@ -1057,15 +1057,111 @@
     * Invoices 
     **************
     -->
-    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="InvoicesSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!--<include-elements menu-name="InvoiceTabBar" recursive="includes-only" />-->
         <menu-item name="Invoices" title="${uiLabelMap.AccountingInvoices}">
             <link target="findInvoices" />
+            <menu-item name="Invoice" sub-menu-style="+${styles.scipio-nav-actions-menu}">
+                <sub-menu name="Invoice" include="InvoiceSideBar" style="+${styles.scipio-nav-actions-menu}"/>
+            </menu-item>
         </menu-item>
         <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
             <link target="CommissionRun"/>
         </menu-item>
         <menu-item name="commissionReport" title="${uiLabelMap.AccountingCommissionReport}">
             <link target="FindCommissions"/>
+        </menu-item>
+
+
+    </menu>
+
+    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="+scipio-nav-actions-menu">
+
+        <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
+            <condition>
+                <not><if-empty field="invoice.invoiceId"/></not>
+            </condition>
+            <link target="invoiceOverview">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="editInvoice" title="${uiLabelMap.AccountingInvoiceHeader}">
+            <condition>
+                <and>
+                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="editInvoice">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoiceItems}">
+            <condition>
+                <and>
+                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="listInvoiceItems">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="EditInvoiceTimeEntries" title="${uiLabelMap.AccountingInvoiceTimeEntries}">
+            <condition>
+                <and>
+                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="editInvoiceTimeEntries">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="invoiceTerms" title="${uiLabelMap.PartyTerms}">
+            <condition>
+                <and>
+                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="invoiceTerms">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="editInvoiceApplications" title="${uiLabelMap.AccountingApplications}">
+            <condition>
+                <and>
+                    <not><if-empty field="invoice.invoiceId"/></not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="editInvoiceApplications">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
+            </link>
         </menu-item>
     </menu>
     

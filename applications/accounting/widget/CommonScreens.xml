@@ -512,11 +512,11 @@ code package.
     ********** 
     * Invoices 
     **********-->
-    <screen name="CommonInvoiceDecorator">
+    <screen name="CommonInvoicesDecorator">
         <section>
             <actions>
                 <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="ListInvoices"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#InvoiceSideBar" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#InvoicesSideBar" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
                 </condition-to-field>              
@@ -548,6 +548,45 @@ code package.
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+
+    <screen name="InvoiceDecorator">
+        <section>
+            <actions>
+
+                <set field="activeMainMenu" from-field="activeMainMenu" default-value="InvoiceSideBar" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="InvoiceSideBar" />
+                <!--<set field="activeSubMenuItem" from-field="activeSubMenu" default-value="InvoiceSideBar" />-->
+                <set field="invoiceId" from-field="invoice.invoiceId" default-value="${parameters.invoiceId}"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.invoiceId ? ('[' + context.invoiceId + ']') : ''}"/>
+
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.invoiceId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+
     </screen>
     
     <!--

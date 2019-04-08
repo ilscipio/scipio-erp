@@ -18,7 +18,7 @@ code package.
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -42,10 +42,11 @@ code package.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCreateNewInvoice"/>
+                <set field="activeSubMenuItem" value="Invoices"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingCreateNewSalesInvoice}">
                             <include-form name="NewSalesInvoice" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
@@ -71,7 +72,7 @@ code package.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -104,7 +105,7 @@ code package.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.AccountingInvoice}: ${parameters.invoiceId}"/>
-                <set field="activeSubMenuItem" value="Invoices"/>
+                <set field="activeSubMenuItem" value="invoiceOverview"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
                 <entity-and entity-name="InvoiceRole" list="invoiceRoles">
@@ -138,7 +139,7 @@ code package.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -266,7 +267,7 @@ code package.
                 <set field="appliedAmount" value="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}" type="BigDecimal"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -343,7 +344,7 @@ code package.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetAccountOrganizationAndClass.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd} - ${uiLabelMap.AccountingInvoice}: ${invoiceId}">
                             <section>
@@ -382,7 +383,7 @@ code package.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}">
                             <include-form name="EditTimeEntries" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
@@ -406,7 +407,7 @@ code package.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PartyInvoiceRolePanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
                             <include-form name="EditInvoiceRole" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
@@ -418,11 +419,11 @@ code package.
         </section>
     </screen>
 
-    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
+    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream) -->
     <screen name="InvoiceTerms">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListInvoiceTerms"/>
+                <set field="titleProperty" value="PageTitleListEditInvoiceTerms"/>
                 <set field="activeSubMenuItem" value="invoiceTerms"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
@@ -432,18 +433,20 @@ code package.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="InvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="PartyInvoiceTermPanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
+                        <screenlet id="PartyInvoiceTermPanel" collapsible="true" title="${uiLabelMap.PageTitleNewInvoiceTerm}">
                             <include-form name="EditInvoiceTerm" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
                         </screenlet>
-                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
+                        <screenlet title="${uiLabelMap.CommonTerms}">
+                            <include-form name="ListInvoiceTerms" location="component://accounting/widget/invoice/InvoiceForms.xml" />
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    -->
+
     
     <screen name="SendPerEmail">
         <section>
@@ -454,7 +457,7 @@ code package.
                 <set field="activeSubMenuItem" value="sendPerEmail"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSendPerEmail}">
                             <include-form name="SendPerEmail" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
@@ -550,7 +553,7 @@ code package.
                 <set field="asm_title" value="${uiLabelMap.AccountingSelectPartiesForCommissionInvoice}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body"> 
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -577,7 +580,7 @@ code package.
                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/CommissionReport.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
@@ -690,7 +693,7 @@ code package.
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPurchaseInvoice" location="component://accounting/widget/invoice/InvoiceForms.xml"/>
@@ -786,7 +789,7 @@ code package.
                 <set field="titleProperty" value="AccountingCreateNewSalesInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewSalesInvoice" location="component://accounting/widget/invoice/InvoiceForms.xml"/>

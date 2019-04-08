@@ -23789,6 +23789,10 @@
         <value xml:lang="zh">编辑发票应用列表</value>
         <value xml:lang="zh-TW">編輯發票應用清單</value>
     </property>
+    <property key="PageTitleListEditInvoiceTerms">
+        <value xml:lang="de">Liste der Rechnungsausdrücke</value>
+        <value xml:lang="en">Invoice Term List</value>
+    </property>
     <property key="PageTitleListFinAccountAuths">
         <value xml:lang="ar">قائمة صلاحيات الحساب المالي</value>
         <value xml:lang="de">Finanzkonto Autorisierungen auflisten</value>
@@ -24145,6 +24149,12 @@
         <value xml:lang="vi">Tìm kiếm Tài khoản sổ cái</value>
         <value xml:lang="zh">查找总账账户</value>
         <value xml:lang="zh-TW">尋找總帳科目</value>
+    </property>
+    <property key="PageTitleNewInvoiceTerm">
+        <value xml:lang="de">Neue Rechnungslaufzeit</value>
+        <value xml:lang="en">New Invoice Term</value>
+        <value xml:lang="es">Nuevo término de factura</value>
+        <value xml:lang="fr">Nouveau terme de facture</value>
     </property>
     <property key="PageTitleNewTaxAuthorityPartyInfo">
         <value xml:lang="de">Neue Informationen der Steuerbehörde</value>

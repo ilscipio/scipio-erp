@@ -82,7 +82,8 @@ public class SeoStringUtil {
                 sb.append(c);
                 prevdash = false;
             }
-            else if ((new String(dashedArray).indexOf(c) == -1) && (!prevdash && sb.length() > 0)) {
+            // SCIPIO (2019-04-09): Converting c to a String as well otherwise it doesn't work as expected
+            else if ((new String(dashedArray).contains(String.valueOf(c))) && (!prevdash && sb.length() > 0)) {
                 sb.append('-');
                 prevdash = true;
             }

@@ -677,9 +677,7 @@ public class SurveyWrapper {
         switch (type) {
             case 1:
                 if (result[0] > 0) {
-                    // SCIPIO: TODO: REVIEW: only one of these is right...
-                    //result[2] = result[1] / ((long) result[0]);
-                    result[2] = ((long) result[1]) / ((long) result[0]);
+                    result[2] = result[1] / ((long) result[0]);
                 }
                 break;
             case 2:
@@ -689,9 +687,7 @@ public class SurveyWrapper {
                 break;
             case 3:
                 if (result[0] > 0) {
-                    // SCIPIO: TODO: REVIEW: only one of these is right...
-                    //result[2] = result[1] / (long) result[0];
-                    result[2] = result[1] / result[0];
+                    result[2] = result[1] / (long) result[0];
                 }
                 break;
         }

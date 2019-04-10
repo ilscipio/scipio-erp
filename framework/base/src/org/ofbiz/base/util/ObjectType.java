@@ -898,7 +898,7 @@ public class ObjectType {
         return Boolean.TRUE;
     }
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked") // SCIPIO: Not necessary for javac or IDEA - NOTE: Eclipse may report a warning
     public static boolean isEmpty(Object value) {
         if (value == null) {
             return true;

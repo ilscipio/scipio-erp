@@ -169,9 +169,9 @@ public final class UtilGenerics {
         return map;
     }
 
-    @SafeVarargs
-    @SuppressWarnings("hiding")
-    public static <K, Object> Map<K, Object> toMap(Class<K> keyType, Object... data) {
+    //@SafeVarargs // SCIPIO: Not needed for reifiable types
+    //@SuppressWarnings("hiding") // SCIPIO: Not needed, now removed Object: public static <K, Object>
+    public static <K> Map<K, Object> toMap(Class<K> keyType, Object... data) { // SCIPIO: Fixed: public static <K, Object>...
         if (data == null) {
             return null;
         }

@@ -74,7 +74,7 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
      */
     protected abstract BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException;
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked") // SCIPIO: Not necessary for javac or IDEA - NOTE: Eclipse may report a warning
     @Override
     public AbstractImageScalerFactory<? extends AbstractImageScaler> getFactory() { // for return type
         return (AbstractImageScalerFactory<? extends AbstractImageScaler>) factory;

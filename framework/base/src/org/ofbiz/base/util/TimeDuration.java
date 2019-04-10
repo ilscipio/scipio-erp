@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.ofbiz.base.lang.SourceMonitored;
 import org.ofbiz.base.lang.ThreadSafe;
@@ -96,7 +97,9 @@ public class TimeDuration implements Serializable, Comparable<TimeDuration> {
 
         // compute elapsed years
         long yearMillis = 86400000 * calStart.getLeastMaximum(Calendar.DAY_OF_YEAR);
-        float units = deltaMillis / yearMillis;
+        // SCIPIO: This seems to be an error: deltaMillis / yearMillis is an integer division, which makes the (int) cases redundant...
+        //float units = deltaMillis / yearMillis;
+        long units = deltaMillis / yearMillis;
         this.years = factor * advanceCalendar(calStart, calEnd, (int) units, Calendar.YEAR);
         deltaMillis = computeDeltaMillis(calStart.getTimeInMillis(), targetMillis);
 
@@ -174,17 +177,21 @@ public class TimeDuration implements Serializable, Comparable<TimeDuration> {
         if (obj == this) {
             return true;
         }
-        try {
-            TimeDuration that = (TimeDuration) obj;
-            return this.years == that.years
-                    && this.months == that.months
-                    && this.days == that.days
-                    && this.hours == that.hours
-                    && this.minutes == that.minutes
-                    && this.seconds == that.seconds
-                    && this.milliseconds == that.milliseconds;
-        } catch (Exception e) {}
-        return false;
+        // SCIPIO: This is lazy and confuses the IDE
+        //try {
+        if (!(obj instanceof TimeDuration)) {
+            return false;
+        }
+        TimeDuration that = (TimeDuration) obj;
+        return this.years == that.years
+                && this.months == that.months
+                && this.days == that.days
+                && this.hours == that.hours
+                && this.minutes == that.minutes
+                && this.seconds == that.seconds
+                && this.milliseconds == that.milliseconds;
+        //} catch (Exception e) {}
+        //return false;
     }
 
     /** Returns a <code>String</code> formatted as
@@ -294,6 +301,11 @@ public class TimeDuration implements Serializable, Comparable<TimeDuration> {
         cal.add(Calendar.MONTH, this.months);
         cal.add(Calendar.YEAR, this.years);
         return cal;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(milliseconds, seconds, minutes, hours, days, months, years);
     }
 
     /** Returns a <code>TimeDuration</code> instance derived from an encoded

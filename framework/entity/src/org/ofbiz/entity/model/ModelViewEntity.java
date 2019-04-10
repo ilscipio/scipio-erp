@@ -376,6 +376,7 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Deprecated @Override
     public String colNameString(String separator, String afterLast, boolean alias, ModelField... flds) {
         return colNameString(Arrays.asList(flds), separator, afterLast, alias);
@@ -386,6 +387,7 @@ public class ModelViewEntity extends ModelEntity {
         return colNameString(Arrays.asList(flds), sb, prefix, separator, afterLast, alias);
     }
 
+    @SuppressWarnings("deprecation")
     @Deprecated @Override
     public String colNameString(List<ModelField> flds, String separator, String afterLast, boolean alias) {
         return colNameString(flds, new StringBuilder(), "", separator, afterLast, alias).toString();

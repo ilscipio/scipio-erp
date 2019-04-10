@@ -151,8 +151,8 @@ public class StringUtilTests extends GenericTestCaseBase {
     }
 
     public void testCreateMap() {
-        List<String>[] badKeys = UtilGenerics.cast(new List[] {null, list("1"), list("2")});
-        List<String>[] badValues = UtilGenerics.cast(new List[] {list("one"), null, list("two", "extra")});
+        List<String>[] badKeys = UtilGenerics.cast(new List<?>[] {null, list("1"), list("2")});
+        List<String>[] badValues = UtilGenerics.cast(new List<?>[] {list("one"), null, list("two", "extra")});
         for (int i = 0; i < badKeys.length; i++) {
             IllegalArgumentException caught = null;
             try {

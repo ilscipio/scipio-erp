@@ -640,8 +640,8 @@ public class OrbitalPaymentServices {
         return shippingRef;
     }
 
-    private static Map<String, Object> validateRequest(Map<String, Object> params, Map props, RequestIF request) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    private static Map<String, Object> validateRequest(Map<String, Object> params, Map<String, Object> props, RequestIF request) {
+        Map<String, Object> result = new HashMap<>();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }

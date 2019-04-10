@@ -210,7 +210,7 @@ public class TruitionCoReg {
 
                 // email address
                 String emailAddress = null;
-                Collection emCol = ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+                Collection<GenericValue> emCol = ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
                 if (UtilValidate.isEmpty(emCol)) {
                     emCol = ContactHelper.getContactMech(party, null, "EMAIL_ADDRESS", false);
                 }
@@ -231,7 +231,7 @@ public class TruitionCoReg {
                 String state = null;
                 String zipCode = null;
                 String country = null;
-                Collection adCol = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+                Collection<GenericValue> adCol = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
                 if (UtilValidate.isEmpty(adCol)) {
                     adCol = ContactHelper.getContactMech(party, null, "POSTAL_ADDRESS", false);
                 }
@@ -267,7 +267,7 @@ public class TruitionCoReg {
 
                 // phone number
                 String phoneNumber = null;
-                Collection phCol = ContactHelper.getContactMech(party, "PHONE_HOME", "TELECOM_NUMBER", false);
+                Collection<GenericValue> phCol = ContactHelper.getContactMech(party, "PHONE_HOME", "TELECOM_NUMBER", false);
                 if (UtilValidate.isEmpty(phCol)) {
                     phCol = ContactHelper.getContactMech(party, null, "TELECOM_NUMBER", false);
                 }

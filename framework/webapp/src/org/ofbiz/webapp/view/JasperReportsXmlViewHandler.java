@@ -80,7 +80,7 @@ public class JasperReportsXmlViewHandler extends AbstractViewHandler {
         try {
             String datasourceName = delegator.getEntityHelperName(info);
             InputStream is = context.getResourceAsStream(page);
-            Map parameters = UtilHttp.getParameterMap(request);
+            Map<String, Object> parameters = UtilHttp.getParameterMap(request);
 
             JasperReport report = JasperCompileManager.compileReport(is);
 

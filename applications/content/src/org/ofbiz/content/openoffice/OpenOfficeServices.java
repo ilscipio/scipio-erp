@@ -68,7 +68,7 @@ public class OpenOfficeServices {
      */
     public static Map<String, Object> convertDocumentByteBuffer(DispatchContext dctx, Map<String, ? extends Object> context) {
 
-        Map results = ServiceUtil.returnSuccess();
+        Map<String, Object> results = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         XMultiComponentFactory xmulticomponentfactory = null;
         //String uniqueSeqNum = delegator.getNextSeqId("OOTempDir");
@@ -156,7 +156,7 @@ public class OpenOfficeServices {
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
             OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, stringUrl, stringConvertedFile, filterName);
 
-            Map results = ServiceUtil.returnSuccess();
+            Map<String, Object> results = ServiceUtil.returnSuccess();
             return results;
         } catch (IOException e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
@@ -201,7 +201,7 @@ public class OpenOfficeServices {
             oobais.close();
             oobaos.close();
 
-            Map results = ServiceUtil.returnSuccess();
+            Map<String, Object> results = ServiceUtil.returnSuccess();
             return results;
         } catch (IOException e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
@@ -246,7 +246,7 @@ public class OpenOfficeServices {
             oobais.close();
             oobaos.close();
 
-            Map results = ServiceUtil.returnSuccess();
+            Map<String, Object> results = ServiceUtil.returnSuccess();
             return results;
         } catch (IOException e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
@@ -362,7 +362,7 @@ public class OpenOfficeServices {
             // Closing the converted document
             xcomponent.dispose();
 
-            Map results = ServiceUtil.returnSuccess();
+            Map<String, Object> results = ServiceUtil.returnSuccess();
             return results;
         } catch (Exception e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);

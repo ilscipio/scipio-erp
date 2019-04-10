@@ -32,12 +32,13 @@ import net.sf.jasperreports.engine.JRField;
  */
 public class JRMapCollectionDataSource implements JRDataSource {
 
-    private Collection data = null;
-    private Iterator iterator = null;
-    private Map currentMap = null;
+    //private Collection<Map<String, ?>> data = null; // SCIPIO: not needed
+    private Iterator<Map<String, ?>> iterator = null;
+    private Map<String, ?> currentMap = null;
 
-    public JRMapCollectionDataSource(Collection mapCollection) {
-        this.data = mapCollection;
+    public JRMapCollectionDataSource(Collection<Map<String, ?>> mapCollection) {
+        //this.data = mapCollection; // SCIPIO: not needed
+        Collection<Map<String, ?>> data = mapCollection;
 
         if (data != null) {
             this.iterator = data.iterator();
@@ -52,7 +53,7 @@ public class JRMapCollectionDataSource implements JRDataSource {
 
             if (hasNext) {
                 try {
-                    this.currentMap = (Map) this.iterator.next();
+                    this.currentMap = this.iterator.next();
                 } catch (Exception e) {
                     throw new JRException("Current collection object does not seem to be a Map.", e);
                 }

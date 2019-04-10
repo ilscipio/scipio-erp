@@ -121,7 +121,7 @@ public class OpenOfficeWorker{
 
         try {
             factory = getRemoteServer("localhost", "8100");
-            List filterList = getFilterNames(factory);
+            List<String> filterList = getFilterNames(factory);
             request.setAttribute("filterList", filterList);
         } catch (IOException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
@@ -133,7 +133,7 @@ public class OpenOfficeWorker{
         return "success";
     }
 
-    public static List getFilterNames(XMultiComponentFactory xmulticomponentfactory) throws Exception {
+    public static List<String> getFilterNames(XMultiComponentFactory xmulticomponentfactory) throws Exception {
         XPropertySet xPropertySet = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, xmulticomponentfactory);
         Object oDefaultContext = xPropertySet.getPropertyValue("DefaultContext");
         XComponentContext xComponentContext = (XComponentContext) UnoRuntime.queryInterface(XComponentContext.class, oDefaultContext);
@@ -157,7 +157,7 @@ public class OpenOfficeWorker{
             */
         }
 
-        List filterNameList = UtilMisc.toListArray(filterNames);
+        List<String> filterNameList = UtilMisc.toListArray(filterNames);
         return filterNameList;
     }
 
@@ -349,7 +349,9 @@ public class OpenOfficeWorker{
 
         String returnUrl = null;
         File f = new File(filePath);
-        URL u = f.toURL();
+        // SCIPIO: Bad java
+        //URL u = f.toURL();
+        URL u = f.toURI().toURL();
         returnUrl =  ExternalUriReferenceTranslator.create(xComponentContext).translateToInternal(u.toExternalForm());
 
         return returnUrl;

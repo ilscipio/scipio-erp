@@ -1253,31 +1253,37 @@ public final class UtilDateTime {
             return this;
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setYear(int year) {
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setMonth(int month) {
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setDate(int date) {
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setHours(int hours) {
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setMinutes(int minutes) {
             throw new UnsupportedOperationException();
         }
 
+        @SuppressWarnings("deprecation")
         @Deprecated
         public void setSeconds(int seconds) {
             throw new UnsupportedOperationException();

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
@@ -37,11 +38,11 @@ public class TaxwareServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static Map calcTax(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
-        List items = (List) context.get("itemProductList");
-        List amnts = (List) context.get("itemAmountList");
-        List ishpn = (List) context.get("itemShippingList");
+    public static Map<String, Object> calcTax(DispatchContext dctx, Map<String, Object> context) {
+        Map<String, Object> result = new HashMap<>();
+        List<GenericValue> items = UtilGenerics.checkList(context.get("itemProductList"));
+        List<BigDecimal> amnts = UtilGenerics.checkList(context.get("itemAmountList"));
+        List<BigDecimal> ishpn = UtilGenerics.checkList(context.get("itemShippingList"));
         BigDecimal shipping = (BigDecimal) context.get("orderShippingAmount");
         GenericValue address = (GenericValue) context.get("shippingAddress");
 
@@ -84,8 +85,7 @@ public class TaxwareServices {
         return result;
     }
 
-    public static Map verifyZip(DispatchContext dctx, Map context) {
-
-        return new HashMap();
+    public static Map<String, Object> verifyZip(DispatchContext dctx, Map<String, Object> context) {
+        return new HashMap<>();
     }
 }

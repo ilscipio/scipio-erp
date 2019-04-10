@@ -36,6 +36,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
@@ -52,7 +53,7 @@ public class JasperReportsPoiXlsViewHandler extends AbstractViewHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext context;
-    public static final UtilCache jasperReportsCompiledCache = UtilCache.createUtilCache("webapp.JasperReportsCompiled");
+    public static final UtilCache<String, JasperReport> jasperReportsCompiledCache = UtilCache.createUtilCache("webapp.JasperReportsCompiled");
 
     public void init(ServletContext context) throws ViewHandlerException {
         this.context = context;
@@ -94,7 +95,7 @@ public class JasperReportsPoiXlsViewHandler extends AbstractViewHandler {
 
             response.setContentType("application/xls");
 
-            Map parameters = (Map) request.getAttribute("jrParameters");
+            Map<String, Object> parameters = UtilGenerics.checkMap(request.getAttribute("jrParameters"));
             if (parameters == null) {
                 parameters = UtilHttp.getParameterMap(request);
             }

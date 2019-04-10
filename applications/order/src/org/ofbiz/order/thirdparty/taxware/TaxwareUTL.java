@@ -56,14 +56,14 @@ public class TaxwareUTL {
     DataFile outItem = null;
 
     BigDecimal shippingAmount = BigDecimal.ZERO;
-    List orderAdjustments = new ArrayList();
-    List itemAdjustments = new ArrayList();
+    List<GenericValue> orderAdjustments = new ArrayList<>();
+    List<GenericValue> itemAdjustments = new ArrayList<>();
 
     boolean setShipping = false;
     GenericValue shipToAddress = null;
 
     // list of records to process
-    List records = new ArrayList();
+    List<Record> records = new ArrayList<>();
     boolean processed = false;
 
     public TaxwareUTL() throws TaxwareException {
@@ -78,7 +78,7 @@ public class TaxwareUTL {
             throw new TaxwareException("Cannot re-process records.");
         processed = true;
 
-        Iterator i = records.iterator();
+        Iterator<Record> i = records.iterator();
 
         while (i.hasNext()) {
             Record rec = (Record) i.next();
@@ -156,11 +156,11 @@ public class TaxwareUTL {
         this.shipToAddress = v;
     }
 
-    public List getItemAdjustments() {
+    public List<GenericValue> getItemAdjustments() {
         return itemAdjustments;
     }
 
-    public List getOrderAdjustments() {
+    public List<GenericValue> getOrderAdjustments() {
         return orderAdjustments;
     }
 
@@ -278,8 +278,8 @@ public class TaxwareUTL {
         retHead.readDataFile(headStr);
         retItem.readDataFile(itemStr);
 
-        List retRecords = retItem.getRecords();
-        Iterator i = retRecords.iterator();
+        List<Record> retRecords = retItem.getRecords();
+        Iterator<Record> i = retRecords.iterator();
 
         if (Debug.verboseOn()) Debug.logVerbose("Returned Records: " + retRecords.size(), module);
         if (Debug.verboseOn()) Debug.logVerbose("Sent Items: " + records.size(), module);
@@ -290,7 +290,7 @@ public class TaxwareUTL {
 
             // make the adjustment lists
             if (itemAdjustments.size() < records.size()) {
-                List currentItem = new ArrayList();
+                List<GenericValue> currentItem = new ArrayList<>();
 
                 if (rec.getBigDecimal("TAX_AMT_COUNTRY").compareTo(BigDecimal.ZERO) > 0) {
                     if (Debug.verboseOn()) Debug.logVerbose("Country Tax Amount: " + rec.getBigDecimal("TAX_AMT_COUNTRY"), module);

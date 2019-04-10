@@ -67,7 +67,7 @@
   <inspection_tool class="GrMethodMayBeStatic" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="GrUnnecessaryPublicModifier" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="GrUnnecessarySemicolon" enabled="false" level="WARNING" enabled_by_default="false" />
-  <inspection_tool class="GroovyUnusedCatchParameter" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="GroovyUnusedCatchParameter" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
   <inspection_tool class="Guava" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="HighlightVisitorInternal" enabled="false" level="TYPO" enabled_by_default="false" />
   <inspection_tool class="IdempotentLoopBody" enabled="true" level="WEAK WARNING" enabled_by_default="true" />

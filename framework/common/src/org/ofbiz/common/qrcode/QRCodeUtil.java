@@ -48,7 +48,7 @@ public class QRCodeUtil {
         Graphics g = combined.getGraphics();
         g.drawImage(qrImage, 0, 0, null);
         ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g.drawImage(overlay, Math.round(deltaWidth/2), Math.round(deltaHeight/2), null);
+        g.drawImage(overlay, Math.round(((float) deltaWidth) / 2), Math.round(((float) deltaHeight) / 2), null);
         return combined;
     }
 

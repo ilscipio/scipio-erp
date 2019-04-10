@@ -77,16 +77,17 @@ public class FileTypeUtil {
         double convertedFileSize = bytesLong;
 
         String uomIdTo = "DATA_B";
-        if (bytesLong > 1024) {
+        // SCIPIO: Added explicit L (long) to 1024 values because these values technically overflow ints + parenthesis
+        if (bytesLong > 1024L) {
             uomIdTo = "DATA_KB";
             convertedFileSize = convertedFileSize / 1024;
-            if (bytesLong > 1024 * 1024) {
+            if (bytesLong > (1024L * 1024L)) {
                 uomIdTo = "DATA_MB";
                 convertedFileSize = convertedFileSize / 1024;
-                if (bytesLong > 1024 * 1024 * 1024) {
+                if (bytesLong > (1024L * 1024L * 1024L)) {
                     uomIdTo = "DATA_GB";
                     convertedFileSize = convertedFileSize / 1024;
-                    if (bytesLong > 1024 * 1024 * 1024 * 1024) {
+                    if (bytesLong > (1024L * 1024L * 1024L * 1024L)) {
                         convertedFileSize = convertedFileSize / 1024;
                         uomIdTo = "DATA_TB";
                     }
@@ -94,7 +95,6 @@ public class FileTypeUtil {
                     // TeraByte max size
                 }
             }
-
         }
 
         // BigDecimal convertedUom = UomWorker.convertUom(bytes, "DATA_B",

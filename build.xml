@@ -1326,8 +1326,9 @@ code package.
             <arg value="readers=${data-readers}"/>
         </exec-scipio-jar>
     </target>
+    <!-- SCIPIO: Example: ./ant load-file -Ddata-file=framework/common/data/GeoData_IN.xml,framework/common/data/CurrencyData.xml -->
     <target name="load-file" depends="build"
-            description="Load data using the command line argument 'data-file' to load data from a given file using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
+            description="Load data using the command line argument 'data-file' to load data from a given file or comma-separated files using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
         <property name="delegator" value="default" />
         <exec-scipio-jar action="load-data">
             <arg value="delegator=${delegator}"/>

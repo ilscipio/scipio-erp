@@ -92,6 +92,8 @@ public final class ValidateMethodCondition extends MethodOperation implements Co
         try {
             Class<?> valClass = methodContext.getLoader().loadClass(className);
             Method valMethod = valClass.getMethod(methodName, paramTypes);
+            // SCIPIO: IDEA noinspection needed for false positive
+            //noinspection JavaReflectionInvocation
             Boolean resultBool = (Boolean) valMethod.invoke(null, params);
             return resultBool;
         } catch (Exception e) {

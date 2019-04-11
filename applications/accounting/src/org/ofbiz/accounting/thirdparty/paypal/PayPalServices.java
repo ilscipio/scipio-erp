@@ -338,12 +338,12 @@ public class PayPalServices {
             encoder.add("L_QTY" + line, "1");
             line++;
         }
-        encoder.add("ITEMAMT", cart.getSubTotal().add(otherAdjustments).setScale(2).toPlainString());
+        encoder.add("ITEMAMT", cart.getSubTotal().add(otherAdjustments).setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
         encoder.add("SHIPPINGAMT", "0.00");
         encoder.add("TAXAMT", "0.00");
-        encoder.add("AMT", cart.getSubTotal().add(otherAdjustments).setScale(2).toPlainString());
+        encoder.add("AMT", cart.getSubTotal().add(otherAdjustments).setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
         //NOTE: The docs say this is optional but then won't work without it
-        encoder.add("MAXAMT", cart.getSubTotal().add(otherAdjustments).setScale(2).toPlainString());
+        encoder.add("MAXAMT", cart.getSubTotal().add(otherAdjustments).setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
     }
 
     public static Map<String, Object> getExpressCheckout(DispatchContext dctx, Map<String, Object> context) {

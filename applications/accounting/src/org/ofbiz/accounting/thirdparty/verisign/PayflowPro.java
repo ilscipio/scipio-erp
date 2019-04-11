@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.thirdparty.verisign;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -492,14 +493,14 @@ public class PayflowPro {
             //paramMap.put("L_NUMBER" + line, item.getProductId());
             parameterMap.put("L_NAME" + line, item.getName());
             parameterMap.put("L_DESC" + line, item.getDescription());
-            parameterMap.put("L_AMT" + line, item.getBasePrice().setScale(2).toPlainString());
+            parameterMap.put("L_AMT" + line, item.getBasePrice().setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
             parameterMap.put("L_QTY" + line, item.getQuantity().toBigInteger().toString());
             line++;
             BigDecimal otherAdjustments = item.getOtherAdjustments();
             if (otherAdjustments.compareTo(BigDecimal.ZERO) != 0) {
                 parameterMap.put("L_NAME" + line, item.getName() + " Adjustments");
                 parameterMap.put("L_DESC" + line, "Adjustments for item: " + item.getName());
-                parameterMap.put("L_AMT" + line, otherAdjustments.setScale(2).toPlainString());
+                parameterMap.put("L_AMT" + line, otherAdjustments.setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
                 parameterMap.put("L_QTY" + line, "1");
                 line++;
             }
@@ -507,14 +508,14 @@ public class PayflowPro {
         BigDecimal otherAdjustments = cart.getOrderOtherAdjustmentTotal();
         if (otherAdjustments.compareTo(BigDecimal.ZERO) != 0) {
             parameterMap.put("L_NAME" + line, "Order Adjustments");
-            parameterMap.put("L_AMT" + line, otherAdjustments.setScale(2).toPlainString());
+            parameterMap.put("L_AMT" + line, otherAdjustments.setScale(2).toPlainString()); // SCIPIO: Added missing RoundingMode
             parameterMap.put("L_QTY" + line, "1");
             line++;
         }
-        parameterMap.put("ITEMAMT", cart.getSubTotal().add(otherAdjustments).setScale(2).toPlainString());
-        parameterMap.put("TAXAMT", cart.getTotalSalesTax().setScale(2).toPlainString());
-        parameterMap.put("FREIGHTAMT", cart.getTotalShipping().setScale(2).toPlainString());
-        parameterMap.put("AMT", cart.getGrandTotal().setScale(2).toPlainString());
+        parameterMap.put("ITEMAMT", cart.getSubTotal().add(otherAdjustments).setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
+        parameterMap.put("TAXAMT", cart.getTotalSalesTax().setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
+        parameterMap.put("FREIGHTAMT", cart.getTotalShipping().setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
+        parameterMap.put("AMT", cart.getGrandTotal().setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
 
         if (!cart.shippingApplies()) {
             parameterMap.put("NOSHIPPING", "1");
@@ -629,7 +630,7 @@ public class PayflowPro {
         data.put("TOKEN", payPalPaymentMethod.getString("expressCheckoutToken"));
         data.put("ACTION", "D");
         // set the amount
-        data.put("AMT", processAmount.setScale(2).toPlainString());
+        data.put("AMT", processAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()); // SCIPIO: Added missing RoundingMode
 
         PayflowAPI pfp = init(delegator, paymentGatewayConfigId, null, context);
 

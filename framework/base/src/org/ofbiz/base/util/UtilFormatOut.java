@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -219,9 +220,9 @@ public final class UtilFormatOut {
     public static String formatPercentageRate(BigDecimal percentage, boolean negate) {
         if (percentage == null) return "";
         if (negate) {
-            return percentageDecimalFormat.format(percentage.divide(BigDecimal.valueOf(-100)));
+            return percentageDecimalFormat.format(percentage.divide(BigDecimal.valueOf(-100), RoundingMode.HALF_UP)); // SCIPIO: Added missing RoundingMode
         }
-        return percentageDecimalFormat.format(percentage.divide(BigDecimal.valueOf(100)));
+        return percentageDecimalFormat.format(percentage.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)); // SCIPIO: Added missing RoundingMode
     }
 
     /** Formats an Long representing a quantity into a string

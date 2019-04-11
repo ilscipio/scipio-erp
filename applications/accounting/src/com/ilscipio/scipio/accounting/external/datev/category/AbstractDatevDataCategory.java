@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.accounting.external.datev.category;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
@@ -227,7 +228,7 @@ public abstract class AbstractDatevDataCategory {
 
                 validatedValue = BigDecimal.valueOf(df.parse(value).doubleValue());
                 if (UtilValidate.isNotEmpty(validatedValue) && UtilValidate.isNotEmpty(scale)) {
-                    validatedValue = ((BigDecimal) validatedValue).setScale(Math.toIntExact(scale));
+                    validatedValue = ((BigDecimal) validatedValue).setScale(Math.toIntExact(scale), RoundingMode.HALF_UP); // SCIPIO: Added missing RoundingMode
                 }
                 break;
             case ACCOUNT:

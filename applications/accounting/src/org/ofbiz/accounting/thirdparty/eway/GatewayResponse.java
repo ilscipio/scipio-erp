@@ -95,7 +95,7 @@ public class GatewayResponse {
 
     public BigDecimal getTransactionAmount() {
         BigDecimal amt = new BigDecimal(getReturnAmount());
-        amt = amt.divide(new BigDecimal(100));
+        amt = amt.divide(new BigDecimal(100), RoundingMode.HALF_UP); // SCIPIO: Added missing RoundingMode
         return amt.setScale(2, RoundingMode.HALF_UP);
     }
 

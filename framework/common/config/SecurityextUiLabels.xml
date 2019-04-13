@@ -215,7 +215,7 @@
     </property>
     <property key="loginevents.password_was_empty_reenter">
         <value xml:lang="de">Es wurde kein Passwort eingegeben.</value>
-        <value xml:lang="en">password was empty reenter</value>
+        <value xml:lang="en">Password was empty, please re-enter.</value>
         <value xml:lang="es">La clave no puede ser vacía</value>
         <value xml:lang="fr">Le mot de passe était vide, SVP recommencez.</value>
         <value xml:lang="it">La password è vuota, prego inserirla di nuovo.</value>
@@ -306,7 +306,7 @@
     </property>
     <property key="loginevents.username_was_empty_reenter">
         <value xml:lang="de">Es wurde kein Benutzername eingegeben.</value>
-        <value xml:lang="en">username was empty reenter</value>
+        <value xml:lang="en">Username was empty, please re-enter.</value>
         <value xml:lang="es">El usuario no puede ser vacío, por favor intente de nuevo.</value>
         <value xml:lang="fr">Le nom d'utilisateur est vide, taper le de nouveau SVP.</value>
         <value xml:lang="it">L'utente è vuoto, prego inserirlo di nuovo.</value>

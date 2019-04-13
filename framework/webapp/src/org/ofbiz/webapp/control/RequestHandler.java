@@ -646,13 +646,15 @@ public class RequestHandler {
 
             // If error, then display more error messages:
             if ("error".equals(eventReturnBasedRequestResponse.name)) {
-                if (Debug.errorOn()) {
+                // SCIPIO: New configurable log level. Default: warning (was error in the past)
+                int loginFailLogLevel = Debug.getLevelFromString(EntityUtilProperties.getPropertyValue("security", "security.login.fail.log.level", "warning", delegator));
+                if (Debug.isOn(loginFailLogLevel)) {
                     String errorMessageHeader = "Request " + requestMap.uri + " caused an error with the following message: ";
                     if (request.getAttribute("_ERROR_MESSAGE_") != null) {
-                        Debug.logError(errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_"), module);
+                        Debug.log(loginFailLogLevel, null, errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_"), module);
                     }
                     if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
-                        Debug.logError(errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_LIST_"), module);
+                        Debug.log(loginFailLogLevel, null, errorMessageHeader + request.getAttribute("_ERROR_MESSAGE_LIST_"), module);
                     }
                 }
             }

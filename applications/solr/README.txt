@@ -425,6 +425,11 @@ uncommenting the appropriate line in:
   accounted for and the service should reschedule and attempt another check/reindex every few moments
   thereafter.
 
+* On some networks, when authentication is enabled and a user first accesses the Solr UI, there can be
+  a long delay before the prompt appears, due to unnecessary DNS lookups by Solr.
+  This can be remedied using host files on the server and other workarounds.
+  See: https://issues.apache.org/jira/browse/SOLR-12353
+
 * 2019-04-01: For Solr 7, in security.json, the ',"collection":null' part must be removed from the line:
     {"path":"/admin/ping","collection":null,"role":"*"}
   to give:

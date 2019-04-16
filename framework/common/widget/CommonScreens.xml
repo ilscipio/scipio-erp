@@ -172,7 +172,7 @@ code package.
                     context.webSiteFound = false;
                     context.webSiteIdNotFound = we.getWebSiteId();
                     scipioBaseUrl = UtilProperties.getPropertyValue("general", "scipioerp.base.url", "");
-                    scipioDevSetupUrl = UtilProperties.getPropertyValue("general", "community/developer/installation-configuration/", "");
+                    scipioDevSetupUrl = UtilProperties.getPropertyValue("general", "scipioerp.ce.dev.setup", "");
                     context.scipioSetupUrl = scipioBaseUrl + scipioDevSetupUrl;                    
                     
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonSystemNotProperlyConfigured", locale));

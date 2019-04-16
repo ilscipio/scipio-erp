@@ -76,8 +76,14 @@ public class GroovyUtil {
             conf.setScriptBaseClass(scriptBaseClass);
             groovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
         } else {
-            conf = CompilerConfiguration.DEFAULT;
+            // SCIPIO: 2019-04-15: Make a copy so we can modify safely
+            //conf = CompilerConfiguration.DEFAULT;
+            conf = new CompilerConfiguration(CompilerConfiguration.DEFAULT);
         }
+        // SCIPIO: 2019-04-15: Automatically include Debug in all Groovy scripts to simplify usage and debugging.
+        conf.addCompilationCustomizers(new ImportCustomizer()
+            .addImports("org.ofbiz.base.util.Debug")
+        );
         groovyScriptClassLoader = groovyClassLoader;
         groovyScriptCompilerConfig = conf; // SCIPIO
         /*

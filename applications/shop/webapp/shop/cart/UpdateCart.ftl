@@ -205,6 +205,9 @@ code package.
                         <#else><#-- Is Promo or Shoppinglist -->
                             <input type="hidden" name="cartLineProductId" id="cartLineProductId_${cartLine_index}" value="${cartLine.getProductId()}" /> 
                             <@field type="select" inline=true name="update${cartLine_index}" id="qty_${cartLine_index}" class="+validate-number">
+                                <#if (cartLine.getQuantity() < 1)>
+                                    <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
+                                </#if>
                                 <#list 1..99 as x>
                                     <#if cartLine.getQuantity()==x>
                                         <#assign selected = true/>
@@ -213,6 +216,9 @@ code package.
                                     </#if>
                                     <@field type="option" value=(x) selected=selected>${x}</@field>
                                 </#list>
+                                <#if (cartLine.getQuantity() > 99)>
+                                    <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
+                                </#if>
                             </@field>
                             <span id="advice-required-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                             <span id="advice-validate-number-qty_${cartLine_index}" style="display:none;" class="errorMessage"> (${uiLabelMap.CommonPleaseEnterValidNumberInThisField}) </span>

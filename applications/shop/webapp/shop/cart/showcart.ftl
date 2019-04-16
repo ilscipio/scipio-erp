@@ -231,6 +231,9 @@ function setAlternateGwp(field) {
                                     </#if>
                                 <#else><#-- fixedAssetExist -->
                                     <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
+                                        <#if (cartLine.getQuantity() < 1)>
+                                            <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
+                                        </#if>
                                         <#list 1..99 as x>
                                             <#if cartLine.getQuantity() == x>
                                                 <#assign selected = true/>
@@ -239,6 +242,9 @@ function setAlternateGwp(field) {
                                             </#if>
                                             <@field type="option" value=(x) selected=selected>${x}</@field>
                                         </#list>
+                                        <#if (cartLine.getQuantity() > 99)>
+                                            <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
+                                        </#if>
                                     </@field>
                                 </#if>
                             </#if>

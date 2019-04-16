@@ -35,6 +35,8 @@
 .idea
 /out/
 *.iml
+*.ipr
+*.iws
 *~
 *#
 .*.swp

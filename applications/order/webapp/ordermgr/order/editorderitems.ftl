@@ -546,6 +546,7 @@ code package.
                             <strong>${uiLabelMap.OrderTotalDue}</strong>
                     </@td>
                     <@td nowrap="nowrap" class="${styles.text_right!}">
+                            <strong>
                             <@ofbizCurrency amount=grandTotal isoCode=currencyUomId/>
                             </strong>
                     </@td>

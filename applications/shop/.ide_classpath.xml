@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+<!-- SCIPIO: IDE-compile classpath includes and excludes
+    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
+<classpath>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/cart/ShowPromoText.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/customer/ViewProfile.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/order/OrderHistory.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/order/OptionSettings.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/cart/ShowCart.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/order/CheckoutReview.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/shoppinglist/EditShoppingList.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/shop/WEB-INF/actions/order/ShipSettings.groovy"/>
+</classpath>

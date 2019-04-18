@@ -7,7 +7,5 @@ code package.
 <!-- SCIPIO: IDE-compile classpath includes and excludes
     NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
 <classpath>
-    <classpathentry kind="lib" path="webapp/WEB-INF/lib/solr-core-*.jar" sourcepath="webapp/WEB-INF/libsrc/solr-core-*-sources.jar"/>
-    <!-- FIXME: Uncomment when compilation works again
-    <classpathentry kind="src" mode="exclude" path="src/com/ilscipio/scipio/solr/plugin/security"/>-->
+    <classpathentry kind="src" mode="exclude" path="webapp/webtools/WEB-INF/actions/entity/EntityPerformanceTest.groovy"/>
 </classpath>

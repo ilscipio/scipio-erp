@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+<!-- SCIPIO: IDE-compile classpath includes and excludes
+    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
+<classpath>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/webapp/view/JasperReportsJXlsViewHandler.java"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/webapp/view/JasperReportsPoiXlsViewHandler.java"/>
+</classpath>

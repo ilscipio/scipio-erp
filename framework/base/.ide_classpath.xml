@@ -16,4 +16,6 @@ code package.
     <classpathentry kind="lib" mode="exclude" path="lib/tomcat-annotations-api-*.jar" sourcepath="libsrc/tomcat-annotations-api-*-sources.jar"/>
     <classpathentry kind="lib" mode="exclude" path="lib/tomcat-jsp-api-*.jar" sourcepath="libsrc/tomcat-jsp-api-*-sources.jar"/>
     <classpathentry kind="lib" mode="exclude" path="lib/tomcat-el-api-*.jar" sourcepath="libsrc/tomcat-el-api-*-sources.jar"/>
+
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/base/config/CoberturaInstrumenter.java"/>
 </classpath>

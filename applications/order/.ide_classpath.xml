@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+<!-- SCIPIO: IDE-compile classpath includes and excludes
+    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
+<classpath>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/order/thirdparty/taxware/TaxwareUTL.java"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/order/thirdparty/taxware/TaxwareServices.java"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/BillSettings.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/SideDeepCategory.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/ProductSummary.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/CategoryDetail.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>
+    <classpathentry kind="src" mode="exclude" path="webapp/ordermgr/reports/OrderReportPrepare.groovy"/>
+</classpath>

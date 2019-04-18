@@ -9,5 +9,5 @@ code package.
 <classpath>
     <classpathentry kind="lib" path="webapp/WEB-INF/lib/solr-core-*.jar" sourcepath="webapp/WEB-INF/libsrc/solr-core-*-sources.jar"/>
     <!-- FIXME: Uncomment when compilation works again
-    <classpathentry kind="src" mode="exclude" path="src/com/ilscipio/scipio/solr/plugin/security"/>-->
+    <classpathentry kind="src" mode="exclude" path="src/com/ilscipio/scipio/solr/plugin/security/"/>-->
 </classpath>

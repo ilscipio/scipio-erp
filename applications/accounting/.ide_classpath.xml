@@ -7,11 +7,11 @@ code package.
 <!-- SCIPIO: IDE-compile classpath includes and excludes
     NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
 <classpath>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/verisign"/>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/cybersource"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/verisign/"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/cybersource/"/>
     <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/paypal/PayPalServices.java"/>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/orbital"/>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/securepay"/>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/ideal"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/orbital/"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/securepay/"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/accounting/thirdparty/ideal/"/>
     <classpathentry kind="src" mode="exclude" path="webapp/accounting/WEB-INF/actions/payment/ListNotAppliedPayments.groovy"/>
 </classpath>

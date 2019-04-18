@@ -9,6 +9,6 @@ code package.
 <classpath>
     <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/report/JREntityListIteratorDataSource.java"/>
     <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/report/JRMapCollectionDataSource.java"/>
-    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/openoffice"/>
+    <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/openoffice/"/>
     <classpathentry kind="src" mode="exclude" path="webapp/content/WEB-INF/actions/cms/UserPermPrep.groovy"/>
 </classpath>

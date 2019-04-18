@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+<!-- SCIPIO: IDE-compile classpath includes and excludes
+    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
+<classpath>
+    <classpathentry kind="lib" path="lib/j2eespecs-ref/javax.annotation-api-*.jar" sourcepath="libsrc/j2eespecs-ref/javax.annotation-api-*-sources.jar"/>
+    <classpathentry kind="lib" path="lib/j2eespecs-ref/javax.el-api-*.jar" sourcepath="libsrc/j2eespecs-ref/javax.el-api-*-sources.jar"/>
+    <classpathentry kind="lib" path="lib/j2eespecs-ref/javax.servlet-api-*.jar" sourcepath="libsrc/j2eespecs-ref/javax.servlet-api-*-sources.jar"/>
+    <classpathentry kind="lib" path="lib/j2eespecs-ref/javax.servlet.jsp-api-*.jar" sourcepath="libsrc/j2eespecs-ref/javax.servlet.jsp-api-*-sources.jar"/>
+
+    <classpathentry kind="lib" mode="exclude" path="lib/tomcat-servlet-api-*.jar" sourcepath="libsrc/tomcat-servlet-api-*-sources.jar"/>
+    <classpathentry kind="lib" mode="exclude" path="lib/tomcat-annotations-api-*.jar" sourcepath="libsrc/tomcat-annotations-api-*-sources.jar"/>
+    <classpathentry kind="lib" mode="exclude" path="lib/tomcat-jsp-api-*.jar" sourcepath="libsrc/tomcat-jsp-api-*-sources.jar"/>
+    <classpathentry kind="lib" mode="exclude" path="lib/tomcat-el-api-*.jar" sourcepath="libsrc/tomcat-el-api-*-sources.jar"/>
+</classpath>

@@ -5,7 +5,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <!-- SCIPIO: IDE-compile classpath includes and excludes
-    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format. -->
+    NOTE: This is a custom file format based on but not fully compatible with Eclipse's .classpath file format.
+    For jar libraries, always use a wildcard for the version filename part (".../xxx-*.jar", ".../xxx-*-sources.jar"). -->
 <classpath>
     <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/report/JREntityListIteratorDataSource.java"/>
     <classpathentry kind="src" mode="exclude" path="src/org/ofbiz/content/report/JRMapCollectionDataSource.java"/>

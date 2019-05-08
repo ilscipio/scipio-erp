@@ -80,7 +80,7 @@ code package.
                 <#elseif "EMAIL_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
-                  <#if !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
+                  <#if !partyInfoViewOnly && !partyInfoSimpleFuncOnly && contactMech.infoString?has_content>
                     <#assign emailFormName = 'createEmail${contactMech.infoString?replace("&#64;","")?replace("&#x40;","")?replace(".","")?replace("@","")}'>
                     <form method="post" action="<@pageUrl>NewDraftCommunicationEvent</@pageUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${emailFormName}">
                       <#if userLogin.partyId?has_content>

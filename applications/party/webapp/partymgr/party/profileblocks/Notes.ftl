@@ -22,10 +22,10 @@ code package.
                 <#if noteRef.noteParty?has_content>
                   <div><strong>${uiLabelMap.CommonBy}: </strong>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, noteRef.noteParty, true)}</div>
                 </#if>
-                <div><strong>${uiLabelMap.CommonAt}: </strong>${noteRef.noteDateTime.toString()}</div>
+                <div><strong>${uiLabelMap.CommonAt}: </strong>${noteRef.noteDateTime!""}</div>
               </@td>
               <@td>
-                ${noteRef.noteInfo}
+                ${noteRef.noteInfo!""}
               </@td>
             </@tr>
             <#if noteRef_has_next>

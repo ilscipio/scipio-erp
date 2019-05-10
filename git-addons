@@ -13,10 +13,9 @@ print_title() {
 }
 
 print_usage() {
-  echo "----------
-usage: ./git-addons [action] [addon-names...] [options]
+  echo "usage: ./git-addons [ACTION] [ADDON]... [OPTION]...
 
-[action]:
+ACTIONS
 
   help                Show this help dialog.
 
@@ -62,7 +61,7 @@ usage: ./git-addons [action] [addon-names...] [options]
                       Command-specific options:
                         -a, --all         Update all existing addons already present.
 
-[options] (must come AFTER action and addon-names):
+OPTIONS (must come after ACTION and ADDON names):
 
   -a, --all           Apply action to all recognized addons; meaning varies by action.
   
@@ -85,7 +84,7 @@ usage: ./git-addons [action] [addon-names...] [options]
 
   -v, --verbose       Verbose output
 
-Description:
+DESCRIPTION
 
 This script uses the git subtree command to integrate SCIPIO-ERP addons
 into your working copy of ScipioCE/EE. Its primary purpose is to allow
@@ -117,12 +116,12 @@ For more information on git subtree, type 'git subtree --help'.
 NOTE: There is no official support for git submodules at this time, and using
 submodules is not recommended. subtrees should be used for most client projects.
 
-Requirements:
+REQUIREMENTS
 
 * Bash 4 or higher (for Linux/Mac; for Windows, use Git Bash, Cygwin or other emulation)
 * Git 2.0 or higher (with git subtree command)
 
-Installation:
+INSTALLATION
 
 Addons can be installed at 2 different times: before or after you have loaded the data
 for the Scipio platform ('./ant [load-demo|load-extseed|...]' or install.sh/install.bat).
@@ -144,7 +143,7 @@ you will likely need to push the changes of the 'pull' command to your Git repos
 pull it to your production (and other) branches, and finally run the appropriate 'load-xxxx'
 for every database instance you have (e.g. staging vs production).
 
-Examples:
+EXAMPLES
 
 List addons:
 * ./git-addons list --all
@@ -172,9 +171,10 @@ Steps to pull, configure and load data for new addon into existing databases (pr
 2. git push                                # Push the addon and configuration back to your own repository
 3. git pull                                # Pull changes on each server
 3. ./git-addons load-production paypal     # Load data - run once for every database (staging, production, etc.)
-
 "
 }
+
+# FIXME: not POSIX compliant + non-exported var names should be lowercase + ...
 
 print_usage_cmd_pull() {
   echo "pull: add or merges the SCIPIO-ERP addon with the given addon-name.

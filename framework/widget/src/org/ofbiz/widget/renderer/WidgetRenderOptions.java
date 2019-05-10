@@ -3,11 +3,12 @@ package org.ofbiz.widget.renderer;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.renderer.RenderOptions;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * SCIPIO: An optional, dedicated class for render options stored in the

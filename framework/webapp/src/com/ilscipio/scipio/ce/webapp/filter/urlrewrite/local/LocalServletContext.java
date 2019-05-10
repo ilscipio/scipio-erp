@@ -233,6 +233,12 @@ public class LocalServletContext implements ServletContext {
     }
 
     @Override
+    public Dynamic addJspFile(String s, String s1) {
+        Debug.logWarning("addJspFile called - unsupported - returning null", module);
+        return null;
+    }
+
+    @Override
     public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
         Debug.logWarning("createServlet called - unsupported - returning null", module);
         return null;
@@ -414,5 +420,38 @@ public class LocalServletContext implements ServletContext {
     public String getVirtualServerName() {
         Debug.logWarning("getVirtualServerName called - unsupported - returning null", module);
         return null;
+    }
+
+    @Override
+    public int getSessionTimeout() {
+        Debug.logWarning("getSessionTimeout called - unsupported - returning 0", module);
+        return 0;
+    }
+
+    @Override
+    public void setSessionTimeout(int i) {
+        Debug.logWarning("setSessionTimeout called - unsupported - doing nothing", module);
+    }
+
+    @Override
+    public String getRequestCharacterEncoding() {
+        Debug.logWarning("getRequestCharacterEncoding called - unsupported - returning null", module);
+        return null;
+    }
+
+    @Override
+    public void setRequestCharacterEncoding(String s) {
+        Debug.logWarning("setRequestCharacterEncoding called - unsupported - doing nothing", module);
+    }
+
+    @Override
+    public String getResponseCharacterEncoding() {
+        Debug.logWarning("getResponseCharacterEncoding called - unsupported - returning null", module);
+        return null;
+    }
+
+    @Override
+    public void setResponseCharacterEncoding(String s) {
+        Debug.logWarning("getResponseCharacterEncoding called - unsupported - doing nothing", module);
     }
 }

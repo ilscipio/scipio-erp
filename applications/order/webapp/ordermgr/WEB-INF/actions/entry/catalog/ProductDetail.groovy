@@ -554,13 +554,13 @@ if(product){
                             if (cart.isSalesOrder()) {
                                 // sales order: run the "calculateProductPrice" service
                                 variantPriceMap = runService('calculateProductPrice', priceContext);
-                                BigDecimal calculatedPrice = (BigDecimal)variantPriceMap.get("price");
+                                BigDecimal calculatedPrice = (BigDecimal) variantPriceMap.get("price");
                                 // Get the minimum quantity for variants if MINIMUM_ORDER_PRICE is set for variants.
                                 variantPriceMap.put("minimumQuantity", ShoppingCart.getMinimumOrderQuantity(delegator, calculatedPrice, variant.get("productId")));
                                 Iterator treeMapIter = variantTree.entrySet().iterator();
                                 while (treeMapIter.hasNext()) {
                                     Map.Entry entry = treeMapIter.next();
-                                    if (entry.getValue() instanceof  Map) {
+                                    if (entry.getValue() instanceof Map) {
                                         Iterator entryIter = entry.getValue().entrySet().iterator();
                                         while (entryIter.hasNext()) {
                                             Map.Entry innerentry = entryIter.next();
@@ -586,9 +586,30 @@ if(product){
                             variantProductInfo = [:];
                             variantProductInfo.putAll(variant);
                             variantProductInfo.requireAmount = (variant.requireAmount ?: "N");
-                            if (variantPriceMap && variantPriceMap.basePrice) {
-                                variantProductInfo.price = variantPriceMap.basePrice;
-                                variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                            if (variantPriceMap) {
+                                if (variantPriceMap.basePrice) {
+                                    variantProductInfo.price = variantPriceMap.basePrice;
+                                    variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                                }
+                                if (variantPriceMap.defaultPrice) {
+                                    variantProductInfo.defaultPrice = variantPriceMap.defaultPrice;
+                                    variantProductInfo.defaultPriceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.defaultPrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                                }
+                                if (variantPriceMap.listPrice) {
+                                    variantProductInfo.listPrice = variantPriceMap.listPrice;
+                                    variantProductInfo.listPriceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.listPrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                                }
+                                if (UtilValidate.isNotEmpty(variantPriceMap.orderItemPriceInfos)) {
+                                    for (itemPriceInfo in variantPriceMap.orderItemPriceInfos) {
+                                        if (itemPriceInfo.modifyAmount) {
+                                            variantProductInfo.modifyAmount = itemPriceInfo.modifyAmount;
+                                            variantProductInfo.modifyAmountFormatted = UtilFormatOut.formatCurrency(itemPriceInfo.modifyAmount, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                                        }
+                                        /*for (priceInfo in itemPriceInfo.keySet()) {
+                                            Debug.log("[" + priceInfo + "]: " + itemPriceInfo.get(priceInfo));
+                                        }*/
+                                    }
+                                }
                             }
                             variantProductInfoMap[variant.productId] = variantProductInfo;
 

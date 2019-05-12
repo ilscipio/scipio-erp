@@ -603,7 +603,21 @@ if(product){
                                     for (itemPriceInfo in variantPriceMap.orderItemPriceInfos) {
                                         if (itemPriceInfo.modifyAmount) {
                                             variantProductInfo.modifyAmount = itemPriceInfo.modifyAmount;
-                                            variantProductInfo.modifyAmountFormatted = UtilFormatOut.formatCurrency(itemPriceInfo.modifyAmount, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
+                                            variantProductInfo.modifyAmountFormatted = UtilFormatOut.formatCurrency(itemPriceInfo.modifyAmount, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));                                            
+                                            
+                                            if (variantPriceMap.listPrice) {
+                                                variantProductInfo.oldPrice = variantPriceMap.listPrice;
+                                                variantProductInfo.oldPriceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.listPrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));;
+                                            } else if (variantProductInfo.defaultPrice) {
+                                                variantProductInfo.oldPrice = variantPriceMap.defaultPrice;
+                                                variantProductInfo.oldPriceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.defaultPrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));;;
+                                            }
+                                            if (variantProductInfo.oldPrice) {
+                                                priceSaved = variantProductInfo.oldPrice - variantProductInfo.price;
+                                                variantProductInfo.priceSaved = priceSaved;
+                                                percentSaved = (priceSaved / variantProductInfo.oldPrice);
+                                                variantProductInfo.percentSaved = UtilFormatOut.formatPercentage(percentSaved);
+                                            }
                                         }
                                         /*for (priceInfo in itemPriceInfo.keySet()) {
                                             Debug.log("[" + priceInfo + "]: " + itemPriceInfo.get(priceInfo));

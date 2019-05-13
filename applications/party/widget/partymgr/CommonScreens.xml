@@ -371,8 +371,12 @@ code package.
     <screen name="ScipioNewRegistrationsList">
         <section>
             <actions>
-               <entity-condition entity-name="PartyAndPerson" list="registrations">
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-condition entity-name="PartyAndPerson" list="registrations">
                     <order-by field-name="createdDate"/>
+                    <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
                 </entity-condition>
            </actions>
            <widgets>
@@ -424,6 +428,9 @@ code package.
         <section>
             <actions>
                 <set field="intervalScope" value="month"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
                 <script location="component://party/script/com/ilscipio/party/dashboard/PartyLastCommunications.groovy"/>
            </actions>
            <widgets>

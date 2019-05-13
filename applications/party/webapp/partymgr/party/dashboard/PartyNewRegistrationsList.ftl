@@ -5,16 +5,20 @@
                 <@thead>
                     <@tr valign="bottom" class="header-row">
                         <@th>${uiLabelMap.CommonDate}</@th>
+                        <@th>${uiLabelMap.CommonParty}</@th>
                         <@th>${uiLabelMap.CommonPerson}</@th>
-                        <@th>${uiLabelMap.CommonComments}</@th>
+                        <!--<@th>${uiLabelMap.CommonComments}</@th>-->
                     </@tr>
                 </@thead>
                 <@tbody>
                     <#list registrations as party>
                         <@tr>
-                            <@td><#if party.createdDate?has_content>${party.createdDate?string('yyyy-MM-dd HH:mm')!}</#if></@td>
+                            <@td><#if party.createdDate?has_content>${party.createdDate?string('yyyy-MM-dd HH:mm')!}<#elseif party.createdStamp?has_content>
+                            ${party.createdStamp?string('yyyy-MM-dd HH:mm')!}
+                            </#if></@td>
+                            <@td><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${party.partyId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${party.partyId!}</a></@td>
                             <@td><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${party.partyId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${party.firstName!} ${party.lastName!}</a></@td>
-                            <@td>${party.comments!""}</@td>
+                            <!--<@td>${party.comments!""}</@td>-->
                         </@tr>
                     </#list>
                 </@tbody>

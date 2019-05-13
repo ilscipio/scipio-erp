@@ -1685,6 +1685,7 @@ code package.
         <member-entity entity-alias="PTY" entity-name="Party"/>
         <member-entity entity-alias="PERS" entity-name="Person"/>
         <alias-all entity-alias="PTY"/>
+        <alias name="createdStamp" field="createdStamp" entity-alias="PTY"/>
         <alias-all entity-alias="PERS"/>
         <view-link entity-alias="PTY" rel-entity-alias="PERS">
             <key-map field-name="partyId"/>

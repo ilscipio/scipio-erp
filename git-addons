@@ -9,7 +9,7 @@
 TOPDIR=$(pwd)
 
 print_title() {
-  echo -e "\nSCIPIO-ERP Addons and Themes Git Merging Script\n"
+  echo -e "SCIPIO-ERP Addons and Themes Git Merging Script\n"
 }
 
 print_usage() {

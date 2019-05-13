@@ -13,6 +13,7 @@ code package.
             <actions>
                 <set field="titleProperty" value="SfaFindOpportunities"/>
                 <set field="activeSubMenuItem" value="Opportunities"/>
+                <set field="findScreenShowResults" value="true"/> <!-- Always display results -->
             </actions>
             <widgets>
                 <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> --> 

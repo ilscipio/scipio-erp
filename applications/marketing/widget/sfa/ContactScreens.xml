@@ -19,6 +19,7 @@ code package.
                     session.removeAttribute('leadDescription')
                 ]]></script>
                 <set field="title" value="${uiLabelMap.SfaContacts}"/>
+                <set field="findScreenShowResults" value="true"/> <!-- Always display results -->
             </actions>
             <widgets>
                 <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
@@ -33,22 +34,11 @@ code package.
                                 </decorator-section>
                                 <decorator-section name="search-results">
                                     <section>
-                                        <condition>
-                                            <or>
-                                                <if-empty field="parameters.all"/>
-                                                <if-compare field="parameters.all" operator="equals" value="true"/>
-                                            </or>
-                                        </condition>
                                         <widgets>
                                             <!-- list all contacts -->
                                             <!-- <label style="heading" text="${uiLabelMap.SfaAllContacts}"/> -->
                                             <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                                         </widgets>
-                                        <fail-widgets>
-                                            <!-- list my contacts -->
-                                            <!-- <label style="heading" text="${uiLabelMap.SfaMyContacts}"/> -->
-                                            <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
-                                        </fail-widgets>
                                     </section>
                                 </decorator-section>
                             </decorator-screen>

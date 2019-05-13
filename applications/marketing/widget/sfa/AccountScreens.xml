@@ -19,9 +19,10 @@ code package.
                     session.removeAttribute('leadDescription')
                 ]]></script>
                 <set field="title" value="${uiLabelMap.SfaAcccounts}" />
+                <set field="findScreenShowResults" value="true"/> <!-- Always display results -->
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">               
+                <decorator-screen name="CommonAccountDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                         <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
@@ -30,24 +31,9 @@ code package.
                                 <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <section>
-                                    <condition>
-                                        <or>
-                                            <if-empty field="parameters.all"/>
-                                            <if-compare field="parameters.all" operator="equals" value="true"/>
-                                        </or>
-                                    </condition>
-                                    <widgets>
-                                        <!-- list all accounts -->
-                                        <!-- <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/> -->
-                                        <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <!-- list my accounts -->
-                                        <!-- <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/> -->
-                                        <include-form name="ListMyAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                                    </fail-widgets>
-                                </section>
+                                <!-- list all accounts -->
+                                <!-- <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/> -->
+                                <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>

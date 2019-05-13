@@ -18,6 +18,7 @@ code package.
                     session.removeAttribute('accountDescription')
                     session.removeAttribute('contactDescription')
                 ]]></script>
+                <set field="findScreenShowResults" value="true"/> <!-- Always display results -->
             </actions>
             <widgets>
                 <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
@@ -31,22 +32,11 @@ code package.
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <section>
-                                    <condition>
-                                        <or>
-                                            <if-empty field="parameters.all"/>
-                                            <if-compare field="parameters.all" operator="equals" value="true"/>
-                                        </or>
-                                    </condition>
                                     <widgets>
                                         <!-- list all leads -->
                                         <!-- <label style="heading" text="${uiLabelMap.SfaAllLeads}"/> -->
                                         <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
                                     </widgets>
-                                    <fail-widgets>
-                                        <!-- list my leads -->
-                                        <!-- <label style="heading" text="${uiLabelMap.SfaMyLeads}"/> -->
-                                        <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                    </fail-widgets>
                                 </section>
                             </decorator-section>
                         </decorator-screen>

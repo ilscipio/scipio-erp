@@ -45,6 +45,7 @@ code package.
     <!-- SCIPIO: Changelist
                * Removed portal page reference
                * Removed "showOld buttons
+               * Added Communications
      -->
     <screen name="viewprofile">
         <section>
@@ -143,7 +144,8 @@ code package.
                                         <container style="${styles.grid_row}">
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                             </container>
+                                                <include-screen name="ScipioListUserCommunications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>

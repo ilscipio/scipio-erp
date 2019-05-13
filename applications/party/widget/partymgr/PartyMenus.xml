@@ -901,4 +901,15 @@
             </link>
         </menu-item>
     </menu>
+
+    <menu name="CommunicationSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="new" title="${uiLabelMap.PartyNewCommunication}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditCommunicationEvent">
+                <parameter param-name="partyIdTo" from-field="partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+
 </menus>

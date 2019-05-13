@@ -662,4 +662,15 @@
             </widgets>
         </section>
     </screen>
+    <!--Scipio: new UserCommunications widget -->
+    <screen name="ScipioListUserCommunications">
+        <section>
+            <widgets>
+                <screenlet title="${uiLabelMap.PartyCommunications}">
+                    <include-menu name="CommunicationSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                    <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListPartyCommEvents"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
 </screens>

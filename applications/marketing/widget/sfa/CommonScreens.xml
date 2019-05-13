@@ -443,6 +443,8 @@ code package.
                                                 
                                                 <!-- SCIPIO: moved these to left, used to be in "profile-bottom" -->
                                                 <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+
+                                                <include-screen name="ScipioListUserCommunications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             </container>
                                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                 <!-- SCIPIO: NOTE: these are very long when they show, so they pretty much have to stay on the right - see viewprofile?roleTypeId=ACCOUNT&partyId=Company -->

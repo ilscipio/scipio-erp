@@ -7,27 +7,36 @@ code package.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form name="EditCommEvent" type="single" target="updateCommunicationEvent" default-map-name="communicationEvent" default-position-span="1">
+    <form name="EditCommEvent" type="single" target="updateCommunicationEvent" default-map-name="communicationEvent" default-position-span="1" group-columns="true">
         <alt-target target="createCommunicationEvent" use-when="communicationEvent==null"/>
         <field name="action"><hidden value="${parameters.action}"/></field>
         <field name="communicationEventId" use-when="communicationEvent!=null"><display/></field>
         <field name="my"><hidden value="${my}"/></field>
-        <field name="parentCommEventId" position="1">
-            <lookup target-form-name="LookupCommEvent">
-                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_update}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
-                    <parameter param-name="communicationEventId" from-field="communicationEvent.parentCommEventId"/>
+
+        <!-- party ID fields -->
+        <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}" position="1">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}" position="2">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="contactListId"  position="2">
+            <lookup size="20" target-form-name="LookupContactList">
+                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_nav} ${styles.action_update}"
+                               description="${uiLabelMap.CommonEdit}" use-when="${not empty context.communicationEvent.contactListId}">
+                    <parameter param-name="contactListId" from-field="communicationEvent.contactListId"/>
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="communicationEventTypeId" >
+
+        <!-- Event Info -->
+        <field name="communicationEventTypeId" position="1">
             <drop-down>
                 <entity-options entity-name="CommunicationEventType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-
-        <!-- status -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -36,21 +45,29 @@ code package.
                 </entity-options>
             </drop-down>
         </field>
-        <!-- party ID fields -->
-        <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}" position="1">
-            <lookup target-form-name="LookupPartyName"/>
+        <field name="parentCommEventId" position="1">
+            <lookup target-form-name="LookupCommEvent">
+                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_update}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
+                    <parameter param-name="communicationEventId" from-field="communicationEvent.parentCommEventId"/>
+                </sub-hyperlink>
+            </lookup>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}" position="2">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-
-        <field name="contactMechTypeId">
-            <drop-down>
-                 <entity-options description="${description}" entity-name="ContactMechType"/>
+        <field name="reasonEnumId" position="2">
+            <drop-down no-current-selected-key="" allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="CE_COMM_REASON"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
             </drop-down>
         </field>
 
-        <!-- this is an example of how to display different types of contact mech to the user -->
+
+
+        <field name="contactMechTypeId" position="1">
+            <drop-down>
+                <entity-options description="${description}" entity-name="ContactMechType"/>
+            </drop-down>
+        </field>
         <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}" position="1">
             <lookup target-form-name="LookupPreferredContactMech" description-field-name="partyIdFrom" target-parameter="partyIdFrom"/>
         </field>
@@ -74,28 +91,6 @@ code package.
             </drop-down>
         </field>
 
-        <!-- contact list -->
-        <field name="contactListId">
-            <lookup size="20" target-form-name="LookupContactList">
-                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_nav} ${styles.action_update}"
-                    description="${uiLabelMap.CommonEdit}" use-when="${not empty context.communicationEvent.contactListId}">
-                    <parameter param-name="contactListId" from-field="communicationEvent.contactListId"/>
-                </sub-hyperlink>
-            </lookup>
-        </field>
-        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
-        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}" position="2"><date-time/></field>
-
-        <field name="subject"><text size="60"/></field>
-
-        <field name="reasonEnumId" position="2">
-            <drop-down no-current-selected-key="" allow-empty="true">
-                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
-                    <entity-constraint name="enumTypeId" operator="equals" value="CE_COMM_REASON"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
         <field name="contentMimeTypeId" encode-output="false">
             <drop-down no-current-selected-key="text/plain" allow-empty="false">
                 <entity-options description="${mimeTypeId}" entity-name="MimeType" key-field-name="mimeTypeId">
@@ -104,11 +99,47 @@ code package.
             </drop-down>
         </field>
 
+
+        <!-- Message -->
+        <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
+        <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}" position="2"><date-time/></field>
+
+        <field name="subject"><text size="60"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" position-span="0"><textarea cols="60" rows="10"/></field>
 
         <field name="note" title="${uiLabelMap.CommonNote}" position-span="0"><textarea cols="60" rows="3"/></field>
         <field name="messageId" use-when="communicationEvent!=null"><display/></field>
+
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+
+        <sort-order>
+            <field-group>
+                <sort-field name="communicationEventId" />
+                <sort-field name="partyIdFrom" />
+                <sort-field name="partyIdTo" />
+                <sort-field name="contactListId" />
+                <sort-field name="communicationEventTypeId" />
+                <sort-field name="statusId"/>
+                <sort-field name="subject"/>
+                <sort-field name="content"/>
+                <sort-field name="messageId"/>
+                <sort-field name="submitAction"/>
+            </field-group>
+            <field-group title="${uiLabelMap.CommonAdvancedFeatures}" collapsible="true" initially-collapsed="true">
+                <sort-field name="parentCommEventId"/>
+                <sort-field name="contactMechTypeId"/>
+                <sort-field name="contactMechIdFrom"/>
+                <sort-field name="contactMechIdTo"/>
+                <sort-field name="roleTypeIdFrom"/>
+                <sort-field name="roleTypeIdTo"/>
+                <sort-field name="contentMimeTypeId"/>
+                <sort-field name="datetimeStarted"/>
+                <sort-field name="datetimeEnded"/>
+                <sort-field name="reasonEnumId"/>
+                <sort-field name="note"/>
+            </field-group>
+        </sort-order>
+
     </form>
     <form name="EditEmail" type="single" target="createCommunicationEvent" default-map-name="communicationEvent" id="EditEmail">
         <actions>

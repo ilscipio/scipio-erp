@@ -55,6 +55,7 @@ code package.
         If lib.entity.jdbc.conf.filepat.map.[conf-name] does not exist for conf-name, defaults to: [conf-name-*]-*.jar -->
     <property name="lib.entity.jdbc.conf.filepat.map.firebird" value="jaybird-*.jar"/>
     <property name="lib.entity.jdbc.conf.filepat.map.hsql" value="hsqldb-*.jar"/>
+    <property name="lib.entity.jdbc.conf.filepat.map.derby" value="derby*.jar"/><!-- removed '-' for extra Derby 15 jars - see ivy.xml -->
 
     <target name="do-lib-update" description="Downloads all jars">
         <antcall target="do-lib-update-entity-general"/>
@@ -76,19 +77,7 @@ code package.
         <if>
             <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>
-                <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
-                    <!-- 2018-06-28: this will no longer be useful
-                    <firstmatchmapper>
-                        <!- - Move drivers to old locations (TODO?: remove? standardize?) - ->
-                        <regexpmapper from="^(.*/)?(jaybird-[^/]+\.jar)$" to="\1firebird/1.8/\2" handledirsep="true"/>              
-                        <regexpmapper from="^(.*/)?(hsqldb-[^/]+\.jar)$" to="\1hsql/\2" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?(mysql-[^/]+\.jar)$" to="\1mysql/\2" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?(mariadb-[^/]+\.jar)$" to="\1mariadb/\2" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jar)$" to="\1postgresql/1.8/\2" handledirsep="true"/>
-                        <regexpmapper from="^(.*/)?(derby-[^/]+\.jar)$" to="\1derby/\2" handledirsep="true"/>
-                        <identitymapper/>
-                    </firstmatchmapper>-->
-                </ivy:retrieve>
+                <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc"/>
             </then>
         </if>
     </target>

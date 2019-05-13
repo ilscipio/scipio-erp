@@ -1,16 +1,8 @@
 #!/usr/bin/env bash
 
-# not portable, oh well
-#BASEDIR=$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)
-# maybe later
-#BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-#PROJDIR="${BASEDIR}"
-#cd "${PROJDIR}"
-TOPDIR=$(pwd)
+project_dir=$(pwd)
 
-print_title() {
-  echo -e "SCIPIO-ERP Addons and Themes Git Merging Script\n"
-}
+print_title() { echo -e "SCIPIO-ERP Addons and Themes Git Merging Script\n"; }
 
 print_usage() {
   echo "usage: ./git-addons [ACTION] [ADDON]... [OPTION]...
@@ -174,7 +166,11 @@ Steps to pull, configure and load data for new addon into existing databases (pr
 "
 }
 
-# FIXME: not POSIX compliant + non-exported var names should be lowercase + ...
+#
+# DEV NOTES: known issues:
+# * FIXME: non-exported var names should be lowercase (historical)
+# * FIXME: not POSIX, requires bash 4
+#
 
 print_usage_cmd_pull() {
   echo "pull: add or merges the SCIPIO-ERP addon with the given addon-name.
@@ -205,7 +201,7 @@ join_string() {
 
 print_addon_line() {
   get_addon_info "$2" || return
-  if [ "$1" == "${ADDON_REPOTYPE}" ]; then
+  if [ "$1" = "${ADDON_REPOTYPE}" ]; then
     local INSTSTR=$(print_addon_format)
     echo "${ADDON_NAME} -> ${ADDON_DIR} ${INSTSTR}"
   fi
@@ -305,32 +301,27 @@ print_error_usage() {
   print_usage
 }
 
-print_targetaddons_msg() {
-  print_msg "\n##############################################\n\
-$1: Target addons: ${@:2}\n\
+print_targetaddons_msg() { print_msg "
+##############################################
+$1: Target addons: ${@:2}
 ##############################################"
 }
 
-print_targetaddons_all_msg() {
-  print_msg "\n##############################################\n\
-$1: Target addons (auto-detected): ${ADDONS}\n\
-NOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly.\n\
+print_targetaddons_all_msg() { print_msg "
+##############################################
+$1: Target addons (auto-detected): ${ADDONS}
+NOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly.
 ##############################################"
 }
 
-print_subheader() {
-  echo -e "\n===========================\n\
-${@:2}\n\
+print_subheader() { print_msg "
+===========================
+${@:2}
 ==========================="
 }
 
 callgit() {
-  if [[ "${DRYRUN}" -eq 1 ]]; then
-    echo "dry-run: git $@"
-    true
-  else
-    git "$@"
-  fi
+  if [ "${DRYRUN}" = 1 ]; then echo "dry-run: git $@"; else git "$@"; fi
 }
 
 check_min_version() {
@@ -425,15 +416,15 @@ determine_scipio_branch() {
     return 0
   fi
   local SCPVER=$(grep '^scipio.release.branch=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
-  if [ "${SCPVER}" == "dev" ]; then
+  if [ "${SCPVER}" = "dev" ]; then
     SCIPIO_BRANCH="master"
-  elif [ "${SCPVER}" == "main" ]; then
+  elif [ "${SCPVER}" = "main" ]; then
     local SCPVERSPEC=$(grep '^scipio.release.version.general=' "framework/base/config/scipiometainfo.properties" | grep -o '[^= ]*$')
     if [ -z "${SCPVERSPEC}" ]; then
       print_error_req "Scipio version in framework/base/config/scipiometainfo.properties appears invalid - try updating script?"
       return 2
     fi
-    if [ "${SCPVERSPEC}" == "2.0" ]; then
+    if [ "${SCPVERSPEC}" = "2.0" ]; then
       SCIPIO_BRANCH="2.x"
     else
       SCIPIO_BRANCH="${SCPVERSPEC}"
@@ -445,12 +436,7 @@ determine_scipio_branch() {
 }
 
 extract_pos_args() {
-  for ARG; do
-    if [[ "${ARG}" == -* ]]; then
-      return
-    fi
-    echo -n " ${ARG}"
-  done
+  for ARG; do if [[ "${ARG}" == -* ]]; then return; fi; echo -n " ${ARG}"; done
 }
 
 parse_options() {
@@ -476,12 +462,12 @@ parse_options() {
     return 2
   fi
 
-  if [ "${ACTION}" == "help" ] || [ "${ACTION}" == "-h" ] || [ "${ACTION}" == "--help" ]; then
+  if [ "${ACTION}" = "help" ] || [ "${ACTION}" = "-h" ] || [ "${ACTION}" = "--help" ]; then
     ACTION=help
     HELP=1
-  elif [ "${ACTION}" == "pull" ]; then
+  elif [ "${ACTION}" = "pull" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
-  elif [ "${ACTION}" == "remote-reset" ]; then
+  elif [ "${ACTION}" = "remote-reset" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
   elif [[ "${ACTION}" == load-* ]]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
@@ -489,9 +475,9 @@ parse_options() {
   elif [[ "${ACTION}" == install-* ]]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
     DATA_TARGET="load-${ACTION#install-}"
-  elif [ "${ACTION}" == "config" ]; then
+  elif [ "${ACTION}" = "config" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
-  elif [ "${ACTION}" == "list" ]; then
+  elif [ "${ACTION}" = "list" ]; then
     true
   else
     print_error_usage "Unrecognized action: ${ACTION}"
@@ -499,32 +485,32 @@ parse_options() {
   fi
 
   for ARG; do
-    if [ "${ARG}" == "-v" ] || [ "${ARG}" == "--verbose" ]; then
+    if [ "${ARG}" = "-v" ] || [ "${ARG}" = "--verbose" ]; then
       VERBOSE=1
-    elif [ "${ARG}" == "-h" ] || [ "${ARG}" == "--help" ]; then
+    elif [ "${ARG}" = "-h" ] || [ "${ARG}" = "--help" ]; then
       HELP=1
-    elif [ "${ARG}" == "-a" ] || [ "${ARG}" == "--all" ]; then
+    elif [ "${ARG}" = "-a" ] || [ "${ARG}" = "--all" ]; then
       ALLADDONS=1
       if [ ! -z "${TARGETADDONS}" ]; then
         print_error_usage "--all cannot be used at same time as addon-name list."
         return 2
       fi
-    elif [ "${ARG}" == "-n" ] || [ "${ARG}" == "--dry-run" ]; then
+    elif [ "${ARG}" = "-n" ] || [ "${ARG}" = "--dry-run" ]; then
       DRYRUN=1
-    elif [ "${ARG}" == "-e" ] || [ "${ARG}" == "--no-msg-edit" ]; then
+    elif [ "${ARG}" = "-e" ] || [ "${ARG}" = "--no-msg-edit" ]; then
       export GIT_MERGE_AUTOEDIT=no
-    elif [ "${ARG}" == "-t" ] || [ "${ARG}" == "--no-commit" ]; then
+    elif [ "${ARG}" = "-t" ] || [ "${ARG}" = "--no-commit" ]; then
       NOCOMMIT=1
-    elif [ "${ARG}" == "-g" ] || [ "${ARG}" == "--no-config" ]; then
+    elif [ "${ARG}" = "-g" ] || [ "${ARG}" = "--no-config" ]; then
       NOCONFIG=1
-    elif [ "${ARG}" == "--rebase" ]; then
+    elif [ "${ARG}" = "--rebase" ]; then
       REBASE=1
-    elif [ "${ARG}" == "--subtree" ]; then
+    elif [ "${ARG}" = "--subtree" ]; then
       # already the default
       REPOTYPE=subtree
-    elif [ "${ARG}" == "--submodule" ]; then
+    elif [ "${ARG}" = "--submodule" ]; then
       REPOTYPE=submodule
-    elif [ "${ARG}" == "--checkout" ]; then
+    elif [ "${ARG}" = "--checkout" ]; then
       DOCHECKOUT=1
     elif [[ "${ARG}" == -* ]]; then
       print_error_usage "Unrecognized option: ${ARG}"
@@ -534,9 +520,9 @@ parse_options() {
 }
 
 process_action() {
-  if [ "${ACTION}" == "help" ]; then
+  if [ "${ACTION}" = "help" ]; then
     print_usage
-  elif [ "${ACTION}" == "pull" ]; then
+  elif [ "${ACTION}" = "pull" ]; then
     if [ "${HELP}" -eq 1 ]; then
       print_usage_cmd_pull
     else
@@ -551,7 +537,7 @@ process_action() {
         pull_addons ${TARGETADDONS} || return
       fi
     fi
-  elif [ "${ACTION}" == "remote-reset" ]; then
+  elif [ "${ACTION}" = "remote-reset" ]; then
     if [ "${HELP}" -eq 1 ]; then
       print_usage_cmd_remote_reset
     else
@@ -566,7 +552,7 @@ process_action() {
         remote_reset_addons ${TARGETADDONS} || return
       fi
     fi
-  elif [ "${ACTION}" == "list" ]; then
+  elif [ "${ACTION}" = "list" ]; then
     if [ "${ALLADDONS}" -eq 1 ]; then
       list_addons_all || return
     else
@@ -586,7 +572,7 @@ process_action() {
       check_target_addons ${TARGETADDONS} || return
       install_addons ${TARGETADDONS} || return
     fi
-  elif [ "${ACTION}" == "config" ]; then
+  elif [ "${ACTION}" = "config" ]; then
     if [ "${ALLADDONS}" -eq 1 ]; then
       config_addons_all || return
     else
@@ -663,7 +649,7 @@ is_addon_submodule() {
 }
 
 is_addon_submodule_known() {
-  is_addon_submodule && [ "${ADDON_URL}" == $(print_submodule_url_for_dir "${ADDON_DIR}") ]
+  is_addon_submodule && [ "${ADDON_URL}" = "$(print_submodule_url_for_dir "${ADDON_DIR}")" ]
 }
 
 print_submodule_url_for_dir() {
@@ -802,7 +788,7 @@ pull_addon() {
       print_msg "Running 'git pull${REBASE_STR}' for existing submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
 
       callgit pull ${REBASE_STR} || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
-      cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
+      cd "${project_dir}" || { echo "Could not switch back to project directory: ${project_dir}"; return 1; }
     else
       ensure_addon_remote || return
 
@@ -810,13 +796,13 @@ pull_addon() {
       callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard']"; return 1; }
     fi
   else
-    if [ "${REPOTYPE}" == "submodule" ]; then
+    if [ "${REPOTYPE}" = "submodule" ]; then
       print_msg "Running 'git submodule add' for new submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
 
       callgit submodule add -b "${ADDON_BRANCH}" "${ADDON_URL}" "${ADDON_DIR}" || { echo "Submodule add failed. Please verify."; return 1; }
       cd "${ADDON_DIR}" || { echo "Could not change into dir: ${ADDON_DIR}"; return 1; }
       callgit checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
-      cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
+      cd "${project_dir}" || { echo "Could not switch back to top dir: ${project_dir}"; return 1; }
       print_msg "\nNOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified); you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
     else
       ensure_addon_remote || return
@@ -896,7 +882,7 @@ load_addons_exec() {
     #print_msg "Component names: ${ADDONS_COMPONENT_NAMES[@]}"
     COMPNAMES_STRING=$(join_string , ${ADDONS_COMPONENT_NAMES[@]})
     local REAL_DATA_TARGET="${DATA_TARGET}"
-    if [ "${REAL_DATA_TARGET}" == "load-production" ]; then
+    if [ "${REAL_DATA_TARGET}" = "load-production" ]; then
       local REAL_DATA_TARGET="load-extseed"
     fi
     print_msg "\nExecuting: ./ant ${REAL_DATA_TARGET} -Dcomponent=${COMPNAMES_STRING}\n"

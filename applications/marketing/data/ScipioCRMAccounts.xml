@@ -1,0 +1,5 @@
+<entity-engine-transform-xml template="component://marketing/data/templates/account.ftl">
+    <accounts>
+        <account id="18000" name="rocketoperation" email=""/>
+    </accounts>
+</entity-engine-transform-xml>

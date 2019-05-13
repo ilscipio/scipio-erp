@@ -18,6 +18,10 @@ code package.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/MarketingHelpData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/SfaPortletData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/sfaDemoData.xml"/>
+    <!-- SCIPIO: Use advanced templates as an example for lead data generation
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/ScipioCRMAccounts.xml"/>
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/ScipioCRMContacts.xml"/>
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/ScipioCRMLeads.xml"/>-->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_contact.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_opportunity.xml"/>

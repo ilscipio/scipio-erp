@@ -1,0 +1,5 @@
+<entity-engine-transform-xml template="component://marketing/data/templates/lead.ftl">
+    <leads>
+        <lead id="L_001" companyName="newLeadCompany" isOFBizUser="N" ofbizUrl="" firstName="" lastName="" email="" note="" source="EMAIL" />
+    </leads>
+</entity-engine-transform-xml>

@@ -4,6 +4,17 @@
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="entity" organisation="com.ilscipio.scipio.ce"/>
     <configurations defaultconfmapping="%->default">
+
+        <!--
+            SCIPIO ENTITY CONFIGURATIONS: GENERAL
+        -->
+
+        <conf name="none" description="dummy empty conf"/>
+
+        <!--
+            SCIPIO ENTITY CONFIGURATIONS: JDBC DRIVERS
+        -->
+
         <conf name="jdbc" description="download all lib/jdbc jars required for build"/>
         <conf name="derby" description="downloads the derby JDBC driver"/>
         <conf name="firebird" description="downloads the firebird jaybird JDBC driver (JDK 8+) (alias for jaybird)"/>
@@ -14,11 +25,22 @@
         <conf name="mysql" description="downloads the mysql JDBC driver"/>
         <conf name="mariadb" description="downloads the mariadb JDBC driver"/>
         <conf name="postgresql" description="downloads the postgresql JDBC driver (JDK 8+)"/>
-        <conf name="none" description="dummy empty conf"/>
+
+        <!--
+            CUSTOM/CLIENT CONFIGURATIONS
+        -->
+
+
+        <!-- /CUSTOM/CLIENT CONFIGURATIONS (END) -->
+
     </configurations>
     <dependencies>
         <!-- NOTICE: 2018-03-19: All framework/*/lib root dir ivy dependencies are now defined in:
-              framework/base/ivy.xml -->
+              framework/base/ivy.xml; in stock Scipio this entity/ivy.xml file now only contains JDBC drivers. -->
+
+        <!--
+            SCIPIO DEPENDENCIES: JDBC DRIVERS
+        -->
 
         <!-- Derby 1.14: requires Java 8, single jar -->
         <dependency org="org.apache.derby" name="derby" rev="10.14.2.0" transitive="false" conf="jdbc,derby"/>
@@ -48,5 +70,26 @@
 
         <!-- PostgreSQL -->
         <dependency org="org.postgresql" name="postgresql" rev="42.2.5" transitive="false" conf="jdbc,postgresql"/>
+
+        <!--
+            CUSTOM/CLIENT DEPENDENCIES
+
+            Custom/client dependencies which are required by several modules
+            or by patches to the framework or any stock Scipio components or code
+            may be added below this comment.
+        -->
+
+
+        <!-- /CUSTOM/CLIENT DEPENDENCIES (END) -->
+
+        <!--
+            CUSTOM/CLIENT EXCLUDES
+
+            Custom/client excludes may be added below.
+        -->
+
+
+        <!-- /CUSTOM/CLIENT EXCLUDES (END) -->
+
     </dependencies>
 </ivy-module>

@@ -84,9 +84,12 @@ code package.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="salesOpportunity==null" target="createSalesOpportunity"/>
         <field name="salesOpportunityId" use-when="salesOpportunity!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="salesOpportunityId" use-when="salesOpportunity==null&amp;&amp;salesOpportunityId==null"><text/></field>
+        <!-- SCIPIO: disabled, as it is inconvenient to type in ID (will get generated anyhow)
+            <field name="salesOpportunityId" use-when="salesOpportunity==null&amp;&amp;salesOpportunityId==null"><text/></field>
+        -->
         <field name="salesOpportunityId" use-when="salesOpportunity==null&amp;&amp;salesOpportunityId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}: [${salesOpportunityId}]"><display/></field>
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}"><text default-value="${communicationEvent.subject}" size="30"/></field>
+        <field name="opportunityName" use-when="communicationEvent!=null &amp;&amp; communicationEvent.subject!=null" title="${uiLabelMap.SfaOpportunityName}"><text default-value="${communicationEvent.subject}" size="30"/></field>
+        <field name="opportunityName" use-when="communicationEvent==null"><text default-value="${uiLabelMap.SfaOpportunity}" size="30"/></field>
         <field name="description" title="${uiLabelMap.MarketingSegmentGroupDescription}"><textarea default-value="${communicationEvent.content}"/></field>
         <field name="nextStep" title="${uiLabelMap.SfaNextStep}"><textarea/></field>
         <field name="estimatedAmount" position="1" title="${uiLabelMap.SfaEstimatedAmount}"><text size="25"/></field>

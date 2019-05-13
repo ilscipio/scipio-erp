@@ -3564,8 +3564,15 @@
         <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
         <value xml:lang="en">Only convertible currencies are listed.</value>
     </property>
+    <property key="SfaOpportunity">
+        <value xml:lang="de">Opportunität</value>
+        <value xml:lang="en">Opportunity</value>
+        <value xml:lang="fr">Opportunité</value>
+        <value xml:lang="it">Opportunità</value>
+        <value xml:lang="pt-BR">Oportunidade</value>
+    </property>
     <property key="SfaOpportunities">
-        <value xml:lang="de">Opportunities</value>
+        <value xml:lang="de">Opportunitäten</value>
         <value xml:lang="en">Opportunities</value>
         <value xml:lang="fr">Opportunités</value>
         <value xml:lang="it">Opportunità</value>
@@ -3576,7 +3583,7 @@
         <value xml:lang="zh-TW">機會</value>
     </property>
     <property key="SfaOpportunityCommunications">
-        <value xml:lang="de">Kommunikation zu Opportunity</value>
+        <value xml:lang="de">Kommunikation zur Opportunität</value>
         <value xml:lang="en">Opportunity Communications</value>
         <value xml:lang="ja">機会通信</value>
         <value xml:lang="pt-BR">Comunicação de oportunidades</value>

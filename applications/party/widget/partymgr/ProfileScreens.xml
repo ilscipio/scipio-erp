@@ -603,6 +603,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.OrderOpportunities}" >
+                    <include-menu name="SalesOpportunitiesSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     <include-form name="PartySalesOpportunities" location="component://party/widget/partymgr/PartyForms.xml"/>
                 </screenlet>
             </widgets>

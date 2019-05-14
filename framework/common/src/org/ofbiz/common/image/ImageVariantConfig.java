@@ -511,7 +511,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
                 } else {
                     String pathPrefix = properties.getProperty(namePrefix + name + ".pathprefix");
                     if (pathPrefix != null) pathPrefix = pathPrefix.trim();
-                    if (UtilValidate.isEmpty(pathPrefix)) Debug.logError("Empty pathprefix for [" + resource + "/" + namePrefix + "] (default entry will be used)", module);
+                    if (UtilValidate.isEmpty(pathPrefix)) Debug.logWarning("Empty pathprefix for [" + resource + "/" + namePrefix + "] (default entry will be used)", module); // SCIPIO: Changed to logWarning
                     else {
                         ImageVariantConfig cfg = cfgFactory.fromImagePropertiesXml(cfgfile);
                         if (cfg == null) throw new IllegalArgumentException("could not read: " + cfgfile);

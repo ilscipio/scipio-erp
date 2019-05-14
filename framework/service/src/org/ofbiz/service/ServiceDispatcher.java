@@ -470,7 +470,7 @@ public class ServiceDispatcher {
 
                             if (!beganTrans) {
                                 // just log and let things roll through, will be considered an error and ECAs, etc will run according to that
-                                Debug.logError("After rollback attempt for lock retry did not begin a new transaction!", module);
+                                Debug.logWarning("After rollback attempt for lock retry did not begin a new transaction!", module); // SCIPIO: Changed to logWarning
                             } else {
                                 // deadlocks can be resolved by retring immediately as conflicting operations in the other thread will have cleared
                                 needsLockRetry = true;

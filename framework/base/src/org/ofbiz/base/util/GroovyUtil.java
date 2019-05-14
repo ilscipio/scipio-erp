@@ -125,7 +125,7 @@ public class GroovyUtil {
             GroovyLangVariant langVariant, boolean convertOperators, boolean bindingToContext, boolean useCache) throws CompilationFailedException {
         Object o;
         if (expression == null || expression.equals("")) {
-            Debug.logError("Groovy Evaluation error. Empty expression", module);
+            Debug.logWarning("Groovy Evaluation error. Empty expression", module); // SCIPIO: Changed to logWarning
             return null;
         }
         if (Debug.verboseOn()) {

@@ -218,7 +218,7 @@ public class LocalServletContainer {
             delegator = DelegatorFactory.getDelegator(delegatorName);
             servletContext.setAttribute("delegator", delegator);
             if (delegator == null) {
-                Debug.logError("[ContextFilter.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module);
+                Debug.logWarning("[ContextFilter.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module); // SCIPIO: Changed to logWarning
             }
         }
 
@@ -235,7 +235,7 @@ public class LocalServletContainer {
             }
             config.getServletContext().setAttribute("security", security);
             if (security == null) {
-                Debug.logError("An invalid (null) Security object has been set in the servlet context.", module);
+                Debug.logWarning("An invalid (null) Security object has been set in the servlet context.", module); // SCIPIO: Changed to logWarning
             }
         }
 
@@ -314,7 +314,7 @@ public class LocalServletContainer {
             delegator = (Delegator) getServletContext().getAttribute("delegator");
         }
         if (delegator == null) {
-            Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
+            Debug.logWarning("[ControlServlet] ERROR: delegator not found in ServletContext", module); // SCIPIO: Changed to logWarning
         } else {
             request.setAttribute("delegator", delegator);
             // always put this in the session too so that session events can use the delegator
@@ -330,7 +330,7 @@ public class LocalServletContainer {
             dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         }
         if (dispatcher == null) {
-            Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
+            Debug.logWarning("[ControlServlet] ERROR: dispatcher not found in ServletContext", module); // SCIPIO: Changed to logWarning
         }
         request.setAttribute("dispatcher", dispatcher);
 
@@ -339,7 +339,7 @@ public class LocalServletContainer {
             security = (Security) getServletContext().getAttribute("security");
         }
         if (security == null) {
-            Debug.logError("[ControlServlet] ERROR: security not found in ServletContext", module);
+            Debug.logWarning("[ControlServlet] ERROR: security not found in ServletContext", module); // SCIPIO: Changed to logWarning
         }
         request.setAttribute("security", security);
 

@@ -359,7 +359,7 @@ public class CommonEvents {
             uiLabelObject = UtilGenerics.<Map<String, List<String>>> cast(json.toObject(Map.class));
         }
         if (UtilValidate.isEmpty(uiLabelObject)) {
-            Debug.logError("No resource and labels found in JSON string: " + jsonString, module);
+            Debug.logWarning("No resource and labels found in JSON string: " + jsonString, module); // SCIPIO: Changed to logWarning
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
@@ -390,10 +390,10 @@ public class CommonEvents {
             uiLabelObject = UtilGenerics.<Map<String, String>>cast(json.toObject(Map.class));
         }
         if (UtilValidate.isEmpty(uiLabelObject)) {
-            Debug.logError("No resource and labels found in JSON string: " + jsonString, module);
+            Debug.logWarning("No resource and labels found in JSON string: " + jsonString, module); // SCIPIO: Changed to logWarning
             return "error";
         } else if (uiLabelObject.size() > 1) {
-            Debug.logError("More than one resource found, please use the method: getJSONuiLabelArray", module);
+            Debug.logWarning("More than one resource found, please use the method: getJSONuiLabelArray", module); // SCIPIO: Changed to logWarning
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
@@ -567,7 +567,7 @@ public class CommonEvents {
                 }
 
                 if (UtilValidate.isEmpty(targetPage)) {
-                    Debug.logError("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module);
+                    Debug.logWarning("Scipio: Missing target page for targetPageResponse " + targetPageResponse, module); // SCIPIO: Changed to logWarning
                     return "error";
                 } else {
                     // SCIPIO: SECURITY CHECK: In case this is not checked anywhere else - at least make sure
@@ -582,7 +582,7 @@ public class CommonEvents {
                     }
                 }
             } else {
-                Debug.logError("Scipio: Invalid targetPageResponse: " + targetPageResponse, module);
+                Debug.logWarning("Scipio: Invalid targetPageResponse: " + targetPageResponse, module); // SCIPIO: Changed to logWarning
                 return "error";
             }
         }

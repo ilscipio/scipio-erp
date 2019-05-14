@@ -138,7 +138,7 @@ public class NotificationServices {
                     body = (String) bodyResult.get("body");
                 } else {
                     // otherwise just report the error
-                    Debug.logError("prepareNotification failed: " + bodyResult.get(ModelService.ERROR_MESSAGE), module);
+                    Debug.logWarning("prepareNotification failed: " + bodyResult.get(ModelService.ERROR_MESSAGE), module); // SCIPIO: Changed to logWarning
                     body = null;
                 }
             }
@@ -160,7 +160,7 @@ public class NotificationServices {
                 // pass on to the sendMail service
                 result = dispatcher.runSync("sendMail", emailContext);
             } else {
-                Debug.logError("Invalid email body; null is not allowed", module);
+                Debug.logWarning("Invalid email body; null is not allowed", module); // SCIPIO: Changed to logWarning
                 result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonNotifyEmailInvalidBody", locale));
             }
         } catch (GenericServiceException serviceException) {
@@ -207,7 +207,7 @@ public class NotificationServices {
             URL templateUrl = FlexibleLocation.resolveLocation(templateName);
 
             if (templateUrl == null) {
-                Debug.logError("Problem getting the template URL: " + templateName + " not found", module);
+                Debug.logWarning("Problem getting the template URL: " + templateName + " not found", module); // SCIPIO: Changed to logWarning
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonNotifyEmailProblemFindingTemplate", locale));
             }
 

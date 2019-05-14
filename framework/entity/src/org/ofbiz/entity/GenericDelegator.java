@@ -455,7 +455,7 @@ public class GenericDelegator implements Delegator {
                 }
             } catch (GenericEntityException ex) {
                 errorCount++;
-                Debug.logError("Entity [" + entityName + "] named in Entity Group with name " + groupName + " are not defined in any Entity Definition file", module);
+                Debug.logWarning("Entity [" + entityName + "] named in Entity Group with name " + groupName + " are not defined in any Entity Definition file", module); // SCIPIO: Changed to logWarning
             }
         }
 
@@ -2569,7 +2569,7 @@ public class GenericDelegator implements Delegator {
     @Override
     public void rollback() {
         if (!this.testMode) {
-            Debug.logError("Rollback requested outside of testmode", module);
+            Debug.logWarning("Rollback requested outside of testmode", module); // SCIPIO: Changed to logWarning
         }
         this.testMode = false;
         this.testRollbackInProgress = true;

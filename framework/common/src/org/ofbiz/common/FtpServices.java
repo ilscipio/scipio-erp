@@ -127,7 +127,7 @@ public class FtpServices {
             }
         }
         if (errorList.size() > 0) {
-            Debug.logError("[putFile] The following error(s) (" + errorList.size() + ") occurred: " + errorList, module);
+            Debug.logWarning("[putFile] The following error(s) (" + errorList.size() + ") occurred: " + errorList, module); // SCIPIO: Changed to logWarning
             return ServiceUtil.returnError(errorList);
         }
         Debug.logInfo("[putFile] finished successfully", module);
@@ -195,7 +195,7 @@ public class FtpServices {
             }
         }
         if (errorList.size() > 0) {
-            Debug.logError("[getFile] The following error(s) (" + errorList.size() + ") occurred: " + errorList, module);
+            Debug.logWarning("[getFile] The following error(s) (" + errorList.size() + ") occurred: " + errorList, module); // SCIPIO: Changed to logWarning
             return ServiceUtil.returnError(errorList);
         }
         return ServiceUtil.returnSuccess();

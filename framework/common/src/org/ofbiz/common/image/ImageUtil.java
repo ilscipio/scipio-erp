@@ -163,7 +163,7 @@ public abstract class ImageUtil {
                     continue;
                 }
             } else {
-                Debug.logError("Could not find image op instance " + aliasName + " for alias property " + propPrefix+aliasEntry+".alias", module);
+                Debug.logWarning("Could not find image op instance " + aliasName + " for alias property " + propPrefix+aliasEntry+".alias", module); // SCIPIO: Changed to logWarning
                 continue;
             }
         }

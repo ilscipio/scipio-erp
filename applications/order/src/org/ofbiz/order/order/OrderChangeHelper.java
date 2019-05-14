@@ -144,7 +144,7 @@ public final class OrderChangeHelper {
         Map<String, Object> statusResult = dispatcher.runSync("changeOrderStatus", statusFields);
         if (ServiceUtil.isError(statusResult)) {
             String errorMessage = ServiceUtil.getErrorMessage(statusResult);
-            Debug.logError("Problems adjusting order header status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            Debug.logWarning("Problems adjusting order header status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: Changed to logWarning // SCIPIO: 2018-10-09: Kept log message
             throw new GenericServiceException(errorMessage);
         }
 
@@ -156,7 +156,7 @@ public final class OrderChangeHelper {
         Map<String, Object> itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);
         if (ServiceUtil.isError(itemStatusResult)) {
             String errorMessage = ServiceUtil.getErrorMessage(itemStatusResult);
-            Debug.logError("Problems adjusting order item status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: 2018-10-09: Kept log message
+            Debug.logWarning("Problems adjusting order item status for order #" + orderId + ": " + errorMessage, module); // SCIPIO: Changed to logWarning // SCIPIO: 2018-10-09: Kept log message
             throw new GenericServiceException(errorMessage);
         }
 

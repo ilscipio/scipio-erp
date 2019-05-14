@@ -519,7 +519,7 @@ public class DatabaseUtil {
 
                         ModelEntity relModelEntity = modelEntities.get(modelRelation.getRelEntityName());
                         if (relModelEntity == null) {
-                            Debug.logError("No such relation: " + entity.getEntityName() + " -> " + modelRelation.getRelEntityName(), module);
+                            Debug.logWarning("No such relation: " + entity.getEntityName() + " -> " + modelRelation.getRelEntityName(), module); // SCIPIO: Changed to logWarning
                             continue;
                         }
                         String relConstraintName = makeFkConstraintName(modelRelation, datasourceInfo.getConstraintNameClipLength());
@@ -1631,11 +1631,11 @@ public class DatabaseUtil {
                 if ("one".equals(modelRelation.getType())) {
                     ModelEntity relModelEntity = modelEntities.get(modelRelation.getRelEntityName());
                     if (relModelEntity == null) {
-                        Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName(), module);
+                        Debug.logWarning("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName(), module); // SCIPIO: Changed to logWarning
                         continue;
                     }
                     if (relModelEntity instanceof ModelViewEntity) {
-                        Debug.logError("Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName(), module);
+                        Debug.logWarning("Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName(), module); // SCIPIO: Changed to logWarning
                         continue;
                     }
 
@@ -2060,7 +2060,7 @@ public class DatabaseUtil {
 
             ModelField mainField = entity.getField(keyMap.getFieldName());
             if (mainField == null) {
-                Debug.logError("Bad key-map in entity [" + entity.getEntityName() + "] relation to [" + modelRelation.getTitle() + modelRelation.getRelEntityName() + "] for field [" + keyMap.getFieldName() + "]", module);
+                Debug.logWarning("Bad key-map in entity [" + entity.getEntityName() + "] relation to [" + modelRelation.getTitle() + modelRelation.getRelEntityName() + "] for field [" + keyMap.getFieldName() + "]", module); // SCIPIO: Changed to logWarning
                 return null;
             }
 
@@ -2071,7 +2071,7 @@ public class DatabaseUtil {
 
             ModelField relField = relModelEntity.getField(keyMap.getRelFieldName());
             if (relField == null) {
-                Debug.logError("The field '" + keyMap.getRelFieldName() + "' was not found at related entity - check relations at entity '" + entity.getEntityName() + "'!", module);
+                Debug.logWarning("The field '" + keyMap.getRelFieldName() + "' was not found at related entity - check relations at entity '" + entity.getEntityName() + "'!", module); // SCIPIO: Changed to logWarning
             }
 
             if (relCols.length() > 0) {

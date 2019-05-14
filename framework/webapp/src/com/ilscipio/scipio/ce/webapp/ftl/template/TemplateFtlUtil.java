@@ -465,15 +465,15 @@ public abstract class TemplateFtlUtil {
                                     encode = val;
                                 }
                                 else {
-                                    Debug.logError("Scipio: progress success action value has invalid option name: [" + pair + "] in " + progressSuccessAction, module);
+                                    Debug.logWarning("Scipio: progress success action value has invalid option name: [" + pair + "] in " + progressSuccessAction, module); // SCIPIO: Changed to logWarning
                                 }
                             }
                             else {
-                                Debug.logError("Scipio: progress success action value has invalid option value: [" + pair + "] in " + progressSuccessAction, module);
+                                Debug.logWarning("Scipio: progress success action value has invalid option value: [" + pair + "] in " + progressSuccessAction, module); // SCIPIO: Changed to logWarning
                             }
                         }
                         else {
-                            Debug.logError("Scipio: progress success action value has invalid option: [" + pair + "] in " + progressSuccessAction, module);
+                            Debug.logWarning("Scipio: progress success action value has invalid option: [" + pair + "] in " + progressSuccessAction, module); // SCIPIO: Changed to logWarning
                         }
                     }
                 }
@@ -498,7 +498,7 @@ public abstract class TemplateFtlUtil {
                 newAction = sb.toString();
             }
             else {
-                Debug.logError("Scipio: progress success action value has invalid format in " + progressSuccessAction, module);
+                Debug.logWarning("Scipio: progress success action value has invalid format in " + progressSuccessAction, module); // SCIPIO: Changed to logWarning
             }
             progressSuccessAction = newAction;
         }

@@ -24,7 +24,7 @@ code package.
     <#assign email=.node.@email/>
     <#assign note=.node.@note/>
     <#assign source=.node.@source/>
-    <Party partyId="${partyId}" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <Party partyId="${partyId}" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED" createdDate="2019-01-01 00:00:00.000"/>
     <PartyGroup partyId="${partyId}" groupName="${companyName}"/>
     <#if isOFBizUser?has_content>
         <PartyAttribute partyId="${partyId}" attrName="isOFBizUser" attrValue="${isOFBizUser}" attrDescription="Company uses OFBiz?"/>
@@ -39,7 +39,7 @@ code package.
     <PartyRole partyId="${partyId}" roleTypeId="ACCOUNT_LEAD"/>
     <PartyRole partyId="${partyId}" roleTypeId="_NA_"/>
     <#if firstName?has_content || lastName?has_content>
-        <Party partyId="${partyId}_001" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
+        <Party partyId="${partyId}_001" partyTypeId="PERSON" statusId="PARTY_ENABLED" createdDate="2019-01-01 00:00:00.000"/>
         <Person partyId="${partyId}_001" firstName="${firstName!""}" lastName="${lastName!""}"/>
         <PartyRole partyId="${partyId}_001" roleTypeId="_NA_"/>
         <PartyRole partyId="${partyId}_001" roleTypeId="CONTACT"/>

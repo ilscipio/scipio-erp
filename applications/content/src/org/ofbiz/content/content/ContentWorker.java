@@ -132,7 +132,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
      */
     public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache) throws GeneralException, IOException {
         if (UtilValidate.isEmpty(contentId)) {
-            Debug.logWarning("No content ID found.", module); // SCIPIO: Changed to logWarning
+            Debug.logWarning("No content ID found.", module); // SCIPIO: Changed to warning
             return null;
         }
         GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache(cache).queryOne();

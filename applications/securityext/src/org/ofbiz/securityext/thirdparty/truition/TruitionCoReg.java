@@ -309,13 +309,13 @@ public class TruitionCoReg {
                 }
 
                 if (retCode < 0) {
-                    Debug.logWarning("EDeal cookie not set; API return code: " + retCode, module); // SCIPIO: Changed to logWarning
+                    Debug.logWarning("EDeal cookie not set; API return code: " + retCode, module); // SCIPIO: Changed to warning
                     return false;
                 } else {
                     Debug.logInfo("EDeal cookie success; API return code: " + retCode, module);
                 }
             } else {
-                Debug.logWarning("Truition requires a Person to be logged in. First/Last name required!", module); // SCIPIO: Changed to logWarning
+                Debug.logWarning("Truition requires a Person to be logged in. First/Last name required!", module); // SCIPIO: Changed to warning
                 return false;
             }
         }

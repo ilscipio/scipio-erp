@@ -186,7 +186,7 @@ public class PayPalServices {
             cart = weakCart.get();
         }
         if (cart == null) {
-            Debug.logWarning("Could locate the ShoppingCart for token " + token, module); // SCIPIO: Changed to logWarning
+            Debug.logWarning("Could locate the ShoppingCart for token " + token, module); // SCIPIO: Changed to warning
             return ServiceUtil.returnSuccess();
         }
         // Since most if not all of the shipping estimate codes requires a persisted contactMechId we'll create one and
@@ -1015,7 +1015,7 @@ public class PayPalServices {
         NVPDecoder decoder = new NVPDecoder();
         decoder.decode(responseMessage);
         if (!"Success".equals(decoder.get("ACK"))) {
-            Debug.logWarning("A response other than success was received from PayPal: " + responseMessage, module); // SCIPIO: Changed to logWarning
+            Debug.logWarning("A response other than success was received from PayPal: " + responseMessage, module); // SCIPIO: Changed to warning
         }
 
         return decoder;

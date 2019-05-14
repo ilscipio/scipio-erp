@@ -415,14 +415,16 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         if (multitenant && tenantId != null) {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName + "#" + tenantId);
             if (delegator == null) {
-                Debug.logError("Solr: authentication: could not get tenant delegator '" + entityDelegatorName + "#" + tenantId
+                // Scipio: Changed to logWarning
+                Debug.logWarning("Solr: authentication: could not get tenant delegator '" + entityDelegatorName + "#" + tenantId
                         + "'; auth failed", module);
                 return null;
             }
         } else {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName);
             if (delegator == null) {
-                Debug.logError("Solr: authentication: could not get delegator '" + entityDelegatorName
+                // Scipio: Changed to logWarning
+                Debug.logWarning("Solr: authentication: could not get delegator '" + entityDelegatorName
                         + "'; auth failed", module);
                 return null;
             }

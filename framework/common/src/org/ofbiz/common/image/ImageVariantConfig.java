@@ -528,7 +528,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             try {
                 return fromProperties(resource, namePrefix, cfgFactory);
             } catch(Exception e) {
-                Debug.logError("Unable to read image variant path mapping config [" + resource + "/" + namePrefix + "]", module);
+                Debug.logWarning("Unable to read image variant path mapping config [" + resource + "/" + namePrefix + "]", module); // SCIPIO: Changed to logWarning
                 return new PathVariantConfig(new HashMap<String, ImageVariantConfig>(), null);
             }
         }

@@ -168,7 +168,7 @@ public abstract class SolrProductSearch {
 
                 if (immediate) {
                     if (productId == null && productIdMap == null) {
-                        Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIdMap", module);
+                        Debug.logWarning("Solr: updateToSolr: Missing product instance, productId or productIdMap", module); // SCIPIO: Changed to logWarning
                         return ServiceUtil.returnError("Missing product instance, productId or productIdMap");
                     }
                     result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIdMap);
@@ -176,7 +176,7 @@ public abstract class SolrProductSearch {
                 } else {
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
                         if (productId == null) {
-                            Debug.logError("Solr: registerUpdateToSolr: Missing product instance or productId", module);
+                            Debug.logWarning("Solr: registerUpdateToSolr: Missing product instance or productId", module); // SCIPIO: Changed to logWarning
                             // DEV NOTE: This *should* be okay to return error, without interfering with running transaction,
                             // because default ECA flags are: rollback-on-error="false" abort-on-error="false"
                             return ServiceUtil.returnError("Missing product instance or productId");
@@ -187,7 +187,7 @@ public abstract class SolrProductSearch {
                         final String reason = "No transaction in place";
                         if ("update".equals(context.get("noTransMode"))) {
                             if (productId == null && productIdMap == null) {
-                                Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIdMap", module);
+                                Debug.logWarning("Solr: updateToSolr: Missing product instance, productId or productIdMap", module); // SCIPIO: Changed to logWarning
                                 return ServiceUtil.returnError("Missing product instance, productId or productIdMap");
                             }
                             Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
@@ -437,7 +437,7 @@ public abstract class SolrProductSearch {
             }
             Map<String, Object> result = ServiceUtil.returnError(errorMsgs);
             // DEV NOTE: this log statement is _probably_ redundant, but do it just in case
-            Debug.logError("Solr: registerUpdateToSolr: Error(s) indexing product(s): " + errorMsgs, module);
+            Debug.logWarning("Solr: registerUpdateToSolr: Error(s) indexing product(s): " + errorMsgs, module); // SCIPIO: Changed to logWarning
             return result;
         }
     }
@@ -463,7 +463,7 @@ public abstract class SolrProductSearch {
             }
             if (Boolean.TRUE.equals(forceAdd)) {
                 if (product == null) {
-                    Debug.logError("Solr: updateToSolr: Explicit add action requested, but product not found for productId: " + productId, module);
+                    Debug.logWarning("Solr: updateToSolr: Explicit add action requested, but product not found for productId: " + productId, module); // SCIPIO: Changed to logWarning
                     return ServiceUtil.returnError("Explicit add action requested, but product not found for productId: " + productId);
                 }
                 result = addToSolrCore(dctx, context, product, productId);

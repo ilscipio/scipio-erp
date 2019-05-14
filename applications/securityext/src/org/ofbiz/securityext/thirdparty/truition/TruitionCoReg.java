@@ -65,19 +65,19 @@ public class TruitionCoReg {
         String cookieName = EntityUtilProperties.getPropertyValue("truition", "truition.cookie.name", delegator);
         int time = (int) UtilProperties.getPropertyNumber("truition", "truition.cookie.time");
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
+            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties", module); // SCIPIO: Changed to logWarning
             return "error";
         }
         if (UtilValidate.isEmpty(cookiePath)) {
-            Debug.logError("Truition is not properly configured; cookiePath missing;see truition.properties", module);
+            Debug.logWarning("Truition is not properly configured; cookiePath missing;see truition.properties", module); // SCIPIO: Changed to logWarning
             return "error";
         }
         if (UtilValidate.isEmpty(cookieName)) {
-            Debug.logError("Truition is not properly configured; cookieName missing;see truition.properties", module);
+            Debug.logWarning("Truition is not properly configured; cookieName missing;see truition.properties", module); // SCIPIO: Changed to logWarning
             return "error";
         }
         if (time == 0) {
-            Debug.logError("Truition is not properly configured; cookieTime missing; see trution", module);
+            Debug.logWarning("Truition is not properly configured; cookieTime missing; see trution", module); // SCIPIO: Changed to logWarning
             return "error";
         }
 
@@ -111,11 +111,11 @@ public class TruitionCoReg {
         String domainName = EntityUtilProperties.getPropertyValue("truition", "truition.domain.name", delegator);
         String cookieName = EntityUtilProperties.getPropertyValue("truition", "truition.cookie.name", delegator);
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
+            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties", module); // SCIPIO: Changed to logWarning
             return "error";
         }
         if (UtilValidate.isEmpty(cookieName)) {
-            Debug.logError("Truition is not properly configured; cookieName missing;see truition.properties", module);
+            Debug.logWarning("Truition is not properly configured; cookieName missing;see truition.properties", module); // SCIPIO: Changed to logWarning
             return "error";
         }
 
@@ -160,11 +160,11 @@ public class TruitionCoReg {
         String siteId = EntityUtilProperties.getPropertyValue("truition", "truition.siteId", delegator);
 
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties!", module);
+            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties!", module); // SCIPIO: Changed to logWarning
             return false;
         }
         if (UtilValidate.isEmpty(siteId)) {
-            Debug.logError("Truition is not properly configured; siteId missing; see truition.properties!", module);
+            Debug.logWarning("Truition is not properly configured; siteId missing; see truition.properties!", module); // SCIPIO: Changed to logWarning
             return false;
         }
 
@@ -309,13 +309,13 @@ public class TruitionCoReg {
                 }
 
                 if (retCode < 0) {
-                    Debug.logError("EDeal cookie not set; API return code: " + retCode, module);
+                    Debug.logWarning("EDeal cookie not set; API return code: " + retCode, module); // SCIPIO: Changed to logWarning
                     return false;
                 } else {
                     Debug.logInfo("EDeal cookie success; API return code: " + retCode, module);
                 }
             } else {
-                Debug.logError("Truition requires a Person to be logged in. First/Last name required!", module);
+                Debug.logWarning("Truition requires a Person to be logged in. First/Last name required!", module); // SCIPIO: Changed to logWarning
                 return false;
             }
         }

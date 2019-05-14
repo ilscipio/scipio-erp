@@ -126,7 +126,7 @@ public class ServiceDispatcher {
                 Debug.logWarning(e.getMessage(), module);
             }
         } else {
-            Debug.logError("[ServiceDispatcher.init] : Delegator parameter was null and caused an exception.", module);
+            Debug.logWarning("[ServiceDispatcher.init] : Delegator parameter was null and caused an exception.", module); // SCIPIO: Changed to logWarning
         }
         // make sure we haven't disabled these features from running
         if (enableJMS) {

@@ -738,7 +738,7 @@ public final class UtilProperties implements Serializable {
             URL propertyURL = resources.nextElement();
             Properties props = UtilProperties.getProperties(propertyURL);
             if (props == null) {
-                Debug.logError("Unable to load properties file: " + propertyURL, module);
+                Debug.logWarning("Unable to load properties file: " + propertyURL, module); // SCIPIO: Changed to logWarning
             } else {
                 mergedProps.putAll(props);
             }

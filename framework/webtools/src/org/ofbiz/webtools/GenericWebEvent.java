@@ -280,7 +280,7 @@ public class GenericWebEvent {
                 try {
                     resultBool = (Boolean) valMethod.invoke(null, params);
                 } catch (Exception e) {
-                    Debug.logError("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true.", module);
+                    Debug.logWarning("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true.", module); // SCIPIO: Changed to logWarning
                     resultBool = Boolean.TRUE;
                 }
 
@@ -292,7 +292,7 @@ public class GenericWebEvent {
                         msgField = valClass.getField(curValidate + "Msg");
                         message = (String) msgField.get(null);
                     } catch (Exception e) {
-                        Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.", module);
+                        Debug.logWarning("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.", module); // SCIPIO: Changed to logWarning
                         message = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.validation_failed", locale) + ".";
                     }
                     errMsgParam += field.getColName() + " " + curValidate + " " + UtilProperties.getMessage(GenericWebEvent.err_resource,

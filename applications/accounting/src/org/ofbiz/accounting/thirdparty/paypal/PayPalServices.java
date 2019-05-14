@@ -186,7 +186,7 @@ public class PayPalServices {
             cart = weakCart.get();
         }
         if (cart == null) {
-            Debug.logError("Could locate the ShoppingCart for token " + token, module);
+            Debug.logWarning("Could locate the ShoppingCart for token " + token, module); // SCIPIO: Changed to logWarning
             return ServiceUtil.returnSuccess();
         }
         // Since most if not all of the shipping estimate codes requires a persisted contactMechId we'll create one and

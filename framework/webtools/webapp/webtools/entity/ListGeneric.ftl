@@ -30,11 +30,11 @@ code package.
                             <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it 
                                2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
                             <#assign fieldValue = (record.fields[raw(field.name)])! />
-                            <#if fieldValue?has_content>
+                            <#if !fieldValue?is_method && fieldValue?has_content>
                                 <#if (isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean)>
                                     ${fieldValue?string}
                                 <#else>
-                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em> 
+                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em>
                                 </#if>
                             </#if>
                         </@td>

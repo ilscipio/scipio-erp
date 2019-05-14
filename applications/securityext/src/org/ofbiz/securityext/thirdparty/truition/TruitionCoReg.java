@@ -65,19 +65,19 @@ public class TruitionCoReg {
         String cookieName = EntityUtilProperties.getPropertyValue("truition", "truition.cookie.name", delegator);
         int time = (int) UtilProperties.getPropertyNumber("truition", "truition.cookie.time");
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
             return "error";
         }
         if (UtilValidate.isEmpty(cookiePath)) {
-            Debug.logWarning("Truition is not properly configured; cookiePath missing;see truition.properties", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; cookiePath missing; see truition.properties", module);
             return "error";
         }
         if (UtilValidate.isEmpty(cookieName)) {
-            Debug.logWarning("Truition is not properly configured; cookieName missing;see truition.properties", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; cookieName missing; see truition.properties", module);
             return "error";
         }
         if (time == 0) {
-            Debug.logWarning("Truition is not properly configured; cookieTime missing; see trution", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; cookieTime missing; see truition.properties", module);
             return "error";
         }
 
@@ -111,11 +111,11 @@ public class TruitionCoReg {
         String domainName = EntityUtilProperties.getPropertyValue("truition", "truition.domain.name", delegator);
         String cookieName = EntityUtilProperties.getPropertyValue("truition", "truition.cookie.name", delegator);
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties", module);
             return "error";
         }
         if (UtilValidate.isEmpty(cookieName)) {
-            Debug.logWarning("Truition is not properly configured; cookieName missing;see truition.properties", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; cookieName missing;see truition.properties", module);
             return "error";
         }
 
@@ -160,11 +160,11 @@ public class TruitionCoReg {
         String siteId = EntityUtilProperties.getPropertyValue("truition", "truition.siteId", delegator);
 
         if (UtilValidate.isEmpty(domainName)) {
-            Debug.logWarning("Truition is not properly configured; domainName missing; see truition.properties!", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; domainName missing; see truition.properties!", module);
             return false;
         }
         if (UtilValidate.isEmpty(siteId)) {
-            Debug.logWarning("Truition is not properly configured; siteId missing; see truition.properties!", module); // SCIPIO: Changed to logWarning
+            Debug.logError("Truition is not properly configured; siteId missing; see truition.properties!", module);
             return false;
         }
 

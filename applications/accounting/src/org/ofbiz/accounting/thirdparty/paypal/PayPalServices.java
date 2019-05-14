@@ -186,7 +186,7 @@ public class PayPalServices {
             cart = weakCart.get();
         }
         if (cart == null) {
-            Debug.logWarning("Could locate the ShoppingCart for token " + token, module); // SCIPIO: Changed to logWarning
+            Debug.logError("Could locate the ShoppingCart for token " + token, module);
             return ServiceUtil.returnSuccess();
         }
         // Since most if not all of the shipping estimate codes requires a persisted contactMechId we'll create one and
@@ -746,7 +746,7 @@ public class PayPalServices {
             return ServiceUtil.returnError(e.getMessage());
         }
         if (ServiceUtil.isError(outMap)) {
-            Debug.logWarning(ServiceUtil.getErrorMessage(outMap), module); // SCIPIO: Changed to logWarning
+            //Debug.logError(ServiceUtil.getErrorMessage(outMap), module); // SCIPIO: Redundant logging
             return outMap;
         }
         return ServiceUtil.returnSuccess();

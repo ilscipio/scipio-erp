@@ -122,8 +122,7 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
 
         Delegator delegator = DelegatorFactory.getDelegator(entityDelegatorName);
         if (delegator == null) {
-            // Scipio: Changed to logWarning
-            Debug.logWarning("Solr: authorization: Could not get delegator '" + entityDelegatorName
+            Debug.logError("Solr: authorization: Could not get delegator '" + entityDelegatorName
                     + "'; no scipio perms can be mapped to solr roles", module);
             return allUserIdPerms;
         }
@@ -142,7 +141,7 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                 String tenantDelegName = delegator.getDelegatorBaseName() + "#" + tenant.getString("tenantId");
                 Delegator tenantDelegator = DelegatorFactory.getDelegator(tenantDelegName);
                 if (tenantDelegator == null) {
-                    Debug.logWarning("Solr: authorization: Could not get tenant delegator '" + tenantDelegName + "'", module); // SCIPIO: Changed to logWarning
+                    Debug.logError("Solr: authorization: Could not get tenant delegator '" + tenantDelegName + "'", module);
                     continue;
                 }
                 getPermsForAllUserLoginIdsCore(tenantDelegator, perms, allUserIdPerms);

@@ -2693,7 +2693,7 @@
     </property>
     <property key="PageTitleListCommunications">
         <value xml:lang="ar">سرد الإتصالات</value>
-        <value xml:lang="de">Liste Kommunikationen</value>
+        <value xml:lang="de">Kommunikationen</value>
         <value xml:lang="en">List Communications</value>
         <value xml:lang="es">Lista de comunicaciones</value>
         <value xml:lang="fr">Afficher les communications</value>

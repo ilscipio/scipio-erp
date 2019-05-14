@@ -150,16 +150,19 @@ code package.
                 <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioNewRegistrations" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="ScipioMarketingCampaigns"/>
@@ -195,7 +198,7 @@ code package.
             </widgets>
         </section>
     </screen>
-    
+
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>

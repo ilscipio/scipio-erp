@@ -441,10 +441,13 @@ code package.
                         </not>
                     </condition>
                      <widgets>
-                       <screenlet title="${uiLabelMap.PartyCommunication}">
-                            <platform-specific>
+                       <screenlet title="${uiLabelMap.PartyLastCommunication}">
+                           <!--<container>
+                               <link style="${styles.link_nav} ${styles.action_add}" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/>
+                           </container>-->
+                           <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyLastCommunications.ftl"/></html>
-                            </platform-specific>
+                           </platform-specific>
                        </screenlet>
                    </widgets>
                 </section>

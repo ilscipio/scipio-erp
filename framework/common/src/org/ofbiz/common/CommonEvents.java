@@ -359,7 +359,7 @@ public class CommonEvents {
             uiLabelObject = UtilGenerics.<Map<String, List<String>>> cast(json.toObject(Map.class));
         }
         if (UtilValidate.isEmpty(uiLabelObject)) {
-            Debug.logError("No resource and labels found in JSON string: " + jsonString, module);
+            Debug.logWarning("No resource and labels found in JSON string: " + jsonString, module); // SCIPIO: Changed to warning
             return "error";
         }
         Locale locale = UtilHttp.getLocale(request);
@@ -390,7 +390,7 @@ public class CommonEvents {
             uiLabelObject = UtilGenerics.<Map<String, String>>cast(json.toObject(Map.class));
         }
         if (UtilValidate.isEmpty(uiLabelObject)) {
-            Debug.logError("No resource and labels found in JSON string: " + jsonString, module);
+            Debug.logWarning("No resource and labels found in JSON string: " + jsonString, module); // SCIPIO: Changed to warning // NOTE: one below this must remain error!
             return "error";
         } else if (uiLabelObject.size() > 1) {
             Debug.logError("More than one resource found, please use the method: getJSONuiLabelArray", module);

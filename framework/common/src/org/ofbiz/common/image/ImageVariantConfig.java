@@ -511,7 +511,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
                 } else {
                     String pathPrefix = properties.getProperty(namePrefix + name + ".pathprefix");
                     if (pathPrefix != null) pathPrefix = pathPrefix.trim();
-                    if (UtilValidate.isEmpty(pathPrefix)) Debug.logWarning("Empty pathprefix for [" + resource + "/" + namePrefix + "] (default entry will be used)", module); // SCIPIO: Changed to logWarning
+                    if (UtilValidate.isEmpty(pathPrefix)) Debug.logError("Empty pathprefix for [" + resource + "/" + namePrefix + "] (default entry will be used)", module);
                     else {
                         ImageVariantConfig cfg = cfgFactory.fromImagePropertiesXml(cfgfile);
                         if (cfg == null) throw new IllegalArgumentException("could not read: " + cfgfile);
@@ -528,7 +528,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             try {
                 return fromProperties(resource, namePrefix, cfgFactory);
             } catch(Exception e) {
-                Debug.logWarning("Unable to read image variant path mapping config [" + resource + "/" + namePrefix + "]", module); // SCIPIO: Changed to logWarning
+                Debug.logError("Unable to read image variant path mapping config [" + resource + "/" + namePrefix + "]", module);
                 return new PathVariantConfig(new HashMap<String, ImageVariantConfig>(), null);
             }
         }

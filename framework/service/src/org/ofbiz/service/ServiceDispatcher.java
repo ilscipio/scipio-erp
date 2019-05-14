@@ -126,7 +126,7 @@ public class ServiceDispatcher {
                 Debug.logWarning(e.getMessage(), module);
             }
         } else {
-            Debug.logWarning("[ServiceDispatcher.init] : Delegator parameter was null and caused an exception.", module); // SCIPIO: Changed to logWarning
+            Debug.logError("[ServiceDispatcher.init] : Delegator parameter was null and caused an exception.", module);
         }
         // make sure we haven't disabled these features from running
         if (enableJMS) {
@@ -470,7 +470,7 @@ public class ServiceDispatcher {
 
                             if (!beganTrans) {
                                 // just log and let things roll through, will be considered an error and ECAs, etc will run according to that
-                                Debug.logWarning("After rollback attempt for lock retry did not begin a new transaction!", module); // SCIPIO: Changed to logWarning
+                                Debug.logError("After rollback attempt for lock retry did not begin a new transaction!", module);
                             } else {
                                 // deadlocks can be resolved by retring immediately as conflicting operations in the other thread will have cleared
                                 needsLockRetry = true;

@@ -43,7 +43,7 @@ public final class BshUtil {
                 + "this is a compatibility mode only (runs as Groovy); please convert to Groovy script", module); 
         Object o = null;
         if (expression == null || expression.equals("")) {
-            Debug.logWarning("BSH Evaluation error. Empty expression", module); // SCIPIO: Changed to logWarning
+            Debug.logError("BSH Evaluation error. Empty expression", module);
             return null;
         }
 

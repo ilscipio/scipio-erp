@@ -114,22 +114,19 @@ public class ExampleWebSockets {
     private static boolean checkClientAuthorization(Session session, EndpointConfig config, String errorSuffix) {
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         if (httpSession == null) {
-            // Scipio: Changed to logWarning
-            Debug.logWarning("Could not get HttpSession for websockets session "
+            Debug.logError("Could not get HttpSession for websockets session " 
                     + getLogIdStr(session) + " for client authorization" + errorSuffix, module);
             return false;
         }
         Security security = WebAppUtil.getSecurity(httpSession);
         if (security == null) {
-            // Scipio: Changed to logWarning
-            Debug.logWarning("Could not get Security object from HttpSession"
+            Debug.logError("Could not get Security object from HttpSession"
                     + " for websockets session " + getLogIdStr(session) + " for client authorization"
                     + errorSuffix, module);
             return false;
         }
         if (!security.hasEntityPermission("OFBTOOLS", "_VIEW", httpSession)) {
-            // Scipio: Changed to logWarning
-            Debug.logWarning("Client not authorized for OFBTOOLS_VIEW permission for websockets session "
+            Debug.logError("Client not authorized for OFBTOOLS_VIEW permission for websockets session " 
                     + getLogIdStr(session) +  errorSuffix, module);
             return false;
         }

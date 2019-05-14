@@ -132,7 +132,7 @@ public class ModelViewEntity extends ModelEntity {
             String alias = UtilXml.checkEmpty(memberEntityElement.getAttribute("entity-alias")).intern();
             String name = UtilXml.checkEmpty(memberEntityElement.getAttribute("entity-name")).intern();
             if (name.length() <= 0 || alias.length() <= 0) {
-                Debug.logWarning("[new ModelViewEntity]: entity-alias or entity-name missing on member-entity element of the view-entity " + this.entityName, module); // SCIPIO: Changed to logWarning
+                Debug.logError("[new ModelViewEntity]: entity-alias or entity-name missing on member-entity element of the view-entity " + this.entityName, module);
             } else {
                 ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name);
                 this.addMemberModelMemberEntity(modelMemberEntity);
@@ -428,14 +428,14 @@ public class ModelViewEntity extends ModelEntity {
     public ModelEntity getAliasedEntity(String entityAlias, ModelReader modelReader) {
         ModelMemberEntity modelMemberEntity = this.memberModelMemberEntities.get(entityAlias);
         if (modelMemberEntity == null) {
-            Debug.logWarning("[" + this.getEntityName() + "]: No member entity with alias " + entityAlias + " found; this view-entity will NOT be usable...", module); // SCIPIO: Changed to logWarning
+            Debug.logError("[" + this.getEntityName() + "]: No member entity with alias " + entityAlias + " found; this view-entity will NOT be usable...", module);
             return null;
         }
 
         String aliasedEntityName = modelMemberEntity.getEntityName();
         ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
         if (aliasedEntity == null) {
-            Debug.logWarning("[" + this.getEntityName() + "]: [ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName, module); // SCIPIO: Changed to logWarning
+            Debug.logError("[" + this.getEntityName() + "]: [ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName, module);
             return null;
         }
 
@@ -445,7 +445,7 @@ public class ModelViewEntity extends ModelEntity {
     public ModelField getAliasedField(ModelEntity aliasedEntity, String field, ModelReader modelReader) {
         ModelField aliasedField = aliasedEntity.getField(field);
         if (aliasedField == null) {
-            Debug.logWarning("[" + this.getEntityName() + "]: [ModelViewEntity.populateFields] ERROR: could not find ModelField for entity name: " + aliasedEntity.getEntityName() + " and field: " + field, module); // SCIPIO: Changed to logWarning
+            Debug.logError("[" + this.getEntityName() + "]: [ModelViewEntity.populateFields] ERROR: could not find ModelField for entity name: " + aliasedEntity.getEntityName() + " and field: " + field, module);
             return null;
         }
         return aliasedField;
@@ -683,20 +683,20 @@ public class ModelViewEntity extends ModelEntity {
 
             ModelMemberEntity modelMemberEntity = memberModelMemberEntities.get(entityAlias);
             if (modelMemberEntity == null) {
-                Debug.logWarning("[" + this.getEntityName() + "]: Member entity referred to in alias-all not found, ignoring: " + entityAlias, module); // SCIPIO: Changed to logWarning
+                Debug.logError("[" + this.getEntityName() + "]: Member entity referred to in alias-all not found, ignoring: " + entityAlias, module);
                 continue;
             }
 
             String aliasedEntityName = modelMemberEntity.getEntityName();
             ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
             if (aliasedEntity == null) {
-                Debug.logWarning("[" + this.getEntityName() + "]: Entity referred to in member-entity " + entityAlias + " not found, ignoring: " + aliasedEntityName, module); // SCIPIO: Changed to logWarning
+                Debug.logError("[" + this.getEntityName() + "]: Entity referred to in member-entity " + entityAlias + " not found, ignoring: " + aliasedEntityName, module);
                 continue;
             }
 
             List<String> entFieldList = aliasedEntity.getAllFieldNames();
             if (entFieldList == null) {
-                Debug.logWarning("[" + this.getEntityName() + "]: Entity referred to in member-entity " + entityAlias + " has no fields, ignoring: " + aliasedEntityName, module); // SCIPIO: Changed to logWarning
+                Debug.logError("[" + this.getEntityName() + "]: Entity referred to in member-entity " + entityAlias + " has no fields, ignoring: " + aliasedEntityName, module);
                 continue;
             }
 

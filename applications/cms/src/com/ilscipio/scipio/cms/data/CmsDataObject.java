@@ -788,7 +788,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 try {
                     dataObjects.add(makeFromValue(gv));
                 } catch (Exception e) {
-                    Debug.logError(e, "Internal error: Error creating memory instance for entity " + entityName, module);
+                    Debug.logError(e, "Cms: Internal error: Error creating memory instance for entity " + entityName, module);
                 }
             }
             return dataObjects;
@@ -816,7 +816,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 try {
                     dataObjects.add(makeFromValue(gv));
                 } catch (Exception e) {
-                    Debug.logError(e, "Internal error: Error creating memory instance for entity " + entityName, module);
+                    Debug.logError(e, "Cms: Internal error: Error creating memory instance for entity " + entityName, module);
                 }
             }
             return dataObjects;
@@ -902,7 +902,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 try {
                     dataObject = makeFromValue(genericValues.get(0));
                 } catch (Exception e) {
-                    Debug.logError(e, "Internal error: Error creating memory instance for entity " + entityName, module);
+                    Debug.logError(e, "Cms: Internal error: Error creating memory instance for entity " + entityName, module);
                 }
             }
             return dataObject;
@@ -945,7 +945,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
                 try {
                     dataObject = makeFromValue(genericValues.get(0));
                 } catch (Exception e) {
-                    Debug.logError(e, "Internal error: Error creating memory instance for entity " + entityName, module);
+                    Debug.logError(e, "Cms: Internal error: Error creating memory instance for entity " + entityName, module);
                 }
             }
             return dataObject;

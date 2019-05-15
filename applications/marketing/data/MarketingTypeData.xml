@@ -74,6 +74,9 @@ code package.
     <DataSource dataSourceId="WORD_OF_MOUTH" dataSourceTypeId="LEAD_SOURCE" description="Word of Mouth"/>
     <DataSource dataSourceId="EMAIL" dataSourceTypeId="LEAD_SOURCE" description="Email"/>
     <DataSource dataSourceId="CAMPAIGN" dataSourceTypeId="LEAD_SOURCE" description="Campaign"/>
+    <DataSource dataSourceId="XING" dataSourceTypeId="LEAD_SOURCE" description="Xing"/>
+    <DataSource dataSourceId="LINKEDIN" dataSourceTypeId="LEAD_SOURCE" description="LinkedIn"/>
+    <DataSource dataSourceId="XING" dataSourceTypeId="LEAD_SOURCE" description="Xing"/>
 
     <StatusType parentTypeId="PARTY_STATUS" hasTable="" statusTypeId="LEAD_STATUS" description="Lead Status"/>
     <StatusItem description="Assigned" sequenceId="01" statusCode="ASSIGNED" statusId="LEAD_ASSIGNED" statusTypeId="LEAD_STATUS"/>

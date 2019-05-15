@@ -76,6 +76,7 @@ code package.
     <DataSource dataSourceId="CAMPAIGN" dataSourceTypeId="LEAD_SOURCE" description="Campaign"/>
     <DataSource dataSourceId="XING" dataSourceTypeId="LEAD_SOURCE" description="Xing"/>
     <DataSource dataSourceId="LINKEDIN" dataSourceTypeId="LEAD_SOURCE" description="LinkedIn"/>
+    <DataSource dataSourceId="SEARCH_ENGINE" dataSourceTypeId="LEAD_SOURCE" description="Search Engine"/>
 
     <StatusType parentTypeId="PARTY_STATUS" hasTable="" statusTypeId="LEAD_STATUS" description="Lead Status"/>
     <StatusItem description="Assigned" sequenceId="01" statusCode="ASSIGNED" statusId="LEAD_ASSIGNED" statusTypeId="LEAD_STATUS"/>

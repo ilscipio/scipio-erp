@@ -92,20 +92,16 @@ public abstract class TemplateFtlUtil {
         if (cacheId != null && !cacheId.isEmpty()) {
             cacheKey = styleStr + "::" + containerStyleStr + "::" + cacheId;
         }
-
         if (cacheKey != null) {
             res = headingElemSpecFromStyleStrCache.get(cacheKey);
         }
-
         if (res == null) {
             res = TemplateFtlUtil.getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr, allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes);
-
             if (cacheKey != null) {
                 // note: probably no need to synchronize on cache; duplicate insertion is ok
                 headingElemSpecFromStyleStrCache.put(cacheKey, res);
             }
         }
-
         return res;
     }
 
@@ -136,8 +132,7 @@ public abstract class TemplateFtlUtil {
 
         if (titleStyleParts.length > 3) {
             titleArgsStr = titleStyleParts[2];
-        }
-        else {
+        } else {
             titleArgsStr = titleStyleParts[titleStyleParts.length - 1];
         }
 
@@ -146,15 +141,12 @@ public abstract class TemplateFtlUtil {
             if (titleStyleParts.length >= 3) {
                 titleContainerStyle = titleStyleParts[0];
                 titleStyle = titleStyleParts[1];
-            }
-            else if (titleStyleParts.length == 2) {
+            } else if (titleStyleParts.length == 2) {
                 titleStyle = titleStyleParts[0];
-            }
-            else {
+            } else {
                 titleStyle = "";
             }
-        }
-        else if (titleStyleParts.length > 1) {
+        } else if (titleStyleParts.length > 1) {
             titleContainerStyle = titleStyleParts[0];
             titleStyle = titleStyleParts[1];
         }
@@ -167,8 +159,7 @@ public abstract class TemplateFtlUtil {
             if (titleContainerStyleParts.length <= 1) {
                 titleContainerElemType = titleContainerStyle.toLowerCase();
                 titleContainerClass = titleContainerStyle;
-            }
-            else {
+            } else {
                 titleContainerElemType = titleContainerStyleParts[0].toLowerCase();
                 titleContainerClass = titleContainerStyle.substring(titleContainerElemType.length() + 1);
             }
@@ -179,8 +170,7 @@ public abstract class TemplateFtlUtil {
                     if (titleContainerStyleParts.length <= 1) {
                         titleContainerClass = "";
                     }
-                }
-                else {
+                } else {
                     titleContainerElemType = "";
                     titleContainerClass = titleContainerStyle;
                 }
@@ -196,8 +186,7 @@ public abstract class TemplateFtlUtil {
             if (titleStyleParts.length <= 1) {
                 titleElemType = titleStyle.toLowerCase();
                 titleClass = titleStyle;
-            }
-            else {
+            } else {
                 titleElemType = titleStyleParts[0].toLowerCase();
                 titleClass = titleStyle.substring(titleElemType.length() + 1);
             }
@@ -274,8 +263,7 @@ public abstract class TemplateFtlUtil {
         String res = null;
         if (arg instanceof String) {
             res = (String) arg;
-        }
-        else if (arg instanceof Collection) {
+        } else if (arg instanceof Collection) {
             Collection<String> argColl = UtilGenerics.checkCollection(arg);
             if (argColl.isEmpty()) {
                 res = "";
@@ -291,11 +279,9 @@ public abstract class TemplateFtlUtil {
         Set<String> res = null;
         if (arg instanceof Set) {
             res = UtilGenerics.checkSet(arg);
-        }
-        else if (arg instanceof String) {
+        } else if (arg instanceof String) {
             res = new HashSet<String>(Arrays.asList(((String) arg).split("\\|")));
-        }
-        else if (arg instanceof Collection) {
+        } else if (arg instanceof Collection) {
             Collection<String> argColl = UtilGenerics.checkCollection(arg);
             res = new HashSet<String>(argColl);
         }
@@ -450,29 +436,23 @@ public abstract class TemplateFtlUtil {
                             Boolean val = null;
                             if ("true".equals(elems[1])) {
                                 val = true;
-                            }
-                            else if ("false".equals(elems[1])) {
+                            } else if ("false".equals(elems[1])) {
                                 val = false;
                             }
                             if (val != null) {
                                 if ("fullPath".equalsIgnoreCase(elems[0])) {
                                     fullPath = val;
-                                }
-                                else if ("secure".equalsIgnoreCase(elems[0])) {
+                                } else if ("secure".equalsIgnoreCase(elems[0])) {
                                     secure = val;
-                                }
-                                else if ("encode".equalsIgnoreCase(elems[0])) {
+                                } else if ("encode".equalsIgnoreCase(elems[0])) {
                                     encode = val;
-                                }
-                                else {
+                                } else {
                                     Debug.logError("Scipio: progress success action value has invalid option name: [" + pair + "] in " + progressSuccessAction, module);
                                 }
-                            }
-                            else {
+                            } else {
                                 Debug.logError("Scipio: progress success action value has invalid option value: [" + pair + "] in " + progressSuccessAction, module);
                             }
-                        }
-                        else {
+                        } else {
                             Debug.logError("Scipio: progress success action value has invalid option: [" + pair + "] in " + progressSuccessAction, module);
                         }
                     }
@@ -491,13 +471,11 @@ public abstract class TemplateFtlUtil {
                 if (request != null && response != null) {
                     // FIXME: this does not support inter-webapp links or any new parameters
                     sb.append(RequestHandler.makeUrl(request, response, localRequestName, fullPath, secure, encode));
-                }
-                else {
+                } else {
                     sb.append(localRequestName);
                 }
                 newAction = sb.toString();
-            }
-            else {
+            } else {
                 Debug.logError("Scipio: progress success action value has invalid format in " + progressSuccessAction, module);
             }
             progressSuccessAction = newAction;
@@ -518,8 +496,7 @@ public abstract class TemplateFtlUtil {
     public static String getPlainClassArgNames(String style) {
         if (style.startsWith("+") || style.startsWith("=")) {
             return style.substring(1);
-        }
-        else {
+        } else {
             return style;
         }
     }
@@ -527,8 +504,7 @@ public abstract class TemplateFtlUtil {
     public static String getClassArgPrefix(String style) {
         if (style.startsWith("+") || style.startsWith("=")) {
             return style.substring(0, 1);
-        }
-        else {
+        } else {
             return "";
         }
     }

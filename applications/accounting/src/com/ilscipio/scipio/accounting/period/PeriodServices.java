@@ -179,11 +179,10 @@ public class PeriodServices {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("TimePeriod [ " + customTimePeriodId + "] couldn't be found. " + e.getMessage(), module);
+            Debug.logError(e, "TimePeriod [ " + customTimePeriodId + "] could not be retrieved", module);
+            result = ServiceUtil.returnFailure("TimePeriod [ " + customTimePeriodId + "] could not be retrieved"); // TODO: localize
         }
-
         result.put("timePeriod", timePeriodMap);
-
         return result;
     }
 }

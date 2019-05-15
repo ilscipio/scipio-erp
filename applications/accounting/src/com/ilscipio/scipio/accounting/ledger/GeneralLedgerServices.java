@@ -162,12 +162,10 @@ public class GeneralLedgerServices {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("GlAccount [ " + glAccountId + "] couldn't be found. " + e.getMessage(), module);
+            Debug.logError(e,"GlAccount [ " + glAccountId + "] could not be retrieved", module);
+            result = ServiceUtil.returnFailure("GlAccount [ " + glAccountId + "] could not be retrieved"); // TODO: localize
         }
-
-
         result.put("glAccount", glAccountMap);
-
         return result;
     }
 

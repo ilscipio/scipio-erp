@@ -245,11 +245,11 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
         boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
         if (!validAccessToken) {
-            Debug.logError("Cms: Invalid access token for session; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            Debug.logWarning("Cms: Invalid access token for session; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             try {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             } catch (IOException e) {
-                Debug.logError(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                Debug.logWarning(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             }
             return;
         }

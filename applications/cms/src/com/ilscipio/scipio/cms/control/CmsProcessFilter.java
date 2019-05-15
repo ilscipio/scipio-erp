@@ -184,12 +184,12 @@ public class CmsProcessFilter implements Filter {
             // Only check if coming from external, in case filter gets called multiple times
             if (!cmsRequestVisited) {
                 if (request.getParameter("cmsProcessSourcePath") != null) {
-                    Debug.logError("Cms: Security: Illegal request: contains parameter cmsProcessSourcePath " +
-                            "reserved for internal use: " + relRequestUrl + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                    Debug.logWarning("Cms: Security: Denying illegal request: contains parameter cmsProcessSourcePath " +
+                            "reserved for internal use: " + relRequestUrl + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
                     try {
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     } catch (IOException e1) {
-                        Debug.logError(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                        Debug.logWarning(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
                     }
                     return;
                 }
@@ -241,7 +241,7 @@ public class CmsProcessFilter implements Filter {
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (IOException e1) {
-                Debug.logError(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                Debug.logWarning(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             }
             return;
         }
@@ -249,11 +249,11 @@ public class CmsProcessFilter implements Filter {
         // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
         boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
         if (!validAccessToken) {
-            Debug.logWarning("Cms: Invalid access token for session; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            Debug.logWarning("Cms: Invalid access token for session; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             try {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             } catch (IOException e) {
-                Debug.logError(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                Debug.logWarning(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             }
             return;
         }

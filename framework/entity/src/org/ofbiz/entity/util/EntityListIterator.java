@@ -41,6 +41,9 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
 
 /**
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
+ * <p>
+ * SCIPIO: TODO: in the future this should implement Closeable instead of only AutoCloseable, but this is
+ *  compatibility-breaking...
  */
 public class EntityListIterator implements AutoCloseable, ListIterator<GenericValue> {
 
@@ -153,14 +156,20 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
 
     /**
      * Closes the iterator.
+     * <p>
+     * SCIPIO: 2019-05-17: This no longer prints warning if already closed. The new behavior honors
+     * {@link java.io.Closeable#close()} contract for easier use, because this class <em>should</em> have
+     * implemented that interface instead of only AutoCloseable (cannot due to frustrating GenericEntityException).
      *
      * @throws GenericEntityException
      *             if the {@link EntityListIterator} cannot be closed.
      */
     public void close() throws GenericEntityException {
         if (closed) {
-            String modelEntityName = modelEntity != null ? modelEntity.getEntityName() : "";
-            Debug.logWarning("This EntityListIterator for Entity [" + modelEntityName + "] has already been closed, not closing again.", module);
+            if (Debug.verboseOn()) {
+                String modelEntityName = modelEntity != null ? modelEntity.getEntityName() : "";
+                Debug.logVerbose("This EntityListIterator for Entity [" + modelEntityName + "] has already been closed; not closing again.", module); // SCIPIO: Changed to verbose, fixed text
+            }
             return;
         }
         if (sqlp != null) {
@@ -542,9 +551,12 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
         try {
             if (!closed) {
                 this.close();
-                Debug.logError("\n==============================================================================\n"
-                        + "EntityListIterator Not Closed for Entity [%s], caught in Finalize\n"
-                        + "\n==============================================================================\n",
+                // SCIPIO: ASCII header does not help
+                //Debug.logError("\n==============================================================================\n"
+                //        + "EntityListIterator Not Closed for Entity [%s], caught in Finalize\n"
+                //        + "\n==============================================================================\n",
+                //        module, modelEntity == null ? "" : modelEntity.getEntityName());
+                Debug.logError("EntityListIterator not closed for entity [%s], caught in finalize()",
                         module, modelEntity == null ? "" : modelEntity.getEntityName());
             }
         } catch (Exception e) {

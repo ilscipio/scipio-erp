@@ -292,8 +292,7 @@ code package.
                     Debug.logInfo("Some messages returns from testSimpleMethods1: " + testSmOutVar1 + " " + testSmOutVar2, module);
                     Debug.logInfo("--------------------------------------", module);
                 ]]></script>
-                
-                
+
                 <if>
                     <condition>
                         <if-component component-name="webtools"/>
@@ -884,6 +883,7 @@ code package.
                         </section>
                     </screenlet>
                 </screenlet>
+                <include-screen name="CatchActionsTest"/>
             </widgets>
         </section>
     </screen>
@@ -1186,6 +1186,37 @@ code package.
                     </#if>
                 ]]></html-template></html></platform-specific>
             </widgets>
+        </section>
+    </screen>
+
+    <screen name="CatchActionsTest">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.testIt = delegator.query().from("WebSite").queryIterator();
+                    class CatchActionsTestException extends RuntimeException {}
+                    context.testException = new CatchActionsTestException();
+                    Debug.logInfo("CatchActionsTest: throwing exception: " + context.testException, "CatchActionsTest.groovy");
+                    // NOTE: this can be used, but there is extra ugly warning from ScriptUtil
+                    //throw context.testException;
+                ]]></script>
+                <throw-exception field="testException"/>
+            </actions>
+            <widgets>
+            </widgets>
+            <catch-actions>
+                <script lang="groovy"><![CDATA[
+                    Debug.logInfo("CatchActionsTest: catch-actions: caught exception: " + context.scpException, "CatchActionsTest.groovy");
+                ]]></script>
+                <!-- can rethrow like this, but here we want to prevent the crash
+                <throw-exception field="scpException"/>-->
+            </catch-actions>
+            <finally-actions>
+                <script lang="groovy"><![CDATA[
+                    Debug.logInfo("CatchActionsTest: finally-actions: closing EntityListIterator", "CatchActionsTest.groovy");
+                ]]></script>
+                <close-object field="testIt"/>
+            </finally-actions>
         </section>
     </screen>
 </screens>

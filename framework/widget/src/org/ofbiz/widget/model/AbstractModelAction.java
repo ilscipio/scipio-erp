@@ -20,28 +20,12 @@ package org.ofbiz.widget.model;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.ScriptUtil;
-import org.ofbiz.base.util.Scriptlet;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.UtilXml.ElementHelper;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
@@ -121,6 +105,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelated(modelWidget, actionElement);
         } else if ("condition-to-field".equals(nodeName)) { // SCIPIO: new
             return new ConditionToField(modelWidget, actionElement);
+        } else if (CloseObject.TAG_NAME.equals(nodeName)) { // SCIPIO: new
+            return new CloseObject(modelWidget, actionElement);
+        } else if (ThrowException.TAG_NAME.equals(nodeName)) { // SCIPIO: new
+            return new ThrowException(modelWidget, actionElement);
         } else if ("if".equals(nodeName)) { // SCIPIO: new
             return new MasterIf(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
@@ -1710,6 +1698,79 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return onlyIfFieldEmpty;
         }
 
+    }
+
+    /**
+     * SCIPIO: Models the &lt;close-object&gt; element.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class CloseObject extends AbstractModelAction {
+        public static final String TAG_NAME = "close-object";
+        private final FlexibleMapAccessor<Object> field;
+
+        public CloseObject(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.field = FlexibleMapAccessor.getInstance(element.getAttribute("field"));
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) {
+            try {
+                UtilIO.closeObject(field.get(context));
+            } catch (Exception e) {
+                Debug.logError(e, TAG_NAME+": could not close field object [" + field.getOriginalName()
+                        + "], location [" + getLogDirectiveLocationString() + "]", module);
+            }
+        }
+
+        public FlexibleMapAccessor<Object> getField() {
+            return field;
+        }
+    }
+
+    /**
+     * SCIPIO: Models the &lt;throw-exception&gt; element.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ThrowException extends AbstractModelAction {
+        public static final String TAG_NAME = "throw-exception";
+        private final FlexibleMapAccessor<Object> field;
+
+        public ThrowException(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.field = FlexibleMapAccessor.getInstance(element.getAttribute("field"));
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) {
+            Throwable t = (Throwable) field.get(context);
+            if (t instanceof RuntimeException) {
+                throw (RuntimeException) t;
+            }
+            throw new RenderRuntimeException(t);
+        }
+
+        public FlexibleMapAccessor<Object> getField() {
+            return field;
+        }
+    }
+
+    protected static class RenderRuntimeException extends RuntimeException { // SCIPIO: workaround for ModelAction.runAction interface
+        public RenderRuntimeException(Throwable cause) {
+            super(cause);
+        }
     }
 
     /**

@@ -1058,6 +1058,26 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="close-object" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Closes a Closeable, AutoCloseable or EntityListIterator object if not null.
+                Unknown types will register an error.
+                Added 2019-05-17 for 2.1.0.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="throw-exception" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Throws an exception, which if not a runtime exception may be wrapped in one.
+                Warning: This was first written for use with catch-actions from widget-screen.xsd, and untested elsewhere.
+                Added 2019-05-17 for 2.1.0.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
     <xs:element name="if" substitutionGroup="AllActions">
         <xs:annotation>
             <xs:documentation>

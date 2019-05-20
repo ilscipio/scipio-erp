@@ -356,4 +356,20 @@ public final class UtilIO {
             // ignore
         }
     }
+
+    /**
+     * SCIPIO: Closes a {@link java.io.Closeable} or {@link java.lang.AutoCloseable} (includes {@code EntityListIterator})
+     * if not null, or does nothing if null.
+     * @throws IllegalArgumentException if object neither a Closeable or AutoCloseable
+     * @throws Exception from close() call
+     */
+    public static void closeObject(Object object) throws Exception {
+        if (object instanceof Closeable) {
+            ((Closeable) object).close();
+        } else if (object instanceof AutoCloseable) { // NOTE: covers EntityListIterator
+            ((AutoCloseable) object).close();
+        } else if (object != null) {
+            throw new IllegalArgumentException("object is not an instance of Closeable or AutoCloseable (or EntityListIterator)");
+        }
+    }
 }

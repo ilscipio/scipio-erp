@@ -255,6 +255,8 @@ under the License.
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" ref="widgets" />
                 <xs:element minOccurs="0" ref="fail-widgets" />
+                <xs:element minOccurs="0" ref="catch-actions" /><!-- SCIPIO: Added 2019-05-17 -->
+                <xs:element minOccurs="0" ref="finally-actions" /><!-- SCIPIO: Added 2019-05-17 -->
             </xs:sequence>
             <xs:attribute type="xs:string" name="name">
                 <xs:annotation>
@@ -426,6 +428,35 @@ under the License.
                 SCIPIO: Scipio modifies and adds a number of screen actions.
                 In particular, the master if element (from simple-method-v2) is supported, and should always
                 be used instead of the section condition element for actions-only sections.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="catch-actions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Screen actions that always run only when an exception occurs; the exception is
+                placed in context field 'scpException' and not rethrown by the renderer. Analogous to Java's try/catch block.
+                If you want to rethrow it, use the throw directive on field="scpException".
+                The actions may throw an exception, but it may or may not be wrapped in a RuntimeException (TODO: clarify/standardize).
+                FIXME: Warning: 2019-05-17: may not work with include-screen-actions directive at this time.
+                Added 2019-05-17 for 2.1.0.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="finally-actions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Screen actions that always run at the end of the section, even if exception occurs.
+                Analogous to Java's try/finally block.
+                Should not throw any exceptions.
+                FIXME: Warning: 2019-05-17: may not work with include-screen-actions directive at this time.
+                Added 2019-05-17 for 2.1.0.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>

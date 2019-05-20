@@ -445,6 +445,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         private final boolean isMainSection;
         private final FlexibleStringExpander shareScopeExdr; // SCIPIO
         private final boolean actionsOnly; // SCIPIO: extra flag hint
+        private final List<ModelAction> catchActions; // SCIPIO: Added 2019-05-17
+        private final List<ModelAction> finallyActions; // SCIPIO: Added 2019-05-17
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -466,6 +468,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 this.actions = AbstractModelAction.readSubActions(modelScreen, sectionElement);
                 this.subWidgets = Collections.emptyList();
                 this.failWidgets = Collections.emptyList();
+                this.catchActions = Collections.emptyList(); // SCIPIO
+                this.finallyActions = Collections.emptyList(); // SCIPIO
                 hasActionsElement = true;
             } else if ("widgets".equals(tagName)) {
                 this.condition = null;
@@ -473,6 +477,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 List<? extends Element> subElementList = UtilXml.childElementList(sectionElement);
                 this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
                 this.failWidgets = Collections.emptyList();
+                this.catchActions = Collections.emptyList(); // SCIPIO
+                this.finallyActions = Collections.emptyList(); // SCIPIO
                 hasWidgetsElement = true;
             } else { // SCIPIO: default/stock case: ("section".equals(tagName))
                 // read condition under the "condition" element
@@ -511,6 +517,22 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     hasFailWidgetsElement = true;
                 } else {
                     this.failWidgets = Collections.emptyList();
+                }
+
+                // SCIPIO: read all actions under the "catch-actions" element
+                Element catchActionsElement = UtilXml.firstChildElement(sectionElement, "catch-actions");
+                if (catchActionsElement != null) {
+                    this.catchActions = AbstractModelAction.readSubActions(modelScreen, catchActionsElement);
+                } else {
+                    this.catchActions = Collections.emptyList();
+                }
+
+                // SCIPIO: read all actions under the "finally-actions" element
+                Element finallyActionsElement = UtilXml.firstChildElement(sectionElement, "finally-actions");
+                if (finallyActionsElement != null) {
+                    this.finallyActions = AbstractModelAction.readSubActions(modelScreen, finallyActionsElement);
+                } else {
+                    this.finallyActions = Collections.emptyList();
                 }
             }
             this.isMainSection = isMainSection;
@@ -566,20 +588,20 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
 
-            // check the condition, if there is one
             boolean condTrue = true;
-            if (this.condition != null) {
-                if (!this.condition.eval(context)) {
-                    condTrue = false;
+            try { // SCIPIO: 2019-05-17: new try/catch/finally actions block; refactored
+                // check the condition, if there is one
+                if (this.condition != null) {
+                    if (!this.condition.eval(context)) {
+                        condTrue = false;
+                    }
                 }
-            }
 
-            // if condition does not exist or evals to true run actions and render widgets, otherwise render fail-widgets
-            if (condTrue) {
-                // run the actions only if true
-                AbstractModelAction.runSubActions(this.actions, context);
+                // if condition does not exist or evals to true run actions and render widgets, otherwise render fail-widgets
+                if (condTrue) {
+                    // run the actions only if true
+                    AbstractModelAction.runSubActions(this.actions, context);
 
-                try {
                     // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
                     screenStringRenderer.renderSectionBegin(writer, context, this);
 
@@ -587,13 +609,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
 
                     screenStringRenderer.renderSectionEnd(writer, context, this);
-                } catch (IOException e) {
-                    String errMsg = "Error rendering widgets section [" + getName() + "] in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
-                }
-            } else {
-                try {
+                } else {
                     // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
                     screenStringRenderer.renderSectionBegin(writer, context, this);
 
@@ -601,10 +617,49 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     renderSubWidgetsString(this.failWidgets, writer, context, screenStringRenderer);
 
                     screenStringRenderer.renderSectionEnd(writer, context, this);
-                } catch (IOException e) {
-                    String errMsg = "Error rendering fail-widgets section [" + this.getName() + "] in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                }
+            } catch(GeneralException | IOException | RuntimeException origEx) {
+                Throwable rethrowEx;
+                if (!this.catchActions.isEmpty()) { // SCIPIO: catch-actions
+                    rethrowEx = null; // don't rethrow automatically after
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Running catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] for exception: " + origEx.toString(), module);
+                    }
+                    try {
+                        context.put("scpException", origEx);
+                        AbstractModelAction.runSubActionsEx(this.catchActions, context);
+                    } catch (RuntimeException catchActionsEx) {
+                        rethrowEx = (catchActionsEx instanceof AbstractModelAction.RenderRuntimeException) ? ((AbstractModelAction.RenderRuntimeException) catchActionsEx).getCause() : catchActionsEx;
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] threw an exception: " + rethrowEx.toString(), module);
+                        }
+                    } finally {
+                        context.remove("scpException"); // never leave this
+                    }
+                } else {
+                    rethrowEx = origEx;
+                }
+                if (rethrowEx != null) {
+                    if (rethrowEx instanceof IOException) {
+                        // SCIPIO: TODO: REVIEW: unclear why upstream only wrapped IOException and not GeneralException or
+                        //  RuntimeException here, so inconsistent... but there could be reason...
+                        String errMsg = "Error rendering " + (condTrue ? "widgets" : "fail-widgets") + " section [" + getName() + "] in screen [" + getModelScreen().getName() + "]: " + rethrowEx.toString();
+                        Debug.logError(rethrowEx, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    } else if (rethrowEx instanceof GeneralException) {
+                        throw (GeneralException) rethrowEx;
+                    } else if (rethrowEx instanceof RuntimeException) {
+                        throw (RuntimeException) rethrowEx;
+                    } else {
+                        throw new RuntimeException(rethrowEx);
+                    }
+                }
+            } finally {
+                if (!this.finallyActions.isEmpty()) { // SCIPIO: finally-actions
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Running finally-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "]", module);
+                    }
+                    AbstractModelAction.runSubActionsEx(this.finallyActions, context);
                 }
             }
 
@@ -633,6 +688,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public List<ModelScreenWidget> getFailWidgets() {
             return failWidgets;
         }
+
+        public List<ModelAction> getCatchActions() { return catchActions; }  // SCIPIO: Added 2019-05-17
+
+        public List<ModelAction> getFinallyActions() { return finallyActions; } // SCIPIO: Added 2019-05-17
 
         public boolean isMainSection() {
             return isMainSection;

@@ -50,25 +50,29 @@ invExprs =
             ],EntityOperator.OR)
         ],EntityOperator.AND);
 
-invIterator = from("InvoiceAndType").where(invExprs).cursorScrollInsensitive().distinct().queryIterator();
-invoiceList = [];
-while (invoice = invIterator.next()) {
-    unAppliedAmount = InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP);
-    if (unAppliedAmount.signum() == 1) {
-        if (actualCurrency.equals(true)) {
-            invoiceCurrencyUomId = invoice.currencyUomId;
-        } else {
-            invoiceCurrencyUomId = context.defaultOrganizationPartyCurrencyUomId;
+invIterator = null;
+try {
+    invIterator = from("InvoiceAndType").where(invExprs).cursorScrollInsensitive().distinct().queryIterator();
+    invoiceList = [];
+    while (invoice = invIterator.next()) {
+        unAppliedAmount = InvoiceWorker.getInvoiceNotApplied(invoice, actualCurrency).setScale(2, RoundingMode.HALF_UP);
+        if (unAppliedAmount.signum() == 1) {
+            if (actualCurrency.equals(true)) {
+                invoiceCurrencyUomId = invoice.currencyUomId;
+            } else {
+                invoiceCurrencyUomId = context.defaultOrganizationPartyCurrencyUomId;
+            }
+            invoiceList.add([invoiceId           : invoice.invoiceId,
+                             invoiceDate         : invoice.invoiceDate,
+                             unAppliedAmount     : unAppliedAmount,
+                             invoiceCurrencyUomId: invoiceCurrencyUomId,
+                             amount              : InvoiceWorker.getInvoiceTotal(invoice, actualCurrency).setScale(2, RoundingMode.HALF_UP),
+                             invoiceTypeId       : invoice.invoiceTypeId,
+                             invoiceParentTypeId : invoice.parentTypeId]);
         }
-        invoiceList.add([invoiceId : invoice.invoiceId,
-                         invoiceDate : invoice.invoiceDate,
-                         unAppliedAmount : unAppliedAmount,
-                         invoiceCurrencyUomId : invoiceCurrencyUomId,
-                         amount : InvoiceWorker.getInvoiceTotal(invoice, actualCurrency).setScale(2,RoundingMode.HALF_UP),
-                         invoiceTypeId : invoice.invoiceTypeId,
-                         invoiceParentTypeId : invoice.parentTypeId]);
     }
+} finally { // SCIPIO: close EntityListIterator in finally block
+    invIterator.close();
 }
-invIterator.close();
 
 context.ListUnAppliedInvoices = invoiceList;

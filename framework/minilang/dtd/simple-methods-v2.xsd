@@ -3762,7 +3762,7 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>
                         Use the EntityListIterator when doing the query.
-                        This is much more efficient for large data sets because the results are read incrementaly instead of all at once.
+                        This is much more efficient for large data sets because the results are read incrementally instead of all at once.
                         The EntityListIterator must be closed when you are finished, but this is done automatically by the iterate operation.
                         Defaults to "false".
                         
@@ -4580,7 +4580,7 @@ under the License.
         <xs:annotation>
             <xs:documentation>
                 Use the EntityListIterator for the entity find operation.
-                This is much more efficient for large data sets because the results are read incrementaly instead of all at once.
+                This is much more efficient for large data sets because the results are read incrementally instead of all at once.
                 Note that when using this the use-cache setting will be ignored.
                 Also note that an EntityListIterator must be closed when you are finished, but this is done automatically by the iterate operation.
             </xs:documentation>

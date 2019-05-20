@@ -988,7 +988,12 @@ public class FormRenderer {
         // SCIPIO: factored this out; I don't recall in which cases this could be false, but keeping for safety.
         boolean isListOrMultiForm = ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()));
 
-        if (iter != null) {
+        /// SCIPIO: 2019-05-17: rearranged for new try block to guarantee EntityListIterator close
+        //if (iter != null) {
+        if (iter == null) {
+            return;
+        }
+        try {
 
             listFormHandler.notifyHasList(); // SCIPIO
 
@@ -1210,7 +1215,9 @@ public class FormRenderer {
             }
             context.put("actualPageSize", highIndex - lowIndex);
 
-            if (iter instanceof EntityListIterator) {
+
+        } finally {
+            if (iter instanceof EntityListIterator) { // SCIPIO: 2019-05-17: moved into finally block to guarantee close attempt
                 try {
                     ((EntityListIterator) iter).close();
                 } catch (GenericEntityException e) {

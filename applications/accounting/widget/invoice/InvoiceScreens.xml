@@ -681,6 +681,9 @@ code package.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+            <finally-actions>
+                <close-object field="result.listIt"/><!-- SCIPIO: close EntityListIterator -->
+            </finally-actions>
         </section>
     </screen>
     
@@ -779,6 +782,9 @@ code package.
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+            <finally-actions>
+                <close-object field="result.listIt"/><!-- SCIPIO: close EntityListIterator -->
+            </finally-actions>
         </section>
     </screen>
 

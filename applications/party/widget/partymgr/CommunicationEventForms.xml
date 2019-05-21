@@ -529,7 +529,7 @@ code package.
         <field name="partyId"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
         <field name="subject" widget-style="${styles.link_nav_info_text}" widget-area-style="fieldWidth300" sort-field="true">
-            <hyperlink description="${subject}[${communicationEventId}] " target="${parameters._LAST_VIEW_NAME_}">
+            <hyperlink description="${subject}[${communicationEventId}] " target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -537,9 +537,6 @@ code package.
                 <parameter param-name="form" value="view"/>
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </hyperlink>
-        </field>
-        <field name="communicationEventTypeId">
-            <display-entity entity-name="CommunicationEventType" description="${description}"/>
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonFrom}" sort-field="true">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
@@ -549,11 +546,13 @@ code package.
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}" sort-field="true">
-            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdTo}]" target-type="inter-app" link-style="${styles.link_nav_info_id}">
-                    <parameter param-name="partyId" from-field="partyIdTo"/>
-                </sub-hyperlink>
-            </display-entity>
+            <hyperlink description="${partyIdTo}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+        <field name="entryDate" sort-field="true"><display type="date-time"/></field>
+        <field name="communicationEventTypeId">
+            <display-entity entity-name="CommunicationEventType" description="${description}"/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" entry-name="roleStatusId" widget-style="${styles.link_nav_info_desc}" widget-area-style="fieldWidth300">
             <display-entity entity-name="StatusItem" description="${description}">
@@ -567,8 +566,7 @@ code package.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="entryDate" sort-field="true"><display type="date-time"/></field>
-        <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
+        <!--<field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>-->
         <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListPendingCommEvents" type="list" extends="ListCommEvents" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->

@@ -499,7 +499,7 @@ public class EmailServices {
         try {
             screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenemail.name", EntityUtilProperties.getPropertyValue("widget", "screen.name", dctx.getDelegator()), dctx.getDelegator()),
                     EntityUtilProperties.getPropertyValue("widget", "screenemail.screenrenderer", EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", dctx.getDelegator()), dctx.getDelegator())); // SCIPIO: now using screenemail properties + fallback if missing
-        } catch (TemplateException | IOException e) {
+        } catch (Exception e) { // SCIPIO: Changed (TemplateException | IOException e) to Exception (for robustness)
             Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
         }

@@ -71,7 +71,8 @@ public class ModelFormFieldBuilder {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private FlexibleStringExpander action = FlexibleStringExpander.getInstance("");;
+    private ModelWidget.WidgetMetaInfo metaInfo; // SCIPIO
+    private FlexibleStringExpander action = FlexibleStringExpander.getInstance("");
     private String attributeName = "";
     private boolean encodeOutput = true;
     private String entityName = "";
@@ -122,12 +123,14 @@ public class ModelFormFieldBuilder {
     private AttribsExpression attribsExpr = AttribsExpression.makeAttribsExpr();
 
     public ModelFormFieldBuilder() {
+        this.metaInfo = ModelWidget.WidgetMetaInfo.UNDEFINED; // SCIPIO
     }
 
     /** XML Constructor */
     public ModelFormFieldBuilder(Element fieldElement, ModelForm modelForm, ModelReader entityModelReader,
             DispatchContext dispatchContext) {
         String name = fieldElement.getAttribute("name");
+        this.metaInfo = new ModelWidget.WidgetMetaInfo(fieldElement, name); // SCIPIO
         this.action = FlexibleStringExpander.getInstance(fieldElement.getAttribute("action"));
         this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), name);
         this.encodeOutput = !"false".equals(fieldElement.getAttribute("encode-output"));
@@ -267,6 +270,7 @@ public class ModelFormFieldBuilder {
     }
 
     public ModelFormFieldBuilder(ModelFormField modelFormField) {
+        this.metaInfo = modelFormField.getMetaInfo(); // SCIPIO
         this.action = modelFormField.getAction();
         this.attributeName = modelFormField.getAttributeName();
         this.encodeOutput = modelFormField.getEncodeOutput();
@@ -314,6 +318,7 @@ public class ModelFormFieldBuilder {
     }
 
     public ModelFormFieldBuilder(ModelFormFieldBuilder builder) {
+        this.metaInfo = builder.getMetaInfo(); // SCIPIO
         this.action = builder.getAction();
         this.attributeName = builder.getAttributeName();
         this.encodeOutput = builder.getEncodeOutput();
@@ -374,6 +379,8 @@ public class ModelFormFieldBuilder {
     public ModelFormField build() {
         return ModelFormField.from(this);
     }
+
+    public ModelWidget.WidgetMetaInfo getMetaInfo() { return metaInfo; } // SCIPIO
 
     public FlexibleStringExpander getAction() {
         return action;
@@ -960,6 +967,7 @@ public class ModelFormFieldBuilder {
 
     public ModelFormFieldBuilder setName(String name) {
         this.name = name;
+        this.metaInfo = ModelWidget.WidgetMetaInfo.copy(this.metaInfo, name); // SCIPIO
         return this;
     }
 

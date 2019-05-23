@@ -303,7 +303,7 @@ public abstract class ModelTreeAction extends AbstractModelAction {
                     SimpleMethod.runSimpleMethod(location, method, methodContext);
                     context.putAll(methodContext.getResults());
                 } catch (MiniLangException e) {
-                    throw new RuntimeException("Error running simple method at location [" + location + "]", e);
+                    throw new WidgetRenderException("Error running simple method [" + location + "#" + method + "]: " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             } else {
                 ScriptUtil.executeScript(this.location, this.method, context);

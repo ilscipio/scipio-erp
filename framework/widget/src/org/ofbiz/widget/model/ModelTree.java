@@ -242,7 +242,7 @@ public class ModelTree extends ModelWidget {
         if (UtilValidate.isNotEmpty(treeString)) {
             trail = StringUtil.split(treeString, "|");
             if (UtilValidate.isEmpty(trail)) {
-                throw new RuntimeException("Tree 'trail' value is empty.");
+                throw new WidgetRenderException("Tree 'trail' value is empty.", this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             context.put("rootEntityId", trail.get(0));
             context.put(getDefaultPkName(context), trail.get(0));
@@ -253,10 +253,10 @@ public class ModelTree extends ModelWidget {
         context.put("currentNodeTrail", new LinkedList());
         try {
             node.renderNodeString(writer, context, treeStringRenderer, 0);
-        } catch (IOException e2) {
-            String errMsg = "Error rendering included label with name [" + getName() + "] : " + e2.toString();
-            Debug.logError(e2, errMsg, module);
-            throw new RuntimeException(errMsg);
+        } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+            String errMsg = "Error rendering included label with name [" + getName() + "]";
+            //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+            throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
         }
 
     }
@@ -410,9 +410,9 @@ public class ModelTree extends ModelWidget {
                             Object[] arr = { node, val };
                             subNodeValues.add(arr);
                         }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, module);
-                        throw new RuntimeException(e.getMessage());
+                    } catch (Exception e) { // SCIPIO: Changed GenericEntityException to Exception (for improved breadcrumb trail)
+                        //Debug.logError(e, module); // SCIPIO: Redundant logging
+                        throw new WidgetRenderException(e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                     }
                 } else if (dataIter != null) {
                     while (dataIter.hasNext()) {
@@ -511,9 +511,9 @@ public class ModelTree extends ModelWidget {
                             entity.store();
                         }
                     }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    throw new RuntimeException(e.getMessage());
+                } catch (Exception e) { // SCIPIO: Changed GenericEntityException to Exception (for improved breadcrumb trail)
+                    //Debug.logError(e, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             } else if (nodeCount == null) {
                 getChildren(context);
@@ -618,10 +618,12 @@ public class ModelTree extends ModelWidget {
                             }
                         }
                     }
-                } catch (ScreenRenderException | SAXException | ParserConfigurationException | IOException e) {
-                    String errMsg = "Error rendering included label with name [" + getName() + "] : " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                // SCIPIO: to Exception (for improved breadcrumb trail)
+                //} catch (ScreenRenderException | SAXException | ParserConfigurationException | IOException e) {
+                } catch (Exception e) {
+                    String errMsg = "Error rendering included label with name [" + getName() + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
                 treeStringRenderer.renderNodeEnd(writer, context, this);
                 int removeIdx = currentNodeTrail.size() - 1;
@@ -757,10 +759,10 @@ public class ModelTree extends ModelWidget {
             public void renderImageString(Appendable writer, Map<String, Object> context, TreeStringRenderer treeStringRenderer) {
                 try {
                     treeStringRenderer.renderImage(writer, context, this);
-                } catch (IOException e) {
-                    String errMsg = "Error rendering image with id [" + getId(context) + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                    String errMsg = "Error rendering image with id [" + getId(context) + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             }
         }
@@ -801,10 +803,10 @@ public class ModelTree extends ModelWidget {
             public void renderLabelString(Appendable writer, Map<String, Object> context, TreeStringRenderer treeStringRenderer) {
                 try {
                     treeStringRenderer.renderLabel(writer, context, this);
-                } catch (IOException e) {
-                    String errMsg = "Error rendering label with id [" + getId(context) + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                    String errMsg = "Error rendering label with id [" + getId(context) + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             }
 
@@ -974,10 +976,10 @@ public class ModelTree extends ModelWidget {
             public void renderLinkString(Appendable writer, Map<String, Object> context, TreeStringRenderer treeStringRenderer) {
                 try {
                     treeStringRenderer.renderLink(writer, context, this);
-                } catch (IOException e) {
-                    String errMsg = "Error rendering link with id [" + getId(context) + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                } catch (Exception e) { // SCIPIO: Changed (IOException | GenericEntityException e) to Exception (for improved breadcrumb trail)
+                    String errMsg = "Error rendering link with id [" + getId(context) + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             }
 

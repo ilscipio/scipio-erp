@@ -144,7 +144,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             try {
                 action.runAction(context);
             } catch (GeneralException e) {
-                throw new RuntimeException(e);
+                throw new WidgetRenderException(e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
     }
@@ -757,6 +757,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             if (this.scriptlet != null) {
                 try {
                     this.scriptlet.executeScript(context);
+                } catch(ScriptUtil.ScriptRuntimeException e) {
+                    throw e; // SCIPIO: good enough as-is
                 } catch (Exception e) {
                     throw new GeneralException("Error running inline script", e);
                 }
@@ -1308,9 +1310,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             List<ModelAction> actions;
             try {
                 actions = getIncludedActions(context, getLocation(context), getName(context));
-            } catch (GeneralException e) {
-                throw e;
-            } catch (RuntimeException e) {
+            } catch (GeneralException | RuntimeException e) { // SCIPIO: refactored
                 throw e;
             } catch (Exception e) {
                 throw new GeneralException(e);

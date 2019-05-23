@@ -64,7 +64,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         super(groupingElement, rootGroup ? ROOT_GROUP_NAME : null);
         this.modelScreens = modelScreens;
 
-        Map<String, ModelScreenSettings> screenSettingsMap = new LinkedHashMap<String, ModelScreenSettings>();
+        Map<String, ModelScreenSettings> screenSettingsMap = new LinkedHashMap<>();
         Map<String, ModelScreen> screenMap = new LinkedHashMap<>();
 
         // NOTE: auto settings only supported on root group currently (TODO? other groups? probably not worth it)

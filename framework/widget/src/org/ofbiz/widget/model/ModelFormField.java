@@ -85,7 +85,7 @@ import org.w3c.dom.Element;
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelFormField implements Serializable {
+public class ModelFormField extends ModelWidget implements Serializable { // SCIPIO: 2019-05-21: now extends ModelWidget
 
     /*
      * ----------------------------------------------------------------------- *
@@ -157,6 +157,7 @@ public class ModelFormField implements Serializable {
     private final AttribsExpression attribsExpr;
 
     private ModelFormField(ModelFormFieldBuilder builder) {
+        super(builder.getMetaInfo()); // SCIPIO
         this.action = builder.getAction();
         this.attributeName = builder.getAttributeName();
         this.encodeOutput = builder.getEncodeOutput();
@@ -589,6 +590,11 @@ public class ModelFormField implements Serializable {
 
     public ModelForm getModelForm() {
         return modelForm;
+    }
+
+    @Override
+    public void accept(ModelWidgetVisitor visitor) throws Exception { // SCIPIO: added for ModelWidget interface
+        // TODO
     }
 
     public String getName() {
@@ -1098,6 +1104,15 @@ public class ModelFormField implements Serializable {
         return sb.toString();
     }
 
+    @Override
+    public String getContainerLocation() { // SCIPIO: added for ModelWidget interface
+        return getModelForm().getContainerLocation();
+    }
+
+    @Override
+    public String getWidgetType() { // SCIPIO: added for ModelWidget interface
+        return "form-field";
+    }
 
     /**
      * Models the &lt;auto-complete&gt; element.
@@ -2497,9 +2512,9 @@ public class ModelFormField implements Serializable {
                 FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
                 renderer.render(writer, context);
             } catch (Exception e) {
-                String errMsg = "Error rendering included form named [" + modelForm.getName() + "] at location [" + modelForm.getFormLocation() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included form named [" + modelForm.getName() + "] at location [" + modelForm.getFormLocation() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, modelForm, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2511,12 +2526,12 @@ public class ModelFormField implements Serializable {
                 org.ofbiz.entity.model.ModelReader entityModelReader = ((org.ofbiz.entity.Delegator)context.get("delegator")).getModelReader();
                 org.ofbiz.service.DispatchContext dispatchContext = ((org.ofbiz.service.LocalDispatcher)context.get("dispatcher")).getDispatchContext();
                 modelForm = FormFactory.getFormFromLocation(location, name, entityModelReader, dispatchContext);
-            } catch (RuntimeException e) {
-                throw e;
+            //} catch (RuntimeException e) { // SCIPIO: no
+            //    throw e;
             } catch (Exception e) {
-                String errMsg = "Error rendering form named [" + name + "] at location [" + location + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering form named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, modelForm, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return modelForm;
         }
@@ -2578,9 +2593,9 @@ public class ModelFormField implements Serializable {
                 FormRenderer renderer = new FormRenderer(modelGrid, formStringRenderer);
                 renderer.render(writer, context);
             } catch (Exception e) {
-                String errMsg = "Error rendering included grid named [" + modelGrid.getName() + "] at location [" + modelGrid.getFormLocation() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included grid named [" + modelGrid.getName() + "] at location [" + modelGrid.getFormLocation() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, modelGrid, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2592,12 +2607,12 @@ public class ModelFormField implements Serializable {
                 org.ofbiz.entity.model.ModelReader entityModelReader = ((org.ofbiz.entity.Delegator)context.get("delegator")).getModelReader();
                 org.ofbiz.service.DispatchContext dispatchContext = ((org.ofbiz.service.LocalDispatcher)context.get("dispatcher")).getDispatchContext();
                 modelForm = GridFactory.getGridFromLocation(location, name, entityModelReader, dispatchContext);
-            } catch (RuntimeException e) {
-                throw e;
+            //} catch (RuntimeException e) { // SCIPIO: no
+            //    throw e;
             } catch (Exception e) {
-                String errMsg = "Error rendering grid named [" + name + "] at location [" + location + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering grid named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, modelForm, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return modelForm;
         }
@@ -3544,9 +3559,9 @@ public class ModelFormField implements Serializable {
             try {
                 modelMenu = MenuFactory.getMenuFromLocation(location, name);
             } catch (Exception e) {
-                String errMsg = "Error rendering menu named [" + name + "] at location [" + location + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering menu named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, modelMenu, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return modelMenu;
         }
@@ -3833,12 +3848,12 @@ public class ModelFormField implements Serializable {
                     ScreenRenderer subRenderer = new ScreenRenderer(writer, mapStack, renderer.getScreenStringRenderer());
                     writer.append(subRenderer.render(location, name));
                 }
-            } catch (RuntimeException e) {
-                throw e;
+            //} catch (RuntimeException e) { // SCIPIO: no
+            //    throw e;
             } catch (Exception e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this.getModelFormField(), context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
     }

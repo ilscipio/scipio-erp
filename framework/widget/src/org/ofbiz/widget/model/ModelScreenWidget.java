@@ -640,19 +640,15 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     rethrowEx = origEx;
                 }
                 if (rethrowEx != null) {
-                    if (rethrowEx instanceof IOException) {
-                        // SCIPIO: TODO: REVIEW: unclear why upstream only wrapped IOException and not GeneralException or
-                        //  RuntimeException here, so inconsistent... but there could be reason...
-                        String errMsg = "Error rendering " + (condTrue ? "widgets" : "fail-widgets") + " section [" + getName() + "] in screen [" + getModelScreen().getName() + "]: " + rethrowEx.toString();
-                        Debug.logError(rethrowEx, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    } else if (rethrowEx instanceof GeneralException) {
-                        throw (GeneralException) rethrowEx;
-                    } else if (rethrowEx instanceof RuntimeException) {
-                        throw (RuntimeException) rethrowEx;
-                    } else {
-                        throw new RuntimeException(rethrowEx);
+                    // SCIPIO: NOTE: 2019-05-21: this section no longer singles out IOException, but wraps everything
+                    // including GeneralException and RuntimeException in WidgetRenderException to give consistent detail message
+                    // SPECIAL: if the exception came from ourselves, wrapping again adds no new information.
+                    if (rethrowEx instanceof WidgetRenderException && WidgetRenderException.getWidget(rethrowEx) == this) {
+                        throw (WidgetRenderException) rethrowEx;
                     }
+                    String errMsg = "Error rendering " + (condTrue ? "widgets" : "fail-widgets") + " section [" + getName() + "] in screen [" + getModelScreen().getName() + "]";
+                    //Debug.logError(rethrowEx, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + rethrowEx, rethrowEx, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             } finally {
                 if (!this.finallyActions.isEmpty()) { // SCIPIO: finally-actions
@@ -740,10 +736,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException { // SCIPIO: renamed to *Core
             try {
                 screenStringRenderer.renderColumnContainer(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering container in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering container in screen named [" + getModelScreen().getName() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -860,10 +856,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
 
                 screenStringRenderer.renderContainerEnd(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering container in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering container in screen named [" + getModelScreen().getName() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -1016,10 +1012,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     screenStringRenderer.renderScreenletSubWidget(writer, context, subWidget, this);
                 }
                 screenStringRenderer.renderScreenletEnd(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering screenlet in screen named [" + getModelScreen().getName() + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering screenlet in screen named [" + getModelScreen().getName() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -1576,10 +1572,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             if (preRenderedContent != null && preRenderedContent.containsKey(getName())) {
                 try {
                     writer.append((String) preRenderedContent.get(getName()));
-                } catch (IOException e) {
-                    String errMsg = "Error rendering pre-rendered content in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new RuntimeException(errMsg);
+                } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                    String errMsg = "Error rendering pre-rendered content in screen named [" + getModelScreen().getName() + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
             } else {
                 SectionsRenderer sections = (SectionsRenderer) context.get("sections");
@@ -1629,10 +1625,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) { // SCIPIO: renamed to *Core
             try {
                 screenStringRenderer.renderLabel(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering label in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering label in screen named [" + getModelScreen().getName() + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -1721,11 +1717,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     execInfo.handleFinished(context); // SCIPIO: return logic
                 }
             } catch (Exception e) {
-                String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
-
             if (protectScope) {
                 UtilGenerics.<MapStack<String>>cast(context).pop();
             }
@@ -1826,9 +1821,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     execInfo.handleFinished(context); // SCIPIO: return logic
                 }
             } catch (Exception e) {
-                String errMsg = "Error rendering included grid named [" + getName() + "] at location [" + this.getLocation(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included grid named [" + getName() + "] at location [" + this.getLocation(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             if (protectScope) {
                 UtilGenerics.<MapStack<String>>cast(context).pop();
@@ -1845,9 +1840,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             //} catch (RuntimeException e) {
             //    throw e;
             } catch (Exception e) {
-                String errMsg = "Error rendering included form named [" + name + "] at location [" + location + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included form named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return modelForm;
         }
@@ -1930,10 +1925,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             ModelTree modelTree = null;
             try {
                 modelTree = TreeFactory.getTreeFromLocation(this.getLocation(context), this.getName(context), getModelScreen().getDelegator(context), getModelScreen().getDispatcher(context));
-            } catch (IOException | SAXException | ParserConfigurationException e) {
-                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             modelTree.renderTreeString(writer, context, treeStringRenderer);
             if (protectScope) {
@@ -2102,9 +2097,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                             expandedDataResourceId = content.getString("dataResourceId");
                         }
                     } else {
-                        String errMsg = "Could not find content with contentId [" + expandedContentId + "] ";
-                        Debug.logError(errMsg, module);
-                        throw new RuntimeException(errMsg);
+                        String errMsg = "Could not find content with contentId [" + expandedContentId + "]";
+                        //Debug.logError(errMsg, module); // SCIPIO: Redundant logging
+                        throw new WidgetRenderException(errMsg, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                     }
                 }
 
@@ -2128,10 +2123,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     screenStringRenderer.renderContentEnd(writer, context, this);
                 }
                 UtilGenerics.<MapStack<String>>cast(context).pop();
-            } catch (IOException | GenericEntityException e) {
-                String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed (IOException | GenericEntityException e) to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2231,10 +2226,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 screenStringRenderer.renderSubContentBegin(writer, context, this);
                 screenStringRenderer.renderSubContentBody(writer, context, this);
                 screenStringRenderer.renderSubContentEnd(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering subContent with contentId [" + getContentId(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering subContent with contentId [" + getContentId(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2360,9 +2355,9 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             try {
                 modelMenu = MenuFactory.getMenuFromLocation(location, name);
             } catch (Exception e) {
-                String errMsg = "Error rendering included menu named [" + name + "] at location [" + location + "]: ";
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg + e);
+                String errMsg = "Error rendering included menu named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return modelMenu;
         }
@@ -2555,10 +2550,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) { // SCIPIO: renamed to *Core
             try {
                 screenStringRenderer.renderLink(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering link with id [" + link.getId(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering link with id [" + link.getId(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2654,10 +2649,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) { // SCIPIO: renamed to *Core
             try {
                 screenStringRenderer.renderImage(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering image with id [" + image.getId(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering image with id [" + image.getId(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 
@@ -2704,14 +2699,14 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                                                 .where("portalPageId", expandedPortalPageId)
                                                 .cache().queryOne();
                     } catch (GenericEntityException e) {
-                        throw new RuntimeException(e);
+                        throw new WidgetRenderException(e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                     }
                 }
             }
             if (portalPage == null) {
-                String errMsg = "Could not find PortalPage with portalPageId [" + expandedPortalPageId + "] ";
-                Debug.logError(errMsg, module);
-                throw new RuntimeException(errMsg);
+                String errMsg = "Could not find PortalPage with portalPageId [" + expandedPortalPageId + "]";
+                //Debug.logError(errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
             return portalPage;
         }
@@ -2831,10 +2826,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 }
                 // Renders the portalPage footer
                 screenStringRenderer.renderPortalPageEnd(writer, context, this);
-            } catch (IOException | GenericEntityException e) {
-                String errMsg = "Error rendering PortalPage with portalPageId [" + getId(context) + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed (IOException | GenericEntityException e) to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering PortalPage with portalPageId [" + getId(context) + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 

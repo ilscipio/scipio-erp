@@ -214,9 +214,9 @@ public class IterateSectionWidget extends ModelScreenWidget {
                 if (globalCtx != null) {
                     globalCtx.put("PAGINATOR_NUMBER", lastPageNumber);
                 }
-            } catch (IOException e) {
-                Debug.logError(e, module);
-                throw new RuntimeException(e.getMessage());
+            } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                //Debug.logError(e, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         }
 

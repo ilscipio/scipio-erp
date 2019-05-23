@@ -196,7 +196,10 @@ public class HtmlWidget extends ModelScreenWidget {
         if (exMode != UtilRender.RenderExceptionMode.DEBUG) { // Stock ofbiz case (debug only - no throw)
             // TODO: REVIEW: we should be throwing the same exception types as
             // org.ofbiz.widget.renderer.macro.MacroScreenRenderer.handleError(Appendable, Map<String, Object>, Throwable)
-            throw new RuntimeException(ex);
+            if (ex instanceof WidgetRenderException) {
+                throw (WidgetRenderException) ex;
+            }
+            throw new WidgetRenderException(ex, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
         }
     }
 

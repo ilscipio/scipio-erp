@@ -64,7 +64,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     private final String transactionTimeoutAttr; // SCIPIO: null -> don't use, non-empty -> attribute name
     private final String transactionTimeoutParam; // SCIPIO: null -> don't use, non-empty -> parameter name
     private final boolean transactionTimeoutAttrParamEquals; // SCIPIO: Optimization
-    //private final Map<String, ModelScreen> modelScreenMap; // SCIPIO: generalized
+    //private final Map<String, ModelScreen> modelScreenMap; // SCIPIO: generalized using modelScreenGroup instead
     private final ModelScreenGroup modelScreenGroup;
     private final boolean useTransaction;
     private final boolean useCache;
@@ -278,6 +278,9 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         //} catch (RuntimeException e) {
         //    throw e;
         } catch (Exception e) {
+            // SCIPIO: TODO: REVIEW: currently this does *not* log the full exception, only message, and don't want
+            //  to change for now because callers already log the full exception... however the transaction rollback is important to record
+            //  Several strategies are possible; we could also log the full ex here and not pass the cause to the caller...
             String errMsg = "Error rendering screen [" + this.sourceLocation + "#" + getName() + "]: " + e.toString();
             Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {

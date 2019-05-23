@@ -47,8 +47,8 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
 
     public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings) {
         this.location = sourceLocation;
-        Map<String, ModelScreen> screenMap = new HashMap<String, ModelScreen>();
-        Map<String, ModelScreenGroup> screenGroupMap = new HashMap<String, ModelScreenGroup>();
+        Map<String, ModelScreen> screenMap = new HashMap<>();
+        Map<String, ModelScreenGroup> screenGroupMap = new HashMap<>();
 
         // SCIPIO: NOTE: 2016-10-30: The base code for this was originally moved from
         //   org.ofbiz.widget.model.ScreenFactory.readScreenDocument(Document, String)

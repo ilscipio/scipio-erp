@@ -255,10 +255,10 @@ public class ScreenFactory extends WidgetFactory {
                         if (UtilValidate.isNotEmpty(fallbackLocation)) {
                             try {
                                 modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
-                            } catch (IOException | SAXException | ParserConfigurationException e) {
-                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                                Debug.logError(e, errMsg, module);
-                                throw new RuntimeException(errMsg);
+                            } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
+                                String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]";
+                                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                                throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                             }
                         } else {
                             modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(fallbackName);
@@ -270,10 +270,10 @@ public class ScreenFactory extends WidgetFactory {
                         throw new IllegalArgumentException("Could not find screen with name [" + name + "] in class resource [" + location + "]");
                     }
                 }
-            } catch (IOException | SAXException | ParserConfigurationException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
+                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]";
+                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
             }
         } else {
             if (fallbackSettings != null && fallbackSettings.isEnabledForEmptyLocation()) { // SCIPIO: fallback if empty
@@ -296,10 +296,10 @@ public class ScreenFactory extends WidgetFactory {
                 if (UtilValidate.isNotEmpty(fallbackLocation)) {
                     try {
                         modelScreen = ScreenFactory.getScreenFromLocation(fallbackLocation, fallbackName);
-                    } catch (IOException | SAXException | ParserConfigurationException e) {
-                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]: " + e.toString();
-                        Debug.logError(e, errMsg, module);
-                        throw new RuntimeException(errMsg);
+                    } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
+                        String errMsg = "Error rendering included (fallback) screen named [" + fallbackName + "] at location [" + fallbackLocation + "]";
+                        //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                        throw new WidgetRenderException(errMsg + ": " + e, e, null, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                     }
                 } else {
                     modelScreen = parentWidget.getModelScreen().getModelScreenMap().get(fallbackName);

@@ -20,6 +20,7 @@ package org.ofbiz.widget.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,41 +46,31 @@ public abstract class ModelWidget implements Serializable {
     // SCIPIO: cached variable
     private static final boolean widgetVerboseGlobal = "true".equals(UtilProperties.getPropertyValue("widget", "widget.verbose"));
 
+    /* SCIPIO: 2019-05-21: refactored into structure
     private final String name;
     private final String systemId;
     private final int startColumn;
     private final int startLine;
+    */
+    private final WidgetMetaInfo metaInfo;
 
     /**
      * Derived classes must call this constructor.
-     * @param name The widget name
+     * @param name The widget name, or null to read from "name" attribute (SCIPIO: improved behavior/checks)
      */
     protected ModelWidget(String name) {
-        this.name = name;
-        this.systemId = "anonymous";
-        this.startColumn = 0;
-        this.startLine = 0;
+        this.metaInfo = new WidgetMetaInfo(name); // SCIPIO: now delegating
     }
 
     /**
      * Derived classes must call this constructor.
      * <p>
      * SCIPIO: now supports explicit/custom name override; use empty string for explicit empty.
-     *
      * @param widgetElement The XML Element for the widget
+     * @param name The widget name, or null to read from "name" attribute (SCIPIO: improved behavior/checks)
      */
     protected ModelWidget(Element widgetElement, String name) {
-        this.name = (name != null) ? name : widgetElement.getAttribute("name");
-        // SCIPIO: workarounds for cases where userData not defined
-        //this.systemId = (String) widgetElement.getUserData("systemId");
-        //this.startColumn = ((Integer) widgetElement.getUserData("startColumn")).intValue();
-        //this.startLine = ((Integer) widgetElement.getUserData("startLine")).intValue();
-        String systemId = (String) widgetElement.getUserData("systemId");
-        this.systemId = (systemId != null) ? systemId : "anonymous";
-        Integer startColumn = (Integer) widgetElement.getUserData("startColumn");
-        this.startColumn = (startColumn != null) ? startColumn.intValue() : 0;
-        Integer startLine = (Integer) widgetElement.getUserData("startLine");
-        this.startLine = (startLine != null) ? startLine.intValue() : 0;
+        this.metaInfo = new WidgetMetaInfo(widgetElement, name); // SCIPIO: now delegating
     }
 
     /**
@@ -87,7 +78,15 @@ public abstract class ModelWidget implements Serializable {
      * @param widgetElement The XML Element for the widget
      */
     protected ModelWidget(Element widgetElement) {
-        this(widgetElement, widgetElement.getAttribute("name")); // SCIPIO: now delegating
+        this.metaInfo = new WidgetMetaInfo(widgetElement); // SCIPIO: now delegating
+    }
+
+    /**
+     * SCIPIO: Construct from WidgetMetaInfo.
+     * @param metaInfo The meta info for the widget
+     */
+    protected ModelWidget(WidgetMetaInfo metaInfo) {
+        this.metaInfo = (metaInfo != null) ? metaInfo : WidgetMetaInfo.UNDEFINED;
     }
 
     public abstract void accept(ModelWidgetVisitor visitor) throws Exception;
@@ -97,8 +96,8 @@ public abstract class ModelWidget implements Serializable {
      * @return Widget's name
      */
     public String getName() {
-        return name;
-    }
+        return metaInfo.getName();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     /**
      * SCIPIO: Returns the widget's original name, meaning its name without
@@ -107,32 +106,32 @@ public abstract class ModelWidget implements Serializable {
      * @return Widget's name
      */
     public String getOriginalName() { // final
-        return name;
-    }
+        return metaInfo.getName();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     /**
      * Returns the url as a string, from where this widget was defined.
      * @return url
      */
     public String getSystemId() {
-        return systemId;
-    }
+        return metaInfo.getSystemId();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     /**
      * Returns the column where this widget was defined, in it's containing xml file.
      * @return start column
      */
     public int getStartColumn() {
-        return startColumn;
-    }
+        return metaInfo.getStartColumn();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     /**
      * Returns the line where this widget was defined, in it's containing xml file.
      * @return start line
      */
     public int getStartLine() {
-        return startLine;
-    }
+        return metaInfo.getStartLine();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     @Override
     public String toString() {
@@ -153,8 +152,8 @@ public abstract class ModelWidget implements Serializable {
      * @return Name to be used in boundary comments
      */
     public String getBoundaryCommentName() {
-        return name;
-    }
+        return metaInfo.getName();
+    } // SCIPIO: moved name to WidgetMetaInfo
 
     /**
      * Returns <code>true</code> if widget boundary comments are enabled. Widget boundary comments are
@@ -339,4 +338,155 @@ public abstract class ModelWidget implements Serializable {
         }
     }
 
+    /**
+     * SCIPIO: Returns meta (static) widget information.
+     * NOTE: several of the constructor logic of ModelWidget is moved here.
+     * Added 2019-05-21.
+     */
+    public WidgetMetaInfo getMetaInfo() {
+        return metaInfo;
+    }
+
+    public static class WidgetMetaInfo implements Serializable {
+        public static final String ANON_SYS = "anonymous";
+        public static final WidgetMetaInfo UNDEFINED = new WidgetMetaInfo();
+
+        private final String name;
+        private final String systemId;
+        private final int startColumn;
+        private final int startLine;
+
+        /**
+         * SCIPIO: Fields constructor.
+         */
+        public WidgetMetaInfo(String name, String systemId, Integer startColumn, Integer startLine) {
+            this.name = (name != null) ? name : ""; // SCIPIO: ensure non-null
+            this.systemId = (systemId != null) ? systemId : ANON_SYS; // SCIPIO: ensure anonymous
+            this.startColumn = (startColumn != null) ? startColumn : 0;
+            this.startLine = (startLine != null) ? startLine : 0;
+        }
+
+        /**
+         * SCIPIO: Default constructor - creates an instance having no name (empty string).
+         * NOTE: the original ModelWidget class did not have default constructor for this.
+         * NOTE: kept private even if subclassed because in practice almost everything needs a name.
+         */
+        private WidgetMetaInfo() {
+            this((String) null);
+        }
+
+        /**
+         * Derived classes must call this constructor.
+         * @param name The widget name
+         */
+        public WidgetMetaInfo(String name) {
+            this(name, null, null, null);
+        }
+
+        /**
+         * XML constructor. SCIPIO: now supports explicit/custom name override; use empty string for explicit empty.
+         * @param widgetElement The XML Element for the widget
+         * @param name The widget name, or null to read from "name" attribute (SCIPIO: improved behavior/checks)
+         */
+        public WidgetMetaInfo(Element widgetElement, String name) {
+            this((name != null) ? name : widgetElement.getAttribute("name"), (String) widgetElement.getUserData("systemId"),
+                    (Integer) widgetElement.getUserData("startColumn"), (Integer) widgetElement.getUserData("startLine"));
+        }
+
+        public WidgetMetaInfo(Element widgetElement) {
+            this(widgetElement, null); // SCIPIO: now delegating
+        }
+
+        /**
+         * SCIPIO: Trivial copy constructor. NOTE: limited use because immutable.
+         */
+        protected WidgetMetaInfo(WidgetMetaInfo other) {
+            this(other.getName(), other.getSystemId(), other.getStartColumn(), other.getStartLine());
+        }
+
+        /**
+         * SCIPIO: Copy constructor with optional overrides (null signifies no override).
+         */
+        protected WidgetMetaInfo(WidgetMetaInfo other, String name, String systemId, Integer startColumn, Integer startLine) {
+            this((name != null) ? name : other.getName(), (systemId != null) ? systemId : other.getSystemId(),
+                    (startColumn != null) ? startColumn : other.getStartColumn(), (startLine != null) ? startLine : other.getStartLine());
+        }
+
+        public static WidgetMetaInfo make(String name, String systemId, Integer startColumn, Integer startLine) {
+            WidgetMetaInfo metaInfo = new WidgetMetaInfo(name, systemId, startColumn, startLine);
+            return metaInfo.equals(UNDEFINED) ? UNDEFINED : metaInfo;
+        }
+        public static WidgetMetaInfo make(String name) {
+            WidgetMetaInfo metaInfo = new WidgetMetaInfo(name);
+            return metaInfo.equals(UNDEFINED) ? UNDEFINED : metaInfo;
+        }
+
+        public static WidgetMetaInfo copy(WidgetMetaInfo other, String name, String systemId, Integer startColumn, Integer startLine) {
+            return (other != null) ? other.copy(name, systemId, startColumn, startLine) : make(name, systemId, startColumn, startLine);
+        }
+        public static WidgetMetaInfo copy(WidgetMetaInfo other, String name) {
+            return (other != null) ? other.copy(name) : make(name);
+        }
+        public static WidgetMetaInfo copy(WidgetMetaInfo other) {
+            return (other != null) ? other.copy() : UNDEFINED;
+        }
+
+        public WidgetMetaInfo copy(String name, String systemId, Integer startColumn, Integer startLine) {
+            WidgetMetaInfo metaInfo = copyAlways(name, systemId, startColumn, startLine);
+            // SCIPIO: optimization: if same meta info, return the original; saves memory (NOTE: subclasses may alter this behavior)
+            //return metaInfo;
+            return metaInfo.equals(this) ? this : metaInfo;
+        }
+        public WidgetMetaInfo copy(String name) {
+            WidgetMetaInfo metaInfo = copyAlways(name);
+            // SCIPIO: optimization: if same meta info, return the original; saves memory (NOTE: subclasses may alter this behavior)
+            //return metaInfo;
+            return metaInfo.equals(this) ? this : metaInfo;
+        }
+        public WidgetMetaInfo copy() {
+            // SCIPIO: optimization: if same meta info, return the original; saves memory (NOTE: subclasses may alter this behavior)
+            //return this.copyAlways();
+            return this;
+        }
+
+        protected WidgetMetaInfo copyAlways(String name, String systemId, Integer startColumn, Integer startLine) {
+            return new WidgetMetaInfo(this, name, systemId, startColumn, startLine);
+        }
+        protected WidgetMetaInfo copyAlways(String name) {
+            return copyAlways(name, null, null, null);
+        }
+        protected WidgetMetaInfo copyAlways() {
+            return copyAlways(null, null, null, null);
+        }
+
+        public String getName() { return name; }
+        public String getSystemId() { return systemId; }
+        public int getStartColumn() { return startColumn; }
+        public int getStartLine() { return startLine; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof WidgetMetaInfo)) return false;
+            WidgetMetaInfo that = (WidgetMetaInfo) o;
+            return getStartColumn() == that.getStartColumn() &&
+                    getStartLine() == that.getStartLine() &&
+                    Objects.equals(getName(), that.getName()) &&
+                    Objects.equals(getSystemId(), that.getSystemId());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getName(), getSystemId(), getStartColumn(), getStartLine());
+        }
+
+        @Override
+        public String toString() { // SCIPIO: NOTE: intended to be exception/log/public friendly
+            return "{name=" + name +
+                    ", systemId=" + systemId +
+                    ", startColumn=" + startColumn +
+                    ", startLine=" + startLine +
+                    "}";
+        }
+    }
 }

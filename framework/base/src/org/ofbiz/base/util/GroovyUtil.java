@@ -94,7 +94,7 @@ public class GroovyUtil {
         try {
             GroovyUtil.runScriptAtLocation("component://base/config/GroovyInit.groovy", null, null);
         } catch (Exception e) {
-            Debug.logWarning("The following error occurred during the initialization of Groovy: " + e.getMessage(), module);
+            Debug.logError("Error during Groovy initialization [component://base/config/GroovyInit.groovy]: " + e.getMessage(), module); // SCIPIO: Changed to error, better message
         }
     }
 
@@ -197,7 +197,9 @@ public class GroovyUtil {
                 context.putAll(binding.getVariables());
             }
         } catch (CompilationFailedException e) {
-            Debug.logError(e, "Groovy Evaluation error.", module);
+            if (Debug.verboseOn()) { // SCIPIO: Redundant logging: added verbose check: in 99% of cases this will be redundant
+                Debug.logWarning(e, "Groovy Evaluation error.", module); // SCIPIO: Changed to warning
+            }
             throw e;
         }
         return o;

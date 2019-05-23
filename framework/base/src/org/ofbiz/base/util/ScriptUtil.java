@@ -86,6 +86,7 @@ public final class ScriptUtil {
      * there would probably have to be a ScriptEngineManager cached in every ServletContext as attribute (TODO?).
      */
     private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(ScriptUtil.class.getClassLoader());
+    private static final int SCRIPT_MAX_DISPLAY = UtilProperties.getPropertyAsInteger("debug", "script.maxDisplayLength", 150); // SCIPIO: keep logs and exceptions from going crazy - only verbose mode can override
 
     static {
         // SCIPIO: sanity check
@@ -329,9 +330,11 @@ public final class ScriptUtil {
             ScriptContext scriptContext = createScriptContext(context);
             return engine.eval(script, scriptContext);
         } catch (Exception e) {
-            String errMsg = "Error running " + language + " script [" + script + "]: " + e.toString();
-            Debug.logWarning(e, errMsg, module);
-            throw new IllegalArgumentException(errMsg);
+            String errMsg = "Error running inline " + language + " script [" + getMsgFmtScript(script) + "]: " + e.toString(); // SCIPIO: Cap script display length
+            if (Debug.verboseOn()) { // SCIPIO: Redundant logging: added verbose check: in 99% of cases this will be redundant
+                Debug.logWarning(e, errMsg, module);
+            }
+            throw new ScriptRuntimeException(errMsg, e); // SCIPIO: Changed IllegalArgumentException to ScriptRuntimeException + now passes the cause (stock bugfix)
         }
     }
 
@@ -395,8 +398,10 @@ public final class ScriptUtil {
             return executeScript(filePath, functionName, createScriptContext(context), args);
         } catch (Exception e) {
             String errMsg = "Error running script at location [" + filePath + "]: " + e.toString();
-            Debug.logWarning(e, errMsg, module);
-            throw new IllegalArgumentException(errMsg, e);
+            if (Debug.verboseOn()) { // SCIPIO: Redundant logging: added verbose check: in 99% of cases this will be redundant
+                Debug.logWarning(e, errMsg, module);
+            }
+            throw new ScriptRuntimeException(errMsg, e); // SCIPIO: Changed IllegalArgumentException to ScriptRuntimeException
         }
     }
 
@@ -642,5 +647,21 @@ public final class ScriptUtil {
         // so in this new() call might call for ScriptUtil.class.getClassLoader() as parameter.
         //return new ScriptEngineManager();
         return scriptEngineManager;
+    }
+
+    private static String getMsgFmtScript(String script) { // SCIPIO: inline scripts can be huge
+        return (script == null || Debug.verboseOn()) ? script :
+                StringUtil.limitLength(script.replaceAll("\\n+", " ").trim(), SCRIPT_MAX_DISPLAY, "...");
+    }
+
+    /**
+     * SCIPIO: Wraps exceptions thrown from scripts.
+     * Added 2019-05-22.
+     */
+    public static class ScriptRuntimeException extends IllegalArgumentException {
+        public ScriptRuntimeException() {}
+        public ScriptRuntimeException(String s) { super(s); }
+        public ScriptRuntimeException(String message, Throwable cause) { super(message, cause); }
+        public ScriptRuntimeException(Throwable cause) { super(cause); }
     }
 }

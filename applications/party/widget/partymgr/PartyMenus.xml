@@ -783,6 +783,11 @@
         <menu-item name="new" title="${uiLabelMap.PartyNewCommunication}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditCommunicationEvent"/>
         </menu-item>
+        <menu-item name="edit" title="${uiLabelMap.CommonEdit}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditCommunicationEvent">
+                <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
+            </link>
+        </menu-item>
         <menu-item name="reply" title="${uiLabelMap.PartyReply}">
             <condition>
                 <and>

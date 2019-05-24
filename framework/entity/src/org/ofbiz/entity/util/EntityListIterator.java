@@ -27,6 +27,7 @@ import java.util.ListIterator;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericResultSetClosedException;
@@ -47,6 +48,9 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  */
 public class EntityListIterator implements AutoCloseable, ListIterator<GenericValue> {
 
+    private static final boolean USE_NOT_CLOSED_STACK_TRACE = UtilProperties.getPropertyAsBoolean("debug",
+            "entity.EntityListIterator.notClosedStackTrace", false); // SCIPIO: debugging helper
+
     /** Module Name Used for debugging */
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -65,6 +69,7 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
 
     private boolean haveShowHasNextWarning = false;
     private Integer resultSize = null;
+    private final IllegalStateException notClosedStackTraceEx; // SCIPIO: debugging helper
 
     public EntityListIterator(SQLProcessor sqlp, ModelEntity modelEntity, List<ModelField> selectFields, ModelFieldTypeReader modelFieldTypeReader) {
         this(sqlp, modelEntity, selectFields, modelFieldTypeReader, null, null, null, false);
@@ -86,6 +91,8 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
         this.modelEntity = modelEntity;
         this.selectFields = selectFields;
         this.modelFieldTypeReader = modelFieldTypeReader;
+        this.notClosedStackTraceEx = USE_NOT_CLOSED_STACK_TRACE ? new IllegalStateException("EntityListIterator not closed for entity [" + modelEntity.getEntityName()
+                + "], caught in finalize() (stack trace gives the location EntityListIterator was created)") : null; // SCIPIO: debugging helper
     }
 
     public void setDelegator(Delegator delegator) {
@@ -556,7 +563,7 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
                 //        + "EntityListIterator Not Closed for Entity [%s], caught in Finalize\n"
                 //        + "\n==============================================================================\n",
                 //        module, modelEntity == null ? "" : modelEntity.getEntityName());
-                Debug.logError("EntityListIterator not closed for entity [%s], caught in finalize()",
+                Debug.logError(notClosedStackTraceEx, "EntityListIterator not closed for entity [%s], caught in finalize()", // SCIPIO: Added notClosedStackTraceEx
                         module, modelEntity == null ? "" : modelEntity.getEntityName());
             }
         } catch (Exception e) {

@@ -6,7 +6,7 @@
                     <@tr valign="bottom" class="header-row">
                         <@th>${uiLabelMap.CommonDate}</@th>
                         <@th>${uiLabelMap.CommonPerson}</@th>
-                        <@th>${uiLabelMap.CommonComments}</@th>
+                        <!--<@th>${uiLabelMap.CommonComments}</@th>-->
                     </@tr>
                 </@thead>
                 <@tbody>
@@ -19,7 +19,7 @@
                                 <a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${party.partyId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${party.firstName!} ${party.lastName!}</a>
                             <#else>
                                 <a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${party.partyId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${party.partyId!}</a></#if></@td>
-                            <@td>${party.comments!""}</@td>
+                            <#--<@td>${party.comments!""}</@td>-->
                         </@tr>
                     </#list>
                 </@tbody>

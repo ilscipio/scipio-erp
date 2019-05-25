@@ -545,8 +545,8 @@ code package.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}" sort-field="true">
-            <hyperlink description="${partyIdTo}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}" sort-field="true" widget-style="${styles.link_nav_info_id}">
+            <hyperlink description="${partyIdTo}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>

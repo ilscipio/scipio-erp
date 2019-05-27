@@ -43,6 +43,7 @@
 .*.swo
 desktop.ini
 .svn/
+*.scp.local.properties
 /build.local.properties
 /git-addons-config-local
 /.settings

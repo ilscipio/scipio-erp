@@ -28,9 +28,10 @@ code package.
     <!-- ================================================================== -->
     <!-- NOTE: Properties may also be defined in macros.xml (e.g. for standalone component task support) -->
     
-    <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
-        you may specify some default properties for local machine/developer only -->
-    <property file="build.local.properties"/>
+    <!-- 2017-02-03: Local build properties file support, ignored by version control,
+        which allows to specify build properties for the current local machine/developer only -->
+    <property file="build.scp.local.properties"/><!-- standard filename (namespaced, unique) -->
+    <property file="build.local.properties"/><!-- legacy filename -->
     
     <!-- 2018-06-25: New build.properties file (NOT ignored by version control), where
         you may specific some default shared properties for your project (shared between developers/users) -->

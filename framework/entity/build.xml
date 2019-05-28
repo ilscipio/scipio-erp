@@ -45,11 +45,15 @@ code package.
         For a one-time update you can use lib.entity.jdbc.conf.update instead.
         NOTE: If you added an extra (or unsupported) driver to ivy.xml and its jar filename does not start with the
             ivy config name, you will have to override lib.entity.jdbc.conf.update.filepat to "[something]-*.jar"
+        Special setting: lib.entity.jdbc.deploy.current.always: when true, the jdbc driver directly under
+        framework/entity/lib/jdbc/*.jar is updated even when the ivy libs have not changed; this can help prevent
+        problems with git updates.
     -->
     <property name="lib.entity.jdbc.conf.default" value="derby"/>
     <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/><!-- may be multiple, comma-separated -->
     <property name="lib.entity.jdbc.conf.all" value="jdbc,${lib.entity.jdbc.conf.update}"/>
     <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
+    <property name="lib.entity.jdbc.deploy.current.always" value="true"/>
 
     <!-- Special file pattern mapping: lib.entity.jdbc.conf.filepat.map.[conf-name]
         If lib.entity.jdbc.conf.filepat.map.[conf-name] does not exist for conf-name, defaults to: [conf-name-*]-*.jar -->
@@ -60,6 +64,23 @@ code package.
     <target name="do-lib-update" description="Downloads all jars">
         <antcall target="do-lib-update-entity-general"/>
         <antcall target="do-lib-update-entity-jdbc"/>
+    </target>
+
+    <target name="do-lib-update-always" description="Lib update callback run even if there was no need to update libs">
+        <if>
+            <and>
+                <equals arg1="${lib.entity.jdbc.deploy.current.always}" arg2="true"/>
+                <not><equals arg1="${lib.update.needed}" arg2="true"/></not>
+            </and>
+            <then>
+                <!-- 2019-05-27: even if we didn't run lib update, we must honor build(.local).properties -->
+                <echo message="Configured default JDBC driver (lib.entity.jdbc.conf.default): ${lib.entity.jdbc.conf.default}" level="info"/>
+                <echo message="Target JDBC driver for update (lib.entity.jdbc.conf.update): ${lib.entity.jdbc.conf.update}" level="info"/>
+                <!-- FIXME: do-lib-update-always should really not force-redeploy using do-lib-update-entity-jdbc-current here,
+                        but for now this is less likely to cause real issues than trying to write the new code that detects current state -->
+                <antcall target="do-lib-update-entity-jdbc-current"/>
+            </then>
+        </if>
     </target>
 
     <target name="do-lib-update-entity-general">
@@ -83,6 +104,8 @@ code package.
     </target>
 
     <target name="do-lib-update-entity-jdbc-current">
+        <!-- TODO: want a version of do-lib-update-entity-jdbc-current that skips the delete and ivy:retrieve
+                if the current state would not change by those actions -->
         <for list="${lib.entity.jdbc.conf.update}" delimiter="," param="entity.conf.name.param">
             <sequential>
                 <var name="entity.conf.name" value="@{entity.conf.name.param}"/>

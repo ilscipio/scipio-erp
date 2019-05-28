@@ -378,6 +378,7 @@ code package.
         </condition>
         <echo level="info" message="[Deps changed? ${lib.resolve.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
 
+        <var name="lib.update.changed" unset="true"/>
         <if>
             <or>
                 <equals arg1="${lib.update.force}" arg2="true"/>
@@ -401,11 +402,16 @@ code package.
                         <antcall target="do-lib-clean" inheritrefs="true"/>
                     </then>
                 </if>
+                <property name="lib.update.needed" value="true"/>
                 <antcall target="do-lib-update" inheritrefs="true"/>
+                <antcall target="do-lib-update-always" inheritrefs="true"/>
 
                 <!-- if we're here, then we succeeded; clear the last flag -->
                 <delete file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
             </then>
+            <else>
+                <antcall target="do-lib-update-always" inheritrefs="true"/>
+            </else>
         </if>
     </target>
     
@@ -499,6 +505,8 @@ code package.
                 <ivy:retrieve pattern="libsrc/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}"/>
             </then>
         </if>
+    </target>
+    <target name="do-lib-update-always" description="Lib update callback run even if there was no need to update libs">
     </target>
     <target name="common-lib-update" description="Deploys all jars (default/common implementation)">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}"/>

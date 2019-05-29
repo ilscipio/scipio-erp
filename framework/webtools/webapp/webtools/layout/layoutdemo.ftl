@@ -132,19 +132,6 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@row class="+${styles.grid_display!}">
         <@cell columns=12><@img src="https://placehold.it/240x800" type="none" link="#" responsiveMap=responsiveMap /></@cell>
     </@row>
-    
-    <@row class="+${styles.grid_display!}">
-        <@cell columns=6>
-            <@field type="input" name="responsiveImgContentId" label="Responsive image - contentId" tooltip="Lookup responsive image!"/>
-        </@cell>
-        <@cell columns=6>
-            <@field type="submit" submitType="submit" text="Submit" onClick="alert('submitted!'); return false;" />
-        </@cell>
-    </@row>
-    <@row>
-        <@cell columns=4 id="responsiveImgContentIdContainer">            
-        </@cell>
-    </@row> 
 </@section>
 
 <@section title="Section Titles and Headings - Auto Leveling">

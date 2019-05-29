@@ -1609,7 +1609,7 @@ Slider data entry - a single slide.
         <#if responsiveKeys?contains('srcset')>
             <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
             <#list srcsetMap?keys as srcsetEntry>
-                <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + raw(' ' + srcsetEntry + 'w')>
+                <#local srcset=srcset +' '+escapeFullUrl(srcsetEntry, 'html')+raw(' ' + srcsetMap[srcsetEntry] + 'w')>
                 <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
             </#list>
         </#if>
@@ -1741,7 +1741,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                     <#if responsiveKeys?contains('srcset')>
                         <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
                         <#list srcsetMap?keys as srcsetEntry>
-                            <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + raw(' ' + srcsetEntry + 'w')>
+                            <#local srcset=srcset +' '+escapeFullUrl(srcsetEntry, 'html')+raw(' ' + srcsetMap[srcsetEntry] + 'w')>
                             <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
                         </#list>
                     </#if>

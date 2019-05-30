@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.AutoClose;
 import org.ofbiz.base.util.UtilGenerics;
 
 
@@ -60,6 +61,11 @@ import org.ofbiz.base.util.UtilGenerics;
 public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    /**
+     * SCIPIO: List of closeable objects to be closed on pop() - used to help fix EntityListIterator. Added 2019-05-29.
+     */
+    public static final String AUTO_CLOSE_LIST_FIELD = "scpCtxAutoClose";
 
     /**
      * SCIPIO: Initial stack capacity for {@link #stackList} {@link java.util.ArrayList}.
@@ -129,6 +135,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     // SCIPIO: 2018-08-10: protected was a bad idea for this - added constructor for subclasses instead
     //protected List<Map<K, V>> stackList = new LinkedList<Map<K, V>>();
     private List<Map<K, V>> stackList;
+    private List<EventHandler> eventHandlers = null; // SCIPIO: 2019-05-29: new event handlers
 
     public void reset() {
         stackList = new ArrayList<Map<K, V>>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
@@ -140,6 +147,11 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         // SCIPIO: reversed order
         //this.stackList.add(0,newMap);
         this.stackList.add(newMap);
+        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
+            for(EventHandler eventHandler : getEventHandlersIntrn()) {
+                eventHandler.afterPush(this);
+            }
+        }
     }
 
     /** Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack) */
@@ -150,6 +162,11 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         // SCIPIO: reversed order
         //this.stackList.add(0, existingMap);
         this.stackList.add(existingMap);
+        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
+            for(EventHandler eventHandler : getEventHandlersIntrn()) {
+                eventHandler.afterPush(this);
+            }
+        }
     }
 
     /** Puts an existing Map on the BOTTOM of the stack (bottom meaning will be overriden by lower layers on the stack, ie everything else already there) */
@@ -164,6 +181,12 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
     /** Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it */
     public Map<K, V> pop() {
+        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
+            for(EventHandler eventHandler : getEventHandlersIntrn()) {
+                eventHandler.beforePop(this);
+            }
+        }
+        AutoClose.closeAndClear(this, AUTO_CLOSE_LIST_FIELD); // SCIPIO: 2019-05-29: special close-on-pop AutoCloseable support
         // always leave at least one Map in the List, ie never pop off the last Map
         if (this.stackList.size() > 1) {
             // SCIPIO: reversed order
@@ -612,5 +635,64 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         @Override public Set<K> keySet() { return keySetDeepFirst(); }
         @Override public Collection<V> values() { return valuesDeepFirst(); }
         @Override public Set<Entry<K, V>> entrySet() { return entrySetDeepFirst(); }
+    }
+
+    /**
+     * SCIPIO: Event handler for MapContext calls.
+     * Added 2019-05-29.
+     */
+    public interface EventHandler {
+        default <K, V> void afterPush(Map<K, V> context) {}
+        default <K, V> void beforePop(Map<K, V> context) {}
+    }
+
+    /**
+     * SCIPIO: Registers an event handler for MapContext calls.
+     * Added 2019-05-29.
+     */
+    public void register(EventHandler eventHandler) {
+        getEventHandlersOrNew().add(eventHandler);
+    }
+
+    /**
+     * SCIPIO: Registers an event handler for MapContext calls if it is not already there.
+     * Added 2019-05-29.
+     */
+    public void registerIfNew(EventHandler eventHandler) {
+        if (!getEventHandlersOrNew().contains(eventHandler)) {
+            getEventHandlersOrNew().add(eventHandler);
+        }
+    }
+
+    /**
+     * SCIPIO: Deregisters an event handler for MapContext calls.
+     * Added 2019-05-29.
+     */
+    public void deregister(EventHandler eventHandler) {
+        getEventHandlersOrNew().removeAll(Collections.singleton(eventHandler));
+    }
+
+    public List<EventHandler> getEventHandlers() { // SCIPIO
+        return Collections.unmodifiableList(getEventHandlersOrNew());
+    }
+
+    protected List<EventHandler> getEventHandlersOrNew() { // SCIPIO
+        List<EventHandler> eventHandlers = this.eventHandlers;
+        if (eventHandlers == null) {
+            eventHandlers = new ArrayList<>();
+            this.eventHandlers = eventHandlers;
+        }
+        return eventHandlers;
+    }
+
+    protected List<EventHandler> getEventHandlersIntrn() { // SCIPIO
+        return eventHandlers;
+    }
+
+    /**
+     * SCIPIO: Alias for <code>AutoClose.register(context, AUTO_CLOSE_LIST_FIELD, closeableObject)</code>
+     */
+    public static void registerCloseOnPop(Map<String, ?> context, AutoCloseable closeableObject) {
+        AutoClose.register(context, AUTO_CLOSE_LIST_FIELD, closeableObject);
     }
 }

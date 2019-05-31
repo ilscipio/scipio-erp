@@ -925,6 +925,9 @@ context.styles = [
     "gallery_share_view_width" : 500,
     "gallery_share_view_height" : 500,
 
+  /* Image container*/
+    "image_responsive" : "img-fluid",
+
   /* Panels */
     "panel_wrap" : "panel",
     "panel_head" : "panel-head",

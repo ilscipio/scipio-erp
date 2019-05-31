@@ -1708,6 +1708,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" id="" src="" responsiveMap={} type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
+    <#if responsiveMap?has_content><#local class = addClassArg(class, styles.image_responsive!"img-fluid")></#if>
     <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">

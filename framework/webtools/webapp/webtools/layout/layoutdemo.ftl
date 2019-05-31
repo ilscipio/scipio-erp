@@ -122,9 +122,9 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       "max-width: 480px" : "100vw", "max-width: 320px" : "100vw", "max-width: 280px" : "100vw", "max-width: 200px" : "100vw", "max-width: 150px" : "100vw"
 }>
 <#assign srcsetMap = { 
-      "https://placehold.it/1024x800" : "1024", "https://placehold.it/900x800" : "900", "https://placehold.it/860x800" : "860", "https://placehold.it/800x800" : "800",
-      "https://placehold.it/768x800" : "768", "https://placehold.it/640x800" : "640", "https://placehold.it/560x800" : "560", "https://placehold.it/480x800" : "480",
-      "https://placehold.it/320x800" : "320", "https://placehold.it/280x800" : "280", "https://placehold.it/200x800" : "200", "https://placehold.it/150x800" : "150"
+      "https://placehold.it/1024x200" : "1024", "https://placehold.it/900x800" : "900", "https://placehold.it/860x200" : "860", "https://placehold.it/800x200" : "800",
+      "https://placehold.it/768x200" : "768", "https://placehold.it/640x800" : "640", "https://placehold.it/560x200" : "560", "https://placehold.it/480x200" : "480",
+      "https://placehold.it/320x200" : "320", "https://placehold.it/280x800" : "280", "https://placehold.it/200x200" : "200", "https://placehold.it/150x200" : "150"
 }>
 <#assign responsiveMap = {"srcset" : srcsetMap, "sizes" : sizesMap}>
 

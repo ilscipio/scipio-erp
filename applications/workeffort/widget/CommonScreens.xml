@@ -55,7 +55,7 @@ code package.
                 <set field="activeApp" value="workeffort" global="true"/>
                 <set field="applicationMenuName" value="WorkEffortAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://workeffort/widget/WorkEffortMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.WorkEffortManagerApplication}" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.CommonWorkEffort}" global="true"/>
                 
                 <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>

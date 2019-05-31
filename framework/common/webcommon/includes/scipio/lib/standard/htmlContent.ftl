@@ -1708,7 +1708,8 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 <#-- @img main markup - theme override -->
 <#macro img_markup class="" id="" src="" responsiveMap={} type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
-    <#if responsiveMap?has_content><#local class = addClassArg(class, styles.image_responsive!"img-fluid")></#if>
+    <#local imgClass = "scipio-image">
+    <#if responsiveMap?has_content><#local imgClass = addClassArg(imgClass, styles.image_responsive!"img-fluid")></#if>
     <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">
@@ -1726,7 +1727,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             <#local class = addClassArg(class, "scipio-image-container")>
             <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <div style="${imgStyle}" class="scipio-image"></div>
+                    <div style="${imgStyle}"<@compiledClassAttribStr class=imgClass />></div>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>
@@ -1756,7 +1757,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                     </#if>
                  </#if>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="scipio-image" style="${imgStyle}"/>
+                    <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if><@compiledClassAttribStr class=imgClass /> style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>

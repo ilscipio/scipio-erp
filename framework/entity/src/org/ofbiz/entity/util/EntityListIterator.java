@@ -607,4 +607,18 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
             Debug.logWarning(warningMessage, module);
         }
     }
+
+    /**
+     * SCIPIO: Returns the ModelEntity in use by this EntityListIterator.
+     */
+    public ModelEntity getModelEntity() {
+        return modelEntity;
+    }
+
+    /**
+     * SCIPIO: Returns the entity name being queried by this EntityListIterator.
+     */
+    public String getEntityName() {
+        return (modelEntity != null) ? modelEntity.getEntityName() : null;
+    }
 }

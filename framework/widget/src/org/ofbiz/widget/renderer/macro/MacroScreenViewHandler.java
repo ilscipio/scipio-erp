@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.view.AbstractViewHandler;
@@ -147,7 +148,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
                 // to speed up output.
                 writer = new StandardCompress().getWriter(writer, null);
             }
-            MapStack<String> context = MapStack.create();
+            MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create()
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
 
             // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.

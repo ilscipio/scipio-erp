@@ -37,6 +37,7 @@ import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -252,7 +253,7 @@ public class CmsEvents {
 
             if (statusCode == HttpServletResponse.SC_OK || hasErrorPage) {
                 // create the template map
-                MapStack<String> templateMap = MapStack.create();
+                MapStack<String> templateMap = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
                 ScreenRenderer.populateContextForRequest(templateMap, null, request, response, servletContext);
                 templateMap.put("statusCode", statusCode);
 

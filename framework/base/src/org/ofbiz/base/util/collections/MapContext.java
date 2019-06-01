@@ -18,23 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.base.util.collections;
 
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.ofbiz.base.util.AutoClose;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-
 
 /**
  * Map Stack
@@ -60,12 +47,7 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-
-    /**
-     * SCIPIO: List of closeable objects to be closed on pop() - used to help fix EntityListIterator. Added 2019-05-29.
-     */
-    public static final String AUTO_CLOSE_LIST_FIELD = "scpCtxAutoClose";
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * SCIPIO: Initial stack capacity for {@link #stackList} {@link java.util.ArrayList}.
@@ -114,21 +96,21 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
     protected MapContext() {
         super();
-        stackList = new ArrayList<Map<K, V>>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
+        stackList = new ArrayList<>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
     }
 
     /**
      * SCIPIO: Shallow copy constructor - copies the stackList.
      */
     protected MapContext(MapContext<K, V> source) {
-        stackList = new ArrayList<Map<K, V>>(source.stackList); // SCIPIO: switched to ArrayList
+        stackList = new ArrayList<>(source.stackList); // SCIPIO: switched to ArrayList
     }
 
     /**
      * SCIPIO: Constructor with initial map.
      */
     protected MapContext(Map<K, V> baseMap) {
-        stackList = new ArrayList<Map<K, V>>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
+        stackList = new ArrayList<>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
         stackList.add(baseMap);
     }
 
@@ -138,7 +120,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     private List<EventHandler> eventHandlers = null; // SCIPIO: 2019-05-29: new event handlers
 
     public void reset() {
-        stackList = new ArrayList<Map<K, V>>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
+        stackList = new ArrayList<>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
     }
 
     /** Puts a new Map on the top of the stack */
@@ -149,7 +131,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         this.stackList.add(newMap);
         if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
             for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.afterPush(this);
+                eventHandler.afterPush(this, getCurrentMap());
             }
         }
     }
@@ -164,7 +146,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         this.stackList.add(existingMap);
         if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
             for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.afterPush(this);
+                eventHandler.afterPush(this, getCurrentMap());
             }
         }
     }
@@ -183,10 +165,9 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     public Map<K, V> pop() {
         if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
             for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.beforePop(this);
+                eventHandler.beforePop(this, getCurrentMap());
             }
         }
-        AutoClose.closeAndClear(this, AUTO_CLOSE_LIST_FIELD); // SCIPIO: 2019-05-29: special close-on-pop AutoCloseable support
         // always leave at least one Map in the List, ie never pop off the last Map
         if (this.stackList.size() > 1) {
             // SCIPIO: reversed order
@@ -638,12 +619,27 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     }
 
     /**
+     * SCIPIO: Returns the current level's context map index/level, or null if none; for use by implementations only.
+     */
+    public Integer getCurrentLevel() {
+        return (stackList.size() > 0) ? stackList.size() - 1 : null;
+    }
+
+    /**
+     * SCIPIO: Returns the current level's context map, or null if none.
+     * WARN: Client code should not modify the returned map! Only implementations could do this.
+     */
+    public Map<K, V> getCurrentMap() {
+        return (stackList.size() > 0) ? stackList.get(stackList.size() - 1) : null;
+    }
+
+    /**
      * SCIPIO: Event handler for MapContext calls.
      * Added 2019-05-29.
      */
     public interface EventHandler {
-        default <K, V> void afterPush(Map<K, V> context) {}
-        default <K, V> void beforePop(Map<K, V> context) {}
+        default <K, V> void afterPush(MapContext<K, V> context, Map<K, V> currentMap) {}
+        default <K, V> void beforePop(MapContext<K, V> context, Map<K, V> currentMap) {}
     }
 
     /**
@@ -687,12 +683,5 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
     protected List<EventHandler> getEventHandlersIntrn() { // SCIPIO
         return eventHandlers;
-    }
-
-    /**
-     * SCIPIO: Alias for <code>AutoClose.register(context, AUTO_CLOSE_LIST_FIELD, closeableObject)</code>
-     */
-    public static void registerCloseOnPop(Map<String, ?> context, AutoCloseable closeableObject) {
-        AutoClose.register(context, AUTO_CLOSE_LIST_FIELD, closeableObject);
     }
 }

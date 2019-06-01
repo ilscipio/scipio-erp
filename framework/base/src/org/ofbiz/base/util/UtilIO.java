@@ -32,12 +32,16 @@ import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
 public final class UtilIO {
     public static final Charset UTF8 = Charset.forName("UTF-8"); // SCIPIO: 2018-08-30: keeping public for backward-compat
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final Class<?> ELI_CLS = ObjectType.loadClassOrRuntimeEx("org.ofbiz.entity.util.EntityListIterator"); // SCIPIO
 
     private UtilIO () {}
     /** Copy an InputStream to an OutputStream, optionally closing either
@@ -66,8 +70,7 @@ public final class UtilIO {
             if (closeIn) {
                 closeQuietly(in);
             }
-        }
-    }
+        }}
 
     /** Copy a Reader to a Writer, optionally closing either the input or
      *  the output.
@@ -370,6 +373,87 @@ public final class UtilIO {
             ((AutoCloseable) object).close();
         } else if (object != null) {
             throw new IllegalArgumentException("object is not an instance of Closeable or AutoCloseable (or EntityListIterator)");
+        }
+    }
+
+    /**
+     * SCIPIO: Closes all the AutoCloseable instances - via {@link AutoCloseable#close()} found in the top level of the given context map's values, catching
+     * and logging all Exceptions (not just IOException), with includeTypes filter to include only subclasses of AutoCloseable.
+     */
+    public static <K, V> int closeValuesSafe(Map<K, V> map, Collection<Class<? extends AutoCloseable>> includeTypes, Collection<K> excludeFields) {
+        int i = 0;
+        if (UtilValidate.isNotEmpty(excludeFields)) {
+            for(Map.Entry<K, V> entry : map.entrySet()) {
+                if (excludeFields.contains(entry.getKey())) {
+                    continue;
+                }
+                if (closeSafe(entry.getValue(), includeTypes)) {
+                    i++;
+                }
+            }
+        } else {
+            for(Map.Entry<K, V> entry : map.entrySet()) {
+                if (closeSafe(entry.getValue(), includeTypes)) {
+                    i++;
+                }
+            }
+        }
+        return i;
+    }
+
+    /**
+     * SCIPIO: Closes all the AutoCloseable instances - via {@link AutoCloseable#close()} found in the top level of the given context map's values, catching
+     * and logging all Exceptions (not just IOException), with includeTypes filter to include only subclasses of AutoCloseable.
+     */
+    public static <K, V> int closeValuesSafe(Map<K, V> map, Class<? extends AutoCloseable> includeType, Collection<K> excludeFields) {
+        int i = 0;
+        if (UtilValidate.isNotEmpty(excludeFields)) {
+            for(Map.Entry<K, V> entry : map.entrySet()) {
+                if (excludeFields.contains(entry.getKey())) {
+                    continue;
+                }
+                if (closeSafe(entry.getValue(), includeType)) {
+                    i++;
+                }
+            }
+        } else {
+            for(Map.Entry<K, V> entry : map.entrySet()) {
+                if (closeSafe(entry.getValue(), includeType)) {
+                    i++;
+                }
+            }
+        }
+        return i;
+    }
+
+    private static boolean closeSafe(Object object, Collection<Class<? extends AutoCloseable>> includeTypes) { // SCIPIO
+        if (!(object instanceof AutoCloseable) || (includeTypes != null && !includeTypes.contains(object.getClass()))) {
+            return false;
+        }
+        return closeSafe(object);
+    }
+
+    private static boolean closeSafe(Object object, Class<? extends AutoCloseable> includeType) {   // SCIPIO
+        if (!(object instanceof AutoCloseable) || (includeType != null && !includeType.equals(object.getClass()))) {
+            return false;
+        }
+        return closeSafe(object);
+    }
+
+    private static boolean closeSafe(Object object) { // SCIPIO
+        try {
+            if (Debug.infoOn()) {   // SCIPIO: FIXME: change to verbose later
+                if (ELI_CLS.equals(object.getClass())) {
+                    Debug.logInfo("closeSafe: closing EntityListIterator for entity [" + object.getClass().getMethod("getEntityName").invoke(object) + "]", module);
+                } else {
+                    Debug.logInfo("closeSafe: closing object of type [" + object.getClass().getName() + "]", module);
+                }
+            }
+            ((AutoCloseable) object).close();
+            return true;
+        } catch (Exception e) {
+            Debug.logError(e, "Error closing EntityListIterator: " + e.toString(), module);
+            return false;
         }
     }
 }

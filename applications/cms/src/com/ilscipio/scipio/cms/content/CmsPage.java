@@ -24,6 +24,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -1932,7 +1933,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             if (content != null) {
                 content = content.clone(); // 2016: CLONE because content member on CmsPage instance may be immutable
             }
-            MapStack<String> context = MapStack.create();
+            MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
             boolean shareScope = true; // we don't need to push it here...
             PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, shareScope);
             renderArgs.setRunPageScripts(true);

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.view.AbstractViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
@@ -58,7 +59,7 @@ public class FreeMarkerViewHandler extends AbstractViewHandler {
             throw new ViewHandlerException("Invalid template source");
 
         // make the root context (data model) for freemarker
-        MapStack<String> context = MapStack.create();
+        MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
         prepOfbizRoot(context, request, response);
 
         // process the template & flush the output

@@ -155,6 +155,88 @@ public class ObjectType {
     }
 
     /**
+     * SCIPIO: Loads a class with the current thread's context classloader; logs ClassNotFoundException, returning null if any.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     */
+    public static Class<?> loadClassSafe(String className) {
+        try {
+            return loadClass(className, null);
+        } catch(ClassNotFoundException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Loads a class with the specified classloader; logs ClassNotFoundException, returning null if any.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     */
+    public static Class<?> loadClassSafe(String className, ClassLoader loader) {
+        try {
+            return loadClass(className, loader);
+        } catch(ClassNotFoundException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Loads a class with the current thread's context classloader; ignores ClassNotFoundException, returning null if any.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     */
+    public static Class<?> loadClassOrNull(String className) {
+        try {
+            return loadClass(className, null);
+        } catch(ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Loads a class with the specified classloader; ignores ClassNotFoundException, returning null if any.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     */
+    public static Class<?> loadClassOrNull(String className, ClassLoader loader) {
+        try {
+            return loadClass(className, loader);
+        } catch(ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Loads a class with the current thread's context classloader; wraps ClassNotFoundException in IllegalArgumentException.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     * @throws IllegalArgumentException
+     */
+    public static Class<?> loadClassOrRuntimeEx(String className) throws IllegalArgumentException {
+        try {
+            return loadClass(className, null);
+        } catch(ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * SCIPIO: Loads a class with the specified classloader; wraps ClassNotFoundException in IllegalArgumentException.
+     * @param className The name of the class to load
+     * @return The requested class, or null if not found (error)
+     * @throws IllegalArgumentException
+     */
+    public static Class<?> loadClassOrRuntimeEx(String className, ClassLoader loader) throws IllegalArgumentException {
+        try {
+            return loadClass(className, loader);
+        } catch(ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
      * Returns an instance of the specified class.  This uses the default
      * no-arg constructor to create the instance.
      * @param className Name of the class to instantiate

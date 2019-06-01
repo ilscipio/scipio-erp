@@ -57,6 +57,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
@@ -105,8 +106,7 @@ public class OutputServices {
         }
 
         try {
-
-            MapStack<String> screenContextTmp = MapStack.create();
+            MapStack<String> screenContextTmp = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
             screenContextTmp.put("locale", locale);
 
             Writer writer = new StringWriter();
@@ -223,7 +223,7 @@ public class OutputServices {
         }
 
         try {
-            MapStack<String> screenContextTmp = MapStack.create();
+            MapStack<String> screenContextTmp = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
             screenContextTmp.put("locale", locale);
 
             Writer writer = new StringWriter();

@@ -36,6 +36,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
@@ -345,13 +346,8 @@ public class HtmlWidget extends ModelScreenWidget {
         @Override
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             // isolate the scope
-            MapStack<String> contextMs;
-            if (!(context instanceof MapStack<?>)) {
-                contextMs = MapStack.create(context);
-                context = contextMs;
-            } else {
-                contextMs = UtilGenerics.cast(context);
-            }
+            MapStack<String> contextMs = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
+            context = contextMs;
 
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack<String> standAloneStack = contextMs.standAloneChildStack();

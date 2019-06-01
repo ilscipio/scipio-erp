@@ -64,6 +64,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.XslTransform;
 import org.ofbiz.common.email.NotificationServices;
@@ -756,7 +757,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             // Screen Widget template
             } else if ("SCREEN_COMBINED".equals(dataTemplateTypeId)) {
                 try {
-                    MapStack<String> context = MapStack.create(templateContext);
+                    MapStack<String> context = RenderMapStack.createRenderContext(templateContext); // SCIPIO: Dedicated context class: MapStack.create(templateContext);
                     context.put("locale", locale);
                     // prepare the map for preRenderedContent
                     String textData = (String) context.get("textData");

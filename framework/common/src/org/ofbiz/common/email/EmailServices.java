@@ -62,6 +62,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -77,8 +78,6 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
-
-import freemarker.template.TemplateException;
 
 /**
  * Email Services
@@ -492,7 +491,7 @@ public class EmailServices {
 
         StringWriter bodyWriter = new StringWriter();
 
-        MapStack<String> screenContext = MapStack.create();
+        MapStack<String> screenContext = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
         screenContext.put("locale", locale);
 
         ScreenStringRenderer screenStringRenderer = null;
@@ -540,7 +539,7 @@ public class EmailServices {
                 // start processing fo pdf attachment
                 try {
                     Writer writer = new StringWriter();
-                    MapStack<String> screenContextAtt = MapStack.create();
+                    MapStack<String> screenContextAtt = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
                     // substitute the freemarker variables...
                     ScreenStringRenderer foScreenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", dctx.getDelegator()),
                             EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", dctx.getDelegator()));

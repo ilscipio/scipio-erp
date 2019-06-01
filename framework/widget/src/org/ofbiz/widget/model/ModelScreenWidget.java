@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -582,9 +583,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // SCIPIO: share-scope
             boolean protectScope = !shareScope(context);
             if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
 
@@ -1192,9 +1191,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             // if we are not sharing the scope, protect it using the MapStack
             boolean protectScope = !shareScope(context);
             if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 // SCIPIO: new renderSeqNumber
                 int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
                 renderSeqNumber++;
@@ -1369,9 +1366,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             filteredPrevSectionMap = Collections.unmodifiableMap(filteredPrevSectionMap);
 
             // isolate the scope
-            if (!(context instanceof MapStack)) {
-                context = MapStack.create(context);
-            }
+            context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
 
             MapStack<String> contextMs = (MapStack<String>) context;
 
@@ -1561,9 +1556,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException { // SCIPIO: renamed to *Core
             Map<String, ? extends Object> preRenderedContent = UtilGenerics.checkMap(context.get("preRenderedContent"));
             // SCIPIO: new context stack push/pop and renderSeqNumber handling
-            if (!(context instanceof MapStack<?>)) {
-                context = MapStack.create(context);
-            }
+            context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
             int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
             renderSeqNumber++;
             context.put("renderSeqNumber", renderSeqNumber);
@@ -1694,9 +1687,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             }
             boolean protectScope = !shareScope(context);
             if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
 
@@ -1798,9 +1789,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             }
             boolean protectScope = !shareScope(context);
             if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
 
@@ -1912,9 +1901,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             }
             boolean protectScope = !shareScope(context);
             if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
 
@@ -2074,9 +2061,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 GenericValue content = null;
                 String expandedDataResourceId = getDataResourceId(context);
                 String expandedContentId = getContentId(context);
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
 
                 // This is an important step to make sure that the current contentId is in the context
                 // as templates that contain "subcontent" elements will expect to find the master
@@ -2310,9 +2295,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 // SCIPIO: added scope protect
                 boolean protectScope = !shareScope(context);
                 if (protectScope) {
-                    if (!(context instanceof MapStack<?>)) {
-                        context = MapStack.create(context);
-                    }
+                    context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                     UtilGenerics.<MapStack<String>>cast(context).push();
                 }
 

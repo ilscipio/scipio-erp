@@ -31,6 +31,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
@@ -55,7 +56,7 @@ public class RenderContentAndSubContent implements TemplateTransformModel {
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
         final Map<String, Object> envMap = FreeMarkerWorker.createEnvironmentMap(env);
-        final MapStack<String> templateRoot = MapStack.create();
+        final MapStack<String> templateRoot = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
         ((MapStack<String>)templateRoot).push(envMap);
         if (Debug.verboseOn()) {
             Debug.logVerbose("in RenderContentAndSubContent, contentId(0):" + templateRoot.get("contentId"), module);

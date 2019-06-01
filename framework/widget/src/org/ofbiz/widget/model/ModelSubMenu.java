@@ -31,6 +31,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
@@ -535,9 +536,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
 
         boolean protectScope = !shareScope(context);
         if (protectScope) {
-            if (!(context instanceof MapStack<?>)) {
-                context = MapStack.create(context);
-            }
+            context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
             UtilGenerics.<MapStack<String>>cast(context).push();
         }
 

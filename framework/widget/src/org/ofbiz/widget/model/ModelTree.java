@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -599,7 +600,7 @@ public class ModelTree extends ModelWidget {
                             Map<String, Object> val = UtilGenerics.checkMap(arr[1]);
                             String thisPkName = node.getPkName(context);
                             String thisEntityId = (String) val.get(thisPkName);
-                            MapStack<String> newContext = MapStack.create(context);
+                            MapStack<String> newContext = RenderMapStack.createRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
                             newContext.push();
                             String nodeEntryName = node.getEntryName();
                             if (!nodeEntryName.isEmpty()) {

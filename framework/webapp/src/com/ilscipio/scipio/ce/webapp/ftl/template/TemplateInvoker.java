@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioModelFactory;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioObjectWrapper;
@@ -327,7 +328,7 @@ public class TemplateInvoker {
             }
         }
         if (context == null) {
-            context = MapStack.create();
+            context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
         }
         return context;
     }

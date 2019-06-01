@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -1019,7 +1020,7 @@ public class FormRenderer {
                 listFormHandler.notifyHasDisplayResult(); // SCIPIO
 
                 Map<String, Object> itemMap = UtilGenerics.checkMap(item);
-                MapStack<String> localContext = MapStack.create(context);
+                MapStack<String> localContext = RenderMapStack.createRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
                 if (UtilValidate.isNotEmpty(modelForm.getListEntryName())) {
                     localContext.put(modelForm.getListEntryName(), item);
                 } else {

@@ -1,6 +1,7 @@
 package org.ofbiz.webapp.renderer;
 
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 
 /**
  * SCIPIO: Simple context fetcher that always returns the initial ones.
@@ -12,7 +13,7 @@ public class SimpleContextFetcher implements RenderContextFetcher {
 
     public SimpleContextFetcher(Appendable writer, MapStack<String> context) {
         this.writer = writer;
-        if (context == null) context = MapStack.create();
+        if (context == null) context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
         this.context = context;
     }
 

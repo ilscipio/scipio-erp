@@ -42,6 +42,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.widget.WidgetWorker;
@@ -120,7 +121,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
 
         boolean isEntrySet = false;
         // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
-        MapStack<String> contextMs = MapStack.create(context);
+        MapStack<String> contextMs = RenderMapStack.createRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
 
         String entryName = this.entryNameExdr.expandString(context);
         String keyName = this.keyNameExdr.expandString(context);

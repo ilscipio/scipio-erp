@@ -19,6 +19,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.common.email.NotificationServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -275,7 +276,7 @@ public class CommonServices {
 
             StringWriter bodyWriter = new StringWriter();
 
-            MapStack<String> screenContext = MapStack.create();
+            MapStack<String> screenContext = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
             screenContext.put("locale", locale);
 
             // Scipio new

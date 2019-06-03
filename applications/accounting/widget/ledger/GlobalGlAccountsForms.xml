@@ -289,7 +289,7 @@ code package.
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"></lookup></field>
-        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"><sub-hyperlink target="ww" description="${workEffortName}"/></lookup></field>
+        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"><sub-hyperlink target="WorkEffortSummary" description="${workEffortName}"/></lookup></field>
         <field name="emplPositionTypeId" title="${uiLabelMap.CommonPosition}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="EmplPositionType" description="${description}">

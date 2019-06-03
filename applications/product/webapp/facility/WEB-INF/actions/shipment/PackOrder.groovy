@@ -25,7 +25,11 @@ import org.ofbiz.entity.condition.EntityCondition;
 
 final module = "PackOrder.groovy";
 
-facilityId = parameters.facilityId;
+def facilityId = request.getAttribute("facilityId");
+if (!facilityId) {
+    facilityId = parameters.facilityId;
+}
+def facility ="";
 if (facilityId) {
     facility = from("Facility").where("facilityId", facilityId).queryOne();
     context.facilityId = facilityId;

@@ -33,7 +33,8 @@ ${virtualJavaScript!}
             return;
         }
         window[fieldName] = window[fieldName].replace(/\&\#47;/g, "/");
-        popUp("<@pageUrl>detailImage?detail=" + window[fieldName] + "</@pageUrl>", 'detailImage', '400', '550');
+        <#--SCIPIO: Removed popUp function, which serves no purpose any longer.
+        popUp("<@pageUrl>detailImage?detail=" + window[fieldName] + "</@pageUrl>", 'detailImage', '400', '550');-->
     }
 
     function setAddProductIdInline(inlineCounter, name) {

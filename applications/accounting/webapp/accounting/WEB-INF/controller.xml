@@ -96,19 +96,19 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewPurchaseInvoice"/>
     </request-map>
-    
-    <!-- SCIPIO: Check for duplicates (?)
-    
-    <request-map uri="FindPurchaseInvoices">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
-    </request-map>
 
     <request-map uri="processMassCheckRun">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndPaymentGroupForInvoices"/>
         <response name="success" type="request" value="PaymentGroupOverview"/>
         <response name="error" type="view" value="FindPurchaseInvoices"/>
+    </request-map>
+
+    <!-- SCIPIO: Check for duplicates (?)
+    
+    <request-map uri="FindPurchaseInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPurchaseInvoices"/>
     </request-map>
    
     <request-map uri="findInvoices">

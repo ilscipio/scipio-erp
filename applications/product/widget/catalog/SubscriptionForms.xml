@@ -136,7 +136,7 @@ code package.
         </field>
         <field name="productCategoryId">
             <display-entity entity-name="ProductCategory" description="${categoryName}">
-                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${productCategoryId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="/catalog/control/EditCategory" target-type="inter-app" description="${productCategoryId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -256,7 +256,7 @@ code package.
         </field>
         <field name="productCategoryId">
             <lookup target-form-name="LookupProductCategory">
-                <sub-hyperlink target="/catalog/control/EditProductCategory" target-type="inter-app" description="${subscription.productCategoryId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="/catalog/control/EditCategory" target-type="inter-app" description="${subscription.productCategoryId}" link-style="${styles.link_nav_info_id}">
                 <parameter param-name="productCategoryId" from-field="subscription.productCategoryId"/>
             </sub-hyperlink>
             </lookup>

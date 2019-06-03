@@ -292,7 +292,7 @@ code package.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="TrackingCodeType"/>
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCodeType"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCodeType"/>
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
                 <entity-one entity-name="TrackingCodeType" value-field="trackingCodeType"/>
                 <set field="title" value="${uiLabelMap.MarketingTracking} ${trackingCodeTypeId}"/>

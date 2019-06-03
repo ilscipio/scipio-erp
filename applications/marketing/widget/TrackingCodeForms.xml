@@ -287,7 +287,7 @@ code package.
         <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
-    <form name="ListTrackingCodeType" target="ListTrackingCodeType" title="" type="list"
+    <form name="ListTrackingCodeType" target="FindTrackingCodeType" title="" type="list"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TrackingCodeType"/>

@@ -43,7 +43,7 @@ bomListIterator = select("productId", "internalName", "productAssocTypeId")
                     .where(condList)
                     .orderBy("productId", "productAssocTypeId")
                     .cursorScrollInsensitive()
-                    .cache(true)
+                    //.cache(true) // SCIPIO: EntityListIterator does not support entity cache
                     .queryIterator();
 
 context.ListProductBom = bomListIterator;

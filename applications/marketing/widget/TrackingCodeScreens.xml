@@ -13,7 +13,7 @@ code package.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="TrackingCode"/>
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
                 <set field="title" value="${uiLabelMap.MarketingTrackingCode} ${trackingCodeId}" />
@@ -53,7 +53,7 @@ code package.
                 <set field="activeSubMenuItem" value="TrackingCode"/>
                 <set field="labelTitleProperty" value="PageTitleListTrackingCode"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <set field="entityName" value="TrackingCode"/>
             </actions>
@@ -105,7 +105,7 @@ code package.
                 <set field="activeSubMenuItem" value="TrackingCodeOrder"/>
                 <set field="labelTitleProperty" value="PageTitleEditTrackingCodeOrder"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <set field="orderId" from-field="parameters.partyId"/>
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
@@ -135,7 +135,7 @@ code package.
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
             </actions>
@@ -180,7 +180,7 @@ code package.
                 <set field="activeSubMenuItem" value="TrackingCodeVisit"/>
                 <set field="labelTitleProperty" value="PageTitleEditTrackingCodeVisit"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
@@ -208,7 +208,7 @@ code package.
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <set field="entityName" value="TrackingCodeVisit"/>
             </actions>
@@ -230,7 +230,7 @@ code package.
                 <set field="activeSubMenuItem" value="TrackingCodeVisit"/>
                 <set field="labelTitleProperty" value="PageTitleFindTrackingCodeVisits"/>
 
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/FindTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
             </actions>
             <widgets>

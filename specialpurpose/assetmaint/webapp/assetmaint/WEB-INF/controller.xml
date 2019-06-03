@@ -118,6 +118,14 @@
     <request-map uri="LookupPartsProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartsProduct"/></request-map>
     <request-map uri="LookupWorkEffortShort"><security auth="true" https="true"/><response name="success" type="view" value="LookupWorkEffortShort"/></request-map>
 
+    <request-map uri="searchorders">
+        <security https="true" auth="true"/>
+        <!-- SCIPIO: service now runs from groovy
+        <event type="service" invoke="findOrders"/> -->
+        <response name="success" type="view" value="findorders"/>
+        <response name="error" type="view" value="findorders"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -132,6 +140,8 @@
     <view-map name="EditWorkEffortNotes" type="screen" page="component://assetmaint/widget/AssetmaintScreens.xml#EditWorkEffortNotes"/>
     <view-map name="EditItemIssuances" type="screen" page="component://assetmaint/widget/AssetmaintScreens.xml#EditItemIssuances"/>
     <view-map name="PrintFixedAssetMaint" type="screenfop" page="component://assetmaint/widget/AssetmaintScreens.xml#PrintFixedAssetMaint" content-type="application/pdf"/>
+
+    <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
 
     <!-- Lookup request mappings -->
     <view-map name="LookupPartsProduct" type="screen" page="component://assetmaint/widget/ProductScreens.xml#LookupPartsProduct"/>

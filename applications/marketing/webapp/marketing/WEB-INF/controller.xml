@@ -403,7 +403,10 @@ code package.
             Therefore the following acts as a placeholder until a  full migration of the PromoScreens 
             from the products component has been completed.
     -->
-    
+
+    <!-- ================ WorkEffort Requests ==================  -->
+    <request-map uri="ListWorkEfforts"><security https="true" auth="true"/><response name="success" type="view" value="ListWorkEfforts"/></request-map>
+
     <!-- ================ ProductPromo Requests ================= -->
     <request-map uri="FindProductPromo">
         <security https="true" auth="true"/>
@@ -732,6 +735,9 @@ code package.
     <view-map name="PartyStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#PartyStatusReport"/>
 
     <!-- SCIPIO: View mappings -->
+    <!-- SCIPIO: The following is duplicated from component://workeffort/webapp/workeffort/WEB-INF/controller.xml -->
+    <view-map name="ListWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEfforts"/>
+
     <!-- SCIPIO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>

@@ -406,6 +406,7 @@ code package.
 
     <!-- ================ WorkEffort Requests ==================  -->
     <request-map uri="ListWorkEfforts"><security https="true" auth="true"/><response name="success" type="view" value="ListWorkEfforts"/></request-map>
+    <request-map uri="EditWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="EditWorkEffort"/></request-map>
 
     <!-- ================ ProductPromo Requests ================= -->
     <request-map uri="FindProductPromo">
@@ -737,6 +738,7 @@ code package.
     <!-- SCIPIO: View mappings -->
     <!-- SCIPIO: The following is duplicated from component://workeffort/webapp/workeffort/WEB-INF/controller.xml -->
     <view-map name="ListWorkEfforts" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#ListWorkEfforts"/>
+    <view-map name="EditWorkEffort" type="screen" page="component://workeffort/widget/WorkEffortScreens.xml#EditWorkEffort"/>
 
     <!-- SCIPIO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>

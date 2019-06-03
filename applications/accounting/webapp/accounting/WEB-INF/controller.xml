@@ -1445,12 +1445,11 @@ code package.
     </request-map>
 
     <!-- Fixed Asset GeoLocation-->
-    <!-- SCIPIO: TODO: REVIEW: view no longer exists...
     <request-map uri="FixedAssetGeoLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FixedAssetGeoLocation"/>
         <response name="error" type="view" value="EditFixedAsset"/>
-    </request-map>-->
+    </request-map>
     
 
     <!--
@@ -3091,6 +3090,8 @@ code package.
     <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
     <view-map name="calendar" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#Calendar"/>
     <view-map name="WorkEffortSummary" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#WorkEffortSummary"/>
+
+    <view-map name="FixedAssetGeoLocation" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#FixedAssetGeoLocation"/>
 
     <!-- Depreciation Calculation   -->
     <view-map name="ShowFixedAssetDepreciation" type="screen" page="component://accounting/widget/assets/FixedAssetScreens.xml#ShowFixedAssetDepreciation"/>

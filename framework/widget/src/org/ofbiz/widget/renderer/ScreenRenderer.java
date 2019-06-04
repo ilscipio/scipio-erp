@@ -465,6 +465,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
     }
 
     public static void populateContextForRequest(MapStack<String> context, ScreenRenderer screens, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        populateContextForRequest(context, true, screens, request, response, servletContext);
+    }
+
+    // SCIPIO: Added overload with protectScope (default: true)
+    public static void populateContextForRequest(MapStack<String> context, boolean protectScope, ScreenRenderer screens, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         HttpSession session = request.getSession();
 
         // attribute names to skip for session and application attributes; these are all handled as special cases, duplicating results and causing undesired messages
@@ -616,7 +621,9 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         populateWebappContextScripts(context, request, response, servletContext);
 
         // to preserve these values, push the MapStack
-        context.push();
+        if (protectScope) { // SCIPIO: Added protectScope
+            context.push();
+        }
     }
 
     public MapStack<String> getContext() {

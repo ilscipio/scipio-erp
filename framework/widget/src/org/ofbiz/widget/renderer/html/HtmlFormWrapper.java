@@ -166,11 +166,14 @@ public class HtmlFormWrapper {
                     + " - only the main render context (with delegator) should be passed to this method", module);
             contextStack.push(this.context);
         }
-        StringWriter buffer = new StringWriter();
-        FormRenderer formRenderer = new FormRenderer(modelForm, renderer);
-        formRenderer.render(buffer, contextStack);
-        contextStack.pop();
-        return buffer;
+        try { // SCIPIO: Added try/finally block
+            StringWriter buffer = new StringWriter();
+            FormRenderer formRenderer = new FormRenderer(modelForm, renderer);
+            formRenderer.render(buffer, contextStack);
+            return buffer;
+        } finally {
+            contextStack.pop();
+        }
     }
     /**
      * renderFormString using the context prepared and stored in this instance.

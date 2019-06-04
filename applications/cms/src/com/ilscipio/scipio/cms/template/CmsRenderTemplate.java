@@ -283,9 +283,9 @@ public interface CmsRenderTemplate extends Serializable {
 
             private boolean skipSystemCtx;
             private boolean systemCtxCmsOnly = false;
-            private boolean systemCtxNoPush = false;
+            private boolean protectScopeSystem = true;
             private boolean skipExtraCommonCtx;
-            private boolean shareScope;
+            private boolean protectScope;
 
             private boolean newCmsCtx = true; // high-level flag mainly used by subclasses
 
@@ -294,11 +294,11 @@ public interface CmsRenderTemplate extends Serializable {
             public RenderArgs() {
                 this.skipSystemCtx = false;
                 this.skipExtraCommonCtx = false;
-                this.shareScope = false;
+                this.protectScope = true;
             }
 
             public RenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean shareScope) {
+                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean protectScope) {
                 this.out = out;
                 setEnv(env);
                 this.env = env;
@@ -309,27 +309,12 @@ public interface CmsRenderTemplate extends Serializable {
                 this.ovrdCtxVars = ovrdCtxVars;
                 this.skipSystemCtx = skipSystemCtx;
                 this.skipExtraCommonCtx = skipExtraCommonCtx;
-                this.shareScope = shareScope;
+                this.protectScope = protectScope;
             }
 
             public RenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope) {
-                this(out, null, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, shareScope);
-            }
-
-            public RenderArgs(Writer out, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                this(out, null, context, content, pageContext, null, null, false, false, shareScope);
-            }
-
-            public RenderArgs(Environment env, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope) {
-                this(null, env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, shareScope);
-            }
-
-            public RenderArgs(Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                this(null, env, context, content, pageContext, null, null, false, false, shareScope);
+                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
+                this(out, null, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, protectScope);
             }
 
             public Writer getOut() {
@@ -389,28 +374,17 @@ public interface CmsRenderTemplate extends Serializable {
             public void setSystemCtxCmsOnly(boolean systemCtxCmsOnly) {
                 this.systemCtxCmsOnly = systemCtxCmsOnly;
             }
-            public boolean isSystemCtxNoPush() {
-                return systemCtxNoPush;
-            }
-            public void setSystemCtxNoPush(boolean systemCtxNoPush) {
-                this.systemCtxNoPush = systemCtxNoPush;
-            }
+            public boolean isProtectScopeSystem() { return protectScopeSystem; }
+            public void setProtectScopeSystem(boolean protectScopeSystem) { this.protectScopeSystem = protectScopeSystem; }
             public boolean isSkipExtraCommonCtx() {
                 return skipExtraCommonCtx;
             }
-            public void setSkipExtraCommonCtx(boolean skipExtraCommonCtx) {
-                this.skipExtraCommonCtx = skipExtraCommonCtx;
+            public void setSkipExtraCommonCtx(boolean skipExtraCommonCtx) { this.skipExtraCommonCtx = skipExtraCommonCtx; }
+            public boolean isProtectScope() { return protectScope; }
+            public void setProtectScope(boolean protectScope) {
+                this.protectScope = protectScope;
             }
-            public boolean isShareScope() {
-                return shareScope;
-            }
-            public void setShareScope(boolean shareScope) {
-                this.shareScope = shareScope;
-            }
-            public CmsPage getPage() {
-                // workaround for lack of CmsPage property
-                return content != null ? content.getPage() : null;
-            }
+            public CmsPage getPage() { return (content != null) ? content.getPage() : null; } // workaround for lack of CmsPage property
             public boolean isNewCmsCtx() {
                 return newCmsCtx;
             }
@@ -436,53 +410,61 @@ public interface CmsRenderTemplate extends Serializable {
          * context information and renders to the passed writer.
          */
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
-            final boolean protectScope = !renderArgs.isShareScope();
+            boolean useTransaction = renderArgs.isTxEnabled(); // NOTE: If txTimeout is exactly the string "0", prevents transaction, even if req attr was set
+            boolean beganTransaction = false;
+            final boolean protectScope = !renderArgs.isProtectScope();
+            final int origStackSize = renderArgs.getContext().stackSize();
             if (protectScope) {
                 renderArgs.getContext().push();
             }
-
-            boolean useTransaction = renderArgs.isTxEnabled(); // NOTE: If txTimeout is exactly the string "0", prevents transaction, even if req attr was set
-
-            boolean beganTransaction = false;
             try {
-
                 // Populate context
-                // This does not work anymore, because the transaction has to be started in the middle:
-                //populateRenderContext(renderArgs);
-
                 if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
                     throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");
                 }
+                boolean protectScopeSystem = false;
                 try {
                     // TODO: REVIEW: At current time (2019-02), we will have to emulate ModelScreen and start the
                     // transaction after system context is populated but BEFORE screen scripts are run,
                     // otherwise the txTimeout expression has no context to work with.
                     if (!renderArgs.isSkipSystemCtx()) {
                         populateSystemRenderContext(renderArgs);
+                        if (renderArgs.isProtectScopeSystem()) {
+                            renderArgs.getContext().push();
+                            protectScopeSystem = true;
+                        }
                     } else {
                         // Emulates ModelScreen behavior...
                         renderArgs.getContext().put("nullField", GenericEntity.NULL_FIELD);
                     }
-                    // TODO: REVIEW: For now, leaving populateProcessorScript BEFORE transaction start, because otherwise
-                    // it will be inconsistent with the scripts invoked from populateSystemRenderContext, AND
-                    // it's possible the txTimeout expander needs to fetch something from the common processor.
-                    // We COULD split populateExtraCommonRenderContext into 2 and include the processor in the transaction,
-                    // but for the time being, we don't even supply a processor anymore, so it's unclear if there's any real need
-                    // for it to be wrapped in a transaction.
-                    if (!renderArgs.isSkipExtraCommonCtx()) {
-                        populateExtraCommonRenderContext(renderArgs);
-                    }
-                    if (useTransaction) {
-                        beganTransaction = beginRenderTx(renderArgs);
-                    }
-                    populateWidgetRenderContext(renderArgs);
                 } catch (Throwable t) {
                     throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
                 }
-
-                // Render template
-                renderTemplate(renderArgs.getOut(), renderArgs.getContext());
-
+                try {
+                    try {
+                        // TODO: REVIEW: For now, leaving populateProcessorScript BEFORE transaction start, because otherwise
+                        // it will be inconsistent with the scripts invoked from populateSystemRenderContext, AND
+                        // it's possible the txTimeout expander needs to fetch something from the common processor.
+                        // We COULD split populateExtraCommonRenderContext into 2 and include the processor in the transaction,
+                        // but for the time being, we don't even supply a processor anymore, so it's unclear if there's any real need
+                        // for it to be wrapped in a transaction.
+                        if (!renderArgs.isSkipExtraCommonCtx()) {
+                            populateExtraCommonRenderContext(renderArgs);
+                        }
+                        if (useTransaction) {
+                            beganTransaction = beginRenderTx(renderArgs);
+                        }
+                        populateWidgetRenderContext(renderArgs);
+                    } catch (Throwable t) {
+                        throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
+                    }
+                    // Render template
+                    renderTemplate(renderArgs.getOut(), renderArgs.getContext());
+                } finally {
+                    if (protectScopeSystem) {
+                        renderArgs.getContext().pop();
+                    }
+                }
                 TransactionUtil.commit(beganTransaction);
                 return null;
             } catch (Exception e) { // Implied: | CmsException e)
@@ -502,6 +484,10 @@ public interface CmsRenderTemplate extends Serializable {
             } finally {
                 if (protectScope) {
                     renderArgs.getContext().pop();
+                }
+                if (renderArgs.getContext().stackSize() > origStackSize) {
+                    Debug.logWarning("Cms: Unmatched push() calls at render end: stack size (" + renderArgs.getContext().stackSize()
+                            + ") is greater than expected (" + origStackSize + ")", module);
                 }
             }
         }
@@ -549,31 +535,6 @@ public interface CmsRenderTemplate extends Serializable {
                 }
             }
             return transactionTimeout;
-        }
-        
-        /**
-         * Fully populates the render context as necessary, depending highly on the
-         * template type.
-         * @deprecated 2019-02-11: This does not work anymore, because the transaction has to be started in the middle - see {@link #processAndRender(RenderArgs)}.
-         * <p>
-         * NOTE: subclass may need to override this (2017-02-20: using the flags instead for now).
-         */
-        @Deprecated
-        public void populateRenderContext(RenderArgs renderArgs) {
-            if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
-                throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");
-            }
-            try {
-                if (!renderArgs.isSkipSystemCtx()) {
-                    populateSystemRenderContext(renderArgs);
-                }
-                if (!renderArgs.isSkipExtraCommonCtx()) {
-                    populateExtraCommonRenderContext(renderArgs);
-                }
-                populateWidgetRenderContext(renderArgs);
-            } catch (Throwable t) {
-                throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
-            }
         }
 
         /**
@@ -635,20 +596,10 @@ public interface CmsRenderTemplate extends Serializable {
                 populateContextForRequest(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             }
-
-            // IMPORTANT: here we undo the stack push done by populateContextForRequest, and re-do it at the end
-            // to include more of our custom variables.
-            // NOTE: the stock ofbiz MacroScreenViewHandler does NOT do this, but it can probably be considered a flaw.
-            renderArgs.getContext().pop();
-
             if (!renderArgs.isSystemCtxCmsOnly()) {
                 populateSystemViewHandlerRenderContext(renderArgs.getContext(),
                         renderArgs.getPageContext().getRequest(), renderArgs.getPageContext().getResponse(),
                         renderArgs.getOut());
-            }
-
-            if (!renderArgs.isSystemCtxNoPush()) {
-                renderArgs.getContext().push();
             }
         }
 
@@ -705,6 +656,7 @@ public interface CmsRenderTemplate extends Serializable {
          * Populates context for a new request.
          * <p>
          * Based on {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest}.
+         * NOTE: 2019-06-03: Unlike ScreenRenderer, this does <b>not</b> protect scope - caller must do it as needed.
          * <p>
          * DEV NOTE: MUST BE MAINTAINED TO MATCH <code>ScreenRenderer.populateContextForRequest</code>.
          * Try to keep as close as possible in every way to that method (down to code style),
@@ -713,13 +665,12 @@ public interface CmsRenderTemplate extends Serializable {
         public static void populateContextForRequest(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             // top request-/page-level cms-specific variables
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
-            ScreenRenderer.populateContextForRequest(context, screens,
+            ScreenRenderer.populateContextForRequest(context, false, screens,
                     pageContext.getRequest(), pageContext.getResponse(), pageContext.getServletContext());
         }
 
         public static void populateContextForRequestCmsOnly(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
-            context.push();
         }
 
         public static void populateTopCmsContextVariables(MapStack<String> context, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {

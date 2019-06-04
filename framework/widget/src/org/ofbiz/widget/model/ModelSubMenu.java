@@ -539,23 +539,24 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
             UtilGenerics.<MapStack<String>>cast(context).push();
         }
+        try { // SCIPIO: Added try/finally block
+            // NOTE: there is no stack push/pop here!
+            AbstractModelAction.runSubActions(actions, context);
 
-        // NOTE: there is no stack push/pop here!
-        AbstractModelAction.runSubActions(actions, context);
+            // render menu open
+            menuStringRenderer.renderSubMenuOpen(writer, context, this);
 
-        // render menu open
-        menuStringRenderer.renderSubMenuOpen(writer, context, this);
+            // render each menuItem row, except hidden & ignored rows
+            for (ModelMenuItem item : this.getOrderedMenuItemList(context)) {
+                item.renderMenuItemString(writer, context, menuStringRenderer);
+            }
 
-        // render each menuItem row, except hidden & ignored rows
-        for (ModelMenuItem item : this.getOrderedMenuItemList(context)) {
-            item.renderMenuItemString(writer, context, menuStringRenderer);
-        }
-
-        // render menu close
-        menuStringRenderer.renderSubMenuClose(writer, context, this);
-
-        if (protectScope) {
-            UtilGenerics.<MapStack<String>>cast(context).pop();
+            // render menu close
+            menuStringRenderer.renderSubMenuClose(writer, context, this);
+        } finally {
+            if (protectScope) {
+                UtilGenerics.<MapStack<String>>cast(context).pop();
+            }
         }
     }
 

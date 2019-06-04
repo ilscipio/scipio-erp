@@ -27,6 +27,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import freemarker.template.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -43,120 +44,102 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import freemarker.core.Environment;
-import freemarker.template.TemplateTransformModel;
 
 /**
  * RenderContentAsText - Freemarker Transform for Content rendering
  * This transform cannot be called recursively (at this time).
  */
-public class RenderContentTransform implements TemplateTransformModel {
+public class RenderContentTransform implements TemplateDirectiveModel { // SCIPIO: Refactored as TemplateDirectiveModel
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
-        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
-        final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
-        final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-        final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
-        final HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+        LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
+        HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
+        HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env);
+        MapStack<String> templateRoot = RenderMapStack.createRenderContext(FreeMarkerWorker.createEnvironmentMap(env)); // SCIPIO: Dedicated context class: MapStack.create(FreeMarkerWorker.createEnvironmentMap(env));
+        templateRoot.push(params);
+        try { // SCIPIO: Added try/finally block
+            String xmlEscape = (String) templateRoot.get("xmlEscape");
+            String thisContentId = (String) templateRoot.get("contentId");
+            renderSubContent(env.getOut(), delegator, dispatcher, request, response, templateRoot, xmlEscape, thisContentId);
+        } finally {
+            templateRoot.pop(); // SCIPIO: Added pop()
+        }
+    }
 
-        final Map<String, Object> templateRoot = RenderMapStack.createRenderContext(FreeMarkerWorker.createEnvironmentMap(env)); // SCIPIO: Dedicated context class: MapStack.create(FreeMarkerWorker.createEnvironmentMap(env));
-        ((MapStack<String>)templateRoot).push(args);
-        final String xmlEscape =  (String)templateRoot.get("xmlEscape");
-        final String thisContentId = (String)templateRoot.get("contentId");
+    protected void renderSubContent(Writer out, Delegator delegator, LocalDispatcher dispatcher, HttpServletRequest request, HttpServletResponse response,
+                                 MapStack<String> templateRoot, String xmlEscape, String thisContentId) throws IOException {
+        String mimeTypeId = (String) templateRoot.get("mimeTypeId");
+        Object localeObject = templateRoot.get("locale");
+        Locale locale = null;
+        if (localeObject == null) {
+            locale = UtilHttp.getLocale(request);
+        } else {
+            locale = UtilMisc.ensureLocale(localeObject);
+        }
 
-        return new Writer(out) {
+        String editRequestName = (String)templateRoot.get("editRequestName");
+        if (UtilValidate.isNotEmpty(editRequestName)) {
+            String editStyle = getEditStyle(templateRoot);
+            openEditWrap(out, editStyle);
+        }
 
-            @Override
-            public void write(char cbuf[], int off, int len) {
+        try {
+            String txt = null;
+
+            String mapKey = (String)templateRoot.get("mapKey");
+            if (UtilValidate.isEmpty(mapKey)) {
+                txt = ContentWorker.renderContentAsText(dispatcher, delegator, thisContentId, templateRoot, locale, mimeTypeId, true);
+            } else {
+                txt = ContentWorker.renderSubContentAsText(dispatcher, delegator, thisContentId, mapKey, templateRoot, locale, mimeTypeId, true);
+            }
+            if ("true".equals(xmlEscape)) {
+                txt = UtilFormatOut.encodeXmlValue(txt);
             }
 
-            @Override
-            public void flush() throws IOException {
-                out.flush();
-            }
+            out.write(txt);
+        } catch (GeneralException e) {
+            String errMsg = "Error rendering thisContentId:" + thisContentId + " msg:" + e.toString();
+            Debug.logError(e, errMsg, module);
+            // just log a message and don't return anything: throw new IOException();
+        }
+        if (UtilValidate.isNotEmpty(editRequestName)) {
+            closeEditWrap(out, request, response, thisContentId, editRequestName);
+        }
 
-            @Override
-            public void close() throws IOException {
-                renderSubContent();
-            }
+    }
 
-            public void renderSubContent() throws IOException {
-                String mimeTypeId = (String) templateRoot.get("mimeTypeId");
-                Object localeObject = templateRoot.get("locale");
-                Locale locale = null;
-                if (localeObject == null) {
-                    locale = UtilHttp.getLocale(request);
-                } else {
-                    locale = UtilMisc.ensureLocale(localeObject);
-                }
+    private void openEditWrap(Writer out, String editStyle) throws IOException {
+        String divStr = "<div class=\"" + editStyle + "\">";
+        out.write(divStr);
+    }
 
-                String editRequestName = (String)templateRoot.get("editRequestName");
+    private void closeEditWrap(Writer out, HttpServletRequest request, HttpServletResponse response, String thisContentId, String editRequestName) throws IOException {
+        String fullRequest = editRequestName;
+        String delim = "?";
+        if (UtilValidate.isNotEmpty(thisContentId)) {
+            fullRequest += delim + "contentId=" + thisContentId;
+            delim = "&";
+        }
+        out.write("<a href=\"");
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
+        RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
+        out.append(rh.makeLink(request, response, "/" + fullRequest, false, null, true)); // SCIPIO: 2018-07-09: changed secure to null
+        out.write("\">Edit</a>");
+        out.write("</div>");
+    }
 
-                if (UtilValidate.isNotEmpty(editRequestName)) {
-                    String editStyle = getEditStyle();
-                    openEditWrap(out, editStyle);
-                }
-
-                try {
-                    String txt = null;
-
-                    String mapKey = (String)templateRoot.get("mapKey");
-                    if (UtilValidate.isEmpty(mapKey)) {
-                        txt = ContentWorker.renderContentAsText(dispatcher, delegator, thisContentId, templateRoot, locale, mimeTypeId, true);
-                    } else {
-                        txt = ContentWorker.renderSubContentAsText(dispatcher, delegator, thisContentId, mapKey, templateRoot, locale, mimeTypeId, true);
-                    }
-                    if ("true".equals(xmlEscape)) {
-                        txt = UtilFormatOut.encodeXmlValue(txt);
-                    }
-
-                    out.write(txt);
-
-                } catch (GeneralException e) {
-                    String errMsg = "Error rendering thisContentId:" + thisContentId + " msg:" + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    // just log a message and don't return anything: throw new IOException();
-                }
-                if (UtilValidate.isNotEmpty(editRequestName)) {
-                    closeEditWrap(out, editRequestName);
-                }
-
-            }
-
-            public void openEditWrap(Writer out, String editStyle) throws IOException {
-                String divStr = "<div class=\"" + editStyle + "\">";
-                out.write(divStr);
-            }
-
-            public void closeEditWrap(Writer out, String editRequestName) throws IOException {
-                String fullRequest = editRequestName;
-                String delim = "?";
-                if (UtilValidate.isNotEmpty(thisContentId)) {
-                    fullRequest += delim + "contentId=" + thisContentId;
-                    delim = "&";
-                }
-
-                out.write("<a href=\"");
-                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
-                RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                out.append(rh.makeLink(request, response, "/" + fullRequest, false, null, true)); // SCIPIO: 2018-07-09: changed secure to null
-                out.write("\">Edit</a>");
-                out.write("</div>");
-            }
-
-            public String getEditStyle() {
-                String editStyle = (String)templateRoot.get("editStyle");
-                if (UtilValidate.isEmpty(editStyle)) {
-                    editStyle = UtilProperties.getPropertyValue("content", "defaultEditStyle");
-                }
-                if (UtilValidate.isEmpty(editStyle)) {
-                    editStyle = "buttontext";
-                }
-                return editStyle;
-            }
-        };
+    private String getEditStyle(MapStack<String> templateRoot) {
+        String editStyle = (String) templateRoot.get("editStyle");
+        if (UtilValidate.isEmpty(editStyle)) {
+            editStyle = UtilProperties.getPropertyValue("content", "defaultEditStyle");
+        }
+        if (UtilValidate.isEmpty(editStyle)) {
+            editStyle = "buttontext";
+        }
+        return editStyle;
     }
 }

@@ -358,10 +358,13 @@ public class HtmlWidget extends ModelScreenWidget {
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
-            context.put("sections", sections);
+            try { // SCIPIO: Added try/finally block
+                context.put("sections", sections);
 
-            renderHtmlTemplate(writer, this.locationExdr, context);
-            contextMs.pop();
+                renderHtmlTemplate(writer, this.locationExdr, context);
+            } finally {
+                contextMs.pop();
+            }
         }
 
         @Override

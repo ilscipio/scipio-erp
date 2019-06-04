@@ -255,45 +255,52 @@ public class CmsEvents {
                 // create the template map
                 MapStack<String> templateMap = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
                 ScreenRenderer.populateContextForRequest(templateMap, null, request, response, servletContext);
-                templateMap.put("statusCode", statusCode);
+                try { // SCIPIO: Added try/finally block
+                    templateMap.put("statusCode", statusCode);
 
-                // make the link prefix
-                ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
-                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                templateMap.put("_REQUEST_HANDLER_", rh);
+                    // make the link prefix
+                    ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+                    RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                    templateMap.put("_REQUEST_HANDLER_", rh);
 
-                response.setStatus(statusCode);
+                    response.setStatus(statusCode);
 
-                // NOTE DEJ20080817: this is done in the ContentMapFacade class now to avoid problems with the jsessionid being in the middle of the URL and such
-                //String contextLinkPrefix = rh.makeLink(request, response, "", true, false, true);
-                //templateMap.put("_CONTEXT_LINK_PREFIX_", contextLinkPrefix);
+                    // NOTE DEJ20080817: this is done in the ContentMapFacade class now to avoid problems with the jsessionid being in the middle of the URL and such
+                    //String contextLinkPrefix = rh.makeLink(request, response, "", true, false, true);
+                    //templateMap.put("_CONTEXT_LINK_PREFIX_", contextLinkPrefix);
 
-                try {
-                    Writer writer = response.getWriter();
-                    // TODO: replace "screen" to support dynamic rendering of different output
-                    // SCIPIO: modified to pass name
-                    FormStringRenderer formStringRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
-                    templateMap.put("formStringRenderer", formStringRenderer);
+                    try {
+                        Writer writer = response.getWriter();
+                        // TODO: replace "screen" to support dynamic rendering of different output
+                        // SCIPIO: modified to pass name
+                        FormStringRenderer formStringRenderer = new MacroFormRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.formrenderer", delegator), request, response);
+                        templateMap.put("formStringRenderer", formStringRenderer);
 
-                    // if use web analytics
-                    List<GenericValue> webAnalytics = EntityQuery.use(delegator).from("WebAnalyticsConfig").where("webSiteId", webSiteId).queryList();
-                    // render
-                    if (UtilValidate.isNotEmpty(webAnalytics) && hasErrorPage) {
-                        ContentWorker.renderContentAsText(dispatcher, delegator, contentId, writer, templateMap, locale, "text/html", null, null, true, webAnalytics);
-                    } else if (UtilValidate.isEmpty(mapKey)) {
-                        ContentWorker.renderContentAsText(dispatcher, delegator, contentId, writer, templateMap, locale, "text/html", null, null, true);
-                    } else {
-                        ContentWorker.renderSubContentAsText(dispatcher, delegator, contentId, writer, mapKey, templateMap, locale, "text/html", true);
+                        // if use web analytics
+                        List<GenericValue> webAnalytics = EntityQuery.use(delegator).from("WebAnalyticsConfig").where("webSiteId", webSiteId).queryList();
+                        // render
+                        if (UtilValidate.isNotEmpty(webAnalytics) && hasErrorPage) {
+                            ContentWorker.renderContentAsText(dispatcher, delegator, contentId, writer, templateMap, locale, "text/html", null, null, true, webAnalytics);
+                        } else if (UtilValidate.isEmpty(mapKey)) {
+                            ContentWorker.renderContentAsText(dispatcher, delegator, contentId, writer, templateMap, locale, "text/html", null, null, true);
+                        } else {
+                            ContentWorker.renderSubContentAsText(dispatcher, delegator, contentId, writer, mapKey, templateMap, locale, "text/html", true);
+                        }
+
+                    } catch (TemplateException e) {
+                        throw new GeneralRuntimeException("Error creating form renderer", e);
+                    } catch (IOException e) {
+                        throw new GeneralRuntimeException("Error in the response writer/output stream: " + e.toString(), e);
+                    } catch (GeneralException e) {
+                        throw new GeneralRuntimeException("Error rendering content: " + e.toString(), e);
                     }
-
-                } catch (TemplateException e) {
-                    throw new GeneralRuntimeException("Error creating form renderer", e);
-                } catch (IOException e) {
-                    throw new GeneralRuntimeException("Error in the response writer/output stream: " + e.toString(), e);
-                } catch (GeneralException e) {
-                    throw new GeneralRuntimeException("Error rendering content: " + e.toString(), e);
+                } finally {
+                    templateMap.pop(); // SCIPIO: Added pop()
+                    if (templateMap.stackSize() > 1) { // SCIPIO
+                        Debug.logWarning("Unmatched push() calls at render end: stack size (" + templateMap.stackSize()
+                                + ") greater than expected (1)", module);
+                    }
                 }
-
                 return "success";
             } else {
                 String contentName = null;

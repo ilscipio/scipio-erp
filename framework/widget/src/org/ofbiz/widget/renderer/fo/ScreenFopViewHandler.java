@@ -87,19 +87,22 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             //MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(UtilProperties.getPropertyValue("widget", getName() + ".menurenderer"), writer);
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
+            try { // SCIPIO: Added try/finally block
+                // SCIPIO: 2018-10-18: in addition, dump the screens renderer into the request attributes,
+                // for some cases where only request is available
+                request.setAttribute("screens", screens);
 
-            // SCIPIO: 2018-10-18: in addition, dump the screens renderer into the request attributes,
-            // for some cases where only request is available
-            request.setAttribute("screens", screens);
-
-            // this is the object used to render forms from their definitions
-            screens.getContext().put("formStringRenderer", formStringRenderer);
-            // SCIPIO: new early encoder
-            UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".encoder", delegator));
-            screens.getContext().put("simpleEncoder", simpleEncoder);
-            UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder", delegator));
-            screens.getContext().put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
-            screens.render(page);
+                // this is the object used to render forms from their definitions
+                screens.getContext().put("formStringRenderer", formStringRenderer);
+                // SCIPIO: new early encoder
+                UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".encoder", delegator));
+                screens.getContext().put("simpleEncoder", simpleEncoder);
+                UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(EntityUtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder", delegator));
+                screens.getContext().put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
+                screens.render(page);
+            } finally {
+                screens.getContext().pop(); // SCIPIO: Added pop()
+            }
         // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
         //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException e) {
         } catch (Exception e) {
@@ -200,11 +203,15 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
                     EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", delegator));
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
-            screens.getContext().put("errorMessage", msg + ": " + e);
-            screens.render(DEFAULT_ERROR_TEMPLATE);
-            response.setContentType("text/html");
-            response.getWriter().write(writer.toString());
-            writer.close();
+            try { // SCIPIO: Added try/finally block
+                screens.getContext().put("errorMessage", msg + ": " + e);
+                screens.render(DEFAULT_ERROR_TEMPLATE);
+                response.setContentType("text/html");
+                response.getWriter().write(writer.toString());
+            } finally {
+                writer.close();
+                screens.getContext().pop(); // SCIPIO: Added pop()
+            }
         // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
         //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException x) {
         } catch (Exception x) {

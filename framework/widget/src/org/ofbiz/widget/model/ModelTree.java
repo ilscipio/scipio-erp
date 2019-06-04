@@ -602,20 +602,24 @@ public class ModelTree extends ModelWidget {
                             String thisEntityId = (String) val.get(thisPkName);
                             MapStack<String> newContext = RenderMapStack.createRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
                             newContext.push();
-                            String nodeEntryName = node.getEntryName();
-                            if (!nodeEntryName.isEmpty()) {
-                                newContext.put(nodeEntryName, val);
-                            } else {
-                                newContext.putAll(val);
-                            }
-                            String targetEntityId = null;
-                            List<String> targetNodeTrail = UtilGenerics.checkList(context.get("targetNodeTrail"));
-                            if (newDepth < targetNodeTrail.size()) {
-                                targetEntityId = targetNodeTrail.get(newDepth);
-                            }
-                            if ((targetEntityId != null && targetEntityId.equals(thisEntityId))
-                                    || this.showPeers(newDepth, context)) {
-                                node.renderNodeString(writer, newContext, treeStringRenderer, newDepth);
+                            try { // SCIPIO: Added try/finally block
+                                String nodeEntryName = node.getEntryName();
+                                if (!nodeEntryName.isEmpty()) {
+                                    newContext.put(nodeEntryName, val);
+                                } else {
+                                    newContext.putAll(val);
+                                }
+                                String targetEntityId = null;
+                                List<String> targetNodeTrail = UtilGenerics.checkList(context.get("targetNodeTrail"));
+                                if (newDepth < targetNodeTrail.size()) {
+                                    targetEntityId = targetNodeTrail.get(newDepth);
+                                }
+                                if ((targetEntityId != null && targetEntityId.equals(thisEntityId))
+                                        || this.showPeers(newDepth, context)) {
+                                    node.renderNodeString(writer, newContext, treeStringRenderer, newDepth);
+                                }
+                            } finally {
+                                newContext.pop(); // SCIPIO: Added pop()
                             }
                         }
                     }

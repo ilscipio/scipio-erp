@@ -443,32 +443,9 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
             public AtRenderArgs() {
                 super();
             }
-
-            public AtRenderArgs(Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                super(env, context, content, pageContext, shareScope);
-            }
-
-            public AtRenderArgs(Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars,
-                    boolean shareScope) {
-                super(env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, shareScope);
-            }
-
-            public AtRenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars,
-                    boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean shareScope) {
-                super(out, env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, skipSystemCtx, skipExtraCommonCtx, shareScope);
-            }
-
-            public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                super(out, context, content, pageContext, shareScope);
-            }
-
-            public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope, boolean newCmsCtx) {
-                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, shareScope);
+            public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
+                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope, boolean newCmsCtx) {
+                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, protectScope);
                 setNewCmsCtx(newCmsCtx);
             }
         }
@@ -487,11 +464,10 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                         renderArgs.setContent(new CmsPageContent((CmsPage) null));
                     }
                 }
-
                 // here assume context has everything except cms stuff
                 renderArgs.setSkipSystemCtx(false);
                 renderArgs.setSystemCtxCmsOnly(true);
-                renderArgs.setSystemCtxNoPush(true); // don't push system ctx, if it's used
+                renderArgs.setProtectScopeSystem(false); // don't push system ctx, if it's used
                 renderArgs.setSkipExtraCommonCtx(true);
             } else {
                 // NO SYSTEM context for assets in usual invocations - the system context should be already populated by the page earlier.

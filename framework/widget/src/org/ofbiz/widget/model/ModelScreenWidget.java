@@ -586,81 +586,82 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
-
-            boolean condTrue = true;
-            try { // SCIPIO: 2019-05-17: new try/catch/finally actions block; refactored
-                // check the condition, if there is one
-                if (this.condition != null) {
-                    if (!this.condition.eval(context)) {
-                        condTrue = false;
-                    }
-                }
-
-                // if condition does not exist or evals to true run actions and render widgets, otherwise render fail-widgets
-                if (condTrue) {
-                    // run the actions only if true
-                    AbstractModelAction.runSubActions(this.actions, context);
-
-                    // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
-                    screenStringRenderer.renderSectionBegin(writer, context, this);
-
-                    // render sub-widgets
-                    renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
-
-                    screenStringRenderer.renderSectionEnd(writer, context, this);
-                } else {
-                    // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
-                    screenStringRenderer.renderSectionBegin(writer, context, this);
-
-                    // render sub-widgets
-                    renderSubWidgetsString(this.failWidgets, writer, context, screenStringRenderer);
-
-                    screenStringRenderer.renderSectionEnd(writer, context, this);
-                }
-            } catch(GeneralException | IOException | RuntimeException origEx) {
-                Throwable rethrowEx;
-                if (!this.catchActions.isEmpty()) { // SCIPIO: catch-actions
-                    rethrowEx = null; // don't rethrow automatically after
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Running catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] for exception: " + origEx.toString(), module);
-                    }
-                    try {
-                        context.put("scpException", origEx);
-                        AbstractModelAction.runSubActionsEx(this.catchActions, context);
-                    } catch (RuntimeException catchActionsEx) {
-                        rethrowEx = (catchActionsEx instanceof AbstractModelAction.RenderRuntimeException) ? ((AbstractModelAction.RenderRuntimeException) catchActionsEx).getCause() : catchActionsEx;
-                        if (Debug.verboseOn()) {
-                            Debug.logVerbose("catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] threw an exception: " + rethrowEx.toString(), module);
+            try { // SCIPIO: Added try/finally block
+                boolean condTrue = true;
+                try { // SCIPIO: 2019-05-17: new try/catch/finally actions block; refactored
+                    // check the condition, if there is one
+                    if (this.condition != null) {
+                        if (!this.condition.eval(context)) {
+                            condTrue = false;
                         }
-                    } finally {
-                        context.remove("scpException"); // never leave this
                     }
-                } else {
-                    rethrowEx = origEx;
-                }
-                if (rethrowEx != null) {
-                    // SCIPIO: NOTE: 2019-05-21: this section no longer singles out IOException, but wraps everything
-                    // including GeneralException and RuntimeException in WidgetRenderException to give consistent detail message
-                    // SPECIAL: if the exception came from ourselves, wrapping again adds no new information.
-                    if (rethrowEx instanceof WidgetRenderException && WidgetRenderException.getWidget(rethrowEx) == this) {
-                        throw (WidgetRenderException) rethrowEx;
+
+                    // if condition does not exist or evals to true run actions and render widgets, otherwise render fail-widgets
+                    if (condTrue) {
+                        // run the actions only if true
+                        AbstractModelAction.runSubActions(this.actions, context);
+
+                        // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
+                        screenStringRenderer.renderSectionBegin(writer, context, this);
+
+                        // render sub-widgets
+                        renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+
+                        screenStringRenderer.renderSectionEnd(writer, context, this);
+                    } else {
+                        // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
+                        screenStringRenderer.renderSectionBegin(writer, context, this);
+
+                        // render sub-widgets
+                        renderSubWidgetsString(this.failWidgets, writer, context, screenStringRenderer);
+
+                        screenStringRenderer.renderSectionEnd(writer, context, this);
                     }
-                    String errMsg = "Error rendering " + (condTrue ? "widgets" : "fail-widgets") + " section [" + getName() + "] in screen [" + getModelScreen().getName() + "]";
-                    //Debug.logError(rethrowEx, errMsg, module); // SCIPIO: Redundant logging
-                    throw new WidgetRenderException(errMsg + ": " + rethrowEx, rethrowEx, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                } catch (GeneralException | IOException | RuntimeException origEx) {
+                    Throwable rethrowEx;
+                    if (!this.catchActions.isEmpty()) { // SCIPIO: catch-actions
+                        rethrowEx = null; // don't rethrow automatically after
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Running catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] for exception: " + origEx.toString(), module);
+                        }
+                        try {
+                            context.put("scpException", origEx);
+                            AbstractModelAction.runSubActionsEx(this.catchActions, context);
+                        } catch (RuntimeException catchActionsEx) {
+                            rethrowEx = (catchActionsEx instanceof AbstractModelAction.RenderRuntimeException) ? ((AbstractModelAction.RenderRuntimeException) catchActionsEx).getCause() : catchActionsEx;
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("catch-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "] threw an exception: " + rethrowEx.toString(), module);
+                            }
+                        } finally {
+                            context.remove("scpException"); // never leave this
+                        }
+                    } else {
+                        rethrowEx = origEx;
+                    }
+                    if (rethrowEx != null) {
+                        // SCIPIO: NOTE: 2019-05-21: this section no longer singles out IOException, but wraps everything
+                        // including GeneralException and RuntimeException in WidgetRenderException to give consistent detail message
+                        // SPECIAL: if the exception came from ourselves, wrapping again adds no new information.
+                        if (rethrowEx instanceof WidgetRenderException && WidgetRenderException.getWidget(rethrowEx) == this) {
+                            throw (WidgetRenderException) rethrowEx;
+                        }
+                        String errMsg = "Error rendering " + (condTrue ? "widgets" : "fail-widgets") + " section [" + getName() + "] in screen [" + getModelScreen().getName() + "]";
+                        //Debug.logError(rethrowEx, errMsg, module); // SCIPIO: Redundant logging
+                        throw new WidgetRenderException(errMsg + ": " + rethrowEx, rethrowEx, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                    }
+                } finally {
+                    if (!this.finallyActions.isEmpty()) { // SCIPIO: finally-actions
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Running finally-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "]", module);
+                        }
+                        AbstractModelAction.runSubActionsEx(this.finallyActions, context);
+                    }
                 }
             } finally {
-                if (!this.finallyActions.isEmpty()) { // SCIPIO: finally-actions
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Running finally-actions for section [" + getName() + "] in screen [" + getModelScreen().getName() + "]", module);
-                    }
-                    AbstractModelAction.runSubActionsEx(this.finallyActions, context);
+                // SCIPIO: share-scope
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
                 }
-            }
-
-            // SCIPIO: share-scope
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
             }
         }
 
@@ -1196,37 +1197,39 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 int renderSeqNumber = (Integer) (context.get("renderSeqNumber") != null ? context.get("renderSeqNumber") : 0);
                 renderSeqNumber++;
                 context.put("renderSeqNumber", renderSeqNumber);
-
                 UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            try { // SCIPIO: Added try/finally block
+                if (protectScope) {
+                    // build the widgetpath
+                    List<String> widgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
+                    if (widgetTrail == null) {
+                        widgetTrail = new LinkedList<>();
+                    }
 
-                // build the widgetpath
-                List<String> widgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
-                if (widgetTrail == null) {
-                    widgetTrail = new LinkedList<>();
+                    String thisName = nameExdr.expandString(context);
+                    widgetTrail.add(thisName);
+                    context.put("_WIDGETTRAIL_", widgetTrail);
                 }
 
-                String thisName = nameExdr.expandString(context);
-                widgetTrail.add(thisName);
-                context.put("_WIDGETTRAIL_", widgetTrail);
-            }
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+                // don't need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
+                String name = this.getName(context);
+                String location = this.getLocation(context);
 
-            // don't need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
-            String name = this.getName(context);
-            String location = this.getLocation(context);
-
-            if (name.isEmpty()) {
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("In the include-screen tag the screen name was empty, ignoring include; in screen [" + getModelScreen().getName() + "]", module);
+                if (name.isEmpty()) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In the include-screen tag the screen name was empty, ignoring include; in screen [" + getModelScreen().getName() + "]", module);
+                    }
+                    return;
                 }
-                return;
-            }
 
-            ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer);
-
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+                ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer);
+            } finally {
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
             }
         }
 
@@ -1385,16 +1388,18 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
-            context.put("sections", sections);
+            try { // SCIPIO: Added try/finally block
+                context.put("sections", sections);
 
-            String name = this.getName(context);
-            String location = this.getLocation(context);
+                String name = this.getName(context);
+                String location = this.getLocation(context);
 
-            // SCIPIO: fallback added
-            ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer,
-                    true, this.fallbackSettings.getResolvedForScreenLogic(context));
-
-            contextMs.pop();
+                // SCIPIO: fallback added
+                ScreenFactory.renderReferencedScreen(name, location, this, writer, context, screenStringRenderer,
+                        true, this.fallbackSettings.getResolvedForScreenLogic(context));
+            } finally {
+                contextMs.pop();
+            }
         }
 
         public String getName(Map<String, Object> context) {
@@ -1562,24 +1567,27 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             context.put("renderSeqNumber", renderSeqNumber);
 
             UtilGenerics.<MapStack<String>>cast(context).push();
-            if (preRenderedContent != null && preRenderedContent.containsKey(getName())) {
-                try {
-                    writer.append((String) preRenderedContent.get(getName()));
-                } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
-                    String errMsg = "Error rendering pre-rendered content in screen named [" + getModelScreen().getName() + "]";
-                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
-                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
-                }
-            } else {
-                SectionsRenderer sections = (SectionsRenderer) context.get("sections");
-                // for now if sections is null, just log a warning; may be permissible to make the screen for flexible
-                if (sections == null) {
-                    Debug.logWarning("In decorator-section-include could not find sections object in the context, not rendering section with name [" + getName() + "]", module);
+            try { // SCIPIO: Added try/finally block
+                if (preRenderedContent != null && preRenderedContent.containsKey(getName())) {
+                    try {
+                        writer.append((String) preRenderedContent.get(getName()));
+                    } catch (Exception e) { // SCIPIO: Changed IOException to Exception (for improved breadcrumb trail)
+                        String errMsg = "Error rendering pre-rendered content in screen named [" + getModelScreen().getName() + "]";
+                        //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                        throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                    }
                 } else {
-                    sections.render(getName());
+                    SectionsRenderer sections = (SectionsRenderer) context.get("sections");
+                    // for now if sections is null, just log a warning; may be permissible to make the screen for flexible
+                    if (sections == null) {
+                        Debug.logWarning("In decorator-section-include could not find sections object in the context, not rendering section with name [" + getName() + "]", module);
+                    } else {
+                        sections.render(getName());
+                    }
                 }
+            } finally {
+                UtilGenerics.<MapStack<String>>cast(context).pop(); // SCIPIO
             }
-            UtilGenerics.<MapStack<String>>cast(context).pop(); // SCIPIO
         }
 
         @Override
@@ -1690,30 +1698,32 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+            try { // SCIPIO: Added try/finally block
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
-            try {
-                ModelForm modelForm = getModelForm(context);
-                // SCIPIO: new targeted rendering applicability check.
-                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
-                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
-                if (!execInfo.shouldExecute()) {
-                    return;
-                }
                 try {
-                    FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
-                    renderer.render(writer, context);
-                } finally {
-                    execInfo.handleFinished(context); // SCIPIO: return logic
+                    ModelForm modelForm = getModelForm(context);
+                    // SCIPIO: new targeted rendering applicability check.
+                    WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                    WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                    if (!execInfo.shouldExecute()) {
+                        return;
+                    }
+                    try {
+                        FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
+                        renderer.render(writer, context);
+                    } finally {
+                        execInfo.handleFinished(context); // SCIPIO: return logic
+                    }
+                } catch (Exception e) {
+                    String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
-            } catch (Exception e) {
-                String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]";
-                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
-                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
-            }
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+            } finally {
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
             }
         }
 
@@ -1792,30 +1802,32 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+            try { // SCIPIO: Added try/finally block
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
-            try {
-                ModelForm modelForm = getModelForm(context);
-                // SCIPIO: new targeted rendering applicability check.
-                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
-                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
-                if (!execInfo.shouldExecute()) {
-                    return;
-                }
                 try {
-                    FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
-                    renderer.render(writer, context);
-                } finally {
-                    execInfo.handleFinished(context); // SCIPIO: return logic
+                    ModelForm modelForm = getModelForm(context);
+                    // SCIPIO: new targeted rendering applicability check.
+                    WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                    WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                    if (!execInfo.shouldExecute()) {
+                        return;
+                    }
+                    try {
+                        FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
+                        renderer.render(writer, context);
+                    } finally {
+                        execInfo.handleFinished(context); // SCIPIO: return logic
+                    }
+                } catch (Exception e) {
+                    String errMsg = "Error rendering included grid named [" + getName() + "] at location [" + this.getLocation(context) + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
                 }
-            } catch (Exception e) {
-                String errMsg = "Error rendering included grid named [" + getName() + "] at location [" + this.getLocation(context) + "]";
-                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
-                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
-            }
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+            } finally {
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
             }
         }
 
@@ -1904,22 +1916,24 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+            try { // SCIPIO: Added try/finally block
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
-            String name = this.getName(context);
-            String location = this.getLocation(context);
-            ModelTree modelTree = null;
-            try {
-                modelTree = TreeFactory.getTreeFromLocation(this.getLocation(context), this.getName(context), getModelScreen().getDelegator(context), getModelScreen().getDispatcher(context));
-            } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
-                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]";
-                //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
-                throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
-            }
-            modelTree.renderTreeString(writer, context, treeStringRenderer);
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+                String name = this.getName(context);
+                String location = this.getLocation(context);
+                ModelTree modelTree = null;
+                try {
+                    modelTree = TreeFactory.getTreeFromLocation(this.getLocation(context), this.getName(context), getModelScreen().getDelegator(context), getModelScreen().getDispatcher(context));
+                } catch (Exception e) { // SCIPIO: Changed (IOException | SAXException | ParserConfigurationException e) to Exception (for improved breadcrumb trail)
+                    String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]";
+                    //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
+                    throw new WidgetRenderException(errMsg + ": " + e, e, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                }
+                modelTree.renderTreeString(writer, context, treeStringRenderer);
+            } finally {
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
             }
         }
 
@@ -2067,47 +2081,50 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 // as templates that contain "subcontent" elements will expect to find the master
                 // contentId in the context as "contentId".
                 UtilGenerics.<MapStack<String>>cast(context).push();
-                context.put("contentId", expandedContentId);
+                try { // SCIPIO: Added try/finally block
+                    context.put("contentId", expandedContentId);
 
-                if (expandedDataResourceId.isEmpty()) {
-                    if (!expandedContentId.isEmpty()) {
-                        content = EntityQuery.use(delegator).from("Content").where("contentId", expandedContentId).cache().queryOne();
-                    } else {
-                        String errMsg = "contentId is empty.";
-                        Debug.logError(errMsg, module);
-                        return;
+                    if (expandedDataResourceId.isEmpty()) {
+                        if (!expandedContentId.isEmpty()) {
+                            content = EntityQuery.use(delegator).from("Content").where("contentId", expandedContentId).cache().queryOne();
+                        } else {
+                            String errMsg = "contentId is empty.";
+                            Debug.logError(errMsg, module);
+                            return;
+                        }
+                        if (content != null) {
+                            if (content.get("dataResourceId") != null) {
+                                expandedDataResourceId = content.getString("dataResourceId");
+                            }
+                        } else {
+                            String errMsg = "Could not find content with contentId [" + expandedContentId + "]";
+                            //Debug.logError(errMsg, module); // SCIPIO: Redundant logging
+                            throw new WidgetRenderException(errMsg, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                        }
+                    }
+
+                    GenericValue dataResource = null;
+                    if (!expandedDataResourceId.isEmpty()) {
+                        dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", expandedDataResourceId).cache().queryOne();
+                    }
+
+                    String mimeTypeId = null;
+                    if (dataResource != null) {
+                        mimeTypeId = dataResource.getString("mimeTypeId");
                     }
                     if (content != null) {
-                        if (content.get("dataResourceId") != null) {
-                            expandedDataResourceId = content.getString("dataResourceId");
-                        }
-                    } else {
-                        String errMsg = "Could not find content with contentId [" + expandedContentId + "]";
-                        //Debug.logError(errMsg, module); // SCIPIO: Redundant logging
-                        throw new WidgetRenderException(errMsg, this, context); // SCIPIO: Changed RuntimeException to WidgetRenderException
+                        mimeTypeId = content.getString("mimeTypeId");
                     }
-                }
 
-                GenericValue dataResource = null;
-                if (!expandedDataResourceId.isEmpty()) {
-                    dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", expandedDataResourceId).cache().queryOne();
+                    if (!(mimeTypeId != null
+                            && ((mimeTypeId.indexOf("application") >= 0) || (mimeTypeId.indexOf("image")) >= 0))) {
+                        screenStringRenderer.renderContentBegin(writer, context, this);
+                        screenStringRenderer.renderContentBody(writer, context, this);
+                        screenStringRenderer.renderContentEnd(writer, context, this);
+                    }
+                } finally {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
                 }
-
-                String mimeTypeId = null;
-                if (dataResource != null) {
-                    mimeTypeId = dataResource.getString("mimeTypeId");
-                }
-                if (content != null) {
-                    mimeTypeId = content.getString("mimeTypeId");
-                }
-
-                if (!(mimeTypeId != null
-                        && ((mimeTypeId.indexOf("application") >= 0) || (mimeTypeId.indexOf("image")) >= 0))) {
-                    screenStringRenderer.renderContentBegin(writer, context, this);
-                    screenStringRenderer.renderContentBody(writer, context, this);
-                    screenStringRenderer.renderContentEnd(writer, context, this);
-                }
-                UtilGenerics.<MapStack<String>>cast(context).pop();
             } catch (Exception e) { // SCIPIO: Changed (IOException | GenericEntityException e) to Exception (for improved breadcrumb trail)
                 String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]";
                 //Debug.logError(e, errMsg, module); // SCIPIO: Redundant logging
@@ -2298,33 +2315,34 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
                     UtilGenerics.<MapStack<String>>cast(context).push();
                 }
+                try { // SCIPIO: Added try/finally block
+                    AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
-                // SCIPIO: new render state to carry around max depth
-                // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
-                MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
-                if (prevRenderState != null) {
-                    Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
-                        + "a new menu render was started", module);
-                }
-                try {
-                    MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
-                    if (menuRenderArgs != null) {
-                        renderState.putAll(menuRenderArgs); // keep same names
+                    // SCIPIO: new render state to carry around max depth
+                    // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
+                    MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
+                    if (prevRenderState != null) {
+                        Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
+                                + "a new menu render was started", module);
                     }
-                    renderState.setMaxDepth(getMaxDepth(context));
-                    renderState.setSubMenuFilter(getSubMenuFilter(context));
+                    try {
+                        MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
+                        if (menuRenderArgs != null) {
+                            renderState.putAll(menuRenderArgs); // keep same names
+                        }
+                        renderState.setMaxDepth(getMaxDepth(context));
+                        renderState.setSubMenuFilter(getSubMenuFilter(context));
 
-                    modelMenu.renderMenuString(writer, context, menuStringRenderer);
+                        modelMenu.renderMenuString(writer, context, menuStringRenderer);
+                    } finally {
+                        // SCIPIO: restore the previous render state just in case
+                        MenuRenderState.store(context, prevRenderState);
+                    }
                 } finally {
-                    // SCIPIO: restore the previous render state just in case
-                    MenuRenderState.store(context, prevRenderState);
-                }
-
-                // SCIPIO: added scope protect
-                if (protectScope) {
-                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                    // SCIPIO: added scope protect
+                    if (protectScope) {
+                        UtilGenerics.<MapStack<String>>cast(context).pop();
+                    }
                 }
             } finally {
                 execInfo.handleFinished(context); // SCIPIO: return logic

@@ -967,35 +967,31 @@ public class FormRenderer {
         }
         // if list is empty, do not render rows
         Iterator<?> iter = null;
-        if (obj instanceof Iterator<?>) {
-            iter = (Iterator<?>) obj;
-        } else if (obj instanceof List<?>) {
-            iter = ((List<?>) obj).listIterator();
-        }
+        try { // SCIPIO: Added try/finally block, refactored some bits below
+            if (obj instanceof Iterator<?>) {
+                iter = (Iterator<?>) obj;
+            } else if (obj instanceof List<?>) {
+                iter = ((List<?>) obj).listIterator();
+            }
 
-        // set low and high index
-        Paginator.getListLimits(modelForm, context, obj);
+            // set low and high index
+            Paginator.getListLimits(modelForm, context, obj);
 
-        int listSize = (Integer) context.get("listSize");
-        int lowIndex = (Integer) context.get("lowIndex");
-        int highIndex = (Integer) context.get("highIndex");
+            int listSize = (Integer) context.get("listSize");
+            int lowIndex = (Integer) context.get("lowIndex");
+            int highIndex = (Integer) context.get("highIndex");
 
-        // we're passed a subset of the list, so use (0, viewSize) range
-        if (modelForm.isOverridenListSize()) {
-            lowIndex = 0;
-            highIndex = (Integer) context.get("viewSize");
-        }
+            // we're passed a subset of the list, so use (0, viewSize) range
+            if (modelForm.isOverridenListSize()) {
+                lowIndex = 0;
+                highIndex = (Integer) context.get("viewSize");
+            }
 
-        // SCIPIO: factored this out; I don't recall in which cases this could be false, but keeping for safety.
-        boolean isListOrMultiForm = ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()));
-
-        /// SCIPIO: 2019-05-17: rearranged for new try block to guarantee EntityListIterator close
-        //if (iter != null) {
-        if (iter == null) {
-            return;
-        }
-        try {
-
+            // SCIPIO: factored this out; I don't recall in which cases this could be false, but keeping for safety.
+            boolean isListOrMultiForm = ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()));
+            if (iter == null) {
+                return;
+            }
             listFormHandler.notifyHasList(); // SCIPIO
 
             // render item rows
@@ -1021,6 +1017,7 @@ public class FormRenderer {
 
                 Map<String, Object> itemMap = UtilGenerics.checkMap(item);
                 MapStack<String> localContext = RenderMapStack.createRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context)
+                boolean extraPush = false; // SCIPIO
                 if (UtilValidate.isNotEmpty(modelForm.getListEntryName())) {
                     localContext.put(modelForm.getListEntryName(), item);
                 } else {
@@ -1032,180 +1029,188 @@ public class FormRenderer {
                     } else {
                         localContext.push(itemMap);
                     }
+                    extraPush = true; // SCIPIO
                 }
 
                 localContext.push();
-                localContext.put("previousItem", previousItem);
-                previousItem = new HashMap<>();
-                previousItem.putAll(itemMap);
+                try { // SCIPIO: Added try/finally block
+                    localContext.put("previousItem", previousItem);
+                    previousItem = new HashMap<>();
+                    previousItem.putAll(itemMap);
 
-                AbstractModelAction.runSubActions(modelForm.getRowActions(), localContext);
+                    AbstractModelAction.runSubActions(modelForm.getRowActions(), localContext);
 
-                localContext.put("itemIndex", itemIndex - lowIndex);
-                if (UtilValidate.isNotEmpty(context.get("renderFormSeqNumber"))) {
-                    localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
-                }
+                    localContext.put("itemIndex", itemIndex - lowIndex);
+                    if (UtilValidate.isNotEmpty(context.get("renderFormSeqNumber"))) {
+                        localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
+                    }
 
-                if (Debug.verboseOn()) {
-                     Debug.logVerbose("In form got another row, context is: " + localContext, module);
-                }
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("In form got another row, context is: " + localContext, module);
+                    }
 
-                // Check to see if there is a field, same name and same use-when (could come from extended form)
-                List<ModelFormField> tempFieldList = new LinkedList<>();
-                tempFieldList.addAll(modelForm.getFieldList());
-                for (int j = 0; j < tempFieldList.size(); j++) {
-                    ModelFormField modelFormField = tempFieldList.get(j);
-                    if (!modelFormField.isUseWhenEmpty()) {
-                        boolean shouldUse1 = modelFormField.shouldUse(localContext);
-                        for (int i = j + 1; i < tempFieldList.size(); i++) {
-                            ModelFormField curField = tempFieldList.get(i);
-                            if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
-                                boolean shouldUse2 = curField.shouldUse(localContext);
-                                if (shouldUse1 == shouldUse2) {
-                                    tempFieldList.remove(i--);
+                    // Check to see if there is a field, same name and same use-when (could come from extended form)
+                    List<ModelFormField> tempFieldList = new LinkedList<>();
+                    tempFieldList.addAll(modelForm.getFieldList());
+                    for (int j = 0; j < tempFieldList.size(); j++) {
+                        ModelFormField modelFormField = tempFieldList.get(j);
+                        if (!modelFormField.isUseWhenEmpty()) {
+                            boolean shouldUse1 = modelFormField.shouldUse(localContext);
+                            for (int i = j + 1; i < tempFieldList.size(); i++) {
+                                ModelFormField curField = tempFieldList.get(i);
+                                if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
+                                    boolean shouldUse2 = curField.shouldUse(localContext);
+                                    if (shouldUse1 == shouldUse2) {
+                                        tempFieldList.remove(i--);
+                                    }
+                                } else {
+                                    continue;
                                 }
-                            } else {
+                            }
+                        }
+                    }
+
+                    // Each single item is rendered in one or more rows if its fields have
+                    // different "position" attributes. All the fields with the same position
+                    // are rendered in the same row.
+                    // The default position is 1, and represents the main row:
+                    // it contains the fields that are in the list header (columns).
+                    // The positions lower than 1 are rendered in rows before the main one;
+                    // positions higher than 1 are rendered after the main one.
+
+                    // We get a sorted (by position, ascending) set of lists;
+                    // each list contains all the fields with that position.
+                    Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
+                    //List hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList);
+                    for (List<ModelFormField> fieldListByPosition : fieldListsByPosition) {
+                        // For each position (the subset of fields with the same position attribute)
+                        // we have two phases: preprocessing and rendering
+
+                        List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<>();
+                        List<ModelFormField> innerFormFields = new LinkedList<>();
+                        List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<>();
+
+                        // Preprocessing:
+                        // all the form fields are evaluated and the ones that will
+                        // appear in the form are put into three separate lists:
+                        // - hyperlink fields that will appear at the beginning of the row
+                        // - fields of other types
+                        // - hyperlink fields that will appear at the end of the row
+                        Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = fieldListByPosition.iterator();
+                        int currentPosition = 1;
+                        while (innerDisplayHyperlinkFieldIter.hasNext()) {
+                            ModelFormField modelFormField = innerDisplayHyperlinkFieldIter.next();
+                            FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+                            // don't do any header for hidden or ignored fields
+                            if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
+                                    || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
                                 continue;
                             }
+
+                            if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
+                                    && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
+                                    && fieldInfo.getFieldType() != FieldInfo.HYPERLINK) {
+                                // okay, now do the form cell
+                                break;
+                            }
+
+                            // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
+                            if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
+                                continue;
+                            }
+                            innerDisplayHyperlinkFieldsBegin.add(modelFormField);
+                            currentPosition = modelFormField.getPosition();
                         }
-                    }
-                }
+                        Iterator<ModelFormField> innerFormFieldIter = fieldListByPosition.iterator();
+                        while (innerFormFieldIter.hasNext()) {
+                            ModelFormField modelFormField = innerFormFieldIter.next();
+                            FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
-                // Each single item is rendered in one or more rows if its fields have
-                // different "position" attributes. All the fields with the same position
-                // are rendered in the same row.
-                // The default position is 1, and represents the main row:
-                // it contains the fields that are in the list header (columns).
-                // The positions lower than 1 are rendered in rows before the main one;
-                // positions higher than 1 are rendered after the main one.
+                            // don't do any header for hidden or ignored fields
+                            if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
+                                    || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
+                                continue;
+                            }
 
-                // We get a sorted (by position, ascending) set of lists;
-                // each list contains all the fields with that position.
-                Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
-                //List hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList);
-                for (List<ModelFormField> fieldListByPosition : fieldListsByPosition) {
-                    // For each position (the subset of fields with the same position attribute)
-                    // we have two phases: preprocessing and rendering
+                            // skip all of the display/hyperlink fields
+                            // SCIPIO: added SUBMIT here
+                            if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
+                                    || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
+                                    || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
+                                    || fieldInfo.getFieldType() == FieldInfo.SUBMIT) {
+                                continue;
+                            }
 
-                    List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<>();
-                    List<ModelFormField> innerFormFields = new LinkedList<>();
-                    List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<>();
-
-                    // Preprocessing:
-                    // all the form fields are evaluated and the ones that will
-                    // appear in the form are put into three separate lists:
-                    // - hyperlink fields that will appear at the beginning of the row
-                    // - fields of other types
-                    // - hyperlink fields that will appear at the end of the row
-                    Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = fieldListByPosition.iterator();
-                    int currentPosition = 1;
-                    while (innerDisplayHyperlinkFieldIter.hasNext()) {
-                        ModelFormField modelFormField = innerDisplayHyperlinkFieldIter.next();
-                        FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
-                                || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
-                            continue;
+                            // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
+                            if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
+                                continue;
+                            }
+                            innerFormFields.add(modelFormField);
+                            currentPosition = modelFormField.getPosition();
                         }
+                        while (innerDisplayHyperlinkFieldIter.hasNext()) {
+                            ModelFormField modelFormField = innerDisplayHyperlinkFieldIter.next();
+                            FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
-                        if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
-                                && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
-                                && fieldInfo.getFieldType() != FieldInfo.HYPERLINK) {
-                            // okay, now do the form cell
-                            break;
-                        }
+                            // don't do any header for hidden or ignored fields
+                            if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
+                                    || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
+                                continue;
+                            }
 
-                        // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-                        innerDisplayHyperlinkFieldsBegin.add(modelFormField);
-                        currentPosition = modelFormField.getPosition();
-                    }
-                    Iterator<ModelFormField> innerFormFieldIter = fieldListByPosition.iterator();
-                    while (innerFormFieldIter.hasNext()) {
-                        ModelFormField modelFormField = innerFormFieldIter.next();
-                        FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                            // skip all non-display and non-hyperlink fields
+                            // SCIPIO: added SUBMIT here
+                            if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
+                                    && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
+                                    && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
+                                    && fieldInfo.getFieldType() != FieldInfo.SUBMIT) {
+                                continue;
+                            }
 
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
-                                || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
-                            continue;
-                        }
-
-                        // skip all of the display/hyperlink fields
-                        // SCIPIO: added SUBMIT here
-                        if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
-                                || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
-                                || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
-                                || fieldInfo.getFieldType() == FieldInfo.SUBMIT) {
-                            continue;
+                            // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
+                            if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
+                                continue;
+                            }
+                            innerDisplayHyperlinkFieldsEnd.add(modelFormField);
+                            currentPosition = modelFormField.getPosition();
                         }
 
-                        // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-                        innerFormFields.add(modelFormField);
-                        currentPosition = modelFormField.getPosition();
-                    }
-                    while (innerDisplayHyperlinkFieldIter.hasNext()) {
-                        ModelFormField modelFormField = innerDisplayHyperlinkFieldIter.next();
-                        FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
-                                || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
-                            continue;
-                        }
-
-                        // skip all non-display and non-hyperlink fields
-                        // SCIPIO: added SUBMIT here
-                        if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
-                                && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
-                                && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
-                                && fieldInfo.getFieldType() != FieldInfo.SUBMIT) {
-                            continue;
-                        }
-
-                        // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        if (!isListOrMultiForm && !modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-                        innerDisplayHyperlinkFieldsEnd.add(modelFormField);
-                        currentPosition = modelFormField.getPosition();
-                    }
-
-                    // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
-                    if (isListOrMultiForm && !modelForm.getUseMasterSubmitField()) {
-                        Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
-                        while (submitFields.hasNext()) {
-                            ModelFormField submitField = submitFields.next();
-                            if (submitField != null && submitField.shouldUse(context)) {
-                                innerDisplayHyperlinkFieldsEnd.add(submitField);
-                                fieldListByPosition.add(submitField);
+                        // SCIPIO: Adding submit buttons if use-row-submit flag in the form definition is set to false
+                        if (isListOrMultiForm && !modelForm.getUseMasterSubmitField()) {
+                            Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+                            while (submitFields.hasNext()) {
+                                ModelFormField submitField = submitFields.next();
+                                if (submitField != null && submitField.shouldUse(context)) {
+                                    innerDisplayHyperlinkFieldsEnd.add(submitField);
+                                    fieldListByPosition.add(submitField);
+                                }
                             }
                         }
+
+                        List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
+                                currentPosition);
+
+                        // Rendering:
+                        // the fields in the three lists created in the preprocessing phase
+                        // are now rendered: this will create a visual representation
+                        // of one row (for the current position).
+                        if (innerDisplayHyperlinkFieldsBegin.size() > 0 || innerFormFields.size() > 0
+                                || innerDisplayHyperlinkFieldsEnd.size() > 0) {
+
+                            numOfColumns = listFormHandler.getNumOfColumns();
+
+                            this.renderItemRow(writer, localContext, formStringRenderer, formPerItem, hiddenIgnoredFieldList,
+                                    innerDisplayHyperlinkFieldsBegin, innerFormFields, innerDisplayHyperlinkFieldsEnd,
+                                    fieldListByPosition, currentPosition, numOfColumns, isListOrMultiForm);
+                        }
+                    } // iteration on positions
+                } finally {
+                    localContext.pop(); // SCIPIO: Added missing pop
+                    if (extraPush) {
+                        localContext.pop();
                     }
-
-                    List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
-                            currentPosition);
-
-                    // Rendering:
-                    // the fields in the three lists created in the preprocessing phase
-                    // are now rendered: this will create a visual representation
-                    // of one row (for the current position).
-                    if (innerDisplayHyperlinkFieldsBegin.size() > 0 || innerFormFields.size() > 0
-                            || innerDisplayHyperlinkFieldsEnd.size() > 0) {
-
-                        numOfColumns = listFormHandler.getNumOfColumns();
-
-                        this.renderItemRow(writer, localContext, formStringRenderer, formPerItem, hiddenIgnoredFieldList,
-                                innerDisplayHyperlinkFieldsBegin, innerFormFields, innerDisplayHyperlinkFieldsEnd,
-                                fieldListByPosition, currentPosition, numOfColumns, isListOrMultiForm);
-                    }
-                } // iteration on positions
+                }
             } // iteration on items
 
             // reduce the highIndex if number of items falls short
@@ -1215,8 +1220,6 @@ public class FormRenderer {
                 context.put("highIndex", modelForm.isOverridenListSize() ? listSize : highIndex);
             }
             context.put("actualPageSize", highIndex - lowIndex);
-
-
         } finally {
             if (iter instanceof EntityListIterator) { // SCIPIO: 2019-05-17: moved into finally block to guarantee close attempt
                 try {

@@ -204,93 +204,90 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 return;
             }
         }
-
         if (assetName == null && assetId == null) {
             handleError(env, null, "The name of the asset must be given as parameter \"name\", or the id as parameter \"id\"");
             return;
-        } else {
-            CmsAssetTemplate assetTemplate;
-            CmsPageContent assetContent = null;
-            try {
-                Delegator delegator = pageContext.getDelegator();
-                boolean useCache = !pageContext.isPreview();
+        }
 
-                if (globalDef) {
-                    if (assetName != null) {
-                        assetTemplate = CmsAssetTemplate.getWorker().findByName(delegator, assetName, webSiteId, webSiteOptional, useCache, pageContext.getRequest());
-                    } else {
-                        assetTemplate = CmsAssetTemplate.getWorker().findById(delegator, assetId, useCache, pageContext.getRequest());
-                    }
+        CmsAssetTemplate assetTemplate;
+        CmsPageContent assetContent = null;
+        try {
+            Delegator delegator = pageContext.getDelegator();
+            boolean useCache = !pageContext.isPreview();
 
-                    if (mode == Mode.STANDALONE) {
-                        assetContent = new CmsPageContent(pageContent.getPage());
-                        // Set any content with attribs supplied to macro
-                        if (attribs != null) {
-                            assetContent.putAll(attribs);
-                        }
-                    }
+            if (globalDef) {
+                if (assetName != null) {
+                    assetTemplate = CmsAssetTemplate.getWorker().findByName(delegator, assetName, webSiteId, webSiteOptional, useCache, pageContext.getRequest());
                 } else {
-                    if (newCmsCtx || pageTemplate == null) {
-                        throw new IllegalStateException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
-                            + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
-                    }
+                    assetTemplate = CmsAssetTemplate.getWorker().findById(delegator, assetId, useCache, pageContext.getRequest());
+                }
 
-                    // prepare content for asset
-                    //Map<String, CmsAssetTemplate> assetTemplates = pageTemplate.getActiveAssetTemplates();
-
-                    if (assetName != null) {
-                        assetTemplate = pageTemplate.getAssetTemplateByImportName(assetName);
-                    } else {
-                        assetTemplate = pageTemplate.getAssetTemplateById(assetId);
-                    }
-
-                    if (mode == Mode.STANDALONE) {
-                        // NOTE: this creates a shallow copy of the lower map level - important!
-                        assetContent = pageContent.getAssetContent(assetName);
-                        // Replace any content with attribs supplied to macro
-                        if (attribs != null) {
-                            assetContent.putAll(attribs);
-                        }
+                if (mode == Mode.STANDALONE) {
+                    assetContent = new CmsPageContent(pageContent.getPage());
+                    // Set any content with attribs supplied to macro
+                    if (attribs != null) {
+                        assetContent.putAll(attribs);
                     }
                 }
+            } else {
+                if (newCmsCtx || pageTemplate == null) {
+                    throw new IllegalStateException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
+                        + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
+                }
+
+                // prepare content for asset
+                //Map<String, CmsAssetTemplate> assetTemplates = pageTemplate.getActiveAssetTemplates();
+
+                if (assetName != null) {
+                    assetTemplate = pageTemplate.getAssetTemplateByImportName(assetName);
+                } else {
+                    assetTemplate = pageTemplate.getAssetTemplateById(assetId);
+                }
+
+                if (mode == Mode.STANDALONE) {
+                    // NOTE: this creates a shallow copy of the lower map level - important!
+                    assetContent = pageContent.getAssetContent(assetName);
+                    // Replace any content with attribs supplied to macro
+                    if (attribs != null) {
+                        assetContent.putAll(attribs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // DEV NOTE: I don't think this ever gets triggered, it's just here for safety;
+            handleError(env, e, "Please check asset reference ("
+                    + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
+                    + ") and/or validity of asset template. Please check with your supervisor if all variables have been set correctly");
+            return;
+        }
+
+        if (assetTemplate != null) {
+            try {
+                // render asset
+                if (mode == Mode.STANDALONE) {
+                    // TODO: per-asset share-scope setting (protectScope here)
+                    assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext, ctxVars, ovrdCtxVars, true, newCmsCtx));
+                } else if (mode == Mode.INCLUDE) {
+                    assetTemplate.getRenderer().includeTemplate(env);
+                } else if (mode == Mode.IMPORT) {
+                    assetTemplate.getRenderer().importTemplate(env, namespace);
+                } else {
+                    throw new CmsException("error determining asset mode");
+                }
             } catch (Exception e) {
-                // DEV NOTE: I don't think this ever gets triggered, it's just here for safety;
-                handleError(env, e, "Please check asset reference ("
-                        + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
+                handleNestedError(env, e, "Please check asset reference (" + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
                         + ") and/or validity of asset template. Please check with your supervisor if all variables have been set correctly");
                 return;
             }
-
-            if (assetTemplate != null) {
-                try {
-                    // render asset
-                    if (mode == Mode.STANDALONE) {
-                        // currently, ALWAYS push context around asset render call
-                        final boolean shareScope = false;
-                        assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext, ctxVars, ovrdCtxVars, shareScope, newCmsCtx));
-                    } else if (mode == Mode.INCLUDE) {
-                        assetTemplate.getRenderer().includeTemplate(env);
-                    } else if (mode == Mode.IMPORT) {
-                        assetTemplate.getRenderer().importTemplate(env, namespace);
-                    } else {
-                        throw new CmsException("error determining asset mode");
-                    }
-                } catch (Exception e) {
-                    handleNestedError(env, e, "Please check asset reference ("
-                            + (assetName != null ? "name: '" + assetName + "'" : "id: '" + assetId + "'")
-                            + ") and/or validity of asset template. Please check with your supervisor if all variables have been set correctly");
-                    return;
-                }
+        } else {
+            if (assetName != null) {
+                handleError(env, null, "Asset with name '" + assetName + "' not found. Please check with your supervisor"
+                            + " if all variables have been set correctly.");
+                return;
             } else {
-                if (assetName != null) {
-                    handleError(env, null, "Asset with name '" + assetName + "' not found. Please check with your supervisor"
-                                + " if all variables have been set correctly.");
-                    return;
-                } else {
-                    handleError(env, null, "Asset with id '" + assetId + "' not found. Please check with your supervisor"
-                                + " if all variables have been set correctly");
-                    return;
-                }
+                handleError(env, null, "Asset with id '" + assetId + "' not found. Please check with your supervisor"
+                            + " if all variables have been set correctly");
+                return;
             }
         }
     }

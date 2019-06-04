@@ -24,7 +24,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import freemarker.template.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
@@ -38,82 +40,67 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 
 import freemarker.core.Environment;
-import freemarker.template.TemplateTransformModel;
 
 /**
  * RenderContentAndSubContent - Freemarker Transform for Content rendering
  * This transform cannot be called recursively (at this time).
  */
-public class RenderContentAndSubContent implements TemplateTransformModel {
+public class RenderContentAndSubContent implements TemplateDirectiveModel { // SCIPIO: Refactored as TemplateDirectiveModel
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
-        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
-        final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-        final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
-        final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
-        final Map<String, Object> envMap = FreeMarkerWorker.createEnvironmentMap(env);
-        final MapStack<String> templateRoot = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
-        ((MapStack<String>)templateRoot).push(envMap);
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("in RenderContentAndSubContent, contentId(0):" + templateRoot.get("contentId"), module);
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+        LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
+        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+        HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
+        HttpServletResponse response = FreeMarkerWorker.getWrappedObject("response", env); // SCIPIO
+        Map<String, Object> envMap = FreeMarkerWorker.createEnvironmentMap(env);
+        MapStack<String> templateRoot = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
+        templateRoot.push(envMap);
+        try { // SCIPIO: Added try/finally block
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("in RenderContentAndSubContent, contentId(0):" + templateRoot.get("contentId"), module);
+            }
+            FreeMarkerWorker.getSiteParameters(request, templateRoot);
+            FreeMarkerWorker.overrideWithArgs(templateRoot, params);
+            renderSubContent(env.getOut(), delegator, dispatcher, request, response, templateRoot);
+        } finally {
+            templateRoot.pop(); // SCIPIO: Added pop()
         }
-        FreeMarkerWorker.getSiteParameters(request, templateRoot);
-        FreeMarkerWorker.overrideWithArgs(templateRoot, args);
+    }
 
-        return new Writer(out) {
+    protected void renderSubContent(Writer out, Delegator delegator, LocalDispatcher dispatcher, HttpServletRequest request, HttpServletResponse response,
+                                    MapStack<String> templateRoot) throws IOException {
+        String mimeTypeId = (String) templateRoot.get("mimeTypeId");
+        Object localeObject = templateRoot.get("locale");
+        Locale locale = null;
+        if (localeObject == null) {
+            locale = UtilHttp.getLocale(request);
+        } else {
+            locale = UtilMisc.ensureLocale(localeObject);
+        }
 
-            @Override
-            public void write(char cbuf[], int off, int len) {
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("in RenderContentAndSubContent, contentId(2):" + templateRoot.get("contentId"), module);
+        }
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("in RenderContentAndSubContent, subContentId(2):" + templateRoot.get("subContentId"), module);
+        }
+        try {
+            String contentId = (String)templateRoot.get("contentId");
+            String mapKey = (String)templateRoot.get("mapKey");
+            String contentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
+            if (UtilValidate.isNotEmpty(mapKey) || UtilValidate.isNotEmpty(contentAssocTypeId)) {
+                String txt = ContentWorker.renderSubContentAsText(dispatcher, delegator, contentId, mapKey, templateRoot, locale, mimeTypeId, true);
+                out.write(txt);
+            } else if (contentId != null) {
+                ContentWorker.renderContentAsText(dispatcher, delegator, contentId, out, templateRoot, locale, mimeTypeId, null, null, true);
             }
-
-            @Override
-            public void flush() throws IOException {
-                out.flush();
-            }
-
-            @Override
-            public void close() throws IOException {
-                renderSubContent();
-            }
-
-            public void renderSubContent() throws IOException {
-                String mimeTypeId = (String) templateRoot.get("mimeTypeId");
-                Object localeObject = templateRoot.get("locale");
-                Locale locale = null;
-                if (localeObject == null) {
-                    locale = UtilHttp.getLocale(request);
-                } else {
-                    locale = UtilMisc.ensureLocale(localeObject);
-                }
-
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("in RenderContentAndSubContent, contentId(2):" + templateRoot.get("contentId"), module);
-                }
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("in RenderContentAndSubContent, subContentId(2):" + templateRoot.get("subContentId"), module);
-                }
-                    try {
-                        String contentId = (String)templateRoot.get("contentId");
-                        String mapKey = (String)templateRoot.get("mapKey");
-                        String contentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
-                        if (UtilValidate.isNotEmpty(mapKey) || UtilValidate.isNotEmpty(contentAssocTypeId)) {
-                            String txt = ContentWorker.renderSubContentAsText(dispatcher, delegator, contentId, mapKey, templateRoot, locale, mimeTypeId, true);
-                            out.write(txt);
-                        } else if (contentId != null) {
-                            ContentWorker.renderContentAsText(dispatcher, delegator, contentId, out, templateRoot, locale, mimeTypeId, null, null, true);
-//                            ((MapStack)templateRoot).pop();
-                        }
-                    } catch (GeneralException e) {
-                        String errMsg = "Error rendering thisContentId:" + (String)templateRoot.get("contentId") + " msg:" + e.toString();
-                        Debug.logError(e, errMsg, module);
-                        // just log a message and don't return anything: throw new IOException();
-                    }
-            }
-
-        };
+        } catch (GeneralException e) {
+            String errMsg = "Error rendering thisContentId:" + (String)templateRoot.get("contentId") + " msg:" + e.toString();
+            Debug.logError(e, errMsg, module);
+            // just log a message and don't return anything: throw new IOException();
+        }
     }
 }

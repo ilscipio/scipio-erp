@@ -563,32 +563,9 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             public PtRenderArgs() {
                 super();
             }
-
-            public PtRenderArgs(Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                super(env, context, content, pageContext, shareScope);
-            }
-
-            public PtRenderArgs(Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars,
-                    boolean shareScope) {
-                super(env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, shareScope);
-            }
-
-            public PtRenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars,
-                    boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean shareScope) {
-                super(out, env, context, content, pageContext, earlyCtxVars, ovrdCtxVars, skipSystemCtx, skipExtraCommonCtx, shareScope);
-            }
-
-            public PtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, boolean shareScope) {
-                super(out, context, content, pageContext, shareScope);
-            }
-
-            public PtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content,
-                    CmsPageContext pageContext, Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean shareScope) {
-                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, shareScope);
+            public PtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
+                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
+                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, protectScope);
             }
 
             public boolean isRunPageScripts() {

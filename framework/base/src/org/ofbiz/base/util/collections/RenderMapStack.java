@@ -43,6 +43,9 @@ public class RenderMapStack extends MapStack<String> {
     private static final String AUTO_CLOSE_EXCL_FIELD = "scpCtxAutoCloseExcl"; // SCIPIO
     @SuppressWarnings("unchecked")
     private static final Class<? extends AutoCloseable> ELI_CLS = (Class<? extends AutoCloseable>) ObjectType.loadClassOrRuntimeEx("org.ofbiz.entity.util.EntityListIterator"); // SCIPIO
+    @SuppressWarnings("unchecked")
+    private static final Class<? extends AutoCloseable> ENTITY_CLS = (Class<? extends AutoCloseable>) ObjectType.loadClassOrRuntimeEx("org.ofbiz.entity.GenericEntity"); // SCIPIO
+    private static final int LOG_DEBUG = Debug.INFO; // SCIPIO: TODO: SWITCH TO VERBOSE
 
     public static RenderMapStack createRenderContext() {
         RenderMapStack newValue = new RenderMapStack();
@@ -124,15 +127,25 @@ public class RenderMapStack extends MapStack<String> {
         return standAloneChild;
     }
 
+    /** Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it.
+     * SCIPIO: This method may perform additional event handler calls and cleanup commands (for render context, closes all EntityListIterators found in context values). */
     @Override
     public Map<String, Object> pop() {
         @SuppressWarnings("unchecked")
-        int numClosed = UtilIO.closeValuesSafe(getCurrentMap(), ELI_CLS, (Collection<String>) getCurrentMap().get(AUTO_CLOSE_EXCL_FIELD));
-        if (Debug.infoOn()) {   // SCIPIO: FIXME: change to verbose later
+        int numClosed = UtilIO.closeValuesSafe(getCurrentMap(), ELI_CLS, getAutoCloseExclFieldList());
+        if (Debug.isOn(LOG_DEBUG)) {   // SCIPIO: FIXME: change to verbose later
             if (numClosed > 0) {
-                Debug.logInfo("pop: closed " + numClosed + " EntityListIterators", module);
+                Debug.log(LOG_DEBUG, null, "Render context: pop: auto-closed " + numClosed + " EntityListIterators", module);
             }
         }
         return super.pop();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Collection<String> getAutoCloseExclFieldList() {
+        if (getCurrentMap() == null || ENTITY_CLS.isAssignableFrom(getCurrentMap().getClass())) {
+            return null;
+        }
+        return (Collection<String>) getCurrentMap().get(AUTO_CLOSE_EXCL_FIELD);
     }
 }

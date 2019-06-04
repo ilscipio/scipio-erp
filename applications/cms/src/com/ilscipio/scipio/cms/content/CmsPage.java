@@ -1934,13 +1934,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 content = content.clone(); // 2016: CLONE because content member on CmsPage instance may be immutable
             }
             MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
-            boolean shareScope = true; // we don't need to push it here...
-            PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, shareScope);
+            PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, null, null, false);
             renderArgs.setRunPageScripts(true);
             renderArgs.setTxTimeoutExdr(page.getTxTimeoutExdr()); // NOTE: If set, overrides the template's timeout.
             page.getTemplate().getRenderer().processAndRender(renderArgs);
         }
-
     }
 
     @Override

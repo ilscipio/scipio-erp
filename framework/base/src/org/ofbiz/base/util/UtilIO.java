@@ -42,6 +42,7 @@ public final class UtilIO {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final Class<?> ELI_CLS = ObjectType.loadClassOrRuntimeEx("org.ofbiz.entity.util.EntityListIterator"); // SCIPIO
+    private static final int LOG_DEBUG = Debug.INFO; // SCIPIO: TODO: SWITCH TO VERBOSE
 
     private UtilIO () {}
     /** Copy an InputStream to an OutputStream, optionally closing either
@@ -442,11 +443,11 @@ public final class UtilIO {
 
     private static boolean closeSafe(Object object) { // SCIPIO
         try {
-            if (Debug.infoOn()) {   // SCIPIO: FIXME: change to verbose later
+            if (Debug.isOn(LOG_DEBUG)) {
                 if (ELI_CLS.equals(object.getClass())) {
-                    Debug.logInfo("closeSafe: closing EntityListIterator for entity [" + object.getClass().getMethod("getEntityName").invoke(object) + "]", module);
+                    Debug.log(LOG_DEBUG, null, "closeSafe: closing EntityListIterator for entity [" + object.getClass().getMethod("getEntityName").invoke(object) + "]", module);
                 } else {
-                    Debug.logInfo("closeSafe: closing object of type [" + object.getClass().getName() + "]", module);
+                    Debug.log(LOG_DEBUG, null, "closeSafe: closing object of type [" + object.getClass().getName() + "]", module);
                 }
             }
             ((AutoCloseable) object).close();

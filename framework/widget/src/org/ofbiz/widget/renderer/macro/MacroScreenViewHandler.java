@@ -150,25 +150,34 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             }
             MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create()
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
+            try { // SCIPIO: Added try/finally block
+                // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.
+                writer = WidgetRenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
 
-            // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.
-            writer = WidgetRenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
-
-            ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
-            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
-            context.put("screens", screens);
-            // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
-            // for some cases where only request is available
-            request.setAttribute("screens", screens);
-            // SCIPIO: new early encoder
-            UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".encoder"));
-            context.put("simpleEncoder", simpleEncoder);
-            UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder"));
-            context.put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
-            screenStringRenderer.renderScreenBegin(writer, context);
-            screens.render(page);
-            screenStringRenderer.renderScreenEnd(writer, context);
-            writer.flush();
+                ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
+                ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
+                context.put("screens", screens);
+                // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
+                // for some cases where only request is available
+                request.setAttribute("screens", screens);
+                // SCIPIO: new early encoder
+                UtilCodec.SimpleEncoder simpleEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".encoder"));
+                context.put("simpleEncoder", simpleEncoder);
+                UtilCodec.SimpleEncoder simpleEarlyEncoder = UtilCodec.getEncoder(UtilProperties.getPropertyValue("widget", getName() + ".earlyEncoder"));
+                context.put("simpleEarlyEncoder", (simpleEarlyEncoder != null) ? simpleEarlyEncoder : simpleEncoder);
+                screenStringRenderer.renderScreenBegin(writer, context);
+                screens.render(page);
+                screenStringRenderer.renderScreenEnd(writer, context);
+            } finally {
+                context.pop(); // SCIPIO: Added pop()
+                if (context.stackSize() > 1) { // SCIPIO
+                    Debug.logWarning("Unmatched push() calls at render end: stack size (" + context.stackSize()
+                            + ") greater than expected (1)", module);
+                }
+                if (writer != null) { // SCIPIO: Added null check, moved to finally block
+                    writer.flush();
+                }
+            }
         } catch (TemplateException e) {
             Debug.logError(e, "Error initializing screen renderer", module);
             throw new ViewHandlerException(e.getMessage());

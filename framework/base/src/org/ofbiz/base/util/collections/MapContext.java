@@ -123,30 +123,44 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         stackList = new ArrayList<>(STACK_INITIAL_CAPACITY); // SCIPIO: switched to ArrayList
     }
 
-    /** Puts a new Map on the top of the stack */
+    /** Puts a new Map on the top of the stack.
+     * SCIPIO: May perform additional event handler calls and setup. */
     public void push() {
+        pushOnly();
+        runPostPushEvents();
+    }
+
+    /** Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack).
+     * SCIPIO: May perform additional event handler calls and setup. */
+    public void push(Map<K, V> existingMap) {
+        pushOnly(existingMap); // SCIPIO: Moved implementation
+        runPostPushEvents();
+    }
+
+    /** SCIPIO: Puts a new Map on the top of the stack.
+     * Does not perform any additional event handler calls or setup. */
+    protected void pushOnly() {
         Map<K, V> newMap = new HashMap<K, V>();
         // SCIPIO: reversed order
         //this.stackList.add(0,newMap);
         this.stackList.add(newMap);
-        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
-            for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.afterPush(this, getCurrentMap());
-            }
-        }
     }
 
-    /** Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack) */
-    public void push(Map<K, V> existingMap) {
+    /** SCIPIO: Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack).
+     * Does not perform any additional event handler calls or setup. */
+    protected void pushOnly(Map<K, V> existingMap) {
         if (existingMap == null) {
             throw new IllegalArgumentException("Error: cannot push null existing Map onto a MapContext");
         }
         // SCIPIO: reversed order
         //this.stackList.add(0, existingMap);
         this.stackList.add(existingMap);
+    }
+
+    protected void runPostPushEvents() { // SCIPIO
         if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
             for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.afterPush(this, getCurrentMap());
+                eventHandler.postPush(this, getCurrentMap());
             }
         }
     }
@@ -161,13 +175,16 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         this.stackList.add(0, existingMap);
     }
 
-    /** Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it */
+    /** Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it.
+     * SCIPIO: This method may perform additional event handler calls and cleanup (for render context, closes all EntityListIterators found in context values). */
     public Map<K, V> pop() {
-        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
-            for(EventHandler eventHandler : getEventHandlersIntrn()) {
-                eventHandler.beforePop(this, getCurrentMap());
-            }
-        }
+        runPrePopEvents();
+        return popOnly(); // SCIPIO: Moved implementation
+    }
+
+    /** SCIPIO: Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it.
+     * This method does not perform any additional event handler calls or cleanup (for render context, will not close any EntityListIterators). */
+    protected Map<K, V> popOnly() {
         // always leave at least one Map in the List, ie never pop off the last Map
         if (this.stackList.size() > 1) {
             // SCIPIO: reversed order
@@ -175,6 +192,14 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
             return stackList.remove(stackList.size() - 1);
         } else {
             return null;
+        }
+    }
+
+    protected void runPrePopEvents() { // SCIPIO
+        if (getEventHandlersIntrn() != null) { // SCIPIO: event handler callback
+            for(EventHandler eventHandler : getEventHandlersIntrn()) {
+                eventHandler.prePop(this, getCurrentMap());
+            }
         }
     }
 
@@ -619,10 +644,10 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     }
 
     /**
-     * SCIPIO: Returns the current level's context map index/level, or null if none; for use by implementations only.
+     * SCIPIO: Returns the current stack size.
      */
-    public Integer getCurrentLevel() {
-        return (stackList.size() > 0) ? stackList.size() - 1 : null;
+    public int stackSize() {
+        return stackList.size();
     }
 
     /**
@@ -630,7 +655,7 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
      * WARN: Client code should not modify the returned map! Only implementations could do this.
      */
     public Map<K, V> getCurrentMap() {
-        return (stackList.size() > 0) ? stackList.get(stackList.size() - 1) : null;
+        return (stackSize() > 0) ? stackList.get(stackSize() - 1) : null;
     }
 
     /**
@@ -638,8 +663,8 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
      * Added 2019-05-29.
      */
     public interface EventHandler {
-        default <K, V> void afterPush(MapContext<K, V> context, Map<K, V> currentMap) {}
-        default <K, V> void beforePop(MapContext<K, V> context, Map<K, V> currentMap) {}
+        default <K, V> void postPush(MapContext<K, V> context, Map<K, V> currentMap) {}
+        default <K, V> void prePop(MapContext<K, V> context, Map<K, V> currentMap) {}
     }
 
     /**

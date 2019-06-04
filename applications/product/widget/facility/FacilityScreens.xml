@@ -1054,31 +1054,50 @@ code package.
                 <set field="groupByWarehouseArea" from-field="parameters.groupByWarehouseArea"/>
                 <set field="groupByNoOfOrderItems" from-field="parameters.groupByNoOfOrderItems"/>
                 <set field="maxNumberOfOrders" from-field="parameters.maxNumberOfOrders" default-value="50"/>
-                <service service-name="findOrdersToPickMove">
-                    <field-map field-name="facilityId"/>
-                    <field-map field-name="groupByShippingMethod"/>
-                    <field-map field-name="groupByWarehouseArea"/>
-                    <field-map field-name="groupByNoOfOrderItems"/>
-                </service>
-
-                <entity-condition entity-name="Picklist" list="picklistActiveList">
-                    <condition-list combine="and">
-                        <condition-expr field-name="facilityId" operator="equals" from-field="parameters.facilityId"/>
-                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PICKED"/>
-                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PACKED"/>
-                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
-                    </condition-list>
-                    <order-by field-name="picklistDate"/>
-                </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityPickingDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/facility/facility/PicklistOptions.ftl"/></html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="facility"/>
+                        </not>
+                    </condition>
+                    <actions>
+                        <service service-name="findOrdersToPickMove">
+                            <field-map field-name="facilityId"/>
+                            <field-map field-name="groupByShippingMethod"/>
+                            <field-map field-name="groupByWarehouseArea"/>
+                            <field-map field-name="groupByNoOfOrderItems"/>
+                        </service>
+                        <entity-condition entity-name="Picklist" list="picklistActiveList">
+                            <condition-list combine="and">
+                                <condition-expr field-name="facilityId" operator="equals" from-field="parameters.facilityId"/>
+                                <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PICKED"/>
+                                <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PACKED"/>
+                                <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
+                            </condition-list>
+                            <order-by field-name="picklistDate"/>
+                        </entity-condition>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="CommonFacilityPickingDecorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/facility/facility/PicklistOptions.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="CommonFacilityPickingDecorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/facility/facility/PicklistOptions.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>

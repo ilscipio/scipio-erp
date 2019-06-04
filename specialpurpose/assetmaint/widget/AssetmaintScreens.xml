@@ -78,7 +78,7 @@
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -159,7 +159,7 @@
                 </if>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
@@ -194,7 +194,7 @@
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -287,7 +287,7 @@
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="add-time-entry" title="${uiLabelMap.PageTitleAddWorkEffortTimeEntry}" collapsible="true">
                             <include-form name="AddWorkEffortTimeEntry" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
@@ -315,7 +315,7 @@
                 <set field="noteId" from-field="parameters.noteId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="add-workeffort-note" title="${uiLabelMap.PageTitleAddWorkEffortNotes}" collapsible="true">
                             <include-form name="AddWorkEffortNote" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
@@ -343,7 +343,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="add-item-issuance" title="${uiLabelMap.PageTitleAddItemIssuance}" collapsible="true">
                             <include-form name="AddItemIssuance" location="component://assetmaint/widget/forms/FixedAssetForms.xml"/>

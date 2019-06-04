@@ -271,7 +271,7 @@ code package.
             </actions>
             <widgets>
                 <!-- SCIPIO: changed this from FixedAssetDecorator to CommonFixedAssetMaintDecorator so menu opens... -->
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
@@ -305,7 +305,7 @@ code package.
                     <condition><if-empty field="maintHistSeqId"/></condition>
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
                 </section>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -344,7 +344,7 @@ code package.
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="add-fixedasset-meter" title="${uiLabelMap.AccountingAddFixedAssetMeter}" collapsible="true">
                             <include-form name="AddFixedAssetMeter" location="component://accounting/widget/assets/FixedAssetForms.xml"/>
@@ -396,7 +396,7 @@ code package.
                 <entity-one entity-name="FixedAssetMaintOrder" value-field="fixedAssetMaintOrder"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="add-fixedasset-maint-order" title="${uiLabelMap.AccountingAddFixedAssetMaintOrder}" collapsible="true">
                             <include-form name="AddFixedAssetMaintOrder" location="component://accounting/widget/assets/FixedAssetForms.xml"/>

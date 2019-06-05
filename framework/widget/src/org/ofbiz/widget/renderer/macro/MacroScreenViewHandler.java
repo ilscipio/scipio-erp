@@ -168,14 +168,12 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
                 screenStringRenderer.renderScreenBegin(writer, context);
                 screens.render(page);
                 screenStringRenderer.renderScreenEnd(writer, context);
+                writer.flush();
             } finally {
                 context.pop(); // SCIPIO: Added pop()
                 if (context.stackSize() > 1) { // SCIPIO
                     Debug.logWarning("Unmatched push() calls at render end: stack size (" + context.stackSize()
                             + ") greater than expected (1)", module);
-                }
-                if (writer != null) { // SCIPIO: Added null check, moved to finally block
-                    writer.flush();
                 }
             }
         } catch (TemplateException e) {

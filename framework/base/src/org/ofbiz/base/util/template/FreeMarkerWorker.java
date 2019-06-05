@@ -125,6 +125,8 @@ public final class FreeMarkerWorker {
      */
     private static final DefaultObjectWrapper defaultSimpleTypeCopyingWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeCopyingWrapper(version);
 
+    private static final Boolean AUTO_FLUSH_DEFAULT = UtilProperties.getPropertyAsBoolean("freemarkerConfig", "render.io.autoFlush", null); // SCIPIO
+
     /**
      * SCIPIO: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
@@ -383,8 +385,9 @@ public final class FreeMarkerWorker {
      * @param template A Template instance
      * @param context The context Map
      * @param outWriter The Writer to render to
+     * @param autoFlush SCIPIO: if null, use default auto-flush setting; true/false enables/disables
      */
-    public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
+    public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter, Boolean autoFlush) throws TemplateException, IOException {
         // SCIPIO: 2015-12-15: we want a patch around the processing code to remove our saved copy of
         // the FTL environment. within this call we know that FTL will store its own environment and make accessible via
         // Environment.getCurrentEnvironment().
@@ -404,7 +407,7 @@ public final class FreeMarkerWorker {
             //        run time error if in the future we will pass a different class to the method
             //        (such as a StringBuffer).
             Environment env = template.createProcessingEnvironment(context, (Writer) outWriter);
-            applyUserSettings(env, context);
+            applyUserSettings(env, context, autoFlush);
             env.process();
             return env;
         }
@@ -414,11 +417,22 @@ public final class FreeMarkerWorker {
     }
 
     /**
+     * Renders a Template instance.
+     * @param template A Template instance
+     * @param context The context Map
+     * @param outWriter The Writer to render to
+     */
+    public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
+        return renderTemplate(template, context, outWriter, null);
+    }
+
+    /**
      * Apply user settings to an Environment instance.
      * @param env An Environment instance
      * @param context The context Map containing the user settings
+     * @param autoFlush SCIPIO: if null, use default auto-flush setting; true/false enables/disables
      */
-    public static void applyUserSettings(Environment env, Map<String, Object> context) throws TemplateException {
+    public static void applyUserSettings(Environment env, Map<String, Object> context, Boolean autoFlush) throws TemplateException {
         Locale locale = (Locale) context.get("locale");
         if (locale == null) {
             locale = Locale.getDefault();
@@ -430,6 +444,21 @@ public final class FreeMarkerWorker {
             timeZone = TimeZone.getDefault();
         }
         env.setTimeZone(timeZone);
+        // SCIPIO: determine auto-flush
+        if (autoFlush != null) {
+            env.setAutoFlush(autoFlush);
+        } else if (AUTO_FLUSH_DEFAULT != null) {
+            env.setAutoFlush(AUTO_FLUSH_DEFAULT);
+        }
+    }
+
+    /**
+     * Apply user settings to an Environment instance.
+     * @param env An Environment instance
+     * @param context The context Map containing the user settings
+     */
+    public static void applyUserSettings(Environment env, Map<String, Object> context) throws TemplateException {
+        applyUserSettings(env, context, null); // SCIPIO: delegated
     }
 
     /**

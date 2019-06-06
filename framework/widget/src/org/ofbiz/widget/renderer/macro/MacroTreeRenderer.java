@@ -132,7 +132,7 @@ public class MacroTreeRenderer implements TreeStringRenderer {
         if (environment == null) {
             // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
-            environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
+            environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer, MacroScreenRenderer.AUTO_FLUSH_MACROS); // SCIPIO: Added auto-flush control
             environments.put(writer, environment);
         }
         return environment;

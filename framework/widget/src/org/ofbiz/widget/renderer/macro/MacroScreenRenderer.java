@@ -99,6 +99,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     protected static final Configuration ftlHtmlConfig = HtmlWidget.getFtlConfig();
     protected static final UtilCache<String, Template> ftlHtmlTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.macro", 0, 0, false);
 
+    protected static final Boolean AUTO_FLUSH_MACROS = UtilProperties.getPropertyAsBoolean("widget", "widget.ftl.render.io.autoFlush", null);
+
     public MacroScreenRenderer(String name, String macroLibraryPath) throws TemplateException, IOException {
         // SCIPIO: use special config for HTML
         this.macroLibrary = getTemplate(name, macroLibraryPath);
@@ -220,7 +222,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (environment == null) {
             // SCIPIO: custom render context
             Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
-            environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
+            environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer, AUTO_FLUSH_MACROS); // SCIPIO: Added auto-flush control
             environments.put(writer, environment);
         }
         return environment;

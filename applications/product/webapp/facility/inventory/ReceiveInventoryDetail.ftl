@@ -219,7 +219,7 @@
             <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${raw(purchaseOrder.orderId)}</#assign>
         </#if>
         <@section title=sectionTitle>
-            <input type="hidden" id="getConvertedPrice" value="<@pageUrl>getConvertedPrice</@pageUrl> />
+            <input type="hidden" id="getConvertedPrice" value="<@pageUrl>getConvertedPrice</@pageUrl>" />
             <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
             <form method="post" action="<@pageUrl>receiveInventoryProduct</@pageUrl>" name="receiveMultiPO">
                 <#if shipment?has_content>                                                                                

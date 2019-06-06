@@ -203,7 +203,7 @@
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-template"><#-- FIXME: get these classes on <body> instead... -->
             <@row>
                 <@cell columns=12>
-                    <@heading level=1>${pageTemplate.templateName!}</@heading></a>
+                    <@heading level=1>${pageTemplate.templateName!}</@heading>
                 </@cell>
             </@row>
             <@row>

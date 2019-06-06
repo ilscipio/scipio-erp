@@ -18,13 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -1014,6 +1008,17 @@ public final class Debug {
      */
     public static String getCallerShortInfo(Collection<String> excludeClasses) {
         return formatCallerShortInfo(getCallerInfo(excludeClasses));
+    }
+
+    /**
+     * SCIPIO: Checks the current thread stack trace to find calling method that does not belong to the specified classes,
+     * and returns a short string with class simple name, method and line number (or empty string if all excluded).
+     * The calling method is automatically excluded.
+     * WARN: This method is very slow and should only be used if verbose on.
+     * Added 2018-11-29.
+     */
+    public static String getCallerShortInfo(String... excludeClasses) {
+        return getCallerShortInfo(Arrays.asList(excludeClasses));
     }
 
     /**

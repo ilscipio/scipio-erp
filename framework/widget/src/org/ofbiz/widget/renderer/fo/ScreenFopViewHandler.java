@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -103,6 +104,9 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             } finally {
                 screens.getContext().pop(); // SCIPIO: Added pop()
             }
+        } catch (ClientAbortException e) { // SCIPIO: 2019-06-06: special case: do not log aborts verbosely, as it can DDoS a server
+            // SCIPIO: NOTE: the flush *probably* does not happen here, but just in case, catch this error here - but it should happen mainly below at the main flush()
+            Debug.logWarning("Unable to render FOP output: " + e.toString(), module);
         // SCIPIO: 2018-09-04: TODO: REVIEW: from upstream: this may not be desirable for us right now...
         //} catch (IOException | GeneralException | SAXException | ParserConfigurationException | TemplateException e) {
         } catch (Exception e) {
@@ -189,8 +193,10 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
         try {
             out.writeTo(response.getOutputStream());
             response.getOutputStream().flush();
+        } catch (ClientAbortException e) { // SCIPIO: 2019-06-06: special case: do not log aborts verbosely, as it can DDoS a server
+            Debug.logWarning("Unable to write FOP output to OutputStream: " + e.toString(), module);
         } catch (IOException e) {
-            renderError("Unable to write to OutputStream", e, screenOutString, request, response);
+            renderError("Unable to write FOP output to OutputStream", e, screenOutString, request, response); // SCIPIO: tweaked message
         }
     }
 

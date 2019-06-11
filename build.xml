@@ -2414,13 +2414,16 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
     <!-- Create New Component. This target will create basic directory structure for an Scipio ERP component in hot-deploy directory. -->
     <!-- ================================================================== -->
 
+    <!-- SCIPIO: Added non-interactive support:
+        ./ant create-component -Dcomponent-name=mycomponent -Dcomponent-resource-name=MyComponent -Dwebapp-name=mycomponent -Dbase-permission=MYCOMPONENT -Dcomponent-package=org.mycompany.myprojects -Dconfirm-component-creation=y -->
     <target name="create-component"
             description="Create the layout of a Scipio component in the hot-deploy folder.">
-        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="base-permission" message="Base permission (UPPERCASE): (e.g. MYCOMPONENT) [Mandatory]"/>
-        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]" unless:set="component-name"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]" unless:set="component-resource-name"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [Mandatory]" unless:set="webapp-name"/>
+        <input addproperty="base-permission" message="Base permission (UPPERCASE): (e.g. MYCOMPONENT) [Mandatory]" unless:set="base-permission"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external" unless:set="component-package"/>
 
         <echo>The following hot-deploy component will be created:
               Name: ${component-name}
@@ -2429,7 +2432,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
               Base permission: ${base-permission}
               Folder: ${basedir}/hot-deploy/${component-name}
         </echo>
-        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n" unless:set="confirm-component-creation"/>
         <fail message="Component creation cancelled by the user.">
             <condition>
                 <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>

@@ -74,7 +74,7 @@ OPTIONS (must come after ACTION and ADDON names):
 
   -h, --help          General help or help about specific command
 
-  -v, --verbose       Verbose output
+  -v, --verbose       Verbose output (currently also counts as 'debug' - output subject to change)
 
 DESCRIPTION
 
@@ -202,25 +202,28 @@ join_string() {
 print_addon_line() {
   get_addon_info "$2" || return
   if [ "$1" = "${ADDON_REPOTYPE}" ]; then
-    local INSTSTR=$(print_addon_format)
-    echo "${ADDON_NAME} -> ${ADDON_DIR} ${INSTSTR}"
+    echo "${ADDON_NAME} -> ${ADDON_DIR} $(print_addon_format)"
   fi
 }
 
 print_addon_format() {
   if is_addon_dir_present; then
     if is_addon_subtree; then
-      echo "[INSTALLED, subtree]"
+      echo "[installed, subtree]"
     elif is_addon_submodule_known; then
-      echo "[INSTALLED, submodule]"
+      echo "[installed, submodule]"
     elif is_addon_subtree_basic; then
-      echo "[PRESENT - WARNING: git log has no record of this being a git subtree! May be incompatible with script! git subtree likely to fail!]"
+      if is_remote_exists "${ADDON_NAME}"; then
+        echo "[present - warning: could not validate as subtree; may not be compatible with script; git subtree may fail]"
+      else
+        echo "[present - warning: could not validate as subtree; may not be compatible with script; addon remote appears missing]"
+      fi
     elif is_addon_submodule; then
-      echo "[PRESENT - WARNING: Appears to be a submodule of unknown origin! Incompatible with script!]"
+      echo "[present - warning: Appears to be a submodule of unknown origin; incompatible with script]"
     elif is_addon_dir_empty; then
-      echo "[PRESENT - WARNING: Empty addon directory! Incompatible with script!]"
+      echo "[present - warning: Empty addon directory; incompatible with script]"
     else
-      echo "[PRESENT - WARNING: Does not appear to be subtree-compatible! Incompatible with script!]"
+      echo "[present - warning: Does not appear to be subtree-compatible; incompatible with script]"
     fi
   fi
 }
@@ -270,11 +273,11 @@ list_addons_all_names() {
 }
 
 print_error() {
-  echo -e "ERROR: ""$@"
+  echo -e "error: ""$@" >&2
 }
 
 print_warn() {
-  echo -e "WARNING: ""$@"
+  echo -e "warning: ""$@" >&2
 }
 
 print_msg() {
@@ -292,7 +295,7 @@ debug() {
 }
 
 die() {
-  echo "${@}"
+  print_error "${@}"
   exit 1
 }
 
@@ -369,18 +372,18 @@ check_requirements() {
     print_error_req "insufficient bash version - required: 4.0, you: ${BASH_VERSION}"
     return 2
   fi
-  local GITVERSION=$(git --version)
-  if [ $? -ne 0 ] || [ -z "${GITVERSION}" ]; then
+  local git_ver=$(git --version)
+  if [ $? -ne 0 ] || [ -z "${git_ver}" ]; then
     print_error_req "Could not detect git version - is git installed?"
     return 2
   fi
-  local GITVERSION=$(echo -n "${GITVERSION}" | sed -r -n 's/^git\s\s*version\s\s*(.*)$/\1/p')
-  if [ $? -ne 0 ] || [ -z "${GITVERSION}" ] || ! check_min_version "${GITVERSION}" "2.0"; then
-    print_error_req "Insufficient git version - required: 2.0, system: ${GITVERSION}"
+  local git_ver=$(echo -n "${git_ver}" | sed -r -n 's/^git\s\s*version\s\s*(.*)$/\1/p')
+  if [ $? -ne 0 ] || [ -z "${git_ver}" ] || ! check_min_version "${git_ver}" "2.0"; then
+    print_error_req "Insufficient git version - required: 2.0, system: ${git_ver}"
     return 2
   fi
-  if ! check_min_version "${GITVERSION}" "2.7"; then
-    print_warn "You are running git ${GITVERSION}; this script has not been tested with git version less than 2.7"
+  if ! check_min_version "${git_ver}" "2.7"; then
+    print_warn "You are running git ${git_ver}; this script has not been tested with git version less than 2.7"
   fi
   # FIXME: subtree command test broken since git 2.20.0 or .1, gone from list (?)
   #if ! git --help --all | grep -q 'subtree'; then
@@ -670,11 +673,18 @@ is_addon_subtree_basic() {
 }
 
 is_addon_subtree_deep() {
-  local latest_squash=$(find_latest_squash "${ADDON_DIR}")
+  if [ "${VERBOSE}" = 1 ]; then
+    local latest_squash=$(find_latest_squash "${ADDON_DIR}")
+  else
+    local latest_squash=$(find_latest_squash "${ADDON_DIR}" 2>/dev/null)
+  fi
+  echo "latest squash for ${ADDON_NAME}: ${latest_squash}" >&2
   [ ! -z "${latest_squash}" ]
 }
 
-# NOTE: function imported from git package 2.17 git-subtree.sh (this is unlikely to ever change much)
+# NOTE: function imported and modified from git package 2.17 git-subtree.sh (this is unlikely to ever change much)
+# 2019-06-12: MODIFIED git code below to remove the git rev-parse, because it causes this to require
+# fully-fetched addon remotes, and this is nothing but problems 
 find_latest_squash() {
     debug "Looking for latest squash ($dir)..."
     dir="$1"
@@ -696,8 +706,10 @@ find_latest_squash() {
             main="$b"
             ;;
         git-subtree-split:)
-            sub="$(git rev-parse "$b^0")" ||
-            die "could not rev-parse split hash $b from commit $sq"
+            # SCIPIO: don't require it to be fetched (rev-parse) - we only need a basic check
+            #sub="$(git rev-parse "$b^0")" ||
+            #die "could not rev-parse split hash $b from commit $sq"
+            sub="$b"
             ;;
         END)
             if test -n "$sub"
@@ -729,12 +741,10 @@ check_addon_supported() {
     if is_addon_subtree_basic; then
       print_warn "Addon ${ADDON_NAME} -> ${ADDON_DIR} has no record of being a subtree in its log; git subtree pull may fail (if it does, you may need to remove the directory, re-run this script, and reapply your changes after)"
     elif is_addon_subtree; then
-      local FMTSTR=$(print_addon_format)
-      print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - submodule URL does not match any known addon URL; assuming not a Scipio addon.\nDetected as: ${FMTSTR}"
+      print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - submodule URL does not match any known addon URL; assuming not a Scipio addon.\nDetected as: $(print_addon_format)"
       return 2
     else
-      local FMTSTR=$(print_addon_format)
-      print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - does not appear to be a subtree! Cannot be managed using this script unless removed first.\nDetected as: ${FMTSTR}"
+      print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - does not appear to be a subtree! Cannot be managed using this script unless removed first.\nDetected as: $(print_addon_format)"
       return 2
     fi
   fi
@@ -852,6 +862,10 @@ ensure_addon_remote() {
   remote_reset_addon_core
 }
 
+fetch_addon() {
+  ensure_addon_remote && callgit fetch "${ADDON_NAME}"
+}
+
 remote_reset_addon_core() {
   echo "Setting remote for addon ${ADDON_NAME}: ${ADDON_URL}"
   if [ -z "${ADDON_URL}" ]; then
@@ -940,7 +954,6 @@ install_addons_all() {
 get_addon_info() {
   ADDON_INFO_STR="${SCIPIO_ADDON_MAP[$1]}"
   if [ -z "${ADDON_INFO_STR}" ]; then
-    echo ""
     print_error "Invalid addon name or definition: '$1'"
     return 1
   fi
@@ -953,10 +966,10 @@ get_addon_info() {
   if [[ "${ADDON_URLPART}" == *//* ]]; then # full url
     ADDON_URL="${ADDON_URLPART}"
   else # suffix only; prepend base...
-    local REPOURLVAR="SCIPIO_ADDONS_URL_${ADDON_REPOTYPE^^}"
-    local REPOBASEURL=${!REPOURLVAR}
-    if [ ! -z "${REPOBASEURL}" ]; then
-      ADDON_URL="${REPOBASEURL}${ADDON_URLPART}"
+    local repo_url_var="SCIPIO_ADDONS_URL_${ADDON_REPOTYPE^^}"
+    local repo_baseurl="${!repo_url_var}"
+    if [ ! -z "${repo_baseurl}" ]; then
+      ADDON_URL="${repo_baseurl}${ADDON_URLPART}"
     fi
   fi
   if [[ "${ADDON_URL}" != *".git" ]]; then

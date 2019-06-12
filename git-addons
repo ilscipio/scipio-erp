@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-project_dir=$(pwd)
+project_dir="$(pwd)"
 
 print_title() { echo -e "SCIPIO-ERP Addons and Themes Git Merging Script\n"; }
 
@@ -830,6 +830,7 @@ pull_addon() {
 
 remote_reset_addons() {
   print_targetaddons_msg "remote-reset" "$@"
+  remote_reset_addons_tips
   for ADDON; do
     get_addon_info "${ADDON}" || return
     remote_reset_addon || return
@@ -839,6 +840,7 @@ remote_reset_addons() {
 remote_reset_addons_all() {
   get_valid_addons || return
   print_targetaddons_all_msg "remote-reset"
+  remote_reset_addons_tips
   for ADDON in ${ADDONS}; do
     get_addon_info "${ADDON}" || return
     # no remotes needed for submodules
@@ -846,6 +848,10 @@ remote_reset_addons_all() {
       remote_reset_addon || return
     fi
   done
+}
+
+remote_reset_addons_tips() {
+  print_msg "note: verify remotes using: git remote -v"
 }
 
 remote_reset_addon() {

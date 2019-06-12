@@ -678,7 +678,6 @@ is_addon_subtree_deep() {
   else
     local latest_squash=$(find_latest_squash "${ADDON_DIR}" 2>/dev/null)
   fi
-  echo "latest squash for ${ADDON_NAME}: ${latest_squash}" >&2
   [ ! -z "${latest_squash}" ]
 }
 

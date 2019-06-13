@@ -93,7 +93,7 @@ or instead by creating a git-addons-config-local file (ignored by git).
 
 In order to use this script with purchased addons, you must set the variable
 SCIPIO_ADDONS_URL_EE in the accompanying git-addons-config/git-addons-config-local script
-to the base ssh://.../SCIPIO-ERP/ addons location provided when you purchase an addon.
+to the base ssh://.../scipio-erp/ addons location provided when you purchase an addon.
 
 For enterprise addons, you must have an SSH agent loaded with your private key for access
 to the Ilscipio (or other) servers.
@@ -216,7 +216,7 @@ print_addon_format() {
       if is_remote_exists "${ADDON_NAME}"; then
         echo "[present - warning: could not validate as subtree; may not be compatible with script; git subtree may fail]"
       else
-        echo "[present - warning: could not validate as subtree; may not be compatible with script; addon remote appears missing]"
+        echo "[present - warning: could not validate as subtree; addon remote appears missing - try remote-reset]"
       fi
     elif is_addon_submodule; then
       echo "[present - warning: Appears to be a submodule of unknown origin; incompatible with script]"
@@ -404,7 +404,7 @@ check_requirements() {
   fi
   if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
     print_msg "NOTE: The variable SCIPIO_ADDONS_URL_EE is not set. You will only be able to install community addons from Github. \
-If you have purchased an addon from the Scipio store, you must input the base address (ssh://.../SCIPIO-ERP/) provided to you \
+If you have purchased an addon from the Scipio store, you must input the base address (ssh://.../scipio-erp/) provided to you \
 into the git-addons-config (+ git commit) or git-addons-config-local file, including trailing slash. See './git-addons help' and git-addons-config for details.\n"
     if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
       print_error_req "Could not read any addons URL from git-addons-config script"

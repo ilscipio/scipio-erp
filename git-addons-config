@@ -6,7 +6,7 @@
 
 # Enterprise addons base folder [INPUT PURCHASED ADDONS BASE SSH ADDRESS HERE]
 # Please set this to the address of the Ilscipio servers provided to you upon addon purchase.
-# This will be an ssh:// address and end with /SCIPIO-ERP/ (including trailing slash).
+# This will be an ssh:// address and end with /scipio-erp/ (including trailing slash).
 # You will have to commit the change locally (git add git-addons-config && git commit -m "Updated git-addons-config").
 if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
   SCIPIO_ADDONS_URL_EE=""

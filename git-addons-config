@@ -11,15 +11,21 @@
 if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
   SCIPIO_ADDONS_URL_EE=""
 fi
-
+# Suffix added just before ".git" to all EE repo URLs
+if [ -z "${SCIPIO_ADDONS_URL_SUFFIX_EE}" ]; then
+  SCIPIO_ADDONS_URL_SUFFIX_EE=""
+fi
 # Community addons base folder
 # This is used for addons that are public on Github.
 # Maintained by Ilscipio [DO NOT MODIFY]
 if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
   SCIPIO_ADDONS_URL_CE="https://github.com/ilscipio/addons-"
 fi
-
-# Suffix added just before ".git" to all repo URLs
+# Suffix added just before ".git" to all CE repo URLs
+if [ -z "${SCIPIO_ADDONS_URL_SUFFIX_CE}" ]; then
+  SCIPIO_ADDONS_URL_SUFFIX_CE=""
+fi
+# Suffix added just before ".git" to all repo URLs *if* no more specific suffix (from above)
 if [ -z "${SCIPIO_ADDONS_URL_SUFFIX}" ]; then
   SCIPIO_ADDONS_URL_SUFFIX=""
 fi

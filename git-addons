@@ -977,7 +977,10 @@ get_addon_info() {
     fi
   fi
   if [ ! -z "${ADDON_URL}" ] && [[ "${ADDON_URL}" != *".git" ]]; then
-    ADDON_URL="${ADDON_URL}${SCIPIO_ADDONS_URL_SUFFIX}.git"
+    local url_suffix_var="SCIPIO_ADDONS_URL_SUFFIX_${ADDON_REPOTYPE^^}"
+    local repo_urlsuffix="${!url_suffix_var}"
+    if [ -z "${repo_urlsuffix}" ]; then local repo_urlsuffix="${SCIPIO_ADDONS_URL_SUFFIX}"; fi
+    ADDON_URL="${ADDON_URL}${repo_urlsuffix}.git"
   fi
   ADDON_BRANCHPREFIX="${ADDON_INFO[4]}"
   ADDON_BRANCHPREFIX="${ADDON_BRANCHPREFIX%/}"

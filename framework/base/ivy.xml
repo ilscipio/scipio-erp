@@ -388,6 +388,9 @@
             into one of the sections above.
         -->
 
+        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.3.0" conf="base,sources" />
+        <dependency org="com.sun.xml.bind" name="jaxb-core" rev="2.3.0" conf="base,sources" />
+
 
         <!--
             THEMES COMPONENT DEPENDENCIES

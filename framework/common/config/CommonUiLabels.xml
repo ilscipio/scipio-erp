@@ -16106,16 +16106,16 @@
         <value xml:lang="zh">Google Base</value>
     </property>
     <property key="GoogleLogin">
-        <value xml:lang="de">Anmeldung mit Google+</value>
-        <value xml:lang="en">Sign in with Google+</value>
+        <value xml:lang="de">Anmeldung mit Google</value>
+        <value xml:lang="en">Sign in with Google</value>
         <value xml:lang="fr">Connectez-vous avec Google+</value>
-        <value xml:lang="hi-IN">Google+ के साथ में साइन इन करें</value>
-        <value xml:lang="it">Collegati a Google+</value>
-        <value xml:lang="ja">Google+のアカウントでログイン</value>
-        <value xml:lang="nl">Log in met Google+</value>
-        <value xml:lang="pt">Faça login no Google+</value>
-        <value xml:lang="zh">请用google+</value>
-        <value xml:lang="zh-TW">請用google+</value>
+        <value xml:lang="hi-IN">Google के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Google</value>
+        <value xml:lang="ja">Googleのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Google</value>
+        <value xml:lang="pt">Faça login no Google</value>
+        <value xml:lang="zh">请用google</value>
+        <value xml:lang="zh-TW">請用google</value>
     </property>
     <property key="HR">
         <value xml:lang="ar">الموارد البشرية</value>

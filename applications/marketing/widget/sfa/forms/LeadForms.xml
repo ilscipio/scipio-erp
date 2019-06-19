@@ -159,7 +159,7 @@ code package.
     </form>
 
     <form name="listLeads" paginate-target="${currentUrl}"
-            extends="listAccounts" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml">
+            extends="listAccountsCommon" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml"><!-- SCIPIO: Fixed listAccounts -> listAccountsCommon (new) -->
         <actions>
             <set field="roleTypeIdFrom" value="OWNER"/>
             <set field="roleTypeIdTo" value="LEAD"/>

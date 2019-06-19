@@ -72,8 +72,8 @@ code package.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="listAccounts" paginate-target="${currentUrl}" type="list" list-name="listIt"
-        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <!-- SCIPIO: 2019-06-19: refactored listAccounts into listAccounts + listAccountsCommon because extending forms wish to make a different actions query -->
+    <form name="listAccounts" extends="listAccountsCommon">
         <actions>
             <set field="roleTypeIdFrom" value="OWNER"/>
             <set field="roleTypeIdTo" value="ACCOUNT"/>
@@ -91,6 +91,9 @@ code package.
                 <field-map field-name="distinct" value="Y"/>
             </service>
         </actions>
+    </form>
+    <form name="listAccountsCommon" paginate-target="${currentUrl}" type="list" list-name="listIt"
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true">
         <row-actions>
             <entity-one entity-name="Party" value-field="party" use-cache="true"/>
             <set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(party, true)}"/>
@@ -219,7 +222,7 @@ code package.
         <field name="infoString" title="${contactMechType.description}"><text-find/></field>
     </form>
 
-    <form name="listAccountLeads" extends="listAccounts">
+    <form name="listAccountLeads" extends="listAccountsCommon"><!-- SCIPIO: Fixed listAccounts -> listAccountsCommon (new) -->
         <actions>
             <set field="roleTypeIdTo" value="ACCOUNT_LEAD"/>
             <set field="parameters.statusId" value="PARTY_DISABLED"/>

@@ -25,7 +25,7 @@ code package.
         </sort-order>
     </form>
     <form name="ListContacts" paginate-target="${currentUrl}"
-            extends="listAccounts" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml">
+            extends="listAccountsCommon" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml"><!-- SCIPIO: Fixed listAccounts -> listAccountsCommon (new) -->
         <actions>
             <set field="roleTypeIdFrom" value="ACCOUNT"/>
             <set field="roleTypeIdTo" value="CONTACT"/>

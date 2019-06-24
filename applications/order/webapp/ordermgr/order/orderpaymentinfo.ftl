@@ -407,9 +407,9 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         <@cell columns=6>
                             <#if eftAccount?has_content>
                               ${eftAccount.nameOnAccount!}<br />
-                              <#if eftAccount.companyNameOnAccount??>${eftAccount.companyNameOnAccount}<br /></#if>
-                              ${uiLabelMap.AccountingBankName}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br />
-                              ${uiLabelMap.AccountingAccount}#: ${eftAccount.accountNumber}
+                              <#if eftAccount.companyNameOnAccount??>${eftAccount.companyNameOnAccount!}<br /></#if>
+                              ${uiLabelMap.AccountingBankName}: ${eftAccount.bankName!}, ${eftAccount.routingNumber!}<br />
+                              ${uiLabelMap.AccountingAccount}#: ${eftAccount.accountNumber!}
                             <#else>
                               ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>  

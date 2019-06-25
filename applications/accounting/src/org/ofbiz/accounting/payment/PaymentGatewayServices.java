@@ -881,7 +881,7 @@ public class PaymentGatewayServices {
      * Releases authorization for a single OrderPaymentPreference through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @return SUCCESS|FAILED|ERROR for complete processing of payment.
      */
-    public static Map<String, Object> releaseOrderPaymentPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> releaseOrderPaymentPreference(DispatchContext dctx, Map<String, ? extends Object> context) throws GeneralException {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -959,12 +959,23 @@ public class PaymentGatewayServices {
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
         Map<String, Object> releaseContext = new HashMap<>();
-        releaseContext.put("orderPaymentPreference", paymentPref);
-        releaseContext.put("releaseAmount", authTransaction.getBigDecimal("amount"));
-        releaseContext.put("currency", currency);
+        // SCIPIO (2019-06-25: Using the right params to invoke the service
+        releaseContext.put("userLogin", userLogin);
+        releaseContext.put("orderId", orh.getOrderId());
+        releaseContext.put("orderItems", orh.getOrderItems());
+        releaseContext.put("shippingAddress", EntityUtil.getFirst(orh.getShippingLocations())); // TODO refactor the payment API to handle support all addresses
         releaseContext.put("paymentConfig", paymentConfig);
         releaseContext.put("paymentGatewayConfigId", paymentGatewayConfigId);
-        releaseContext.put("userLogin", userLogin);
+        releaseContext.put("currency", orh.getCurrency());
+        releaseContext.put("orderPaymentPreference", paymentPref);
+        if (paymentPref.get("securityCode") != null) {
+            releaseContext.put("cardSecurityCode", paymentPref.get("securityCode"));
+        }
+        releaseContext.put("processAmount", authTransaction.getBigDecimal("amount"));
+
+        // get the billing information
+        getBillingInformation(orh, paymentPref, releaseContext);
+
         // run the defined service
         Map<String, Object> releaseResult = null;
         try {
@@ -978,11 +989,19 @@ public class PaymentGatewayServices {
         if (releaseResult != null && ServiceUtil.isSuccess(releaseResult)) {
             Map<String, Object> releaseResRes;
             try {
-                ModelService model = dctx.getModelService("processReleaseResult");
-                releaseResult.put("orderPaymentPreference", paymentPref);
-                releaseResult.put("userLogin", userLogin);
-                Map<String, Object> resCtx = model.makeValid(releaseResult, ModelService.IN_PARAM);
-                releaseResRes = dispatcher.runSync(model.name,  resCtx);
+                // SCIPIO (2019-06-25: Using the right params to invoke the service.
+                // This can't be done automatically by infering the params gotten from service model because they don't match!
+                Map<String, Object> resCtx = UtilMisc.toMap();
+                resCtx.put("orderPaymentPreference", paymentPref);
+                resCtx.put("userLogin", userLogin);
+                resCtx.put("releaseResult", releaseResult.get("authResult"));
+                resCtx.put("releaseAmount", releaseResult.get("processAmount"));
+                resCtx.put("currencyUomId", orh.getCurrency());
+                resCtx.put("releaseAltRefNum", releaseResult.get("authAltRefNum"));
+                resCtx.put("releaseRefNum", releaseResult.get("authRefNum"));
+                resCtx.put("releaseFlag", releaseResult.get("authFlag"));
+                resCtx.put("releaseMessage", releaseResult.get("authMessage"));
+                releaseResRes = dispatcher.runSync("processReleaseResult",  resCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble processing the release results", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder,

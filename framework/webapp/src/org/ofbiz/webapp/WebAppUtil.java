@@ -83,7 +83,7 @@ public final class WebAppUtil {
 
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
-     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * specified in the <code>scipio-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
      * <p>
      * SCIPIO: NOTE: This stock method always returns with a trailing slash (unless null).
@@ -134,7 +134,7 @@ public final class WebAppUtil {
 
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
-     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * specified in the <code>scipio-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
      *
      * @param webAppInfo
@@ -148,7 +148,7 @@ public final class WebAppUtil {
     /**
      * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
      * or null. The path consists of the web application's mount-point
-     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * specified in the <code>scipio-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
      *
      * @param webAppInfo
@@ -168,7 +168,7 @@ public final class WebAppUtil {
     /**
      * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
      * or null. The path consists of the web application's mount-point
-     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * specified in the <code>scipio-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
      * @deprecated 2017-12-05: call {@link #getControlServletPathSafe(WebappInfo)} instead;
      * the central {@link #getControlServletPath} method already ensured a trailing slash,
@@ -443,7 +443,7 @@ public final class WebAppUtil {
 
     /**
      * SCIPIO: Returns the web.xml context-params for webappInfo, and tries to include
-     * the init-params defined in ofbiz-component.xml as well. This is a best-effort operation,
+     * the init-params defined in scipio-component.xml as well. This is a best-effort operation,
      * because it is technically possible for custom code to add context-params from other sources unexpectedly.
      * <p>
      * NOTE: 2018-09-25: It is recommended to use {@link ExtWebappInfo#getContextParams()} instead of this, for caching reasons.

@@ -95,7 +95,7 @@ public class EntityDataLoadContainer implements Container {
 
         /*
            load-data arguments:
-           readers (none, all, seed, demo, ext, etc - configured in entityengine.xml and associated via ofbiz-component.xml)
+           readers (none, all, seed, demo, ext, etc - configured in entityengine.xml and associated via scipio-component.xml)
            timeout (transaction timeout default 7200)
            delegator (overrides the delegator name configured for the container)
            group (overrides the entity group name configured for the container)

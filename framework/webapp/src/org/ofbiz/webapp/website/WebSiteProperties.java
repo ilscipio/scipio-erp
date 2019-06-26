@@ -110,7 +110,7 @@ public final class WebSiteProperties {
                 if (extWebappInfo == null) {
                     Debug.logWarning("Looking up current request ExtWebappInfo using webSiteId '" 
                             + webSiteId + "' as fallback; this should not normally be needed"
-                            + "; please ensure your ofbiz-component.xml webapp configurations are correct"
+                            + "; please ensure your scipio-component.xml webapp configurations are correct"
                             + "; if they appear correct, please report this issue", module);
                     try {
                         extWebappInfo = ExtWebappInfo.fromWebSiteId(webSiteId);
@@ -309,7 +309,7 @@ public final class WebSiteProperties {
      * Intended for inter-webapp operations. Currently NOT cached.
      * <p>
      * This overload supports extWebappInfo with null webSiteId; in this case it will mostly
-     * use system defaults (other than anything configurable using only web.xml and ofbiz-component.xml).
+     * use system defaults (other than anything configurable using only web.xml and scipio-component.xml).
      */
     public static WebSiteProperties from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException {
         String webSiteId = extWebappInfo.getWebSiteId();

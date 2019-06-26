@@ -56,7 +56,7 @@ public class ServiceGroupReader {
             addGroupDefinitions(handler);
         }
 
-        // get all of the component resource group stuff, ie specified in each ofbiz-component.xml file
+        // get all of the component resource group stuff, ie specified in each scipio-component.xml file
         for (ComponentConfig.ServiceResourceInfo componentResourceInfo: ComponentConfig.getAllServiceResourceInfos("group")) {
             addGroupDefinitions(componentResourceInfo.createResourceHandler());
         }

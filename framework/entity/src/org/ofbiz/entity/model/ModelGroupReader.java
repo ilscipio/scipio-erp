@@ -88,7 +88,7 @@ public class ModelGroupReader implements Serializable {
             this.entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfig.ENTITY_ENGINE_XML_FILENAME, resourceElement.getLoader(), resourceElement.getLocation()));
         }
 
-        // get all of the component resource group stuff, ie specified in each ofbiz-component.xml file
+        // get all of the component resource group stuff, ie specified in each scipio-component.xml file
         for (ComponentConfig.EntityResourceInfo componentResourceInfo: ComponentConfig.getAllEntityResourceInfos("group")) {
             if (modelName.equals(componentResourceInfo.readerName)) {
                 this.entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());

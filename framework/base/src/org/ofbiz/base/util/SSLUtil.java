@@ -169,7 +169,7 @@ public final class SSLUtil {
     }
 
     /**
-     * SCIPIO: Returns the component keystores in a trust manager (keystore elements in ofbiz-component.xml);
+     * SCIPIO: Returns the component keystores in a trust manager (keystore elements in scipio-component.xml);
      * same as {@link #getTrustManagers()} but without the system keystore.
      * <p>
      * Added 2018-07-12.

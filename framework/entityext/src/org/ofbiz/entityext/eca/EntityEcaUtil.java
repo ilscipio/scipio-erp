@@ -96,7 +96,7 @@ public final class EntityEcaUtil {
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(handler)));
         }
 
-        // get all of the component resource eca stuff, ie specified in each ofbiz-component.xml file
+        // get all of the component resource eca stuff, ie specified in each scipio-component.xml file
         for (ComponentConfig.EntityResourceInfo componentResourceInfo: ComponentConfig.getAllEntityResourceInfos("eca")) {
             if (entityEcaReaderName.equals(componentResourceInfo.readerName)) {
                 futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(componentResourceInfo.createResourceHandler())));

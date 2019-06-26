@@ -349,7 +349,7 @@ public class ExtWebappInfo implements Serializable {
      * WARN: 2018-09-25: If you need to get the context params statically,
      * <strong>always</strong> use {@link #getContextParams()} on this class instead!
      * This descriptor may not include context-params added from other
-     * sources such as ofbiz-component.xml.
+     * sources such as scipio-component.xml.
      */
     public WebXml getWebXml() {
         return webXml;
@@ -439,7 +439,7 @@ public class ExtWebappInfo implements Serializable {
     }
 
     /**
-     * Returns the static context-params defined in web.xml plus those injected from ofbiz-component.xml
+     * Returns the static context-params defined in web.xml plus those injected from scipio-component.xml
      * webapp element init-param definitions.
      */
     public Map<String, String> getContextParams() {

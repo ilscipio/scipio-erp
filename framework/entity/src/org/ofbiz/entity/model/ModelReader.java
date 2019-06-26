@@ -121,7 +121,7 @@ public class ModelReader implements Serializable {
             entityResourceHandlers.add(handler);
         }
 
-        // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+        // get all of the component resource model stuff, ie specified in each scipio-component.xml file
         for (ComponentConfig.EntityResourceInfo componentResourceInfo : ComponentConfig.getAllEntityResourceInfos("model")) {
             if (modelName.equals(componentResourceInfo.readerName)) {
                 entityResourceHandlers.add(componentResourceInfo.createResourceHandler());

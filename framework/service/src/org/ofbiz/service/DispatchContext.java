@@ -257,7 +257,7 @@ public class DispatchContext implements Serializable {
                 futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createServiceReaderCallable(handler)));
             }
 
-            // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+            // get all of the component resource model stuff, ie specified in each scipio-component.xml file
             for (ComponentConfig.ServiceResourceInfo componentResourceInfo: ComponentConfig.getAllServiceResourceInfos("model")) {
                 futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createServiceReaderCallable(componentResourceInfo.createResourceHandler())));
             }

@@ -117,7 +117,7 @@ public abstract class TrustManagers {
 
     /**
      * Returns the ofbiz manager, which is combination of a system keystore
-     * and all the component keystore element definitions in ofbiz-component.xml files.
+     * and all the component keystore element definitions in scipio-component.xml files.
      * <p>
      * NOTE: This may include some system trust stoke keystores; however it does not
      * fully include the system (JVM) trust manager itself, so it should not be

@@ -21,7 +21,7 @@ package org.ofbiz.service;
 import org.ofbiz.entity.Delegator;
 
 /**
- * A {@link LocalDispatcher} factory. Implementations register themselves in the ofbiz-component.xml file.
+ * A {@link LocalDispatcher} factory. Implementations register themselves in the scipio-component.xml file.
  */
 public interface LocalDispatcherFactory {
     /**

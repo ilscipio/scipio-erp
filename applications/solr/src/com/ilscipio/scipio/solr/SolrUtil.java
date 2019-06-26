@@ -265,10 +265,10 @@ public abstract class SolrUtil {
 
     /**
      * Returns true if the LOCAL Solr webapp is present in the system (by context root),
-     * as defined in applications/solr/ofbiz-component.xml.
+     * as defined in applications/solr/scipio-component.xml.
      * <p>
      * For stock Scipio configuration, this always returns true.
-     * It only returns false if the webapp is disabled/commented in ofbiz-component.xml.
+     * It only returns false if the webapp is disabled/commented in scipio-component.xml.
      * <p>
      * WARN: Do not call this before or while components are being read.
      */

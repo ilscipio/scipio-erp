@@ -136,7 +136,7 @@ public class EntityDataLoader {
                         }
                     }
 
-                    // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+                    // get all of the component resource model stuff, ie specified in each scipio-component.xml file
                     for (ComponentConfig.EntityResourceInfo componentResourceInfo: ComponentConfig.getAllEntityResourceInfos("data", componentName)) {
                         if (readerName.equals(componentResourceInfo.readerName)) {
                             ResourceHandler handler = componentResourceInfo.createResourceHandler();

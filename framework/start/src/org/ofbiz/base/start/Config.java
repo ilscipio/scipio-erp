@@ -335,12 +335,12 @@ public class Config {
                 if (componentLocation == null) {
                     continue;
                 }
-                ofbizComponents.add(new File(new File(folder, componentLocation.getNodeValue()), "ofbiz-component.xml"));
+                ofbizComponents.add(getComponentFile(new File(folder, componentLocation.getNodeValue()))); // SCIPIO: refactored
             }
         } else {
             File[] componentFolders = folder.listFiles(folderFilter);
             for (File componentFolder: componentFolders) {
-                File ofbizComponent = new File(componentFolder, "ofbiz-component.xml");
+                File ofbizComponent = getComponentFile(componentFolder); // SCIPIO: refactored
                 if (ofbizComponent.exists()) {
                     ofbizComponents.add(ofbizComponent);
                 }
@@ -405,4 +405,26 @@ public class Config {
         }
     }
 
+    /**
+     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
+     * or null if not found.
+     * <p>DEV NOTE: DUPLICATED FROM: <code>org.ofbiz.base.component.ComponentConfig#getComponentFile</code>
+     */
+    static File getComponentFile(File componentDir) {
+        File file = new File(componentDir, "scipio-component.xml");
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        file = new File(componentDir, "scipio-theme.xml");
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        file = new File(componentDir, "ofbiz-component.xml");
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        // SPECIAL: this class never returned null in stock, so return ofbiz-component.xml for backwards-compat/workaround
+        //return null;
+        return file;
+    }
 }

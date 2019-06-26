@@ -194,11 +194,11 @@ public class ComponentContainer implements Container {
                 for (String sub: fileNames) {
                     try {
                         File componentPath = FileUtil.getFile(parentPath.getCanonicalPath() + "/" + sub);
-                        if (componentPath.isDirectory() && !sub.equals("CVS") && !sub.equals(".svn")) {
+                        if (componentPath != null && componentPath.isDirectory() && !sub.equals("CVS") && !sub.equals(".svn")) { // SCIPIO: 2019-06-25: added null check
                             // make sure we have a component configuration file
                             String componentLocation = componentPath.getCanonicalPath();
-                            File configFile = FileUtil.getFile(componentLocation + "/ofbiz-component.xml");
-                            if (configFile.exists()) {
+                            File configFile = ComponentConfig.getComponentFile(componentLocation); // SCIPIO: refactored
+                            if (configFile != null && configFile.exists()) {  // SCIPIO: 2019-06-25: added null check
                                 ComponentConfig config = null;
                                 try {
                                     // pass null for the name, will default to the internal component name
@@ -225,7 +225,7 @@ public class ComponentContainer implements Container {
                                         configUrl = nestedComponentLoadConfig.toURI().toURL();
                                         List<ComponentLoaderConfig.ComponentDef> componentsToLoad = ComponentLoaderConfig.getComponentsFromConfig(configUrl);
                                         if (componentsToLoad != null) {
-                                            for (ComponentLoaderConfig.ComponentDef def: componentsToLoad) {
+                                            for (ComponentLoaderConfig.ComponentDef def : componentsToLoad) {
                                                 this.loadComponentFromConfig(componentLocation.toString(), def, false, false, localComponentList);
                                             }
                                         }

@@ -39,13 +39,7 @@ import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerConfig.Container;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.location.FlexibleLocation;
-import org.ofbiz.base.util.Assert;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.KeyStoreUtil;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -58,6 +52,8 @@ import org.w3c.dom.Element;
 public final class ComponentConfig {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    public static final String SCIPIO_COMPONENT_XML_FILENAME = "scipio-component.xml"; // SCIPIO
+    public static final String SCIPIO_THEME_XML_FILENAME = "scipio-theme.xml"; // SCIPIO
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
     /* Note: These Maps are not UtilCache instances because there is no strategy or implementation for reloading components.
      * Also, we are using LinkedHashMap to maintain insertion order - which client code depends on. This means
@@ -628,10 +624,10 @@ public final class ComponentConfig {
         if (!rootLocationDir.isDirectory()) {
             throw new ComponentException("The component root location is not a directory: " + rootLocation);
         }
-        String xmlFilename = rootLocation + "/" + OFBIZ_COMPONENT_XML_FILENAME;
-        URL xmlUrl = UtilURL.fromFilename(xmlFilename);
+        // SCIPIO: refactored xmlUrl
+        URL xmlUrl = getComponentFileUrl(rootLocation);
         if (xmlUrl == null) {
-            throw new ComponentException("Could not find the " + OFBIZ_COMPONENT_XML_FILENAME + " configuration file in the component root location: " + rootLocation);
+            throw new ComponentException("Could not find the " + SCIPIO_COMPONENT_XML_FILENAME + " configuration file in the component root location: " + rootLocation); // SCIPIO: switched name
         }
         Document ofbizComponentDocument = null;
         try {
@@ -816,6 +812,67 @@ public final class ComponentConfig {
         this.containers = other.containers;
         this.componentDependencies = other.componentDependencies;
         this.classpathSpecialInfos = other.classpathSpecialInfos;
+    }
+
+    /**
+     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
+     * or null if not found.
+     * <p>DEV NOTE: DUPLICATED AT: <code>org.ofbiz.base.start.Config#getComponentFile</code>
+     */
+    public static File getComponentFile(File componentDir) {
+        File file = new File(componentDir, SCIPIO_COMPONENT_XML_FILENAME);
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        file = new File(componentDir, SCIPIO_THEME_XML_FILENAME);
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        file = new File(componentDir, OFBIZ_COMPONENT_XML_FILENAME);
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
+     * or null if not found.
+     */
+    public static File getComponentFile(String componentDir) { // SCIPIO: DEV NOTE: DUPLICATED AT: org.ofbiz.base.start.Config#getComponentFile
+        File file = FileUtil.getFile(componentDir + "/" + SCIPIO_COMPONENT_XML_FILENAME);
+        if (file != null && file.exists()) {
+            return file;
+        }
+        file = FileUtil.getFile(componentDir + "/" + SCIPIO_THEME_XML_FILENAME);
+        if (file != null && file.exists()) {
+            return file;
+        }
+        file = FileUtil.getFile(componentDir + "/" + OFBIZ_COMPONENT_XML_FILENAME);
+        if (file != null && file.exists()) {
+            return file;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file URL for the given component directory,
+     * or null if not found.
+     * NOTE: There is no way to determine the URL reliably unless the file exists, but otherwise scipio-component.xml would
+     * be considered the "default".
+     */
+    public static URL getComponentFileUrl(String componentDir) {
+        String xmlFilename = componentDir + "/" + SCIPIO_COMPONENT_XML_FILENAME;
+        URL xmlUrl = UtilURL.fromFilename(xmlFilename);
+        if (xmlUrl == null) {
+            xmlFilename = componentDir + "/" + SCIPIO_THEME_XML_FILENAME;
+            xmlUrl = UtilURL.fromFilename(xmlFilename);
+            if (xmlUrl == null) {
+                xmlFilename = componentDir + "/" + OFBIZ_COMPONENT_XML_FILENAME;
+                xmlUrl = UtilURL.fromFilename(xmlFilename);
+            }
+        }
+        return xmlUrl;
     }
 
     public boolean enabled() {
@@ -1077,7 +1134,7 @@ public final class ComponentConfig {
 
     /**
      * SCIPIO: Post-processes the global list of loaded components after all
-     * <code>ofbiz-component.xml</code> files have been read (hook/callback) (new 2017-01-19).
+     * <code>scipio-component.xml</code> files have been read (hook/callback) (new 2017-01-19).
      */
     public static List<ComponentConfig> postProcessComponentConfigs(List<ComponentConfig> componentList) {
         componentList = (postProcessWebappInfos(componentList));

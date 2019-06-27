@@ -2570,15 +2570,16 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </echo>
     </target>
     
-    <!-- SCIPIO: new -->
+    <!-- SCIPIO: new; added non-interactive support:
+        ./ant create-component-shop-override -Dcomponent-name=mycomponent -Dcomponent-resource-name=MyComponent -Dwebapp-name=mycomponent -Dbase-permission=MYCOMPONENT -Dcomponent-package=org.mycompany.myprojects -Dconfirm-component-creation=Y -->
     <target name="create-component-shop-override"
             description="Create the layout of a Scipio shop webapp override component in the hot-deploy folder. (SCIPIO)">
-        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [default: ${component-name}]" defaultvalue="${component-name}"/>
-        <!--<input addproperty="base-permission" message="Base permission (uppercase): (e.g. MYCOMPONENT) [default: SHOP]" defaultvalue="SHOP"/>-->
-        <property name="base-permission" value="SHOP"/>
-        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]" unless:set="component-name"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]" unless:set="component-resource-name"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [default: ${component-name}]" defaultvalue="${component-name}" unless:set="webapp-name"/>
+        <!--<input addproperty="base-permission" message="Base permission (uppercase): (e.g. MYCOMPONENT) [default: SHOP]" defaultvalue="SHOP" unless:set="base-permission"/>-->
+        <property name="base-permission" value="SHOP" unless:set="base-permission"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external" unless:set="component-package"/>
 
         <!-- TODO? more options -->
         <echo>The following hot-deploy component will be created:
@@ -2595,7 +2596,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
             
               NOTE: If you have modified /applications/shop directly in the filesystem, some of those changes may be carried over here.
         </echo>
-        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n" unless:set="confirm-component-creation"/>
         <fail message="Component creation cancelled by the user.">
             <condition>
                 <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>
@@ -2772,13 +2773,15 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </echo>
     </target>
 
+    <!-- SCIPIO: Added non-interactive support:
+    ./ant create-theme -Dcomponent-name=my-theme -Dcomponent-resource-name=MyTheme -Dwebapp-name=mytheme -Dtheme-id=MYTHEME -Dis-backend=Y -Dconfirm-component-creation=Y -->
     <target name="create-theme"
             description="Create the layout of a Scipio theme component in the themes folder.">
-        <input addproperty="component-name" message="Theme name (lowercase): (e.g. my-theme) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. MyTheme) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
-        <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]"/>
-        <input addproperty="is-backend" message="Is backoffice theme? (N for shop theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
+        <input addproperty="component-name" message="Theme name (lowercase): (e.g. my-theme) [Mandatory]" unless:set="component-name"/>
+        <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. MyTheme) [Mandatory]" unless:set="component-resource-name"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]" unless:set="webapp-name"/>
+        <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]" unless:set="theme-id"/>
+        <input addproperty="is-backend" message="Is backoffice theme? (N for shop theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n" unless:set="is-backend"/>
         <if>
             <equals arg1="${is-backend}" arg2="Y" casesensitive="false"/>
             <then>
@@ -2796,7 +2799,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
               ThemeId: ${theme-id}
               Theme-Type: ${theme-type} (is backoffice theme: ${is-backend})
         </echo>
-        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n" unless:set="confirm-component-creation"/>
         <fail message="Component creation cancelled by the user.">
             <condition>
                 <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>

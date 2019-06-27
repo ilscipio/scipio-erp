@@ -50,7 +50,7 @@ NOTE: 2017-12: The Solr ECA system was recently significantly overhauled, and no
     * ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
   * Config files:
     * config/solrconfig.properties - Scipio solr service behavior control
-    * ofbiz-component.xml - Standard Scipio component config
+    * scipio-component.xml/scipio-theme.xml/ofbiz-component.xml - Standard Scipio component config
 
 * Apache Solr configurations:
   * Config files:
@@ -318,7 +318,7 @@ fashion. Client projects may need to modify or augment these for their own needs
 NOTE: In the current implementation (2017-12), the Scipio will log info-level Solr ECA service calls 
   even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has little effect on functionality.
   It is simply that the service engine is a bit verbose. You may, alternatively, simply comment out
-  all the ECAs/SECAs or their file includes in ofbiz-component.xml; however this may negatively affect
+  all the ECAs/SECAs or their file includes in scipio-component.xml; however this may negatively affect
   dirty-data detection and you then have to be doubly certain about your plan to schedule 
   rebuildSolrIndex/rebuildSolrIndexAuto invocations. 
 

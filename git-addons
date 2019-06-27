@@ -990,11 +990,15 @@ get_addon_info() {
 
 get_addon_component_info() {
   ADDON_COMPONENT_NAME=""
-  if [ -f "${ADDON_DIR}/ofbiz-component.xml" ]; then
+  if [ -f "${ADDON_DIR}/scipio-component.xml" ]; then
+    ADDON_COMPONENT_NAME=$(cat "${ADDON_DIR}/scipio-component.xml" | sed -rn 's/^.*<ofbiz-component\s(.*\s)?name="([^"]*)".*$/\2/p')
+    if [ -z "${ADDON_COMPONENT_NAME}" ]; then print_error "Could not determine component name for addon ${ADDON_NAME}; please contact support"; fi
+  elif [ -f "${ADDON_DIR}/scipio-theme.xml" ]; then
+    ADDON_COMPONENT_NAME=$(cat "${ADDON_DIR}/scipio-theme.xml" | sed -rn 's/^.*<ofbiz-component\s(.*\s)?name="([^"]*)".*$/\2/p')
+    if [ -z "${ADDON_COMPONENT_NAME}" ]; then print_error "Could not determine component name for addon ${ADDON_NAME}; please contact support"; fi
+  elif [ -f "${ADDON_DIR}/ofbiz-component.xml" ]; then
     ADDON_COMPONENT_NAME=$(cat "${ADDON_DIR}/ofbiz-component.xml" | sed -rn 's/^.*<ofbiz-component\s(.*\s)?name="([^"]*)".*$/\2/p')
-    if [ -z "${ADDON_COMPONENT_NAME}" ]; then
-      print_error "Could not determine component name for addon ${ADDON_NAME}; please contact support."
-    fi
+    if [ -z "${ADDON_COMPONENT_NAME}" ]; then print_error "Could not determine component name for addon ${ADDON_NAME}; please contact support"; fi
   fi
 }
 

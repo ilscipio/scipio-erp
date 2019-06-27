@@ -69,7 +69,7 @@
                 <para>Dans le composant spécifique data/helpData, créez le fichier HELP_${helpTopic}.xml. Vous pourrez trouver un fichier d'exemple comme  HELP_ACCOUNTING_main.xml</para>
             </listitem>
             <listitem>
-                <para>Mettez à jour/créez data/${componentName}HelpData.xml, vous pourrez trouver comme exemple le fichier AccountingHelpData.xml. Si vous le créez, pensez à ajouter une ligne dans le fichier ofbiz-component.xml pour que les données soient chargées.</para>
+                <para>Mettez à jour/créez data/${componentName}HelpData.xml, vous pourrez trouver comme exemple le fichier AccountingHelpData.xml. Si vous le créez, pensez à ajouter une ligne dans le fichier scipio-component.xml pour que les données soient chargées.</para>
             </listitem>
             <listitem>
                 <para>Charger le fichier de données et le ficher d'aide devrait s'afficher lorsque vous cliquerez sur le bouton d'aide.

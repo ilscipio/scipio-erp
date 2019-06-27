@@ -27,7 +27,7 @@
         <orderedlist>
             <listitem>
                 <para>
-                    Define test-suite in ofbiz-component.xml like this:
+                    Define test-suite in oscipio-component.xml/scipio-theme.xml/ofbiz-component.xml like this:
                 </para>
                 <programlisting>
                     &lt;test-suite loader="main" location="testdef/servicetests.xml"/&gt;

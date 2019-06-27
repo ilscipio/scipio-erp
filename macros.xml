@@ -417,7 +417,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
     <!-- SCIPIO: Build invoker with automatic dependency resolution.
         Fetches the component.build.dependencies filelist from each component within a given component directory
         and resolves the resulting dependency graph to determine a build order, mirroring the same
-        algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17).
+        algorithm now used for the scipio-component.xml/scipio-theme.xml/ofbiz-component.xml depends-on functionality (new 2017-01-17).
         See also the "get-component-build-deps" target (called by this macro). -->
     <macrodef name="dep-subant">
         <attribute name="dir" default=""/>

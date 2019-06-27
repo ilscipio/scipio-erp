@@ -6286,8 +6286,8 @@
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
     <property key="WebtoolsReaderImportNotice">
-        <value xml:lang="de">Eingabe Readers (Komma getrennt,keine Leerzeichen; aus entityengine.xml und ofbiz-component.xml Dateien)</value>
-        <value xml:lang="en">Enter Readers (comma separated, no spaces; from entityengine.xml and ofbiz-component.xml files)</value>
+        <value xml:lang="de">Eingabe Readers (Komma getrennt,keine Leerzeichen; aus entityengine.xml und scipio-component.xml/scipio-theme.xml/ofbiz-component.xml Dateien)</value>
+        <value xml:lang="en">Enter Readers (comma separated, no spaces; from entityengine.xml and scipio-component.xml/scipio-theme.xml/ofbiz-component.xml files)</value>
     </property>
     <property key="WebtoolsReaders">
         <value xml:lang="de">Readers</value>

@@ -2501,7 +2501,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
         <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
-        <copy file="${basedir}/framework/resources/templates/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
+        <copy file="${basedir}/framework/resources/templates/scipio-component.xml" tofile="${basedir}/hot-deploy/${component-name}/scipio-component.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
@@ -2589,7 +2589,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
               Base permission: ${base-permission}
               Folder: ${basedir}/hot-deploy/${component-name}
             
-              The webapp will automatically override the one defined in /applications/shop/ofbiz-component.xml, and it will have:
+              The webapp will automatically override the one defined in /applications/shop/scipio-component.xml, and it will have:
               webSiteId: ScipioWebStore
               mount-point: /shop
               demo data: inherited from /applications/shop/data/
@@ -2663,7 +2663,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
-        <copy file="${basedir}/framework/resources/templates/shop-override/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
+        <copy file="${basedir}/framework/resources/templates/shop-override/scipio-component.xml" tofile="${basedir}/hot-deploy/${component-name}/scipio-component.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/shop/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
@@ -2842,7 +2842,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}"/>
         <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF"/>
         <copy file="${basedir}/framework/resources/templates/theme/.gitignore-webapp" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/.gitignore"/>
-        <copy file="${basedir}/framework/resources/templates/theme/ofbiz-component.xml" tofile="${basedir}/themes/${component-name}/ofbiz-component.xml" encoding="utf-8">
+        <copy file="${basedir}/framework/resources/templates/theme/scipio-theme.xml" tofile="${basedir}/themes/${component-name}/scipio-theme.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/theme/build.xml" tofile="${basedir}/themes/${component-name}/build.xml" encoding="utf-8">

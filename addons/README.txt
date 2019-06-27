@@ -9,7 +9,7 @@ LOADABLE COMPONENTS
 Each folder may contain the following traditional component files:
 
   build.xml
-  ofbiz-component.xml
+  scipio-component.xml/scipio-theme.xml/ofbiz-component.xml
 
 Folders which contain a build.xml (Ant) file are treated as Ofbiz components for the 
 build process. Such build.xml files should import the common.xml file found
@@ -17,12 +17,12 @@ in the root SCIPIO project directory (or build will fail). Build order follows t
 as hot-deploy (by default, arbitrary, but supports an explicit build.xml file
 directly in addons directory).
 
-Folders which contain a ofbiz-component.xml file are treated as Ofbiz components
+Folders which contain a scipio-component.xml/scipio-theme.xml/ofbiz-component.xml file are treated as Scipio components
 for runtime loading. Build order follows the same rules as hot-deploy (by default,
 arbitrary, but supports an explicit component-load.xml file directly in addons
 directory).
 
-Folders which do not contain a build.xml or ofbiz-component.xml files are
+Folders which do not contain a build.xml or scipio-component.xml/scipio-theme.xml/ofbiz-component.xml files are
 not considered components and may follow any other layout (with other exceptions below).
 
 BUILD HOOKS AND EXTENSIONS

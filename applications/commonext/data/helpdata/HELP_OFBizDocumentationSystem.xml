@@ -82,7 +82,7 @@
             <listitem>
                 <para>
                     Update/create the data/${componentName}HelpData.xml, an example can be found in the
-                    AccountingHelpData.xml. If new make also an entry in the ofbiz-component.xml
+                    AccountingHelpData.xml. If new make also an entry in the scipio-component.xml
                 </para>
             </listitem>
             <listitem>

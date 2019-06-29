@@ -267,20 +267,20 @@
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
         <!-- catalina: tomcat -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.19" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.21" conf="base,sources"/>
         <!-- gone since 8.5.3+?
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.19" conf="base,sources"/>-->
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.21" conf="base,sources"/>-->
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
@@ -290,10 +290,10 @@
             But for sources, the tomcat files have unusable documentation, so we use the official java API files instead;
             so we put the official servlet API jars in j2eespecs-ref dir (see build/base.xml for the renaming).
             NOTE: the tomcat-provided jar are renamed in base/build.xml so they match the API ones in name (TODO: REVIEW: still necessary?) -->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.19" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.19" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.21" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.21" conf="base,sources"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="4.0.1" conf="base,j2eespecs,sources"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.3" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.1-b06" conf="base,j2eespecs,sources"/>

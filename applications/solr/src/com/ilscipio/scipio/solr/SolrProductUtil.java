@@ -80,6 +80,7 @@ public abstract class SolrProductUtil {
         map.put("inStock", "inStock");
         map.put("isVirtual", "isVirtual");
         map.put("isVariant", "isVariant");
+        map.put("requireAmount_b", "requireAmount");
         // NOT REAL Product ENTITY FIELDS
         //map.put("defaultPrice", "defaultPrice");
         //map.put("listPrice", "listPrice");
@@ -603,6 +604,7 @@ public abstract class SolrProductUtil {
                 }
             }
 
+
             boolean isVirtual = "Y".equals(product.getString("isVirtual"));
             if (isVirtual) dispatchContext.put("isVirtual", isVirtual);
             boolean isVariant = "Y".equals(product.getString("isVariant"));
@@ -611,6 +613,9 @@ public abstract class SolrProductUtil {
             if (isDigital) dispatchContext.put("isDigital", isDigital);
             boolean isPhysical = ProductWorker.isPhysical(product);
             if (isPhysical) dispatchContext.put("isPhysical", isPhysical);
+
+            Boolean requireAmount = product.getBoolean("requireAmount");
+            if (Boolean.TRUE.equals(requireAmount)) fields.put("requireAmount_b", requireAmount);
 
             dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defaultProductLocale, pcwList, useCache));
             dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));

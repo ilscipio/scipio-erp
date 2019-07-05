@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@pageUrl secure=true>keywordsearch</@pageUrl>">
+    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@pageUrl secure=true>search</@pageUrl>">
         <@row collapse=true class="keywordsearch">
             <@cell small=10>
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) widgetOnly=true/>

@@ -8,7 +8,7 @@ code package.
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)/>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)/>
 
-<form name="advtokeywordsearchform" id="advtokeywordsearchform" method="post" action="<@pageUrl>keywordsearch</@pageUrl>">
+<form name="advtokeywordsearchform" id="advtokeywordsearchform" method="post" action="<@pageUrl>search</@pageUrl>">
   <#-- SCIPIO: don't hardcode these
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>-->

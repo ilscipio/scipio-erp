@@ -15,7 +15,7 @@ code package.
     <#assign detailText = productCategoryLink.detailText!/>
 
     <#if productCategoryLink.linkTypeEnumId == "PCLT_SEARCH_PARAM">
-      <#assign linkUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, "keywordsearch?" + productCategoryLink.linkInfo)/>
+      <#assign linkUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, "search?" + productCategoryLink.linkInfo)/>
     <#elseif productCategoryLink.linkTypeEnumId == "PCLT_ABS_URL">
       <#assign linkUrl = productCategoryLink.linkInfo!/>
     <#elseif productCategoryLink.linkTypeEnumId == "PCLT_CAT_ID">

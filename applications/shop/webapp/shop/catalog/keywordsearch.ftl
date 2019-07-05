@@ -19,7 +19,7 @@ code package.
 <#macro menuContent menuArgs={}>
   <@row>
     <@cell columns=8 medium=8 class="+${styles.text_left!}">
-      <div class="kws-searchinfo"
+      <div class="kws-searchinfo">
         <#if !displaySearchString??>
           <#if !searchString!?trim?has_content || searchString == "*:*">
             <#assign displaySearchString = "(" + rawLabel('CommonAll') + ")">
@@ -34,7 +34,7 @@ code package.
             <#t/>(<a href="<@pageUrl>advancedsearch</@pageUrl>" class="${styles.action_nav!} ${styles.action_find!} kws-refinesearch-link" style="white-space:nowrap;">${uiLabelMap.CommonRefineSearch}</a>)
         <#if displaySearchString?has_content && fullSuggestions?has_content>
           <br/><span class="kws-suggestion"><em><label style="display:inline;">${uiLabelMap.ShopDidYouMean}:</label> <a href="javascript:jQuery('#kws-suggestion-form').submit();void(0);">${fullSuggestions[0]!}</a></em></span>
-            <form method="post" action="<@pageUrl>keywordsearch</@pageUrl>" style="display:none;" id="kws-suggestion-form"">
+            <form method="post" action="<@pageUrl>search</@pageUrl>" style="display:none;" id="kws-suggestion-form">
                 <#-- WARN: TODO: REIMPLEMENT: using clearSearch=N relies on session; this works for single tab,
                     but frustrates polyvalent web users; ideally should do it parameter-based (requires revisit advancedsearch at same time) -->
                 <@field type="hidden" name="clearSearch" value="N"/>
@@ -53,7 +53,7 @@ code package.
     </@cell>
     <@cell columns=4 medium=4 class="+${styles.text_right!}">
         <#-- NOTE: @productSortOrderSelectXxx macros defined in catalogcommon.ftl -->
-        <form method="post" action="<@pageUrl>keywordsearch</@pageUrl>" style="display:none;" id="kwssort-form">
+        <form method="post" action="<@pageUrl>search</@pageUrl>" style="display:none;" id="kwssort-form">
             <#-- WARN: TODO: REIMPLEMENT: using clearSearch=N relies on session; this works for single tab,
                 but frustrates polyvalent web users; ideally should do it parameter-based (requires revisit advancedsearch at same time) -->
             <@field type="hidden" name="clearSearch" value="N"/>
@@ -113,7 +113,7 @@ code package.
       <#assign pagingEnabled = ((viewSize!1) > 0)><#-- (default is enabled) -->
     </#if>
   </#if>
-  <@paginate enabled=pagingEnabled mode="content" url=makePageUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
+  <@paginate enabled=pagingEnabled mode="content" url=makePageUrl("search") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
     <@grid columns=4>
         <#-- SCIPIO: DEV NOTE: this shouldn't try to pass solrProduct - we are relying on the entity Product for calculating prices -->
         <#list productIds as productId> 

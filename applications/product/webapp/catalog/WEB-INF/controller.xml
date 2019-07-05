@@ -61,9 +61,13 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
-    <request-map uri="keywordsearch">
+    <request-map uri="search"><!-- SCIPIO: renamed to search and aliased below -->
         <security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>
+    </request-map>
+    <request-map uri="keywordsearch">
+        <security https="true" auth="false"/>
+        <response name="success" type="request" value="search"/>
     </request-map>
 
     <request-map uri="searchRemoveFromCategory">

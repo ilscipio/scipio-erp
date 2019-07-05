@@ -66,6 +66,10 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
+    <request-map uri="search">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
     <request-map uri="keywordsearch">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>

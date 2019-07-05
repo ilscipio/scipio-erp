@@ -18,9 +18,9 @@ code package.
     </#if>    
     
     <#if solrProduct?has_content && solrProduct.mediumImage??>    
-        <#assign smallImageUrl = solrProduct.mediumImage?trim>
+        <#assign smallImageUrl = raw(solrProduct.mediumImage)?trim>
     <#elseif solrProduct?has_content && solrProduct.smallImage??>
-        <#assign smallImageUrl = solrProduct.smallImage?trim>        
+        <#assign smallImageUrl = raw(solrProduct.smallImage)?trim>
     <#elseif productContentWrapper?? && productContentWrapper.get("SMALL_IMAGE_URL","url")?has_content>
         <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")>        
     </#if>
@@ -50,7 +50,7 @@ code package.
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>
-    <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
+    <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
@@ -62,11 +62,11 @@ code package.
     </#assign>
 
     <#assign productPrice>
-        <#if product??>
+        <#if hasProduct>
             <#if totalPrice??>
                 <@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/>
             <#else>
-                <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
+                <#if ((price.price!0) > 0) && ((requireAmount!"N") == "N")>
                     <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
                 <#elseif price.listPrice??>
                     <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
@@ -87,18 +87,6 @@ code package.
                     </#list>
                 </#if>
             </#if>
-        <#-- FIXME: PRICE CANNOT WORK PROPERLY WITHOUT CURRENCY UOM (STORED + TARGET)!
-            don't even try to display until this is resolved, because wrong value is more confusing
-            than no value
-        <#elseif solrProduct??>
-            
-             
-            <#if solrProduct.listPrice??>
-                <@ofbizCurrency amount=solrProduct.listPrice />          
-            <#elseif solrProduct.defaultPrice??>                    
-                <@ofbizCurrency amount=solrProduct.defaultPrice />
-            </#if>
-        -->
         </#if>
     </#assign>
 
@@ -119,7 +107,7 @@ code package.
             ${productPrice}
         </@pli>
         <@pli type="button">
-            <a href="<@catalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
+            <a href="<@catalogAltUrl productCategoryId=categoryId productId=productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>
     </@pul>   
 

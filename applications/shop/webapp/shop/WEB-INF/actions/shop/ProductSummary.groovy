@@ -35,12 +35,45 @@ import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final module = "ProductSummary.groovy";
+// SCIPIO: config
+kwsArgs = context.kwsArgs ?: [:];
+cfgPropRes = kwsArgs.cfgPropRes ?: application.getAttribute("shopSearchCfgRes") ?: "shop";
+cfgPropPrefix = kwsArgs.cfgPropPrefix != null ? kwsArgs.cfgPropPrefix : "shop.";
+searchDataSrc = UtilProperties.getPropertyValue(cfgPropRes, cfgPropPrefix+"search.solr.dataSrc", "entity");
+context.searchDataSrc = searchDataSrc;
+avoidEntityData = (searchDataSrc == "solr");
+context.avoidEntityData = avoidEntityData;
+
+solrCurrency = com.ilscipio.scipio.solr.SolrProductUtil.getConfiguredDefaultCurrency(delegator,
+    org.ofbiz.product.store.ProductStoreWorker.getProductStore(request)); // SCIPIO
+
+def toBigDecimalCurrency(priceVal) { // SCIPIO
+    if (priceVal == null) return null;
+    if (!(priceVal instanceof BigDecimal)) {
+        if (priceVal instanceof String) {
+            priceVal = new BigDecimal(priceVal);
+        } else {
+            priceVal = BigDecimal.valueOf(priceVal);
+        }
+    }
+    priceVal.setScale(ShoppingCart.scale, ShoppingCart.rounding);
+};
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");
 optProductId = request.getAttribute("optProductId");
 productId = product?.productId ?: optProductId ?: request.getAttribute("productId");
 solrProduct = request.getAttribute("solrProduct");
+solrProducts = context.solrProducts;
+if (!solrProduct && solrProducts && productId) {
+    // FIXME: inefficient
+    for(sp in solrProducts) {
+        if (sp.productId == productId) {
+            solrProduct = sp;
+            break;
+        }
+    }
+}
 
 webSiteId = CatalogWorker.getWebSiteId(request);
 catalogId = CatalogWorker.getCurrentCatalogId(request);
@@ -63,7 +96,7 @@ context.remove("numRatings");
 context.remove("totalPrice");
 
 // get the product entity
-if (!product && productId) {
+if (!avoidEntityData && !product && productId) {
     product = delegator.findOne("Product", [productId : productId], true);
 }
 if (product) {
@@ -93,8 +126,10 @@ if (product) {
     solrProductWorker = SolrValueWorker.getWorker(solrProduct, context.locale, productStore ?: ProductStoreWorker.getProductStore(request));
 
     context.solrTitle = solrProductWorker.getFieldValueI18nForDisplay("title");
+    context.title = context.solrTitle;
     context.description = solrProductWorker.getFieldValueI18nForDisplay("description");
     context.longdescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
+    context.longDescription = context.longdescription;
 } else {
     if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
         Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
@@ -141,6 +176,43 @@ if (product) {
 
     // get the product review(s)
     reviews = product.getRelated("ProductReview", null, ["-postedDateTime"], false);
+} else if (solrProduct) {
+    categoryId = parameters.category_id ?: request.getAttribute("productCategoryId");
+    // get the product price
+    def priceMap = [price: toBigDecimalCurrency(solrProduct.defaultPrice),
+        listPrice: toBigDecimalCurrency(solrProduct.listPrice),
+        currencyUsed: cart.getCurrency() ?: solrCurrency
+    ];
+    if (cart.getCurrency() && solrCurrency != cart.getCurrency()) {
+        // NOTE: CONVERSION LOGIC FROM: org.ofbiz.product.price.PriceServices.calculateProductPrice(DispatchContext, Map<String, ? extends Object>)
+        priceResults = dispatcher.runSync("convertUom", ["uomId": solrCurrency, "uomIdTo": cart.getCurrency(),
+            "originalValue": priceMap.price, "defaultDecimalScale": Long.valueOf(2), "defaultRoundingMode": "HalfUp"]);
+        if (ServiceUtil.isError(priceResults) || (priceResults.get("convertedValue") == null)) {
+            Debug.logWarning("Unable to convert default price for product  " + productId, module);
+        } else {
+            priceMap.price = priceResults.convertedValue;
+        }
+        if (priceMap.listPrice != null) {
+            priceResults = dispatcher.runSync("convertUom", ["uomId": solrCurrency, "uomIdTo": cart.getCurrency(),
+                "originalValue": priceMap.listPrice, "defaultDecimalScale": Long.valueOf(2), "defaultRoundingMode": "HalfUp"]);
+            if (ServiceUtil.isError(priceResults) || (priceResults.get("convertedValue") == null)) {
+                Debug.logWarning("Unable to convert list price for product  " + productId, module);
+            } else {
+                priceMap.listPrice = priceResults.convertedValue;
+            }
+        }
+    }
+    //context.totalPrice = priceMap.price;
+    context.price = priceMap;
+    // get aggregated product totalPrice
+    // SCIPIO: TODO: REVIEW
+//    if ("AGGREGATED".equals(product.productTypeId)) {
+//        configWrapper = ProductConfigWorker.getProductConfigWrapper(productId, cart.getCurrency(), request);
+//        if (configWrapper) {
+//            configWrapper.setDefaultConfig();
+//            context.totalPrice = configWrapper.getTotalPrice();
+//        }
+//    }
 }
 
 // get the average rating
@@ -161,10 +233,17 @@ if (reviews) {
 }
 
 // an example of getting features of a certain type to show
-sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", [productId : productId, productFeatureTypeId : "SIZE"], ["sequenceNum", "defaultSequenceNum"], true);
+sizeProductFeatureAndAppls = null;
+if (!avoidEntityData) { // SCIPIO
+    sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", [productId : productId, productFeatureTypeId : "SIZE"], ["sequenceNum", "defaultSequenceNum"], true);
+}
 
 context.product = product;
+context.productId = productId; // SCIPIO
+context.hasProduct = (product != null || solrProduct != null);
+context.requireAmount = (product != null) ? product.requireAmount : (solrProduct?.requireAmount_b == true ? "Y" : "N"); // SCIPIO
 context.solrProduct = solrProduct;
 context.categoryId = categoryId;
 context.productReviews = reviews;
 context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
+

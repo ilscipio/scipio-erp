@@ -43,7 +43,8 @@ code package.
         <@slider library="slick" jsOptions=jsOptions class="slider slides-${viewCluster!4}"> <#-- Relying on Slick Slider here - requires additional seed data.-->
             <#list solrProducts as solrProduct>
                 <@slide library="slick">
-                    <@render resource=productsummaryScreen reqAttribs={"productId": solrProduct.productId, "optProductId": solrProduct.productId, "listIndex": solrProduct_index} />
+                    <@render resource=productsummaryScreen reqAttribs={"productId": solrProduct.productId, "optProductId": solrProduct.productId,
+                        "listIndex": solrProduct_index, "solrProduct": solrProduct} ctxVars={"solrProducts": solrProducts!{}, "solrProduct": solrProduct}/>
                 </@slide>
             </#list>
         </@slider>

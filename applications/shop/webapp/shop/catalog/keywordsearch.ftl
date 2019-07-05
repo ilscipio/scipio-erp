@@ -118,7 +118,7 @@ code package.
         <#-- SCIPIO: DEV NOTE: this shouldn't try to pass solrProduct - we are relying on the entity Product for calculating prices -->
         <#list productIds as productId> 
             <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-            <li><@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}/></li>
+            <li><@render resource=productsummaryScreen reqAttribs={"optProductId":productId, "listIndex":productId_index}  ctxVars={"solrProducts": solrProducts!{}}/></li>
         </#list>
     </@grid>
   </@paginate>

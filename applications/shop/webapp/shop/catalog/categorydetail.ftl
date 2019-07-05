@@ -33,7 +33,7 @@ code package.
             paramStr="sortOrder=${escapeVal(sortOrderEff, 'url')}&sortAscending=${sortAscendingEff}">
             <@grid columns=4>
                 <#list solrProducts as solrProduct>
-                    <li><@render resource=productsummaryScreen reqAttribs={"productId":solrProduct.productId}/>
+                    <li><@render resource=productsummaryScreen reqAttribs={"productId":solrProduct.productId}  ctxVars={"solrProducts": solrProducts!{}}/>
                     </li>
                 </#list>
             </@grid>

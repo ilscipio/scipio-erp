@@ -329,7 +329,7 @@ code package.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="runSolrQuery">
         <description>Run a query on Solr and return the results</description>
-        <attribute mode="IN" optional="false" name="query" type="String"/>
+        <attribute mode="IN" optional="false" name="query" type="String" allow-html="any"/>
         <attribute mode="IN" optional="true" name="start" type="Integer"/><!-- 2016-04-01: may specify either an absolute "start" value or a zero-based viewIndex -->
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
@@ -462,7 +462,7 @@ code package.
         invoke="keywordSearch">
         <description>Run a query on Solr and return the results</description>
         <implements service="solrSearchCommon"/>
-        <attribute mode="IN" optional="false" name="query" type="String"/>
+        <attribute mode="IN" optional="false" name="query" type="String" allow-html="any"/>
         <attribute mode="IN" optional="true" name="viewSize" type="Object">
             <description>Supports String or Integer (2017-09-11)</description>
         </attribute>

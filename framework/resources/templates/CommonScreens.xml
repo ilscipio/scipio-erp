@@ -61,6 +61,20 @@
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="left-column" /></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="left-column"/>
+                            </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SCIPIO ERP - @component-resource-name@ Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - @component-resource-name@ Component" default="build" basedir=".">
+
+    <!-- SCIPIO: NOTE: Default target ("build", above) currently controls compilation behavior (may improve in future);
+        for source compilation you must create a "src" folder and change above to default="jar" -->
+
     <import file="../../commontheme.xml"/>
 
     <!-- ================================================================== -->

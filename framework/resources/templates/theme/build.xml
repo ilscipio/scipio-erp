@@ -16,7 +16,7 @@
         <file name="../base" />
     </filelist>
 
-    <target name="build" depends="check-init-lib-update">
+    <target name="build" depends="check-lib-update">
         <!-- echo message="[build] ========== Building @component-resource-name@ Theme ==========" />
         <echo message="[build] ========== Done Building @component-resource-name@ Theme ==========" /-->
     </target>

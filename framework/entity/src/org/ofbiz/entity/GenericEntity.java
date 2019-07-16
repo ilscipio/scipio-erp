@@ -117,10 +117,6 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     /** This is an internal field used to specify that a value has come from a sync process and that the auto-stamps should not be over-written */
     private boolean isFromEntitySync = false;
 
-    /** SCIPIO: New multi-purpose data origin recording field, independent of the entity engine (delegator) data source. Known values: entity (default), solr.
-     * @see #getDataOrigin() */
-    private String dataOrigin = "entity";
-
     /** Creates new GenericEntity - Should never be used, prefer the other options. */
     protected GenericEntity() { }
 
@@ -366,28 +362,6 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     public void setIsFromEntitySync(boolean isFromEntitySync) {
         assertIsMutable();
         this.isFromEntitySync = isFromEntitySync;
-    }
-
-    /**
-     * SCIPIO: Returns the name of the data's logical origin. Known values: <code>entity</code> (default/generic), <code>solr</code>.
-     * Independent of the entity engine (delegator) data source.
-     * This denotes the logical provenance of the data currently in this entity or that was last written to this entity;
-     * it is conceptually unrelated to the entity engine (delegator) data source and unlike it, does not require any
-     * special delegator implementation to be used.
-     */
-    public String getDataOrigin() {
-        return dataOrigin;
-    }
-
-    /**
-     * SCIPIO: Records the name of the data's origin. Known values: <code>entity (default/generic), <code>solr</code>.
-     * Independent of the entity engine (delegator) data source.
-     * This denotes the logical provenance of the data currently in this entity or that was last written to this entity;
-     * it is conceptually unrelated to the entity engine (delegator) data source and unlike it, does not require any
-     * special delegator implementation to be used.
-     */
-    public void setDataOrigin(String dataOrigin) {
-        this.dataOrigin = dataOrigin;
     }
 
     public String getEntityName() {

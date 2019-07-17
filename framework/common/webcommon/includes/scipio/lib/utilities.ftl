@@ -33,9 +33,10 @@
 
 <#assign scipioUtilitiesDefined = true> <#-- this one must use #assign, not #global -->
 
-<#-- scipioNullObject: Special value which may be passed by templates to some functions which
+<#-- scpNull (scipioNullObject): Special value which may be passed by templates to some functions which
     recognize this object to mean they should substitute it with the value null. -->
-<#assign scipioNullObject = Static["com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil"].getNullModelAlways()>
+<#assign scpNull = Static["com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil"].getNullModelAlways()>
+<#assign scipioNullObject = scpNull>
 
 <#-- scipioDummyNullValue: This is a special var used in some functions and macros as an FTL hack to pass
     the value null to function calls. WARN: It must NEVER be assigned a value!
@@ -113,13 +114,13 @@ TODO: Reimplement as transform.
                                   {{{globalCtxVars}}} will work in most cases, but unfortunately they are overridden
                                   by the invoked's sections local vars, so they can't be used to provide overrides.
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
                               NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
@@ -1114,7 +1115,7 @@ Sets a request attribute.
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -1130,7 +1131,7 @@ Sets a field value in context
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -1146,7 +1147,7 @@ Sets a field value in global context.
 
 New in Scipio.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -1160,20 +1161,20 @@ to indicate the value null.
 ************
 Sets context variables and request attributes.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 
   * Parameters *
     varMaps                 = ((map)) Map of maps of vars to set
                               * {{{ctxVars}}}: A map of screen context vars to be set before the invocation
                                 NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
-                                    object found in the global {{{scipioNullObject}}} variable.
+                                    object found in the global {{{scpNull}}} variable.
                               * {{{globalCtxVars}}}: A map of screen global context vars to be set before the invocation
                                 NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
-                                    object found in the global {{{scipioNullObject}}} variable.
+                                    object found in the global {{{scpNull}}} variable.
                               * {{{reqAttribs}}}: A map of request attributes to be set before the invocation
                                 NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
-                                    object found in the global {{{scipioNullObject}}} variable.
+                                    object found in the global {{{scpNull}}} variable.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function setVars varMaps={}>
@@ -1186,7 +1187,7 @@ to indicate the value null.
 ************
 Sets context variables and request attributes.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 
   * Parameters *
@@ -1206,7 +1207,7 @@ to indicate the value null.
 ************
 Gets all the named attributes and context vars.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 
   * Parameters *
@@ -1234,19 +1235,19 @@ to indicate the value null.
 ************
 Sets context variables and request attributes around a nested block. Can also be used alone.
 
-This function is enhanced to support more value types and the special value scipioNullObject
+This function is enhanced to support more value types and the special value scpNull
 to indicate the value null.
 
   * Parameters *
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
                               NOTE: Currently, this uses #setGlobalContextField. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
-                                  object found in the global {{{scipioNullObject}}} variable.
+                                  object found in the global {{{scpNull}}} variable.
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation

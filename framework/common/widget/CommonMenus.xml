@@ -47,7 +47,7 @@ Common menus NOTES:
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <!-- SCIPIO: Original stock Ofbiz base app bar menu, modified. -->
-    <menu name="CommonEmptyAppBarMenu" type="simple" menu-container-style="+menu-type-main" 
+    <menu name="CommonEmptyAppBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'main'}"
         id="app-navigation" title="${applicationTitle}&amp;nbsp;"
         default-menu-item-name="main" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
@@ -59,7 +59,7 @@ Common menus NOTES:
     </menu>
     
     <!-- SCIPIO: New dashboard app bar menu. -->
-    <menu name="CommonEmptyAppBarDashboardMenu" type="simple" menu-container-style="+menu-type-main" 
+    <menu name="CommonEmptyAppBarDashboardMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'main'}"
         id="app-navigation" title="${applicationTitle}&amp;nbsp;"
         default-menu-item-name="main" selected-menuitem-context-field-name="activeMainMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
@@ -71,7 +71,7 @@ Common menus NOTES:
     </menu>
     
     <!-- SCIPIO: New menu for sidebars derived from main app bar menus. Should have mostly minor differences with CommonSideBarMenu. -->
-    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="+menu-type-sidebar" 
+    <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'sidebar'}"
         selected-menuitem-context-field-name="activeMainMenuItem" selected-menu-context-field-name="activeMainSubMenu" items-sort-mode="displaytext-ignorecase"
         separate-menu-type="${groovy:context.menuCfgSepMenuType?:'default-sidebar'}" 
         separate-menu-target-style="${groovy:context.menuCfgSepMenuTargetStyle?:'scipio-nav-actions-menu'}" 
@@ -88,24 +88,24 @@ Common menus NOTES:
 
     <!-- SCIPIO: Original stock Ofbiz base tab bar menu, modified. 
         NOTE: Despite individual menu names, some "*ButtonBar"-named menus belong more as extending this CommonTabBarMenu instead of CommonButtonBarMenu. -->
-    <menu name="CommonEmptyTabBarMenu" type="simple" menu-container-style="+menu-type-tab" 
+    <menu name="CommonEmptyTabBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'tab'}"
         selected-menuitem-context-field-name="activeSubMenuItem"/>
     <menu name="CommonTabBarMenu" extends="CommonEmptyTabBarMenu"/>
     
     <!-- SCIPIO: New menu for sub-tar bars. 
         NOTE: 2016-09-22: selected-menuitem-context-field-name has been REMOVED from this menu by default because it rarely makes sense in scipio provided screens anymore -->
-    <menu name="CommonEmptySubTabBarMenu" type="simple" menu-container-style="+menu-type-tab" />
+    <menu name="CommonEmptySubTabBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'tab'}" />
     <menu name="CommonSubTabBarMenu" extends="CommonEmptySubTabBarMenu"/>
     
     <!-- SCIPIO: Original stock Ofbiz base button bar menu, modified. 
         NOTE: Not all stock Ofbiz menus named "*ButtonBar" should extend CommonButtonBarMenu!
         WARN: This does not include a selected-menuitem-context-field-name. Menus must specify it themselves! -->
-    <menu name="CommonEmptyButtonBarMenu" type="simple" menu-container-style="+menu-type-button"/>    
+    <menu name="CommonEmptyButtonBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'button'}"/>
     <menu name="CommonButtonBarMenu" extends="CommonEmptyButtonBarMenu" />    
     
     <!-- SCIPIO: New menu for sidebars, usually derived from tar bar menus. 
         NOTE: Screens expect this to be similar in function as CommonTabBarMenu. For sidebars that deviate, use/make another Common* base menu class. For menus whose contents derive from main app menus, use CommonAppSideBarMenu. -->
-    <menu name="CommonEmptySideBarMenu" type="simple" menu-container-style="+menu-type-sidebar" 
+    <menu name="CommonEmptySideBarMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'sidebar'}"
         selected-menuitem-context-field-name="activeSubMenuItem" items-sort-mode="displaytext-ignorecase">
     </menu>
     <menu name="CommonSideBarMenu" extends="CommonEmptySideBarMenu">
@@ -122,7 +122,7 @@ Common menus NOTES:
     </menu>
     
     <!-- SCIPIO: New menu type. Makes a single drop-down button menu. -->
-    <menu name="CommonEmptyButtonDropdownMenu" type="simple" menu-container-style="+menu-type-button-dropdown"/>    
+    <menu name="CommonEmptyButtonDropdownMenu" type="simple" menu-container-style="+menu-type-${groovy:context.menuCfgType?:'button-dropdown'}"/>
     <menu name="CommonButtonDropdownMenu" extends="CommonEmptyButtonDropdownMenu" />    
     
 </menus>

@@ -361,6 +361,30 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
 </#function>
 -->
 
+<#--
+*************
+* runScript
+************
+Runs a (groovy) script that prepares data to put into the {{{context}}}.
+
+The return value may be empty, and usually you may want to assign it to a dummy variable, though it may also be used for specific purposes.
+
+Currently, this method only support file locations, and is basic for low overhead. For interpreted/inline scripts, see #interpretStd.
+
+TODO: support automatic optional exception swallowing, better arg extraction
+
+  * Parameters *
+    location                = ((string)) The resource identifier, usually a component:// file location, usually
+                              ends with ".groovy".
+
+  * History *
+    Added for 2.1.0.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function runScript location>
+</#function>
+-->
+
 <#-- 
 *************
 * makeSectionsRenderer

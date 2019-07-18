@@ -2627,6 +2627,11 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     
 </@section>
 
+<@section title="FTL runScript">
+    <#assign ignored = runScript("component://webtools/webapp/webtools/WEB-INF/actions/misc/TestScript1.groovy")!>
+    <p>context.testScript1Result: ${testScript1Result!"[ERROR: MISSING]"}</p>
+</@section>
+
 <@section title="makeSectionsRenderer">
     <@section title="ftl">
       <#macro ftlSectionTestMacro>

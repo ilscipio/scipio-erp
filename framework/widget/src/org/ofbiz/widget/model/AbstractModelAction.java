@@ -734,24 +734,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
             if (!this.locationExdr.getOriginal().isEmpty()) {
-                String scriptLocation = this.locationExdr.expandString(context);
-                String location = WidgetWorker.getScriptLocation(scriptLocation);
-                String method = WidgetWorker.getScriptMethodName(scriptLocation);
-
-                if (location.endsWith(".xml")) {
-                    Map<String, Object> localContext = new HashMap<>();
-                    localContext.putAll(context);
-                    DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
-                    MethodContext methodContext = new MethodContext(ctx, localContext, null);
-                    try {
-                        SimpleMethod.runSimpleMethod(location, method, methodContext);
-                        context.putAll(methodContext.getResults());
-                    } catch (MiniLangException e) {
-                        throw new GeneralException("Error running simple method at location [" + location + "]", e);
-                    }
-                } else {
-                    ScriptUtil.executeScript(location, method, context);
-                }
+                executeScriptAtLocation(this.locationExdr.expandString(context), context); // SCIPIO: refactored
             }
 
             if (this.scriptlet != null) {
@@ -773,6 +756,27 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public String getMethod() {
             //return method;
             return WidgetWorker.getScriptMethodName(locationExdr.getOriginal());
+        }
+
+        public static Object executeScriptAtLocation(String scriptLocation, Map<String, Object> context) throws GeneralException { // SCIPIO: refactored from runAction()
+            String location = WidgetWorker.getScriptLocation(scriptLocation);
+            String method = WidgetWorker.getScriptMethodName(scriptLocation);
+
+            if (location.endsWith(".xml")) {
+                Map<String, Object> localContext = new HashMap<>();
+                localContext.putAll(context);
+                DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
+                MethodContext methodContext = new MethodContext(ctx, localContext, null);
+                try {
+                    Object result = SimpleMethod.runSimpleMethod(location, method, methodContext);
+                    context.putAll(methodContext.getResults());
+                    return result; // SCIPIO: return result
+                } catch (MiniLangException e) {
+                    throw new GeneralException("Error running simple method at location [" + location + "]", e);
+                }
+            } else {
+                return ScriptUtil.executeScript(location, method, context);
+            }
         }
     }
 

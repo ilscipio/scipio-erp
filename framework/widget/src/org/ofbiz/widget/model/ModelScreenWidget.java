@@ -2332,7 +2332,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                         }
                         renderState.setMaxDepth(getMaxDepth(context));
                         renderState.setSubMenuFilter(getSubMenuFilter(context));
-
+                        // SCIPIO: support a dedicated menuCfgInlineItems for now, to simplify screen calls, because menuRenderArgs is harder to use
+                        if (!renderState.isInlineEntriesSet() && context.get("menuCfgInlineItems") != null) {
+                            renderState.setInlineEntries((Boolean) context.get("menuCfgInlineItems"));
+                        }
                         modelMenu.renderMenuString(writer, context, menuStringRenderer);
                     } finally {
                         // SCIPIO: restore the previous render state just in case

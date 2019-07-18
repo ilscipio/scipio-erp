@@ -34,6 +34,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
 
     private transient ModelSubMenu separateMenu; // 2017-04-25: tracks the best separate menu candidate
     private transient final SeparateMenuConfig separateMenuConfig; // ensures don't re-evaluate expressions after begin render
+    private Boolean inlineEntries = null;
 
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
@@ -56,6 +57,9 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
             return this.get(key);
         } else if ("subMenuFilter".equals(key)) {
             this.setSubMenuFilter((String) value);
+            return this.get(key);
+        } else if ("inlineEntries".equals(key)) {
+            this.setInlineEntries((Boolean) value);
             return this.get(key);
         } else {
             return setInternal(key, value);
@@ -136,7 +140,16 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     }
 
     public boolean isInlineEntries() {
-        return Boolean.TRUE.equals(this.get("inlineEntries"));
+        return Boolean.TRUE.equals(inlineEntries);
+    }
+
+    public void setInlineEntries(Boolean inlineEntries) {
+        this.inlineEntries = inlineEntries;
+        setInternal("inlineEntries", this.inlineEntries);
+    }
+
+    public boolean isInlineEntriesSet() {
+        return (inlineEntries != null);
     }
 
     public String getMenuCtxRole() {

@@ -20,11 +20,8 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
-import org.ofbiz.product.category.*;
 import org.ofbiz.service.*;
 import com.ilscipio.scipio.solr.*;
-import org.apache.solr.client.solrj.*;
-import org.apache.solr.client.solrj.response.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 

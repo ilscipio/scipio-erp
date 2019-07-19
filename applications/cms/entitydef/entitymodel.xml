@@ -781,6 +781,7 @@
           icon        : "string" // string for custom
           li_attr     : {}  // attributes for the generated LI node
           a_attr      : {}  // attributes for the generated A node
+          content     : {}  // HTML content
         }
       </description></field>
       <field name="createdBy" type="id"></field>

@@ -428,6 +428,13 @@
                 <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsMenuTree.groovy"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsContentTree.groovy"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/trumbowyg.min.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/plugins/table/trumbowyg.table.min.js" global="true"/>
+
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/trumbowyg.scipio_common.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_media/trumbowyg.scipio_media.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_links/trumbowyg.scipio_links.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_assets/trumbowyg.scipio_assets.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">

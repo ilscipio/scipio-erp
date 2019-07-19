@@ -2227,27 +2227,31 @@ It may be used in combination with cms menus:
             <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
             <#if menuJson?has_content>
                 <@menu type=type title=title id=id class=class style=style>
-                        <#list menuJson as item>
-                            <#if item["data"]["path"]?has_content>
-                                <#if item["type"]=="link_external">
-                                    <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
-                                        <@cmsmenu items=item["children"] type=type/>
-                                    </@menuitem>
-                                <#else>
-                                    <#if item.data.websiteid?has_content>
-                                        <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
-                                            <@cmsmenu items=item["children"] type=type/>
-                                        </@menuitem>
-                                    <#else>
-                                        <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
-                                            <@cmsmenu items=item["children"] type=type/>
-                                        </@menuitem>
-                                    </#if>
+                      <#list menuJson as item>
+                            <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
+                                  <#if item["type"]=="link_external">
+                                      <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
+                                          <@cmsmenu items=item["children"] type=type/>
+                                      </@menuitem>
+                                  <#else>
+                                      <#if item.data.websiteid?has_content>
+                                          <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
+                                              <@cmsmenu items=item["children"] type=type/>
+                                          </@menuitem>
+                                      <#else>
+                                          <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
+                                              <@cmsmenu items=item["children"] type=type/>
+                                          </@menuitem>
+                                      </#if>
                                 </#if>
+                            <#elseif item["type"]=="content">
+                                  <@menuitem type="text">
+                                  ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
+                                  </@menuitem>
                             <#else>
-                                <@menuitem type="generic" text=item.text!""></@menuitem>
+                                  <@menuitem type="generic" text=item.text!""></@menuitem>
                             </#if>
-                        </#list>
+                      </#list>
                     <#nested>
                 </@menu>
             </#if>
@@ -2255,26 +2259,30 @@ It may be used in combination with cms menus:
             <#if items?is_sequence>
               <@menu type=type title=title id=id class=class style=style>
               <#list items as item>
-                <#if item["data"]["path"]?has_content>
-                    <#if item["type"]=="link_external">
-                            <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
-                                <@cmsmenu items=item["children"] type=type/>
-                            </@menuitem>
-                        <#else>
-                            <#if item.data.websiteid?has_content>
-                                <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
-                                    <@cmsmenu items=item["children"] type=type/>
-                                </@menuitem>
-                            <#else>
-                                <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
-                                    <@cmsmenu items=item["children"] type=type/>
-                                </@menuitem>
-                            </#if>
-                        </#if>
-                    <#else>
-                        <@menuitem type="generic" text=item.text!""></@menuitem>
-                    </#if>
-              </#list>
+                  <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
+                      <#if item["type"]=="link_external">
+                          <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
+                              <@cmsmenu items=item["children"] type=type/>
+                          </@menuitem>
+                      <#else>
+                          <#if item.data.websiteid?has_content>
+                              <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
+                                  <@cmsmenu items=item["children"] type=type/>
+                              </@menuitem>
+                          <#else>
+                              <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
+                                  <@cmsmenu items=item["children"] type=type/>
+                              </@menuitem>
+                          </#if>
+                      </#if>
+                  <#elseif item["type"]=="content">
+                    <@menuitem type="text">
+                        ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
+                    </@menuitem>
+                  <#else>
+                      <@menuitem type="generic" text=item.text!""></@menuitem>
+                  </#if>
+                </#list>
               </@menu>
             </#if>
       </#if>

@@ -20,11 +20,13 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 <@modal id="edit-menuitem-dialog">
     <@heading>${uiLabelMap.CommonEdit}</@heading>
     <@form id="edit_menu_item">
-        <@field type="select" name="type" id="type" label=uiLabelMap.CmsLinkType>
+        <@field type="select" name="type" id="type" label=uiLabelMap.CommonType onChange="toggle_editor_fields();">
                <option value="link_internal">${uiLabelMap.CmsLinkInternal}</option>
                <option value="link_external">${uiLabelMap.CmsLinkExternal}</option>
+               <option value="content">${uiLabelMap.CmsContent}</option>
         </@field>
-        <@field type="input" id="path" name="path" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=true/>
+        <div id="c_path_wrap"><@field type="input" id="path" name="path" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=false/></div>
+        <div id="c_content_wrap" style="display:none;"><@field type="textarea" id="content" class="+editor" name="content" value="" label=uiLabelMap.CmsContent placeholder="..." required=false/></div>
         <div class="modal-footer ${styles.text_right}">
             <@field type="submit" text=uiLabelMap.CommonEdit class="${styles.link_run_sys!} ${styles.action_edit!}" />
         </div>
@@ -38,12 +40,38 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             },
             "link_external": {
                 "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+            },
+            "content": {
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
             }
 }/>
 <@script>
+    function toggle_editor_fields(){
+            if ( $('#type').val() == 'content'){
+                $("#c_content_wrap").show();
+                $("#c_path_wrap").hide();
+            }else{
+                $("#c_content_wrap").hide();
+                $("#c_path_wrap").show();
+            }
+    }
+
+    function simple_encode_html(str){
+        str = str.replace(/</g,"[lt];");
+        str = str.replace(/>/g,"[gt];");
+        return str;
+    }
+
+    function simple_decode_html(str){
+        str = str.replace(/[lt];/g,"<");
+        str = str.replace(/[gt];/g,">");
+        return str;
+    }
+
     var nodeIcons = {
         "link_internal" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
-        "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+        "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link",
+         "content" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
     };
     var editorBaseUrl = '<@pageUrl escapeAs='js'>menus</@pageUrl>';
     var menuId='';
@@ -60,6 +88,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     function open_dialog(dialogName){
         try {
                 $('#'+dialogName).foundation('reveal','open');
+                toggle_editor_fields();
             } catch(err) {
                 try {
                     $('#'+dialogName).modal('show'); 
@@ -107,6 +136,8 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             });
         }
     };
+
+
     
     function node_edit() {
         var menuTree = $('#cms-menu-tree').jstree(true);
@@ -122,6 +153,10 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             if(node["data"] && node["data"]["path"]){
                 $('form#edit_menu_item #path').val(node["data"]["path"]);
             }
+            if(node["data"] && node["data"]["content"]){
+                console.log(node["data"]["content"]);
+                $('form#edit_menu_item #content').trumbowyg('html',simple_decode_html(node["data"]["content"]));
+            }
         }
         open_dialog('modal_edit-menuitem-dialog');
     };
@@ -130,6 +165,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         var menuTree = $('#cms-menu-tree').jstree(true);
         var path = $('form#edit_menu_item #path').val();
         var type = $('form#edit_menu_item #type').val();
+        var content = $('form#edit_menu_item #content').trumbowyg('html');
         var sel = menuTree.get_selected();
             if(!sel.length) { return false; }
             sel = sel[0];
@@ -137,6 +173,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         if(node) {
             node["type"] = type;
             node["data"]["path"] = path;
+            node["data"]["content"] = simple_encode_html(content);
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
             saveMenu();
@@ -312,6 +349,70 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         <#-- Auto-save when menu positions are changed -->                                                        
         $('#cms-menu-tree').on('move_node.jstree', function (e, data) {
             saveMenu();
+        });
+
+        $('.editor').trumbowyg({
+            autogrow: true,
+            semantic: false,
+            btnsDef: {
+                // Customizables dropdowns
+                image: {
+                    dropdown: ['insertImage','scipio_media_image','upload','scipio_media_video','scipio_media_audio','scipio_media_file', 'base64', 'noEmbed'],
+                    ico: 'insertImage'
+                },
+                link: {
+                    dropdown: [
+                        'createLink',
+                        'unlink',
+                        <#-- DEV NOTE: autourl tries to identify the macro in the given link and
+                            open the right dialog; it falls back on createLink. but the ones below are
+                            always needed also, in order to create new links.
+                            also, autourl doesn't completely replace the stock 'createLink',
+                            because some users may need/want to edit a cmsPageUrl or ofbizUrl using
+                            the stock form instead of the helpers. -->
+                        'scipio_links_autourl',
+                        'scipio_links_cmspageurl',
+                        'scipio_links_ofbizurl',
+                        'scipio_links_ofbizcontenturl'
+                    ]
+                }
+            },
+            btns: [
+                ['viewHTML'],
+                ['formatting'],
+                'btnGrp-semantic',
+                ['superscript', 'subscript'],
+                'btnGrp-justify',
+                'btnGrp-lists',
+                ['link'],
+                ['image'],
+                ['scipio_assets'],
+                ['table'],
+                ['horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ],
+            plugins: {
+                // Add imagur parameters to upload plugin
+                scipio_media: {
+                    serverPath: '<@pageUrl escapeAs='js'>getMediaFiles</@pageUrl>',
+                    mediaUrl: '<@contentUrl escapeAs='js'>/cms/media</@contentUrl>'
+                },
+                scipio_links: {
+                    getPagesServerPath: '<@pageUrl escapeAs='js'>getPages</@pageUrl>',
+                    getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
+                    <#-- WARN: currentWebSiteId may become problem in future; see js source -->
+                    currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
+                },
+                scipio_assets: {
+                    getAssetTypesServerPath: '<@pageUrl escapeAs='js'>getAssetTypes</@pageUrl>',
+                    getAssetsServerPath: '<@pageUrl escapeAs='js'>getAssets</@pageUrl>',
+                    getAssetAttributesServerPath: '<@pageUrl escapeAs='js'>getAssetAttributes</@pageUrl>',
+                    getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
+                    <#-- WARN: currentWebSiteId may become problem in future; see js source -->
+                    currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
+                }
+            }
         });
 
     });    

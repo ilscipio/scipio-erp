@@ -353,7 +353,7 @@ The submenu's main class may be set as altnested in global styles.
 -->
 <#assign menu_defaultArgs = {
   "type":"", "name":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
-  "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
+  "items":true, "itemCount":"", "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
   "nestedFirst":false, "title":"", "specialType":"", "titleClass":"", "mainButtonClass":"", "htmlwrap":true, 
   "isNestedMenu":"", "parentMenuType":"", "active":"", "activeTarget":"", "menuLevel":"", 
   "sepMenuType":"", "sepMenuDef":{}, "itemClass":"", "passArgs":{}
@@ -485,7 +485,14 @@ The submenu's main class may be set as altnested in global styles.
     <#local active = false>
   </#if>
   <#local class = menuAppendActiveStyle(class, styleName, "_active", active, activeTarget)>
-  
+  <#if itemCount?has_content>
+    <#if (itemCount > 0)>
+      <#local class = addClassArg(class, (styles["menu_" + styleName + "_haschild"]!styles["menu_default_haschild"]!""))>
+    <#elseif (itemCount == 0)>
+      <#local class = addClassArg(class, (styles["menu_" + styleName + "_nochild"]!styles["menu_default_nochild"]!""))>
+    </#if>
+  </#if>
+
   <#local namePrefix = styles["menu_" + styleName + "_nameprefix"]!styles["menu_default_nameprefix"]!"">
   <#if name?has_content && namePrefix?has_content>
     <#local class = addClassArg(class, namePrefix + name)>
@@ -516,7 +523,7 @@ The submenu's main class may be set as altnested in global styles.
   <@menu_markup type=type name=name specialType=specialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] 
     inlineItems=inlineItems htmlwrap=htmlwrap title=title titleClass=titleClass mainButtonClass=titleClass isNestedMenu=isNestedMenu 
     parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType 
-    active=active activeTarget=activeTarget menuLevel=menuLevel sepMenu=sepMenu origArgs=origArgs passArgs=passArgs>
+    active=active activeTarget=activeTarget menuLevel=menuLevel sepMenu=sepMenu itemCount=itemCount origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -633,7 +640,7 @@ The submenu's main class may be set as altnested in global styles.
     DEV NOTE: This is called directly from both @menu and widgets @renderMenuFull -->
 <#macro menu_markup type="" specialType="" name="" class="" id="" style="" attribs={} excludeAttribs=[] 
     inlineItems=false titleClass="" title="" htmlwrap="ul" isNestedMenu=false parentMenuType="" parentMenuSpecialType=""
-    active=false activeTarget="" menuLevel=1 sepMenu={}
+    active=false activeTarget="" menuLevel=1 sepMenu={} itemCount=""
     origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems && htmlwrap?has_content>
     <#-- NOTE: here we always test specialType and never type, so that many (custom) menu types may reuse the same 
@@ -750,7 +757,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":"", "selected":"", "active":"", "activeTarget":"", "target":"", "title":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":"", "nestedFirst":false,
-  "htmlwrap":true, "inlineItem":false, "contentWrapElem":-1, "isNestedMenu":"", "passArgs":{}
+  "htmlwrap":true, "inlineItem":false, "itemCount":"", "contentWrapElem":-1, "isNestedMenu":"", "passArgs":{}
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -828,6 +835,13 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemselected"]!styles["menu_default_itemselected"]!""))>
     <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentselected"]!styles["menu_default_item_contentselected"]!""))>
   </#if>
+  <#if itemCount?has_content>
+    <#if (itemCount > 0)>
+      <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemhaschild"]!styles["menu_default_itemhaschild"]!""))>
+    <#elseif (itemCount == 0)>
+      <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnochild"]!styles["menu_default_itemnochild"]!""))>
+    </#if>
+  </#if>
 
   <#if activeTarget?is_boolean>
     <#if activeTarget>
@@ -863,7 +877,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
 
   <@menuitem_markup type=type menuType=menuType menuSpecialType=menuSpecialType name=name menuName=menuName class=class id=id style=style attribs=attribs 
     excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlwrap=htmlwrap disabled=disabled selected=selected active=active activeTarget=activeTarget
-    isNestedMenu=isNestedMenu menuLevel=menuLevel parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType origArgs=origArgs passArgs=passArgs><#rt>
+    isNestedMenu=isNestedMenu menuLevel=menuLevel parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType itemCount=itemCount origArgs=origArgs passArgs=passArgs><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -922,7 +936,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   DEV NOTE: This is called directly from both @menuitem and widgets @renderMenuItemFull -->
 <#macro menuitem_markup type="" menuType="" menuSpecialType="" name="" menuName="" class="" id="" style="" attribs={} 
     excludeAttribs=[] inlineItem=false htmlwrap="li" disabled=false selected=false active=false activeTarget=""
-    isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 origArgs={} passArgs={} catchArgs...>
+    isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 itemCount="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItem && htmlwrap?has_content>
     <${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
@@ -2226,30 +2240,30 @@ It may be used in combination with cms menus:
         <#if menuId?has_content>
             <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
             <#if menuJson?has_content>
-                <@menu type=type title=title id=id class=class style=style>
+                <@menu type=type title=title id=id class=class style=style itemCount=menuJson?size>
                       <#list menuJson as item>
                             <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
                                   <#if item["type"]=="link_external">
-                                      <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
+                                      <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank" itemCount=item["children"]?size>
                                           <@cmsmenu items=item["children"] type=type/>
                                       </@menuitem>
                                   <#else>
                                       <#if item.data.websiteid?has_content>
-                                          <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
+                                          <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))}) itemCount=item["children"]?size>
                                               <@cmsmenu items=item["children"] type=type/>
                                           </@menuitem>
                                       <#else>
-                                          <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
+                                          <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!"")) itemCount=item["children"]?size>
                                               <@cmsmenu items=item["children"] type=type/>
                                           </@menuitem>
                                       </#if>
                                 </#if>
                             <#elseif item["type"]=="content">
-                                  <@menuitem type="text">
+                                  <@menuitem type="text" itemCount=0>
                                   ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
                                   </@menuitem>
                             <#else>
-                                  <@menuitem type="generic" text=item.text!""></@menuitem>
+                                  <@menuitem type="generic" text=item.text!"" itemCount=0></@menuitem>
                             </#if>
                       </#list>
                     <#nested>
@@ -2257,30 +2271,30 @@ It may be used in combination with cms menus:
             </#if>
         <#else>
             <#if items?is_sequence>
-              <@menu type=type title=title id=id class=class style=style>
+              <@menu type=type title=title id=id class=class style=style itemCount=items?size>
               <#list items as item>
                   <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
                       <#if item["type"]=="link_external">
-                          <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
+                          <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank" itemCount=item["children"]?size>
                               <@cmsmenu items=item["children"] type=type/>
                           </@menuitem>
                       <#else>
                           <#if item.data.websiteid?has_content>
-                              <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
+                              <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))}) itemCount=item["children"]?size>
                                   <@cmsmenu items=item["children"] type=type/>
                               </@menuitem>
                           <#else>
-                              <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
+                              <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!"")) itemCount=item["children"]?size>
                                   <@cmsmenu items=item["children"] type=type/>
                               </@menuitem>
                           </#if>
                       </#if>
                   <#elseif item["type"]=="content">
-                    <@menuitem type="text">
+                    <@menuitem type="text" itemCount=0>
                         ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
                     </@menuitem>
                   <#else>
-                      <@menuitem type="generic" text=item.text!""></@menuitem>
+                      <@menuitem type="generic" text=item.text!"" itemCount=0></@menuitem>
                   </#if>
                 </#list>
               </@menu>

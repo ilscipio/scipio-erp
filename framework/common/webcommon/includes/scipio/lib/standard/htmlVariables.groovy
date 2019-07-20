@@ -289,6 +289,8 @@ context.styles = [
     "menu_default_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_levelprefix" : "menu-level-",
     "menu_default_nameprefix" : "menu-name-",
+    "menu_default_haschild" : "", // NOTE: 2019-07-19: only works for certain menu types (cms)
+    "menu_default_nochild" : "", // NOTE: 2019-07-19: only works for certain menu types (cms)
     "menu_default_item" : "",
     "menu_default_item_htmlwrap" : true,
     "menu_default_itemdisabled" : "disabled",
@@ -297,6 +299,8 @@ context.styles = [
     "menu_default_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_itemselected" : "selected",
     "menu_default_itemnameprefix" : "item-name-",
+    "menu_default_itemhaschild" : "", // NOTE: 2019-07-19: only works for certain menu types (cms)
+    "menu_default_itemnochild" : "", // NOTE: 2019-07-19: only works for certain menu types (cms)
     "menu_default_item_contentdisabled" : "disabled",
     "menu_default_item_contentactive" : "active",
     "menu_default_item_contentactivetarget" : "active-target",

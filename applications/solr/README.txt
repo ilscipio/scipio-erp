@@ -267,7 +267,7 @@ are available due to running within Scipio (such as logging control).
 The solr component indexes data such as Products into the Apache Solr database
 using services defined in the file:
 
-  servicesdef/solrservices.xml
+  servicesdef/services.xml
 
 There are two methods for indexing data:
 
@@ -342,7 +342,7 @@ Solr queries can be done using severals methods:
 
 Simply invoke (manually or in code) the query services found in the file:
 
-  servicesdef/solrservices.xml
+  servicesdef/services.xml
   
 These include solrProductsSearch, solrKeywordSearch and others. Note that in general,
 solr services can only successfully run in contexts where the solr webapp is loaded and accessible.

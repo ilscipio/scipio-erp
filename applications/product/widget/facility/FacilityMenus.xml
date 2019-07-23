@@ -135,15 +135,27 @@ code package.
             here we tell it to highlight the parent item and hide the sub-menu. -->
         <menu-item-alias name="NewFacility" for="PARENT-NOSUB"/>
         <menu-item name="settings">
+            <condition>
+                <not><if-empty field="facilityId"/></not>
+            </condition>
             <sub-menu name="FacilitySettings" include="FacilitySettingsSideBar"/>
         </menu-item>
         <menu-item name="inventory">
+            <condition>
+                <not><if-empty field="facilityId"/></not>
+            </condition>
             <sub-menu name="FacilityInventory" include="FacilityInventorySideBar"/>
         </menu-item>
         <menu-item name="PicklistOptions">
+            <condition>
+                <not><if-empty field="facilityId"/></not>
+            </condition>
             <sub-menu name="FacilityPicking" include="FacilityPickingSideBar"/>
         </menu-item>
         <menu-item name="PackOrder">
+            <condition>
+                <not><if-empty field="facilityId"/></not>
+            </condition>
             <sub-menu name="FacilityPackOrder" include="FacilityPackOrderSideBar"/>
         </menu-item>
     </menu>      

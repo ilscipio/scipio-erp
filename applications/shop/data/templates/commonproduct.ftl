@@ -18,6 +18,9 @@ NOTE: This template does not support globals as-is (#global)
     <#local productId = .node.@productId[0]>
     <#local productName = .node.@productName[0]>
     <#local productCategoryId = .node.@productCategoryId[0]>
+    <#if !productCategoryId?has_content && .node?parent.@catId[0]?has_content>
+        <#local productCategoryId = .node?parent.@catId[0]>
+    </#if>
 
     <#local extraCategoryId1 = (.node.@extraCategoryId1[0])!"">
     <#local extraCategoryId2 = (.node.@extraCategoryId2[0])!"">

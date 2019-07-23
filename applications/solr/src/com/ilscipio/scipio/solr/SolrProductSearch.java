@@ -911,7 +911,7 @@ public abstract class SolrProductSearch {
     /**
      * Performs solr products search.
      */
-    public static Map<String, Object> productsSearch(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrProductsSearch(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -978,7 +978,7 @@ public abstract class SolrProductSearch {
      * The search form requires the result to be in a specific layout, so this
      * will generate the proper results.
      */
-    public static Map<String, Object> keywordSearch(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrKeywordSearch(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -1081,7 +1081,7 @@ public abstract class SolrProductSearch {
      * Returns a map of the categories currently available under the root
      * element.
      */
-    public static Map<String, Object> getAvailableCategories(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrAvailableCategories(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         try {
             boolean displayProducts = Boolean.TRUE.equals(context.get("displayProducts"));
@@ -1136,13 +1136,9 @@ public abstract class SolrProductSearch {
     
     /**
      * SCIPIO (2019-05-02): Gets all available categories in order to be consumed in a menu-like format (like getSideDeepCategories)
-     * 
-     * @param dctx
-     * @param context
-     * @return
      */
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> getAvailableCategoriesExtended(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrAvailableCategoriesExtended(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result;
         try {
@@ -1193,19 +1189,7 @@ public abstract class SolrProductSearch {
         }
         return result;
     }
-    
-    
-    /**
-     * 
-     * @param categoriesExtended
-     * @param multiLevelEntryCategoryMap
-     * @param currentTrail
-     * @param dctx
-     * @param context
-     * @param catalogId
-     * @return
-     * @throws Exception
-     */
+
     @SuppressWarnings("unchecked")
     private static Map<String, List<Map<String, Object>>> buildCategoriesExtendedFromMap(Map<String, List<Map<String, Object>>> categoriesExtended,
             Map<String, Object> multiLevelEntryCategoryMap, String currentTrail, DispatchContext dctx, Map<String, Object> context, String catalogId)
@@ -1236,18 +1220,7 @@ public abstract class SolrProductSearch {
         }
         return categoriesExtended;
     }
-    
-    /**
-     * 
-     * @param dctx
-     * @param context
-     * @param catalogId
-     * @param categoryPath
-     * @param facetPrefix
-     * @param level
-     * @return
-     * @throws Exception
-     */
+
     private static List<Map<String, Object>> prepareAndRunSorlCategoryQuery(DispatchContext dctx, Map<String, Object> context, String catalogId,
             String categoryPath, String facetPrefix, int level) throws Exception {
         // TODO: Use this method in sideDeepCategories
@@ -1287,12 +1260,6 @@ public abstract class SolrProductSearch {
         return result;
     }
 
-    /**
-     * 
-     * @param currentMap
-     * @param categoryIds
-     * @return
-     */
     @SuppressWarnings("unchecked")
     private static Map<String, Object> getAllCategoriesFromMap(Map<String, Object> currentMap, String[] categoryIds) {
         
@@ -1385,7 +1352,7 @@ public abstract class SolrProductSearch {
     /**
      * Return a map of the side deep categories.
      */
-    public static Map<String, Object> getSideDeepCategories(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrSideDeepCategory(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         try {
             String catalogId = (String) context.get("catalogId");
@@ -1797,9 +1764,6 @@ public abstract class SolrProductSearch {
         return rebuildSolrIndex(dctx, context);
     }
 
-    /**
-     * Marks SOLR data as dirty.
-     */
     public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -1810,6 +1774,12 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnError("Unable to set SOLR data status: " + e.getMessage());
         }
         return result;
+    }
+
+    public static Map<String, Object> markSolrDataDirty(DispatchContext dctx, Map<String, Object> context) {
+        context = new HashMap<>(context);
+        context.put("dataStatusId", "SOLR_DATA_OLD");
+        return setSolrDataStatus(dctx, context);
     }
 
     static void copyStdServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx) {

@@ -59,8 +59,8 @@ code package.
 
     <service name="markSolrDataDirty" engine="java"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="setSolrDataStatus">
-        <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
+        invoke="markSolrDataDirty">
+        <description>Mark SOLR data status as dirty</description>
     </service>
 
     <!-- ========================================================= -->
@@ -418,7 +418,7 @@ code package.
     <service name="solrProductsSearch" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="productsSearch">
+        invoke="solrProductsSearch">
         <description>Run a query on Solr and return the results</description>
         <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
@@ -459,7 +459,7 @@ code package.
     <service name="solrKeywordSearch" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="keywordSearch">
+        invoke="solrKeywordSearch">
         <description>Run a query on Solr and return the results</description>
         <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="false" name="query" type="String" allow-html="any"/>
@@ -536,7 +536,7 @@ code package.
     <service name="solrAvailableCategories" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="getAvailableCategories">
+        invoke="solrAvailableCategories">
         <description>Run a query on Solr and return the results</description>
         <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="true" name="productCategoryId" type="String"/>
@@ -553,7 +553,7 @@ code package.
     <service name="solrAvailableCategoriesExtended" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="getAvailableCategoriesExtended" >        
+        invoke="solrAvailableCategoriesExtended" >
         <description>Run a query on Solr and return the results in a more detailed way like solrSideDeepCategory</description>
         <implements service="solrAvailableCategories"/>
         <attribute mode="IN" optional="true" name="depth" type="String"/>
@@ -564,7 +564,7 @@ code package.
     <service name="solrSideDeepCategory" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="getSideDeepCategories">
+        invoke="solrSideDeepCategory">
         <description>Run a query on Solr and return the results</description>
         <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>

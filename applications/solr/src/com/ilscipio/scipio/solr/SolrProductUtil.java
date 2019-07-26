@@ -417,9 +417,16 @@ public abstract class SolrProductUtil {
 
     /**
      * Generates a map of product content that may be passed to the addToSolrIndex service.
-     * NOTE: the result field names match the addToSolrIndex service fields, NOT the
-     * Solr schema product fields; these are extra intermediates.
-     * DEV NOTE: FIXME: this extra layer of renaming is confusing and problematic; should get rid of it...
+     * <p>
+     * NOTE: Prefer <code>fields</code> over <code>targetCtx</code>, which is old method and requires needless patching to make work.
+     * For <code>fields</code>, the field names are the final Solr schema field names; for <code>targetCtx</code>, they are
+     * intermediate names found in services.xml.
+     * <p>
+     * <b>WARNING:</b> DO NOT USE ENTITY CACHE HERE FOR ANYTHING! It is an error and you will end up with serious problems!
+     * Do not call any utilities that use the entity cache! If you need them, you must patch them to not use entity cache.
+     * The useCache parameter here will always be false for the foreseeable future.
+     * <p>
+     * <b>WARNING:</b> You should use the provided nowTimestamp for filter-by-date operations.
      */
     public static Map<String, Object> getProductContent(GenericValue product, DispatchContext dctx, Map<String, Object> context) {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -427,7 +434,7 @@ public abstract class SolrProductUtil {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) product.get("productId");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
-        Map<String, Object> dispatchContext = new HashMap<>();
+        Map<String, Object> targetCtx = new HashMap<>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
@@ -439,7 +446,7 @@ public abstract class SolrProductUtil {
             // 2018: The fields map is needed for arbitrarily-named fields such as dynamicFields.
             // It is much more flexible than the stock static field names in the
             // solrProductAttributes service interface and in the future may replace it entirely.
-            Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
+            Map<String, Object> fields = getGenSolrDocFieldsMap(targetCtx);
 
             // Get all product assoc
             List<GenericValue> productAssocFromList = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId).filterByDate().cache(useCache).queryList();
@@ -499,7 +506,7 @@ public abstract class SolrProductUtil {
             }
 
             List<String> productStoreIdList = UtilMisc.getMapValuesForKeyOrNewList(productStores, "productStoreId");
-            dispatchContext.put("productStore", productStoreIdList);
+            targetCtx.put("productStore", productStoreIdList);
 
             if (productStores.isEmpty()) {
                 Debug.logInfo("Solr: Cannot determine store for product '" + productId + "'", module);
@@ -513,8 +520,8 @@ public abstract class SolrProductUtil {
                 }
             }
 
-            dispatchContext.put("category", new ArrayList<>(trails));
-            dispatchContext.put("catalog", new ArrayList<>(catalogs));
+            targetCtx.put("category", new ArrayList<>(trails));
+            targetCtx.put("catalog", new ArrayList<>(catalogs));
 
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
@@ -540,38 +547,38 @@ public abstract class SolrProductUtil {
                 parentProductId = ProductWorker.getParentProductId(productId, delegator, useCache);
             }
 
-            dispatchContext.put("productId", productId);
-            // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
+            targetCtx.put("productId", productId);
+            // if (product.get("sku") != null) targetCtx.put("sku", product.get("sku"));
             if (product.get("internalName") != null) {
-                dispatchContext.put("internalName", product.get("internalName"));
+                targetCtx.put("internalName", product.get("internalName"));
             }
             if (product.get("productTypeId") != null) {
-                dispatchContext.put("productTypeId", product.get("productTypeId"));
+                targetCtx.put("productTypeId", product.get("productTypeId"));
             }
             // GenericValue manu = product.getRelatedOneCache("Manufacturer");
-            // if (product.get("manu") != null) dispatchContext.put("manu", "");
+            // if (product.get("manu") != null) targetCtx.put("manu", "");
             String smallImage = (String) product.get("smallImageUrl");
             if (smallImage != null) {
-                dispatchContext.put("smallImage", smallImage);
+                targetCtx.put("smallImage", smallImage);
             }
             String mediumImage = (String) product.get("mediumImageUrl");
             if (mediumImage != null) {
-                dispatchContext.put("mediumImage", mediumImage);
+                targetCtx.put("mediumImage", mediumImage);
             }
             String largeImage = (String) product.get("largeImageUrl");
             if (largeImage != null) {
-                dispatchContext.put("largeImage", largeImage);
+                targetCtx.put("largeImage", largeImage);
             }
 
-            // if(product.get("weight") != null) dispatchContext.put("weight", "");
+            // if(product.get("weight") != null) targetCtx.put("weight", "");
 
             // Alternative
-            // if(category.size()>0) dispatchContext.put("category", category);
-            // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
+            // if(category.size()>0) targetCtx.put("category", category);
+            // if(product.get("popularity") != null) targetCtx.put("popularity", "");
 
             Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId, "emptyAction", "success", "useCache", useCache));
             if (featureSet != null) {
-                dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
+                targetCtx.put("features", (Set<?>) featureSet.get("featureSet"));
             }
 
             /* 2018-05-29: Use a more precise, total AND per-store count
@@ -589,7 +596,7 @@ public abstract class SolrProductUtil {
                     productStores, useTotal, useVariantStockCalcForTotal, nowTimestamp, useCache);
             for (Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {
                 if ("_total_".equals(entry.getKey())) {
-                    dispatchContext.put("inStock", entry.getValue().toBigInteger().intValue());
+                    targetCtx.put("inStock", entry.getValue().toBigInteger().intValue());
                 } else {
                     String fieldName = "storeStock_" + SolrExprUtil.escapeFieldNamePart(entry.getKey()) + "_pi";
                     if (fields.containsKey(fieldName)) {
@@ -606,33 +613,35 @@ public abstract class SolrProductUtil {
 
 
             boolean isVirtual = "Y".equals(product.getString("isVirtual"));
-            if (isVirtual) dispatchContext.put("isVirtual", isVirtual);
+            if (isVirtual) targetCtx.put("isVirtual", isVirtual);
             boolean isVariant = "Y".equals(product.getString("isVariant"));
-            if (isVariant) dispatchContext.put("isVariant", isVariant); // new 2017-08-17
+            if (isVariant) targetCtx.put("isVariant", isVariant); // new 2017-08-17
             boolean isDigital = ProductWorker.isDigital(product);
-            if (isDigital) dispatchContext.put("isDigital", isDigital);
+            if (isDigital) targetCtx.put("isDigital", isDigital);
             boolean isPhysical = ProductWorker.isPhysical(product);
-            if (isPhysical) dispatchContext.put("isPhysical", isPhysical);
+            if (isPhysical) targetCtx.put("isPhysical", isPhysical);
 
             Boolean requireAmount = product.getBoolean("requireAmount");
             if (Boolean.TRUE.equals(requireAmount)) fields.put("requireAmount_b", requireAmount);
 
-            dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defaultProductLocale, pcwList, useCache));
-            dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
-            dispatchContext.put("longDescription", getLocalizedContentStringMap(delegator, dispatcher, product, "LONG_DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
+            targetCtx.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defaultProductLocale, pcwList, useCache));
+            targetCtx.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
+            targetCtx.put("longDescription", getLocalizedContentStringMap(delegator, dispatcher, product, "LONG_DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
 
-            // dispatchContext.put("comments", "");
-            // dispatchContext.put("keywords", "");
-            // dispatchContext.put("last_modified", "");
+            // targetCtx.put("comments", "");
+            // targetCtx.put("keywords", "");
+            // targetCtx.put("last_modified", "");
 
             // this is the currencyUomId that the prices in solr should use...
             String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
 
+            Map<String, Object> stdPriceMap = null;
+            ProductConfigWrapper cfgPriceWrapper = null;
             if ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId"))) {
-                getConfigurableProductStartingPrices(dispatchContext, delegator, dispatcher, userLogin, context, product,
+                cfgPriceWrapper = getConfigurableProductStartingPrices(targetCtx, delegator, dispatcher, userLogin, context, product,
                         productStore, currencyUomId, defaultProductLocale, useCache);
             } else {
-                getProductStandardPrices(dispatchContext, delegator, dispatcher, userLogin, context, product,
+                stdPriceMap = getProductStandardPrices(targetCtx, delegator, dispatcher, userLogin, context, product,
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
 
@@ -645,13 +654,13 @@ public abstract class SolrProductUtil {
             Set<String> keywords = new LinkedHashSet<>();
             // NOTE: for variant products, we also include the keywords from the virtual/parent
             getProductKeywords(keywords, delegator, useCache, productId, parentProductId);
-            dispatchContext.put("keywords", new ArrayList<>(keywords));
+            targetCtx.put("keywords", new ArrayList<>(keywords));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
         } catch (Exception e) {
             Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
         }
-        return dispatchContext;
+        return targetCtx;
     }
 
     protected static void getProductCategoryIds(Collection<String> productCategoryIds, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
@@ -777,13 +786,31 @@ public abstract class SolrProductUtil {
     /**
      * Gets or creates and stores the unabstracted "fields" map for addToSolrIndex.
      */
-    protected static Map<String, Object> getGenSolrDocFieldsMap(Map<String, Object> dispatchContext) {
-        Map<String, Object> fields = UtilGenerics.checkMap(dispatchContext.get("fields"));
+    protected static Map<String, Object> getGenSolrDocFieldsMap(Map<String, Object> targetCtx) {
+        Map<String, Object> fields = UtilGenerics.checkMap(targetCtx.get("fields"));
         if (fields == null) {
             fields = new HashMap<>();
-            dispatchContext.put("fields", fields);
+            targetCtx.put("fields", fields);
         }
         return fields;
+    }
+
+    /**
+     * Gets the given field from the "fields" map or from the root target context (which should contain the fields map).
+     * FIXME: unchecked cast, IDEA doesn't work.
+     */
+    protected static <T> T getField(Map<String, Object> targetCtx, Map<String, Object> fields, String fieldName) {
+        if (fields.containsKey(fieldName)) {
+            return (T) fields.get(fieldName);
+        }
+        return (T) targetCtx.get(fieldName);
+    }
+
+    /**
+     * Gets the given field from the "fields" map or from the root target context (which should contain the fields map).
+     */
+    protected static <T> T getField(Map<String, Object> targetCtx, String fieldName) {
+        return getField(targetCtx, getGenSolrDocFieldsMap(targetCtx), fieldName);
     }
 
     protected static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
@@ -939,7 +966,7 @@ public abstract class SolrProductUtil {
         return out.toString();
     }
 
-    protected static void getProductStandardPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
+    protected static Map<String, Object> getProductStandardPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         Map<String, Object> priceContext = UtilMisc.toMap("product", product);
         priceContext.put("currencyUomId", currencyUomId);
@@ -956,9 +983,10 @@ public abstract class SolrProductUtil {
                 out.put("defaultPrice", defaultPrice);
             }
         }
+        return priceMap;
     }
 
-    protected static void getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
+    protected static ProductConfigWrapper getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, product.getString("productId"), null, null, null, currencyUomId, priceLocale, userLogin);
         configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
@@ -973,6 +1001,7 @@ public abstract class SolrProductUtil {
         if (defaultPrice != null) {
             out.put("defaultPrice", scaleCurrency(defaultPrice).toString());
         }
+        return configWrapper;
     }
 
     protected static BigDecimal scaleCurrency(BigDecimal amount) {

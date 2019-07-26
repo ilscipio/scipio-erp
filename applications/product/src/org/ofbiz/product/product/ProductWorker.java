@@ -712,7 +712,11 @@ public final class ProductWorker {
         return getAverageProductRating(product, null, productStoreId);
     }
 
-    public static BigDecimal getAverageProductRating(GenericValue product, List<GenericValue> reviews, String productStoreId) {
+    public static BigDecimal getAverageProductRating(GenericValue product, List<GenericValue> reviews, String productStoreId) { // SCIPIO: Cache-less overload, now delegates
+        return getAverageProductRating(product, reviews, productStoreId, true);
+    }
+
+    public static BigDecimal getAverageProductRating(GenericValue product, List<GenericValue> reviews, String productStoreId, boolean useCache) { // SCIPIO: Added useCache
         if (product == null) {
             Debug.logWarning("Invalid product entity passed; unable to obtain valid product rating", module);
             return BigDecimal.ZERO;
@@ -742,7 +746,7 @@ public final class ProductWorker {
             // lookup the reviews if we didn't pass them in
             if (reviews == null) {
                 try {
-                    reviews = product.getRelated("ProductReview", reviewByAnd, UtilMisc.toList("-postedDateTime"), true);
+                    reviews = product.getRelated("ProductReview", reviewByAnd, UtilMisc.toList("-postedDateTime"), useCache); // SCIPIO: Added useCache
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }

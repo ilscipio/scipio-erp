@@ -9853,6 +9853,10 @@
         <value xml:lang="de">Sie haben sich für eine Bitcoin Zahlung über Lightning Network entschieden. Um die Transaktion abzuschließen überweisen Sie bitte ${bitcoinAmount} innerhalb der nächsten Stunde an die unten stehende Adresse. Eine Lightning Wallet wird für die Transaktion benötigt. Bitte führen Sie die Bezahlung innerhalb der nächsten 30 Minuten aus. Sie erhalten eine Email-Benachrichtigung, sobald die Zahlung prozessiert wurde.</value>
         <value xml:lang="en">You selected Lightning Network (Bitcoin) payments for this transaction. To complete your payment please send ${bitcoinAmount} to the address below within the next hour. A lightning wallet is required for the transaction. Please complete the payment within the next 30 minutes. You will receive an email confirmation, once we have processed your payment.</value>
     </property>
+    <property key="OrderPaymentDescCash">
+        <value xml:lang="de">Zahlung bei Bargeld.</value>
+        <value xml:lang="en">Pay with cash</value>
+    </property>
     <property key="OrderPaymentDescCOD">
         <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>

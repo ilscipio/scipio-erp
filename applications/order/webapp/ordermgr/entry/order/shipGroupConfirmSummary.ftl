@@ -46,21 +46,24 @@ standard order confirmation page and to be re-usable by other screens.
       <@tr>
 
         <#-- address destination column (spans a number of rows = number of cart items in it) -->
-
         <@td rowspan="${numberOfItems}">
-          <#assign contactMech = delegator.findOne("ContactMech", {"contactMechId":cartShipInfo.contactMechId}, false)! />
-          <#if contactMech?has_content>
-            <#assign address = contactMech.getRelatedOne("PostalAddress", false)! />
-          </#if>
+          <#if cart.getShipmentMethodTypeId()?has_content && cart.getShipmentMethodTypeId() != "NO_SHIPPING">
+              <#assign contactMech = delegator.findOne("ContactMech", {"contactMechId":cartShipInfo.contactMechId}, false)! />
+              <#if contactMech?has_content>
+                <#assign address = contactMech.getRelatedOne("PostalAddress", false)! />
+              </#if>
 
-          <#if address??>
-            <#if address.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${address.toName}<br /></#if>
-            <#if address.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${address.attnName}<br /></#if>
-            <#if address.address1?has_content>${address.address1}<br /></#if>
-            <#if address.address2?has_content>${address.address2}<br /></#if>
-            <#if address.city?has_content>${address.city}</#if>
-            <#if address.stateProvinceGeoId?has_content>&nbsp;${address.stateProvinceGeoId}</#if>
-            <#if address.postalCode?has_content>, ${address.postalCode!}</#if>
+              <#if address??>
+                <#if address.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${address.toName}<br /></#if>
+                <#if address.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${address.attnName}<br /></#if>
+                <#if address.address1?has_content>${address.address1}<br /></#if>
+                <#if address.address2?has_content>${address.address2}<br /></#if>
+                <#if address.city?has_content>${address.city}</#if>
+                <#if address.stateProvinceGeoId?has_content>&nbsp;${address.stateProvinceGeoId}</#if>
+                <#if address.postalCode?has_content>, ${address.postalCode!}</#if>
+              </#if>
+          <#else>
+              ---
           </#if>
         </@td>
 

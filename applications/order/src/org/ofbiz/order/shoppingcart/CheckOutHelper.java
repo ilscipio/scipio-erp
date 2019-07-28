@@ -125,7 +125,7 @@ public class CheckOutHelper {
         // set the shipping address
         if (UtilValidate.isNotEmpty(shippingContactMechId)) {
             this.cart.setAllShippingContactMechId(shippingContactMechId);
-        } else if (cart.shippingApplies()) {
+        } else if (cart.shippingApplies() && !this.cart.getShipmentMethodTypeId().equals("NO_SHIPPING")) {
             // only return an error if shipping is required for this purchase
             errMsg = UtilProperties.getMessage(resource_error,"checkhelper.select_shipping_destination", cart.getLocale());
             errorMessages.add(errMsg);
@@ -183,44 +183,46 @@ public class CheckOutHelper {
             errorMessages.add(errMsg);
         }
 
-        // set the shipping instructions
-        this.cart.setAllShippingInstructions(shippingInstructions);
+        if (!this.cart.getShipmentMethodTypeId().equals("NO_SHIPPING")) {
+            // set the shipping instructions
+            this.cart.setAllShippingInstructions(shippingInstructions);
 
-        if (UtilValidate.isNotEmpty(maySplit)) {
-            cart.setAllMaySplit(Boolean.valueOf(maySplit));
-        } else {
-            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.select_splitting_preference", cart.getLocale());
-            errorMessages.add(errMsg);
-        }
-
-        // set the gift message
-        this.cart.setAllGiftMessage(giftMessage);
-
-        if (UtilValidate.isNotEmpty(isGift)) {
-            cart.setAllIsGift(Boolean.valueOf(isGift));
-        } else {
-            errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_order_is_gift", cart.getLocale());
-            errorMessages.add(errMsg);
-        }
-
-        // interal code
-        this.cart.setInternalCode(internalCode);
-
-        if (UtilValidate.isNotEmpty(shipBeforeDate)) {
-            if (UtilValidate.isDate(shipBeforeDate)) {
-                cart.setShipBeforeDate(UtilDateTime.toTimestamp(shipBeforeDate));
+            if (UtilValidate.isNotEmpty(maySplit)) {
+                cart.setAllMaySplit(Boolean.valueOf(maySplit));
             } else {
-                errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_shipBeforeDate_is_date", cart.getLocale());
+                errMsg = UtilProperties.getMessage(resource_error, "checkhelper.select_splitting_preference", cart.getLocale());
                 errorMessages.add(errMsg);
             }
-        }
 
-        if (UtilValidate.isNotEmpty(shipAfterDate)) {
-            if (UtilValidate.isDate(shipAfterDate)) {
-                cart.setShipAfterDate(UtilDateTime.toTimestamp(shipAfterDate));
+            // set the gift message
+            this.cart.setAllGiftMessage(giftMessage);
+
+            if (UtilValidate.isNotEmpty(isGift)) {
+                cart.setAllIsGift(Boolean.valueOf(isGift));
             } else {
-                errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_shipAfterDate_is_date", cart.getLocale());
+                errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_order_is_gift", cart.getLocale());
                 errorMessages.add(errMsg);
+            }
+
+            // interal code
+            this.cart.setInternalCode(internalCode);
+
+            if (UtilValidate.isNotEmpty(shipBeforeDate)) {
+                if (UtilValidate.isDate(shipBeforeDate)) {
+                    cart.setShipBeforeDate(UtilDateTime.toTimestamp(shipBeforeDate));
+                } else {
+                    errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_shipBeforeDate_is_date", cart.getLocale());
+                    errorMessages.add(errMsg);
+                }
+            }
+
+            if (UtilValidate.isNotEmpty(shipAfterDate)) {
+                if (UtilValidate.isDate(shipAfterDate)) {
+                    cart.setShipAfterDate(UtilDateTime.toTimestamp(shipAfterDate));
+                } else {
+                    errMsg = UtilProperties.getMessage(resource_error, "checkhelper.specify_if_shipAfterDate_is_date", cart.getLocale());
+                    errorMessages.add(errMsg);
+                }
             }
         }
 

@@ -175,6 +175,23 @@
             </@section>
           </#if>
         </#if>
+        <#if productStorePaymentMethodTypeIdMap.CASH??>
+          <#assign methodLabel>${rawString(getLabel('PaymentMethodType.description.CASH', 'AccountingEntityLabels'))}</#assign>
+          <#if showSelect>
+            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_CASH", "contentId":"content_CASH"})>
+            <@field type="radio" id="checkOutPaymentId_CASH" name="checkOutPaymentId" value="CASH" checked=(selectedCheckOutPaymentIdList?seq_contains("CASH"))
+            class="+pay-select-radio pay-select-field" label=methodLabel />
+          </#if>
+          <#if showDetails>
+            <@section containerId="content_CASH" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=methodLabel -->
+              <@payMethInfoPanel title=methodLabel>
+                      <#-- SCIPIO: TODO?: These descriptions could probably be integrated into the entity values using get("xxx", locale)... -->
+              <p>${uiLabelMap.OrderPaymentDescCash}</p>
+              </@payMethInfoPanel>
+              <@payMethAmountField payMethId="CASH"/>
+            </@section>
+          </#if>
+        </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
           <#assign methodLabel>${rawString(getLabel('PaymentMethodType.description.EXT_COD', 'AccountingEntityLabels'))} (${rawLabel('OrderCOD')})</#assign>
           <#if showSelect>

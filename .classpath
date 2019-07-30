@@ -63,9 +63,9 @@
 	<classpathentry kind="lib" path="framework/base/lib/j2eespecs-ref/javax.el-api-3.0.1-b06.jar" sourcepath="framework/base/libsrc/j2eespecs-ref/javax.el-api-3.0.1-b06-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/j2eespecs-ref/javax.servlet-api-4.0.1.jar" sourcepath="framework/base/libsrc/j2eespecs-ref/javax.servlet-api-4.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/j2eespecs-ref/javax.servlet.jsp-api-2.3.3.jar" sourcepath="framework/base/libsrc/j2eespecs-ref/javax.servlet.jsp-api-2.3.3-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/jackson-annotations-2.9.8.jar" sourcepath="framework/base/libsrc/jackson-annotations-2.9.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/jackson-core-2.9.8.jar" sourcepath="framework/base/libsrc/jackson-core-2.9.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/jackson-databind-2.9.8.jar" sourcepath="framework/base/libsrc/jackson-databind-2.9.8-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/jackson-annotations-2.9.9.jar" sourcepath="framework/base/libsrc/jackson-annotations-2.9.9-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/jackson-core-2.9.9.jar" sourcepath="framework/base/libsrc/jackson-core-2.9.9-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/jackson-databind-2.9.9.jar" sourcepath="framework/base/libsrc/jackson-databind-2.9.9-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/java-image-scaling-0.8.6.jar" sourcepath="framework/base/libsrc/java-image-scaling-0.8.6-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/javax.mail-1.6.2.jar" sourcepath="framework/base/libsrc/javax.mail-1.6.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/javolution-5.5.1.jar" sourcepath="framework/base/libsrc/javolution-5.5.1-sources.jar"/>

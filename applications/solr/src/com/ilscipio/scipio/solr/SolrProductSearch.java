@@ -564,7 +564,7 @@ public abstract class SolrProductSearch {
             client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
 
             // Construct Documents
-            SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context, useCache);
+            SolrInputDocument doc1 = SolrProductUtil.generateSolrDocument(dctx.getDelegator(), dctx.getDispatcher(), context, useCache);
             Collection<SolrInputDocument> docs = new ArrayList<>();
 
             if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
@@ -637,7 +637,7 @@ public abstract class SolrProductSearch {
 
                 // Construct Documents
                 for (Map<String, Object> productContent : fieldList) {
-                    SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), productContent, useCache);
+                    SolrInputDocument doc1 = SolrProductUtil.generateSolrDocument(dctx.getDelegator(), dctx.getDispatcher(), productContent, useCache);
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: addListToSolrIndex: Processed document for indexing: " + doc1.toString(), module);
                     docs.add(doc1);
                 }

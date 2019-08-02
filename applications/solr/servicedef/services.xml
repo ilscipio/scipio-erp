@@ -240,11 +240,13 @@ code package.
     </service>
 
     <service name="solrProductAttributesSimple" engine="interface">
-        <description>Simple-type product attributes for addToSolrIndex Product</description>
+        <description>Simple-type product attributes for addToSolrIndex Product
+            NOTE: It is preferable to use the "fields" map of the addToSolrIndex interface in custom implementations,
+            as is lessens the amount of patching required; solrProductAttributes* may be deprecated.</description>
         <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <!-- DEV NOTE: these should correspond to the old hardcoded list com.ilscipio.scipio.solr.SolrUtil.solrProdAttrSimple
             for backward compat, when a field is deprecated, move it back into addToSolrIndex interface -->
-        <attribute mode="IN" name="productId" optional="false" type="String" />
+        <attribute mode="IN" name="productId" optional="true" type="String" /><!-- NOTE: 2019-08-01: Changed to optional="true" to generalize document indexing -->
         <attribute mode="IN" name="productTypeId" optional="true" type="String" />
         <attribute mode="IN" name="internalName" optional="true" type="String" />
         <attribute mode="IN" name="manu" optional="true" type="String" />
@@ -267,7 +269,9 @@ code package.
     </service>
     
     <service name="solrProductAttributesComplex" engine="interface">
-        <description>Complex-type product attributes for addToSolrIndex Product</description>
+        <description>Complex-type product attributes for addToSolrIndex Product
+            NOTE: It is preferable to use the "fields" map of the addToSolrIndex interface in custom implementations,
+                as is lessens the amount of patching required; solrProductAttributes* may be deprecated.</description>
         <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <attribute mode="IN" name="description" optional="true" type="Map" />
         <attribute mode="IN" name="longDescription" optional="true" type="Map" />
@@ -281,7 +285,9 @@ code package.
     </service>
 
     <service name="solrProductAttributes" engine="interface">
-        <description>All product attributes for addToSolrIndex Product</description>
+        <description>All product attributes for addToSolrIndex Product
+            NOTE: It is preferable to use the "fields" map of the addToSolrIndex interface in custom implementations,
+            as is lessens the amount of patching required; solrProductAttributes* may be deprecated.</description>
         <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <implements service="solrProductAttributesSimple"/>
         <implements service="solrProductAttributesComplex"/>
@@ -295,7 +301,12 @@ code package.
         <implements service="solrProductAttributes"/>
         <attribute mode="IN" name="fields" optional="true" type="Map">
             <description>A map of pre-formatted fields to add as-is to the solr document for indexing,
-                with no field renaming or Solr type abstraction (added 2018-02-05)</description>
+                with no field renaming or Solr type abstraction (added 2018-02-05)
+                NOTE: 2019: This map is preferable to use over the solrProductAttributes* service context attributes
+                    as it simplifies custom implementations; solrProductAttributes* may be deprecated.</description>
+        </attribute>
+        <attribute mode="IN" name="fieldsOnly" optional="true" type="Boolean">
+            <description>If true, only the entries in the "fields" map are considered; otherwise the legacy solrProductAttributes are also read; default: false</description>
         </attribute>
         <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
         <attribute mode="IN" name="sku" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>

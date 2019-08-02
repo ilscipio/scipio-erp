@@ -1023,13 +1023,17 @@ public abstract class SolrProductUtil {
     /**
      * Generates a Solr schema product from the fields of the solrProductAttributes service interface.
      * DEV NOTE: TODO: REVIEW: the solrProductAttributes interface may be an undesirable intermediate...
+     * <p>
+     * 2019-08-01: Renamed to generateSolrDocument and added support for non-product documents that use only the <code>fields</code> map.
      */
-    public static SolrInputDocument generateSolrProductDocument(Delegator delegator, LocalDispatcher dispatcher,
-            Map<String, Object> context, boolean useCache) throws GenericEntityException, IllegalArgumentException {
+    public static SolrInputDocument generateSolrDocument(Delegator delegator, LocalDispatcher dispatcher,
+                                                         Map<String, Object> context, boolean useCache) throws GenericEntityException, IllegalArgumentException {
         SolrInputDocument doc = new SolrInputDocument();
 
         String productId = (String) context.get("productId");
-        if (UtilValidate.isEmpty(productId)) throw new IllegalArgumentException("generateSolrProductDocument: missing productId");
+        if (UtilValidate.isEmpty(productId) || Boolean.TRUE.equals(context.get("fieldsOnly"))) {
+            return addSolrDocumentFields(doc, UtilGenerics.checkMap(context.get("fields")));
+        }
 
         GenericValue productStore = null;
         Collection<String> productStoreIds = asStringCollection(context.get("productStore"));
@@ -1066,7 +1070,21 @@ public abstract class SolrProductUtil {
                 UtilGenerics.<String, String>checkMap(context.get("title")), locales, defaultLocale);
 
         // SCIPIO: 2018-02-05: new "manual" fields map, without abstraction
-        Map<String, Object> fields = UtilGenerics.checkMap(context.get("fields"));
+        addSolrDocumentFields(doc, UtilGenerics.checkMap(context.get("fields")));
+        return doc;
+    }
+
+    /**
+     * generateSolrProductDocument.
+     * @deprecated 2019-08-01: generalized to {@link #generateSolrDocument} to support non-product documents and exploit the "fields" map more.
+     */
+    @Deprecated
+    public static SolrInputDocument generateSolrProductDocument(Delegator delegator, LocalDispatcher dispatcher,
+                                                                Map<String, Object> context, boolean useCache) throws GenericEntityException, IllegalArgumentException {
+        return generateSolrDocument(delegator, dispatcher, context, useCache);
+    }
+
+    public static SolrInputDocument addSolrDocumentFields(SolrInputDocument doc, Map<String, Object> fields) {
         if (fields != null) {
             for(Map.Entry<String, Object> entry : fields.entrySet()) {
                 doc.addField(entry.getKey(), entry.getValue());

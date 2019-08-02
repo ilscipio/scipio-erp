@@ -134,19 +134,27 @@
      in a compatible way. Any analysis applied to the <uniqueKey> should _not_ produce multiple
      tokens
    -->   
-   <!-- SCIPIO: use productId instead: <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />-->
+   <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+
+   <!-- SCIPIO: An optional field to specify an alternative document type, in case not using productId (see below);
+       if left empty (default behavior), it is assumed to be "Product", and in stock Scipio is currently left empty. -->
+   <field name="docType" type="string" indexed="true" stored="true" multiValued="false" />
 
    <!-- SCIPIO: NEW static product fields
-   
+
      NOTE: 2018-05-29: In addition to these static fields, stock Scipio
-     product indexing now also submits some single fields defined using the 
+     product indexing now also submits some single fields defined using the
      type-based dynamicField definitions further below (*_i, *_dt, etc.).
      This pattern will help alleviate maintenance for client schemas derived from this stock one.
      Currently, these include:
        * salesDiscDate_dt (Product.salesDiscontinuationDate)
        * storeStock_[productStoreId]_pi (per-store inventory stock counts; [productStoreId] is encoded using SolrExprUtil.escapeFieldNamePart)
+
+     NOTE: 2019-08-01: Unique key change: The unique key has been changed from productId to id in order to generalize the schema
+         and more easily support different document types inside one schema, which sometimes may be required or useful.
+         In stock Scipio, both id and productId are always set to the product ID, but it may be possible to omit productId if client code supports it.
    -->
-   <field name="productId" type="string" indexed="true" stored="true" required="true"/>
+   <field name="productId" type="string" indexed="true" stored="true"/>
    <field name="productTypeId" type="string" indexed="true" stored="true"/>
    <field name="internalName" type="text_general" indexed="true" stored="true"/>
    <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
@@ -475,8 +483,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
-   <!-- SCIPIO: using productId: <uniqueKey>id</uniqueKey>-->
-   <uniqueKey>productId</uniqueKey>
+   <uniqueKey>id</uniqueKey>
 
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,

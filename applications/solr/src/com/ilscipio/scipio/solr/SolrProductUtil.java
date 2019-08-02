@@ -1035,6 +1035,12 @@ public abstract class SolrProductUtil {
             return addSolrDocumentFields(doc, UtilGenerics.checkMap(context.get("fields")));
         }
 
+        // 2019-08-01: fill the generalized "id" field with productId if not set
+        Map<String, Object> fields = UtilGenerics.checkMap(context.get("fields"));
+        if (fields != null && UtilValidate.isEmpty((String) fields.get("id"))) {
+            doc.addField("id", productId);
+        }
+
         GenericValue productStore = null;
         Collection<String> productStoreIds = asStringCollection(context.get("productStore"));
         if (UtilValidate.isNotEmpty(productStoreIds)) {

@@ -123,8 +123,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_textarea_widget_defaultArgs = {
   "name":"", "class":"", "style":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
-  "maxlength":"",
-  "inlineLabel":false, "wrap":"", "required":false, "attribs":{}, "passArgs":{}
+  "maxlength":"", "events":{}, "inlineLabel":false, "wrap":"", "required":false, "attribs":{}, "passArgs":{}
 }>
 <#macro field_textarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_textarea_widget_defaultArgs)>
@@ -139,13 +138,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <@field_textarea_markup_widget name=name class=class style=style alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
     buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title maxlength=maxlength fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap 
-    required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
+    required=required events=events attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" style="" alert="" cols="" rows="" id="" readonly=false value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" 
-    required=false attribs={} origArgs={} passArgs={} catchArgs...>
+    required=false events={} attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_textarea_default!"")>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>
@@ -160,6 +159,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if rows?has_content> rows="${rows}"</#if><#t/>
     <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
     <#if readonly> readonly="readonly"</#if><#t/>
+    <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
     <#if wrap?has_content> wrap="${wrap}"</#if><#t/>
     <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>

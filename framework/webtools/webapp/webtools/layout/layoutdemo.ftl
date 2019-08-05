@@ -832,6 +832,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 
       <@field type="textarea" name="textarea1" label="Textarea 1" />
       <@field type="textarea" name="textarea2" label="Textarea 2 (readonly)" readonly=true text="test"/>
+      <@field type="textarea" name="textarea3" label="Textarea 3 (onclick event)" events={"onclick":"javascript:alert('clicked textarea3');"} />
 
       <#assign items = [
         {"value":"val1", "description":"Value 1"},

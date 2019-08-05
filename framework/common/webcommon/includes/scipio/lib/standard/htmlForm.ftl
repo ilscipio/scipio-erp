@@ -1920,7 +1920,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#break>
       <#case "textarea">
         <@field_textarea_widget name=name class=class alert=alert cols=cols style=style rows=rows id=id readonly=readonly value=value 
-          placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel maxlength=maxlength wrap=wrap required=required attribs=attribs 
+          placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel maxlength=maxlength wrap=wrap required=required events=events attribs=attribs
           passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested/></@field_textarea_widget>
         <#break>
       <#case "datetime">

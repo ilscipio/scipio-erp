@@ -2070,6 +2070,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" secure=false /></li>
     
       <li><@catalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" /></li><!-- alternate form -->
       <li><@catalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" /></li>
       <li><@catalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" /></li>
       <li><@catalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" /></li>

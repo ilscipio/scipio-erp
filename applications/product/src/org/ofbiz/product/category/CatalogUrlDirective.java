@@ -80,6 +80,11 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+        String type = TransformUtil.getStringArg(args, "type");
+        if ("alt".equals(type)) {
+            CatalogAltUrlDirective.INSTANCE.execute(env, args, loopVars, body);
+            return;
+        }
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new

@@ -2053,6 +2053,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <ul>
       <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
       <li><@catalogUrl prefix=shopMountPoint productId="PH-1000" /></li>
+      <li><@catalogUrl type="alt" prefix=shopMountPoint productId="PH-1000" /></li>
       <li><@catalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
       <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" /></li>
       <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true/></li>

@@ -80,6 +80,8 @@ import freemarker.template.TemplateModel;
 public class CatalogAltUrlDirective implements TemplateDirectiveModel {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    static CatalogAltUrlDirective INSTANCE = new CatalogAltUrlDirective();
+
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body)
             throws TemplateException, IOException {

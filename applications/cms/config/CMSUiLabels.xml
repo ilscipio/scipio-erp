@@ -150,6 +150,14 @@
         <value xml:lang="fr">Lien externe</value>
         <value xml:lang="it">Collegamento externo</value>
     </property>
+    <property key="CmsLinkCatalog">
+        <value xml:lang="de">Catalog Link</value>
+        <value xml:lang="en">Catalog Link</value>
+    </property>
+    <property key="CmsLinkCatalogAlt">
+        <value xml:lang="de">Catalog Alt Link</value>
+        <value xml:lang="en">Catalog Alt Link</value>
+    </property>
     <property key="CmsLinkType">
         <value xml:lang="de">Link Art</value>
         <value xml:lang="en">Link Type</value>

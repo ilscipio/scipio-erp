@@ -100,6 +100,10 @@ public class CatalogAltUrlDirective implements TemplateDirectiveModel {
 
         String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
         String productCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
+        if (UtilValidate.isEmpty(productCategoryId)) {
+            // SCIPIO: Support "currentCategoryId" as alias for productCategoryId
+            productCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
+        }
         String productId = TransformUtil.getStringArg(args, "productId", rawParams);
 
         String viewSize = TransformUtil.getStringArg(args, "viewSize", rawParams);

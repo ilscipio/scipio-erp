@@ -568,7 +568,7 @@ public abstract class TemplateFtlUtil {
     }
 
     public static String escapeFullUrl(String value, String lang, Boolean strict, Environment env) throws TemplateModelException {
-        if (value == null || value.isEmpty() || lang == null || lang.isEmpty()) {
+        if (value == null || value.isEmpty() || lang == null || lang.isEmpty() || "raw".equals(lang)) {
             return value;
         }
         if (strict != null) {

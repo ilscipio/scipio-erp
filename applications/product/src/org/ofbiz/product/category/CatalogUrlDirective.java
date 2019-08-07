@@ -86,13 +86,17 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
             return;
         }
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
-        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs); // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
-        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs); // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
 
         String productId = TransformUtil.getStringArg(args, "productId", rawParams);
         String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
+        if (UtilValidate.isEmpty(currentCategoryId)) {
+            // SCIPIO: Support "productCategoryId" as alias for currentCategoryId
+            currentCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
+        }
         String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
 
         HttpServletRequest request = ContextFtlUtil.getRequest(env);

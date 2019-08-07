@@ -91,7 +91,8 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                 toggle_editor_fields();
             } catch(err) {
                 try {
-                    $('#'+dialogName).modal('show'); 
+                    $('#'+dialogName).modal('show');
+                    toggle_editor_fields();
                 }
                 catch(err) {
                     t.dispatchEvent(event);

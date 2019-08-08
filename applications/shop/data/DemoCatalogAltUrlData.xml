@@ -19,7 +19,7 @@ code package.
         
         DEV NOTES:
         * The export is configured in seo-urls.properties and the file regenerated
-          using the exportWebsiteAlternativeUrlsEntityXmlFileFromConfig service.
+          using the exportAlternativeUrlsEntityXmlFileFromConfig service.
         * Initial data create (should no longer be needed after this file is populated once): 
           When no ALTERNATIVE_URLs in system, initial data can be generated using 
           generateAllAlternativeUrls, with these parameters:

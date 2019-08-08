@@ -25,15 +25,20 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                <option value="link_external">${uiLabelMap.CmsLinkExternal}</option>
                <option value="content">${uiLabelMap.CmsContent}</option>
                <option value="link_catalog">${uiLabelMap.CmsLinkCatalog}</option>
-               <option value="link_catalogalt">${uiLabelMap.CmsLinkCatalogAlt}</option>
         </@field>
         <div id="c_path_wrap" class="cms-menu-urlarg-wrap"><@field type="input" id="path" name="path" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=false/></div>
         <div id="c_content_wrap" class="cms-menu-urlarg-wrap" style="display:none;"><@field type="textarea" id="content" class="+editor" name="content" value="" label=uiLabelMap.CmsContent placeholder="..." required=false/></div>
+        <div id="c_caturlfmt_wrap" class="cms-menu-urlarg-wrap" style="display:none;">
+            <@field type="select" id="catUrlFmt" name="catUrlFmt" label=uiLabelMap.CommonFormat>
+                <@field type="option" value="">${getLabel('CommonDefault')}</@field>
+                <@field type="option" value="alt">${getLabel('ProductContentType.description.ALTERNATIVE_URL', 'ProductEntityLabels')}</@field>
+            </@field>
+        </div>
         <div id="c_categoryid_wrap" class="cms-menu-urlarg-wrap" style="display:none;"><@field type="input" id="productCategoryId" name="productCategoryId" value="" label=rawLabel('ProductCategoryId', 'ProductUiLabels') required=false/></div>
         <div id="c_productid_wrap" class="cms-menu-urlarg-wrap" style="display:none;"><@field type="input" id="productId" name="productId" value="" label=rawLabel('ProductProductId', 'ProductUiLabels') required=false/></div>
         <#-- TODO?: more macro arguments for @catalogUrl/@catalogAltUrl -->
         <div class="modal-footer ${styles.text_right}">
-            <@field type="submit" text=uiLabelMap.CommonEdit class="${styles.link_run_sys!} ${styles.action_edit!}" />
+            <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
         </div>
     </@form>
 </@modal>
@@ -51,16 +56,14 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             },
             "link_catalog": {
                 "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
-            },
-            "link_catalogalt": {
-                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
             }
 }/>
 <@script>
     function toggle_editor_fields(){
         $(".cms-menu-urlarg-wrap").hide();
         var linkType = $('#type').val();
-        if (linkType == 'link_catalog' || linkType == 'link_catalogalt') {
+        if (linkType == 'link_catalog') {
+            $("#c_caturlfmt_wrap").show();
             $("#c_categoryid_wrap").show();
             $("#c_productid_wrap").show();
         } else if (linkType == 'content'){
@@ -174,6 +177,9 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                 console.log(node["data"]["content"]);
                 $('form#edit_menu_item #content').trumbowyg('html',simple_decode_html(node["data"]["content"]));
             }
+            if(node["data"] && node["data"]["catUrlFmt"]){
+                $('form#edit_menu_item #catUrlFmt').val(node["data"]["catUrlFmt"]);
+            }
             if(node["data"] && node["data"]["productCategoryId"]){
                 $('form#edit_menu_item #productCategoryId').val(node["data"]["productCategoryId"]);
             }
@@ -189,6 +195,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         var path = $('form#edit_menu_item #path').val();
         var type = $('form#edit_menu_item #type').val();
         var content = $('form#edit_menu_item #content').trumbowyg('html');
+        var catUrlFmt = $('form#edit_menu_item #catUrlFmt').val();
         var productCategoryId = $('form#edit_menu_item #productCategoryId').val();
         var productId = $('form#edit_menu_item #productId').val();
         var sel = menuTree.get_selected();
@@ -199,6 +206,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             node["type"] = type;
             node["data"]["path"] = path;
             node["data"]["content"] = simple_encode_html(content);
+            node["data"]["catUrlFmt"] = catUrlFmt;
             node["data"]["productCategoryId"] = productCategoryId;
             node["data"]["productId"] = productId;
             node["icon"] = nodeIcons[type];

@@ -2263,7 +2263,7 @@ It may be used in combination with cms menus:
                                   ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
                                   </@menuitem>
                             <#elseif item["type"]?starts_with("link_catalog")>
-                                  <#local tgtUrl><@catalogUrl type=item["type"][12..] productCategoryId=raw(item.data.productCategoryId!) productId=raw(item.data.productId!) escapeAs="raw"/></#local>
+                                  <#local tgtUrl><@catalogUrl format=raw(item.data.catUrlFmt!) productCategoryId=raw(item.data.productCategoryId!) productId=raw(item.data.productId!) escapeAs="raw"/></#local>
                                   <@menuitem type="link" text=(item.text!) href=tgtUrl itemCount=item["children"]?size>
                                       <@cmsmenu items=item["children"] type=type/>
                                   </@menuitem>
@@ -2299,7 +2299,7 @@ It may be used in combination with cms menus:
                         ${raw(item.data.content!"")?replace("[lt];","<")?replace("[gt];",">")}
                     </@menuitem>
                   <#elseif item["type"]?starts_with("link_catalog")>
-                      <#local tgtUrl><@catalogUrl type=item["type"][12..] productCategoryId=raw(item.data.productCategoryId!) productId=raw(item.data.productId!) escapeAs="raw"/></#local>
+                      <#local tgtUrl><@catalogUrl format=raw(item.data.catUrlFmt!) productCategoryId=raw(item.data.productCategoryId!) productId=raw(item.data.productId!) escapeAs="raw"/></#local>
                       <@menuitem type="link" text=(item.text!) href=tgtUrl itemCount=item["children"]?size>
                           <@cmsmenu items=item["children"] type=type/>
                       </@menuitem>

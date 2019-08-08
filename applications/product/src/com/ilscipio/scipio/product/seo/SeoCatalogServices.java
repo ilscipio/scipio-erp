@@ -949,7 +949,7 @@ public abstract class SeoCatalogServices {
             exporter = new SeoCatalogUrlExporter(dctx.getDelegator(), dctx.getDispatcher(),
                     travConfig, out.getEffWriter());
         } catch (Exception e) {
-            String message = "Error preparing to export alternative URLs: " + e.getMessage();
+            String message = "Error preparing to export alternative URLs for website '" + webSiteId + "': " + e.getMessage();
             Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
             return ServiceUtil.returnError(message);
         }
@@ -960,15 +960,15 @@ public abstract class SeoCatalogServices {
             exporter.traverseCatalogsDepthFirst(prodCatalogList);
             out.processOutput(exporter);
         } catch(Exception e) {
-            String message = "Error exporting alternative URLs: " + e.getMessage();
-            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
+            String message = "Error exporting alternative URLs for website '" + webSiteId + "': " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+ message, module);
             return ServiceUtil.returnError(message);
         }
 
         String resultMsg = exporter.getStats().toMsg(locale);
         Map<String, Object> result = exporter.getStats().toServiceResultSuccessFailure(resultMsg);
         out.populateServiceResult(result);
-        Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXml: Exported alternative URLs: " + resultMsg, module);
+        Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXml: Exported alternative URLs for website '" + webSiteId + "': " + resultMsg, module);
         return result;
     }
 

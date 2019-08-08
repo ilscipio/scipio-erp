@@ -55,7 +55,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                 "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
             },
             "link_catalog": {
-                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}folder"
             }
 }/>
 <@script>
@@ -89,8 +89,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         "link_internal" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
         "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link",
          "content" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o",
-        "link_catalog" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o",
-        "link_catalogalt" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}file-text-o"
+        "link_catalog" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}folder"
     };
     var editorBaseUrl = '<@pageUrl escapeAs='js'>menus</@pageUrl>';
     var menuId='';

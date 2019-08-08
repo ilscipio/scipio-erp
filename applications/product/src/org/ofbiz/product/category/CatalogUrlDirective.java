@@ -80,8 +80,8 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        String type = TransformUtil.getStringArg(args, "type");
-        if ("alt".equals(type)) {
+        String format = TransformUtil.getStringArg(args, "format"); // SCIPIO: supports '@catalogUrl format="alt"' instead of '@catalogAltUrl' to simplify code
+        if ("alt".equals(format)) {
             CatalogAltUrlDirective.INSTANCE.execute(env, args, loopVars, body);
             return;
         }

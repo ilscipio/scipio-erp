@@ -2134,14 +2134,20 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public LocalizedName(Map<String, String> localeValueMap, Locale defaultLocale) {
             this.localeValueMap = new HashMap<>(localeValueMap);
-            this.valueLocaleMap = makeValueLocaleMap(localeValueMap);
-            this.defaultValue = getNameForLocale(defaultLocale);
+            Map<String, Locale> valueLocaleMap = makeValueLocaleMap(localeValueMap);
+            String defaultValue = (defaultLocale != null) ? getNameForLocale(localeValueMap, defaultLocale) : null;
+            if (UtilValidate.isNotEmpty(defaultValue)) {
+                // 2019-08-09: re-insert the default value for default locale because otherwise it may register to another language
+                valueLocaleMap.put(defaultValue, defaultLocale);
+            }
+            this.valueLocaleMap = valueLocaleMap;
+            this.defaultValue = defaultValue;
         }
 
         /**
          * NOTE: the resulting mapping may not be 1-for-1 - depends on the values.
          */
-        static Map<String, Locale> makeValueLocaleMap(Map<String, String> localeValueMap) {
+        private static Map<String, Locale> makeValueLocaleMap(Map<String, String> localeValueMap) {
             Map<String, Locale> valueLocaleMap = new HashMap<>();
             for(Map.Entry<String, String> entry : localeValueMap.entrySet()) {
                 // SPECIAL: duplicates *could* be possible - keep the shortest locale name (most generic)
@@ -2196,6 +2202,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         public String getNameForLocale(Locale locale) {
+            return getNameForLocale(localeValueMap, locale);
+        }
+
+        private static String getNameForLocale(Map<String, String> localeValueMap, Locale locale) {
             String value = localeValueMap.get(locale.toString());
             if (value == null) value = localeValueMap.get(normalizeLocaleStr(locale));
             return value;

@@ -12,19 +12,19 @@ public abstract class CatalogAltUrlSanitizer {
     /**
      * Clean and convert a name to alt url for storage as ALTERNATIVE_URL.
      */
-    public abstract String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo);
+    public abstract String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
      * Clean and convert an id to alt url for storage as ALTERNATIVE_URL - may be called as fallback when
      * no name found (depending on config), or may be left to live.
      */
-    public abstract String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo);
+    public abstract String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
      * Clean and convert a name to alt url for storage as ALTERNATIVE_URL - returns new map with keys converted.
      * NOTE: last, nameIndex and totalNames may be null.
      */
-    public Map<String, String> convertNamesToDbAltUrls(Map<String, String> map, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
+    public Map<String, String> convertNamesToDbAltUrls(Map<String, String> map, CatalogUrlType entityType, SanitizeContext ctxInfo) {
         Map<String, String> newMap = new HashMap<>();
         for(Map.Entry<String, String> entry : map.entrySet()) {
             newMap.put(entry.getKey(), convertNameToDbAltUrl(entry.getValue(), parseLocale(entry.getKey()), entityType, ctxInfo));
@@ -43,7 +43,7 @@ public abstract class CatalogAltUrlSanitizer {
      * More reliable in other methods. See FIXME in SeoCatalogUrlWorker.
      * NOTE: last, nameIndex and totalNames may be null.
      */
-    public abstract String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo);
+    public abstract String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
      * Converts an ID (productId, etc.) directly to a live alt URL part.
@@ -51,7 +51,7 @@ public abstract class CatalogAltUrlSanitizer {
      * only contain simple characters to begin with.
      * NOTE: last, nameIndex and totalNames may be null.
      */
-    public abstract String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo);
+    public abstract String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
      * TODO: REVIEW: this doesn't belong here but it's the only way to make the parsing consistent.
@@ -70,38 +70,46 @@ public abstract class CatalogAltUrlSanitizer {
      * Class to pass arguments to methods above, needed to prevent compatibility breakage.
      * NOTE: Unless otherwise specified, all fields may be null.
      */
-    public static class SanitizeContextInfo implements Serializable {
+    public static class SanitizeContext implements Serializable {
         private Boolean last;
         private Integer nameIndex;
         private Integer totalNames;
 
-        public SanitizeContextInfo(Boolean last, Integer nameIndex, Integer totalNames) {
+        public SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) {
             this.last = last;
             this.nameIndex = nameIndex;
             this.totalNames = totalNames;
         }
 
-        public SanitizeContextInfo() {
+        public SanitizeContext() {
         }
 
-        public static SanitizeContextInfo fromUndefined() {
-            return ReadOnlySanitizeContextInfo.UNDEFINED;
+        public static SanitizeContext undefined() {
+            return ReadOnlySanitizeContext.UNDEFINED;
         }
 
-        public static SanitizeContextInfo fromLast(boolean last) {
-            return last ? ReadOnlySanitizeContextInfo.LAST : ReadOnlySanitizeContextInfo.NON_LAST;
+        public static SanitizeContext lastElem(boolean last) {
+            return last ? ReadOnlySanitizeContext.LAST : ReadOnlySanitizeContext.NON_LAST;
         }
 
-        public static SanitizeContextInfo fromLast() {
-            return ReadOnlySanitizeContextInfo.LAST;
+        public static SanitizeContext lastElem() {
+            return ReadOnlySanitizeContext.LAST;
         }
 
-        public static SanitizeContextInfo fromNonLast() {
-            return ReadOnlySanitizeContextInfo.NON_LAST;
+        public static SanitizeContext nonLastElem() {
+            return ReadOnlySanitizeContext.NON_LAST;
         }
 
         public Boolean getLast() {
             return last;
+        }
+
+        public boolean isLast() {
+            return Boolean.TRUE.equals(last);
+        }
+
+        public boolean isNonLast() {
+            return Boolean.FALSE.equals(last);
         }
 
         public void setLast(Boolean last) {
@@ -124,16 +132,16 @@ public abstract class CatalogAltUrlSanitizer {
             this.totalNames = totalNames;
         }
 
-        public static class ReadOnlySanitizeContextInfo extends SanitizeContextInfo {
-            private static final SanitizeContextInfo UNDEFINED = new ReadOnlySanitizeContextInfo(); // FIXME: should be unmodifiable
-            private static final SanitizeContextInfo LAST = new ReadOnlySanitizeContextInfo(true, null, null); // FIXME: should be unmodifiable
-            private static final SanitizeContextInfo NON_LAST = new ReadOnlySanitizeContextInfo(true, null, null); // FIXME: should be unmodifiable
+        public static class ReadOnlySanitizeContext extends SanitizeContext {
+            private static final SanitizeContext UNDEFINED = new ReadOnlySanitizeContext(); // FIXME: should be unmodifiable
+            private static final SanitizeContext LAST = new ReadOnlySanitizeContext(true, null, null); // FIXME: should be unmodifiable
+            private static final SanitizeContext NON_LAST = new ReadOnlySanitizeContext(false, null, null); // FIXME: should be unmodifiable
 
-            public ReadOnlySanitizeContextInfo(Boolean last, Integer nameIndex, Integer totalNames) {
+            public ReadOnlySanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) {
                 super(last, nameIndex, totalNames);
             }
 
-            public ReadOnlySanitizeContextInfo() {
+            public ReadOnlySanitizeContext() {
             }
 
             @Override

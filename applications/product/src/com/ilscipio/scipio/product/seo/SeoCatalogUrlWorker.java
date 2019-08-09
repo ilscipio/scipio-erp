@@ -437,7 +437,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     public class SeoCatalogAltUrlSanitizer extends CatalogAltUrlSanitizer {
 
         @Override
-        public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
+        public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
 
             String url = getConfig().getAltUrlGenProcessors().processUrl(name);
 
@@ -451,13 +451,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         @Override
-        public String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
+        public String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
             // TODO: REVIEW: leaving this same as live for now... doubtful...
             return convertIdToLiveAltUrl(id, locale, entityType, ctxInfo);
         }
 
         @Override
-        public String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
+        public String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
             // WARN: due to content wrapper the locale might not be the one from the altUrl!!
             // may also be null
 
@@ -475,7 +475,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         @Override
-        public String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
+        public String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
 
             // TODO: REVIEW: this is what the old Seo code did, but it will just not work in the filters...
             // People should not generate DB IDs with spaces
@@ -522,17 +522,17 @@ public class SeoCatalogUrlWorker implements Serializable {
             String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             if (UtilValidate.isNotEmpty(altUrl)) {
                 // FIXME: effective locale might not be same as "locale" variable!
-                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
+                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
                 if (!altUrl.isEmpty()) {
                     catName = altUrl;
 
                     if (!last) {
                         if (getConfig().isCategoryNameAppendId()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
                         }
                     } else {
                         if (getConfig().isCategoryNameAppendIdLast()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
                         }
                     }
                 }
@@ -543,7 +543,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (catName == null) {
             // fallback
-            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
+            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
         }
         return catName;
     }
@@ -838,17 +838,17 @@ public class SeoCatalogUrlWorker implements Serializable {
             String productId = product.getString("productId");
             String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             // FIXME: effective locale might not be same as "locale" variable!
-            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast());
+            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem());
             if (UtilValidate.isNotEmpty(alternativeUrl)) {
                 urlBuilder.append(alternativeUrl);
 
                 if (config.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
                     urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                    urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast()));
+                    urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem()));
                 }
             } else {
                 // FALLBACK ONLY
-                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast()));
+                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem()));
             }
         }
 

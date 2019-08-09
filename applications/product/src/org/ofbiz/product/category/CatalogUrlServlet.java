@@ -381,9 +381,9 @@ public class CatalogUrlServlet extends HttpServlet {
 
         /**
          * SCIPIO: 2017: allows plugging in custom low-level URL builders.
-         * FIXME: poor initialization logic
          */
         private static List<CatalogUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
+        private static final Object urlBuilderFactoriesSyncObj = new Object();
 
         public static CatalogUrlBuilder getDefaultBuilder() {
             return OfbizCatalogUrlBuilder.getInstance();
@@ -397,17 +397,15 @@ public class CatalogUrlServlet extends HttpServlet {
             return getDefaultBuilder();
         }
 
-        /**
-         * @deprecated FIXME: this may need be redesigned with property config due to possible synchronization/ordering issues.
-         */
-        @Deprecated
-        public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder.Factory builderFactory) {
+        public static void registerUrlBuilder(String name, CatalogUrlBuilder.Factory builderFactory) {
             if (urlBuilderFactories.contains(builderFactory)) return;
-            List<CatalogUrlBuilder.Factory> newList = new ArrayList<>(urlBuilderFactories);
-            newList.add(builderFactory);
-            urlBuilderFactories = Collections.unmodifiableList(newList);
+            synchronized (urlBuilderFactoriesSyncObj) {
+                if (urlBuilderFactories.contains(builderFactory)) return;
+                List<CatalogUrlBuilder.Factory> newList = new ArrayList<>(urlBuilderFactories);
+                newList.add(builderFactory);
+                urlBuilderFactories = Collections.unmodifiableList(newList);
+            }
         }
-
 
         public interface Factory {
             /**

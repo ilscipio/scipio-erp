@@ -69,8 +69,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     public static final String REQWRAPPED_ATTR = "_SCPSEO_REQWRAP_";
 
     static {
-        // TODO?: unhardcode via properties?
-        SeoCatalogUrlWorker.registerUrlBuilder();
+        SeoConfig.initStatic();
     }
 
     protected String productRequestPath = "/" + PRODUCT_REQUEST;

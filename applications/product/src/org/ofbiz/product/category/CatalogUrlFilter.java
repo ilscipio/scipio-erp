@@ -1018,6 +1018,7 @@ public class CatalogUrlFilter extends ContextFilter {
          * FIXME: poor initialization logic
          */
         private static List<CatalogAltUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
+        private static final Object urlBuilderFactoriesSyncObj = new Object();
 
         public static CatalogAltUrlBuilder getDefaultBuilder() {
             return OfbizCatalogAltUrlBuilder.getInstance();
@@ -1031,15 +1032,14 @@ public class CatalogUrlFilter extends ContextFilter {
             return getDefaultBuilder();
         }
 
-        /**
-         * @deprecated FIXME: this may need be redesigned with property config due to possible synchronization/ordering issues.
-         */
-        @Deprecated
-        public static synchronized void registerUrlBuilder(String name, CatalogAltUrlBuilder.Factory builderFactory) {
+        public static void registerUrlBuilder(String name, CatalogAltUrlBuilder.Factory builderFactory) {
             if (urlBuilderFactories.contains(builderFactory)) return;
-            List<CatalogAltUrlBuilder.Factory> newList = new ArrayList<>(urlBuilderFactories);
-            newList.add(builderFactory);
-            urlBuilderFactories = Collections.unmodifiableList(newList);
+            synchronized (urlBuilderFactoriesSyncObj) {
+                if (urlBuilderFactories.contains(builderFactory)) return;
+                List<CatalogAltUrlBuilder.Factory> newList = new ArrayList<>(urlBuilderFactories);
+                newList.add(builderFactory);
+                urlBuilderFactories = Collections.unmodifiableList(newList);
+            }
         }
 
         public interface Factory {

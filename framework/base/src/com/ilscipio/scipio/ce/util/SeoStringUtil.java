@@ -17,7 +17,12 @@ public class SeoStringUtil {
     public static final String URL_HYPHEN = "-";
     public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";
     public static final Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
-    public static final char[] dashedArray = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
+    public static final char[] SEPARATOR_CHARS = new char[] {' ',',','.','/','\\','-','_','=','?',';'};
+    @Deprecated
+    public static final char[] dashedArray = SEPARATOR_CHARS;
+    public static final char SEPARATOR = '-';
+    public static final int MAX_URL_PART_LENGTH = 110;
+
 
     /**
      * Generates a hash of a given plainText using ISO_8859_1.
@@ -58,49 +63,68 @@ public class SeoStringUtil {
     }
 
     /**
+     * For legacy reason, this delegates to {@link #constructSeoNameLowerCase}.
+     */
+    public static String constructSeoName(String name) {
+        return constructSeoNameLowerCase(name);
+    }
+
+    public static String constructSeoNameSameCase(String name) {
+        return constructSeoName(name, SEPARATOR, SEPARATOR_CHARS, MAX_URL_PART_LENGTH);
+    }
+
+    public static String constructSeoNameSameCaseNoLimit(String name) {
+        return constructSeoName(name, SEPARATOR, SEPARATOR_CHARS, -1);
+    }
+
+    public static String constructSeoNameLowerCase(String name) {
+        return constructSeoName(name.toLowerCase(), SEPARATOR, SEPARATOR_CHARS, MAX_URL_PART_LENGTH);
+    }
+
+    public static String constructSeoNameLowerCaseNoLimit(String name) {
+        return constructSeoName(name.toLowerCase(), SEPARATOR, SEPARATOR_CHARS, -1);
+    }
+
+    public static String constructSeoNameUpperCase(String name) {
+        return constructSeoName(name.toUpperCase(), SEPARATOR, SEPARATOR_CHARS, MAX_URL_PART_LENGTH);
+    }
+
+    public static String constructSeoNameUpperCaseNoLimit(String name) {
+        return constructSeoName(name.toUpperCase(), SEPARATOR, SEPARATOR_CHARS, -1);
+    }
+
+    /**
      * taken from http://stackoverflow.com/questions/25259/how-does-stackoverflow-generate-its-seo-friendly-urls
      *
      * @param name
      * @return
      */
-    public static String constructSeoName(String name) {
-        if (name == null)
+    public static String constructSeoName(String name, char sep, char[] dashReplaceChars, int maxlen) {
+        if (name == null) {
             return "";
-
-        int maxlen = 110;
-        int len = name.length();
+        }
         boolean prevdash = false;
-
-        StringBuilder sb = new StringBuilder(len);
+        StringBuilder sb = new StringBuilder(name.length());
         char c;
-
-        name = name.toLowerCase();
-
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < name.length(); i++) {
             c = name.charAt(i);
-            if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) {
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
                 sb.append(c);
                 prevdash = false;
-            }
-            // SCIPIO (2019-04-09): Converting c to a String as well otherwise it doesn't work as expected
-            else if ((new String(dashedArray).contains(String.valueOf(c))) && (!prevdash && sb.length() > 0)) {
+            } else if ((new String(dashReplaceChars).contains(String.valueOf(c))) && (!prevdash && sb.length() > 0)) {
                 sb.append('-');
                 prevdash = true;
-            }
-            else if ((int) c >= 128) {
+            } else if ((int) c >= 128) {
                 int prevlen = sb.length();
                 sb.append(remapInternationalCharToAscii(c));
                 if (prevlen != sb.length())
                     prevdash = false;
             }
-            if (i >= maxlen)
+            if (maxlen >= 0 && i >= maxlen) {
                 break;
+            }
         }
-
-        if (prevdash)
-            return sb.toString().substring(0, sb.length() - 1);
-        else
-            return sb.toString();
+        return prevdash ? sb.toString().substring(0, sb.length() - 1) : sb.toString();
     }
 
     /**

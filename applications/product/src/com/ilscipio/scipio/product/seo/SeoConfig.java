@@ -41,6 +41,8 @@ import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.ExtWebappInfo;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -69,8 +71,11 @@ public class SeoConfig {
     static final boolean DEBUG_FORCERELOAD = false;
 
     static {
-        // TODO?: unhardcode via properties?
-        SeoCatalogUrlWorker.registerUrlBuilder();
+        SeoCatalogUrlWorker.initStatic();
+    }
+
+    public static void initStatic() {
+        // formality
     }
 
     /**
@@ -94,6 +99,8 @@ public class SeoConfig {
     private final Map<String, Integer> forwardResponseCodes;
     private final Map<String, UrlProcessors> urlProcessors;
     private final UrlProcessors altUrlGenProcessors;
+    private final SeoCatalogUrlWorker.Factory urlWorkerFactory;
+    private transient SeoCatalogUrlWorker urlWorker = null;
     private final Map<String, List<CharFilter>> charFiltersMap;
     private final List<Pattern> userExceptionPatterns;
     private final Set<String> allowedContextPaths;
@@ -125,11 +132,30 @@ public class SeoConfig {
     private final int defaultRedirectResponseCode;
 
     /**
+     * SCIPIO: Returns config for website.
+     * TODO: currently this always returns default config.
+     */
+    public static SeoConfig getConfig(Delegator delegator, String webSiteId) {
+        // TODO?: website-specific configs
+        SeoConfig config = getCommonConfig();
+        //SeoCatalogUrlWorker.registerConfig(config, delegator, webSiteId);
+        return config;
+    }
+
+    public static SeoConfig getConfig(Delegator delegator, ExtWebappInfo webappInfo) {
+        return getConfig(delegator, (webappInfo != null) ? webappInfo.getWebSiteId() : null);
+    }
+
+    public static SeoConfig getConfig(Delegator delegator, FullWebappInfo webappInfo) {
+        return getConfig(delegator, (webappInfo != null) ? webappInfo.getWebSiteId() : null);
+    }
+
+    /**
      * SCIPIO: Returns the default common config.
+     * Avoid if have a delegator or webSiteId.
      */
     public static SeoConfig getCommonConfig() {
-        if (DEBUG_FORCERELOAD) return readDefaultCommonConfig();
-        else return CommonSeoConfigs.INSTANCE;
+        return DEBUG_FORCERELOAD ? readDefaultCommonConfig() : CommonSeoConfigs.INSTANCE;
     }
 
     /**
@@ -138,15 +164,6 @@ public class SeoConfig {
      */
     public static SeoConfig getDefaultEmptyConfig() {
         return CommonSeoConfigs.EMPTY;
-    }
-
-    /**
-     * SCIPIO: Returns config for website.
-     * TODO: currently this always returns default config.
-     */
-    public static SeoConfig getConfig(Delegator delegator, String webSiteId) {
-        // TODO?: possible website-specific stuff in future
-        return getCommonConfig();
     }
 
     /**
@@ -194,6 +211,7 @@ public class SeoConfig {
         Map<String, Integer> forwardResponseCodes = new HashMap<>();
         Map<String, UrlProcessors> urlProcessors = new HashMap<>();
         UrlProcessors altUrlGenProcessors = UrlProcessors.getDummyProcessors();
+        SeoCatalogUrlWorker.Factory urlWorkerFactory = null;
         Map<String, List<CharFilter>> charFiltersMap = new HashMap<>();
         List<Pattern> userExceptionPatterns = new ArrayList<>();
         Set<String> allowedContextPaths = null;
@@ -458,6 +476,22 @@ public class SeoConfig {
                 Debug.logWarning("No url-processors element found in " + srcInfo, module);
             }
 
+            Element urlHandlersElem = UtilXml.firstChildElement(rootElem, "url-handlers");
+            if (urlHandlersElem != null) {
+                Element urlWorkerElem = UtilXml.firstChildElement(urlHandlersElem, "worker");
+                String factoryClsName = urlWorkerElem.getAttribute("factoryClass");
+                if (UtilValidate.isNotEmpty(factoryClsName)) {
+                    Debug.logInfo("  url worker factory: " + factoryClsName, module);
+                    try {
+                        Class<? extends SeoCatalogUrlWorker.Factory<?>> urlWorkerFactoryCls =
+                                (Class<? extends SeoCatalogUrlWorker.Factory<?>>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
+                        urlWorkerFactory = urlWorkerFactoryCls.newInstance();
+                    } catch (Exception e) {
+                        Debug.logError(e, "Error loading url worker using factory: " + factoryClsName + ": " + e.getMessage(), module);
+                    }
+                }
+            }
+
             // required
             altUrlGenProcessors = urlProcessors.get("alt-url-gen");
             if (altUrlGenProcessors == null) {
@@ -484,6 +518,7 @@ public class SeoConfig {
         this.charFiltersMap = charFiltersMap;
         this.urlProcessors = urlProcessors;
         this.altUrlGenProcessors = altUrlGenProcessors;
+        this.urlWorkerFactory = urlWorkerFactory;
         this.userExceptionPatterns = userExceptionPatterns;
         this.allowedContextPaths = allowedContextPaths;
         this.specialProductIds = specialProductIds;
@@ -657,6 +692,33 @@ public class SeoConfig {
      */
     public UrlProcessors getAltUrlGenProcessors() {
         return altUrlGenProcessors;
+    }
+
+    /**
+     * Returns the SeoCatalogUrlWorker factory to be used.
+     * In stock Scipio this defaults to <code>com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker$Factory</code>.
+     */
+    public SeoCatalogUrlWorker.Factory getUrlWorkerFactory() {
+        return urlWorkerFactory;
+    }
+
+    /**
+     * Returns the SeoCatalogUrlWorker factory to be used.
+     * In stock Scipio this defaults to <code>com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker</code>.
+     * <p>
+     * FIXME?: This currently creates a circular dependency between SeoConfig and SeoCatalogUrlWorker because the worker
+     * will store or access the config... if problems, just create a cache
+     */
+    public SeoCatalogUrlWorker getUrlWorker() {
+        SeoCatalogUrlWorker urlWorker = this.urlWorker;
+        if (urlWorker == null) {
+            synchronized(this) {
+                if (urlWorker == null && getUrlWorkerFactory() != null) {
+                    urlWorker = getUrlWorkerFactory().getUrlWorker(this);
+                }
+            }
+        }
+        return urlWorker;
     }
 
     /**

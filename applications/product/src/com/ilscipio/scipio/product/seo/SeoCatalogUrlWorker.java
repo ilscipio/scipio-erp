@@ -87,11 +87,22 @@ public class SeoCatalogUrlWorker implements Serializable {
 
     public static final String DEFAULT_CONFIG_RESOURCE = "SeoConfigUiLabels";
 
-    private static final SeoCatalogUrlWorker DEFAULT_INSTANCE = new SeoCatalogUrlWorker();
-
     // TODO: in production, these cache can be tweaked with non-soft refs, limits and expire time
     private static final UtilCache<String, AltUrlPartResults> productAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.product.alturl.part", true);
     private static final UtilCache<String, AltUrlPartResults> categoryAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.category.alturl.part", true);
+
+    static {
+        CatalogUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
+        CatalogAltUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
+    }
+
+    public static void initStatic() {
+        // formality
+    }
+
+    private static final class Instances {
+        private static final SeoCatalogUrlWorker DEFAULT = new SeoCatalogUrlWorker();
+    }
 
     // trying to avoid this if possible... if needed, has to be configurable
 //    /**
@@ -141,22 +152,57 @@ public class SeoCatalogUrlWorker implements Serializable {
         this.config = config;
         this.configResourceName = DEFAULT_CONFIG_RESOURCE;
         this.urlSuffix = config.getSeoUrlSuffix() != null ? config.getSeoUrlSuffix() : "";
-        this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
-        this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
-        this.catalogAltUrlSanitizer = new SeoCatalogAltUrlSanitizer();
+        this.catalogUrlBuilder = createCatalogUrlBuilder();
+        this.catalogAltUrlBuilder = createCatalogAltUrlBuilder();
+        this.catalogAltUrlSanitizer = createCatalogAltUrlSanitizer();
     }
+
     protected SeoCatalogUrlWorker() {
         this(SeoConfig.getCommonConfig());
     }
 
+    public static class Factory<T extends SeoCatalogUrlWorker> implements Serializable {
+        public static final Factory<SeoCatalogUrlWorker> DEFAULT = new Factory<>();
+        public SeoCatalogUrlWorker getUrlWorker(SeoConfig config) {
+            return new SeoCatalogUrlWorker(config);
+        }
+    }
+
+    protected SeoCatalogUrlBuilder createCatalogUrlBuilder() {
+        return new SeoCatalogUrlBuilder();
+    }
+
+    protected SeoCatalogAltUrlBuilder createCatalogAltUrlBuilder() {
+        return new SeoCatalogAltUrlBuilder();
+    }
+
+    protected CatalogAltUrlSanitizer createCatalogAltUrlSanitizer() {
+        return new SeoCatalogAltUrlSanitizer();
+    }
+
     /**
-     * TODO: to be removed later.
+     * Returns an instance with possible website-specific configuration.
      */
-    @SuppressWarnings("deprecation")
-    static void registerUrlBuilder() {
-        // TODO?: unhardcode via properties?
-        CatalogUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
-        CatalogAltUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
+    public static SeoCatalogUrlWorker getInstance(Delegator delegator, String webSiteId) {
+        return getInstance(SeoConfig.getConfig(delegator, webSiteId), delegator, webSiteId);
+    }
+
+    /**
+     * Returns an instance with possible website-specific configuration.
+     */
+    public static SeoCatalogUrlWorker getInstance(SeoConfig config, Delegator delegator, String webSiteId) {
+        return config.getUrlWorker();
+    }
+
+    /**
+     * Returns an instance with possible website-specific configuration IF it is
+     * enabled for this website/context, otherwise null.
+     */
+    public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
+                Delegator delegator, String contextPath, String webSiteId) {
+        SeoConfig config = SeoConfig.getConfig(delegator, webSiteId);
+        if (!config.isSeoUrlEnabled(contextPath, webSiteId)) return null;
+        return config.getUrlWorker();
     }
 
     /**
@@ -164,45 +210,19 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
     public static SeoCatalogUrlWorker getDefaultInstance(Delegator delegator) {
         if (SeoConfig.DEBUG_FORCERELOAD) return createInstanceDeep(delegator, null);
-        else return DEFAULT_INSTANCE;
-    }
-
-    /**
-     * Returns an instance with possible website-specific configuration.
-     * <p>
-     * TODO: currently only returns default instance, inevitably this will change.
-     */
-    public static SeoCatalogUrlWorker getInstance(Delegator delegator, String webSiteId) {
-        // TODO: this should return different builder depending on store and config
-        return getDefaultInstance(delegator);
-    }
-
-    /**
-     * Returns an instance with possible website-specific configuration IF it is
-     * enabled for this website/context, otherwise null.
-     * <p>
-     * TODO: currently only returns default instance, inevitably this will change.
-     */
-    public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
-                Delegator delegator, String contextPath, String webSiteId) {
-        if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
-        // TODO: should return different builder depending on store and config
-        return getDefaultInstance(delegator);
+        else return Instances.DEFAULT;
     }
 
     /**
      * Force create new instance - for debugging only!
-     * <p>
-     * TODO: currently only returns default instance, inevitably this will change.
      */
     public static SeoCatalogUrlWorker createInstance(Delegator delegator, String webSiteId) {
-        return new SeoCatalogUrlWorker();
+        SeoConfig config = SeoConfig.getConfig(delegator, webSiteId);
+        return config.getUrlWorkerFactory().getUrlWorker(config);
     }
 
     /**
      * Force create new instance deep - for debugging only!
-     * <p>
-     * TODO: currently only returns default instance, inevitably this will change.
      */
     public static SeoCatalogUrlWorker createInstanceDeep(Delegator delegator, String webSiteId) {
         return new SeoCatalogUrlWorker(SeoConfig.createConfig(delegator, webSiteId));
@@ -218,13 +238,15 @@ public class SeoCatalogUrlWorker implements Serializable {
         public static BuilderFactory getInstance() { return INSTANCE; }
         @Override
         public CatalogUrlBuilder getCatalogUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo) {
-            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
-            return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogUrlBuilder();
+            SeoConfig config = SeoConfig.getConfig(delegator, targetWebappInfo);
+            if (!config.isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
+            return SeoCatalogUrlWorker.getInstance(config, delegator, targetWebappInfo.getWebSiteId()).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo) {
-            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
-            return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogAltUrlBuilder();
+            SeoConfig config = SeoConfig.getConfig(delegator, targetWebappInfo);
+            if (!config.isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
+            return SeoCatalogUrlWorker.getInstance(config, delegator, targetWebappInfo.getWebSiteId()).getCatalogAltUrlBuilder();
         }
     }
 
@@ -415,7 +437,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     public class SeoCatalogAltUrlSanitizer extends CatalogAltUrlSanitizer {
 
         @Override
-        public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType) {
+        public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
 
             String url = getConfig().getAltUrlGenProcessors().processUrl(name);
 
@@ -429,13 +451,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         @Override
-        public String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType) {
+        public String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
             // TODO: REVIEW: leaving this same as live for now... doubtful...
-            return convertIdToLiveAltUrl(id, locale, entityType);
+            return convertIdToLiveAltUrl(id, locale, entityType, ctxInfo);
         }
 
         @Override
-        public String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType) {
+        public String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
             // WARN: due to content wrapper the locale might not be the one from the altUrl!!
             // may also be null
 
@@ -453,7 +475,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         @Override
-        public String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType) {
+        public String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContextInfo ctxInfo) {
 
             // TODO: REVIEW: this is what the old Seo code did, but it will just not work in the filters...
             // People should not generate DB IDs with spaces
@@ -461,8 +483,8 @@ public class SeoCatalogUrlWorker implements Serializable {
 
             return id;
         }
-
     }
+
 
     /*
      * *****************************************************
@@ -500,17 +522,17 @@ public class SeoCatalogUrlWorker implements Serializable {
             String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             if (UtilValidate.isNotEmpty(altUrl)) {
                 // FIXME: effective locale might not be same as "locale" variable!
-                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY);
+                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
                 if (!altUrl.isEmpty()) {
                     catName = altUrl;
 
                     if (!last) {
                         if (getConfig().isCategoryNameAppendId()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
                         }
                     } else {
                         if (getConfig().isCategoryNameAppendIdLast()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
                         }
                     }
                 }
@@ -521,7 +543,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (catName == null) {
             // fallback
-            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast(last));
         }
         return catName;
     }
@@ -816,17 +838,17 @@ public class SeoCatalogUrlWorker implements Serializable {
             String productId = product.getString("productId");
             String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             // FIXME: effective locale might not be same as "locale" variable!
-            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT);
+            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast());
             if (UtilValidate.isNotEmpty(alternativeUrl)) {
                 urlBuilder.append(alternativeUrl);
 
                 if (config.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
                     urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                    urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT));
+                    urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast()));
                 }
             } else {
                 // FALLBACK ONLY
-                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT));
+                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContextInfo.fromLast()));
             }
         }
 

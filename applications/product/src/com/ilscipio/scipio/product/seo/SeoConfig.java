@@ -264,14 +264,20 @@ public class SeoConfig {
 
                         categoryNameEnabled = booleanSetting(catUrlElem, "category-name", categoryNameEnabled);
 
-                        seoUrlSuffix = UtilXml.childElementValue(catUrlElem, "category-url-suffix", null);
+                        seoUrlSuffix = UtilXml.childElementValue(catUrlElem, "seo-url-suffix", null);
+                        if (UtilValidate.isEmpty(seoUrlSuffix)) {
+                            seoUrlSuffix = UtilXml.childElementValue(catUrlElem, "category-url-suffix", null); // DEPRECATED: legacy name
+                        }
                         if (UtilValidate.isNotEmpty(seoUrlSuffix)) {
                             seoUrlSuffix = seoUrlSuffix.trim();
                             if (seoUrlSuffix.contains("/")) {
                                 seoUrlSuffix = null;
                             }
                         }
-                        Debug.logInfo("  category-url-suffix: " + seoUrlSuffix, module);
+                        if (UtilValidate.isEmpty(seoUrlSuffix)) {
+                            seoUrlSuffix = null; // for legacy code compatibility
+                        }
+                        Debug.logInfo("  seo-url-suffix: " + seoUrlSuffix, module);
 
                         categoryNameMaxLength = integerSetting(catUrlElem, "category-name-max-length", null, false);
                         productNameMaxLength = integerSetting(catUrlElem, "product-name-max-length", null, false);

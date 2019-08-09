@@ -72,7 +72,10 @@ code package.
         <propertyref name="ivy.settings.file"/>
         <propertyref name="checkreqs.ran"/>
     </propertyset>
-    
+
+    <!-- Random seed, workaround for lockups on some systems -->
+    <property name="scipio.exec.os.linux.randseed" value="file:///dev/./urandom"/>
+
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
         a file named "build-main-early.xml" in its folder, which will be imported into
         the main build, supporting plugin-like additions to root build.xml.
@@ -1109,8 +1112,7 @@ code package.
     <!-- Start and Stop OFBiz                                                        -->
     <!-- ================================================================== -->
 
-    <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) 
-        TODO?: is not as versatile or friendly as it could be; didn't want to refactor all the task xml at this time -->
+    <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) -->
     <macrodef name="exec-scipio-jar">
         <attribute name="action" default=""/>
         <attribute name="fork" default="true"/>
@@ -1137,54 +1139,43 @@ code package.
                 <equals arg1="@{action}" arg2="load-data"/>
                 <then><var name="exec-scipio-jar.component" value="${component}" if:set="component"/></then>
             </if>
-            <!-- Main invocation -->
-            <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
+            <var name="scipio.exec.os.linux.randseed.set" unset="true"/>
+            <condition property="scipio.exec.os.linux.randseed.set">
+                <and>
+                    <os family="unix"/>
+                    <not><equals arg1="${scipio.exec.os.linux.randseed}" arg2=""/></not>
+                    <not><equals arg1="${scipio.exec.os.linux.randseed}" arg2="-"/></not>
+                </and>
+            </condition>
+            <var name="scipio.exec.secure" unset="true"/>
+            <condition property="scipio.exec.secure">
                 <equals arg1="@{secure}" arg2="true"/>
-                <then>
-                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
-                        <jvmarg value="${memory.initial.param}"/>
-                        <jvmarg value="${memory.max.param}"/>
-                        <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-                        <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-                        <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-                        <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-                        <!-- SCIPIO: solr home -->
-                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
-                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
-                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
-                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
-                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
-                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
-                        <syspropertyset>
-                            <propertyref prefix="scipio."/>
-                        </syspropertyset>
-                        <arg value="${exec-scipio-jar.action}" if:set="exec-scipio-jar.action"/>
-                        <arg value="component=${exec-scipio-jar.component}" if:set="exec-scipio-jar.component"/>
-                        <args/>
-                    </java>
-                </then>
-                <else>
-                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
-                        <jvmarg value="${memory.initial.param}"/>
-                        <jvmarg value="${memory.max.param}"/>
-                        <!-- SCIPIO: solr home -->
-                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
-                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
-                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
-                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
-                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
-                        <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
-                        <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
-                        <syspropertyset>
-                            <propertyref prefix="scipio."/>
-                        </syspropertyset>
-                        <arg value="@{action}" if:set="exec-scipio-jar.action"/>
-                        <arg value="component=${component}" if:set="exec-scipio-jar.component"/>
-                        <args/>
-                    </java>
-                </else>
-            </if>
+            </condition>
+            <!-- Main invocation -->
+            <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
+                <jvmarg value="${memory.initial.param}"/>
+                <jvmarg value="${memory.max.param}"/>
+                <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar" if:set="scipio.exec.secure"/>
+                <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt" if:set="scipio.exec.secure"/>
+                <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt" if:set="scipio.exec.secure"/>
+                <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt" if:set="scipio.exec.secure"/>
+                <!-- SCIPIO: random lockup workaround -->
+                <jvmarg value="-Djava.security.egd=${scipio.exec.os.linux.randseed}" if:set="scipio.exec.os.linux.randseed.set"/>
+                <!-- SCIPIO: solr home -->
+                <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+                <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
+                <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
+                <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                <!-- SCIPIO: Uncomment to specify a java.util.logging config for Tomcat (non-log4j)
+                <jvmarg value="-Djava.util.logging.config.file=${ofbiz.home.dir}/framework/base/config/logging.properties"/>-->
+                <syspropertyset>
+                    <propertyref prefix="scipio."/>
+                </syspropertyset>
+                <arg value="@{action}" if:set="exec-scipio-jar.action"/>
+                <arg value="component=${component}" if:set="exec-scipio-jar.component"/>
+                <args/>
+            </java>
         </sequential>
     </macrodef>
     

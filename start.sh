@@ -21,10 +21,11 @@ rm -f $OFBIZ_LOG
 #IPADDR=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 #RMIIF="-Djava.rmi.server.hostname=$IPADDR"
 MEMIF="-Xms128M -Xmx3512M"
+RNDFIX="-Djava.security.egd=file:///dev/./urandom"
 #JMX="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=33333 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 #MISC="-Duser.language=en"
 MISC="-Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/ -Dsolr.lock.type=single"
-VMARGS="$MEMIF $MISC $JMX $DEBUG $RMIIF"
+VMARGS="$MEMIF $RNDFIX $MISC $JMX $DEBUG $RMIIF"
 
 # Worldpay Config
 #VMARGS="-Xbootclasspath/p:applications/accounting/lib/cryptix.jar $VMARGS"

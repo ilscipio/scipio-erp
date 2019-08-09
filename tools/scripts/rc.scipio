@@ -30,7 +30,7 @@ SCIPIO_HOME=/home/scipio/scipioce
 JAVA_VMOPTIONS="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
 
 # Java arguments
-JAVA_ARGS="-jar ofbiz.jar"
+JAVA_ARGS="-Djava.security.egd=file:///dev/./urandom -jar ofbiz.jar"
 
 # *nix user ofbiz should run as (you must create this user first)
 SCIPIO_USER=scipio

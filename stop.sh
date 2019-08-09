@@ -12,5 +12,5 @@ else
   JAVA=java
 fi
 
-$JAVA -jar ofbiz.jar -shutdown
+$JAVA -Djava.security.egd=file:///dev/./urandom -jar ofbiz.jar -shutdown
 

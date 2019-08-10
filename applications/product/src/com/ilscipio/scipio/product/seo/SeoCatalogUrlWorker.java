@@ -1709,13 +1709,14 @@ public class SeoCatalogUrlWorker implements Serializable {
         List<EntityCondition> condList = new ArrayList<>();
         int lastIndex = altUrl.lastIndexOf('-');
         while(lastIndex > 0) {
-            if (lastIndex >= (altUrl.length() - 1)) continue; // bad format, missing id
             String name = altUrl.substring(0, lastIndex);
             String id = altUrl.substring(lastIndex + 1);
-            condList.add(EntityCondition.makeCondition(
+            if (!id.isEmpty()) { // 2019-08-09: if ID is empty, we have a URL that ends with a dash ('-'); covered for backward-compat below
+                condList.add(EntityCondition.makeCondition(
                         EntityCondition.makeCondition(textField, EntityOperator.LIKE, name),
                         EntityOperator.AND,
                         EntityCondition.makeCondition(idField, id)));
+            }
             lastIndex = altUrl.lastIndexOf('-', lastIndex - 1);
         }
         if (!exactOnly) {

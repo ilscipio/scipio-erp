@@ -479,15 +479,17 @@ public class SeoConfig {
             Element urlHandlersElem = UtilXml.firstChildElement(rootElem, "url-handlers");
             if (urlHandlersElem != null) {
                 Element urlWorkerElem = UtilXml.firstChildElement(urlHandlersElem, "worker");
-                String factoryClsName = urlWorkerElem.getAttribute("factoryClass");
-                if (UtilValidate.isNotEmpty(factoryClsName)) {
-                    Debug.logInfo("  url worker factory: " + factoryClsName, module);
-                    try {
-                        Class<? extends SeoCatalogUrlWorker.Factory<?>> urlWorkerFactoryCls =
-                                (Class<? extends SeoCatalogUrlWorker.Factory<?>>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
-                        urlWorkerFactory = urlWorkerFactoryCls.newInstance();
-                    } catch (Exception e) {
-                        Debug.logError(e, "Error loading url worker using factory: " + factoryClsName + ": " + e.getMessage(), module);
+                if (urlWorkerElem != null) {
+                    String factoryClsName = urlWorkerElem.getAttribute("factoryClass");
+                    if (UtilValidate.isNotEmpty(factoryClsName)) {
+                        Debug.logInfo("  url worker factory: " + factoryClsName, module);
+                        try {
+                            Class<? extends SeoCatalogUrlWorker.Factory<?>> urlWorkerFactoryCls =
+                                    (Class<? extends SeoCatalogUrlWorker.Factory<?>>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
+                            urlWorkerFactory = urlWorkerFactoryCls.newInstance();
+                        } catch (Exception e) {
+                            Debug.logError(e, "Error loading url worker using factory: " + factoryClsName + ": " + e.getMessage(), module);
+                        }
                     }
                 }
             }
@@ -705,16 +707,21 @@ public class SeoConfig {
     /**
      * Returns the SeoCatalogUrlWorker factory to be used.
      * In stock Scipio this defaults to <code>com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker</code>.
-     * <p>
+     * WARNING: This method may be removed in the future.
      * FIXME?: This currently creates a circular dependency between SeoConfig and SeoCatalogUrlWorker because the worker
-     * will store or access the config... if problems, just create a cache
+     *  will store or access the config... if problems, just create a cache or a cache class for SeoCatalogUrlWorker.
      */
     public SeoCatalogUrlWorker getUrlWorker() {
         SeoCatalogUrlWorker urlWorker = this.urlWorker;
         if (urlWorker == null) {
             synchronized(this) {
-                if (urlWorker == null && getUrlWorkerFactory() != null) {
-                    urlWorker = getUrlWorkerFactory().getUrlWorker(this);
+                if (urlWorker == null) {
+                    if (getUrlWorkerFactory() != null) {
+                        urlWorker = getUrlWorkerFactory().getUrlWorker(this);
+                    } else {
+                        // TODO/FIXME: Before this fallback we should check the factory defined on the common/default SeoConfig...
+                        urlWorker = SeoCatalogUrlWorker.Factory.getDefault().getUrlWorker(this);
+                    }
                 }
             }
         }

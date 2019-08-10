@@ -162,7 +162,8 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
 
     public static class Factory<T extends SeoCatalogUrlWorker> implements Serializable {
-        public static final Factory<SeoCatalogUrlWorker> DEFAULT = new Factory<>();
+        protected static final Factory<SeoCatalogUrlWorker> DEFAULT = new Factory<>();
+        public static Factory<SeoCatalogUrlWorker> getDefault() { return DEFAULT; }
         public SeoCatalogUrlWorker getUrlWorker(SeoConfig config) {
             return new SeoCatalogUrlWorker(config);
         }
@@ -191,17 +192,6 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returns an instance with possible website-specific configuration.
      */
     public static SeoCatalogUrlWorker getInstance(SeoConfig config, Delegator delegator, String webSiteId) {
-        return config.getUrlWorker();
-    }
-
-    /**
-     * Returns an instance with possible website-specific configuration IF it is
-     * enabled for this website/context, otherwise null.
-     */
-    public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
-                Delegator delegator, String contextPath, String webSiteId) {
-        SeoConfig config = SeoConfig.getConfig(delegator, webSiteId);
-        if (!config.isSeoUrlEnabled(contextPath, webSiteId)) return null;
         return config.getUrlWorker();
     }
 

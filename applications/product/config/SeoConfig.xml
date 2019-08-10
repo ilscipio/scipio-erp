@@ -125,7 +125,14 @@
         <!-- The legacy CatalogUrlFilter post-filter - may be good to leave for compatibility and extra safety -->
         <processor type="static-method">org.ofbiz.common.UrlServletHelper#invalidCharacter</processor>
     </url-processors>
-    
+
+    <!-- Runtime URL handlers (builders, sanitizers) -->
+    <url-handlers>
+        <!-- Main worker, must extends com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker
+            Default implementation: com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker -->
+        <!--<worker factoryClass="com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker$Factory"/>-->
+    </url-handlers>
+
     <!-- Simple regex character filters, applied with "replaceAll" in the order defined.
         NOTE: These could be done URLRewriteFilter but might be advantage to have regexp specific to prod/catalog links -->
     <char-filters name="default">

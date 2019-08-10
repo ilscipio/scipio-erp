@@ -438,16 +438,9 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         @Override
         public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
-
-            String url = getConfig().getAltUrlGenProcessors().processUrl(name);
-
-            if (entityType == CatalogUrlType.PRODUCT) {
-                url = getConfig().limitProductNameLength(url);
-            } else if (entityType == CatalogUrlType.CATEGORY) {
-                url = getConfig().limitCategoryNameLength(url);
-            }
-
-            return url;
+            name = processNameToAltUrl(name, locale, entityType, ctxInfo);
+            name = normalizeAltUrl(name, locale, entityType, ctxInfo);
+            return name;
         }
 
         @Override
@@ -460,7 +453,6 @@ public class SeoCatalogUrlWorker implements Serializable {
         public String sanitizeAltUrlFromDb(String altUrl, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
             // WARN: due to content wrapper the locale might not be the one from the altUrl!!
             // may also be null
-
             if (altUrl == null) return "";
 
             // 2017: LEAVE THIS METHOD EMPTY - allows better DB queries if no post-processing.
@@ -470,21 +462,41 @@ public class SeoCatalogUrlWorker implements Serializable {
             // the reason this existed in the first place was because users can input garbage
             // through the UI, could could prevent in other ways...
             //altUrl = UrlServletHelper.invalidCharacter(altUrl); // (stock ofbiz)
-
             return altUrl;
         }
 
         @Override
         public String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
-
             // TODO: REVIEW: this is what the old Seo code did, but it will just not work in the filters...
             // People should not generate DB IDs with spaces
             //return id.trim().replaceAll(" ", SeoStringUtil.URL_HYPHEN);
-
             return id;
         }
-    }
 
+        protected String processNameToAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
+            return getConfig().getAltUrlGenProcessors().processUrl(name);
+        }
+
+        protected String normalizeAltUrl(String name, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo) {
+            if (entityType == CatalogUrlType.PRODUCT) {
+                name = truncateAltUrl(name, getConfig().getProductNameMaxLength());
+            } else if (entityType == CatalogUrlType.CATEGORY) {
+                name = truncateAltUrl(name, getConfig().getCategoryNameMaxLength());
+            }
+            return trimAltUrl(name);
+        }
+
+        protected String truncateAltUrl(String name, Integer maxLength) {
+            if (name == null || maxLength == null || maxLength < 0 || name.length() <= maxLength) {
+                return name;
+            }
+            return name.substring(0, maxLength);
+        }
+
+        protected String trimAltUrl(String name) {
+            return SeoStringUtil.trimSeoName(name);
+        }
+    }
 
     /*
      * *****************************************************

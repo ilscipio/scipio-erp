@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 
 /**
@@ -201,6 +202,21 @@ public class SeoStringUtil {
         else {
             return "";
         }
+    }
+
+    public static String trimSeoName(String name) { // often needed after truncate
+        return StringUtils.stripEnd(name, "-");
+    }
+
+    /**
+     * Truncates and trims the SEO name.
+     * @see #trimSeoName
+     */
+    public static String truncateSeoName(String name, Integer maxLength) {
+        if (name == null || maxLength == null || maxLength < 0 || name.length() <= maxLength) {
+            return name;
+        }
+        return trimSeoName(name.substring(0, maxLength));
     }
 
     public static String calculateRuntime(long startTime, long endTime) {

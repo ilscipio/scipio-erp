@@ -1785,6 +1785,23 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </#if>
 
 <#if debugMode>
+<@section title="Request info">
+  <ul>
+    <li>HttpServletRequest.getServerPort: ${request.getServerPort()!"[missing]"}</li>
+    <li>HttpServletRequest.isSecure: ${request.isSecure()?string}</li>
+    <li>Request headers:
+        <ul>
+          <#list request.getHeaderNames() as headerName>
+          <li>${headerName}: ${escapeVal(request.getHeader(raw(headerName))!, 'html')}</li>
+          </#list>
+        </ul>
+     </li>
+  </ul>
+</@section>
+</#if>
+
+
+<#if debugMode>
 <@section title="FTL request-scope stacks">
   <@section title="Basic stack">
     <#macro printTestStack>

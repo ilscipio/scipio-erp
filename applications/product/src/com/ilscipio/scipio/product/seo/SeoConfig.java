@@ -34,15 +34,19 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.ilscipio.scipio.ce.util.SeoStringUtil;
+import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.WebAppUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -61,6 +65,9 @@ import com.ilscipio.scipio.product.seo.UrlProcessors.UrlProcessor;
 public class SeoConfig {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final UtilCache<String, SeoConfig> webSiteConfigCache = UtilCache.createUtilCache("scipio.seo.config.website");
+    private static final Object webSiteConfigCacheSyncObj = new Object();
 
     public static final String SEO_CONFIG_FILENAME = "SeoConfig.xml";
     public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";
@@ -82,7 +89,6 @@ public class SeoConfig {
      * SCIPIO: default/common configs holder - eliminates the need for synchronized/volatile/etc. - faster.
      */
     private static class CommonSeoConfigs {
-        private static final SeoConfig INSTANCE = readDefaultCommonConfig();
         private static final SeoConfig EMPTY = new SeoConfig();
     }
 
@@ -136,9 +142,34 @@ public class SeoConfig {
      * TODO: currently this always returns default config.
      */
     public static SeoConfig getConfig(Delegator delegator, String webSiteId) {
-        // TODO?: website-specific configs
-        SeoConfig config = getCommonConfig();
-        //SeoCatalogUrlWorker.registerConfig(config, delegator, webSiteId);
+        if (UtilValidate.isEmpty(webSiteId)) {
+            webSiteId = null;
+        }
+        String key = ((delegator != null) ? delegator.getDelegatorName() : "default") + "::" + webSiteId;
+        SeoConfig config = webSiteConfigCache.get(key);
+        if (DEBUG_FORCERELOAD || config == null) {
+            synchronized(webSiteConfigCacheSyncObj) {
+                if (DEBUG_FORCERELOAD || config == null) {
+                    if (UtilValidate.isNotEmpty(webSiteId)) { // NOTE: This is duplicated in createConfig below
+                        Map<String, String> contextParams = WebAppUtil.getWebappContextParamsSafe(webSiteId);
+                        String seoConfigLoc = contextParams.get("scpSeoConfigLoc");
+                        if (UtilValidate.isNotEmpty(seoConfigLoc)) {
+                            config = readConfig(seoConfigLoc, delegator, webSiteId);
+                        }
+                        if (config == null) {
+                            config = getConfig(delegator, (String) null); // get the common one (reuse from cache)
+                        }
+                    } else if (delegator != null && !"default".equals(delegator.getDelegatorName())) {
+                        config = getConfig(null, (String) null); // get the common one (reuse from cache)
+                    } else {
+                        config = readConfig(SEO_CONFIG_FILENAME, delegator, webSiteId); // the default/common config (physical read)
+                    }
+                    if (!DEBUG_FORCERELOAD) {
+                        webSiteConfigCache.put(key, config);
+                    }
+                }
+            }
+        }
         return config;
     }
 
@@ -155,7 +186,8 @@ public class SeoConfig {
      * Avoid if have a delegator or webSiteId.
      */
     public static SeoConfig getCommonConfig() {
-        return DEBUG_FORCERELOAD ? readDefaultCommonConfig() : CommonSeoConfigs.INSTANCE;
+        //return DEBUG_FORCERELOAD ? readDefaultCommonConfig() : CommonSeoConfigs.COMMON;
+        return getConfig((Delegator) null, (String) null);
     }
 
     /**
@@ -167,11 +199,21 @@ public class SeoConfig {
     }
 
     /**
-     * SCIPIO: Force create config - for debugging only!
+     * SCIPIO: Force create config - for debugging only (may create needless duplicates).
      */
     public static SeoConfig createConfig(Delegator delegator, String webSiteId) {
-        // TODO?: possible website-specific stuff in future
-        return readDefaultCommonConfig();
+        SeoConfig config = null;
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            Map<String, String> contextParams = WebAppUtil.getWebappContextParamsSafe(webSiteId);
+            String seoConfigLoc = contextParams.get("scpSeoConfigLoc");
+            if (UtilValidate.isNotEmpty(seoConfigLoc)) {
+                config = readConfig(seoConfigLoc, delegator, webSiteId);
+            }
+        }
+        if (config == null) {
+            config = readConfig(SEO_CONFIG_FILENAME, delegator, webSiteId); // get the common one (reuse from cache)
+        }
+        return config;
     }
 
     protected SeoConfig() {
@@ -553,31 +595,19 @@ public class SeoConfig {
         this.isInitialed = isInitialed;
     }
 
-    private static SeoConfig readDefaultCommonConfig() {
-        FileInputStream configFileIS = null;
+    private static SeoConfig readConfig(String configFile, Delegator delegator, String webSiteId) {
         SeoConfig config = null;
         try {
-            URL seoConfigFilename = UtilURL.fromResource(SEO_CONFIG_FILENAME);
+            URL seoConfigFilename = UtilURL.fromResource(configFile);
             Document configDoc = UtilXml.readXmlDocument(seoConfigFilename, false);
-            Element rootElement = configDoc.getDocumentElement();
-
-            config = new SeoConfig(null, rootElement, configDoc, seoConfigFilename.toString());
-        } catch (SAXException e) {
-            Debug.logError(e, module);
-        } catch (ParserConfigurationException e) {
-            Debug.logError(e, module);
-        } catch (IOException e) {
-            Debug.logError(e, module);
-        } finally {
-            if (configFileIS != null) {
-                try {
-                    configFileIS.close();
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                }
+            if (configDoc != null) {
+                Element rootElement = configDoc.getDocumentElement();
+                config = new SeoConfig(webSiteId, rootElement, configDoc, seoConfigFilename.toString());
             }
+        } catch (Exception e) {
+            Debug.logError(e, "Seo: Error reading SEO config file [" + configFile + "]: " + e.getMessage(), module);
         }
-        return config != null ? config : new SeoConfig(null, false);
+        return config;
     }
 
     /**
@@ -829,24 +859,26 @@ public class SeoConfig {
         return categoryNameMaxLength;
     }
 
+    /**
+     * @deprecated use: <code>SeoStringUtil.truncateSeoName(categoryName, config.getCategoryNameMaxLength())</code>
+     * because the caller will be SeoCatalogUrlWorker or another and its behavior should be overridable.
+     */
+    @Deprecated
     public String limitCategoryNameLength(String categoryName) {
-        if (categoryNameMaxLength != null && categoryName != null &&
-                categoryName.length() > categoryNameMaxLength) {
-            return categoryName.substring(0, categoryNameMaxLength);
-        }
-        return categoryName;
+        return SeoStringUtil.truncateSeoName(categoryName, getCategoryNameMaxLength());
     }
 
     public Integer getProductNameMaxLength() {
         return productNameMaxLength;
     }
 
+    /**
+     * @deprecated use: <code>SeoStringUtil.truncateSeoName(categoryName, config.getProductNameMaxLength())</code>
+     * because the caller will be SeoCatalogUrlWorker or another and its behavior should be overridable.
+     */
+    @Deprecated
     public String limitProductNameLength(String productName) {
-        if (productNameMaxLength != null && productName != null &&
-                productName.length() > productNameMaxLength) {
-            return productName.substring(0, productNameMaxLength);
-        }
-        return productName;
+        return SeoStringUtil.truncateSeoName(productName, getProductNameMaxLength());
     }
 
     /**

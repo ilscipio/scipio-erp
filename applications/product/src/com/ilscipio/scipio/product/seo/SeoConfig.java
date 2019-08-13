@@ -137,6 +137,29 @@ public class SeoConfig {
     private final int defaultResponseCode;
     private final int defaultRedirectResponseCode;
 
+    private final TrailFormat productUrlTrailFormat;
+    private final TrailFormat categoryUrlTrailFormat;
+
+    public enum TrailFormat {
+        NAME("name"), // stock scipio default
+        ID("id"),
+        DISABLE("disable");
+
+        private final String name;
+        TrailFormat(String name) { this.name = name; }
+        public boolean isOn() { return (this != DISABLE); }
+        public boolean isOff() { return !isOn(); }
+
+        public static TrailFormat fromNameSafe(String name) {
+            for(TrailFormat tf : TrailFormat.values()) {
+                if (tf.name.equals(name)) {
+                    return tf;
+                }
+            }
+            return null;
+        }
+    }
+
     /**
      * SCIPIO: Returns config for website.
      * TODO: currently this always returns default config.
@@ -286,6 +309,9 @@ public class SeoConfig {
         int defaultResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
         int defaultRedirectResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
 
+        TrailFormat productUrlTrailFormat = null;
+        TrailFormat categoryUrlTrailFormat = null;
+
         if (rootElem != null && isInitialed) {
 
             String regexIfMatch = UtilXml.childElementValue(rootElem, "regexpifmatch", "^.*/.*$");
@@ -363,6 +389,9 @@ public class SeoConfig {
 
                         String newUrlTrailResolverName = stringSetting(catUrlElem, "new-url-trail-resolver", newUrlTrailResolver.getName());
                         newUrlTrailResolver = ClosestTrailResolver.ResolverType.fromNameOrDefault(newUrlTrailResolverName, newUrlTrailResolver);
+
+                        productUrlTrailFormat = TrailFormat.fromNameSafe(stringSetting(catUrlElem, "product-url-trail-format", null, null));
+                        categoryUrlTrailFormat = TrailFormat.fromNameSafe(stringSetting(catUrlElem, "category-url-trail-format", null, null));
                     }
                 }
             } catch (NullPointerException e) {
@@ -592,6 +621,9 @@ public class SeoConfig {
         this.defaultResponseCode = defaultResponseCode;
         this.defaultRedirectResponseCode = defaultRedirectResponseCode;
 
+        this.productUrlTrailFormat = (productUrlTrailFormat != null) ? productUrlTrailFormat : TrailFormat.NAME;
+        this.categoryUrlTrailFormat = (categoryUrlTrailFormat != null) ? categoryUrlTrailFormat : TrailFormat.NAME;
+
         this.isInitialed = isInitialed;
     }
 
@@ -684,9 +716,11 @@ public class SeoConfig {
 
     /**
      * Check whether category name/trail is enabled for products.
-     *
+     * @deprecated 2019-08: use {@link #getProductUrlTrailFormat()} and {@link #getCategoryUrlTrailFormat()} instead.
+      *
      * @return a boolean value to indicate whether category name is enabled.
      */
+    @Deprecated
     public boolean isCategoryNameEnabled() {
         return categoryNameEnabled;
     }
@@ -1008,13 +1042,22 @@ public class SeoConfig {
         return defaultRedirectResponseCode;
     }
 
+
+    public TrailFormat getProductUrlTrailFormat() {
+        return productUrlTrailFormat;
+    }
+
+    public TrailFormat getCategoryUrlTrailFormat() {
+        return categoryUrlTrailFormat;
+    }
+
     // HELPERS
 
     static String stringSetting(Element parentElement, String settingName, String defaultValue, Set<String> specialNullValues) {
         String value = UtilXml.childElementValue(parentElement, settingName, defaultValue);
         if (value == null || value.isEmpty()) value = defaultValue;
         Debug.logInfo("  " + settingName + ": " + value, module);
-        if (specialNullValues.contains(value)) return null;
+        if (specialNullValues != null && specialNullValues.contains(value)) return null;
         return value;
     }
 

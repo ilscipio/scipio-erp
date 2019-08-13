@@ -45,10 +45,15 @@
         <!-- max name lengths -->
         <category-name-max-length>24</category-name-max-length>
         <product-name-max-length>40</product-name-max-length>
-        
-        <!-- Whether generated product URLs should include parent category name/trail/path/rollup, or product info only.
-          1. if enable, the product seo url will be /category-name(-category-id)/product-name(-product-id)(.html)
-          2. if disable, the product seo url will be /product-name(-product-id)(.html) -->
+
+        <!-- Category trail format for product and category URLs. May be "name" (default), "id" or "disable"
+            For products: Whether generated product URLs should include parent category name/trail/path/rollup, or product info only.
+            1. if enable, the product seo url will be (or as configured): /category-name(-category-id)/product-name(-product-id)(.html)
+            2. if disable, the product seo url will be (or as configured): /product-name(-product-id)(.html) -->
+        <product-url-trail-format>name</product-url-trail-format>
+        <category-url-trail-format>name</category-url-trail-format>
+
+        <!-- DEPRECATED: Use product-url-trail-format and category-url-trail-format instead -->
         <category-name>enable</category-name>
 
         <!-- Appends category ID for intermediate (non-last) categories in generated product and category links -->

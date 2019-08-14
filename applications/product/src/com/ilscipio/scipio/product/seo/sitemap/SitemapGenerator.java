@@ -213,7 +213,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         public SitemapTraversalState(SitemapTraversalState other, boolean deepCopy) {
             super(other, deepCopy);
             if (deepCopy) {
-
+                if (trailNames != null) {
+                    Map<Locale, List<String>> trailNames = new HashMap<>();
+                    for (Map.Entry<Locale, List<String>> entry : other.trailNames.entrySet()) {
+                        trailNames.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+                    }
+                    this.trailNames = trailNames;
+                }
             } else {
                 this.trailNames = other.trailNames;
             }

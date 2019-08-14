@@ -18,8 +18,6 @@
  *******************************************************************************/
 package com.ilscipio.scipio.product.seo;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +30,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
-import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
@@ -43,6 +39,7 @@ import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
@@ -50,7 +47,6 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.product.seo.UrlProcessors.CharFilter;
 import com.ilscipio.scipio.product.seo.UrlProcessors.CharFilterUrlProcessor;
@@ -139,6 +135,11 @@ public class SeoConfig {
 
     private final TrailFormat productUrlTrailFormat;
     private final TrailFormat categoryUrlTrailFormat;
+
+    private final FlexibleStringExpander productUrlTargetPattern;
+    private final String productUrlTargetSeparator;
+    private final boolean productSimpleIdLookup;
+    private final boolean categorySimpleIdLookup;
 
     public enum TrailFormat {
         NAME("name"), // stock scipio default
@@ -312,6 +313,11 @@ public class SeoConfig {
         TrailFormat productUrlTrailFormat = null;
         TrailFormat categoryUrlTrailFormat = null;
 
+        String productUrlTargetPattern = null;
+
+        boolean productSimpleIdLookup = false;
+        boolean categorySimpleIdLookup = false;
+
         if (rootElem != null && isInitialed) {
 
             String regexIfMatch = UtilXml.childElementValue(rootElem, "regexpifmatch", "^.*/.*$");
@@ -392,6 +398,11 @@ public class SeoConfig {
 
                         productUrlTrailFormat = TrailFormat.fromNameSafe(stringSetting(catUrlElem, "product-url-trail-format", null, null));
                         categoryUrlTrailFormat = TrailFormat.fromNameSafe(stringSetting(catUrlElem, "category-url-trail-format", null, null));
+
+                        productUrlTargetPattern = stringSetting(catUrlElem, "product-url-target-pattern", "${name}-${id}", null);
+
+                        productSimpleIdLookup = booleanSetting(catUrlElem, "product-simple-id-lookup", false);
+                        categorySimpleIdLookup = booleanSetting(catUrlElem, "category-simple-id-lookup", false);
                     }
                 }
             } catch (NullPointerException e) {
@@ -624,6 +635,16 @@ public class SeoConfig {
         this.productUrlTrailFormat = (productUrlTrailFormat != null) ? productUrlTrailFormat : TrailFormat.NAME;
         this.categoryUrlTrailFormat = (categoryUrlTrailFormat != null) ? categoryUrlTrailFormat : TrailFormat.NAME;
 
+        this.productUrlTargetPattern = FlexibleStringExpander.getInstance(productUrlTargetPattern);
+        Map<String, Object> patCtx = UtilMisc.toMap("id", "", "name", "");
+        String patRes = this.productUrlTargetPattern.expandString(patCtx);
+        if (UtilValidate.isNotEmpty(patRes)) {
+            this.productUrlTargetSeparator = patRes;
+        } else {
+            this.productUrlTargetSeparator = null;
+        }
+        this.productSimpleIdLookup = productSimpleIdLookup;
+        this.categorySimpleIdLookup = categorySimpleIdLookup;
         this.isInitialed = isInitialed;
     }
 
@@ -1049,6 +1070,22 @@ public class SeoConfig {
 
     public TrailFormat getCategoryUrlTrailFormat() {
         return categoryUrlTrailFormat;
+    }
+
+    public FlexibleStringExpander getProductUrlTargetPattern() {
+        return productUrlTargetPattern;
+    }
+
+    public String getProductUrlTargetSeparator() {
+        return productUrlTargetSeparator;
+    }
+
+    public boolean isProductSimpleIdLookup() {
+        return productSimpleIdLookup;
+    }
+
+    public boolean isCategorySimpleIdLookup() {
+        return categorySimpleIdLookup;
     }
 
     // HELPERS

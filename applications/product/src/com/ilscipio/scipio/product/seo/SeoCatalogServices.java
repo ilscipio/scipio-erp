@@ -394,7 +394,7 @@ public abstract class SeoCatalogServices {
         // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
         Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY,
-                CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.<String, String>emptyMap();
+                CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.emptyMap();
 
         // make seo name for main record (may or may not already be in localeUrlMap)
         String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.CATEGORY,

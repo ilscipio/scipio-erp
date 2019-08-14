@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -427,10 +428,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setNameIndex(state.getPhysicalDepth());
         Map<Locale, List<String>> trailNames = getTrailNames(state);
         for(Locale locale : locales) {
             // NOTE: this is non-last - cannot reuse the one determined in previous call
-            String trailName = urlWorker.getCategoryUrlTrailName(getDelegator(), getDispatcher(), locale, productCategory, false, isUseCache());
+            String trailName = urlWorker.getCategoryUrlTrailName(getDelegator(), getDispatcher(), locale, productCategory, sanitizeCtx, isUseCache());
             trailNames.get(locale).add(trailName); // no need copy, just remove after
         }
     }
@@ -463,7 +465,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             Locale locale = getDefaultLocale();
             List<String> trail = trailNames.get(locale);
 
-            String url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), isUseCache()).toString();
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategoryId);
+            String url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
             url = postprocessElementLink(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
@@ -491,7 +494,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             Locale locale = getDefaultLocale();
             List<String> trail = trailNames.get(locale);
 
-            String url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), isUseCache()).toString();
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productId);
+            String url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
             url = postprocessElementLink(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);

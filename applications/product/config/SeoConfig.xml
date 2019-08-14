@@ -56,6 +56,17 @@
         <!-- DEPRECATED: Use product-url-trail-format and category-url-trail-format instead -->
         <category-name>enable</category-name>
 
+        <!-- Target product URL generation target pattern
+            TODO: product-url-target-pattern not fully implemented.
+            WARN: Changing this pattern may not necessarily produce browsable URLs; the filter that accepts the request may need to be modified.
+            There must be only one separator (-). Only consulted if both name and id are present. -->
+        <product-url-target-pattern>${name}-${id}</product-url-target-pattern>
+
+        <!-- If enable, prioritizes product URL in the explicit form /shop/product/ID/...
+            WARN: may interfere with full category trail URLs and may cause extra paths on line to be ignored. -->
+        <product-simple-id-lookup>disable</product-simple-id-lookup>
+        <category-simple-id-lookup>disable</category-simple-id-lookup>
+
         <!-- Appends category ID for intermediate (non-last) categories in generated product and category links -->
         <category-name-append-id>disable</category-name-append-id>
         <!-- Appends category ID for terminating (last) category in generated category links -->

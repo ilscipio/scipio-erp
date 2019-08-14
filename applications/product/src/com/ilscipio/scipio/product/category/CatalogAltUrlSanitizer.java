@@ -74,6 +74,8 @@ public abstract class CatalogAltUrlSanitizer {
         private Boolean last;
         private Integer nameIndex;
         private Integer totalNames;
+        private String targetProductId;
+        private String targetCategoryId;
 
         public SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) {
             this.last = last;
@@ -112,24 +114,45 @@ public abstract class CatalogAltUrlSanitizer {
             return Boolean.FALSE.equals(last);
         }
 
-        public void setLast(Boolean last) {
-            this.last = last;
+        public SanitizeContext setLast(Boolean last) {
+            this.last = last; return this;
         }
 
         public Integer getNameIndex() {
             return nameIndex;
         }
 
-        public void setNameIndex(Integer nameIndex) {
-            this.nameIndex = nameIndex;
+        public SanitizeContext setNameIndex(Integer nameIndex) {
+            this.nameIndex = nameIndex; return this;
+        }
+
+        public int increaseNameIndex() {
+            this.nameIndex++;
+            return nameIndex;
         }
 
         public Integer getTotalNames() {
             return totalNames;
         }
 
-        public void setTotalNames(Integer totalNames) {
-            this.totalNames = totalNames;
+        public SanitizeContext setTotalNames(Integer totalNames) {
+            this.totalNames = totalNames; return this;
+        }
+
+        public String getTargetProductId() {
+            return targetProductId;
+        }
+
+        public SanitizeContext setTargetProductId(String targetProductId) {
+            this.targetProductId = targetProductId; return this;
+        }
+
+        public String getTargetCategoryId() {
+            return targetCategoryId;
+        }
+
+        public SanitizeContext setTargetCategoryId(String targetCategoryId) {
+            this.targetCategoryId = targetCategoryId; return this;
         }
 
         public static class ReadOnlySanitizeContext extends SanitizeContext {
@@ -145,19 +168,25 @@ public abstract class CatalogAltUrlSanitizer {
             }
 
             @Override
-            public void setLast(Boolean last) {
+            public SanitizeContext setLast(Boolean last) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void setNameIndex(Integer nameIndex) {
+            public SanitizeContext setNameIndex(Integer nameIndex) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void setTotalNames(Integer totalNames) {
+            public SanitizeContext setTotalNames(Integer totalNames) {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public SanitizeContext setTargetProductId(String targetProductId) { throw new UnsupportedOperationException(); }
+
+            @Override
+            public SanitizeContext setTargetCategoryId(String targetCategoryId) { throw new UnsupportedOperationException(); }
         }
     }
 }

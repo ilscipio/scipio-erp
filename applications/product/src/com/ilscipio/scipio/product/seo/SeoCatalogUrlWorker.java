@@ -498,29 +498,36 @@ public class SeoCatalogUrlWorker implements Serializable {
 
     /**
      * Convert list of categoryIds to formatted alt url names.
-     * WARNING: This method's signature is subject to change.
-     * FIXME?: lastElemFormat and edge cases could be handled by callers instead...
+     * WARNING: this method may change without notice.
      */
-    public List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, boolean markLast,
-                                                 SeoConfig.TrailFormat trailFormat, SeoConfig.TrailFormat lastElemFormat, boolean useCache) {
+    protected List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, boolean markLast,
+                                                 SeoConfig.TrailFormat trailFormat, SeoConfig.TrailFormat lastElemFormat, CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx, boolean useCache) {
         if (trail == null || trail.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trail.size());
         ListIterator<String> trailIt = trail.listIterator();
         if (lastElemFormat == null) {
             lastElemFormat = trailFormat;
         }
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext();
+        if (targetSanitizeCtx != null) {
+            sanitizeCtx.setTargetProductId(targetSanitizeCtx.getTargetProductId());
+            sanitizeCtx.setTargetCategoryId(targetSanitizeCtx.getTargetCategoryId());
+            sanitizeCtx.setTotalNames(targetSanitizeCtx.getTotalNames());
+        }
+        sanitizeCtx.setNameIndex(0);
         while(trailIt.hasNext()) {
             String productCategoryId = trailIt.next();
             if ("TOP".equals(productCategoryId)) continue;
             String trailPart;
             SeoConfig.TrailFormat effTrailFormat = trailIt.hasNext() ? trailFormat : lastElemFormat;
+            sanitizeCtx.setLast(markLast && !trailIt.hasNext());
             if (effTrailFormat == SeoConfig.TrailFormat.ID) {
-                trailPart = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY,
-                        CatalogAltUrlSanitizer.SanitizeContext.lastElem(markLast && !trailIt.hasNext()));
+                trailPart = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, sanitizeCtx);
             } else {
-                trailPart = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategoryId, markLast && !trailIt.hasNext(), useCache);
+                trailPart = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategoryId, sanitizeCtx, useCache);
             }
             if (trailPart != null) catNames.add(trailPart);
+            sanitizeCtx.increaseNameIndex();
         }
         return catNames;
     }
@@ -530,24 +537,26 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Fallback on ID.
      * FIXME: ContentWrapper does not respect useCache flag!
      */
-    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, boolean last, boolean useCache) {
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) {
         String catName = null;
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
+            if (sanitizeCtx == null) {
+                sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext();
+            }
             String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             if (UtilValidate.isNotEmpty(altUrl)) {
                 // FIXME: effective locale might not be same as "locale" variable!
-                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
+                altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY, sanitizeCtx);
                 if (!altUrl.isEmpty()) {
                     catName = altUrl;
-
-                    if (!last) {
+                    if (!sanitizeCtx.isLast()) {
                         if (getConfig().isCategoryNameAppendId()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, sanitizeCtx);
                         }
                     } else {
                         if (getConfig().isCategoryNameAppendIdLast()) {
-                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
+                            catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, sanitizeCtx);
                         }
                     }
                 }
@@ -558,7 +567,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (catName == null) {
             // fallback
-            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, CatalogAltUrlSanitizer.SanitizeContext.lastElem(last));
+            catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY, sanitizeCtx);
         }
         return catName;
     }
@@ -566,15 +575,24 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Reads ALTERNATIVE_URL for category and locale from DB and builds config-specified alt url path part.
      * Fallback on ID.
+     * FIXME: ContentWrapper does not respect useCache flag!
      */
-    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, boolean last, boolean useCache) {
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, boolean useCache) {
+        return getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, null, useCache);
+    }
+
+    /**
+     * Reads ALTERNATIVE_URL for category and locale from DB and builds config-specified alt url path part.
+     * Fallback on ID.
+     */
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) {
         String catName = null;
         if (productCategoryId != null) {
             try {
                 GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory")
                             .where("productCategoryId", productCategoryId).cache(useCache).queryOne();
                 if (productCategory != null) {
-                    catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, last, useCache);
+                    catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, sanitizeCtx, useCache);
                 } else {
                     ; // NOTE: this is possible due to cache and delays and such
                 }
@@ -583,6 +601,14 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
         }
         return catName;
+    }
+
+    /**
+     * Reads ALTERNATIVE_URL for category and locale from DB and builds config-specified alt url path part.
+     * Fallback on ID.
+     */
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, boolean useCache) {
+        return getCategoryUrlTrailName(delegator, dispatcher, locale, productCategoryId, null, useCache);
     }
 
     /**
@@ -681,16 +707,17 @@ public class SeoCatalogUrlWorker implements Serializable {
         // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
         //trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
         trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, targetWebappInfo.getWebSiteId(), currentCatalogId);
-        // TODO: OPTIMIZE: If trail is off, here can trim all elements but the last - but suboptimal
         if (getConfig().getCategoryUrlTrailFormat().isOff() && UtilValidate.isNotEmpty(trail)) {
             String lastElem = trail.get(trail.size() - 1);
             trail = new ArrayList<>();
             trail.add(lastElem);
         }
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext()
+                .setTargetCategoryId(productCategoryId).setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
         List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, true, getConfig().getCategoryUrlTrailFormat(),
-                SeoConfig.TrailFormat.NAME, true);
+                SeoConfig.TrailFormat.NAME, targetSanitizeCtx, true);
         // NOTE: pass null productCategory because already resolved in trailNames
-        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, targetWebappInfo.getContextPath(), true);
+        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, targetWebappInfo.getContextPath(), targetSanitizeCtx, true);
 
         // append view index
         if (UtilValidate.isNotEmpty(viewIndex)) {
@@ -733,7 +760,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Assumes trailNames already valid.
      */
     public StringBuilder makeCategoryUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
-            GenericValue productCategory, List<String> trailNames, String contextPath, boolean useCache) {
+                                             GenericValue productCategory, List<String> trailNames, String contextPath, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) {
         StringBuilder urlBuilder = new StringBuilder();
         if (contextPath != null) {
             urlBuilder.append(contextPath);
@@ -752,7 +779,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         appendSlashAndValue(urlBuilder, trailNames);
 
         if (productCategory != null) {
-            String catTrailName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, true, useCache);
+            if (sanitizeCtx == null) {
+                sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategory.getString("productCategoryId"));
+            }
+            String catTrailName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, sanitizeCtx, useCache);
             if (catTrailName != null) {
                 appendSlashAndValue(urlBuilder, catTrailName);
             }
@@ -767,6 +797,11 @@ public class SeoCatalogUrlWorker implements Serializable {
         checkAddUrlSuffix(urlBuilder);
 
         return urlBuilder;
+    }
+
+    public StringBuilder makeCategoryUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
+                                             GenericValue productCategory, List<String> trailNames, String contextPath, boolean useCache) {
+        return makeCategoryUrlPath(delegator, dispatcher, locale, productCategory, trailNames, contextPath, null, useCache);
     }
 
     public String makeProductUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId) {
@@ -784,6 +819,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * SCIPIO: Modified for bugfixes and lookup via cache products map (TODO: REVIEW)
      */
+    @SuppressWarnings("deprecated")
     public String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
         GenericValue product;
         try {
@@ -793,21 +829,23 @@ public class SeoCatalogUrlWorker implements Serializable {
             return null;
         }
 
-        List<String> trailNames;
         if (!getConfig().isCategoryNameEnabled() && getConfig().getProductUrlTrailFormat().isOff()) {
             // no need for trail
             trail = Collections.emptyList();
-            trailNames = Collections.emptyList();
         } else {
             // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
             //if (UtilValidate.isNotEmpty(productCategoryId)) {
             //    trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
             //}
             trail = makeFullProductUrlTrail(delegator, trail, product, targetWebappInfo.getWebSiteId(), currentCatalogId);
-            trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, false, getConfig().getProductUrlTrailFormat(), null,true);
+        }
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
+        List<String> trailNames = Collections.emptyList();
+        if (!trail.isEmpty()) {
+            trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, false, getConfig().getProductUrlTrailFormat(), null, targetSanitizeCtx, true);
         }
 
-        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, targetWebappInfo.getContextPath(), true);
+        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, targetWebappInfo.getContextPath(), targetSanitizeCtx, true);
 
         return urlBuilder.toString();
     }
@@ -818,7 +856,8 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Assumes trailNames already valid.
      * FIXME: ContentWrapper does not respect useCache flag!
      */
-    public StringBuilder makeProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product, List<String> trailNames, String contextPath, boolean useCache) {
+    @SuppressWarnings("deprecated")
+    public StringBuilder makeProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product, List<String> trailNames, String contextPath, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) {
         StringBuilder urlBuilder = new StringBuilder();
         if (contextPath != null) {
             urlBuilder.append(contextPath);
@@ -855,21 +894,31 @@ public class SeoCatalogUrlWorker implements Serializable {
             ensureTrailingSlash(urlBuilder);
             //}
 
-            // append product name
             String productId = product.getString("productId");
+            if (sanitizeCtx == null) {
+                sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetProductId(productId);
+            }
+
+            // append product name
             String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             // FIXME: effective locale might not be same as "locale" variable!
-            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem());
+            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT, sanitizeCtx);
             if (UtilValidate.isNotEmpty(alternativeUrl)) {
-                urlBuilder.append(alternativeUrl);
-
                 if (config.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
-                    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                    urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem()));
+                    // 2019-08: can do a little better
+                    //urlBuilder.append(alternativeUrl);
+                    //urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+                    //urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, sanitizeCtx));
+                    urlBuilder.append(getConfig().getProductUrlTargetPattern().expandString(UtilMisc.toMap(
+                            "name", alternativeUrl,
+                            "id", getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, sanitizeCtx)
+                    )));
+                } else {
+                    urlBuilder.append(alternativeUrl);
                 }
             } else {
                 // FALLBACK ONLY
-                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, CatalogAltUrlSanitizer.SanitizeContext.lastElem()));
+                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT, sanitizeCtx));
             }
         }
 
@@ -882,6 +931,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         checkAddUrlSuffix(urlBuilder);
 
         return urlBuilder;
+    }
+
+    public StringBuilder makeProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product, List<String> trailNames, String contextPath, boolean useCache) {
+        return makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, contextPath, null, useCache);
     }
 
     protected void checkAddUrlSuffix(StringBuilder sb) {
@@ -1036,13 +1089,22 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (UtilValidate.isNotEmpty(lastPathElem)) {
             pathElements.remove(pathElements.size() - 1);
+            String firstPathElem = (pathElements.size() > 0) ? pathElements.get(0) : lastPathElem;
 
             try {
                 if (explicitProductRequest) {
                     // EXPLICIT PRODUCT
-                    boolean exactOnly = false;
-                    boolean allowIdOnly = true;
-                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
+                    AltUrlPartResults productMatches = null;
+                    if (getConfig().isProductSimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
+                        boolean exactOnly = true;
+                        boolean allowIdOnly = true;
+                        productMatches = extractCandidateAltUrlProductIdCached(delegator, firstPathElem, exactOnly, allowIdOnly);
+                    }
+                    if (productMatches == null || productMatches.isEmpty()) {
+                        boolean exactOnly = false;
+                        boolean allowIdOnly = true;
+                        productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
+                    }
                     if (productMatches.size() > 0) {
                         AltUrlMatchInfo matchInfo = findBestProductMatch(delegator, productMatches, pathElements, currentCatalogId, webSiteId);
                         if (matchInfo != null) {
@@ -1052,9 +1114,17 @@ public class SeoCatalogUrlWorker implements Serializable {
                     }
                 } else if (explicitCategoryRequest) {
                     // EXPLICIT CATEGORY
-                    boolean exactOnly = false;
-                    boolean allowIdOnly = true;
-                    AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
+                    AltUrlPartResults categoryMatches = null;
+                    if (getConfig().isCategorySimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
+                        boolean exactOnly = true;
+                        boolean allowIdOnly = true;
+                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, firstPathElem, exactOnly, allowIdOnly);
+                    }
+                    if (categoryMatches == null || categoryMatches.isEmpty()) {
+                        boolean exactOnly = false;
+                        boolean allowIdOnly = true;
+                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
+                    }
                     if (categoryMatches.size() > 0) {
                         AltUrlMatchInfo matchInfo = findBestCategoryMatch(delegator, categoryMatches, pathElements, currentCatalogId, webSiteId);
                         if (matchInfo != null) {

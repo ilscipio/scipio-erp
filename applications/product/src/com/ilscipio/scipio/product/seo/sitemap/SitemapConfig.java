@@ -81,6 +81,7 @@ public class SitemapConfig implements Serializable {
     private final boolean doProduct;
     private final boolean doCategory;
     private final boolean doCmsPage;
+    private final boolean preProcessTrail;
     // TODO?: REVIEW: I don't see a reason to implement this for sitemaps yet...
     // see SitemapWorker#buildSitemapProduct
     private final boolean doChildProduct = false;
@@ -125,6 +126,7 @@ public class SitemapConfig implements Serializable {
         this.doProduct = asBoolean(map.get("doProduct"), true);
         this.doCategory = asBoolean(map.get("doCategory"), true);
         this.doCmsPage = asBoolean(map.get("doCmsPage"), true);
+        this.preProcessTrail = asBoolean(map.get("preProcessTrail"), false);
 
         this.useProductLastModDate = asBoolean(map.get("useProductLastModDate"), false);
         String dateFormatStr = asNormString(map.get("dateFormat"));
@@ -319,6 +321,10 @@ public class SitemapConfig implements Serializable {
 
     public boolean isDoCmsPage() {
         return doCmsPage;
+    }
+
+    public boolean isPreProcessTrail() {
+        return preProcessTrail;
     }
 
     public boolean isUseProductLastModDate() {

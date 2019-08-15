@@ -47,7 +47,7 @@
         <product-name-max-length>40</product-name-max-length>
 
         <!-- Category trail format for product and category URLs. May be "name" (default), "id" or "disable"
-            For products: Whether generated product URLs should include parent category name/trail/path/rollup, or product info only.
+            For product-url-trail-format="disable": Whether generated product URLs should include parent category name/trail/path/rollup, or product info only.
             1. if enable, the product seo url will be (or as configured): /category-name(-category-id)/product-name(-product-id)(.html)
             2. if disable, the product seo url will be (or as configured): /product-name(-product-id)(.html) -->
         <product-url-trail-format>name</product-url-trail-format>

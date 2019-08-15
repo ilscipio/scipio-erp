@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
+import com.ilscipio.scipio.product.seo.SeoConfig;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -244,6 +245,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return config;
     }
 
+    public SeoCatalogUrlWorker getUrlWorker() { return urlWorker; }
+
     @Override
     public void reset() throws GeneralException {
         super.reset();
@@ -273,6 +276,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected Map<Locale, List<String>> getTrailNames(TraversalState state) {
         return ((SitemapTraversalState) state).trailNames;
+    }
+
+    protected List<GenericValue> getTrailEntities(TraversalState state) {
+        return ((SitemapTraversalState) state).getTrailCategories();
     }
 
     protected String getSitemapWebappPathPrefix() {
@@ -436,10 +443,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
         CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setNameIndex(state.getPhysicalDepth());
         Map<Locale, List<String>> trailNames = getTrailNames(state);
-        for(Locale locale : locales) {
-            // NOTE: this is non-last - cannot reuse the one determined in previous call
-            String trailName = urlWorker.getCategoryUrlTrailName(getDelegator(), getDispatcher(), locale, productCategory, sanitizeCtx, isUseCache());
-            trailNames.get(locale).add(trailName); // no need copy, just remove after
+        if (getConfig().isPreProcessTrail()) {
+            for (Locale locale : locales) {
+                // NOTE: this is non-last - cannot reuse the one determined in previous call
+                SeoConfig.TrailFormat trailFormat = getUrlWorker().getConfig().getCategoryUrlTrailFormat(); // WARN: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
+                String trailName = getUrlWorker().getCategoryUrlTrailElem(getDelegator(), getDispatcher(), locale, productCategory, sanitizeCtx, trailFormat, isUseCache());
+                trailNames.get(locale).add(trailName); // no need copy, just remove after
+            }
+        } else {
+            // NOTE: it should not be necessary to do this, but to prevent bugs, fill the trailNames with IDs (still faster)
+            for (Locale locale : locales) {
+                trailNames.get(locale).add(productCategory.getString("productCategoryId"));
+            }
         }
     }
 
@@ -454,25 +469,33 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void visitCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
-        buildSitemapCategoryLink(productCategory, getTrailNames(state));
+        buildSitemapCategoryLink(productCategory, getTrailNames(state), getTrailEntities(state));
     }
 
     @Override
     public void visitProduct(GenericValue product, TraversalState state) throws GeneralException {
-        buildSitemapProductLink(product, getTrailNames(state));
+        buildSitemapProductLink(product, getTrailNames(state), getTrailEntities(state));
     }
 
-    protected void buildSitemapCategoryLink(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException {
+    protected void buildSitemapCategoryLink(GenericValue productCategory, Map<Locale, List<String>> trailNames, List<GenericValue> trailEntities) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
 
             // TODO: missing multi-locale link support - unclear if library supports
 
             Locale locale = getDefaultLocale();
-            List<String> trail = trailNames.get(locale);
+            String url;
 
-            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategoryId);
-            String url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
+            if (getConfig().isPreProcessTrail()) {
+                List<String> trail = trailNames.get(locale);
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategoryId)
+                        .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
+                url = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
+            } else {
+                url = getUrlWorker().makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
+                        getWebappInfo(), isUseCache()).toString();
+            }
+
             url = postprocessElementLink(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
@@ -486,7 +509,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
     }
 
-    protected void buildSitemapProductLink(GenericValue product, Map<Locale, List<String>> trailNames) throws GeneralException {
+    protected void buildSitemapProductLink(GenericValue product, Map<Locale, List<String>> trailNames, List<GenericValue> trailEntities) throws GeneralException {
         if (!config.isIncludeVariant() && "Y".equals(product.getString("isVariant"))) {
             stats.productSkipped++;
             return;
@@ -498,10 +521,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             // TODO: missing multi-locale link support - unclear if library supports
 
             Locale locale = getDefaultLocale();
-            List<String> trail = trailNames.get(locale);
+            String url;
 
-            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productId);
-            String url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
+            if (getConfig().isPreProcessTrail()) {
+                List<String> trail = trailNames.get(locale);
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetProductId(productId)
+                        .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
+                url = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
+            } else {
+                url = getUrlWorker().makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
+                        getWebappInfo(), isUseCache()).toString();
+            }
+
             url = postprocessElementLink(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);

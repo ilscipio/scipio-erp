@@ -149,7 +149,6 @@ public class SeoConfig {
         private final String name;
         TrailFormat(String name) { this.name = name; }
         public boolean isOn() { return (this != DISABLE); }
-        public boolean isOff() { return !isOn(); }
 
         public static TrailFormat fromNameSafe(String name) {
             for(TrailFormat tf : TrailFormat.values()) {
@@ -737,11 +736,9 @@ public class SeoConfig {
 
     /**
      * Check whether category name/trail is enabled for products.
-     * @deprecated 2019-08: use {@link #getProductUrlTrailFormat()} and {@link #getCategoryUrlTrailFormat()} instead.
-      *
+     * 2019-08: This is logically deprecated; configure using {@link #getProductUrlTrailFormat()} and {@link #getCategoryUrlTrailFormat()} instead.
      * @return a boolean value to indicate whether category name is enabled.
      */
-    @Deprecated
     public boolean isCategoryNameEnabled() {
         return categoryNameEnabled;
     }

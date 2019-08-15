@@ -169,7 +169,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     config.getUrlConfPath(), urlRewriterCtx);
         }
 
-        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setDoContent(config.isDoContent()).setUseCache(useCache);
+        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config)
+                .setDoContent(config.isDoContent())
+                .setUseCache(useCache)
+                .addFilters(config.getCatalogFilters());
         return new SitemapGenerator(delegator, dispatcher,
                 locales,
                 webSiteId, webSite, productStore,

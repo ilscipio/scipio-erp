@@ -90,6 +90,8 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         private boolean preventDupCategoryTraversal = false;
         private boolean preventDupProductVisit = false;
 
+        private List<CatalogFilter> filters = new ArrayList<>();
+
         public boolean isUseCache() {
             return useCache;
         }
@@ -223,6 +225,35 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
          */
         public boolean isPreventDupProductAny() {
             return preventDupProductVisit;
+        }
+
+
+        public List<CatalogFilter> getFilters() {
+            return filters;
+        }
+
+        public TraversalConfig addFilters(Collection<CatalogFilter> filters) {
+            if (filters == null) { return this; }
+            this.filters.addAll(filters);
+            return this;
+        }
+
+        public TraversalConfig addFilter(CatalogFilter filter) {
+            if (filter == null) { return this; }
+            this.filters.add(filter);
+            return this;
+        }
+
+        public TraversalConfig removeFilters(Collection<CatalogFilter> filters) {
+            if (filters == null) { return this; }
+            this.filters.removeAll(filters);
+            return this;
+        }
+
+        public TraversalConfig removeFilter(CatalogFilter filter) {
+            if (filter == null) { return this; }
+            this.filters.remove(filter);
+            return this;
         }
     }
 
@@ -409,6 +440,24 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return new ArrayList<>(MAX_CATEGORY_DEPTH_PERF);
     }
 
+    public boolean useProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
+        for(CatalogFilter filter : getTravConfig().getFilters()) {
+            if (!filter.filterProduct(product, state)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean useCategory(GenericValue productCategory, CatalogTraverser.TraversalState state) throws GeneralException {
+        for(CatalogFilter filter : getTravConfig().getFilters()) {
+            if (!filter.filterCategory(productCategory, state)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Simply calls the {@link CatalogVisitor#visitCategory} and {@link CatalogVisitor#visitProduct} method for every single
      * product in the system, bypassing catalog/category rollup, for simplistic operations only.
@@ -436,7 +485,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             productCategoryIt = EntityQuery.use(delegator).from("ProductCategory").cache(isUseCache()).queryIterator();
             GenericValue productCategory;
             while ((productCategory = productCategoryIt.next()) != null) {
-                visitor.visitCategory(productCategory, state);
+                if (useCategory(productCategory, state)) {
+                    visitor.visitCategory(productCategory, state);
+                }
             }
             return true;
         } catch(StopCatalogTraversalException e) {
@@ -465,7 +516,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             GenericValue product;
             while ((product = productIt.next()) != null) {
                 // NOTE: doChildProducts = false, because already counted in our global query here
-                visitor.visitProduct(product, state);
+                if (useProduct(product, state)) {
+                    visitor.visitProduct(product, state);
+                }
             }
             return true;
         } catch(StopCatalogTraversalException e) {
@@ -584,7 +637,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
             // visit category itself (before recursive call)
             if (isDoCategory(productCategory) && !(travConfig.isPreventDupCategoryVisit() && categorySeen)) {
-                visitor.visitCategory(productCategory, state);
+                if (useCategory(productCategory, state)) {
+                    visitor.visitCategory(productCategory, state);
+                }
                 if (travConfig.isPreventDupCategoryAny()) {
                     this.seenCategoryIds.add(productCategoryId);
                 }
@@ -653,7 +708,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
                     GenericValue product = productCategoryMember.getRelatedOne("Product", isUseCache());
                     // product is always one level down
-                    visitor.visitProduct(product, state);
+                    if (useProduct(product, state)) {
+                        visitor.visitProduct(product, state);
+                    }
 
                     if (travConfig.isPreventDupProductVisit()) {
                         this.seenProductIds.add(productId);

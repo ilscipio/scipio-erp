@@ -4,19 +4,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
+import com.ilscipio.scipio.product.category.CatalogFilter;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -99,6 +89,8 @@ public class SitemapConfig implements Serializable {
 
     private final boolean includeVariant;
 
+    private final List<CatalogFilter> catalogFilters;
+
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
         this.webSiteId = webSiteId;
         this.urlConfPath = asNormString(map.get("urlConfPath"));
@@ -157,6 +149,54 @@ public class SitemapConfig implements Serializable {
         this.prodCatalogIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogIds")));
         this.prodCatalogCategoryTypeIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogCategoryTypeIds")));
         this.includeVariant = asBoolean(map.get("includeVariant"), false);
+
+        this.catalogFilters = Collections.unmodifiableList(readCatalogFilters(map.get("catalogFilters")));
+    }
+
+    private static List<CatalogFilter> readCatalogFilters(Object catalogFiltersObj) {
+        List<CatalogFilter> catalogFilters = null;
+        if (catalogFiltersObj instanceof Collection) {
+            Collection<?> catalogFiltersColl = (Collection<?>) catalogFiltersObj;
+            catalogFilters = new ArrayList<>(catalogFiltersColl.size());
+            for(Object catalogFilterObj : catalogFiltersColl) {
+                if (catalogFilterObj instanceof CatalogFilter) {
+                    catalogFilters.add((CatalogFilter) catalogFilterObj);
+                } else if (catalogFilterObj instanceof Class) {
+                    Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) catalogFilterObj;
+                    try {
+                        catalogFilters.add(filterCls.newInstance());
+                    } catch(Exception e) {
+                        throw new IllegalArgumentException("Error loading catalogFilter " + filterCls.getName(), e);
+                    }
+                } else if (catalogFilterObj instanceof String) {
+                    try {
+                        Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) Thread.currentThread().getContextClassLoader().loadClass((String) catalogFilterObj);
+                        catalogFilters.add(filterCls.newInstance());
+                    } catch(Exception e) {
+                        throw new IllegalArgumentException("Error loading catalogFilter " + catalogFilterObj, e);
+                    }
+                } else {
+                    throw new IllegalArgumentException("catalogFilter unrecognized argument type: " + catalogFilterObj.getClass().getName());
+                }
+            }
+        } else if (catalogFiltersObj instanceof String) {
+            String catalogFiltersStr = asNormString(catalogFiltersObj);
+            if (UtilValidate.isNotEmpty(catalogFiltersStr)) {
+                String[] catalogFilterClsStrFull = catalogFiltersStr.split(";");
+                catalogFilters = new ArrayList<>(catalogFilterClsStrFull.length);
+                for(String catalogFilterClsStr : catalogFilterClsStrFull) {
+                    try {
+                        Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) Thread.currentThread().getContextClassLoader().loadClass(catalogFilterClsStr);
+                        catalogFilters.add(filterCls.newInstance());
+                    } catch(Exception e) {
+                        throw new IllegalArgumentException("Error loading catalogFilter " + catalogFilterClsStr, e);
+                    }
+                }
+            }
+        } else if (catalogFiltersObj != null) {
+            throw new IllegalArgumentException("catalogFilter unrecognized argument type: " + catalogFiltersObj.getClass().getName());
+        }
+        return catalogFilters != null ? catalogFilters : new ArrayList<>();
     }
 
     public static SitemapConfig getSitemapConfigForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId) {
@@ -389,6 +429,10 @@ public class SitemapConfig implements Serializable {
      */
     public boolean isIncludeVariant() {
         return includeVariant;
+    }
+
+    public List<CatalogFilter> getCatalogFilters() {
+        return catalogFilters;
     }
 
     // ADVANCED GETTERS

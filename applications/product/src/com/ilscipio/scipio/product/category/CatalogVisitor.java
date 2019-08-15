@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.product.category;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface CatalogVisitor {
         @Override public void visitProduct(GenericValue product, TraversalState state) throws GeneralException { ; }
     }
 
-    public static class LoggingCatalogVisitor extends AbstractCatalogVisitor {
+    public static class LoggingCatalogVisitor extends AbstractCatalogVisitor implements Serializable {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected List<String> trailIds = new ArrayList<>();

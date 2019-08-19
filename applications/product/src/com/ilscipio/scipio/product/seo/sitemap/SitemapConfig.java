@@ -12,6 +12,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -34,12 +35,10 @@ public class SitemapConfig implements Serializable {
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
 
-    private static final String logPrefix = SitemapGenerator.logPrefix;
+    // NOTE: This is a special cache that contains only one map as entry: "_all_"- may be re-adapted in the future
+    private static final UtilCache<String, Object> websiteCache = UtilCache.createUtilCache("scipio.seo.sitemap.config.website");
 
-    private static class StaticConfigHolder {
-        // TODO?: in future could have DB config
-        private static final Map<String, SitemapConfig> staticConfigs = Collections.unmodifiableMap(readStaticConfigsFromProperties());
-    }
+    private static final String logPrefix = SitemapGenerator.logPrefix;
 
     private static final Map<String, W3CDateFormat.Pattern> dateFormatTypeMap;
     static {
@@ -200,11 +199,38 @@ public class SitemapConfig implements Serializable {
     }
 
     public static SitemapConfig getSitemapConfigForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId) {
-        return StaticConfigHolder.staticConfigs.get(webSiteId);
+        return getWebSiteMapCache().get(webSiteId);
     }
 
     public static Map<String, SitemapConfig> getAllSitemapConfigs(Delegator delegator, LocalDispatcher dispatcher) {
-        return StaticConfigHolder.staticConfigs;
+        return getWebSiteMapCache();
+    }
+
+    /*
+    private static UtilCache<String, Object> loadWebsiteCache() {
+        websiteCache.clear();
+        Map<String, SitemapConfig> allConfigs = readStaticConfigsFromProperties();
+        // TODO: REVIEW: don't do this because each cache entry has its own expiry
+        //for(Map.Entry<String, SitemapConfig> entry : allConfigs.entrySet()) {
+        //    websiteCache.put(entry.getKey(), entry.getValue());
+        //}
+        websiteCache.put("_all_", Collections.unmodifiableMap(allConfigs));
+        return websiteCache;
+    }
+     */
+
+    private static Map<String, SitemapConfig> getWebSiteMapCache() {
+        Map<String, SitemapConfig> cache = (Map<String, SitemapConfig>) websiteCache.get("_all_");
+        if (cache == null) {
+            synchronized(SitemapConfig.class) {
+                cache = (Map<String, SitemapConfig>) websiteCache.get("_all_");
+                if (cache == null) {
+                    cache = Collections.unmodifiableMap(readStaticConfigsFromProperties());
+                    websiteCache.put("_all_", cache);
+                }
+            }
+        }
+        return cache;
     }
 
     protected static Map<String, SitemapConfig> readStaticConfigsFromProperties() {

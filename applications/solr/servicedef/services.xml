@@ -444,9 +444,11 @@ code package.
         </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
+        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="solrUsername" type="String">
             <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
@@ -455,6 +457,8 @@ code package.
             <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
         </attribute>
         <attribute name="results" type="List" mode="OUT" optional="true"/>
+        <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
+        <attribute name="facetFields" type="Map" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>

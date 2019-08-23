@@ -929,8 +929,8 @@ public abstract class SolrProductSearch {
             }
             Integer viewSize = (Integer) dispatchMap.get("viewSize");
             //Integer viewIndex = (Integer) dispatchMap.get("viewIndex");
-            dispatchMap.put("facet", false); // (always false)
-            dispatchMap.put("spellcheck", false); // 2017-09: changed to false (always false)
+            if (dispatchMap.get("facet") == null) dispatchMap.put("facet", false);
+            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", false); // 2017-09: default changed to false
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
 
             List<String> queryFilters = getEnsureQueryFiltersModifiable(dispatchMap);
@@ -944,7 +944,38 @@ public abstract class SolrProductSearch {
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
             result = ServiceUtil.returnSuccess();
+
+            Map<String, Integer> facetQuery = queryResult.getFacetQuery();
+            Map<String, String> facetQueries = null;
+            if (facetQuery != null) {
+                facetQueries = new HashMap<>();
+                for (String fq : facetQuery.keySet()) {
+                    if (facetQuery.get(fq) > 0) {
+                        facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq).intValue() + ")");
+                    }
+                }
+            }
+
+            List<FacetField> facets = queryResult.getFacetFields();
+            Map<String, Map<String, Long>> facetFields = null;
+            if (facets != null) {
+                facetFields = new HashMap<>();
+
+                for (FacetField facet : facets) {
+                    Map<String, Long> facetEntry = new HashMap<>();
+                    List<FacetField.Count> facetEntries = facet.getValues();
+                    if (UtilValidate.isNotEmpty(facetEntries)) {
+                        for (FacetField.Count fcount : facetEntries) {
+                            facetEntry.put(fcount.getName(), fcount.getCount());
+                        }
+                        facetFields.put(facet.getName(), facetEntry);
+                    }
+                }
+            }
+
             result.put("results", queryResult.getResults());
+            result.put("facetFields", facetFields);
+            result.put("facetQueries", facetQueries);
             result.put("listSize", queryResult.getResults().getNumFound());
             // 2016-04-01: Need to translate this
             //result.put("viewIndex", queryResult.getResults().getStart());
@@ -1036,8 +1067,9 @@ public abstract class SolrProductSearch {
             if (facetQuery != null) {
                 facetQueries = new HashMap<>();
                 for (String fq : facetQuery.keySet()) {
-                    if (facetQuery.get(fq).intValue() > 0)
+                    if (facetQuery.get(fq) > 0) {
                         facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq).intValue() + ")");
+                    }
                 }
             }
 
@@ -1050,8 +1082,9 @@ public abstract class SolrProductSearch {
                     Map<String, Long> facetEntry = new HashMap<>();
                     List<FacetField.Count> facetEntries = facet.getValues();
                     if (UtilValidate.isNotEmpty(facetEntries)) {
-                        for (FacetField.Count fcount : facetEntries)
+                        for (FacetField.Count fcount : facetEntries) {
                             facetEntry.put(fcount.getName(), fcount.getCount());
+                        }
                         facetFields.put(facet.getName(), facetEntry);
                     }
                 }
@@ -1675,15 +1708,11 @@ public abstract class SolrProductSearch {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        boolean startupForce = isReindexStartupForce(delegator, dispatcher);
-        if (startupForce) {
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by force-startup system or config property", module);
-        }
-        boolean force = startupForce;
-
+        Boolean startupForce = isReindexStartupForce(delegator, dispatcher);
+        boolean force = Boolean.TRUE.equals(startupForce);
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
 
-        if (force || autoRunEnabled) {
+        if ((force || autoRunEnabled) && !Boolean.FALSE.equals(startupForce)) {
             Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
             if (onlyIfDirty == null) {
                 onlyIfDirty = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.onlyIfDirty", false);
@@ -1703,7 +1732,7 @@ public abstract class SolrProductSearch {
             }
 
             Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty
-                    + ", ifConfigChange: " + ifConfigChange + ", waitSolrReady: " + waitSolrReady + ")", module);
+                    + ", ifConfigChange: " + ifConfigChange + ", waitSolrReady: " + waitSolrReady + ", startupForce: " + startupForce + ")", module);
 
             Map<String, Object> servCtx;
             try {
@@ -1735,26 +1764,31 @@ public abstract class SolrProductSearch {
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else {
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled (startupForce: " + startupForce + ")", module);
             result = ServiceUtil.returnSuccess();
         }
 
         return result;
     }
 
-    private static boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
+    private static Boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
         if (reindexAutoForceRan) return false;
         synchronized(SolrProductSearch.class) {
             if (reindexAutoForceRan) return false;
             reindexAutoForceRan = true;
-            return getReindexStartupForceProperty(delegator, dispatcher, false);
+            return getReindexStartupForceProperty(delegator, dispatcher);
         }
     }
 
-    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher, Boolean defaultValue) {
+    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
         Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
         if (force != null) return force;
-        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, defaultValue);
+        force = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, null);
+        if (Boolean.FALSE.equals(force)) {
+            // COMPATIBILITY MODE: the value from .properties when false must be interpreted as 'unset' (property ignored)
+            force = null;
+        }
+        return force;
     }
 
     /**

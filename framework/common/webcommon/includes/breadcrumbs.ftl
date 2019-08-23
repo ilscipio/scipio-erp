@@ -68,7 +68,7 @@
 
       <#if useTitleFallback>
         <#-- If there is neither any category or product information available, display the page title -->
-        <#if !crumbs?has_content && !productContentWrapper??>
+        <#if !crumbs?has_content && !productContentWrapper?has_content>
             <#local titleText><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap[titleProperty]}</#if></#local>
             <#if titleText?has_content>
               <#local elemClass = styles.nav_breadcrumb!>

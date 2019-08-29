@@ -3,16 +3,7 @@ package com.ilscipio.scipio.solr;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -671,5 +662,25 @@ public abstract class SolrExprUtil {
      */
     public static String makeDateFieldBeforeOrUnsetExpr(String fieldName, Date timestamp) {
         return "((*:* NOT " + fieldName + ":*) OR " + fieldName + ":[* TO " + formatTimestampForQuote(timestamp) + "])";
+    }
+
+    public static String makeInExpr(String fieldName, Collection<String> values) {
+        if (UtilValidate.isEmpty(values)) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        boolean first = true;
+        for(String value : values) {
+            if (!first) {
+                sb.append(" OR ");
+            }
+            sb.append(fieldName);
+            sb.append(":");
+            sb.append(escapeTermFull(value));
+            first = false;
+        }
+        sb.append(")");
+        return sb.toString();
     }
 }

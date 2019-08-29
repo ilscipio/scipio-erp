@@ -724,6 +724,7 @@ public abstract class SolrProductSearch {
                 solrQuery.set("defType", defType);
             }
 
+            // FIXME: "facet" is a leftover from ancient code and should be redone somehow...
             Boolean faceted = (Boolean) context.get("facet");
             if (Boolean.TRUE.equals(faceted)) {
                 solrQuery.setFacet(faceted);
@@ -731,7 +732,6 @@ public abstract class SolrProductSearch {
                 solrQuery.addFacetField("cat");
                 solrQuery.setFacetMinCount(1);
                 solrQuery.setFacetLimit(8);
-
                 solrQuery.addFacetQuery("listPrice:[0 TO 50]");
                 solrQuery.addFacetQuery("listPrice:[50 TO 100]");
                 solrQuery.addFacetQuery("listPrice:[100 TO 250]");
@@ -742,6 +742,31 @@ public abstract class SolrProductSearch {
                 solrQuery.addFacetQuery("listPrice:[5000 TO 10000]");
                 solrQuery.addFacetQuery("listPrice:[10000 TO 50000]");
                 solrQuery.addFacetQuery("listPrice:[50000 TO *]");
+            }
+
+            if (UtilValidate.isNotEmpty((String) context.get("facetQuery"))) {
+                solrQuery.setFacet(true);
+                solrQuery.addFacetQuery((String) context.get("facetQuery"));
+            }
+
+            if (UtilValidate.isNotEmpty((Collection<String>) context.get("facetQueryList"))) {
+                solrQuery.setFacet(true);
+                SolrQueryUtil.addFacetQueries(solrQuery, (Collection<String>) context.get("facetQueryList"));
+            }
+
+            if (UtilValidate.isNotEmpty((Collection<String>) context.get("facetFieldList"))) {
+                solrQuery.setFacet(true);
+                SolrQueryUtil.addFacetFields(solrQuery, (Collection<String>) context.get("facetFieldList"));
+            }
+
+            if (context.get("facetMinCount") != null) {
+                solrQuery.setFacet(true);
+                solrQuery.setFacetMinCount((Integer) context.get("facetMinCount"));
+            }
+
+            if (context.get("facetLimit") != null) {
+                solrQuery.setFacet(true);
+                solrQuery.setFacetLimit((Integer) context.get("facetLimit"));
             }
 
             Boolean spellCheck = (Boolean) context.get("spellcheck");
@@ -881,10 +906,6 @@ public abstract class SolrProductSearch {
                 solrQuery.setSort(sortBy, order);
             }
 
-            if ((String) context.get("facetQuery") != null) {
-                solrQuery.addFacetQuery((String) context.get("facetQuery"));
-            }
-
             //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
             QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
             if (solrUsername != null) {
@@ -960,7 +981,6 @@ public abstract class SolrProductSearch {
             Map<String, Map<String, Long>> facetFields = null;
             if (facets != null) {
                 facetFields = new HashMap<>();
-
                 for (FacetField facet : facets) {
                     Map<String, Long> facetEntry = new HashMap<>();
                     List<FacetField.Count> facetEntries = facet.getValues();
@@ -1077,7 +1097,6 @@ public abstract class SolrProductSearch {
             Map<String, Map<String, Long>> facetFields = null;
             if (facets != null) {
                 facetFields = new HashMap<>();
-
                 for (FacetField facet : facets) {
                     Map<String, Long> facetEntry = new HashMap<>();
                     List<FacetField.Count> facetEntries = facet.getValues();

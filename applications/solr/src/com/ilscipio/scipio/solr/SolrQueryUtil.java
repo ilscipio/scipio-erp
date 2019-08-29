@@ -29,6 +29,22 @@ public abstract class SolrQueryUtil {
         }
     }
 
+    public static void addFacetQueries(SolrQuery solrQuery, Collection<String> facetQueries) {
+        if (facetQueries != null) {
+            for(String facetQuery : facetQueries) {
+                solrQuery.addFacetQuery(facetQuery);
+            }
+        }
+    }
+
+    public static void addFacetFields(SolrQuery solrQuery, Collection<String> facetFields) {
+        if (facetFields != null) {
+            for(String facetField : facetFields) {
+                solrQuery.addFacetField(facetField);
+            }
+        }
+    }
+
     public static List<String> copyQueryFilters(List<String> queryFilters) {
         return queryFilters != null ? new ArrayList<>(queryFilters) : new ArrayList<>();
     }

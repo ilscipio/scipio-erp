@@ -355,7 +355,13 @@ code package.
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
+        <attribute mode="IN" optional="true" name="facetQueryList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetFieldList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetMinCount" type="Integer"/>
+        <attribute mode="IN" optional="true" name="facetLimit" type="Integer"/>
+        <attribute mode="IN" optional="true" name="facet" type="Boolean">
+            <description>DEPRECATED: 2019-08: this was a legacy parameter and you may simply omit it; default: false (changed 2017-09)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
@@ -445,10 +451,16 @@ code package.
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
+        <attribute mode="IN" optional="true" name="facetQueryList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetFieldList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetMinCount" type="Integer"/>
+        <attribute mode="IN" optional="true" name="facetLimit" type="Integer"/>
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="facet" type="Boolean">
+            <description>DEPRECATED: 2019-08: this was a legacy parameter and you may simply omit it; default: false (changed 2017-09)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="solrUsername" type="String">
             <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
@@ -492,6 +504,10 @@ code package.
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
+        <attribute mode="IN" optional="true" name="facetQueryList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetFieldList" type="List"/>
+        <attribute mode="IN" optional="true" name="facetMinCount" type="Integer"/>
+        <attribute mode="IN" optional="true" name="facetLimit" type="Integer"/>
         <attribute mode="IN" optional="true" name="queryType" type="String">
             <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
         </attribute>
@@ -507,7 +523,9 @@ code package.
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="facet" type="Boolean">
+            <description>DEPRECATED: 2019-08: this was a legacy parameter and you may simply omit it; default: false (changed 2017-09)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (changed 2017-09) -->
         <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (changed 2017-09) -->

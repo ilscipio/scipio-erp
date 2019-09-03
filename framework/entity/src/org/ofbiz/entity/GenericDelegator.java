@@ -993,7 +993,9 @@ public class GenericDelegator implements Delegator {
             ecaRunner.evalRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, primaryKey, false);
             this.clearCacheLine(primaryKey);
 
-            this.saveEntitySyncRemoveInfo(primaryKey);
+            if (saveEntitySyncRemoveInfo){
+                this.saveEntitySyncRemoveInfo(primaryKey);
+            }
 
             if (testMode) {
                 if (removedEntity != null) {

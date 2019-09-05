@@ -263,7 +263,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap = new HashMap<>();
             List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
             for (ShoppingCartItem item : cart.items()) {
-                ShoppingCartItem newItem = new ShoppingCartItem(item, exactCopy, itemGroupByNumberMap);
+                ShoppingCartItem newItem = item.copy(exactCopy, itemGroupByNumberMap);
                 cartLines.add(newItem);
                 oldToNewItemMap.put(item, newItem);
             }
@@ -273,7 +273,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             //this.productPromoUseInfoList.addAll(cart.productPromoUseInfoList);
             List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>(cart.productPromoUseInfoList.size());
             for(ProductPromoUseInfo ppui : cart.productPromoUseInfoList) {
-                productPromoUseInfoList.add(new ProductPromoUseInfo(ppui, exactCopy, oldToNewItemMap));
+                productPromoUseInfoList.add(ppui.copy(exactCopy, oldToNewItemMap));
             }
             this.productPromoUseInfoList = productPromoUseInfoList;
             this.productPromoCodes = new HashSet<>(cart.productPromoCodes);
@@ -308,13 +308,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             
             List<CartPaymentInfo> paymentInfo = new ArrayList<>();
             for(CartPaymentInfo cpi : cart.paymentInfo) {
-                paymentInfo.add(new CartPaymentInfo(cpi, exactCopy));
+                paymentInfo.add(cpi.copy(exactCopy));
             }
             this.paymentInfo = paymentInfo;
             
             List<CartShipInfo> shipInfo = new ArrayList<>();
             for(CartShipInfo csi : cart.shipInfo) {
-                shipInfo.add(new CartShipInfo(csi, exactCopy, oldToNewItemMap));
+                shipInfo.add(csi.copy(exactCopy, oldToNewItemMap));
             }
             this.shipInfo = shipInfo;
 
@@ -404,7 +404,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             // clone the items
             List<ShoppingCartItem> cartLines = new ArrayList<>(); // SCIPIO: Use local var
             for (ShoppingCartItem item : cart.items()) {
-                cartLines.add(new ShoppingCartItem(item));
+                cartLines.add(item.copy(exactCopy));
             }
             this.cartLines = cartLines;
         }
@@ -448,7 +448,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 newParentGroup = copyItemGroupParentsFirst(itemGroup.getParentGroup(), exactCopy, newMap);
             }
         }
-        ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, newParentGroup);
+        ShoppingCartItemGroup newGroup = itemGroup.copy(exactCopy, newParentGroup);
         newMap.put(newGroup.getGroupNumber(), newGroup);
         return newGroup;
     }
@@ -498,14 +498,21 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this(delegator, productStoreId, null, locale, currencyUom);
     }
 
-    /** SCIPIO: Performs an exact, deep copy of the cart.
-     * Changes to this copy do not affect the main cart. Added 2018-11-16. */
-    public ShoppingCart exactCopy() {
-        return new ShoppingCart(this, true);
+    /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+    public ShoppingCart copy(boolean exactCopy) {
+        return new ShoppingCart(this, exactCopy);
     }
-    
+
+    /** SCIPIO: Performs an exact, deep copy of the cart. Added 2018-11-16.
+     * @deprecated 2019-09-05: use {@link #copy(boolean)} instead.
+     */
+    @Deprecated
+    public ShoppingCart exactCopy() {
+        return copy(true);
+    }
+
     /**
-     * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+     * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
     void ensureExactEquals(ShoppingCart other) throws IllegalStateException {
@@ -5010,8 +5017,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.parentGroup = parentGroup;
         }
 
+        /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+        public ShoppingCartItemGroup copy(boolean exactCopy, ShoppingCartItemGroup parentGroup) {
+            return new ShoppingCartItemGroup(this, parentGroup);
+        }
+
         /**
-         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(ShoppingCartItemGroup other) {
@@ -5120,8 +5132,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.usageInfoMap = usageInfoMap;
         }
 
+        /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+        public ProductPromoUseInfo copy(boolean exactCopy, Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap) {
+            return new ProductPromoUseInfo(this, exactCopy, oldToNewItemMap);
+        }
+
         /**
-         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(ProductPromoUseInfo other) {
@@ -5227,7 +5244,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 if (entry.getValue() == null) {
                     shipItemInfo.put(newItem, null);
                 } else {
-                    shipItemInfo.put(newItem, new CartShipItemInfo(entry.getValue(), exactCopy, newItem));
+                    shipItemInfo.put(newItem, entry.getValue().copy(exactCopy, newItem));
                 }
             }
             this.shipItemInfo = shipItemInfo;
@@ -5254,8 +5271,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.attributes = other.attributes;
         }
 
+        /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+        public CartShipInfo copy(boolean exactCopy, Map<ShoppingCartItem, ShoppingCartItem> oldToNewItemMap) {
+            return new CartShipInfo(this, exactCopy, oldToNewItemMap);
+        }
+
         /**
-         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(CartShipInfo other) {
@@ -5592,8 +5614,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 this.quantity = other.quantity;
             }
 
+            /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+            public CartShipItemInfo copy(boolean exactCopy, ShoppingCartItem parentItem) {
+                return new CartShipItemInfo(this, exactCopy, parentItem);
+            }
+
             /**
-             * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+             * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
              * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
              */
             void ensureExactEquals(CartShipItemInfo other) {
@@ -5677,8 +5704,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.origAmount = other.origAmount;
         }
 
+        /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+        public CartPaymentInfo copy(boolean exactCopy) {
+            return new CartPaymentInfo(this, exactCopy);
+        }
+
         /**
-         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #exactCopy}.
+         * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
         void ensureExactEquals(CartPaymentInfo other) {

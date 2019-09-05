@@ -288,7 +288,7 @@ public class CartUpdate implements AutoCloseable {
         if (!CART_COPIES_ENABLED) {
             return cart;
         }
-        ShoppingCart newCart = cart.exactCopy();
+        ShoppingCart newCart = cart.copy(true);
         if (isDebug()) {
             try {
                 newCart.ensureExactEquals(cart);

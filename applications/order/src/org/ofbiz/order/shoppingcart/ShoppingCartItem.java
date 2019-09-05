@@ -738,12 +738,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Clone an item (exactCopy==false).
+     * @deprecated SCIPIO: 2019-09-05: use {@link #copy(boolean)} instead.
      * SCIPIO: WARN: This overload cannot fully clone the itemGroup field (FIXME or doesn't matter?) */
+    @Deprecated
     public ShoppingCartItem(ShoppingCartItem item) {
         this(item, false, null);
     }
 
-    /** Clone an item (exactCopy==false). */
+    /** Clone an item (exactCopy==false).
+     * @deprecated SCIPIO: 2019-09-05: use {@link #copy(boolean, Map)} instead. */
+    @Deprecated
     public ShoppingCartItem(ShoppingCartItem item, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
         this(item, false, itemGroupByNumberMap);
     }
@@ -770,9 +774,9 @@ public class ShoppingCartItem implements java.io.Serializable {
                         Debug.logError("Could not fully clone ShoppingCartItemGroup because no copy was made for parent group"
                                 + " with number: " + item.itemGroup.getParentGroup().getGroupNumber(), module);
                     }
-                    this.itemGroup = new ShoppingCart.ShoppingCartItemGroup(item.itemGroup, parentGroup);
+                    this.itemGroup = item.itemGroup.copy(exactCopy, parentGroup);
                 } else {
-                    this.itemGroup = new ShoppingCart.ShoppingCartItemGroup(item.itemGroup, null);
+                    this.itemGroup = item.itemGroup.copy(exactCopy, null);
                 }
             } else {
                 item.itemGroup = null;
@@ -901,6 +905,16 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
             this.featuresForSupplier.addAll(item.featuresForSupplier);
         }
+    }
+
+    /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+    public ShoppingCartItem copy(boolean exactCopy, Map<String, ShoppingCartItemGroup> itemGroupByNumberMap) {
+        return new ShoppingCartItem(this, exactCopy, itemGroupByNumberMap);
+    }
+
+    /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */
+    public ShoppingCartItem copy(boolean exactCopy) {
+        return copy(exactCopy, null);
     }
 
     /** Cannot create shopping cart item with no parameters */
@@ -2810,7 +2824,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (baseQuantity.compareTo(BigDecimal.ONE) > 0) {
             for (int i = 1; i < baseQuantity.intValue(); i++) {
                 // clone the item
-                ShoppingCartItem item = new ShoppingCartItem(this);
+                ShoppingCartItem item = this.copy(false); // SCIPIO: clone polymorphically
 
                 // set the new item's quantity
                 item.setQuantity(BigDecimal.ONE, dispatcher, cart, false);

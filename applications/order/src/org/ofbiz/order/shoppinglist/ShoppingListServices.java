@@ -47,6 +47,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartFactory;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
@@ -455,7 +456,7 @@ public class ShoppingListServices {
 
             if (UtilValidate.isNotEmpty(items)) {
                 if (listCart == null) {
-                    listCart = new ShoppingCart(delegator, productStoreId, locale, currencyUom);
+                    listCart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom); // SCIPIO: use factory
                     listCart.setOrderPartyId(shoppingList.getString("partyId"));
                     listCart.setAutoOrderShoppingListId(shoppingList.getString("shoppingListId"));
                 } else {

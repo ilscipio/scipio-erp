@@ -70,6 +70,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartFactory;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
@@ -4792,7 +4793,7 @@ public class OrderServices {
     public static Map<String, Object> shoppingCartTest(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         // SCIPIO: Default product store and web site have changed
-        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "ScipioShop", "ScipioWebStore", locale, "USD");
+        ShoppingCart cart = ShoppingCartFactory.get("ScipioShop").createShoppingCart(dctx.getDelegator(), "ScipioShop", "ScipioWebStore", locale, "USD"); // SCIPIO: use factory
         try {
             cart.addOrIncreaseItem("PH-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
         } catch (CartItemModifyException | ItemNotFoundException e) {
@@ -5214,7 +5215,7 @@ public class OrderServices {
                             currencyUomId = orh.getCurrency();
                         }
                         // create the cart
-                        ShoppingCart cart = new ShoppingCart(delegator, orh.getProductStoreId(), null, currencyUomId);
+                        ShoppingCart cart = ShoppingCartFactory.get(orh.getProductStoreId()).createShoppingCart(delegator, orh.getProductStoreId(), null, currencyUomId); // SCIPIO: use factory
                         cart.setOrderType("PURCHASE_ORDER");
                         cart.setBillToCustomerPartyId(cart.getBillFromVendorPartyId()); //Company
                         cart.setBillFromVendorPartyId(supplierPartyId);
@@ -5505,7 +5506,7 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         Map<String, BigDecimal> itemMap = UtilGenerics.checkMap(context.get("itemMap"));
 
-        ShoppingCart cart = new ShoppingCart(delegator, productStoreId, null, locale, currency);
+        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, null, locale, currency); // SCIPIO: use factory
         try {
             cart.setUserLogin(userLogin, dispatcher);
         } catch (CartItemModifyException e) {

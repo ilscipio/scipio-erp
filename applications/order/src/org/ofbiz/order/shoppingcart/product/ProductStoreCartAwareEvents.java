@@ -31,6 +31,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.shoppingcart.CartSync;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
+import org.ofbiz.order.shoppingcart.ShoppingCartFactory;
 import org.ofbiz.order.shoppingcart.WebShoppingCart;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -112,7 +113,7 @@ public class ProductStoreCartAwareEvents {
         // this should always be different given the previous session productStoreId check, but just in case...
         if (!productStoreId.equals(cart.getProductStoreId())) {
             // this is a really simple operation now that we have prepared all of the data, as done above in this method
-            cart = new WebShoppingCart(request);
+            cart = ShoppingCartFactory.get(productStoreId).createWebShoppingCart(request); // SCIPIO: use factory
             ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         }
 

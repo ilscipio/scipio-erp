@@ -822,9 +822,9 @@ public class ShoppingCartEvents {
         try {
             GenericValue supplierParty = EntityQuery.use(delegator).from("Party").where("partyId", supplierPartyId).queryOne();
             if (UtilValidate.isNotEmpty(supplierParty.getString("preferredCurrencyUomId"))) {
-                cart = new WebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId"));
+                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId")); // SCIPIO: use factory
             } else {
-                cart = new WebShoppingCart(request);
+                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
             }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
@@ -1165,7 +1165,7 @@ public class ShoppingCartEvents {
                 cart = sessionCart;
                 if (cart == null) {
                     // NEW CART
-                    cart = new WebShoppingCart(request);
+                    cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
                     // Update both session and req attr (or per modifyScopesFilter)
                     ShoppingCartEvents.setCartObject(request, cart, modifyScopesFilter);
                     requestCart = cart; // Don't re-update below; done by setCartObject
@@ -1527,7 +1527,7 @@ public class ShoppingCartEvents {
                 }
             } catch(CartUserInvalidException e) {
                 Debug.logWarning("Invalid cart state: " + e.getMessage() + "; clearing cart", module);
-                cart = new WebShoppingCart(request);
+                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
                 modifyCart = true;
             }
 

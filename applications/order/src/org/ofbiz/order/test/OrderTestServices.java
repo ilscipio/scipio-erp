@@ -37,6 +37,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartFactory;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -123,7 +124,7 @@ public class OrderTestServices {
 
         Random r = new Random();
 
-        ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
+        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUomId); // SCIPIO: use factory
         cart.setOrderType("SALES_ORDER");
         cart.setChannelType(salesChannel);
         cart.setProductStoreId(productStoreId);

@@ -1445,20 +1445,20 @@ functionality.
 </#macro>
 
 <#-- @paginate main markup - theme override -->
-<#macro paginate_markup paginateClass="" paginateFirstClass="" viewIndex=1 lowIndex=0 highIndex=0 realHighIndex=0 listSize=0 viewSize=1 
-    ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
-    paginateFirstLabel="" paginatePreviousClass="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 
+<#macro paginate_markup paginateClass="" paginateFirstClass="" viewIndex=1 lowIndex=0 highIndex=0 realHighIndex=0 listSize=0 viewSize=1
+    ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl=""
+    paginateFirstLabel="" paginatePreviousClass="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel=""
     pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" showCount="" alwaysShowCount="" countMsg="" lowCountMsg=""
-    paginateNextClass="" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastClass="" ajaxLastUrl="" 
-    lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" 
-    forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl="" 
-    paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
+    paginateNextClass="" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastClass="" ajaxLastUrl=""
+    lastUrl="" paginateLastLabel="" paginateViewSizeLabel=""
+    forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl=""
+    paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass=""
     paginateOffLabel=""
     availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false position="" infoWidget={} infoWidgetArgs={} ctrlWidget={} ctrlWidgetArgs={} origArgs={} passArgs={} catchArgs...>
-    
-  <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
-  <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  
-    
+
+  <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)>
+  <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>
+
   <#-- DEV NOTE: you could force-disable toggling paginate like this (per-theme even), but not clear if wanted.
       NOTE: not possible to force-enable because every screen has to implement the toggle (and widgets don't?).
       DO NOT remove the actual toggle code.
@@ -1479,10 +1479,10 @@ functionality.
 
   <#if paginateToggle>
      <#if !paginateOffLabel?has_content>
-       <#local paginateOffLabel = (uiLabelMap.CommonPagingOff)!"">  
+       <#local paginateOffLabel = (uiLabelMap.CommonPagingOff)!"">
      </#if>
      <#if !paginateOnLabel?has_content>
-       <#local paginateOnLabel = (uiLabelMap.CommonPagingOn)!"">  
+       <#local paginateOnLabel = (uiLabelMap.CommonPagingOn)!"">
      </#if>
   </#if>
 
@@ -1519,10 +1519,10 @@ functionality.
 
   <#-- NOTE: (listSize > minPageSize) implies (listSize > 0); some cases this gets called with listSize zero -->
   <#if paginateOn && (listSize > minPageSize)>
-    
+
       <#local itemRange = 2/>
       <#local placeHolder ="..."/>
-    
+
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
         <#if infoWidget.content??>
@@ -1534,44 +1534,44 @@ functionality.
             <div<@compiledClassAttribStr class=paginateClass />>
               <ul class="${styles.pagination_list!}">
       </#if>
-  
+
             <#-- NOTE: must use submitPaginationPost JS function to force send as POST for some requests, because Ofbiz security feature prevents
                  GET params passed to controller service event when request is https="true".
                  NOTE: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
                  FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
                     currently non-js falls back to GET only, won't always work -->
-  
+
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxFirstUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(firstUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(firstUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateFirstClass), 'html')}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${escapeVal(paginateFirstLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateFirstLabel, 'htmlmarkup')}</span></#if></li>
+                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateFirstClass), 'html')}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginateFirstLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateFirstLabel, 'htmlmarkup')}</span></#if></li>
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPreviousUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(previousUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(previousUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginatePreviousClass), 'html')}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr}>${escapeVal(paginatePreviousLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginatePreviousLabel, 'htmlmarkup')}</span></#if></li>
+                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginatePreviousClass), 'html')}<#if (viewIndex > viewIndexFirst)>"><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginatePreviousLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginatePreviousLabel, 'htmlmarkup')}</span></#if></li>
             <#local displayDots = true/>
-            <#if (listSize > 0)> 
+            <#if (listSize > 0)>
               <#local x=(listSize/viewSize)?ceiling>
                 <#list 1..x as i>
                   <#local vi = viewIndexFirst + (i - 1)>
                   <#if (vi gte viewIndexFirst && vi lte viewIndexFirst+itemRange) || (vi gte viewIndex-itemRange && vi lte viewIndex+itemRange)>
                     <#local displayDots = true/>
                     <#if vi == viewIndex>
-                      <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)">${i}</a></li>
+                      <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)" class="${styles.pagination_link!}">${i}</a></li>
                     <#else>
                       <#local finalSelectUrl = selectUrl?replace("_VIEWINDEXVALUE_", vi)>
                       <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxSelectUrl + vi?string, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(finalSelectUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(finalSelectUrl, 'html')}"</#if></#local>
-                      <li><a ${actionStr}>${i}</a></li>
+                      <li class="${styles.pagination_item!}"><a ${actionStr} class="${styles.pagination_link!}">${i}</a></li>
                     </#if>
                   <#else>
-                  <#if displayDots><li><span>${escapeVal(placeHolder, 'htmlmarkup')}</span></li></#if>
+                  <#if displayDots><li class="${styles.pagination_dots!}"><span>${escapeVal(placeHolder, 'htmlmarkup')}</span></li></#if>
                   <#local displayDots = false/>
                   </#if>
                 </#list>
             </#if>
-            
-                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxNextUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(nextUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(nextUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateNextClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr}>${escapeVal(paginateNextLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateNextLabel, 'htmlmarkup')}</span></#if></li>
-                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxLastUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(lastUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(lastUrl, 'html')}"</#if></#local>
-                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateLastClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr}>${escapeVal(paginateLastLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateLastLabel, 'htmlmarkup')}</span></#if></li>         
 
-      <#if !listItemsOnly>  
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxNextUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(nextUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(nextUrl, 'html')}"</#if></#local>
+                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateNextClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginateNextLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateNextLabel, 'htmlmarkup')}</span></#if></li>
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxLastUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(lastUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(lastUrl, 'html')}"</#if></#local>
+                <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateLastClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginateLastLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateLastLabel, 'htmlmarkup')}</span></#if></li>
+
+      <#if !listItemsOnly>
               </ul>
             </div>
           </div>
@@ -1584,8 +1584,8 @@ functionality.
               <#-- NOTE: duplicated below -->
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOffUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOffUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOffUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOffClass, styles.pagination_item!)>
-              <span<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapeVal(paginateOffLabel, 'htmlmarkup')}</a></span>       
-            </#local>    
+              <span<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapeVal(paginateOffLabel, 'htmlmarkup')}</a></span>
+            </#local>
           </#if>
             <#if javaScriptEnabled>
               <#if viewSizeSelection>
@@ -1595,7 +1595,7 @@ functionality.
                         <label>${escapeVal(paginateViewSizeLabel, 'htmlmarkup')}</label>
                     </div>
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
-                        <select name="pageSize" size="1" ${actionStr}><#rt/>    
+                        <select name="pageSize" size="1" ${actionStr}><#rt/>
                         <#local sufficientPs = false>
                         <#list availPageSizes as ps>
                            <#if !sufficientPs>
@@ -1609,7 +1609,7 @@ functionality.
                     </div>
                 </div>
               </#if>
-                
+
               <#if paginateToggle>
                 <div class="${styles.grid_row!}">
                     <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.text_right!}">
@@ -1671,13 +1671,13 @@ functionality.
             <#if !paginateOn>
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOnUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOnUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOnUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOnClass, styles.pagination_item!)>
-              <li<@compiledClassAttribStr class=paginateOnClass />><a ${actionStr}>${escapeVal(paginateOnLabel, 'htmlmarkup')}</a></li>  
+              <li<@compiledClassAttribStr class=paginateOnClass />><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginateOnLabel, 'htmlmarkup')}</a></li>
             <#else>
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxPaginateOffUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(paginateOffUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(paginateOffUrl, 'html')}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOffClass, styles.pagination_item!)>
-              <li<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapeVal(paginateOffLabel, 'htmlmarkup')}</a></li> 
+              <li<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr} class="${styles.pagination_link!}">${escapeVal(paginateOffLabel, 'htmlmarkup')}</a></li>
             </#if>
-    <#if !listItemsOnly>  
+    <#if !listItemsOnly>
             </ul>
           </div>
         </div>

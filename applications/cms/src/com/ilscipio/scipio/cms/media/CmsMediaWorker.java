@@ -282,7 +282,7 @@ public abstract class CmsMediaWorker {
                     imageSizeDimensionList.add(imageSizeDimension);
                 } else {
                     // TODO: Let's see what do in this case
-                    scpWidthList.add(contentDataResource.getLong("scpWidth"));
+                    scpWidthList.add(contentDataResource.getLong("drScpWidth"));
                 }
                 dataResourceBySizeIdMap.put(sizeId, contentDataResource);
             }

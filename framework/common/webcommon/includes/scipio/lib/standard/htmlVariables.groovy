@@ -1121,8 +1121,12 @@ context.styles = [
     "field_rangefind_select_default" : "",
     "field_display_default" : "",
     "field_generic_default" : "",
-    
+
+    /* default type styles (NOTE: these have priority over "fields_default_*" - @field vs @fields) */
+    "field_default_labelposition" : "",
+
     /* checkbox type styles */
+    //"field_checkbox_labelposition" : "",
     "field_checkbox_default" : "switch small checkbox-type-switch",         /* default checkbox styles */
     "field_checkbox_default_type" : "checkbox-type-switch",                 /* normally already included in previous, but can reference individually with this */
     "field_checkbox_default_labeltype" : "extralabel",                      /* FIXME? this should really be "standard" and the CSS made to cooperate with "standard" mode - see checkbox markup macro for issues */

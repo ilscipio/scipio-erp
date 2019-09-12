@@ -1631,14 +1631,33 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#local container = true>
     </#if>
   </#if>
-  
+
   <#-- label area logic
       NOTE: labelArea boolean logic does not determine "label type" or "label area type"; 
           only controls presence of. so labelArea logic and usage anywhere should not change
           if new label (area) type were to be added (e.g. on top instead of side by side). -->
+  <#if labelType?has_content>
+    <#local effLabelType = labelType>
+  <#else>
+    <#local effLabelType = (fieldsInfo.labelType)!"">
+  </#if>
+  <#if !labelPosition?has_content>
+    <#local labelPosition = styles["field_"+type+"_labelposition"]!styles["field_default_labelposition"]!"">
+  </#if>
+  <#if labelPosition?has_content>
+    <#local effLabelPosition = labelPosition>
+  <#else>
+    <#local effLabelPosition = (fieldsInfo.labelPosition)!"">
+  </#if>
+  <#if collapsedInlineLabel?is_boolean>
+    <#local effCollapsedInlineLabel = collapsedInlineLabel>
+  <#else>
+    <#local effCollapsedInlineLabel = (fieldsInfo.collapsedInlineLabel)![]>
+  </#if>
+  <!-- effLabelPosition: ${effLabelPosition?string} -->
   <#if labelArea?is_boolean>
     <#local labelAreaDefault = labelArea>
-  <#elseif labelType == "none" || labelPosition == "none">
+  <#elseif effLabelType == "none" || effLabelPosition == "none">
     <#local labelAreaDefault = false>
   <#elseif isChildField>
     <#local labelAreaDefault = false>
@@ -1655,23 +1674,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
       </#if>
     </#if>
-  </#if>
-  
-  <#if labelType?has_content>
-    <#local effLabelType = labelType>
-  <#else>
-    <#local effLabelType = (fieldsInfo.labelType)!"">
-  </#if>
-  <#if labelPosition?has_content>
-    <#local effLabelPosition = labelPosition>
-  <#else>
-    <#local effLabelPosition = (fieldsInfo.labelPosition)!"">
-  </#if>
-
-  <#if collapsedInlineLabel?is_boolean>
-    <#local effCollapsedInlineLabel = collapsedInlineLabel>
-  <#else>
-    <#local effCollapsedInlineLabel = (fieldsInfo.collapsedInlineLabel)![]>
   </#if>
 
   <#if !labelAreaRequireContent?is_boolean>
@@ -1904,7 +1906,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     "widgetPostfixCombined":widgetPostfixCombined, "labelArea":useLabelArea, 
     "labelInRow":(effLabelType != "vertical"), "postfix":postfix, "postfixColumns":postfixColumns,
     "fieldsType":fieldsType, "labelSmallDiffColumns":labelSmallDiffColumns}>
-</#compress>     
+</#compress>
   <@field_markup_container type=type fieldsType=fieldsType defaultGridArgs=defaultGridArgs gridArgs=gridArgs postfix=postfix  
     postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent 
     collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container containerId=containerId containerClass=containerClass containerStyle=containerStyle

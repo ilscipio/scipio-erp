@@ -1654,7 +1654,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#else>
     <#local effCollapsedInlineLabel = (fieldsInfo.collapsedInlineLabel)![]>
   </#if>
-  <!-- effLabelPosition: ${effLabelPosition?string} -->
   <#if labelArea?is_boolean>
     <#local labelAreaDefault = labelArea>
   <#elseif effLabelType == "none" || effLabelPosition == "none">

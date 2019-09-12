@@ -116,6 +116,12 @@ code package.
             <param-value>false</param-value>
         </init-param>
     </filter>
+    <!-- SCIPIO: CMS Process filter -->
+    <filter>
+        <display-name>CmsProcessFilter</display-name>
+        <filter-name>CmsProcessFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>
+    </filter>
     <filter>
         <display-name>SeoCatalogUrlFilter</display-name>
         <filter-name>SeoCatalogUrlFilter</filter-name>
@@ -175,12 +181,6 @@ code package.
             <param-value></param-value>
         </init-param>
     </filter>
-    <!-- SCIPIO: CMS Process filter -->
-    <filter>
-        <display-name>CmsProcessFilter</display-name>
-        <filter-name>CmsProcessFilter</filter-name>
-        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>         
-    </filter>
     <filter>
         <display-name>ContextFilter</display-name>
         <filter-name>ContextFilter</filter-name>
@@ -212,6 +212,13 @@ code package.
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>ERROR</dispatcher><!-- 2018-04: needed for outbound-rules to run on error page -->
     </filter-mapping>
+    <!-- SCIPIO: CMS Process filter mapping -->
+    <filter-mapping>
+        <filter-name>CmsProcessFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>SeoCatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -228,13 +235,6 @@ code package.
     <filter-mapping>
         <filter-name>ContentUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-    <!-- SCIPIO: CMS Process filter mapping -->
-    <filter-mapping>
-        <filter-name>CmsProcessFilter</filter-name>
-        <url-pattern>/*</url-pattern>   
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>

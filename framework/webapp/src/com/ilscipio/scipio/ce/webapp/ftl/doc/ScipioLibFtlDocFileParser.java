@@ -714,11 +714,13 @@ public class ScipioLibFtlDocFileParser extends FtlDocFileParser {
      */
     protected List<String> parseArgStringMacro(CharSequence argStr) throws ParseException {
         List<String> argList = new ArrayList<>();
-        String[] args = argStr.toString().split("(\\s|\\n)+");
-        for (String arg : args) {
-            String[] parts = arg.split("=");
-            String name = parts[0];
-            argList.add(name);
+        if (argStr != null && argStr.length() > 0) {
+            String[] args = argStr.toString().split("(\\s|\\n)+");
+            for (String arg : args) {
+                String[] parts = arg.split("=");
+                String name = parts[0];
+                argList.add(name);
+            }
         }
         return argList;
     }

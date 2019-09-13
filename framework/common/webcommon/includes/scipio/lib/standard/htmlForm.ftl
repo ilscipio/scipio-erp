@@ -2369,6 +2369,29 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   </#if>-->
 </#macro>
 
+<#--
+*************
+* input
+************
+A form field input widget with optional label and post-input (postfix) content. Alias for @field.
+
+FIXME: Documentation parser does not recognize ALIAS yet.
+
+  * Parameters *
+    (other)                 = See @field
+
+  * Related *
+    @field
+
+  * History *
+    Added for for 2.1.0.
+-->
+<#-- ALIAS FOR: @field
+<#macro input>
+</#macro>
+-->
+<#assign input = field/>
+
 <#-- 
 *************
 * getDefaultFieldGridStyles

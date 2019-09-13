@@ -683,6 +683,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <@field type="datetime" label="Date 3 (month)" name="date3" value="" size="25" maxlength="30" dateType="month" />
       <@field type="datetime" label="Date 4 (time only)" name="date4" value="" size="25" maxlength="30" dateType="time" />
       <@field type="datetime" label="Date 5 (timestamp internal, displayed as short date)" name="date5" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
+      <@input type="datetime" label="Date 6 (@input - alias for @field)" name="date5" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
 
       <@field type="datefind" label="Date Find 1 (timestamp)" name="datefind1" value="" size="25" maxlength="30" dateType="date-time" />
       <@field type="datefind" label="Date Find 2 (short date)" name="datefind2" value="" size="25" maxlength="30" dateType="date" />

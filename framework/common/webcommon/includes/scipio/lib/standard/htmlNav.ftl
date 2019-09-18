@@ -1072,7 +1072,8 @@ functionality.
                               DEV NOTE: only here for testing purposes
    altParam                 = Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE
    viewIndexString          = (default: VIEW_INDEX) Specific param name to use        
-   viewSizeString           = (default: VIEW_SIZE) Specific param name to use        
+   viewSizeString           = (default: VIEW_SIZE) Specific param name to use
+                              Set to the value "_" to omit from URLs.
    paginateToggleString     = (default: PAGING) Specific param name to use     
    paramPrefix              = (default: -empty-) Prefix added to param names. Some screens need "~".
                               NOTE: Does not affect paramStr - caller must handle.
@@ -1221,39 +1222,39 @@ functionality.
     <#if paramStr?has_content>
       <#local commonUrl = commonUrl + trimParamStrDelims(raw(paramStr), paramDelim) + paramDelim>
     </#if>
-    
+
+    <#local viewSizeParam = (viewSizeString != "_")?then(viewSizeString + "=" + viewSize + paramDelim, "")>
     <#local firstUrl = "">
     <#if (!firstUrl?has_content)>
-      <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
+      <#local firstUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
     </#if>
     <#local previousUrl = "">
     <#if (!previousUrl?has_content)>
-      <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexPrevious}"+urlSuffix/>
+      <#local previousUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexPrevious}"+urlSuffix/>
     </#if>
     <#local nextUrl="">
     <#if (!nextUrl?has_content)>
-      <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexNext}"+urlSuffix/>
+      <#local nextUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexNext}"+urlSuffix/>
     </#if>
     <#local lastUrl="">
     <#if (!lastUrl?has_content)>
-      <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexLast}"+urlSuffix/>
+      <#local lastUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexLast}"+urlSuffix/>
     </#if>
     <#local selectUrl="">
     <#if (!selectUrl?has_content)>
-      <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=_VIEWINDEXVALUE_"+urlSuffix/>
+      <#local selectUrl=commonUrl+"${viewSizeParam}${viewIndexString}=_VIEWINDEXVALUE_"+urlSuffix/>
     </#if>
     <#local selectSizeUrl="">
     <#if (!selectSizeUrl?has_content)>
-      <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'${paramDelim}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
+      <#local selectSizeUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}='+this.value+'${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
     </#if>
-  
     <#local paginateOnUrl="">
     <#if (!paginateOnUrl?has_content)>
-      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${previousViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
+      <#local paginateOnUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}=${previousViewSize}${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
     </#if>
     <#local paginateOffUrl="">
     <#if (!paginateOffUrl?has_content)>
-      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${paginateOffViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
+      <#local paginateOffUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}=${paginateOffViewSize}${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
     </#if>
     
     <#-- optimization to avoid too much overhead during request -->

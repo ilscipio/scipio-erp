@@ -17,6 +17,9 @@
  * under the License.
  */
 
+
+import org.ofbiz.base.util.cache.UtilCache
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -32,38 +35,86 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 final module = "MiniProductSummary.groovy";
 
-miniProduct = request.getAttribute("miniProduct");
+
+// Setup
+UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.miniproductsummary.rendered", 0,0,
+        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.expireTime","0")),
+        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.softReference","true"), true));
+Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.enable","false"), false);
+miniProduct = context.miniProduct ? context.miniProduct : request.getAttribute("miniProduct");
 optProductId = request.getAttribute("optProductId");
 webSiteId = WebSiteWorker.getWebSiteId(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 cart = ShoppingCartEvents.getCartObject(request);
-context.remove("totalPrice");
 
-if (optProductId) {
-    miniProduct = from("Product").where("productId", optProductId).queryOne();
+context.remove("totalPrice");
+context.miniProdFormName = request.getAttribute("miniProdFormName");
+context.miniProdQuantity = request.getAttribute("miniProdQuantity");
+context.nowTimeLong = nowTimestamp.getTime();
+
+
+/**
+ * Creates a unique product cachekey
+ * */
+String getProductCacheKey(){
+    if (userLogin){
+        return optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+    }else{
+        return optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+    }
 }
 
-if (miniProduct && productStoreId && prodCatalogId) {
-    // calculate the "your" price
-    priceParams = [product : miniProduct,
-                   prodCatalogId : prodCatalogId,
-                   webSiteId : webSiteId,
-                   currencyUomId : cart.getCurrency(),
-                   autoUserLogin : autoUserLogin,
-                   productStoreId : productStoreId];
-    if (userLogin) priceParams.partyId = userLogin.partyId;
-    priceResult = runService('calculateProductPrice', priceParams);
-    // returns: isSale, price, orderItemPriceInfos
-    context.priceResult = priceResult;
-    // Check if Price has to be displayed with tax
-    if (productStore.get("showPricesWithVatTax").equals("Y")) {
-        Map priceMap = runService('calcTaxForDisplay', ["basePrice": priceResult.get("price"), "locale": locale, "productId": optProductId, "productStoreId": productStoreId]);
-        context.price = priceMap.get("priceWithTax");
-    } else {
-        context.price = priceResult.get("price");
+if(!miniProduct){
+    String cacheKey = getProductCacheKey();
+    if (useCache) {
+        Map cachedValue = productCache.get(cacheKey);
+        if (cachedValue != null) {
+            miniProduct = cachedValue.miniProduct;
+            context.miniProduct = cachedValue.miniProduct;
+            context.price = cachedValue.price;
+            context.priceResult = cachedValue.priceResult;
+        }
     }
 
+    if (!miniProduct && optProductId) {
+        miniProduct = delegator.findOne("Product", [productId : optProductId], true);
+
+        if(!miniProduct){
+            Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
+            return
+        }
+        context.miniProduct = miniProduct;
+
+        // calculate the "your" price
+        priceParams = [product : miniProduct,
+                       prodCatalogId : prodCatalogId,
+                       webSiteId : webSiteId,
+                       currencyUomId : cart.getCurrency(),
+                       autoUserLogin : autoUserLogin,
+                       productStoreId : productStoreId];
+        if (userLogin) priceParams.partyId = userLogin.partyId;
+        priceResult = runService('calculateProductPrice', priceParams);
+        // returns: isSale, price, orderItemPriceInfos
+        context.priceResult = priceResult;
+        // Check if Price has to be displayed with tax
+        if (productStore.get("showPricesWithVatTax").equals("Y")) {
+            Map priceMap = runService('calcTaxForDisplay', ["basePrice": priceResult.get("price"), "locale": locale, "productId": optProductId, "productStoreId": productStoreId]);
+            context.price = priceMap.get("priceWithTax");
+        } else {
+            context.price = priceResult.get("price");
+        }
+
+        // cache
+        prodMap = [:];
+        prodMap.priceResult = context.priceResult;
+        prodMap.price = context.price;
+        prodMap.miniProduct = context.miniProduct;
+        productCache.put(cacheKey,prodMap)
+    }
+}
+
+if(miniProduct){
     // get aggregated product totalPrice
     if ("AGGREGATED".equals(miniProduct.productTypeId) || "AGGREGATED_SERVICE".equals(miniProduct.productTypeId)) {
         configWrapper = ProductConfigWorker.getProductConfigWrapper(optProductId, cart.getCurrency(), request);
@@ -80,18 +131,7 @@ if (miniProduct && productStoreId && prodCatalogId) {
         }
     }
 
-    context.miniProduct = miniProduct;
-    context.nowTimeLong = nowTimestamp.getTime();
-
-    context.miniProdFormName = request.getAttribute("miniProdFormName");
-    context.miniProdQuantity = request.getAttribute("miniProdQuantity");
-
     // make the miniProductContentWrapper
     ProductContentWrapper miniProductContentWrapper = new ProductContentWrapper(miniProduct, request);
     context.miniProductContentWrapper = miniProductContentWrapper;
-
-} else {
-    if (!miniProduct && optProductId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
-        Debug.logWarning("Shop: Product '" + optProductId + "' not found in DB (caching/solr sync?)", module);
-    }
 }

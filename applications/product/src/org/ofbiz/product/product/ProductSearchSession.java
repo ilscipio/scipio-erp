@@ -215,9 +215,9 @@ public class ProductSearchSession {
             try {
                 this.setViewIndex(Integer.valueOf(viewIndexStr));
             } catch (Exception e) {
-                Debug.logError(e, "Error in formatting of VIEW_INDEX [" + viewIndexStr + "], setting to 20", module);
+                Debug.logError(e, "Error in formatting of VIEW_INDEX [" + viewIndexStr + "], setting to 0", module); // SCIPIO: changed to 0
                 if (this.viewIndex == null) {
-                    this.setViewIndex(20);
+                    this.setViewIndex(0); // SCIPIO: changed to 0
                 }
             }
         }

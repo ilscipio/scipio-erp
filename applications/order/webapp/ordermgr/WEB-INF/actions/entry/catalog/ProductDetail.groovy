@@ -22,6 +22,8 @@
  * should not contain order component's specific code.
  */
 
+import org.ofbiz.base.util.cache.UtilCache
+
 import java.text.NumberFormat;
 
 import org.ofbiz.base.util.*;
@@ -43,6 +45,70 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 
 final module = "ProductDetail.groovy"
 
+UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productdetail.rendered", 0,0,
+        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.expireTime","0")),
+        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.softReference","true"), true));
+Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.enable","false"), false);
+cart = ShoppingCartEvents.getCartObject(request);
+productId = null;
+product = context.product;
+priceMap = [:];
+
+if(product){
+    productId = product.productId;
+}else{
+    productId = requestParams.product_id ?: request.getAttribute("product_id");
+}
+context.product_id = productId;
+
+// set currency format
+currencyUomId = null;
+if (cart) currencyUomId = cart.getCurrency();
+if (!currencyUomId) currencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
+context.currencyUomId = currencyUomId; // SCIPIO: 2018-07-18: make available to ftl
+
+// get the product store for only Sales Order not for Purchase Order.
+productStore = null;
+productStoreId = null;
+if (cart.isSalesOrder()) {
+    productStore = ProductStoreWorker.getProductStore(request);
+    productStoreId = productStore.productStoreId;
+    context.productStoreId = productStoreId;
+    if (productStore != null) {
+        context.productStore = productStore; // SCIPIO: This may be missing in orderentry
+    }
+}
+
+// get the shopping lists for the user (if logged in)
+if (userLogin) {
+    exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.partyId),
+                EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
+    allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").cache(true).queryList();
+    context.shoppingLists = allShoppingLists;
+}
+
+contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
+context.contentPathPrefix = contentPathPrefix;
+product = context.product;  // SCIPIO: prevents crash if missing
+categoryId = parameters.category_id ?: product.primaryProductCategoryId;
+if (categoryId) context.categoryId = categoryId;
+catalogId = CatalogWorker.getCurrentCatalogId(request);
+currentCatalogId = catalogId;
+webSiteId = WebSiteWorker.getWebSiteId(request);
+autoUserLogin = request.getSession().getAttribute("autoUserLogin");
+featureTypes = [:];
+featureOrder = [];
+
+boolean isAlternativePacking = ProductWorker.isAlternativePacking(delegator, productId, null);;
+boolean isMarketingPackage = false;
+
+if(product){
+    isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG");
+}
+context.isMarketingPackage = (isMarketingPackage? "true": "false");
+
+
+// Custom Functions
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     def ct = 0;
     def buf = new StringBuffer();
@@ -74,128 +140,305 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     return buf.toString();
 }
 
-cart = ShoppingCartEvents.getCartObject(request);
-
-// set currency format
-currencyUomId = null;
-if (cart) currencyUomId = cart.getCurrency();
-if (!currencyUomId) currencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
-context.currencyUomId = currencyUomId; // SCIPIO: 2018-07-18: make available to ftl
-
-// get the shopping lists for the user (if logged in)
-if (userLogin) {
-    exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.partyId),
-                EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
-    allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
-    context.shoppingLists = allShoppingLists;
+/**
+ * Creates a unique product cachekey
+ * */
+String getProductCacheKey(){
+    if (userLogin){
+        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+    }else{
+        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+    }
 }
 
-// set the content path prefix
-contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
-context.contentPathPrefix = contentPathPrefix;
-
-product = context.product;  // SCIPIO: prevents crash if missing
-
-// get the product detail information
-if (product) {
-    productId = product.productId;
-    context.product_id = productId;
-    productTypeId = product.productTypeId;
-
-    boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG");
-    context.isMarketingPackage = (isMarketingPackage? "true": "false");
-
-    featureTypes = [:];
-    featureOrder = [];
-
-    // set this as a last viewed
-    LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
-    // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
-    // The synchronized block locks on the _previous_ list instance, and then changes the instance.
-    lastViewedProducts = session.getAttribute("lastViewedProducts");
-    synchronized(lastViewedProducts != null ? lastViewedProducts : UtilHttp.getSessionSyncObject(session)) {
-    lastViewedProducts = session.getAttribute("lastViewedProducts"); // SCIPIO: Re-read because other thread changed it
-    if (!lastViewedProducts) {
-        lastViewedProducts = [];
-        //session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Moved below
-    } else {
-        lastViewedProducts = new ArrayList(lastViewedProducts); // SCIPIO: Make local copy
+String cacheKey = getProductCacheKey();
+Map cachedValue = null;
+if (useCache) {
+    cachedValue = productCache.get(cacheKey);
+    if (cachedValue != null) {
+        context.product_id = cachedValue.product_id;
+        context.mainDetailImageUrl = cachedValue.mainDetailImageUrl;
+        context.categoryId = cachedValue.categoryId;
+        context.category = cachedValue.category;
+        context.previousProductId = cachedValue.previousProductId;
+        context.nextProductId = cachedValue.nextProductId;
+        context.productStoreId = cachedValue.productStoreId;
+        context.productStore = cachedValue.productStore;
+        context.productReviews = cachedValue.productReviews;
+        context.averageRating = cachedValue.averageRating;
+        context.numRatings = cachedValue.numRatings;
+        context.daysToShip = cachedValue.daysToShip;
+        context.daysToShip = cachedValue.daysToShip;
+        context.disFeatureList = cachedValue.disFeatureList;
+        context.sizeProductFeatureAndAppls = cachedValue.sizeProductFeatureAndAppls;
+        context.selFeatureTypes = cachedValue.selFeatureTypes;
+        context.selFeatureOrder = cachedValue.selFeatureOrder;
+        context.selFeatureOrderFirst = cachedValue.selFeatureOrderFirst;
+        context.mainProducts = cachedValue.mainProducts;
+        context.downloadProductContentAndInfoList = cachedValue.downloadProductContentAndInfoList;
+        context.productImageList = cachedValue.productImageList;
+        context.startDate = cachedValue.startDate;
+        context.productTags = cachedValue.productTags;
     }
-    lastViewedProducts.remove(productId);
-    lastViewedProducts.add(0, productId);
-    while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) {
-        lastViewedProducts.remove(lastViewedProducts.size() - 1);
-    }
-    session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Safe publish
-    }
+}
+if(!useCache && !cachedValue){
+    // get the product detail information
+    if (product) {
+        productTypeId = product.productTypeId;
 
-    // make the productContentWrapper
-    productContentWrapper = new ProductContentWrapper(product, request);
-    context.productContentWrapper = productContentWrapper;
-
-    // get the main detail image (virtual or single product)
-    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "url");
-    if (mainDetailImage) {
-        mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
-        context.mainDetailImageUrl = mainDetailImageUrl.toString();
-    }
-
-    // get next/previous information for category
-    categoryId = parameters.category_id ?: product.primaryProductCategoryId;
-    if (categoryId) context.categoryId = categoryId;
-
-    catNextPreviousResult = null;
-    if (categoryId) {
-        prevNextMap = [categoryId : categoryId, productId : productId];
-        prevNextMap.orderByFields = context.orderByFields ?: ["sequenceNum", "productId"];
-        catNextPreviousResult = runService('getPreviousNextProducts', prevNextMap);
-        if (ServiceUtil.isError(catNextPreviousResult)) {
-            request.setAttribute("errorMessageList", [ServiceUtil.getErrorMessage(catNextPreviousResult)]);
-            return;
+        // set this as a last viewed
+        LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
+        // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
+        // The synchronized block locks on the _previous_ list instance, and then changes the instance.
+        lastViewedProducts = session.getAttribute("lastViewedProducts");
+        synchronized(lastViewedProducts != null ? lastViewedProducts : UtilHttp.getSessionSyncObject(session)) {
+            lastViewedProducts = session.getAttribute("lastViewedProducts"); // SCIPIO: Re-read because other thread changed it
+            if (!lastViewedProducts) {
+                lastViewedProducts = [];
+                //session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Moved below
+            } else {
+                lastViewedProducts = new ArrayList(lastViewedProducts); // SCIPIO: Make local copy
+            }
+            lastViewedProducts.remove(productId);
+            lastViewedProducts.add(0, productId);
+            while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) {
+                lastViewedProducts.remove(lastViewedProducts.size() - 1);
+            }
+            session.setAttribute("lastViewedProducts", lastViewedProducts); // SCIPIO: Safe publish
         }
-        if (catNextPreviousResult && catNextPreviousResult.category) {
-            context.category = catNextPreviousResult.category;
-            context.previousProductId = catNextPreviousResult.previousProductId;
-            context.nextProductId = catNextPreviousResult.nextProductId;
+
+        // get the main detail image (virtual or single product)
+        mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL", "url");
+        if (mainDetailImage) {
+            mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
+            context.mainDetailImageUrl = mainDetailImageUrl.toString();
+        }
+
+        catNextPreviousResult = null;
+        if (categoryId) {
+            prevNextMap = [categoryId : categoryId, productId : productId];
+            prevNextMap.orderByFields = context.orderByFields ?: ["sequenceNum", "productId"];
+            catNextPreviousResult = runService('getPreviousNextProducts', prevNextMap);
+            if (ServiceUtil.isError(catNextPreviousResult)) {
+                request.setAttribute("errorMessageList", [ServiceUtil.getErrorMessage(catNextPreviousResult)]);
+                return;
+            }
+            if (catNextPreviousResult && catNextPreviousResult.category) {
+                context.category = catNextPreviousResult.category;
+                context.previousProductId = catNextPreviousResult.previousProductId;
+                context.nextProductId = catNextPreviousResult.nextProductId;
+            }
+        }
+
+        /* SCIPIO: 2019-03: This is already done by ShoppingCartEvents.addToCart and this is the wrong groovy file for this;
+         * the stashParameterMap call creates a memory leak
+        // get a defined survey
+        productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
+        if (productSurvey) {
+            survey = EntityUtil.getFirst(productSurvey);
+            origParamMapId = UtilHttp.stashParameterMap(request);
+            surveyContext = ["_ORIG_PARAM_MAP_ID_" : origParamMapId];
+            surveyPartyId = userLogin?.partyId;
+            wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
+            context.surveyWrapper = wrapper;
+        }
+        */
+
+        // get the product review(s)
+        // get all product review in case of Purchase Order.
+        reviewByAnd = [:];
+        reviewByAnd.statusId = "PRR_APPROVED";
+        if (cart.isSalesOrder()) {
+            reviewByAnd.productStoreId = productStoreId;
+        }
+        reviews = product.getRelated("ProductReview", reviewByAnd, ["-postedDateTime"], true);
+        context.productReviews = reviews;
+        // get the average rating
+        if (reviews) {
+            ratingReviews = EntityUtil.filterByAnd(reviews, [EntityCondition.makeCondition("productRating", EntityOperator.NOT_EQUAL, null)]);
+            if (ratingReviews) {
+                context.averageRating = ProductWorker.getAverageProductRating(product, reviews, productStoreId);
+                context.numRatings = ratingReviews.size();
+            }
+        }
+
+        // get the days to ship
+        // if order is purchase then don't calculate available inventory for product.
+        if (cart.isSalesOrder()) {
+            facilityId = productStore.inventoryFacilityId;
+            /*
+            productFacility = delegator.findOne("ProductFacility", [productId : productId, facilityId : facilityId, true);
+            context.daysToShip = productFacility?.daysToShip
+            */
+
+            resultOutput = runService('getInventoryAvailableByFacility', [productId : productId, facilityId : facilityId, useCache : false]);
+            totalAvailableToPromise = resultOutput.availableToPromiseTotal;
+            if (totalAvailableToPromise) {
+                productFacility = from("ProductFacility").where("productId", productId, "facilityId", facilityId).cache(true).queryOne();
+                context.daysToShip = productFacility?.daysToShip
+            }
+        } else {
+            supplierProduct = from("SupplierProduct").where("productId", productId).orderBy("-availableFromDate").cache(true).queryFirst();
+            if (supplierProduct?.standardLeadTimeDays) {
+                standardLeadTimeDays = supplierProduct.standardLeadTimeDays;
+                daysToShip = standardLeadTimeDays + 1;
+                context.daysToShip = daysToShip;
+            }
+        }
+
+        // get the product distinguishing features
+        disFeatureMap = runService('getProductFeatures', [productId : productId, type : "DISTINGUISHING_FEAT"]);
+        disFeatureList = disFeatureMap.productFeatures;
+        context.disFeatureList = disFeatureList;
+
+        // an example of getting features of a certain type to show
+        sizeProductFeatureAndAppls = from("ProductFeatureAndAppl").where("productId", productId, "productFeatureTypeId", "SIZE").orderBy("sequenceNum", "defaultSequenceNum").queryList();
+        context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
+
+        // SCIPIO: always get selectable features, in case need (affects nothing else)
+        if (true) {
+            selFeatureMap = runService('getProductFeatureSet', [productId : productId, productFeatureApplTypeId : "SELECTABLE_FEATURE"]);
+            selFeatureSet = selFeatureMap.featureSet;
+            selFeatureTypes = [:];
+            selFeatureOrder = [];
+            selFeatureOrderFirst = null;
+            if (selFeatureSet) {
+                selFeatureOrder = new LinkedList(selFeatureSet);
+                selFeatureOrder.each { featureKey ->
+                    featureValue = from("ProductFeatureType").where("productFeatureTypeId", featureKey).cache(true).queryOne();
+                    fValue = featureValue.get("description") ?: featureValue.productFeatureTypeId;
+                    selFeatureTypes[featureKey] = fValue;
+                }
+            }
+            context.selFeatureTypes = selFeatureTypes;
+            context.selFeatureOrder = selFeatureOrder;
+            if (selFeatureOrder) {
+                selFeatureOrderFirst = selFeatureOrder[0];
+            }
+            context.selFeatureOrderFirst = selFeatureOrderFirst;
+            //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureTypes, module);
+            //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureOrder, module);
+        }
+
+        // get product variant for Box/Case/Each
+        productVariants = [];
+        mainProducts = [];
+        if(isAlternativePacking){
+            productVirtualVariants = from("ProductAssoc").where("productIdTo", product.productId , "productAssocTypeId", "ALTERNATIVE_PACKAGE").cache(true).queryList();
+            if(productVirtualVariants){
+                productVirtualVariants.each { virtualVariantKey ->
+                    mainProductMap = [:];
+                    mainProduct = virtualVariantKey.getRelatedOne("MainProduct", true);
+                    quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
+                    mainProductMap.productId = mainProduct.productId;
+                    mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
+                    if (quantityUom) { // SCIPIO: This could be missing
+                        mainProductMap.uomDesc = quantityUom.description;
+                    }
+                    mainProducts.add(mainProductMap);
+                }
+            }
+        }
+        context.mainProducts = mainProducts;
+
+        // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
+        // SCIPIO: This should order by sequenceNum
+        downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
+        context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
+
+        // not the best to save info in an action, but this is probably the best place to count a view; it is done async
+        dispatcher.runAsync("countProductView", [productId : productId, weight : new Long(1)], false);
+
+        //get product image from image management
+        productImageList = [];
+        productContentAndInfoImageManamentList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "IMAGE", "statusId", "IM_APPROVED", "drIsPublic", "Y").orderBy("sequenceNum").queryList();
+        if(productContentAndInfoImageManamentList) {
+            productContentAndInfoImageManamentList.each { productContentAndInfoImageManament ->
+                contentAssocThumb = from("ContentAssoc").where("contentId", productContentAndInfoImageManament.contentId, "contentAssocTypeId", "IMAGE_THUMBNAIL").queryFirst();
+                if(contentAssocThumb) {
+                    imageContentThumb = from("Content").where("contentId", contentAssocThumb.contentIdTo).queryOne();
+                    if(imageContentThumb) {
+                        productImageThumb = from("ContentDataResourceView").where("contentId", imageContentThumb.contentId, "drDataResourceId", imageContentThumb.dataResourceId).queryOne();
+                        productImageMap = [:];
+                        productImageMap.productImageThumb = productImageThumb.drObjectInfo;
+                        productImageMap.productImage = productContentAndInfoImageManament.drObjectInfo;
+                        productImageList.add(productImageMap);
+                    }
+                }
+            }
+            context.productImageList = productImageList;
+        }
+
+        // get reservation start date for rental product
+        if("ASSET_USAGE".equals(productTypeId) || "ASSET_USAGE_OUT_IN".equals(productTypeId)){
+            context.startDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 1).toString().substring(0,10); // should be tomorrow.
+        }
+
+        // get product tags
+        productKeywords = from("ProductKeyword").where("productId": productId, "keywordTypeId" : "KWT_TAG", "statusId" : "KW_APPROVED").queryList();
+        keywordMap = [:];
+        if (productKeywords) {
+            for (productKeyword in productKeywords) {
+                productKeyWordCount = from("ProductKeyword").where("keyword", productKeyword.keyword, "keywordTypeId", "KWT_TAG", "statusId", "KW_APPROVED").queryCount();
+                keywordMap.put(productKeyword.keyword,productKeyWordCount);
+            }
+            context.productTags = keywordMap;
         }
     }
 
-    // get the product store for only Sales Order not for Purchase Order.
-    productStore = null;
-    productStoreId = null;
-    cart = ShoppingCartEvents.getCartObject(request);
-    if (cart.isSalesOrder()) {
-        productStore = ProductStoreWorker.getProductStore(request);
-        productStoreId = productStore.productStoreId;
-        context.productStoreId = productStoreId;
-        if (productStore != null) { 
-            context.productStore = productStore; // SCIPIO: This may be missing in orderentry
-        }
-    }
-    
-    /* SCIPIO: 2019-03: This is already done by ShoppingCartEvents.addToCart and this is the wrong groovy file for this;
-     * the stashParameterMap call creates a memory leak
-    // get a defined survey
-    productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
-    if (productSurvey) {
-        survey = EntityUtil.getFirst(productSurvey);
-        origParamMapId = UtilHttp.stashParameterMap(request);
-        surveyContext = ["_ORIG_PARAM_MAP_ID_" : origParamMapId];
-        surveyPartyId = userLogin?.partyId;
-        wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
-        context.surveyWrapper = wrapper;
-    }
-    */
+    // cache
+    prodMap = [:];
+    prodMap.product_id = context.product_id;
+    prodMap.mainDetailImageUrl = context.mainDetailImageUrl;
+    prodMap.categoryId = context.categoryId;
+    prodMap.category = context.category;
+    prodMap.previousProductId = context.previousProductId;
+    prodMap.nextProductId = context.nextProductId;
+    prodMap.productStoreId = context.productStoreId;
+    prodMap.productStore = context.productStore;
+    prodMap.productReviews = context.productReviews;
+    prodMap.averageRating = context.averageRating;
+    prodMap.numRatings = context.numRatings;
+    prodMap.daysToShip = context.daysToShip;
+    prodMap.daysToShip = context.daysToShip;
+    prodMap.disFeatureList = context.disFeatureList;
+    prodMap.sizeProductFeatureAndAppls = context.sizeProductFeatureAndAppls;
+    prodMap.selFeatureTypes = context.selFeatureTypes;
+    prodMap.selFeatureOrder = context.selFeatureOrder;
+    prodMap.selFeatureOrderFirst = context.selFeatureOrderFirst;
+    prodMap.mainProducts = context.mainProducts;
+    prodMap.downloadProductContentAndInfoList = context.downloadProductContentAndInfoList;
+    prodMap.productImageList = context.productImageList;
+    prodMap.startDate = context.startDate;
+    prodMap.productTags = context.productTags;
+    productCache.put(cacheKey,prodMap);
+}
 
-    // get the product price
-    catalogId = CatalogWorker.getCurrentCatalogId(request);
-    currentCatalogId = catalogId;
-    webSiteId = WebSiteWorker.getWebSiteId(request);
-    autoUserLogin = request.getSession().getAttribute("autoUserLogin");
+// non-cacheable code
+if(product){
+    // get product associations
+    alsoBoughtProducts = runService('getAssociatedProducts', [productId : productId, type : "ALSO_BOUGHT", checkViewAllow : true, prodCatalogId : currentCatalogId, bidirectional : false, sortDescending : true]);
+    context.alsoBoughtProducts = alsoBoughtProducts.assocProducts;
+
+    obsoleteProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.obsoleteProducts = obsoleteProducts.assocProducts;
+
+    crossSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_COMPLEMENT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.crossSellProducts = crossSellProducts.assocProducts;
+
+    upSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_UPGRADE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.upSellProducts = upSellProducts.assocProducts;
+
+    obsolenscenseProducts = runService('getAssociatedProducts', [productIdTo : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.obsolenscenseProducts = obsolenscenseProducts.assocProducts;
+
+    accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.accessoryProducts = accessoryProducts.assocProducts;
+
     if (cart.isSalesOrder()) {
         // sales order: run the "calculateProductPrice" service
         priceContext = [product : product, prodCatalogId : catalogId,
-            currencyUomId : cart.getCurrency(), autoUserLogin : autoUserLogin];
+                        currencyUomId : cart.getCurrency(), autoUserLogin : autoUserLogin];
         priceContext.webSiteId = webSiteId;
         priceContext.productStoreId = productStoreId;
         priceContext.checkIncludeVat = "Y";
@@ -207,110 +450,12 @@ if (product) {
     } else {
         // purchase order: run the "calculatePurchasePrice" service
         priceContext = [product : product, currencyUomId : cart.getCurrency(),
-                partyId : cart.getPartyId(), userLogin : userLogin];
+                        partyId : cart.getPartyId(), userLogin : userLogin];
         priceMap = runService('calculatePurchasePrice', priceContext);
         priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
         context.priceMap = priceMap;
     }
 
-    // get the product review(s)
-    // get all product review in case of Purchase Order.
-    reviewByAnd = [:];
-    reviewByAnd.statusId = "PRR_APPROVED";
-    if (cart.isSalesOrder()) {
-        reviewByAnd.productStoreId = productStoreId;
-    }
-    reviews = product.getRelated("ProductReview", reviewByAnd, ["-postedDateTime"], true);
-    context.productReviews = reviews;
-    // get the average rating
-    if (reviews) {
-        ratingReviews = EntityUtil.filterByAnd(reviews, [EntityCondition.makeCondition("productRating", EntityOperator.NOT_EQUAL, null)]);
-        if (ratingReviews) {
-            context.averageRating = ProductWorker.getAverageProductRating(product, reviews, productStoreId);
-            context.numRatings = ratingReviews.size();
-        }
-    }
-
-    // get the days to ship
-    // if order is purchase then don't calculate available inventory for product.
-    if (cart.isSalesOrder()) {
-        facilityId = productStore.inventoryFacilityId;
-        /*
-        productFacility = delegator.findOne("ProductFacility", [productId : productId, facilityId : facilityId, true);
-        context.daysToShip = productFacility?.daysToShip
-        */
-
-        resultOutput = runService('getInventoryAvailableByFacility', [productId : productId, facilityId : facilityId, useCache : false]);
-        totalAvailableToPromise = resultOutput.availableToPromiseTotal;
-        if (totalAvailableToPromise) {
-            productFacility = from("ProductFacility").where("productId", productId, "facilityId", facilityId).cache(true).queryOne();
-            context.daysToShip = productFacility?.daysToShip
-        }
-    } else {
-       supplierProduct = from("SupplierProduct").where("productId", productId).orderBy("-availableFromDate").cache(true).queryFirst();
-       if (supplierProduct?.standardLeadTimeDays) {
-           standardLeadTimeDays = supplierProduct.standardLeadTimeDays;
-           daysToShip = standardLeadTimeDays + 1;
-           context.daysToShip = daysToShip;
-       }
-    }
-
-    // get the product distinguishing features
-    disFeatureMap = runService('getProductFeatures', [productId : productId, type : "DISTINGUISHING_FEAT"]);
-    disFeatureList = disFeatureMap.productFeatures;
-    context.disFeatureList = disFeatureList;
-
-    // an example of getting features of a certain type to show
-    sizeProductFeatureAndAppls = from("ProductFeatureAndAppl").where("productId", productId, "productFeatureTypeId", "SIZE").orderBy("sequenceNum", "defaultSequenceNum").queryList();
-    context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
-    
-    // SCIPIO: always get selectable features, in case need (affects nothing else)
-    if (true) {
-        selFeatureMap = runService('getProductFeatureSet', [productId : productId, productFeatureApplTypeId : "SELECTABLE_FEATURE"]);
-        selFeatureSet = selFeatureMap.featureSet;
-        selFeatureTypes = [:];
-        selFeatureOrder = [];
-        selFeatureOrderFirst = null;
-        if (selFeatureSet) {
-            selFeatureOrder = new LinkedList(selFeatureSet);
-            selFeatureOrder.each { featureKey ->
-                featureValue = from("ProductFeatureType").where("productFeatureTypeId", featureKey).cache(true).queryOne();
-                fValue = featureValue.get("description") ?: featureValue.productFeatureTypeId;
-                selFeatureTypes[featureKey] = fValue;
-            }
-        }
-        context.selFeatureTypes = selFeatureTypes;
-        context.selFeatureOrder = selFeatureOrder;
-        if (selFeatureOrder) {
-            selFeatureOrderFirst = selFeatureOrder[0];
-        }
-        context.selFeatureOrderFirst = selFeatureOrderFirst;
-        //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureTypes, module);
-        //org.ofbiz.base.util.Debug.logInfo("Test: " + selFeatureOrder, module);
-    }
-
-    // get product variant for Box/Case/Each
-    productVariants = [];
-    boolean isAlternativePacking = ProductWorker.isAlternativePacking(delegator, product.productId, null);
-    mainProducts = [];
-    if(isAlternativePacking){
-        productVirtualVariants = from("ProductAssoc").where("productIdTo", product.productId , "productAssocTypeId", "ALTERNATIVE_PACKAGE").cache(true).queryList();
-        if(productVirtualVariants){
-            productVirtualVariants.each { virtualVariantKey ->
-                mainProductMap = [:];
-                mainProduct = virtualVariantKey.getRelatedOne("MainProduct", true);
-                quantityUom = mainProduct.getRelatedOne("QuantityUom", true);
-                mainProductMap.productId = mainProduct.productId;
-                mainProductMap.piecesIncluded = mainProduct.piecesIncluded;
-                if (quantityUom) { // SCIPIO: This could be missing
-                    mainProductMap.uomDesc = quantityUom.description;
-                }
-                mainProducts.add(mainProductMap);
-            }
-        }
-    }
-    context.mainProducts = mainProducts;
-    
     // Special Variant Code
     if ("Y".equals(product.isVirtual)) {
         if ("VV_FEATURETREE".equals(ProductWorker.getProductVirtualVariantMethod(delegator, productId))) {
@@ -325,7 +470,7 @@ if (product) {
                 } else {
                     variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId]);
                 }
-                variantTree = variantTreeMap.variantTree;                
+                variantTree = variantTreeMap.variantTree;
                 imageMap = variantTreeMap.variantSample;
                 virtualVariant = variantTreeMap.virtualVariant;
                 context.virtualVariant = virtualVariant;
@@ -357,7 +502,7 @@ if (product) {
                 if (featureOrder) {
                     context.featureOrderFirst = featureOrder[0];
                 }
-                
+
                 // SCIPIO: The original OFBiz code was removed here.
                 if (variantTree && imageMap) {
                     // make a list of variant sku with requireAmount
@@ -406,7 +551,7 @@ if (product) {
                             } else {
                                 variantPriceMap = runService('calculatePurchasePrice', priceContext);
                             }
-                            
+
                             // SCIPIO: Save requireAmount flag and base price for variant
                             variantProductInfo = [:];
                             variantProductInfo.putAll(variant);
@@ -416,11 +561,11 @@ if (product) {
                                 variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                             }
                             variantProductInfoMap[variant.productId] = variantProductInfo;
-                            
+
                             // make a list of virtual variants sku with requireAmount
                             virtualVariantsRes = runService('getAssociatedProducts', [productIdTo : variant.productId, type : "ALTERNATIVE_PACKAGE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
                             virtualVariants = virtualVariantsRes.assocProducts;
-                            
+
                             if(virtualVariants){
                                 virtualVariants.each { virtualAssoc ->
                                     virtual = virtualAssoc.getRelatedOne("MainProduct", false);
@@ -466,12 +611,12 @@ if (product) {
                                         variantProductInfo = [:];
                                         variantProductInfo.putAll(virtual);
                                         //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // SCIPIO: This doesn't apply for virtuals
-                                        variantProductInfo.price = variantPriceMap.price;                                        
+                                        variantProductInfo.price = variantPriceMap.price;
                                         variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     }
                                 }
-                                
+
                             }
                         }
                     }
@@ -496,7 +641,7 @@ if (product) {
                 }
             }
             virtualVariantPriceList = [];
-            
+
             if(virtualVariants){
                 // Create the javascript to return the price for each variant
                 virtualVariants.each { virtualAssoc ->
@@ -539,68 +684,9 @@ if (product) {
     }
     context.availableInventory = availableInventory;
 
-    // get product associations
-    alsoBoughtProducts = runService('getAssociatedProducts', [productId : productId, type : "ALSO_BOUGHT", checkViewAllow : true, prodCatalogId : currentCatalogId, bidirectional : false, sortDescending : true]);
-    context.alsoBoughtProducts = alsoBoughtProducts.assocProducts;
-
-    obsoleteProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.obsoleteProducts = obsoleteProducts.assocProducts;
-
-    crossSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_COMPLEMENT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.crossSellProducts = crossSellProducts.assocProducts;
-
-    upSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_UPGRADE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.upSellProducts = upSellProducts.assocProducts;
-
-    obsolenscenseProducts = runService('getAssociatedProducts', [productIdTo : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.obsolenscenseProducts = obsolenscenseProducts.assocProducts;
-
-    accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.accessoryProducts = accessoryProducts.assocProducts;
-
-    // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
-    // SCIPIO: This should order by sequenceNum
-    downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
-    context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
-
-    // not the best to save info in an action, but this is probably the best place to count a view; it is done async
-    dispatcher.runAsync("countProductView", [productId : productId, weight : new Long(1)], false);
-
-    //get product image from image management
-    productImageList = [];
-    productContentAndInfoImageManamentList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "IMAGE", "statusId", "IM_APPROVED", "drIsPublic", "Y").orderBy("sequenceNum").queryList();
-    if(productContentAndInfoImageManamentList) {
-        productContentAndInfoImageManamentList.each { productContentAndInfoImageManament ->
-            contentAssocThumb = from("ContentAssoc").where("contentId", productContentAndInfoImageManament.contentId, "contentAssocTypeId", "IMAGE_THUMBNAIL").queryFirst();
-            if(contentAssocThumb) {
-                imageContentThumb = from("Content").where("contentId", contentAssocThumb.contentIdTo).queryOne();
-                if(imageContentThumb) {
-                    productImageThumb = from("ContentDataResourceView").where("contentId", imageContentThumb.contentId, "drDataResourceId", imageContentThumb.dataResourceId).queryOne();
-                    productImageMap = [:];
-                    productImageMap.productImageThumb = productImageThumb.drObjectInfo;
-                    productImageMap.productImage = productContentAndInfoImageManament.drObjectInfo;
-                    productImageList.add(productImageMap);
-                }
-            }
-        }
-        context.productImageList = productImageList;
-    }
-    
-    // get reservation start date for rental product
-    if("ASSET_USAGE".equals(productTypeId) || "ASSET_USAGE_OUT_IN".equals(productTypeId)){
-        context.startDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 1).toString().substring(0,10); // should be tomorrow.
-    }
-    
-    // get product tags
-    productKeywords = from("ProductKeyword").where("productId": productId, "keywordTypeId" : "KWT_TAG", "statusId" : "KW_APPROVED").queryList();
-    keywordMap = [:];
-    if (productKeywords) {
-        for (productKeyword in productKeywords) {
-            productKeyWordCount = from("ProductKeyword").where("keyword", productKeyword.keyword, "keywordTypeId", "KWT_TAG", "statusId", "KW_APPROVED").queryCount();
-            keywordMap.put(productKeyword.keyword,productKeyWordCount);
-        }
-        context.productTags = keywordMap;
-    }
+    // make the productContentWrapper
+    productContentWrapper = new ProductContentWrapper(product, request);
+    context.productContentWrapper = productContentWrapper;
 }
 
 // SCIPIO: Decide the next possible reserv start date (next day)
@@ -608,6 +694,5 @@ nextDayTimestamp = UtilDateTime.getDayStart(nowTimestamp, 1, timeZone, locale);
 context.nextDayTimestamp = nextDayTimestamp;
 earliestReservStartDate = nextDayTimestamp;
 context.earliestReservStartDate = earliestReservStartDate;
-
 
 

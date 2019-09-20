@@ -21,6 +21,8 @@
  * should not contain order component's specific code.
  */
 
+import org.ofbiz.base.util.cache.UtilCache
+
 import static org.junit.Assert.assertArrayEquals
 
 import org.ofbiz.base.util.*;
@@ -37,6 +39,12 @@ import com.ilscipio.scipio.solr.*;
 
 final module = "CategoryDetail.groovy";
 
+
+UtilCache<String, Map> categoryCache = UtilCache.getOrCreateUtilCache("category.categorydetail.rendered", 0,0,
+        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.expireTime","0")),
+        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.softReference","true"), true));
+Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.enable","false"), false);
+Boolean lookupCategory = true;
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) {
@@ -47,10 +55,25 @@ context.remove("localVarsOnly");
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
 
+
+
+/**
+ * Creates a unique product cachekey
+ * */
+String getCategoryCacheKey(String productCategoryId,String currentCatalogId, int viewSize,int viewIndex, int currIndex, String priceSortField,String sortOrder,Boolean sortAscending){
+    String localeStr = "";
+    if(UtilValidate.isEmpty(context.locale)){
+        localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
+    }else{
+        localeStr = context.locale.toString();
+    }
+    return localeStr+"::"+productCategoryId+"::"+currentCatalogId+"::"+viewSize+"::"+viewIndex+"::"+currIndex+"::"+priceSortField+"::"+sortOrder+"::"+sortAscending;
+}
+
 try {
     catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
     catArgs.priceSortField = catArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
-    
+
     productCategoryId = context.productCategoryId;
     viewSize = context.viewSize;
     viewIndex = context.viewIndex;
@@ -70,7 +93,7 @@ try {
             currIndex = parameters.CURR_INDEX;
         }
     }
-    
+
     context.productCategoryId = productCategoryId;
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 
@@ -83,9 +106,10 @@ try {
     resultSortOrder = null;
     if (parameters.sortOrder != null) {
         resultSortOrder = org.ofbiz.product.product.ProductSearchSession.parseSortOrder(
-            parameters.sortOrder?.toString() ?: "SortKeywordRelevancy", !"N".equals(parameters.sortAscending));
+                parameters.sortOrder?.toString() ?: "SortKeywordRelevancy", !"N".equals(parameters.sortAscending));
         if (resultSortOrder != null && (session.getAttribute("scpProdSortOrder") == null || "Y" == parameters.sortChg)) {
-            session.setAttribute("scpProdSortOrder", resultSortOrder); // NOTE: no thread safety required (not important)
+            session.setAttribute("scpProdSortOrder", resultSortOrder);
+            // NOTE: no thread safety required (not important)
         }
     } else {
         resultSortOrder = session.getAttribute("scpProdSortOrder"); // NOTE: no thread safety required (not important)
@@ -110,85 +134,115 @@ try {
     context.sortAscending = sortAscending;
     context.sortOrderEff = (sortOrder != null) ? sortOrder : sortOrderDef;
     context.sortAscendingEff = ((sortAscending != null) ? sortAscending : sortAscendingDef) ? "Y" : "N";
-    
+
     catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
 
-    // get the product category & members
-    result = dispatcher.runSync("solrProductsSearch",
-        [productStore:productStore, productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
-         filterTimestamp:nowTimestamp, viewSize:viewSize, viewIndex:viewIndex, sortBy: catArgs.sortBy, sortByReverse: catArgs.sortByReverse,
-         locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
-        -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
-    if (!ServiceUtil.isSuccess(result)) {
-        throw new Exception("Error in solrProductsSearch: " + ServiceUtil.getErrorMessage(result));
-    }
-    
-    productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
-    solrProducts = result.results;
-    
-    /* SCIPIO: 2018-05-25: this is now done as part of solrProductsSearch by default
-    // Prevents out of stock product to be displayed on site
-    productStore = ProductStoreWorker.getProductStore(request);
-    if(productStore) {
-        if("N".equals(productStore.showOutOfStockProducts)) {
-            productsInStock = [];
-            solrProducts.each { productCategoryMember ->
-                productFacility = delegator.findOne("ProductFacility", [productId : productCategoryMember.productId, facilityId : productStore.inventoryFacilityId], true);
-                if(productFacility) {
-                    if(productFacility.lastInventoryCount >= 1) {
-                        productsInStock.add(productCategoryMember);
-                    }
-                }
-            }
-            solrProducts = productsInStock;
+
+    // get the product entity
+    String cacheKey = getCategoryCacheKey(context.productCategoryId,currentCatalogId,
+            UtilMisc.toInteger(viewSize), UtilMisc.toInteger(viewIndex), UtilMisc.toInteger(currIndex), catArgs.priceSortField,
+            context.sortOrder, context.sortAscending);
+    if (useCache) {
+        Map cachedValue = categoryCache.get(cacheKey);
+        if (cachedValue != null) {
+            context.solrProducts = cachedValue.solrProducts;
+            context.listIndex = cachedValue.listIndex;
+            context.productCategory = cachedValue.productCategory;
+            context.viewIndex = cachedValue.viewIndex;
+            context.viewSize = cachedValue.viewSize;
+            context.listSize = cachedValue.listSize;
+            context.currIndex = cachedValue.currIndex;
+            lookupCategory=false;
         }
     }
-    */
-    
-    context.solrProducts = solrProducts;
-    
-    /*
-    subCatList = [];
-    if (CategoryWorker.checkTrailItem(request, productCategory.getString("productCategoryId")) || (!UtilValidate.isEmpty(productCategoryId) && productCategoryId == productCategory.productCategoryId))
-        subCatList = CategoryWorker.getRelatedCategoriesRet(request, "subCatList", productCategory.getString("productCategoryId"), true);
-    
-    context.productSubCategoryList = subCatList;
-    */
 
-    context.listIndex = 0;
-    if (result.viewSize > 0) {
-        context.listIndex = Math.ceil(result.listSize/result.viewSize);
-    }
-    // SCIPIO: this may not make sense anymore since SOLR patches
-    //if (!viewSize.equals(String.valueOf(result.viewSize))) {
-    //    pageViewSize = Integer.parseInt(viewSize).intValue();
-    //    context.listIndex = Math.ceil(result.listSize/pageViewSize);
-    //    context.pageViewSize = pageViewSize;
-    //}
-    
-    
-    context.productCategory = productCategory;
-    context.viewIndex = result.viewIndex;
-    context.viewSize = result.viewSize;
-    context.listSize = result.listSize;
-    
-    if (!currIndex) {
-        context.currIndex = 1;
-    } else {
-        context.currIndex = Integer.parseInt(currIndex).intValue();
+    if(lookupCategory){
+        // get the product category & members
+        result = dispatcher.runSync("solrProductsSearch",
+                [productStore   : productStore, productCategoryId: productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters: catArgs.useDefaultFilters,
+                 filterTimestamp: nowTimestamp, viewSize: viewSize, viewIndex: viewIndex, sortBy: catArgs.sortBy, sortByReverse: catArgs.sortByReverse,
+                 locale         : context.locale, userLogin: context.userLogin, timeZone: context.timeZone],
+                -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
+        if (!ServiceUtil.isSuccess(result)) {
+            throw new Exception("Error in solrProductsSearch: " + ServiceUtil.getErrorMessage(result));
+        }
+
+        productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
+        solrProducts = result.results;
+
+        /* SCIPIO: 2018-05-25: this is now done as part of solrProductsSearch by default
+            // Prevents out of stock product to be displayed on site
+            productStore = ProductStoreWorker.getProductStore(request);
+            if(productStore) {
+                if("N".equals(productStore.showOutOfStockProducts)) {
+                    productsInStock = [];
+                    solrProducts.each { productCategoryMember ->
+                        productFacility = delegator.findOne("ProductFacility", [productId : productCategoryMember.productId, facilityId : productStore.inventoryFacilityId], true);
+                        if(productFacility) {
+                            if(productFacility.lastInventoryCount >= 1) {
+                                productsInStock.add(productCategoryMember);
+                            }
+                        }
+                    }
+                    solrProducts = productsInStock;
+                }
+            }
+            */
+
+        context.solrProducts = solrProducts;
+
+        /*
+            subCatList = [];
+            if (CategoryWorker.checkTrailItem(request, productCategory.getString("productCategoryId")) || (!UtilValidate.isEmpty(productCategoryId) && productCategoryId == productCategory.productCategoryId))
+                subCatList = CategoryWorker.getRelatedCategoriesRet(request, "subCatList", productCategory.getString("productCategoryId"), true);
+
+            context.productSubCategoryList = subCatList;
+            */
+
+        context.listIndex = 0;
+        if (result.viewSize > 0) {
+            context.listIndex = Math.ceil(result.listSize / result.viewSize);
+        }
+        // SCIPIO: this may not make sense anymore since SOLR patches
+        //if (!viewSize.equals(String.valueOf(result.viewSize))) {
+        //    pageViewSize = Integer.parseInt(viewSize).intValue();
+        //    context.listIndex = Math.ceil(result.listSize/pageViewSize);
+        //    context.pageViewSize = pageViewSize;
+        //}
+
+
+        context.productCategory = productCategory;
+        context.viewIndex = result.viewIndex;
+        context.viewSize = result.viewSize;
+        context.listSize = result.listSize;
+
+        if (!currIndex) {
+            context.currIndex = 1;
+        } else {
+            context.currIndex = Integer.parseInt(currIndex).intValue();
+        }
+
+        /* SCIPIO: do NOT do this for now (or ever?)
+            parameters.VIEW_SIZE = viewSize;
+            parameters.VIEW_INDEX = viewIndex;
+            parameters.CURR_INDEX = CURR_INDEX;
+            */
+        // cache
+        catMap = [:];
+        catMap.solrProducts = context.solrProducts;
+        catMap.listIndex = context.listIndex;
+        catMap.productCategory = context.productCategory;
+        catMap.viewIndex = context.viewIndex;
+        catMap.viewSize = context.viewSize;
+        catMap.listSize = context.listSize;
+        catMap.currIndex = context.currIndex;
+        categoryCache.put(cacheKey,catMap)
     }
 
     // set the content path prefix
     contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
     context.put("contentPathPrefix", contentPathPrefix);
-    
-    /* SCIPIO: do NOT do this for now (or ever?)
-    parameters.VIEW_SIZE = viewSize;
-    parameters.VIEW_INDEX = viewIndex;
-    parameters.CURR_INDEX = CURR_INDEX;
-    */
-    
+
 } catch(Exception e) {
     Debug.logError("Solr: Error searching products in category: " + e.toString(), module);
 }
-

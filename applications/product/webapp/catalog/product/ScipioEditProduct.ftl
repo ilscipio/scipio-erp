@@ -102,7 +102,7 @@ code package.
             <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId" required=true>
               <#assign options = delegator.findByAnd("ProductType",{},["description ASC"], true)>
                 <#list options as option>
-                    <@field type="option" value=(option.productTypeId!) selected=checkSelected("productTypeId", option.productTypeId, "FINISHED_GOOD")>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.productTypeId!) selected=checkSelected("productTypeId", option.productTypeId, "FINISHED_GOOD")>${option.get("description", locale)!}</@field>
                 </#list>
             </@field>
             <@field type="text" name="manufacturerPartyId" label=uiLabelMap.ProductOemPartyId value=(productParams.manufacturerPartyId!product.manufacturerPartyId!) maxlength="20"/>
@@ -152,7 +152,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_RATING_TYPE"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.enumId!) selected=checkSelected("ratingTypeEnum", option.enumId)>${option.get("description", locale)} (${option.get("enumCode", locale)})</@field>
+                    <@field type="option" value=(option.enumId!) selected=checkSelected("ratingTypeEnum", option.enumId)>${option.get("description", locale)!} (${option.get("enumCode", locale)!})</@field>
                 </#list>
             </@field>
         </@cell>
@@ -175,7 +175,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.enumId!) selected=checkSelected("requirementMethodEnumId", option.enumId)>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.enumId!) selected=checkSelected("requirementMethodEnumId", option.enumId)>${option.get("description", locale)!}</@field>
                 </#list>
             </@field>
             <@field type="select" label=uiLabelMap.ProductLotId name="lotIdFilledIn">
@@ -222,7 +222,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("UomType",{},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomTypeId!) selected=checkSelected("amountUomTypeId", option.uomTypeId!)>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.uomTypeId!) selected=checkSelected("amountUomTypeId", option.uomTypeId!)>${option.get("description", locale)!}</@field>
                 </#list>
             </@field>
         </@cell>
@@ -236,7 +236,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("heightUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("heightUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
         
@@ -245,7 +245,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("widthUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("widthUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
             <@field type="text" name="productDepth" label=uiLabelMap.ProductProductDepth value=(productParams.productDepth!product.productDepth!) maxlength="255"/>
@@ -253,7 +253,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("depthUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("depthUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
         
@@ -262,7 +262,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"LENGTH_MEASURE"},["description ASC"], true)/>
                 <#list options as option>>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("diameterUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("diameterUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
         
@@ -271,7 +271,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{"uomTypeId":"WEIGHT_MEASURE"},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("weightUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("weightUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
         
@@ -372,7 +372,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Uom",{},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.uomId!) selected=checkSelected("quantityUomId", option.uomId!)>${option.get("description", locale)} (${option.get("abbreviation", locale)})</@field>
+                    <@field type="option" value=(option.uomId!) selected=checkSelected("quantityUomId", option.uomId!)>${option.get("description", locale)!} (${option.get("abbreviation", locale)!})</@field>
                 </#list>
             </@field>
             <@field type="text" name="piecesIncluded" label=uiLabelMap.ProductPiecesIncluded value=(productParams.piecesIncluded!product.piecesIncluded!) maxlength="20"/>
@@ -381,7 +381,7 @@ code package.
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("ShipmentBoxType",{},["description ASC"], true)/>
                 <#list options as option>
-                    <@field type="option" value=(option.shipmentBoxTypeId!) selected=checkSelected("defaultShipmentBoxTypeId", option.shipmentBoxTypeId!)>${option.get("description", locale)}</@field>
+                    <@field type="option" value=(option.shipmentBoxTypeId!) selected=checkSelected("defaultShipmentBoxTypeId", option.shipmentBoxTypeId!)>${option.get("description", locale)!}</@field>
                 </#list>
             </@field>
             <@field type="checkbox" name="chargeShipping" label=uiLabelMap.ProductChargeShipping currentValue=(productParams.chargeShipping!product.chargeShipping!'N') value="Y" altValue="N"/>

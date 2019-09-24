@@ -248,7 +248,7 @@ public class EntitySyncServices {
             result.put("toStoreNotUpdated", toStoreNotUpdated);
             result.put("toRemoveDeleted", toRemoveDeleted);
             result.put("toRemoveAlreadyDeleted", toRemoveAlreadyDeleted);
-            if (Debug.infoOn()) Debug.logInfo("Finisching storeEntitySyncData (" + entitySyncId + ") - [" + keysToRemove.size() + "] to remove. Actually removed: " + toRemoveDeleted  + " already removed: " + toRemoveAlreadyDeleted, module);
+            if (Debug.infoOn()) Debug.logInfo("Finishing storeEntitySyncData (" + entitySyncId + ") - [" + keysToRemove.size() + "] to remove. Actually removed: " + toRemoveDeleted  + " already removed: " + toRemoveAlreadyDeleted, module);
             return result;
         } catch (GenericEntityException e) {
             Debug.logError(e, "Exception saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + e.toString(), module);

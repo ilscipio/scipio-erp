@@ -211,9 +211,12 @@ public class CatalinaContainer implements Container {
         if (UtilValidate.isEmpty(connectorProps)) {
             throw new ContainerException("Cannot load CatalinaContainer; no connectors defined!");
         }
+        List<ScipioConnectorInfo> scipioConnectorInfoList = new ArrayList<>(); // SCIPIO
         for (ContainerConfig.Container.Property connectorProp: connectorProps) {
-            createConnector(connectorProp);
+            Connector connector = createConnector(connectorProp);
+            scipioConnectorInfoList.add(new ScipioConnectorInfo(connectorProp, connector)); // SCIPIO
         }
+        ScipioConnectorInfo.registerConnectors(this.name, scipioConnectorInfoList); // SCIPIO
     }
 
     public boolean start() throws ContainerException {

@@ -37,6 +37,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Base64;
@@ -841,8 +842,25 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return (List<E>) getJson(name, List.class);
     }
 
+    private static final ObjectMapper jsonMapper = new ObjectMapper(); // SCIPIO: TODO?: Share instance with JSON class?
+
     /**
-     * SCIPIO: Interprets the "entityJson" field as a JSON object.
+     * SCIPIO: Converts the given Java object to a JSON string and writes it to the field.
+     * Added 2019-09-24/2.1.0.
+     */
+    public void setJson(String name, Object object) {
+        if (object != null) {
+            try {
+                object = jsonMapper.writeValueAsString(object);
+            } catch(Exception e) {
+                throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " from Java type [" + object.getClass() + "] to JSON string", e);
+            }
+        }
+        set(name, object);
+    }
+
+    /**
+     * SCIPIO: Interprets the standard entityJson field as a JSON object.
      * Added 2019-09-24/2.1.0.
      */
     public JSON getEntityJson() {
@@ -850,11 +868,35 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the "entityJson" field as a JSON object and evaluates it to a Map Java type.
+     * SCIPIO: Return the standard entityJson field as its original string.
+     * Added 2019-09-24/2.1.0.
+     */
+    public String getEntityJsonAsString() {
+        return getString(ModelEntity.ENTITY_JSON_FIELD);
+    }
+
+    /**
+     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type.
      * Added 2019-09-24/2.1.0.
      */
     public Map<String, Object> getEntityJsonAsMap() {
         return getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+    }
+
+    /**
+     * SCIPIO: Converts the given Java Map to a JSON string and writes it to the standard entityJson field.
+     * Added 2019-09-24/2.1.0.
+     */
+    public void setEntityJson(Map<String, ?> jsonMap) {
+        setJson(ModelEntity.ENTITY_JSON_FIELD, jsonMap);
+    }
+
+    /**
+     * SCIPIO: Sets the standard entityJson field using the given JSON string.
+     * Added 2019-09-24/2.1.0.
+     */
+    public void setEntityJson(String jsonString) {
+        set(ModelEntity.ENTITY_JSON_FIELD, jsonString);
     }
 
     @SuppressWarnings("deprecation")

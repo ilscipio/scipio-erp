@@ -68,6 +68,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public static final String CREATE_STAMP_FIELD = "createdStamp";
     public static final String CREATE_STAMP_TX_FIELD = "createdTxStamp";
 
+    /** SCIPIO: Standard entity field for JSON data storage (2019: added for 2.1.0) */
+    public static final String ENTITY_JSON_FIELD = "entityJson";
+
     private ModelInfo modelInfo;
 
     /** The ModelReader that created this Entity */

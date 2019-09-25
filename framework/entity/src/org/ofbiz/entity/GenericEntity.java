@@ -841,6 +841,22 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return (List<E>) getJson(name, List.class);
     }
 
+    /**
+     * SCIPIO: Interprets the "entityJson" field as a JSON object.
+     * Added 2019-09-24/2.1.0.
+     */
+    public JSON getEntityJson() {
+        return getJson(ModelEntity.ENTITY_JSON_FIELD);
+    }
+
+    /**
+     * SCIPIO: Interprets the "entityJson" field as a JSON object and evaluates it to a Map Java type.
+     * Added 2019-09-24/2.1.0.
+     */
+    public Map<String, Object> getEntityJsonAsMap() {
+        return getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+    }
+
     @SuppressWarnings("deprecation")
     public byte[] getBytes(String name) {
         Object value = get(name);

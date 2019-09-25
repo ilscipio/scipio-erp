@@ -803,25 +803,33 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * SCIPIO: Interprets the given field as a JSON object.
      * Added 2019-09-24/2.1.0.
      */
-    public JSON getJson(String name) throws IOException {
+    public JSON getJson(String name) {
         Object object = get(name);
-        return object == null ? null : JSON.from(object);
+        try {
+            return object == null ? null : JSON.from(object);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " to JSON object", e);
+        }
     }
 
     /**
      * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Java type.
      * Added 2019-09-24/2.1.0.
      */
-    public <T> T getJson(String name, Class<T> targetClass) throws IOException {
+    public <T> T getJson(String name, Class<T> targetClass) {
         JSON json = getJson(name);
-        return json == null ? null : json.toObject(targetClass);
+        try {
+            return json == null ? null : json.toObject(targetClass);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " from JSON to Java type [" + targetClass + "]", e);
+        }
     }
 
     /**
      * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type.
      * Added 2019-09-24/2.1.0.
      */
-    public <K, V> Map<K, V> getJsonAsMap(String name) throws IOException {
+    public <K, V> Map<K, V> getJsonAsMap(String name) {
         return (Map<K, V>) getJson(name, Map.class);
     }
 
@@ -829,7 +837,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type.
      * Added 2019-09-24/2.1.0.
      */
-    public <E> List<E> getJsonAsList(String name) throws IOException {
+    public <E> List<E> getJsonAsList(String name) {
         return (List<E>) getJson(name, List.class);
     }
 

@@ -18,6 +18,7 @@
  */
 package org.ofbiz.entity;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.ofbiz.base.crypto.HashCrypt;
+import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -795,6 +797,40 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             return new BigDecimal((Double) value);
         }
         return (BigDecimal) value;
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object.
+     * Added 2019-09-24/2.1.0.
+     */
+    public JSON getJson(String name) throws IOException {
+        Object object = get(name);
+        return object == null ? null : JSON.from(object);
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Java type.
+     * Added 2019-09-24/2.1.0.
+     */
+    public <T> T getJson(String name, Class<T> targetClass) throws IOException {
+        JSON json = getJson(name);
+        return json == null ? null : json.toObject(targetClass);
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type.
+     * Added 2019-09-24/2.1.0.
+     */
+    public <K, V> Map<K, V> getJsonAsMap(String name) throws IOException {
+        return (Map<K, V>) getJson(name, Map.class);
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type.
+     * Added 2019-09-24/2.1.0.
+     */
+    public <E> List<E> getJsonAsList(String name) throws IOException {
+        return (List<E>) getJson(name, List.class);
     }
 
     @SuppressWarnings("deprecation")

@@ -19,6 +19,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.catalina.container.ScipioConnectorInfo;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -120,7 +121,7 @@ public abstract class SolrUtil {
         }
         solrPort = LocalUrlUtil.getStandardPort(solrWebappProtocol);
         Debug.logWarning("Solr: Could not determine a solr webapp port from " + solrConfigName
-                + ", url.properties or container; using default: " + solrPort, module);
+                + " or webapp container; using default: " + solrPort, module);
         return solrPort;
     }
 
@@ -832,19 +833,34 @@ public abstract class SolrUtil {
         }
 
         public static Integer getWebappContainerPort(String protocol) {
-            Integer port = UtilProperties.getPropertyAsInteger("url", "https".equals(protocol) ? "port.https" : "port.http", null);
-            // TODO: should try to lookup a container port in this case
-            return port;
+            ScipioConnectorInfo connectorInfo = ScipioConnectorInfo.getWebContainer(protocol);
+            return (connectorInfo != null) ? connectorInfo.getPort() : null;
         }
 
         public static boolean isWebappContainerPort(int port) {
+            ScipioConnectorInfo httpConnectorInfo = ScipioConnectorInfo.getWebContainer(false);
+            if (httpConnectorInfo != null && port == httpConnectorInfo.getPort()) {
+                return true;
+            }
+            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(false);
+            if (httpConnectorInfo != null && port == httpsConnectorInfo.getPort()) {
+                return true;
+            }
+            return false;
+        }
+
+        public static Integer getFrontendServerPort(String protocol) {
+            Integer port = UtilProperties.getPropertyAsInteger("url", "https".equals(protocol) ? "port.https" : "port.http", null);
+            return port;
+        }
+
+        public static boolean isFrontendServerPort(int port) {
             if (port == UtilProperties.getPropertyAsInteger("url", "port.https", -1)) {
                 return true;
             }
             if (port == UtilProperties.getPropertyAsInteger("url", "port.http", -1)) {
                 return true;
             }
-            // TODO: should try to lookup container ports in this case
             return false;
         }
     }

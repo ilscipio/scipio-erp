@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -881,6 +882,25 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      */
     public Map<String, Object> getEntityJsonAsMap() {
         return getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+    }
+
+    /**
+     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type;
+     * if none, creates a new map (insertion-order preserving) without affecting the entity (you must call
+     * {@link #setEntityJson} to update the entity after modifying the map).
+     * Added 2019-09-24/2.1.0.
+     */
+    public Map<String, Object> getEntityJsonAsMapOrNew() {
+        Map<String, Object> map = getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+        return (map != null) ? map : createEntityJsonMap();
+    }
+
+    /**
+     * SCIPIO: Returns a new entityJson Map.
+     * Added 2019-09-24/2.1.0.
+     */
+    public static Map<String, Object> createEntityJsonMap() {
+        return new LinkedHashMap<>();
     }
 
     /**

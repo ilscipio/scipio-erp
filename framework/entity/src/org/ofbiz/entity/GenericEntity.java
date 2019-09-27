@@ -802,20 +802,16 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object.
+     * SCIPIO: Interprets the given field as a JSON object, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public JSON getJson(String name) {
-        Object object = get(name);
-        try {
-            return object == null ? null : JSON.from(object);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " to JSON object", e);
-        }
+        String jsonString = getString(name);
+        return jsonString == null ? null : JSON.from(jsonString);
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Java type.
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Java type, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public <T> T getJson(String name, Class<T> targetClass) {
@@ -828,7 +824,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type.
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public <K, V> Map<K, V> getJsonAsMap(String name) {
@@ -836,7 +832,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type.
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public <E> List<E> getJsonAsList(String name) {
@@ -861,7 +857,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object.
+     * SCIPIO: Interprets the standard entityJson field as a JSON object, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public JSON getEntityJson() {
@@ -869,7 +865,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Return the standard entityJson field as its original string.
+     * SCIPIO: Return the standard entityJson field as its original string, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public String getEntityJsonAsString() {
@@ -877,7 +873,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type.
+     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public Map<String, Object> getEntityJsonAsMap() {

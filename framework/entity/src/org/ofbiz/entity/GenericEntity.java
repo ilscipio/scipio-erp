@@ -892,6 +892,17 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
+     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type;
+     * if none, returns an unmodifiable empty map (you must call
+     * {@link #setEntityJson} to update the entity after modifying the map). Helper for read operations.
+     * Added 2019-09-24/2.1.0.
+     */
+    public Map<String, Object> getEntityJsonAsMapOrEmpty() {
+        Map<String, Object> map = getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+        return (map != null) ? map : Collections.emptyMap();
+    }
+
+    /**
      * SCIPIO: Returns a new entityJson Map.
      * Added 2019-09-24/2.1.0.
      */

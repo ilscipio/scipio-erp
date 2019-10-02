@@ -60,7 +60,6 @@ import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
@@ -88,9 +87,26 @@ public class SeoCatalogUrlWorker implements Serializable {
 
     public static final String DEFAULT_CONFIG_RESOURCE = "SeoConfigUiLabels";
 
+    public static final boolean DEBUG = false;
+
     // TODO: in production, these cache can be tweaked with non-soft refs, limits and expire time
     private static final UtilCache<String, AltUrlPartResults> productAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.product.alturl.part", true);
     private static final UtilCache<String, AltUrlPartResults> categoryAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.category.alturl.part", true);
+    private static final UtilCache<String, String> productUrlCache = UtilCache.createUtilCache("seo.filter.product.url", true);
+    private static final UtilCache<String, TrailCacheEntry> productTrailCache = UtilCache.createUtilCache("seo.filter.product.trails", true);
+    private static final UtilCache<String, String> categoryUrlCache = UtilCache.createUtilCache("seo.filter.category.url", true);
+    private static final UtilCache<String, TrailCacheEntry> categoryTrailCache = UtilCache.createUtilCache("seo.filter.category.trails", true);
+
+    protected static class TrailCacheEntry implements Serializable {
+        protected final Set<String> topCategoryIds;
+        protected final List<List<String>> trails;
+        protected TrailCacheEntry(Set<String> topCategoryIds, List<List<String>> trails) {
+            this.topCategoryIds = topCategoryIds;
+            this.trails = trails;
+        }
+        public Set<String> getTopCategoryIds() { return topCategoryIds; }
+        public List<List<String>> getTrails() { return trails; }
+    }
 
     static {
         CatalogUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
@@ -636,61 +652,6 @@ public class SeoCatalogUrlWorker implements Serializable {
         return categoryList;
     }
 
-    /**
-     * Creates a full trail to the given category using hints from the incoming trail to select best.
-     */
-    protected List<String> makeFullCategoryUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue productCategory, String webSiteId, String currentCatalogId) {
-        if (productCategory == null) return newPathList();
-
-        Set<String> topCategoryIds = getCatalogTopCategoriesForCategoryUrl(delegator, currentCatalogId, webSiteId);
-        if (topCategoryIds.isEmpty()) {
-            Debug.logWarning("Seo: makeFullCategoryUrlTrail: No top categories found for catalog '" + currentCatalogId + "'; can't select best trail", module);
-            return newPathList();
-        }
-
-        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategory.getString("productCategoryId"), topCategoryIds);
-        return findBestTopCatTrailForNewUrl(delegator, trails, hintTrail, topCategoryIds);
-    }
-
-    /**
-     * Creates a full trail to the given product using hints from the incoming trail to select best.
-     */
-    protected List<String> makeFullProductUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue product, String webSiteId, String currentCatalogId) {
-        if (product == null) return newPathList();
-
-        Set<String> topCategoryIds = getCatalogTopCategoriesForProductUrl(delegator, currentCatalogId, webSiteId);
-        if (topCategoryIds.isEmpty()) {
-            Debug.logWarning("Seo: makeFullProductUrlTrail: No top category found for catalog '" + currentCatalogId + "'; can't select best trail", module);
-            return newPathList();
-        }
-
-        try {
-            String primaryCatId = product.getString("primaryProductCategoryId");
-            if (primaryCatId != null) { // prioritize primary product category
-                List<List<String>> trails = getCategoryRollupTrails(delegator, primaryCatId, topCategoryIds);
-                return findBestTopCatTrailForNewUrl(delegator, trails, hintTrail, topCategoryIds);
-            } else { // no primary, use rollups
-                List<GenericValue> prodCatMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
-                    .where("productId", product.getString("productId")).orderBy("-fromDate").filterByDate().queryList();
-                if (prodCatMembers.size() == 0) {
-                    return newPathList();
-                } else {
-                    List<List<String>> trails = null;
-                    for(GenericValue prodCatMember : prodCatMembers) {
-                        String productCategoryId = prodCatMember.getString("productCategoryId");
-                        List<List<String>> memberTrails = getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds);
-                        if (trails == null) trails = memberTrails;
-                        else trails.addAll(memberTrails);
-                    }
-                    return findBestTopCatTrailForNewUrl(delegator, trails, hintTrail, topCategoryIds);
-                }
-            }
-        } catch(Exception e) {
-            Debug.logError(e, "Seo: Error generating trail for product '" + product.getString("productId") + "': " + e.getMessage(), module);
-            return newPathList();
-        }
-    }
-
     protected List<String> findBestTopCatTrailForNewUrl(Delegator delegator, List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
         if (trails.size() == 0) {
             return newPathList();
@@ -707,17 +668,88 @@ public class SeoCatalogUrlWorker implements Serializable {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         List<String> trail = CategoryWorker.getTrail(request);
-        return makeCategoryUrl(delegator, dispatcher, locale, trail,
-                FullWebappInfo.fromRequest(request), CatalogWorker.getCurrentCatalogId(request),
-                previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+        FullWebappInfo targetWebappInfo = FullWebappInfo.fromRequest(request);
+        String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+        return makeCategoryUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId,
+                    previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
     }
 
     /**
      * Make category url according to the configurations.
      */
-    public String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo,
+    public String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> currentTrail, FullWebappInfo targetWebappInfo,
                                   String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
-        final boolean useCache = true;
+        final boolean useCache = true; // NOTE: this is for entity cache lookups, not util caches
+        List<String> trail;
+        if (getConfig().getCategoryUrlTrailFormat().isOn()) {
+            trail = mapCategoryUrlTrail(delegator, currentTrail, productCategoryId, targetWebappInfo.getWebSiteId(), currentCatalogId);
+        } else {
+            trail = Collections.emptyList();
+        }
+        String key = getCategoryCacheKey(delegator, targetWebappInfo, "Default", locale, previousCategoryId, productCategoryId, productId,
+                viewSize, viewIndex, viewSort, searchString, currentCatalogId, trail);
+        String url = categoryUrlCache.get(key);
+        if (url == null) {
+            url = makeCategoryUrlImpl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId,
+                    previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString, useCache);
+            categoryUrlCache.put(key, url);
+            if (DEBUG) {
+                Debug.logInfo("Seo: makeCategoryUrl: Created category url [" + url + "] for key [" + key + "]", module);
+            }
+        } else {
+            if (DEBUG) {
+                Debug.logInfo("Seo: makeCategoryUrl: Got cached category url [" + url + "] for key [" + key + "]", module);
+            }
+        }
+        return url;
+    }
+
+    /**
+     * NOTE: caching the trail effectively renders the entries cached per-category-page, but there is no way around with without adding more complexity.
+     */
+    protected static String getCategoryCacheKey(Delegator delegator, FullWebappInfo targetWebappInfo, String type, Locale locale, String previousCategoryId, String productCategoryId, String productId,
+                                                String viewSize, String viewIndex, String viewSort, String searchString, String currentCatalogId, List<String> trail) {
+        String localeStr;
+        if (locale == null) {
+            localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
+            if (UtilValidate.isEmpty(localeStr)) {
+                localeStr = Locale.getDefault().toString();
+            }
+        } else {
+            localeStr = locale.toString();
+        }
+        return delegator.getDelegatorName()+"::"+type+"::"+targetWebappInfo.getContextPath()+"::"+targetWebappInfo.getWebSiteId()+"::"+localeStr+"::"+previousCategoryId+"::"+productCategoryId+"::"
+                +productId+"::"+viewSize+"::"+viewSort+"::"+searchString+"::"+currentCatalogId+"::"+String.join("/", trail);
+    }
+
+    /**
+     * Creates a full trail to the given category using hints from the incoming trail to select best.
+     * Caching.
+     */
+    protected List<String> mapCategoryUrlTrail(Delegator delegator, List<String> hintTrail, String productCategoryId, String webSiteId, String currentCatalogId) {
+        List<String> trail = null;
+        String trailKey = delegator.getDelegatorName() + "::" + webSiteId + "::" + productCategoryId + "::" + currentCatalogId;
+        TrailCacheEntry trailEntry = categoryTrailCache.get(trailKey);
+        if (trailEntry == null) {
+            Set<String> topCategoryIds = getCatalogTopCategoriesForCategoryUrl(delegator, currentCatalogId, webSiteId);
+            List<List<String>> trails = null;
+            if (topCategoryIds.isEmpty()) {
+                Debug.logWarning("Seo: mapCategoryUrlTrail: No top categories found for catalog '" + currentCatalogId + "'; can't select best trail", module);
+                topCategoryIds = null;
+            } else {
+                trails = getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds);
+            }
+            trailEntry = new TrailCacheEntry(topCategoryIds, trails);
+            categoryTrailCache.put(trailKey, trailEntry);
+        }
+        if (trailEntry.getTopCategoryIds() != null) {
+            trail = findBestTopCatTrailForNewUrl(delegator, trailEntry.getTrails(), hintTrail, trailEntry.getTopCategoryIds()); // fast
+        }
+        return (trail != null) ? trail : Collections.emptyList();
+    }
+
+    protected String makeCategoryUrlImpl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo,
+                                  String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString, boolean useCache) {
         GenericValue productCategory;
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
@@ -730,49 +762,31 @@ public class SeoCatalogUrlWorker implements Serializable {
             return null;
         }
 
-        if (getConfig().getCategoryUrlTrailFormat().isOn()) {
-            trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, targetWebappInfo.getWebSiteId(), currentCatalogId);
-        } else {
-            trail = Collections.emptyList(); // NOTE: last member not required by makeCategoryUrlCore (contrary to ofbiz API)
-        }
         // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
         //trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
         StringBuilder urlBuilder = makeCategoryUrlCore(delegator, dispatcher, locale, productCategory, currentCatalogId, previousCategoryId,
                 getCategoriesFromIdList(delegator, dispatcher, locale, trail, useCache), targetWebappInfo, useCache);
 
-        // append view index
-        if (UtilValidate.isNotEmpty(viewIndex)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewIndex=" + viewIndex + "&");
-        }
-        // append view size
-        if (UtilValidate.isNotEmpty(viewSize)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewSize=" + viewSize + "&");
-        }
-        // append view sort
-        if (UtilValidate.isNotEmpty(viewSort)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewSort=" + viewSort + "&");
-        }
-        // append search string
-        if (UtilValidate.isNotEmpty(searchString)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("searchString=" + searchString + "&");
-        }
+        appendCategoryUrlParam(urlBuilder, "viewIndex", viewIndex);
+        appendCategoryUrlParam(urlBuilder, "viewSize", viewSize);
+        appendCategoryUrlParam(urlBuilder, "viewSort", viewSort);
+        appendCategoryUrlParam(urlBuilder, "searchString", searchString);
         if (urlBuilder.toString().endsWith("&")) {
             return urlBuilder.toString().substring(0, urlBuilder.toString().length()-1);
         }
-
         return urlBuilder.toString();
+    }
+
+    private void appendCategoryUrlParam(StringBuilder urlBuilder, String paramName, String paramValue) {
+        if (UtilValidate.isNotEmpty(paramValue)) {
+            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
+                urlBuilder.append("?");
+            }
+            urlBuilder.append(paramName);
+            urlBuilder.append("=");
+            urlBuilder.append(paramValue);
+            urlBuilder.append("&");
+        }
     }
 
     /**
@@ -851,35 +865,126 @@ public class SeoCatalogUrlWorker implements Serializable {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         List<String> trail = CategoryWorker.getTrail(request);
-        return makeProductUrl(delegator, dispatcher, locale, trail,
-                FullWebappInfo.fromRequest(request), CatalogWorker.getCurrentCatalogId(request),
-                previousCategoryId, productCategoryId, productId);
+        FullWebappInfo targetWebappInfo = FullWebappInfo.fromRequest(request);
+        String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+        return makeProductUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId);
     }
 
     /**
      * Make product url according to the configurations.
      * <p>
-     * SCIPIO: Modified for bugfixes and lookup via cache products map (TODO: REVIEW)
+     * SCIPIO: Modified for bugfixes and lookup via cache products map.
      */
-    public String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo,
+    public String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> currentTrail, FullWebappInfo targetWebappInfo,
                                  String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
-        final boolean useCache = true;
+        final boolean useCache = true; // NOTE: this is for entity cache lookups, not util caches
+        List<String> trail;
+        if (!getConfig().isCategoryNameEnabled() && !getConfig().getProductUrlTrailFormat().isOn()) {
+            trail = Collections.emptyList(); // no need for trail
+        } else {
+            // NO LONGER NEED ADJUST (stock ofbiz logic) - in fact it will prevent the valid trail selection after this from working
+            //if (UtilValidate.isNotEmpty(productCategoryId)) {
+            //    currentTrail = CategoryWorker.adjustTrail(currentTrail, productCategoryId, previousCategoryId);
+            //}
+            trail = mapProductUrlTrail(delegator, currentTrail, productId, targetWebappInfo.getWebSiteId(), currentCatalogId);
+        }
+        String key = getProductUrlCacheKey(delegator, targetWebappInfo, "Default", locale, previousCategoryId, productCategoryId,
+                productId, currentCatalogId, trail);
+        String url = productUrlCache.get(key);
+        if (url == null) {
+            url = makeProductUrlImpl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId, useCache);
+            productUrlCache.put(key, url);
+            if (DEBUG) {
+                Debug.logInfo("makeProductUrl: Created product url [" + url + "] for key [" + key + "]", module);
+            }
+        } else {
+            if (DEBUG) {
+                Debug.logInfo("makeProductUrl: Got cached product url [" + url + "] for key [" + key + "]", module);
+            }
+        }
+        return url;
+    }
+
+    protected static String getProductUrlCacheKey(Delegator delegator, FullWebappInfo targetWebappInfo, String type, Locale locale, String previousCategoryId, String productCategoryId, String productId, String currentCatalogId, List<String> trail) {
+        String localeStr;
+        if (locale == null) {
+            localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
+            if (UtilValidate.isEmpty(localeStr)) {
+                localeStr = Locale.getDefault().toString();
+            }
+        } else {
+            localeStr = locale.toString();
+        }
+        return delegator.getDelegatorName()+"::"+type+"::"+targetWebappInfo.getContextPath()+"::"+targetWebappInfo.getWebSiteId()+"::"+localeStr+"::"+previousCategoryId+"::"+productCategoryId+"::"
+                +productId+"::"+currentCatalogId+"::"+String.join("/", trail);
+    }
+
+    /**
+     * Creates a full trail to the given product using hints from the incoming trail to select best.
+     */
+    protected List<String> mapProductUrlTrail(Delegator delegator, List<String> hintTrail, String productId, String webSiteId, String currentCatalogId) {
+        List<String> trail = null;
+        String trailKey = delegator.getDelegatorName() + "::" + webSiteId + "::" + productId + "::" + currentCatalogId;
+        TrailCacheEntry trailEntry = productTrailCache.get(trailKey);
+        if (trailEntry == null) {
+            GenericValue product = null;
+            try {
+                product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Seo: Cannot create product's URL for: " + productId, module);
+            }
+            Set<String> topCategoryIds = null;
+            List<List<String>> trails = null;
+            if (product != null) {
+                topCategoryIds = getCatalogTopCategoriesForProductUrl(delegator, currentCatalogId, webSiteId);
+                if (topCategoryIds.isEmpty()) {
+                    Debug.logWarning("Seo: mapProductUrlTrail: No top category found for catalog '" + currentCatalogId + "'; can't select best trail", module);
+                    topCategoryIds = null;
+                } else {
+                    try {
+                        String primaryCatId = product.getString("primaryProductCategoryId");
+                        if (primaryCatId != null) { // prioritize primary product category
+                            trails = getCategoryRollupTrails(delegator, primaryCatId, topCategoryIds);
+                        } else { // no primary, use rollups
+                            List<GenericValue> prodCatMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
+                                    .where("productId", productId).orderBy("-fromDate").filterByDate().cache().queryList();
+                            if (prodCatMembers.size() > 0) {
+                                //trails = null;
+                                for (GenericValue prodCatMember : prodCatMembers) {
+                                    String productCategoryId = prodCatMember.getString("productCategoryId");
+                                    List<List<String>> memberTrails = getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds);
+                                    if (trails == null) trails = memberTrails;
+                                    else trails.addAll(memberTrails);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Debug.logError(e, "Seo: Error generating trail for product '" + productId + "': " + e.getMessage(), module);
+                    }
+                }
+            }
+            trailEntry = new TrailCacheEntry(topCategoryIds, trails);
+            productTrailCache.put(trailKey, trailEntry);
+        }
+        if (trailEntry.getTopCategoryIds() != null) {
+            trail = findBestTopCatTrailForNewUrl(delegator, trailEntry.getTrails(), hintTrail, trailEntry.getTopCategoryIds()); // fast
+        }
+        return (trail != null) ? trail : Collections.emptyList();
+    }
+
+    /**
+     * Make product url according to the configurations.
+     * <p>
+     * SCIPIO: Modified for bugfixes and lookup via cache products map.
+     */
+    protected String makeProductUrlImpl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo,
+                                 String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, boolean useCache) {
         GenericValue product;
         try {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Seo: Cannot create product's URL for: " + productId, module);
             return null;
-        }
-        if (!getConfig().isCategoryNameEnabled() && !getConfig().getProductUrlTrailFormat().isOn()) {
-            // no need for trail
-            trail = Collections.emptyList();
-        } else {
-            // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
-            //if (UtilValidate.isNotEmpty(productCategoryId)) {
-            //    trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-            //}
-            trail = makeFullProductUrlTrail(delegator, trail, product, targetWebappInfo.getWebSiteId(), currentCatalogId);
         }
         return makeProductUrlCore(delegator, dispatcher, locale, product, currentCatalogId, previousCategoryId,
                 getCategoriesFromIdList(delegator, dispatcher, locale, trail, useCache), targetWebappInfo, useCache).toString();

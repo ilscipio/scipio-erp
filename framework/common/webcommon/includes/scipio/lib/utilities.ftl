@@ -5406,3 +5406,39 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     </#attempt>
   </#if>
 </#macro>
+
+<#--
+*************
+* utilCache
+************
+Wraps a content element in a specific, custom cache. Can be used to Wrap freemarker content that is not often changed for
+a faster processing time.
+
+  * Usage Examples *
+    <@utilCache cacheName="custom.ftl.filename" key="cacheKey">
+        // Static code
+    </@utilCache>
+
+  * Parameters *
+    cacheName          = ((String)) Name of the cache to be used. Example "custom.ftl.filename"
+    key                = ((String)) cache key value
+    sizeLimit          = ((int), default: 0) Max depth, to prevent endless recursions
+    maxInMemory        = ((int), default: 0) Max depth, to prevent endless recursions
+    expireTime         = ((int), default: 1000) Max depth, to prevent endless recursions
+    useSoftReference   = ((boolean), default: true) cache key soft reference
+-->
+<#macro utilCache cacheName key sizeLimit=0 maxInMemory=0 expireTime=1000 useSoftReference=true>
+  <#local useCache = (getPropertyValue("cache","template.ftl.inlinecaching"))!"Y"/>
+  <#local utilCache= Static["org.ofbiz.base.util.cache.UtilCache"].getOrCreateUtilCache(cacheName, sizeLimit, maxInMemory, expireTime, useSoftReference)/>
+  <#if "Y" == useCache>
+    <#if utilCache.get(key)?has_content>
+      <#t>${raw(utilCache.get(key))}<#t>
+    <#else>
+      <#local nested><#nested></#local>
+      <#local temp = utilCache.put(key,nested)!/>
+      <#t>${raw(nested)}<#t>
+    </#if>
+  <#else>
+    <#t><#nested><#t>
+  </#if>
+</#macro>

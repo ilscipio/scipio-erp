@@ -24,7 +24,7 @@ fromDate = UtilDateTime.toTimestamp(calendar.getTime());
 
 lastCommunications = [];
 // TODO: I believe we should improve this at some point by filtering status, fromDate, etc.
-communicationEventList = from("CommunicationEvent").orderBy("entryDate DESC").queryList();
+communicationEventList = from("CommunicationEvent").orderBy("entryDate DESC").maxRows(30).queryList();
 
 for (communication in communicationEventList) {
     fromPersonFullName = "";

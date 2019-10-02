@@ -577,7 +577,9 @@ public class TaxAuthorityServices {
                     }
                     handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, nowTimestamp, delegator, useCache);
                 } else {
-                    Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+                    if (Debug.verboseOn()) { // SCIPIO: changed from info to verbose
+                        Debug.logVerbose("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+                    }
                 }
 
                 adjustments.add(taxAdjValue);
@@ -787,7 +789,9 @@ public class TaxAuthorityServices {
                     }
                     handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, UtilDateTime.nowTimestamp(), delegator, useCache);
                 } else {
-                    Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+                    if (Debug.verboseOn()) { // SCIPIO: changed from info to verbose
+                        Debug.logVerbose("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+                    }
                 }
                 Debug.logInfo("Shipping Tax Adjustment: " + taxAdjValue, module);
 

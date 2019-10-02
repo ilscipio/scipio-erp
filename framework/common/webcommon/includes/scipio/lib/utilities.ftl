@@ -5414,6 +5414,8 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
 Wraps a content element in a specific, custom cache. Can be used to Wrap freemarker content that is not often changed for
 a faster processing time.
 
+TODO: Implement as transform
+
   * Usage Examples *
     <@utilCache cacheName="custom.ftl.filename" key="cacheKey">
         // Static code
@@ -5429,13 +5431,14 @@ a faster processing time.
 -->
 <#macro utilCache cacheName key sizeLimit=0 maxInMemory=0 expireTime=1000 useSoftReference=true>
   <#local useCache = (getPropertyValue("cache","template.ftl.inlinecaching"))!"Y"/>
-  <#local utilCache= Static["org.ofbiz.base.util.cache.UtilCache"].getOrCreateUtilCache(cacheName, sizeLimit, maxInMemory, expireTime, useSoftReference)/>
+  <#local utilCache = Static["org.ofbiz.base.util.cache.UtilCache"].getOrCreateUtilCache(cacheName, sizeLimit, maxInMemory, expireTime, useSoftReference)/>
   <#if "Y" == useCache>
-    <#if utilCache.get(key)?has_content>
-      <#t>${raw(utilCache.get(key))}<#t>
+    <#local cachedCnt = utilCache.get(key)!false>
+    <#if !cachedCnt?is_boolean>
+      <#t>${raw(cachedCnt)}<#t>
     <#else>
       <#local nested><#nested></#local>
-      <#local temp = utilCache.put(key,nested)!/>
+      <#local temp = utilCache.put(key, nested)!/>
       <#t>${raw(nested)}<#t>
     </#if>
   <#else>

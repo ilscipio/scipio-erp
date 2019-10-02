@@ -1943,6 +1943,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </ul>
 </@section>
 
+<@section title="@utilCache tests">
+    <p>Current timestamp: ${nowTimestamp!}</p>
+    <#assign cacheTestExpireTime = 30000>
+    <@utilCache cacheName="scipio.layoutdemo.test1" key="layoutdemo::test1" expireTime=cacheTestExpireTime>
+        <p>Cached timestamp: ${nowTimestamp!} (expireTime: ${cacheTestExpireTime}ms)</p>
+    </@utilCache>
+</@section>
+
 <@section title="URL generation">
   <#assign shopWebSiteId = raw(shopInfo.webSiteId!)>
   <#assign shopMountPoint = raw(shopInfo.mountPoint!)>

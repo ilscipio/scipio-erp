@@ -93,6 +93,8 @@ public final class FreeMarkerWorker {
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
+    private static final int UPDATE_DELAY = UtilProperties.getPropertyAsInteger("cache", "template.ftl.updatedelay", 10000);
+
     // SCIPIO: 2017-04-03: custom wrapper FIXME: should not force BeansWrapper in the future...
     //private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
     private static final BeansWrapper defaultOfbizWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizWrapper(version);
@@ -164,7 +166,7 @@ public final class FreeMarkerWorker {
 
     public static Configuration makeConfiguration(BeansWrapper wrapper) {
         Configuration newConfig = newConfiguration();
-
+        newConfig.setTemplateUpdateDelayMilliseconds(UPDATE_DELAY); // set freemarker Update delay
         newConfig.setObjectWrapper(wrapper);
         TemplateHashModel staticModels = wrapper.getStaticModels();
         newConfig.setSharedVariable("Static", staticModels);

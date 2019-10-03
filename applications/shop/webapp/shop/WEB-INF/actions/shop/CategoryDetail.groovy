@@ -38,6 +38,7 @@ import com.ilscipio.scipio.solr.*;
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 final module = "CategoryDetail.groovy";
+def DEBUG = false;
 
 UtilCache<String, Map> categoryCache = UtilCache.getOrCreateUtilCache("category.categorydetail.rendered", 0,0,
         UtilProperties.getPropertyAsLong("cache", "category.categorydetail.rendered.expireTime", 0L),
@@ -55,7 +56,7 @@ nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
 
 try {
-    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs = context.catArgs ? new LinkedHashMap(context.catArgs) : new LinkedHashMap();
     catArgs.priceSortField = catArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
 
     productCategoryId = context.productCategoryId;
@@ -124,23 +125,27 @@ try {
     /**
      * Creates a unique product cachekey
      */
-    getCategoryCacheKey = { productCategoryId, currentCatalogId, viewSize, viewIndex, currIndex, priceSortField, sortOrder, sortAscending ->
+    getCategoryCacheKey = {
         String localeStr = "";
         if (context.locale == null) {
             localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
         } else {
             localeStr = context.locale.toString();
         }
-        return delegator.getDelegatorName()+"::"+localeStr+"::"+productCategoryId+"::"+currentCatalogId+"::"+viewSize+"::"+viewIndex+"::"+currIndex+"::"+priceSortField+"::"+sortOrder+"::"+sortAscending;
+        // DEV NOTE: don't use UtilMisc.toInteger here because it falls back to value 0 which is vague for these variables; toIntegerObject returns null
+        return delegator.getDelegatorName()+"::"+localeStr+"::"+productCategoryId+"::"+currentCatalogId+"::"+UtilMisc.toIntegerObject(viewSize)+"::"+
+                UtilMisc.toIntegerObject(viewIndex)+"::"+UtilMisc.toIntegerObject(currIndex)+"::"+catArgs.priceSortField+"::"+sortOrder+"::"+sortAscending+"::"+
+                catArgs.queryFilters+"::"+catArgs.useDefaultFilters;
     }
 
     // get the product entity
-    String cacheKey = getCategoryCacheKey(context.productCategoryId,currentCatalogId,
-            UtilMisc.toInteger(viewSize), UtilMisc.toInteger(viewIndex), UtilMisc.toInteger(currIndex), catArgs.priceSortField,
-            context.sortOrder, context.sortAscending);
+    String cacheKey = getCategoryCacheKey();
     if (useCache) {
         Map cachedValue = categoryCache.get(cacheKey);
         if (cachedValue != null) {
+            if (DEBUG) {
+                Debug.logInfo("Found cached category results for key [" + cacheKey + "]", module);
+            }
             context.solrProducts = cachedValue.solrProducts;
             context.listIndex = cachedValue.listIndex;
             context.productCategory = cachedValue.productCategory;
@@ -149,6 +154,10 @@ try {
             context.listSize = cachedValue.listSize;
             context.currIndex = cachedValue.currIndex;
             lookupCategory=false;
+        } else {
+            if (DEBUG) {
+                Debug.logInfo("No cached category results for key [" + cacheKey + "]; doing lookup", module);
+            }
         }
     }
 
@@ -172,46 +181,12 @@ try {
         productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
         solrProducts = result.results;
 
-        /* SCIPIO: 2018-05-25: this is now done as part of solrProductsSearch by default
-            // Prevents out of stock product to be displayed on site
-            productStore = ProductStoreWorker.getProductStore(request);
-            if(productStore) {
-                if("N".equals(productStore.showOutOfStockProducts)) {
-                    productsInStock = [];
-                    solrProducts.each { productCategoryMember ->
-                        productFacility = delegator.findOne("ProductFacility", [productId : productCategoryMember.productId, facilityId : productStore.inventoryFacilityId], true);
-                        if(productFacility) {
-                            if(productFacility.lastInventoryCount >= 1) {
-                                productsInStock.add(productCategoryMember);
-                            }
-                        }
-                    }
-                    solrProducts = productsInStock;
-                }
-            }
-            */
-
         context.solrProducts = solrProducts;
-
-        /*
-            subCatList = [];
-            if (CategoryWorker.checkTrailItem(request, productCategory.getString("productCategoryId")) || (!UtilValidate.isEmpty(productCategoryId) && productCategoryId == productCategory.productCategoryId))
-                subCatList = CategoryWorker.getRelatedCategoriesRet(request, "subCatList", productCategory.getString("productCategoryId"), true);
-
-            context.productSubCategoryList = subCatList;
-            */
 
         context.listIndex = 0;
         if (result.viewSize > 0) {
             context.listIndex = Math.ceil(result.listSize / result.viewSize);
         }
-        // SCIPIO: this may not make sense anymore since SOLR patches
-        //if (!viewSize.equals(String.valueOf(result.viewSize))) {
-        //    pageViewSize = Integer.parseInt(viewSize).intValue();
-        //    context.listIndex = Math.ceil(result.listSize/pageViewSize);
-        //    context.pageViewSize = pageViewSize;
-        //}
-
 
         context.productCategory = productCategory;
         context.viewIndex = result.viewIndex;
@@ -224,11 +199,6 @@ try {
             context.currIndex = Integer.parseInt(currIndex).intValue();
         }
 
-        /* SCIPIO: do NOT do this for now (or ever?)
-            parameters.VIEW_SIZE = viewSize;
-            parameters.VIEW_INDEX = viewIndex;
-            parameters.CURR_INDEX = CURR_INDEX;
-            */
         // cache
         catMap = [:];
         catMap.solrProducts = context.solrProducts;

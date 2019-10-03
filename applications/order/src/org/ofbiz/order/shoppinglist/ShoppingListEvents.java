@@ -34,6 +34,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.RecordNotFoundException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -230,7 +231,7 @@ public class ShoppingListEvents {
             shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListId", shoppingListId).queryOne();
             if (shoppingList == null) {
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.error_getting_shopping_list_and_items", cart.getLocale());
-                throw new IllegalArgumentException(errMsg);
+                throw new RecordNotFoundException(errMsg); // SCIPIO: switched IllegalArgumentException to RecordNotFoundException
             }
 
             shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
@@ -550,12 +551,16 @@ public class ShoppingListEvents {
             try {
                 addListToCart(delegator, dispatcher, cart, prodCatalogId, autoSaveListId, false, false, userLogin != null ? true : false);
                 cart.setLastListRestore(UtilDateTime.nowTimestamp());
+                cartUpdate.commit(cart); // SCIPIO
+            } catch(RecordNotFoundException e) { // SCIPIO: log this as warning because it is a "normal" case when we receive old cookies
+                Debug.logWarning("Auto-save shopping list not found for shoppingListId [" + autoSaveListId + "]; abandoning cart changes", module);
             } catch (IllegalArgumentException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, "Could not load auto-save shopping list to cart; abandoning cart changes", module); // SCIPIO: Added mesasge
             }
+        } else {
+            cartUpdate.commit(cart); // SCIPIO
         }
 
-        cartUpdate.commit(cart); // SCIPIO
         }
         return "success";
     }

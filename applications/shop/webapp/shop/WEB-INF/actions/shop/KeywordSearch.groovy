@@ -149,6 +149,7 @@ if (context.useSolr == false || useSolr == false) {
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
 locale = context.locale;
+currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 searchStringCount = 1;
 
 sanitizeUserQueryExpr = { expr ->
@@ -533,7 +534,12 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             // TODO: (see CommonSearchOptions.groovy)
             //context.searchCategoryIdEff = ...;
         }
-        
+
+        viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+        if (viewProductCategoryId) {
+            kwsArgs.searchFilters.add("cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
+        }
+
         // TODO: REVIEW: added this initially, but upon further review the +catalog: filter above should be sufficient,
         // AS LONG AS catalog is not accepted from request parameters (incl. security)
 //        if (kwsArgs.searchProductStoreId != "NONE") {

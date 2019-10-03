@@ -157,6 +157,12 @@ try {
     }
 
     if(lookupCategory){
+
+        viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+        if (viewProductCategoryId) {
+            catArgs.queryFilters.add("cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
+        }
+
         // get the product category & members
         result = dispatcher.runSync("solrProductsSearch",
                 [productStore   : productStore, productCategoryId: productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters: catArgs.useDefaultFilters,

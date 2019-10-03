@@ -78,7 +78,7 @@ if(!miniProduct){
     }
 
     if (!miniProduct && optProductId) {
-        miniProduct = delegator.findOne("Product", [productId : optProductId], true);
+        miniProduct = from("Product").where("productId", optProductId).cache().queryOne();
 
         if(!miniProduct){
             Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);

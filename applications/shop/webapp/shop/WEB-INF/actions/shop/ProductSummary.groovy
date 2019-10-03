@@ -37,13 +37,10 @@ import com.ilscipio.scipio.solr.*;
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final module = "ProductSummary.groovy";
 
-
-// SCIPIO: config
-// Setup
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productsummary.rendered", 0,0,
-        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "product.productsummary.rendered.expireTime","0")),
-        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productsummary.rendered.softReference","true"), true));
-Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productsummary.rendered.enable","false"), false);
+        UtilProperties.getPropertyAsLong("cache", "product.productsummary.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsBoolean("cache", "product.productsummary.rendered.softReference",true));
+Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.productsummary.rendered.enable", false);
 kwsArgs = context.kwsArgs ?: [:];
 cfgPropRes = kwsArgs.cfgPropRes ?: application.getAttribute("shopSearchCfgRes") ?: "shop";
 cfgPropPrefix = kwsArgs.cfgPropPrefix != null ? kwsArgs.cfgPropPrefix : "shop.";
@@ -106,11 +103,11 @@ def toBigDecimalCurrency(priceVal) { // SCIPIO
 /**
  * Creates a unique product cachekey
  * */
-String getProductCacheKey(){
-    if (userLogin){
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
-    }else{
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+getProductCacheKey = {
+    if (userLogin) {
+        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+    } else {
+        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
     }
 }
 
@@ -145,7 +142,7 @@ if (useCache) {
 
 if(!context.product){
     if (!avoidEntityData && !product && productId) {
-        product = delegator.findOne("Product", [productId : productId], true);
+        product = from("Product").where("productId", productId).cache().queryOne();
     }
 
     if (product) {
@@ -322,7 +319,7 @@ if(context.product) {
     // make the productContentWrapper
     productContentWrapper = new ProductContentWrapper(context.product, request);
     context.productContentWrapper = productContentWrapper;
-}else {
+} else {
     if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
         Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
     }

@@ -46,9 +46,9 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 final module = "ProductDetail.groovy"
 
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productdetail.rendered", 0,0,
-        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.expireTime","0")),
-        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.softReference","true"), true));
-Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.productdetail.rendered.enable","false"), false);
+        UtilProperties.getPropertyAsLong("cache", "product.productdetail.rendered.expireTime",0L),
+        UtilProperties.getPropertyAsBoolean("cache", "product.productdetail.rendered.softReference",true));
+Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.productdetail.rendered.enable", false);
 cart = ShoppingCartEvents.getCartObject(request);
 productId = null;
 product = context.product;
@@ -143,11 +143,11 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
 /**
  * Creates a unique product cachekey
  * */
-String getProductCacheKey(){
-    if (userLogin){
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
-    }else{
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+getProductCacheKey = {
+    if (userLogin) {
+        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+    } else {
+        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
     }
 }
 

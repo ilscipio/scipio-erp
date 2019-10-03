@@ -39,11 +39,10 @@ import com.ilscipio.scipio.solr.*;
 
 final module = "CategoryDetail.groovy";
 
-
 UtilCache<String, Map> categoryCache = UtilCache.getOrCreateUtilCache("category.categorydetail.rendered", 0,0,
-        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.expireTime","0")),
-        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.softReference","true"), true));
-Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "category.categorydetail.rendered.enable","false"), false);
+        UtilProperties.getPropertyAsLong("cache", "category.categorydetail.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsBoolean("cache", "category.categorydetail.rendered.softReference", true));
+Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "category.categorydetail.rendered.enable", false);
 Boolean lookupCategory = true;
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
@@ -54,21 +53,6 @@ context.remove("localVarsOnly");
 
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
-
-
-
-/**
- * Creates a unique product cachekey
- * */
-String getCategoryCacheKey(String productCategoryId,String currentCatalogId, int viewSize,int viewIndex, int currIndex, String priceSortField,String sortOrder,Boolean sortAscending){
-    String localeStr = "";
-    if(UtilValidate.isEmpty(context.locale)){
-        localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
-    }else{
-        localeStr = context.locale.toString();
-    }
-    return localeStr+"::"+productCategoryId+"::"+currentCatalogId+"::"+viewSize+"::"+viewIndex+"::"+currIndex+"::"+priceSortField+"::"+sortOrder+"::"+sortAscending;
-}
 
 try {
     catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
@@ -137,6 +121,18 @@ try {
 
     catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
 
+    /**
+     * Creates a unique product cachekey
+     */
+    getCategoryCacheKey = { productCategoryId, currentCatalogId, viewSize, viewIndex, currIndex, priceSortField, sortOrder, sortAscending ->
+        String localeStr = "";
+        if (context.locale == null) {
+            localeStr = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
+        } else {
+            localeStr = context.locale.toString();
+        }
+        return delegator.getDelegatorName()+"::"+localeStr+"::"+productCategoryId+"::"+currentCatalogId+"::"+viewSize+"::"+viewIndex+"::"+currIndex+"::"+priceSortField+"::"+sortOrder+"::"+sortAscending;
+    }
 
     // get the product entity
     String cacheKey = getCategoryCacheKey(context.productCategoryId,currentCatalogId,

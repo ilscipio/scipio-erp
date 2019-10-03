@@ -35,12 +35,10 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 final module = "MiniProductSummary.groovy";
 
-
-// Setup
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.miniproductsummary.rendered", 0,0,
-        UtilMisc.toLongObject(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.expireTime","0")),
-        UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.softReference","true"), true));
-Boolean useCache = UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "product.miniproductsummary.rendered.enable","false"), false);
+        UtilProperties.getPropertyAsLong("cache", "product.miniproductsummary.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsBoolean("cache", "product.miniproductsummary.rendered.softReference", true));
+Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.miniproductsummary.rendered.enable", false);
 miniProduct = context.miniProduct ? context.miniProduct : request.getAttribute("miniProduct");
 optProductId = request.getAttribute("optProductId");
 webSiteId = WebSiteWorker.getWebSiteId(request);
@@ -57,11 +55,11 @@ context.nowTimeLong = nowTimestamp.getTime();
 /**
  * Creates a unique product cachekey
  * */
-String getProductCacheKey(){
-    if (userLogin){
-        return optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
-    }else{
-        return optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+getProductCacheKey = {
+    if (userLogin) {
+        return delegator.getDelegatorName()+"::"+optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+    } else {
+        return delegator.getDelegatorName()+"::"+optProductId+"::"+webSiteId+"::"+prodCatalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
     }
 }
 

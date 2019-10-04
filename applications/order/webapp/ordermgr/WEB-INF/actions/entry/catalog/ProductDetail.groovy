@@ -181,6 +181,14 @@ if (useCache) {
         context.productTags = cachedValue.productTags;
     }
 }
+
+if (product) {
+    // SCIPIO: 2019-10-04: moved here because access below causes crash
+    // make the productContentWrapper
+    productContentWrapper = new ProductContentWrapper(product, request);
+    context.productContentWrapper = productContentWrapper;
+}
+
 if(!useCache && !cachedValue){
     // get the product detail information
     if (product) {
@@ -683,10 +691,6 @@ if(product){
         }
     }
     context.availableInventory = availableInventory;
-
-    // make the productContentWrapper
-    productContentWrapper = new ProductContentWrapper(product, request);
-    context.productContentWrapper = productContentWrapper;
 }
 
 // SCIPIO: Decide the next possible reserv start date (next day)

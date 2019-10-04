@@ -320,7 +320,7 @@ if(context.product) {
     productContentWrapper = new ProductContentWrapper(context.product, request);
     context.productContentWrapper = productContentWrapper;
 } else {
-    if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+    if (productId && !solrProduct) { // SCIPIO: report this, could be due to inefficient caching or solr setup
         Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
     }
 }

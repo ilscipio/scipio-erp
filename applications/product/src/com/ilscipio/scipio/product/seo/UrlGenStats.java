@@ -23,17 +23,19 @@ public class UrlGenStats {
     public int productError = 0;
     public int productSkipped = 0;
     public int productDupSkip = 0;
+    public int productFiltered = 0;
 
     public int categorySuccess = 0;
     public int categoryError = 0;
     public int categorySkipped = 0;
     public int categoryDupSkip = 0;
+    public int categoryFiltered = 0;
 
     public int contentSuccess = 0;
     public int contentError = 0;
     public int contentSkipped = 0;
     public int contentDupSkip = 0;
-
+    public int contentFiltered = 0;
 
     public UrlGenStats(boolean doProducts, boolean doCategory, boolean doContent) {
         this.doProducts = doProducts;
@@ -54,16 +56,19 @@ public class UrlGenStats {
         map.put("productSkipped", productSkipped);
         map.put("productError", productError);
         map.put("productDupSkip", productDupSkip);
+        map.put("productFiltered", productFiltered);
 
         map.put("categorySuccess", categorySuccess);
         map.put("categoryError", categoryError);
         map.put("categorySkipped", categorySkipped);
         map.put("categoryDupSkip", categoryDupSkip);
+        map.put("categoryFiltered", categoryFiltered);
 
         map.put("contentSuccess", contentSuccess);
         map.put("contentError", contentError);
         map.put("contentSkipped", contentSkipped);
         map.put("contentDupSkip", contentDupSkip);
+        map.put("contentFiltered", contentFiltered);
 
         return map;
     }
@@ -75,6 +80,7 @@ public class UrlGenStats {
     public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList) {
         if (doProducts) {
             msgList.add("Products updated: " + productSuccess);
+            if (productFiltered > 0) msgList.add("Products filtered: " + productFiltered);
             // I think these are mainly useful for debugging after all...
             //if (productSkipped > 0) msgList.add("Products skipped: " + productSkipped);
             //if (productDupSkip > 0) msgList.add("Product duplicates prevented: " + productDupSkip);
@@ -83,6 +89,7 @@ public class UrlGenStats {
 
         if (doCategory) {
             msgList.add("Categories updated: " + categorySuccess);
+            if (categoryFiltered > 0) msgList.add("Categories filtered: " + categoryFiltered);
             //if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
             //if (categoryDupSkip > 0) msgList.add("Category duplicates prevented: " + categoryDupSkip);
             if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
@@ -90,6 +97,7 @@ public class UrlGenStats {
 
         if (doContent) {
             msgList.add("Content updated: " + contentSuccess);
+            if (contentFiltered > 0) msgList.add("Content filtered: " + contentFiltered);
             //if (contentSkipped > 0) msgList.add("Content skipped: " + contentSkipped);
             //if (contentDupSkip > 0) msgList.add("Content duplicates prevented: " + contentDupSkip);
             if (contentError > 0) errMsgList.add("Content failed: " + contentError);

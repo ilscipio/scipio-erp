@@ -562,9 +562,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            List<GenericValue> prodCatalogList = traverser.getTargetCatalogList(prodCatalogId, prodCatalogIdList,
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
                     productStoreId, webSiteId, false);
-            traverser.traverseCatalogsDepthFirst(prodCatalogList);
         } catch(Exception e) {
             String message = "Error generating alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
@@ -859,9 +858,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            List<GenericValue> prodCatalogList = traverser.getTargetCatalogList(prodCatalogId, prodCatalogIdList,
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
                     productStoreId, webSiteId, false);
-            traverser.traverseCatalogsDepthFirst(prodCatalogList);
         } catch(Exception e) {
             String message = "Error removing alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"removeWebsiteAlternativeUrls: "+message, module);
@@ -957,9 +955,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            List<GenericValue> prodCatalogList = exporter.getTargetCatalogList(prodCatalogId, prodCatalogIdList,
+            exporter.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
                     productStoreId, webSiteId, false);
-            exporter.traverseCatalogsDepthFirst(prodCatalogList);
             out.processOutput(exporter);
         } catch(Exception e) {
             String message = "Error exporting alternative URLs for website '" + webSiteId + "': " + e.getMessage();

@@ -103,4 +103,19 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
 //            return false;
 //        }
 //    }
+
+
+    @Override
+    protected void notifyProductFiltered(GenericValue product, TraversalState state) throws GeneralException {
+        if (stats != null) {
+            stats.productFiltered++;
+        }
+    }
+
+    @Override
+    protected void notifyCategoryFiltered(GenericValue product, TraversalState state) throws GeneralException {
+        if (stats != null) {
+            stats.categoryFiltered++;
+        }
+    }
 }

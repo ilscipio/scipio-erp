@@ -60,6 +60,12 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     protected Set<String> seenCategoryIds = null;
     protected Set<String> seenProductIds = null;
 
+    // These are the "last" webSiteId and productStoreId queried and are updated anywhere a store or website is queried - can also be set manually by caller
+    protected String webSiteId = null;
+    protected GenericValue webSite = null;
+    protected String productStoreId = null;
+    protected GenericValue productStore = null;
+
     /**
      * Composed visitor constructor, with explicit visitor.
      */
@@ -360,6 +366,10 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             return new TraversalState(this, deepCopy);
         }
 
+        public CatalogTraverser getTarverser() {
+            return CatalogTraverser.this;
+        }
+
         /**
          * List of ProductCategory values indicating the current category path being visited,
          * not including the visited category (or product - obviously) itself.
@@ -410,6 +420,34 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         protected void setPhysicalDepth(int physicalDepth) {
             this.physicalDepth = physicalDepth;
         }
+
+        /**
+         * WARNING: May be null depending on caller's setup and usage.
+         */
+        public String getWebSiteId() {
+            return CatalogTraverser.this.getWebSiteId();
+        }
+
+        /**
+         * WARNING: May be null depending on caller's setup and usage.
+         */
+        public GenericValue getWebSite() {
+            return CatalogTraverser.this.getWebSite();
+        }
+
+        /**
+         * WARNING: May be null depending on caller's setup and usage.
+         */
+        public String getProductStoreId() {
+            return CatalogTraverser.this.getProductStoreId();
+        }
+
+        /**
+         * WARNING: May be null depending on caller's setup and usage.
+         */
+        public GenericValue getProductStore() {
+            return CatalogTraverser.this.getProductStore();
+        }
     }
 
     protected final TraversalState newTraversalState(int physicalDepth) {
@@ -443,19 +481,27 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     public boolean useProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
         for(CatalogFilter filter : getTravConfig().getFilters()) {
             if (!filter.filterProduct(product, state)) {
+                notifyProductFiltered(product, state);
                 return false;
             }
         }
         return true;
     }
 
+    protected void notifyProductFiltered(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
+    }
+
     public boolean useCategory(GenericValue productCategory, CatalogTraverser.TraversalState state) throws GeneralException {
         for(CatalogFilter filter : getTravConfig().getFilters()) {
             if (!filter.filterCategory(productCategory, state)) {
+                notifyCategoryFiltered(productCategory, state);
                 return false;
             }
         }
         return true;
+    }
+
+    protected void notifyCategoryFiltered(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
     }
 
     /**
@@ -540,6 +586,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
      */
     public boolean traverseProductStoreDfs(GenericValue productStore) throws GeneralException {
+        setProductStore(productStore);
         List<GenericValue> prodCatalogList = queryProductStoreCatalogList(productStore);
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
@@ -554,7 +601,32 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
 
     /**
+     * Traverse ProdCatalog categories of the given product store and website using depth-first search algorithm.
+     * <p>
+     * NOTE: 2019-10-03: This should be preferred over the overload that takes only prodCatalogList as this provides more information.
+     */
+    public boolean traverseCatalogsDepthFirst(String prodCatalogId, Collection<String> prodCatalogIdList,
+                                              String productStoreId, String webSiteId, boolean returnProdCatalogEntityOnly) throws GeneralException {
+        setProductStoreId(productStoreId);
+        setWebSiteId(webSiteId);
+        List<GenericValue> prodCatalogList = getTargetCatalogList(prodCatalogId, prodCatalogIdList,
+                productStoreId, webSiteId, returnProdCatalogEntityOnly);
+        try {
+            for(GenericValue prodCatalog : prodCatalogList) {
+                List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
+                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
+            }
+            return true;
+        } catch(StopCatalogTraversalException e) {
+            return false; // NOTE: not an error - just stop
+        }
+    }
+
+    /**
      * Traverse ProdCatalog categories using depth-first search algorithm.
+     * <p>
+     * WARNING: This does not set the current product store or website, you may want another overload, otherwise you may have to set them manually
+     * for filters to have access to them.
      */
     public boolean traverseCatalogsDepthFirst(List<GenericValue> prodCatalogList) throws GeneralException {
         try {
@@ -564,8 +636,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             }
             return true;
         } catch(StopCatalogTraversalException e) {
-            ; // not an error - just stop
-            return false;
+            return false; // NOTE: not an error - just stop
         }
     }
 
@@ -690,6 +761,61 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     protected Set<String> getSeenProductIds() {
         return seenProductIds;
+    }
+
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getWebSiteId() {
+        return webSiteId;
+    }
+
+    public void setWebSiteId(String webSiteId) {
+        this.webSiteId = webSiteId;
+        this.webSite = null;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getWebSite() {
+        if (webSite == null && webSiteId != null) {
+            webSite = getDelegator().from("WebSite").where("webSiteId", webSiteId).queryOneSafe();
+        }
+        return webSite;
+    }
+
+    public void setWebSite(GenericValue webSite) {
+        this.webSite = webSite;
+        this.webSiteId = (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getProductStoreId() {
+        return productStoreId;
+    }
+
+    public void setProductStoreId(String productStoreId) {
+        this.productStoreId = productStoreId;
+        this.productStore = null;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getProductStore() {
+        if (productStore == null && productStoreId != null) {
+            productStore = getDelegator().from("ProductStore").where("productStoreId", productStoreId).queryOneSafe();
+        }
+        return productStore;
+    }
+
+    public void setProductStore(GenericValue productStore) {
+        this.productStore = productStore;
+        this.productStoreId = (productStore != null) ? productStore.getString("productStoreId") : null;
     }
 
     protected void queryAndVisitCategoryProducts(GenericValue productCategory, TraversalState state) throws GeneralException {
@@ -850,4 +976,5 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     protected String getLogErrorMsg(Throwable t) {
         return getLogErrorPrefix() + t.getMessage();
     }
+
 }

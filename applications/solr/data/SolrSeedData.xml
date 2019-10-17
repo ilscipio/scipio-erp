@@ -11,7 +11,7 @@ code package.
     <StatusItem description="SOLR Data OK (current or not flagged otherwise)" sequenceId="01" statusCode="OK" statusId="SOLR_DATA_OK" statusTypeId="SOLR_DATA_STATUS"/>
     <StatusItem description="SOLR Data Out of Date (Old)" sequenceId="02" statusCode="OLD" statusId="SOLR_DATA_OLD" statusTypeId="SOLR_DATA_STATUS"/>
 
-    <!-- Whenever we reseed anything, we must flag the data as out of date. -->
-    <SolrStatus solrId="SOLR-MAIN" dataStatusId="SOLR_DATA_OLD" />
+    <!-- Whenever we reseed anything, we must flag the data as out of date. 2019-10-17: Removed, because not everyone wants this. Moved to SolrMarkDirtyData.xml as seed-initial.
+    <SolrStatus solrId="SOLR-MAIN" dataStatusId="SOLR_DATA_OLD"/>-->
 
 </entity-engine-xml>

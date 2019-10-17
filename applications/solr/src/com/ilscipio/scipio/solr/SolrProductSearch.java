@@ -1791,9 +1791,9 @@ public abstract class SolrProductSearch {
     }
 
     private static Boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
-        if (reindexAutoForceRan) return false;
+        if (reindexAutoForceRan) return null;
         synchronized(SolrProductSearch.class) {
-            if (reindexAutoForceRan) return false;
+            if (reindexAutoForceRan) return null;
             reindexAutoForceRan = true;
             return getReindexStartupForceProperty(delegator, dispatcher);
         }

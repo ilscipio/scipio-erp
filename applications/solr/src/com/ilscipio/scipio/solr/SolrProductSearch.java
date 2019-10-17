@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.solr.util.DirectJsonRequest;
 
 /**
- * Base class for OFBiz Test Tools test case implementations.
+ * SCIPIO: Main solr services implementations.
  */
 public abstract class SolrProductSearch {
 
@@ -1819,9 +1819,8 @@ public abstract class SolrProductSearch {
 
     public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
-        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         try {
-            SolrUtil.setSolrDataStatusId(delegator, (String) context.get("dataStatusId"), false);
+            SolrUtil.setSolrDataStatusId(dctx.getDelegator(), (String) context.get("dataStatusId"), false);
             result = ServiceUtil.returnSuccess();
         } catch (Exception e) {
             result = ServiceUtil.returnError("Unable to set SOLR data status: " + e.getMessage());

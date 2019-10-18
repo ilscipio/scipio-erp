@@ -71,7 +71,8 @@ public abstract class SolrProductSearch {
             "solr.service.registerUpdateToSolr.updateSrv", "updateToSolr");
 
     private static boolean reindexAutoForceRan = false;
-    private static final String reindexStartupForceSysProp = "scipio.solr.reindex.startup.force";
+    private static final String reindexStartupForceSysProp = "scipio.solr.index.rebuild.startup.force";
+    private static final String reindexStartupForceSysPropLegacy = "scipio.solr.reindex.startup.force"; // old name
     private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
 
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
@@ -1802,14 +1803,15 @@ public abstract class SolrProductSearch {
     private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
         Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
         if (force != null) return force;
-        force = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, null);
-        if (Boolean.FALSE.equals(force)) {
-            // COMPATIBILITY MODE: the value from .properties when false must be interpreted as 'unset' (property ignored)
-            force = null;
+        force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysPropLegacy));
+        if (force != null) return force;
+        String forceStr = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, reindexStartupForceConfigProp);
+        if ("false".equals(forceStr)) {
+            // COMPATIBILITY MODE: the value from .properties when false must be interpreted as 'unset' (property ignored); instead "N" may be passed
+            return null;
         }
-        return force;
+        return UtilMisc.booleanValueVersatile(forceStr);
     }
-
     /**
      * Rebuilds the solr index - only if dirty.
      */

@@ -107,6 +107,7 @@ code package.
         invoke="rebuildSolrIndex"
         semaphore="wait">
         <description>rebuild SOLR Index</description>
+        <implements service="scipioJobCtxInterface"/>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
         <attribute mode="IN" name="core" optional="true" type="String" />
         <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK

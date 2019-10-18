@@ -70,7 +70,6 @@ public abstract class SolrProductSearch {
     private static final String defaultRegisterUpdateToSolrUpdateSrv = UtilProperties.getPropertyValue(SolrUtil.solrConfigName,
             "solr.service.registerUpdateToSolr.updateSrv", "updateToSolr");
 
-    private static boolean reindexAutoForceRan = false;
     private static final String reindexStartupForceSysProp = "scipio.solr.index.rebuild.startup.force";
     private static final String reindexStartupForceSysPropLegacy = "scipio.solr.reindex.startup.force"; // old name
     private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
@@ -1728,7 +1727,15 @@ public abstract class SolrProductSearch {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        Boolean startupForce = isReindexStartupForce(delegator, dispatcher);
+        Map<String, Object> scipioJobCtx = UtilGenerics.checkMap(context.get("scipioJobCtx"));
+        String eventId = (scipioJobCtx != null) ? (String) scipioJobCtx.get("eventId") : null;
+        Boolean startupForce = null;
+        if ("SCH_EVENT_STARTUP".equals(eventId)) {
+            startupForce = getReindexStartupForceProperty(delegator, dispatcher);
+            if (Debug.verboseOn()) {
+                Debug.logInfo("rebuildSolrIndexAuto: Running as startup job (SCH_EVENT_STARTUP)", module);
+            }
+        }
         boolean force = Boolean.TRUE.equals(startupForce);
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
 
@@ -1752,7 +1759,8 @@ public abstract class SolrProductSearch {
             }
 
             Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty
-                    + ", ifConfigChange: " + ifConfigChange + ", waitSolrReady: " + waitSolrReady + ", startupForce: " + startupForce + ")", module);
+                    + ", ifConfigChange: " + ifConfigChange + ", waitSolrReady: " + waitSolrReady + ", startupForce: " + startupForce
+                    + ", eventId: " + eventId + ")", module);
 
             Map<String, Object> servCtx;
             try {
@@ -1784,20 +1792,11 @@ public abstract class SolrProductSearch {
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else {
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled (startupForce: " + startupForce + ")", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled (startupForce: " + startupForce + ", eventId: " + eventId + ")", module);
             result = ServiceUtil.returnSuccess();
         }
 
         return result;
-    }
-
-    private static Boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
-        if (reindexAutoForceRan) return null;
-        synchronized(SolrProductSearch.class) {
-            if (reindexAutoForceRan) return null;
-            reindexAutoForceRan = true;
-            return getReindexStartupForceProperty(delegator, dispatcher);
-        }
     }
 
     private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
@@ -1812,6 +1811,7 @@ public abstract class SolrProductSearch {
         }
         return UtilMisc.booleanValueVersatile(forceStr);
     }
+
     /**
      * Rebuilds the solr index - only if dirty.
      */

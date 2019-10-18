@@ -25,7 +25,9 @@ import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.semaphore.SemaphoreFailException;
 import org.ofbiz.service.semaphore.SemaphoreWaitException;
@@ -138,6 +140,14 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
      */
     protected String getServiceName() {
         return service;
+    }
+
+    /**
+     * SCIPIO: Returns the service model
+     */
+    protected ModelService getModelService() throws GenericServiceException {
+        String serviceName = getServiceName();
+        return (serviceName != null) ? dctx.getModelService(serviceName) : null;
     }
 
     @Override

@@ -40,6 +40,8 @@ import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
@@ -333,6 +335,20 @@ public class PersistedServiceJob extends GenericServiceJob {
             // check the runAsUser
             if (UtilValidate.isNotEmpty(jobValue.getString("runAsUser"))) {
                 context.put("userLogin", ServiceUtil.getUserLogin(dctx, context, jobValue.getString("runAsUser")));
+            }
+            // SCIPIO: scipioJobCtxInterface: If eventId is set, check if the service wants to know what it is
+            String eventId = jobValue.getString("eventId");
+            if (eventId != null) {
+                try {
+                    ModelService modelService = getModelService();
+                    if (modelService != null && modelService.getParam("scipioJobCtx") != null) {
+                        Map<String, Object> scipioJobCtx = new HashMap<>();
+                        scipioJobCtx.put("eventId", eventId);
+                        context.put("scipioJobCtx", scipioJobCtx);
+                    }
+                } catch (GenericServiceException e) { // SCIPIO
+                    Debug.logError(e, "PersistedServiceJob.getContext(): Error getting model service for job", module);
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "PersistedServiceJob.getContext(): Entity Exception", module);

@@ -249,4 +249,13 @@ code package.
         <auto-attributes include="pk" mode="IN"/>
     </service>
 
+    <!-- SCIPIO: New services -->
+    <service name="scipioJobCtxInterface" engine="interface">
+        <description>A special interface that services may implement to receive details about the job that triggered the service</description>
+        <attribute name="scipioJobCtx" type="Map" mode="IN" optional="true">
+            <description>Contains the following fields:
+                * eventId - special Scipio eventId (SCH_EVENT_STARTUP, ...)</description>
+        </attribute>
+    </service>
+
 </services>

@@ -309,6 +309,9 @@ public class JmsServiceEngine extends AbstractEngine {
 
     protected Map<String, Object> run(ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         JmsService serviceElement = getServiceElement(modelService);
+        if (serviceElement == null) { // SCIPIO
+            throw new GenericServiceException("Could not get JMS service for service [" + modelService.name + "]; is JMS configured in serviceengine.xml?");
+        }
         List<Server> serverList = serviceElement.getServers();
 
         Map<String, Object> result = new HashMap<String, Object>();

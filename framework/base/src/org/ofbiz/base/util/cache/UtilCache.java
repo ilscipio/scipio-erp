@@ -466,12 +466,12 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         }
     }
 
+    /** Removes all elements from this cache */
     public void clear() {
         erase();
         clearCounters();
     }
 
-    /** Removes all elements from this cache */
     public static void clearAllCaches() {
         // We make a copy since clear may take time
         for (UtilCache<?,?> cache : utilCacheTable.values()) {

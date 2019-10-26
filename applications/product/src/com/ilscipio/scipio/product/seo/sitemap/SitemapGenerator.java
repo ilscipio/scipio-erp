@@ -11,9 +11,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.seo.SeoConfig;
@@ -505,16 +507,15 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getCategoryElemHandler().addUrl(libUrl);
-            getStats().categorySuccess++;
         } catch(Exception e) {
-            stats.categoryError++;
+            getStats().categoryError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
         }
     }
 
     protected void buildSitemapProductLink(GenericValue product, Map<Locale, List<String>> trailNames, List<GenericValue> trailEntities) throws GeneralException {
         if (!config.isIncludeVariant() && "Y".equals(product.getString("isVariant"))) {
-            stats.productSkipped++;
+            getStats().productSkipped++;
             return;
         }
 
@@ -542,14 +543,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, config.isUseProductLastModDate() ? product.getTimestamp("lastModifiedDate") : null);
             getProductElemHandler().addUrl(libUrl);
-            stats.productSuccess++;
 
             // TODO?: is there need to do variants (not explicitly associated to category)?
             // usually don't want to advertise the variants unless attached to category for some reason?...
             //if (config.doChildProduct) {
             //}
         } catch(Exception e) {
-            stats.productError++;
+            getStats().productError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for product '" + productId + "': " + e.getMessage(), module);
         }
     }
@@ -563,10 +563,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getContentElemHandler().addUrl(libUrl);
-
-            stats.contentSuccess++;
         } catch(Exception e) {
-            stats.contentError++;
+            getStats().contentError++;
             Debug.logError(getLogErrorPrefix()+"Error processing cms page URI: " + uri + ": " + e.getMessage(), module);
         }
     }
@@ -610,6 +608,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         private long urlCount = 0;
         private long sitemapFileIndex = 0;
 
+        private Set<String> seenUrls = new LinkedHashSet<>();
+
         public WebSitemapGenerator getWsg() { return wsg; }
         public List<String> getSitemapFiles() { return sitemapFiles; }
         public long getUrlCount() { return urlCount; }
@@ -632,8 +632,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             if (wsg == null) {
                 beginSitemapFile();
             }
-            wsg.addUrl(url);
-            urlCount++;
+            String urlStr = url.getUrl().toString();
+            if (!seenUrls.contains(urlStr)) {
+                wsg.addUrl(url);
+                seenUrls.add(urlStr);
+                urlCount++;
+                updateStatsCount();
+            }
         }
 
         protected void beginSitemapFile() throws IOException, URISyntaxException {
@@ -653,20 +658,25 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
 
         protected abstract ElemType getType();
+
+        protected abstract void updateStatsCount();
     }
 
     protected class CategoryElemHandler extends ElemHandler {
         @Override protected ElemType getType() { return ElemType.CATEGORY; }
+        @Override protected void updateStatsCount() { getStats().categorySuccess++; }
         @Override public String getTypeFilenamePrefix() { return config.getCategoryFilePrefix(); }
     }
 
     protected class ProductElemHandler extends ElemHandler {
         @Override protected ElemType getType() { return ElemType.PRODUCT; }
+        @Override protected void updateStatsCount() { getStats().productSuccess++; }
         @Override public String getTypeFilenamePrefix() { return config.getProductFilePrefix(); }
     }
 
     protected class ContentElemHandler extends ElemHandler {
         @Override protected ElemType getType() { return ElemType.CONTENT; }
+        @Override protected void updateStatsCount() { getStats().contentSuccess++; }
         @Override public String getTypeFilenamePrefix() { return config.getContentFilePrefix(); }
     }
 

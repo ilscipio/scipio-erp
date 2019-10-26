@@ -41,18 +41,16 @@ public abstract class SitemapServices {
 
             UrlGenStats stats = generator.getStats();
             String dirMsg = "";
-            if (generator != null) {
-                // just in case coding/other errors here, these don't need to cause service fail
-                try {
-                    dirMsg += " (directory: " + generator.getFullSitemapDir() + ")";
-                } catch(Exception e) {
-                    Debug.logError(e, logPrefix+"Error determining full sitemap file directory location: " + e.getMessage(), module);
-                }
-                try {
-                    dirMsg += " (index URL: " + generator.getSitemapIndexFileLink() + ")";
-                } catch(Exception e) {
-                    Debug.logError(e, logPrefix+"Error determining sitemap index link: " + e.getMessage(), module);
-                }
+            // just in case coding/other errors here, these don't need to cause service fail
+            try {
+                dirMsg += " (directory: " + generator.getFullSitemapDir() + ")";
+            } catch(Exception e) {
+                Debug.logError(e, logPrefix+"Error determining full sitemap file directory location: " + e.getMessage(), module);
+            }
+            try {
+                dirMsg += " (index URL: " + generator.getSitemapIndexFileLink() + ")";
+            } catch(Exception e) {
+                Debug.logError(e, logPrefix+"Error determining sitemap index link: " + e.getMessage(), module);
             }
             // TODO: LOCALIZE
             String resultMsg = "Generated sitemaps for website '" + webSiteId + "': " + stats.toMsg(locale) + dirMsg;

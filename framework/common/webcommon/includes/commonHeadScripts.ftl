@@ -21,7 +21,7 @@
 
     <#-- theme style variables 
          TODO?: could be optimized via static JS generated manually or cached -->
-  <#if styles?has_content>
+  <#if styles?has_content && styles.printStyleClassesOnPage!true>
     var scipioStyles = <@objectAsScript lang="js" object=styles />;
   </#if>  
   

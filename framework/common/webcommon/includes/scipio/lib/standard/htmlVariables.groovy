@@ -22,6 +22,7 @@ context.styles = [
   /* Generic */
     "framework" : "foundation",
     "customSideBar" : false,
+    //"printStyleClassesOnPage" : true,
     "disabled" : "disabled",
     "active" : "active",
     "selected" : "selected",

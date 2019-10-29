@@ -125,8 +125,8 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                 if (UtilValidate.isNotEmpty(path)) {
                     if (urlWorker.getConfig().isSeoUrlEnabledForContextPath(request.getContextPath())) {
                         getCatalogTopCategory(request); // TODO: REVIEW
-                        boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
-                        if (forwarded) return;
+                        boolean processed = matchSeoCatalogUrlAndForward(request, response, chain, delegator, path);
+                        if (processed) return;
                     } else {
                         // TODO/FIXME: see CatalogUrlFitler for explanation for why these are here
                         getCatalogTopCategory(request);
@@ -158,23 +158,27 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         }
     }
 
-    public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, Delegator delegator, String matchablePath) throws ServletException, IOException {
-        SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
-        if (urlInfo != null) {
-            boolean res = updateRequestForSeoCatalogUrl(request, delegator, urlInfo);
-            if (!res) return false;
-            return forwardSeoUrl(request, response, delegator, urlInfo);
-        }
-        return false;
-    }
-
     public static String getMatchablePath(HttpServletRequest request) {
         return RequestLinkUtil.getServletAndPathInfo(request);
+    }
+
+    public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Delegator delegator, String matchablePath) throws ServletException, IOException {
+        SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
+        if (urlInfo != null) {
+            return updateRequestAndForwardSeoCatalogUrl(request, response, chain, delegator, matchablePath, urlInfo);
+        }
+        return false;
     }
 
     public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
         return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath(),
                 WebSiteWorker.getWebSiteId(request), CatalogWorker.getCurrentCatalogId(request));
+    }
+
+    protected boolean updateRequestAndForwardSeoCatalogUrl(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Delegator delegator, String matchablePath, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
+        boolean res = updateRequestForSeoCatalogUrl(request, delegator, urlInfo);
+        if (!res) return false;
+        return forwardSeoUrl(request, response, delegator, urlInfo);
     }
 
     /**

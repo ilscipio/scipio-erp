@@ -75,7 +75,19 @@ code package.
             <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
             
             <!-- A lot of pages still need this -->
-            <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
+            <if>
+                <condition>
+                    <or>
+                        <if-empty field="isEmptyJavascript"/>
+                        <not>
+                            <if-compare field="isEmptyJavascript" operator="equals" value="Y" />
+                        </not>
+                    </or>
+                </condition>
+                <then>
+                    <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
+                </then>
+            </if>
 
             <!-- 2016-08-09: this is not appropriate anymore; see GlobalActions
             <!- Get the store VisualTheme ->

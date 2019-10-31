@@ -906,6 +906,30 @@ public abstract class SolrProductSearch {
                 solrQuery.setSort(sortBy, order);
             }
 
+            List<String> sortByList = UtilGenerics.checkList(context.get("sortByList"));
+            if (sortByList != null) {
+                for(String sortByEntry : sortByList) {
+                    SolrQuery.ORDER order;
+                    if (sortByEntry.toLowerCase().endsWith(" desc")) {
+                        order = SolrQuery.ORDER.desc;
+                        sortByEntry = sortByEntry.substring(0, sortByEntry.length() - " desc".length());
+                    } else if (sortByEntry.toLowerCase().endsWith(" asc")) {
+                        sortByEntry = sortByEntry.substring(0, sortByEntry.length() - " asc".length());
+                        order = SolrQuery.ORDER.asc;
+                    } else if (sortByEntry.startsWith("-")) {
+                        order = SolrQuery.ORDER.desc;
+                        sortByEntry = sortByEntry.substring("-".length());
+                    } else {
+                        order = SolrQuery.ORDER.asc;
+                    }
+                    solrQuery.addSort(sortByEntry, order);
+                }
+            }
+
+            if (SolrUtil.verboseOn()) {
+                Debug.logInfo("Solr: runSolrQuery: Submitting query: " + solrQuery, module);
+            }
+
             //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
             QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
             if (solrUsername != null) {

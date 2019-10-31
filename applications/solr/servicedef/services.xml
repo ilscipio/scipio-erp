@@ -352,6 +352,9 @@ code package.
         <attribute mode="IN" optional="true" name="queryFilters" type="List">
             <description>List of strings, each used as-is as a filter (no splitting).</description>
         </attribute>
+        <attribute mode="IN" optional="true" name="sortByList" type="List">
+            <description>List of strings, each optionally suffixed by " asc" or " desc"</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
@@ -449,6 +452,9 @@ code package.
         <attribute mode="IN" optional="true" name="viewIndex" type="Object">
             <description>Supports String, Integer (2017-09-11)</description>
         </attribute>
+        <attribute mode="IN" optional="true" name="sortByList" type="List">
+            <description>List of strings, each optionally suffixed by " asc" or " desc"</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
@@ -500,6 +506,9 @@ code package.
         <attribute mode="IN" optional="true" name="queryFilter" type="String">
             <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
                     To avoid splitting, use queryFilters instead (with one entry).</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="sortByList" type="List">
+            <description>List of strings, each optionally suffixed by " asc" or " desc"</description>
         </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>

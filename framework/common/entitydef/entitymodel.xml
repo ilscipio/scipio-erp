@@ -872,7 +872,8 @@ code package.
     <!-- ============================ -->
     
     <entity entity-name="SystemProperty" package-name="org.ofbiz.common.property" title="Configurable System Property"><!-- SCIPIO: 2018-08-30: fixed title -->
-        <description>Defines and overrides properties as otherwise found in *.properties files in the filesystem</description><!-- SCIPIO -->
+        <description>Defines and overrides properties as otherwise found in *.properties files in the filesystem (NOTE: not related to Java system properties)</description><!-- SCIPIO -->
+        <!-- SCIPIO: NOTE: This is not related to Java system properties; it is better to refer to these as "Entity Properties" in code, as suggested in name by EntityUtilProperties.java -->
         <field name="systemResourceId" type="id-long-ne"></field>
         <field name="systemPropertyId" type="id-long-ne"></field>
         <field name="systemPropertyValue" type="value"></field>

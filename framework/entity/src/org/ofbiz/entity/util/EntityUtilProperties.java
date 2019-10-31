@@ -61,9 +61,21 @@ public final class EntityUtilProperties implements Serializable {
      * if it does not exist, the result is null.
      * Added 2018-07-27.
      */
-    public static String getSystemPropertyValueOrNull(String resource, String name, Delegator delegator) {
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+    public static String getEntityPropertyValueOrNull(String resource, String name, Delegator delegator) {
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         return propMap.isPresent() ? propMap.get() : null;
+    }
+
+    /**
+     * SCIPIO: Returns the value for the given SystemProperty, or null if missing.
+     * If the SystemProperty exists, the result even if no value is an empty string;
+     * if it does not exist, the result is null.
+     * @deprecated Use {@link #getEntityPropertyValueOrNull}, which does the same thing.
+     * Added 2018-07-27.
+     */
+    @Deprecated
+    public static String getSystemPropertyValueOrNull(String resource, String name, Delegator delegator) {
+        return getEntityPropertyValueOrNull(resource, name, delegator);
     }
 
     /**
@@ -72,7 +84,7 @@ public final class EntityUtilProperties implements Serializable {
      * <p>
      * SCIPIO: 2018-08-17: modified to use Optional instead of inappropriate Map.
      */
-    private static Optional<String> getSystemPropertyValue(String resource, String name, Delegator delegator) {
+    private static Optional<String> getEntityPropertyValue(String resource, String name, Delegator delegator) { // SCIPIO: Renamed from: getSystemPropertyValue
         Optional<String> results = Optional.empty(); // SCIPIO: Optional
 
         if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
@@ -137,7 +149,7 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString, Delegator delegator) {
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             compareString = (compareString == null) ? "" : compareString;
             return propMap.get().equalsIgnoreCase(compareString);
@@ -147,7 +159,7 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getPropertyValue(String resource, String name, String defaultValue, Delegator delegator) {
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             String s = propMap.get();
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
@@ -168,7 +180,7 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             String s = propMap.get();
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
@@ -181,7 +193,7 @@ public final class EntityUtilProperties implements Serializable {
     /**
      * getPropertyNumber, as double.
      * <p>
-     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double, Delegator)} instead.
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, Double, Delegator)} instead.
      */
     public static double getPropertyNumber(String resource, String name, double defaultValue, Delegator delegator) { // SCIPIO: added 2018-09-26
         String str = getPropertyValue(resource, name, delegator);
@@ -199,8 +211,9 @@ public final class EntityUtilProperties implements Serializable {
     /**
      * getPropertyNumber, as double.
      * <p>
-     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, Double)} instead.
      */
+    @Deprecated
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
         return UtilProperties.getPropertyNumber(resource, name, defaultValue);
     }
@@ -208,49 +221,50 @@ public final class EntityUtilProperties implements Serializable {
     /**
      * getPropertyNumber, as double, with default value 0.00000.
      * <p>
-     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, double)} instead.
+     * SCIPIO: <strong>WARN:</strong> This method is inconsistent; you should use {@link #getPropertyAsDouble(String, String, Double)} instead.
      */
+    @Deprecated
     public static double getPropertyNumber(String resource, String name) {
         return UtilProperties.getPropertyNumber(resource, name);
     }
 
-    public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue, Delegator delegator) { // SCIPIO: added 2018-09-26
+    public static Boolean getPropertyAsBoolean(String resource, String name, Boolean defaultValue, Delegator delegator) { // SCIPIO: added 2018-09-26
         return UtilProperties.asBoolean(getPropertyValue(resource, name, delegator), defaultValue);
     }
 
-    public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue) {
+    public static Boolean getPropertyAsBoolean(String resource, String name, Boolean defaultValue) {
         return UtilProperties.getPropertyAsBoolean(resource, name, defaultValue);
     }
 
-    public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+    public static Integer getPropertyAsInteger(String resource, String name, Integer defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
         return UtilProperties.asInteger(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
-    public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber) {
+    public static Integer getPropertyAsInteger(String resource, String name, Integer defaultNumber) {
         return UtilProperties.getPropertyAsInteger(resource, name, defaultNumber);
     }
 
-    public static Long getPropertyAsLong(String resource, String name, long defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+    public static Long getPropertyAsLong(String resource, String name, Long defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
         return UtilProperties.asLong(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
-    public static Long getPropertyAsLong(String resource, String name, long defaultNumber) {
+    public static Long getPropertyAsLong(String resource, String name, Long defaultNumber) {
         return UtilProperties.getPropertyAsLong(resource, name, defaultNumber);
     }
 
-    public static Float getPropertyAsFloat(String resource, String name, float defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+    public static Float getPropertyAsFloat(String resource, String name, Float defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
         return UtilProperties.asFloat(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
-    public static Float getPropertyAsFloat(String resource, String name, float defaultNumber) {
+    public static Float getPropertyAsFloat(String resource, String name, Float defaultNumber) {
         return UtilProperties.getPropertyAsFloat(resource, name, defaultNumber);
     }
 
-    public static Double getPropertyAsDouble(String resource, String name, double defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
+    public static Double getPropertyAsDouble(String resource, String name, Double defaultNumber, Delegator delegator) { // SCIPIO: added 2018-09-26
         return UtilProperties.asDouble(getPropertyValue(resource, name, delegator), defaultNumber);
     }
 
-    public static Double getPropertyAsDouble(String resource, String name, double defaultNumber) {
+    public static Double getPropertyAsDouble(String resource, String name, Double defaultNumber) {
         return UtilProperties.getPropertyAsDouble(resource, name, defaultNumber);
     }
 
@@ -271,7 +285,7 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getPropertyValue(String resource, String name, Delegator delegator) {
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             return propMap.get();
         } else {
@@ -291,7 +305,7 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             return propMap.get();
         } else {
@@ -387,7 +401,7 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getMessage(String resource, String name, Locale locale, Delegator delegator) {
-        Optional<String> propMap = getSystemPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
         if (propMap.isPresent()) {
             return propMap.get();
         } else {

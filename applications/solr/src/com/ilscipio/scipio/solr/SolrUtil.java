@@ -343,11 +343,14 @@ public abstract class SolrUtil {
         return isSolrWebappReadyRaw(getQueryHttpSolrClient(null));
     }
 
-    public static GenericValue getSolrStatus(Delegator delegator) {
+    /**
+     * Returns the SolrStatus data status from DB. NOTE: useCache=true should usually not be used.
+     */
+    public static GenericValue getSolrStatus(Delegator delegator, boolean useCache) {
         GenericValue solrStatus;
         try {
             solrStatus = EntityQuery.use(delegator).from("SolrStatus")
-                    .where("solrId", "SOLR-MAIN").cache(false).queryOne();
+                    .where("solrId", "SOLR-MAIN").cache(useCache).queryOne();
             if (solrStatus == null) {
                 Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - seed data missing?", module);
             } else {
@@ -359,9 +362,20 @@ public abstract class SolrUtil {
         return null;
     }
 
-    public static String getSolrDataStatusId(Delegator delegator) {
-        GenericValue solrStatus = getSolrStatus(delegator);
+    public static GenericValue getSolrStatus(Delegator delegator) {
+        return getSolrStatus(delegator, false);
+    }
+
+    /**
+     * Returns the SolrStatus data status ID from DB. NOTE: useCache=true should usually not be used.
+     */
+    public static String getSolrDataStatusId(Delegator delegator, boolean useCache) {
+        GenericValue solrStatus = getSolrStatus(delegator, useCache);
         return solrStatus != null ? solrStatus.getString("dataStatusId") : null;
+    }
+
+    public static String getSolrDataStatusId(Delegator delegator) {
+        return getSolrDataStatusId(delegator, false);
     }
 
     public static void setSolrDataStatusId(Delegator delegator, String dataStatusId, boolean updateVersion) throws GenericEntityException {

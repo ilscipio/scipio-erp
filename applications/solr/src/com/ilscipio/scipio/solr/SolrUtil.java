@@ -38,7 +38,8 @@ public abstract class SolrUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String solrConfigName = "solrconfig";
-    public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("solr", "solr.debug", false); // SCIPIO
+    public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("solr", "solr.debug", false)
+            || UtilValidate.booleanValueVersatile(System.getProperty("scipio.solr.debug"), false); // SCIPIO
 
     private static final boolean solrEnabled = getSolrSysPropCfgBool("enabled", true);
     private static final boolean solrEcaEnabled = getSolrSysPropCfgBool("eca.enabled", false);

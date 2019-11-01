@@ -282,6 +282,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * SCIPIO: If true, avoids optional logging.
      */
     LogLevel logLevel = LogLevel.NORMAL;
+
+    /**
+     * SCIPIO: Log level for when this service is called from ECAs.
+     */
+    LogLevel ecaLogLevel = LogLevel.NORMAL;
     
     private transient List<ModelParam> typeConvertParamList; // SCIPIO
 
@@ -328,6 +333,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
         this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
         this.logLevel = model.logLevel; // SCIPIO
+        this.ecaLogLevel = model.ecaLogLevel; // SCIPIO
         this.typeConvertParamList = model.typeConvertParamList; // SCIPIO
     }
 
@@ -2321,6 +2327,20 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public LogLevel getLogLevel() {
         return logLevel;
+    }
+
+    /**
+     * SCIPIO: Returns true if the service should not log any non-vital information related to ECA calls.
+     */
+    public boolean isEcaQuiet() {
+        return getEcaLogLevel().isQuiet();
+    }
+
+    /**
+     * SCIPIO: Returns configured ECA logging level (default.
+     */
+    public LogLevel getEcaLogLevel() {
+        return ecaLogLevel;
     }
 
     /**

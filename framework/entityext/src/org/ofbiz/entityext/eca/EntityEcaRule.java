@@ -165,7 +165,7 @@ public final class EntityEcaRule implements java.io.Serializable {
                     // in order to enable OR logic without multiple calls to the given service,
                     //only execute a given service name once per service call phase
                     if (actionsRun.add(ea.getServiceName())) {
-                        if (Debug.infoOn()) {
+                        if (!ea.isQuiet(dctx) && Debug.infoOn()) { // SCIPIO: Added quiet check
                             Debug.logInfo("Running Entity ECA Service: " + ea.getServiceName() + ", triggered by rule on Entity: " + value.getEntityName(), module);
                         }
                         ea.runAction(dctx, context, value);

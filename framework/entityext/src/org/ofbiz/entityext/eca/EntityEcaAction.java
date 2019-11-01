@@ -49,6 +49,7 @@ public final class EntityEcaAction implements java.io.Serializable {
     private final boolean abortOnError;
     private final boolean rollbackOnError;
     private final boolean persist;
+    private transient Boolean quiet = null; // SCIPIO: if true, don't log when this gets triggered
 
     public EntityEcaAction(Element action) {
         this.serviceName = action.getAttribute("service");
@@ -65,6 +66,23 @@ public final class EntityEcaAction implements java.io.Serializable {
 
     public String getServiceName() {
         return this.serviceName;
+    }
+
+    /**
+     * SCIPIO: True if the service this refers to has log-eca="quiet" by default.
+     */
+    public boolean isQuiet(DispatchContext dctx) {
+        Boolean quiet = this.quiet;
+        if (quiet == null) {
+            try {
+                quiet = dctx.getModelService(getServiceName()).isEcaQuiet();
+            } catch (Exception e) {
+                Debug.logError(e, "Error finding service [" + getServiceName() + "]", module);
+                quiet = false;
+            }
+            this.quiet = quiet;
+        }
+        return quiet;
     }
 
     public void runAction(DispatchContext dctx, Map<String, ? extends Object> context, GenericEntity newValue) throws GenericEntityException {

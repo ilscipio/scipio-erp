@@ -189,6 +189,12 @@ public class ModelServiceReader implements Serializable {
             logLevel = "true".equalsIgnoreCase(serviceElement.getAttribute("debug")) ? LogLevel.DEBUG : LogLevel.NORMAL;
         }
         service.logLevel = logLevel;
+        // SCIPIO: eca (default) log level
+        LogLevel ecaLogLevel = LogLevel.fromName(serviceElement.getAttribute("log-eca"), null);
+        if (ecaLogLevel == null) {
+            ecaLogLevel = "true".equalsIgnoreCase(serviceElement.getAttribute("debug")) ? LogLevel.DEBUG : LogLevel.NORMAL;
+        }
+        service.ecaLogLevel = ecaLogLevel;
 
         // these default to true; if anything but true, make false
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));

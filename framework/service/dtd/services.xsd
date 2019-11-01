@@ -151,6 +151,24 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="log-eca"><!-- default="normal" -->
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: If set to quiet, the service engine will avoid making info-/timing-level logs
+                    about this service when called from ECAs, by default (may be overridden elsewhere);
+                    if set to debug, will provide extra info (same as debug=true attribute).
+                    May be needed for small or low-level services that get called constantly and burden the log.
+                    NOTE: If log is configured as verbose, "quiet" may not be respected.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="debug"/>
+                    <xs:enumeration value="normal"/>
+                    <xs:enumeration value="quiet"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="notification">
         <xs:complexType>

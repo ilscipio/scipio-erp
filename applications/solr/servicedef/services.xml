@@ -216,7 +216,7 @@ code package.
     </service>
 
     <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="registerUpdateToSolr"
-        use-transaction="false"><!-- must not force transaction; special behavior -->
+        use-transaction="false" log="quiet" log-eca="quiet"><!-- must not force transaction; special behavior -->
         <description>Registers (queues) a product add or removal to/from solr index by product instance or by productId - intended for use with ECAs/SECAs
             - delays the solr index update (updateToSolr) to the current transaction's global-commit</description>
         <!-- NOTE: As of 2017-12, registerUpdateToSolr is the only service that the solr ECAs should invoke (NOT updateToSolr/addToSolr/remoteFromSolr).

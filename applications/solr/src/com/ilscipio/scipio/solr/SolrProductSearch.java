@@ -174,6 +174,18 @@ public abstract class SolrProductSearch {
                     result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIdMap);
                     if (ServiceUtil.isSuccess(result)) indexed = true;
                 } else {
+                    String productInfoStr = null;
+                    if (Debug.infoOn()) {
+                        if (productId != null) {
+                            if (productIdMap != null) {
+                                productInfoStr = "products: " + productId + ", " + productIdMap;
+                            } else {
+                                productInfoStr = "product: " + productId;
+                            }
+                        } else if (productIdMap != null) {
+                            productInfoStr = "products: " + productIdMap;
+                        }
+                    }
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
                         if (productId == null) {
                             //Debug.logWarning("Solr: registerUpdateToSolr: Missing product instance or productId", module); // SCIPIO: Redundant logging
@@ -181,24 +193,24 @@ public abstract class SolrProductSearch {
                             // because default ECA flags are: rollback-on-error="false" abort-on-error="false"
                             return ServiceUtil.returnError("Missing product instance or productId");
                         }
+                        Debug.logInfo("Solr: registerUpdateToSolr: Scheduling indexing for " + productInfoStr, module);
                         result = registerUpdateToSolrForTxCore(dctx, context, forceAdd, productId, productInst);
                         if (ServiceUtil.isSuccess(result)) indexed = true; // NOTE: not really indexed; this is just to skip the mark-dirty below
                     } else {
-                        final String reason = "No transaction in place";
                         if ("update".equals(context.get("noTransMode"))) {
                             if (productId == null && productIdMap == null) {
                                 //Debug.logWarning("Solr: updateToSolr: Missing product instance, productId or productIdMap", module); // SCIPIO: Redundant logging
                                 return ServiceUtil.returnError("Missing product instance, productId or productIdMap");
                             }
-                            Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
+                            Debug.logInfo("Solr: registerUpdateToSolr: No transaction in place; running immediate indexing for " + productInfoStr, module);
                             result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIdMap);
                             if (ServiceUtil.isSuccess(result)) indexed = true;
                         } else { // "mark-dirty"
                             result = ServiceUtil.returnSuccess();
                             if (manual) {
-                                Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; skipping solr indexing completely (manual mode; not marking dirty)", module);
+                                Debug.logInfo("Solr: registerUpdateToSolr: No transaction in place; skipping solr indexing completely (manual mode; not marking dirty); " + productInfoStr, module);
                             } else {
-                                Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; skipping solr indexing, will mark dirty", module);
+                                Debug.logInfo("Solr: registerUpdateToSolr: No transaction in place; skipping solr indexing, will mark dirty; " + productInfoStr, module);
                                 indexed = false;
                             }
                         }

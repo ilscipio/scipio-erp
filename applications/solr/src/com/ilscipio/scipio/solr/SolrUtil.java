@@ -41,9 +41,16 @@ public abstract class SolrUtil {
     public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("solr", "solr.debug", false)
             || UtilValidate.booleanValueVersatile(System.getProperty("scipio.solr.debug"), false); // SCIPIO
 
-    private static final boolean solrEnabled = getSolrSysPropCfgBool("enabled", true);
-    private static final boolean solrEcaEnabled = getSolrSysPropCfgBool("eca.enabled", false);
-    private static final boolean solrWebappCheckEnabled = getSolrSysPropCfgBool("eca.useSolrWebappLoadedCheck", true);
+    private static final Boolean solrEnabledSysProp = getSolrSysPropBool("enabled", null);
+    private static final boolean solrEnabledCfg = getSolrCfgBool("enabled", true);
+    private static final boolean solrEnabled = (solrEnabledSysProp != null) ? solrEnabledSysProp : solrEnabledCfg;
+
+    private static final Boolean solrEcaEnabledSysProp = getSolrSysPropBool("eca.enabled", null);
+    private static final boolean solrEcaEnabledCfg = getSolrCfgBool("eca.enabled", false);
+
+    private static final Boolean solrWebappCheckEnabledSysProp = getSolrSysPropBool("eca.useSolrWebappLoadedCheck", null);
+    private static final boolean solrWebappCheckEnabledCfg = getSolrCfgBool("eca.useSolrWebappLoadedCheck", true);
+    private static final boolean solrWebappCheckEnabled = (solrWebappCheckEnabledSysProp != null) ? solrWebappCheckEnabledSysProp : solrWebappCheckEnabledCfg;
 
     private static final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
     private static final String solrWebappHost = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
@@ -194,15 +201,16 @@ public abstract class SolrUtil {
         return solrApp;
     }
 
-    private static boolean getSolrSysPropCfgBool(String name, boolean defaultValue) {
+    private static Boolean getSolrSysPropBool(String name, Boolean defaultValue) {
         Boolean value = UtilMisc.booleanValueVersatile(System.getProperty("scipio.solr."+name));
         if (value == null) {
             value = UtilMisc.booleanValueVersatile(System.getProperty("ofbiz.solr."+name));
-            if (value == null) {
-                value = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr."+name, defaultValue);
-            }
         }
-        return value;
+        return (value != null) ? value : defaultValue;
+    }
+
+    private static Boolean getSolrCfgBool(String name, Boolean defaultValue) {
+        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr."+name, defaultValue);
     }
 
     public static boolean isSolrEnabled() {
@@ -210,11 +218,25 @@ public abstract class SolrUtil {
     }
 
     public static boolean isSolrEcaEnabled(Delegator delegator) {
-        return UtilProperties.asBoolean(getSolrEcaEnabledSystemProperty(delegator), solrEcaEnabled);
+        if (solrEcaEnabledSysProp != null) {
+            return solrEcaEnabledSysProp;
+        }
+        Boolean ecaEnabled = getSolrEcaEnabledEntityProperty(delegator);
+        return (ecaEnabled != null) ? ecaEnabled : solrEcaEnabledCfg;
     }
 
+    public static Boolean getSolrEcaEnabledEntityProperty(Delegator delegator) {
+        // Need without the fallback (special case)
+        //return EntityUtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.enabled", null, delegator);
+        return UtilProperties.asBoolean(EntityUtilProperties.getEntityPropertyValueOrNull(solrConfigName, "solr.eca.enabled", delegator));
+    }
+
+    /**
+     * @deprecated Use {@link #getSolrEcaEnabledEntityProperty}.
+     */
+    @Deprecated
     public static String getSolrEcaEnabledSystemProperty(Delegator delegator) {
-        return EntityUtilProperties.getSystemPropertyValueOrNull(solrConfigName, "solr.eca.enabled", delegator);
+        return EntityUtilProperties.getEntityPropertyValueOrNull(solrConfigName, "solr.eca.enabled", delegator);
     }
 
     /**

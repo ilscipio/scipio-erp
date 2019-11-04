@@ -20,6 +20,7 @@ package org.ofbiz.webapp.ftl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -52,6 +54,8 @@ import freemarker.template.TemplateScalarModel;
 public class CurrencyDirective implements TemplateDirectiveModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final RoundingMode ROUNDING_MODE = UtilNumber.getRoundingMode("general", "currency.rounding.mode", null);
 
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body)
@@ -92,6 +96,11 @@ public class CurrencyDirective implements TemplateDirectiveModel {
             Debug.logVerbose("Formatting currency: [amount=" + amount + ", isoCode=" + isoCode
                     + ", locale=" + locale + "]", module);
         }
+
+        if (ROUNDING_MODE != null) { // SCIPIO
+            amount = amount.setScale(rounding, ROUNDING_MODE);
+        }
+
         env.getOut().write(UtilFormatOut.formatCurrency(amount, isoCode, locale, rounding)); // SCIPIO: Let IOException propagate
     }
 

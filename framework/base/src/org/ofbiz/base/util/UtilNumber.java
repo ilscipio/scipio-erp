@@ -264,6 +264,26 @@ public final class UtilNumber {
         return getRoundingMode(arithmeticPropertiesFile, property);
     }
 
+    /**
+     * SCIPIO: Method to get BigDecimal rounding mode from a property
+     * @param   file     - Name of the property file
+     * @param   property - Name of the config property from arithmeticPropertiesFile (e.g., "invoice.rounding")
+     * @param   defaultValue - Default rounding mode, if not set
+     * @return  RoundingMode - Rounding mode to pass to BigDecimal's methods. Defaults to DEFAULT_BD_ROUNDING_MODE (RoundingMode.HALF_UP)
+     */
+    public static RoundingMode getRoundingMode(String file, String property, RoundingMode defaultValue) {
+        if (UtilValidate.isEmpty(file) || UtilValidate.isEmpty(property)) {
+            return defaultValue;
+        }
+
+        String value = UtilProperties.getPropertyValue(file, property);
+        RoundingMode mode = roundingModeFromString(value);
+        if (mode == null) {
+            return defaultValue;
+        }
+        return mode;
+    }
+
     private static final Map<String, RoundingMode> roundingModeStrMap; // SCIPIO: 2018-09-06: better string to RoundingMode conversion
     static {
         Map<String, RoundingMode> m = new HashMap<>();

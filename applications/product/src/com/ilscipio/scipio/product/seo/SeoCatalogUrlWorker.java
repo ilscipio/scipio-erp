@@ -1759,7 +1759,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 productAltUrlPartInfoCache.put(key, results);
             }
         }
-        return results != null ? results.filterResults(exactOnly, allowIdOnly) : null;
+        return (results != null) ? results.filterResults(exactOnly, allowIdOnly) : null;
     }
 
     /**
@@ -1769,12 +1769,12 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Added 2017-11-08.
      */
     public AltUrlPartResults extractCandidateAltUrlProductId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly) throws GenericEntityException {
-        Map<String, AltUrlPartInfo> results = new HashMap<>();
-        AltUrlPartInfo exactResult = null;
+        Map<String, AltUrlPartInfo> results = new LinkedHashMap<>();
+        AltUrlPartInfo exactResult;
 
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
         EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productId", "textData", exactOnly);
-        if (matchTextIdCond == null) new AltUrlPartResults(results);
+        if (matchTextIdCond == null) return new AltUrlPartResults(results);
 
         EntityCondition contentTypeIdCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
         Timestamp moment = UtilDateTime.nowTimestamp();
@@ -1792,7 +1792,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         productContentInfos = EntityUtil.filterByDate(productContentInfos, moment, "caFromDate", "caThruDate", true);
         exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {
-            new AltUrlPartResults(results);
+            return new AltUrlPartResults(results);
         }
 
         // Search for non-localized alt urls
@@ -1805,7 +1805,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 .orderBy("-fromDate").cache(true).filterByDate().queryList();
         exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {
-            new AltUrlPartResults(results);
+            return new AltUrlPartResults(results);
         }
 
         if (allowIdOnly) {
@@ -1855,7 +1855,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Added 2017-11-07.
      */
     public AltUrlPartResults extractCandidateAltUrlCategoryId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly) throws GenericEntityException {
-        Map<String, AltUrlPartInfo> results = new HashMap<>();
+        Map<String, AltUrlPartInfo> results = new LinkedHashMap<>();
         AltUrlPartInfo exactResult = null;
 
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.

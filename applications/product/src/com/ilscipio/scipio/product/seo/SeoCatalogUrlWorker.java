@@ -1211,14 +1211,10 @@ public class SeoCatalogUrlWorker implements Serializable {
                     // EXPLICIT PRODUCT
                     AltUrlPartResults productMatches = null;
                     if (getConfig().isProductSimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
-                        boolean exactOnly = true;
-                        boolean allowIdOnly = true;
-                        productMatches = extractCandidateAltUrlProductIdCached(delegator, firstPathElem, exactOnly, allowIdOnly, moment);
+                        productMatches = extractCandidateAltUrlProductIdCached(delegator, firstPathElem, AltUrlExtractOptions.IDONLY, moment);
                     }
                     if (productMatches == null || productMatches.isEmpty()) {
-                        boolean exactOnly = false;
-                        boolean allowIdOnly = true;
-                        productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly, moment);
+                        productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, AltUrlExtractOptions.ALL, moment);
                     }
                     if (productMatches.size() > 0) {
                         matchInfo = findBestProductMatch(delegator, productMatches, pathElements, currentCatalogId, webSiteId, moment);
@@ -1231,14 +1227,10 @@ public class SeoCatalogUrlWorker implements Serializable {
                     // EXPLICIT CATEGORY
                     AltUrlPartResults categoryMatches = null;
                     if (getConfig().isCategorySimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
-                        boolean exactOnly = true;
-                        boolean allowIdOnly = true;
-                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, firstPathElem, exactOnly, allowIdOnly, moment);
+                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, firstPathElem, AltUrlExtractOptions.IDONLY, moment);
                     }
                     if (categoryMatches == null || categoryMatches.isEmpty()) {
-                        boolean exactOnly = false;
-                        boolean allowIdOnly = true;
-                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly, moment);
+                        categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, AltUrlExtractOptions.ALL, moment);
                     }
                     if (categoryMatches.size() > 0) {
                         matchInfo = findBestCategoryMatch(delegator, categoryMatches, pathElements, currentCatalogId, webSiteId, moment);
@@ -1250,9 +1242,8 @@ public class SeoCatalogUrlWorker implements Serializable {
                 } else {
                     // IMPLICIT REQUEST
                     // WARN: best-effort, ambiguous - it is up to SeoConfig.xml to decide how risky this will be
-                    boolean exactOnly = false; // TODO: REVIEW: is this safe if false?
-                    boolean allowIdOnly = !config.isImplicitRequestNameMatchesOnly();
-                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly, moment);
+                    AltUrlExtractOptions extractOptions = config.isImplicitRequestNameMatchesOnly() ? AltUrlExtractOptions.ALL_NAMEONLY : AltUrlExtractOptions.ALL;
+                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, extractOptions, moment);
                     if (productMatches.size() > 0) {
                         matchInfo = findBestProductMatch(delegator, productMatches, pathElements, currentCatalogId, webSiteId, moment);
                         if (matchInfo != null) {
@@ -1260,7 +1251,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                             pathCategoryIds = matchInfo.getPathCategoryIds();
                         }
                     } else {
-                        AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly, moment);
+                        AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, extractOptions, moment);
                         if (categoryMatches.size() > 0) {
                             matchInfo = findBestCategoryMatch(delegator, categoryMatches, pathElements, currentCatalogId, webSiteId, moment);
                             if (matchInfo != null) {
@@ -1375,7 +1366,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 pathCategoryIds = getFirstTopTrail(possibleTrails, topCategoryIds);
             } else {
                 // find the trail closest to the passed path elems
-                List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true, moment);
+                List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, AltUrlExtractOptions.ALL, moment);
                 if (extraPathElement != null) { // needed for categories
                     resolvedPathElems.add(extraPathElement);
                 }
@@ -1391,7 +1382,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
 
     protected AltUrlMatchInfo findMultiMatchBestMatch(Delegator delegator, AltUrlPartResults matches, boolean isCategory, List<String> pathElements, Set<String> topCategoryIds, Timestamp moment) throws GenericEntityException {
-        List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true, moment);
+        List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, AltUrlExtractOptions.ALL, moment);
         List<String> pathCategoryIds = null;
 
         AltUrlPartInfo bestMatch = null;
@@ -1618,12 +1609,12 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         /**
          * NOTE: this is now used post-cache in order to lessen the cache.
-         * The fastest case is when (exactOnly==false && allowIdOnly==true).
+         * The fastest case is when (exactOnly==false && allowIdOnlyMatch==true).
          */
-        public AltUrlPartResults filterResults(boolean exactOnly, boolean allowIdOnly) {
-            if (exactOnly) {
+        public AltUrlPartResults filterResults(AltUrlExtractOptions extractOptions) {
+            if (extractOptions.isExactOnly()) {
                 Map<String, AltUrlPartInfo> newIdMap = new HashMap<>();
-                if (allowIdOnly) {
+                if (extractOptions.isAllowIdOnlyMatch()) {
                     for(Map.Entry<String, AltUrlPartInfo> entry : idMap.entrySet()) {
                         if (entry.getValue().isExact()) {
                             newIdMap.put(entry.getKey(), entry.getValue());
@@ -1638,7 +1629,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 }
                 return newIdMap.isEmpty() ? null : new AltUrlPartResults(newIdMap);
             } else {
-                if (allowIdOnly) {
+                if (extractOptions.isAllowIdOnlyMatch()) {
                     return this;
                 } else {
                     Map<String, AltUrlPartInfo> newIdMap = new HashMap<>();
@@ -1746,21 +1737,45 @@ public class SeoCatalogUrlWorker implements Serializable {
         public AltUrlPartResults getAsResult() { return new AltUrlPartResults(this); }
     }
 
-    public AltUrlPartResults extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl, boolean exactOnly, boolean allowIdOnly, Timestamp moment) throws GenericEntityException {
-        String key = altUrl;
+    public static class AltUrlExtractOptions implements Serializable {
+        public static final AltUrlExtractOptions ALL = new AltUrlExtractOptions(false, false, true, true);
+        public static final AltUrlExtractOptions ALL_NAMEONLY = new AltUrlExtractOptions(false, false, false, true);
+        public static final AltUrlExtractOptions IDONLY = new AltUrlExtractOptions(true, false, true, false);
 
+        private final boolean exactOnly;
+        private final boolean singleExactOnly; // NOTE: there is a 0.001% chance of multiple exact matches; slightly safer if this is always set to false
+        private final boolean allowIdOnlyMatch;
+        private final boolean allowNameMatch;
+        private final String baseCacheKey;
+
+        protected AltUrlExtractOptions(boolean exactOnly, boolean singleExactOnly, boolean allowIdOnlyMatch, boolean allowNameMatch) {
+            this.exactOnly = exactOnly;
+            this.singleExactOnly = singleExactOnly;
+            this.allowIdOnlyMatch = allowIdOnlyMatch;
+            this.allowNameMatch = allowNameMatch;
+            this.baseCacheKey = (exactOnly ? "Y" : "N") + ":" + (singleExactOnly ? "Y" : "N") + ":" + (allowIdOnlyMatch ? "Y" : "N") + ":" + (allowNameMatch ? "Y" : "N");
+        }
+
+        public boolean isExactOnly() { return exactOnly; }
+        public boolean isSingleExactOnly() { return singleExactOnly; }
+        public boolean isAllowIdOnlyMatch() { return allowIdOnlyMatch; }
+        public boolean isAllowNameMatch() { return allowNameMatch; }
+        public String getCacheKey() { return getBaseCacheKey(); }
+        protected String getBaseCacheKey() { return baseCacheKey; }
+    }
+
+    public AltUrlPartResults extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment) throws GenericEntityException {
+        String key = altUrl + "::" + extractOptions.getCacheKey();
         AltUrlPartResults results = productAltUrlPartInfoCache.get(key);
         if (results == null) {
-            boolean singleExactOnly = false; // NOTE: there is a 0.001% chance of multiple exact matches, slightly safer if false
-            results = extractCandidateAltUrlProductId(delegator, altUrl, false, singleExactOnly, true, moment);
-
+            results = extractCandidateAltUrlProductId(delegator, altUrl, extractOptions, moment);
             // NOTE: currently, only storing in cache if has match...
             // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
             if (!results.isEmpty()) {
                 productAltUrlPartInfoCache.put(key, results);
             }
         }
-        return results.filterResults(exactOnly, allowIdOnly);
+        return results.filterResults(extractOptions);
     }
 
     /**
@@ -1769,9 +1784,9 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * Added 2017-11-08.
      */
-    public AltUrlPartResults extractCandidateAltUrlProductId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment) throws GenericEntityException {
+    public AltUrlPartResults extractCandidateAltUrlProductId(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment) throws GenericEntityException {
         Map<String, AltUrlPartInfo> results = new LinkedHashMap<>();
-        extractCandidateAltUrlProductIdImpl(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
+        extractCandidateAltUrlProductIdImpl(delegator, altUrl, extractOptions, moment, results);
         return new AltUrlPartResults(results);
     }
 
@@ -1779,13 +1794,15 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Extracts product ID from alt URL path element using any means applicable (core implementation/override), into the passed results map.
      * Returns non-null (only) if an exact match was found, which is also added to the passed results map.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlProductIdImpl(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
-        AltUrlPartInfo exactResult = extractCandidateAltUrlProductIdByAltUrl(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
-        if (exactResult != null) {
-            return exactResult;
+    protected AltUrlPartInfo extractCandidateAltUrlProductIdImpl(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+        if (extractOptions.isAllowNameMatch()) {
+            AltUrlPartInfo exactResult = extractCandidateAltUrlProductIdByAltUrl(delegator, altUrl, extractOptions, moment, results);
+            if (exactResult != null) {
+                return exactResult;
+            }
         }
-        if (allowIdOnly) {
-            return extractCandidateAltUrlProductIdById(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
+        if (extractOptions.isAllowIdOnlyMatch()) {
+            return extractCandidateAltUrlProductIdById(delegator, altUrl, extractOptions, moment, results);
         }
         return null;
     }
@@ -1794,10 +1811,10 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Extracts product ID from alt URL path element, treating it as an Alternative URL (legacy definition), into the passed results map.
      * Returns non-null only if an exact match was found, which is also added to the passed results map.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlProductIdByAltUrl(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+    protected AltUrlPartInfo extractCandidateAltUrlProductIdByAltUrl(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
         AltUrlPartInfo exactResult;
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
-        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productId", "textData", exactOnly);
+        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productId", "textData", extractOptions.isExactOnly());
         EntityCondition contentTypeIdCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
         List<EntityCondition> condList;
 
@@ -1811,7 +1828,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 .filterByDate(moment) // cannot do this, only one filter at a time (bug): .filterByDate(moment, "caFromDate", "caThruDate")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
         productContentInfos = EntityUtil.filterByDate(productContentInfos, moment, "caFromDate", "caThruDate", true);
-        exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, exactOnly, singleExactOnly, results);
+        exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, extractOptions, results);
         if (exactResult != null) {
             return exactResult;
         }
@@ -1824,7 +1841,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 .where(condList).select("productId", "textData", "localeString")
                 .filterByDate(moment)
                 .orderBy("-fromDate").cache(true).filterByDate().queryList();
-        exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, exactOnly, singleExactOnly, results);
+        exactResult = findExtractAltUrlValueId(altUrl, productContentInfos, "productId", CatalogUrlType.PRODUCT, extractOptions, results);
         if (exactResult != null) {
             return exactResult;
         }
@@ -1836,7 +1853,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returns non-null only if an exact match was found, which is also added to the passed results map.
      * NOTE: This will skip returning a match if the results map already contains an exact match, but will replace a previous non-exact match.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlProductIdById(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+    protected AltUrlPartInfo extractCandidateAltUrlProductIdById(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
         GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", altUrl).cache(true).queryOne();
         if (product != null) {
             String productId = product.getString("productId");
@@ -1851,27 +1868,24 @@ public class SeoCatalogUrlWorker implements Serializable {
         return null;
     }
 
-    public AltUrlPartResults extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl, boolean exactOnly, boolean allowIdOnly, Timestamp moment) throws GenericEntityException {
-        String key = altUrl;
-
+    public AltUrlPartResults extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment) throws GenericEntityException {
+        String key = altUrl + "::" + extractOptions.getCacheKey();
         AltUrlPartResults results = categoryAltUrlPartInfoCache.get(key);
         if (results == null) {
-            boolean singleExactOnly = false; // NOTE: there is a 0.001% chance of multiple exact matches, slightly safer if false
-            results = extractCandidateAltUrlCategoryId(delegator, altUrl, false, singleExactOnly, true, moment);
-
+            results = extractCandidateAltUrlCategoryId(delegator, altUrl, extractOptions, moment);
             // NOTE: currently, only storing in cache if has match...
             // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
             if (!results.isEmpty()) {
                 categoryAltUrlPartInfoCache.put(key, results);
             }
         }
-        return results.filterResults(exactOnly, allowIdOnly);
+        return results.filterResults(extractOptions);
     }
 
-    public List<AltUrlPartResults> extractCandidateAltUrlCategoryIdsCached(Delegator delegator, Collection<String> altUrls, boolean exactOnly, boolean allowIdOnly, Timestamp moment) throws GenericEntityException {
+    public List<AltUrlPartResults> extractCandidateAltUrlCategoryIdsCached(Delegator delegator, Collection<String> altUrls, AltUrlExtractOptions extractOptions, Timestamp moment) throws GenericEntityException {
         List<AltUrlPartResults> result = new ArrayList<>();
         for(String altUrl : altUrls) {
-            result.add(extractCandidateAltUrlCategoryIdCached(delegator, altUrl, exactOnly, allowIdOnly, moment));
+            result.add(extractCandidateAltUrlCategoryIdCached(delegator, altUrl, extractOptions, moment));
         }
         return result;
     }
@@ -1882,9 +1896,9 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * Added 2017-11-07.
      */
-    public AltUrlPartResults extractCandidateAltUrlCategoryId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment) throws GenericEntityException {
+    public AltUrlPartResults extractCandidateAltUrlCategoryId(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment) throws GenericEntityException {
         Map<String, AltUrlPartInfo> results = new LinkedHashMap<>();
-        extractCandidateAltUrlCategoryIdImpl(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
+        extractCandidateAltUrlCategoryIdImpl(delegator, altUrl, extractOptions, moment, results);
         return new AltUrlPartResults(results);
     }
 
@@ -1892,13 +1906,15 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Extracts category ID from alt URL path element using any means applicable (core implementation/override), into the passed results map.
      * Returns non-null only if an exact match was found, which is also added to the passed results map.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdImpl(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
-        AltUrlPartInfo exactResult = extractCandidateAltUrlCategoryIdByAltUrl(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
-        if (exactResult != null) {
-            return exactResult;
+    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdImpl(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+        if (extractOptions.isAllowNameMatch()) {
+            AltUrlPartInfo exactResult = extractCandidateAltUrlCategoryIdByAltUrl(delegator, altUrl, extractOptions, moment, results);
+            if (exactResult != null) {
+                return exactResult;
+            }
         }
-        if (allowIdOnly) {
-            return extractCandidateAltUrlCategoryIdById(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly, moment, results);
+        if (extractOptions.isAllowIdOnlyMatch()) {
+            return extractCandidateAltUrlCategoryIdById(delegator, altUrl, extractOptions, moment, results);
         }
         return null;
     }
@@ -1907,10 +1923,10 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Extracts category ID from alt URL path element, treating it as an Alternative URL (legacy definition), into the passed results map.
      * Returns non-null only if an exact match was found, which is also added to the passed results map.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdByAltUrl(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdByAltUrl(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
         AltUrlPartInfo exactResult;
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
-        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productCategoryId", "textData", exactOnly);
+        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productCategoryId", "textData", extractOptions.isExactOnly());
         EntityCondition contentTypeIdCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
         List<EntityCondition> condList;
 
@@ -1924,7 +1940,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 .filterByDate(moment) // cannot do this, only one filter at a time (bug): .filterByDate(moment, "caFromDate", "caThruDate")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
         productCategoryContentInfos = EntityUtil.filterByDate(productCategoryContentInfos, moment, "caFromDate", "caThruDate", true);
-        exactResult = findExtractAltUrlValueId(altUrl, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, exactOnly, singleExactOnly, results);
+        exactResult = findExtractAltUrlValueId(altUrl, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, extractOptions, results);
         if (exactResult != null) {
             return exactResult;
         }
@@ -1937,7 +1953,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 .where(condList).select("productCategoryId", "textData", "localeString")
                 .filterByDate(moment)
                 .orderBy("-fromDate").cache(true).queryList();
-        return findExtractAltUrlValueId(altUrl, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, exactOnly, singleExactOnly, results);
+        return findExtractAltUrlValueId(altUrl, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, extractOptions, results);
     }
 
     /**
@@ -1945,7 +1961,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returns non-null only if an exact match was found, which is also added to the passed results map.
      * NOTE: This will skip returning a match if the results map already contains an exact match, but will replace a previous non-exact match.
      */
-    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdById(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly, boolean allowIdOnly, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
+    protected AltUrlPartInfo extractCandidateAltUrlCategoryIdById(Delegator delegator, String altUrl, AltUrlExtractOptions extractOptions, Timestamp moment, Map<String, AltUrlPartInfo> results) throws GenericEntityException {
         GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", altUrl).cache(true).queryOne();
         if (productCategory != null) {
             String productCategoryId = productCategory.getString("productCategoryId");
@@ -1995,7 +2011,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * {@link #makeAltUrlTextIdMatchCombinations} in the values query.
      */
     private static AltUrlPartInfo findExtractAltUrlValueId(String altUrl, List<GenericValue> values, String idField,
-            CatalogUrlType entityType, boolean exactOnly, boolean singleExactOnly, Map<String, AltUrlPartInfo> results) {
+            CatalogUrlType entityType, AltUrlExtractOptions extractOptions, Map<String, AltUrlPartInfo> results) {
         for (GenericValue value : values) {
             String textData = value.getString("textData");
 
@@ -2009,7 +2025,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 String altUrlIdStr = altUrl.substring(textData.length());
                 String valueId = value.getString(idField);
                 if (altUrlIdStr.isEmpty()) {
-                    if (!exactOnly) {
+                    if (!extractOptions.isExactOnly()) {
                         // id omitted - add to results, but don't stop looking
                         if (!results.containsKey(valueId)) { // don't replace in case exact match (don't need check)
                             results.put(valueId, new AltUrlPartInfo(false, false, valueId, textData, value.getString("localeString")));
@@ -2020,7 +2036,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                         altUrlIdStr = altUrlIdStr.substring(1);
                         if (altUrlIdStr.equalsIgnoreCase(valueId)) {
                             AltUrlPartInfo urlInfo = new AltUrlPartInfo(true, false, valueId, textData, value.getString("localeString"));
-                            if (singleExactOnly) {
+                            if (extractOptions.isSingleExactOnly()) {
                                 results.clear();
                                 results.put(valueId, urlInfo);
                                 return urlInfo;

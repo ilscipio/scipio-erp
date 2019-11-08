@@ -166,11 +166,17 @@ code package.
     </@row>
     <@row>
         <@cell>
-                     
+
             <#-- Inventory -->
             <@heading>${uiLabelMap.CommonInventory}</@heading>
             <@field type="checkbox" name="salesDiscWhenNotAvail" label=uiLabelMap.ProductSalesDiscontinuationNotAvailable currentValue=(productParams.salesDiscWhenNotAvail!product.salesDiscWhenNotAvail!'N') value="Y" altValue="N"/>
-            <@field type="checkbox" name="requireInventory" label=uiLabelMap.ProductRequireInventory currentValue=(productParams.requireInventory!product.requireInventory!'N') value="Y" altValue="N" tooltip=uiLabelMap.ProductInventoryRequiredProduct/>
+            <#assign requireInventory = (productParams.requireInventory!product.requireInventory!)>
+            <#assign requireInventoryPostfixContent><span style="margin-left: 5px;"><i>${uiLabelMap.ProductRequireInventoryFallbackInfo}<i></span></#assign>
+            <@field postfix=true type="select" name="requireInventory" label=uiLabelMap.ProductRequireInventory postfixColumns=8  postfixContent=requireInventoryPostfixContent>
+                <@field type="option" value="" selected=(!requireInventory?has_content)></@field>
+                <@field type="option" value="Y" selected=(requireInventory =="Y")>${uiLabelMap.CommonYes}</@field>
+                <@field type="option" value="N" selected=(requireInventory =="N")>${uiLabelMap.CommonNo}</@field>
+            </@field>
             <@field type="select" label=uiLabelMap.ProductRequirementMethodEnumId name="requirementMethodEnumId">
                 <@field type="option" value=""></@field>
                 <#assign options =  delegator.findByAnd("Enumeration",{"enumTypeId":"PROD_REQ_METHOD"},["description ASC"], true)/>

@@ -28390,6 +28390,13 @@
         <value xml:lang="zh">需要库存</value>
         <value xml:lang="zh-TW">需要庫存</value>
     </property>
+    <property key="ProductRequireInventoryFallbackInfo">
+        <!-- TODO: DE translation pending -->
+<!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">If left blank, falls back to ProductStore requireInventory flag</value>
+        <value xml:lang="es">Si vacío, se usará el valor definido en ProductStore requireInventory</value>
+        <value xml:lang="fr">Si laissé vide, délègue au champ requireInventory sur ProductStore</value>
+    </property>
     <property key="ProductRequireInventoryForPurchase">
         <value xml:lang="de">Benötigt Bestand zum Einkauf</value>
         <value xml:lang="en">Require Inventory For Purchase</value>

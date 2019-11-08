@@ -258,7 +258,7 @@ code package.
             <set from-field="productStore.requireInventory" field="requireInventory"/>
         </if-empty>
         <if-empty field="requireInventory">
-            <set value="Y" field="requireInventory"/>
+            <set value="N" field="requireInventory"/>
         </if-empty>
     </simple-method>
 

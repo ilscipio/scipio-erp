@@ -50,7 +50,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.PathMatch;
 
 /**
  * SCIPIO: 2017: Seo catalog URL filter.
@@ -81,6 +81,10 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     protected SeoCatalogUrlWorker urlWorker = null;
 
     protected boolean rewriteOutboundUrls = false;
+
+    protected boolean isDebug() {
+        return debug;
+    }
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -163,42 +167,41 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Delegator delegator, String matchablePath) throws ServletException, IOException {
-        SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
-        if (urlInfo != null) {
-            return updateRequestAndForwardSeoCatalogUrl(request, response, chain, delegator, matchablePath, urlInfo);
+        SeoCatalogUrlWorker.PathMatch pathMatch = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
+        if (pathMatch != null) {
+            return updateRequestAndForwardSeoCatalogUrl(request, response, chain, delegator, matchablePath, pathMatch);
         }
         return false;
     }
 
-    public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
+    public PathMatch matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
         return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath(),
                 WebSiteWorker.getWebSiteId(request), CatalogWorker.getCurrentCatalogId(request));
     }
 
-    protected boolean updateRequestAndForwardSeoCatalogUrl(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Delegator delegator, String matchablePath, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
-        boolean res = updateRequestForSeoCatalogUrl(request, delegator, urlInfo);
+    protected boolean updateRequestAndForwardSeoCatalogUrl(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Delegator delegator, String matchablePath, SeoCatalogUrlWorker.PathMatch pathMatch) throws ServletException, IOException {
+        boolean res = updateRequestForSeoCatalogUrl(request, delegator, pathMatch);
         if (!res) return false;
-        return forwardSeoUrl(request, response, delegator, urlInfo);
+        return forwardSeoUrl(request, response, delegator, pathMatch);
     }
 
     /**
      * Sets the product/category IDs in request and updates trail.
      */
-    public static boolean updateRequestForSeoCatalogUrl(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
-
-        if (urlInfo.isProductRequest()) {
-            if (urlInfo.getProductId() != null) {
-                request.setAttribute("product_id", urlInfo.getProductId());
-                request.setAttribute("productId", urlInfo.getProductId());
+    public static boolean updateRequestForSeoCatalogUrl(HttpServletRequest request, Delegator delegator, SeoCatalogUrlWorker.PathMatch pathMatch) {
+        if (pathMatch.isProductRequest()) {
+            if (pathMatch.getTargetProductId() != null) {
+                request.setAttribute("product_id", pathMatch.getTargetProductId());
+                request.setAttribute("productId", pathMatch.getTargetProductId());
             }
-            request.setAttribute("productCategoryId", urlInfo.getCategoryId()); // EVEN IF NULL!
+            request.setAttribute("productCategoryId", pathMatch.getParentCategoryId()); // EVEN IF NULL!
         } else { // if (CatalogUrlServlet.CATEGORY_REQUEST.equals(targetRequest)) {
-            request.setAttribute("productCategoryId", urlInfo.getCategoryId()); // EVEN IF NULL!
+            request.setAttribute("productCategoryId", pathMatch.getTargetCategoryId()); // EVEN IF NULL!
         }
 
         String rootCategoryId = null;
-        if (urlInfo.getPathCategoryIds() != null && urlInfo.getPathCategoryIds().size() >= 1) {
-            rootCategoryId = urlInfo.getPathCategoryIds().get(0);
+        if (UtilValidate.isNotEmpty(pathMatch.getTrailCategoryIds())) {
+            rootCategoryId = pathMatch.getTrailCategoryIds().get(0);
         }
         request.setAttribute("rootCategoryId", rootCategoryId); // EVEN IF NULL!
 
@@ -206,19 +209,20 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 //        String topCategoryId = CatalogUrlFilter.getCatalogTopCategory(request);
 //        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
 //        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-//        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
+//        updateRequestTrail(request, delegator, pathMatch.getTargetProductId(), pathMatch.getTargetCategoryId(), trailCategoryIds, topCategoryId);
 
         // FOR NOW, just replace the whole trail with what we got for time being
         List<String> newTrail = new ArrayList<>();
         newTrail.add("TOP");
-        newTrail.addAll(urlInfo.getPathCategoryIds());
-        if (urlInfo.getCategoryId() != null && !urlInfo.getCategoryId().equals(newTrail.get(newTrail.size() - 1))) {
-            newTrail.add(urlInfo.getCategoryId());
+        if (UtilValidate.isNotEmpty(pathMatch.getTrailCategoryIds())) {
+            newTrail.addAll(pathMatch.getTrailCategoryIds());
+        }
+        if (pathMatch.getTargetCategoryId() != null && !pathMatch.getTargetCategoryId().equals(newTrail.get(newTrail.size() - 1))) {
+            newTrail.add(pathMatch.getTargetCategoryId());
         }
         CategoryWorker.setTrail(request, newTrail);
 
         request.setAttribute("categoryTrailUpdated", Boolean.TRUE); // SCIPIO: This is new
-
         return true;
     }
 
@@ -248,10 +252,10 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         }
     }
 
-    public boolean forwardSeoUrl(HttpServletRequest request, HttpServletResponse response, Delegator delegator, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
+    public boolean forwardSeoUrl(HttpServletRequest request, HttpServletResponse response, Delegator delegator, SeoCatalogUrlWorker.PathMatch pathMatch) throws ServletException, IOException {
         StringBuilder fwdUrl = new StringBuilder();
         fwdUrl.append(getControlServletPath(request));
-        String targetRequest = urlInfo.isProductRequest() ? productRequestPath : categoryRequestPath;
+        String targetRequest = pathMatch.isProductRequest() ? productRequestPath : categoryRequestPath;
         fwdUrl.append(targetRequest);
 
         // TODO: REVIEW: this is from CatalogUrlFilter.
@@ -262,14 +266,14 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         // This is done later by ContextFilter so I don't know why this is here...
         ContextFilter.setAttributesFromRequestBody(request);
 
-        if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
-            if (urlInfo.isProductRequest()) {
-                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()
-                    + " (" + fwdUrl + "); args: [productId: " + urlInfo.getProductId()
-                    + "; productCategoryId: " + urlInfo.getCategoryId() + "]", module);
+        if (isDebug() || Debug.verboseOn()) {
+            if (pathMatch.isProductRequest()) {
+                Debug.logInfo("SEO: [Forwarding request]: " + pathMatch.getPath()
+                    + " (" + fwdUrl + "); args: [productId: " + pathMatch.getTargetProductId()
+                    + "; productCategoryId: " + pathMatch.getParentCategoryId() + "]", module);
             } else {
-                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()
-                    + " (" + fwdUrl + "); args: [productCategoryId: " + urlInfo.getCategoryId() + "]", module);
+                Debug.logInfo("SEO: [Forwarding request]: " + pathMatch.getPath()
+                    + " (" + fwdUrl + "); args: [productCategoryId: " + pathMatch.getTargetCategoryId() + "]", module);
             }
         }
 
@@ -277,7 +281,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         request.setAttribute("ORIGINAL_REQUEST_URI", request.getRequestURI());
 
         RequestDispatcher rd = request.getRequestDispatcher(fwdUrl.toString());
-        request.setAttribute(SEOURLINFO_ATTR, urlInfo);
+        request.setAttribute(SEOURLINFO_ATTR, pathMatch);
         request.setAttribute(FORWARDED_ATTR, Boolean.TRUE);
         request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
         rd.forward(request, getResponseWrapper(request, response, delegator));
@@ -285,7 +289,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     @SuppressWarnings("unused")
-    private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
+    private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, PathMatch urlInfo) {
         Locale locale = UtilHttp.getLocale(request);
         return urlWorker.makeCatalogLink(delegator, urlInfo, locale);
     }

@@ -73,11 +73,6 @@ if (cart.isSalesOrder()) {
     facilityId = productStore.inventoryFacilityId;
 }
 
-context.remove("daysToShip");
-context.remove("averageRating");
-context.remove("numRatings");
-context.remove("totalPrice");
-
 if (!solrProduct && solrProducts && productId) {
     // FIXME: inefficient
     for(sp in solrProducts) {
@@ -111,6 +106,32 @@ getProductCacheKey = {
     }
 }
 
+// IMPORTANT: These cannot be removed with context.remove due to MapStack; you must set them to explicit null
+context.daysToShip = null;
+context.averageRating = null;
+context.numRatings = null;
+context.totalPrice = null;
+
+//context.product = null;
+context.productId = null;
+context.hasProduct = null;
+context.price = null;
+context.requireAmount = null;
+context.solrProduct = null;
+context.categoryId = null;
+context.productReviews = null;
+context.sizeProductFeatureAndAppls = null;
+context.numRatings = null;
+context.averageRating = null;
+context.mainProducts = null;
+context.virtualJavaScript = null;
+context.variantPriceList = null;
+context.daysToShip = null;
+context.solrTitle = null;
+context.title = null;
+context.description = null;
+context.longdescription = null;
+
 // get the product entity
 String cacheKey = getProductCacheKey();
 if (useCache) {
@@ -135,7 +156,6 @@ if (useCache) {
         context.solrTitle = cachedValue.solrTitle;
         context.title = cachedValue.title;
         context.description = cachedValue.description;
-        context.longdescription = cachedValue.longdescription;
         context.longdescription = cachedValue.longdescription;
     }
 }

@@ -26,7 +26,7 @@ code package.
               <div>&nbsp;${uiLabelMap.CommonAt}&nbsp;<#if note.noteDateTime?has_content><@formattedDateTime date=note.noteDateTime /></#if></div>
           </@td>
           <@td valign="top" width="50%">
-            ${note.noteInfo?replace("\n", "<br/>")}
+            ${escapeVal(note.noteInfo, 'html')?replace("\n", "<br/>")}
           </@td>
           <@td align="right" valign="top" width="15%">
             <#if (note.internalNote!) == "N">

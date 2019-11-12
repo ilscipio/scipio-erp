@@ -46,7 +46,7 @@ code package.
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal!>
                     <@tr valign="middle">
                         <@td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
-                        <a href="<@serverUrl>/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav!} ${styles.action_receive!}">${uiLabelMap.ProductInventoryReceive}</a></@td>
+                        <a href="<@serverUrl>/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav!} ${styles.action_receive!}">${uiLabelMap.ProductInventoryReceive}</a></@td>
                         <@td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></@td>
                         <@td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></@td>
                         <#if isMarketingPackage == "true">

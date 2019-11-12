@@ -40,6 +40,7 @@ import org.apache.catalina.Globals;
 import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Manager;
+import org.apache.catalina.authenticator.SingleSignOn;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardEngine;
@@ -77,6 +78,7 @@ import org.ofbiz.base.util.SSLUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.w3c.dom.Document;
 
 /*
@@ -264,6 +266,19 @@ public class CatalinaContainer implements Container {
         // create a default virtual host; others will be created as needed
         Host host = tomcat.getHost();
         configureHost(host);
+
+        // add realm and valve for Tomcat SSO
+        if (EntityUtilProperties.propertyValueEquals("security", "security.login.tomcat.sso", "true")){
+            boolean useEncryption = EntityUtilProperties.propertyValueEquals("security", "password.encrypt", "true");
+            ScipioRealm ofBizRealm = new ScipioRealm();
+            if (useEncryption){
+                ofBizRealm.setCredentialHandler(new HashedCredentialHandler());
+            } else {
+                ofBizRealm.setCredentialHandler(new SimpleCredentialHandler());
+            }
+            host.setRealm(ofBizRealm);
+            ((StandardHost)host).addValve(new SingleSignOn());
+        }
 
         // configure clustering
         List<ContainerConfig.Container.Property> clusterProps = engineConfig.getPropertiesWithValue("cluster");

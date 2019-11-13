@@ -66,6 +66,19 @@ code package.
         <call-simple-method method-name="checkShoppingListSecurity"/>
         <check-errors/>
 
+        <!-- SCIPIO: Do not allow changing the partyId or the auth token of a shopping list once created - unless have admin permissions - as this service
+            is called directly from public controller events and user locations -->
+        <if>
+            <condition>
+                <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
+            </condition>
+            <then>
+                <script lang="groovy"><![CDATA[
+                    parameters.remove("partyId");
+                ]]></script>
+            </then>
+        </if>
+
         <set-nonpk-fields map="parameters" value-field="shoppingList"/>
 
         <!-- don't let auto-reorders be active unless there is some recurrence info -->

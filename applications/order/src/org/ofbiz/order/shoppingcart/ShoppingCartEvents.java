@@ -1424,6 +1424,7 @@ public class ShoppingCartEvents {
     public static String prepareCartForRequest(HttpServletRequest request, HttpServletResponse response) {
         // Prevent shoppingCart from being cached in view-last cached parameters
         RequestAttrNamePolicy.from(request).addExclude(RequestSavingAttrPolicy.NotSaveable.class, "shoppingCart");
+        RequestAttrNamePolicy.from(request).addExclude(RequestSavingAttrPolicy.NotSaveable.class, "shoppingCartChanged");
         return "success";
     }
 

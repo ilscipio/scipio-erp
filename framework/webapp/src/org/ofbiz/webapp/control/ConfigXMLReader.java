@@ -2462,16 +2462,39 @@ public class ConfigXMLReader {
         }
 
         public static abstract class AttributesSpec { // SCIPIO
+            public static final String REDIRECT_ATTR = "_SCP_REDIR_ATTRSPEC_"; // may be set by events to override redirect behavior
+
             public static final AttributesSpec ALL = new AttributesSpec() {
                 @Override public boolean isAll() { return true; }
                 @Override public boolean includeAttribute(String attributeName) { return true; }
+                @Override
+                public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
+                    return this; // not applicable
+                }
             };
             public static final AttributesSpec EVENT_MESSAGES = new AttributesSpec() {
                 @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMsgAttrNames().contains(attributeName); }
+                @Override
+                public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
+                    if (UtilValidate.isEmpty(includeAttributes)) {
+                        return this;
+                    }
+                    Set<String> newIncludes = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    newIncludes.addAll(includeAttributes);
+                    return new IncludeAttributesSpec(newIncludes);
+                }
             };
             public static final AttributesSpec NONE = new AttributesSpec() {
                 @Override public boolean isNone() { return true; }
                 @Override public boolean includeAttribute(String attributeName) { return false; }
+
+                @Override
+                public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
+                    if (UtilValidate.isEmpty(includeAttributes)) {
+                        return this;
+                    }
+                    return new IncludeAttributesSpec(includeAttributes);
+                }
             };
 
             static AttributesSpec getSpec(String mode, Set<String> includeAttributes, Set<String> excludeAttributes) {
@@ -2507,21 +2530,58 @@ public class ConfigXMLReader {
                 }
             }
 
+            /**
+             * Includes event message by default plus optional extra attribute includes (standard setup) and excludes.
+             */
+            public static AttributesSpec getMessagesSpec(Set<String> includeAttributes, Set<String> excludeAttributes) {
+                return getSpec("messages", includeAttributes, excludeAttributes);
+            }
+
+            /**
+             * Includes event message by default plus optional extra attribute includes (standard setup).
+             */
+            public static AttributesSpec getMessagesIncludeSpec(Set<String> includeAttributes) {
+                return getSpec("messages", includeAttributes, null);
+            }
+
+            public static AttributesSpec getIncludeSpec(Set<String> includeAttributes) {
+                return getSpec(null, includeAttributes, null);
+            }
+
+            public static AttributesSpec getExcludeSpec(Set<String> excludeAttributes) {
+                return getSpec(null, null, excludeAttributes);
+            }
+
             public boolean isNone() { return false; }
             public boolean isAll() { return false; }
             public abstract boolean includeAttribute(String attributeName);
-            
+
             static class IncludeAttributesSpec extends AttributesSpec {
                 private final Set<String> attributes;
                 IncludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
                 @Override public boolean includeAttribute(String attributeName) { return attributes.contains(attributeName); }
+                @Override
+                public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
+                    if (UtilValidate.isEmpty(includeAttributes)) {
+                        return this;
+                    }
+                    Set<String> newIncludes = new HashSet<>(this.attributes);
+                    newIncludes.addAll(includeAttributes);
+                    return new IncludeAttributesSpec(newIncludes);
+                }
             }
-            
+
             static class ExcludeAttributesSpec extends AttributesSpec {
                 private final Set<String> attributes;
                 ExcludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
                 @Override public boolean includeAttribute(String attributeName) { return !attributes.contains(attributeName); }
+                @Override
+                public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
+                    return this; // not applicable
+                }
             }
+
+            public abstract AttributesSpec mergeIncludes(Set<String> includeAttributes);
         }
     }
 

@@ -801,7 +801,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
-                callRedirect(nextRequestResponseValue, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(nextRequestResponseValue, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
             } else if (RequestResponse.Type.CROSS_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
@@ -821,7 +821,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -837,7 +837,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -853,14 +853,14 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_LAST == nextRequestResponse.getTypeEnum()) {
                 String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
                 if (UtilValidate.isNotEmpty(lastGetUrl)) {
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
                     // Perform URL encoding
                     lastGetUrl = response.encodeURL(lastGetUrl);
-                    callRedirect(lastGetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                    callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
                 } else {
                     // SCIPIO: New type: request-redirect-last
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
@@ -876,7 +876,7 @@ public class RequestHandler {
                         Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                         throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                     }
-                    callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes(), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                    callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
                 }
             } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
@@ -1193,6 +1193,17 @@ public class RequestHandler {
             }
         }
         return nextPage;
+    }
+
+    private AttributesSpec getRedirectAttrSpec(HttpServletRequest request, AttributesSpec defaultSpec) {
+        Object specObj = request.getAttribute(AttributesSpec.REDIRECT_ATTR);
+        if (specObj instanceof AttributesSpec) {
+            return (AttributesSpec) specObj;
+        }
+        if (specObj instanceof Set) {
+            return defaultSpec.mergeIncludes((Set<String>) specObj);
+        }
+        return defaultSpec;
     }
 
     /**

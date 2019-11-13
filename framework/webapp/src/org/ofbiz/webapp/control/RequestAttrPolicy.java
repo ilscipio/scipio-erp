@@ -159,7 +159,10 @@ public final class RequestAttrPolicy {
              * requests using view-last or request-redirect mechanisms.
              */
             public static final List<String> DEFAULT_ATTR_NAME_EXCL = UtilMisc.unmodifiableArrayList(
-                    RequestAttrNamePolicy.ATTR, "_ALLOW_VIEW_SAVE_", "ftlServletContext", "_REQUEST_HANDLER_");
+                    RequestAttrNamePolicy.ATTR, "_ALLOW_VIEW_SAVE_", "ftlServletContext", "_REQUEST_HANDLER_",
+                    ConfigXMLReader.RequestResponse.AttributesSpec.REDIRECT_ATTR,
+                    "shoppingCartChanged" // TODO: REVIEW: this does not reflect dependencies properly, but may help prevent problems this way
+            );
         }
 
         /**

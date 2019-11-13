@@ -512,7 +512,7 @@ code package.
             <set field="searchParameters.statusId_op" value="notEqual"/>
             <set field="searchParameters.roleStatusId" value="${groovy: 'true'.equals(parameters.all) ? 'dummy' : 'COM_ROLE_COMPLETED'}"/>
             <set field="searchParameters.roleStatusId_op" value="notEqual"/>
-            <set field="searchParameters.communicationEventTypeId" value="${groovy: internalNotesOnly &amp;&amp; 'true'.equals(internalNotesOnly) ? 'COMMENT_NOTE' : ''}"/>
+            <set field="searchParameters.communicationEventTypeId" value="${groovy: context.internalNotesOnly &amp;&amp; 'true'.equals(context.internalNotesOnly) ? 'COMMENT_NOTE' : ''}"/><!-- SCIPIO: Fixed missing context. for internalNotesOnly -->
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="searchParameters"/>
                 <field-map field-name="entityName" value="CommunicationEventAndRole"/>

@@ -1956,6 +1956,46 @@ public final class UtilHttp {
     }
 
     /**
+     * SCIPIO: Gets the request attribute names into the specified collection and returns the collection.
+     */
+    public static <C extends Collection<? super String>> C getRequestAttrNames(HttpServletRequest request, C out, Collection<String> namesToSkip) {
+        Enumeration<String> names = request.getAttributeNames();
+        while(names.hasMoreElements()) {
+            String name = names.nextElement();
+            if (namesToSkip == null || !namesToSkip.contains(name)) {
+                out.add(name);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * SCIPIO: Gets the request attribute names into the specified collection and returns the collection.
+     */
+    public static <C extends Collection<? super String>> C getRequestAttrNames(HttpServletRequest request, C out) {
+        Enumeration<String> names = request.getAttributeNames();
+        while(names.hasMoreElements()) {
+            out.add(names.nextElement());
+        }
+        return out;
+    }
+
+    /**
+     * SCIPIO: Gets the request attribute names into the specified collection and returns the collection.
+     */
+    public static Set<String> getRequestAttrNamesAsSet(HttpServletRequest request, Collection<String> namesToSkip) {
+        return getRequestAttrNames(request, new HashSet<>(), namesToSkip);
+    }
+
+    /**
+     * SCIPIO: Gets the request attribute names into the specified collection and returns the collection.
+     */
+    public static Set<String> getRequestAttrNamesAsSet(HttpServletRequest request) {
+        return getRequestAttrNames(request, new HashSet<>());
+    }
+
+
+    /**
      * SCIPIO: Returns an object which can be used for full session synchronization (never null).
      * <p>
      * NOTE: This must be used instead of synchronizing directly on the session. It is not supported

@@ -30,16 +30,16 @@
         <value xml:lang="zh-TW">鍵值重複.該鍵值已存在.</value>
     </property>
     <property key="CommonErrorOccurredContactSupport">
-        <value xml:lang="en">An error occurred. Please contact support.</value>
         <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
+        <value xml:lang="en">An error occurred. Please contact support.</value>
     </property>
     <property key="CommonErrorOccurredContactTryAgain">
-        <value xml:lang="en">An error occurred. Please try again.</value>
         <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</value>
-    </property> 
+        <value xml:lang="en">An error occurred. Please try again.</value>
+    </property>
     <property key="CommonInvalidFileTypeForMediaCat">
-        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
         <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>
+        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
     </property>
     <property key="CommonMissingFieldWithName">
         <value xml:lang="de">Fehlendes Feld: ${missingFieldName}</value>
@@ -47,8 +47,12 @@
         <value xml:lang="fr">Champ manquant: ${missingFieldName}</value>
     </property>
     <property key="CommonQueryErrorReviewContactSupport">
-        <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
         <value xml:lang="de">Bei der Abfrage ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Anfrage. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
+        <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
+    </property>
+    <property key="CommonPermissionErrorTryAccountSupport">
+        <value xml:lang="de">Ein Berechtigungsfehler ist aufgetreten. Aktualisieren Sie die Seite oder melden Sie sich erneut an (falls Sie ein Konto haben). Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
+        <value xml:lang="en">A permission error occurred. Try refreshing the page, or logging in again (if you have an account). If the error persists, please contact our support.</value>
     </property>
     <property key="CommonServerRequestUrlNotFound">
         <value xml:lang="de">Die angeforderte URL ${requestUrl} wurde auf diesem Server nicht gefunden.</value>

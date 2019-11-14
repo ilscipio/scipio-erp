@@ -265,6 +265,7 @@ public class ShoppingListServices {
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
+        String shoppingListAuthToken = (String) context.get("shoppingListAuthToken"); // SCIPIO
 
         boolean beganTransaction = false;
         try {
@@ -293,7 +294,6 @@ public class ShoppingListServices {
 
                 Map<String, Object> newListResult = null;
                 try {
-
                     newListResult = dispatcher.runSync("createShoppingList", serviceCtx);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problems creating new ShoppingList", module);
@@ -308,6 +308,7 @@ public class ShoppingListServices {
                 // get the new list id
                 if (newListResult != null) {
                     shoppingListId = (String) newListResult.get("shoppingListId");
+                    shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
                 }
             }
 
@@ -345,6 +346,7 @@ public class ShoppingListServices {
                             Debug.logError(e, module);
                         }
                     }
+                    ctx.put("shoppingListAuthToken", shoppingListAuthToken); // SCIPIO
                     Map<String, Object> serviceResult = null;
                     try {
                         serviceResult = dispatcher.runSync("createShoppingListItem", ctx);
@@ -375,6 +377,7 @@ public class ShoppingListServices {
                 slCtx.put("isActive", "Y");
                 slCtx.put("shoppingListId", shoppingListId);
                 slCtx.put("userLogin", userLogin);
+                slCtx.put("shoppingListAuthToken", shoppingListAuthToken); // SCIPIO
 
                 Map<String, Object> slUpResp = null;
                 try {

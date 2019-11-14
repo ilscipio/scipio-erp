@@ -54,6 +54,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -78,6 +79,7 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
+        String shoppingListAuthToken = request.getParameter("shoppingListAuthToken"); // SCIPIO
         
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
@@ -87,7 +89,7 @@ public class ShoppingListEvents {
         }
 
         try {
-            shoppingListId = addBulkFromCart(delegator, dispatcher, cart, userLogin, shoppingListId, shoppingListTypeId, selectedCartItems, true, true);
+            shoppingListId = addBulkFromCart(delegator, dispatcher, cart, userLogin, shoppingListId, shoppingListTypeId, selectedCartItems, true, true, shoppingListAuthToken);
         } catch (IllegalArgumentException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
@@ -99,7 +101,8 @@ public class ShoppingListEvents {
         return "success";
     }
 
-    public static String addBulkFromCart(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart, GenericValue userLogin, String shoppingListId, String shoppingListTypeId, String[] items, boolean allowPromo, boolean append) throws IllegalArgumentException {
+    // SCIPIO: Added shoppingListAuthToken, needed for anon operations
+    public static String addBulkFromCart(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart, GenericValue userLogin, String shoppingListId, String shoppingListTypeId, String[] items, boolean allowPromo, boolean append, String shoppingListAuthToken) throws IllegalArgumentException {
         String errMsg = null;
         
         // SCIPIO (2019-03-07): Ensuring shoppingListId really exists, otherwise force creation. 
@@ -118,7 +121,9 @@ public class ShoppingListEvents {
             throw new IllegalArgumentException(errMsg);
         }
 
-        if (UtilValidate.isEmpty(shoppingList)) {
+        // SCIPIO: fixed
+        //if (UtilValidate.isEmpty(shoppingList)) {
+        if (shoppingList == null) {
             // create a new shopping list
             Map<String, Object> newListResult = null;
             try {
@@ -137,14 +142,19 @@ public class ShoppingListEvents {
             // get the new list id
             if (newListResult != null) {
                 shoppingListId = (String) newListResult.get("shoppingListId");
+                shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
             }
 
             // if no list was created throw an error
-            if (shoppingListId == null || shoppingListId.equals("")) {
+            if (UtilValidate.isEmpty(shoppingListId)) {
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.shoppingListId_is_required_parameter", cart.getLocale());
                 throw new IllegalArgumentException(errMsg);
             }
         } else if (!append) {
+            // SCIPIO: Verify before making any modifications
+            if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, shoppingListAuthToken)) {
+                throw new IllegalArgumentException(UtilProperties.getMessage("CommonErrorUiLabels", "CommonPermissionErrorTryAccountSupport", cart.getLocale()));
+            }
             try {
                 clearListInfo(delegator, shoppingListId);
             } catch (GenericEntityException e) {
@@ -173,6 +183,7 @@ public class ShoppingListEvents {
                         if (item.getConfigWrapper() != null) {
                             ctx.put("configId", item.getConfigWrapper().getConfigId());
                         }
+                        ctx.put("shoppingListAuthToken", shoppingListAuthToken); // SCIPIO
                         serviceResult = dispatcher.runSync("createShoppingListItem", ctx);
                     } catch (GenericServiceException e) {
                         Debug.logError(e, "Problems creating ShoppingList item entity", module);
@@ -192,6 +203,11 @@ public class ShoppingListEvents {
         return shoppingListId;
     }
 
+    // SCIPIO: Original overload
+    public static String addBulkFromCart(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart, GenericValue userLogin, String shoppingListId, String shoppingListTypeId, String[] items, boolean allowPromo, boolean append) throws IllegalArgumentException {
+        return addBulkFromCart(delegator, dispatcher, cart, userLogin, shoppingListId, shoppingListTypeId, items, allowPromo, append, null);
+    }
+
     public static String addListToCart(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -199,6 +215,14 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
+
+        // SCIPIO: Security check to make sure we have access to the list
+        String shoppingListAuthToken = request.getParameter("shoppingListAuthToken");
+        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingListId, shoppingListAuthToken)) {
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonPermissionErrorTryAccountSupport", UtilHttp.getLocale(request)));
+            return "error";
+        }
 
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
@@ -352,6 +376,7 @@ public class ShoppingListEvents {
         serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
         serviceInMap.put("productId", request.getParameter("add_product_id"));
         serviceInMap.put("userLogin", userLogin);
+        serviceInMap.put("shoppingListAuthToken", request.getParameter("shoppingListAuthToken")); // SCIPIO
         if (quantity != null) serviceInMap.put("quantity", quantity);
         Map<String, Object> result = null;
         try {
@@ -374,6 +399,8 @@ public class ShoppingListEvents {
 
     /**
      * Finds or creates a specialized (auto-save) shopping list used to record shopping bag contents between user visits.
+     * <p>
+     * SCIPIO: WARNING: Do not pass partyId from unverified input without checking {@link ShoppingListWorker#checkShoppingListSecurity}.
      */
     public static String getAutoSaveListId(Delegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin, String productStoreId) throws GenericEntityException, GenericServiceException {
         if (partyId == null && userLogin != null) {
@@ -386,7 +413,7 @@ public class ShoppingListEvents {
         if (partyId != null) {
             Map<String, Object> findMap = UtilMisc.<String, Object>toMap("partyId", partyId, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             List<GenericValue> existingLists = EntityQuery.use(delegator).from("ShoppingList").where(findMap).queryList();
-            Debug.logInfo("Finding existing auto-save shopping list with:  \nfindMap: " + findMap + "\nlists: " + existingLists, module);
+            Debug.logInfo("Finding existing auto-save shopping list with:\nfindMap: " + findMap + "\nlists: " + existingLists, module);
 
             if (UtilValidate.isNotEmpty(existingLists)) {
                 list = EntityUtil.getFirst(existingLists);
@@ -429,11 +456,14 @@ public class ShoppingListEvents {
                     currentListSize = shoppingListItems.size();
                 }
             }
+            // SCIPIO: NOTE: It is usually WRONG to get the shoppingListAuthToken from ShoppingList, but in this case the shoppingListId only comes from internal or pre-verified sources
+            // (because callers are expected to validate autoSaveListId before calling cart.setAutoSaveListId(autoSaveListId))
+            String shoppingListAuthToken = shoppingList.getString("shoppingListAuthToken");
 
             try {
                 String[] itemsArray = makeCartItemsArray(cart);
                 if (itemsArray.length != 0) {
-                    addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, null, itemsArray, false, false);
+                    addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, null, itemsArray, false, false, shoppingListAuthToken);
                 } else if (currentListSize != 0) {
                     clearListInfo(delegator, autoSaveListId);
                 }
@@ -652,7 +682,7 @@ public class ShoppingListEvents {
     /**
      * Create the guest cookies for a shopping list
      */
-    public static String createGuestShoppingListCookies (HttpServletRequest request, HttpServletResponse response){
+    public static String createGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
@@ -662,6 +692,7 @@ public class ShoppingListEvents {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         int cookieAge = (60 * 60 * 24 * 30);
         String autoSaveListId = null;
+        String shoppingListAuthToken = null; // SCIPIO: shoppingListAuthToken for lists with no partyId
         Cookie[] cookies = request.getCookies();
 
         // check userLogin
@@ -676,7 +707,35 @@ public class ShoppingListEvents {
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(guestShoppingUserName)) {
-                    autoSaveListId = cookie.getValue();
+                    // SCIPIO
+                    //autoSaveListId = cookie.getValue();
+                    String[] parts = splitShoppingListCookieValue(cookie.getValue());
+                    String cookieAutoSaveListId = (parts.length >= 1 && UtilValidate.isNotEmpty(parts[0])) ? parts[0] : null;
+                    String cookieAuthToken = (parts.length >= 2 && UtilValidate.isNotEmpty(parts[1])) ? parts[1] : null;
+                    // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
+                    if (UtilValidate.isNotEmpty(cookieAutoSaveListId)) {
+                        GenericValue shoppingList = null;
+                        try {
+                            // DEV NOTE: I have left out the .cache() call here, because this is only run on first-visit, but .cache(true) might be ok
+                            // since the ShoppingList.partyId and shoppingListAuthToken fields never get modified...
+                            shoppingList = delegator.from("ShoppingList").where("shoppingListId", cookieAutoSaveListId).queryOne();
+                        } catch (GenericEntityException e) {
+                            Debug.logError("createGuestShoppingListCookies: Could not get ShoppingList '" + cookieAutoSaveListId + "'", module);
+                        }
+                        if (shoppingList == null) {
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("createGuestShoppingListCookies: Cookies pointed to non-existent ShoppingList '" + cookieAutoSaveListId + "'", module);
+                            }
+                        } else {
+                            if (ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, cookieAuthToken)) {
+                                autoSaveListId = cookieAutoSaveListId;
+                                shoppingListAuthToken = cookieAuthToken;
+                            } else {
+                                Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '" + userLogin.getString("partyId")
+                                        + "' to use ShoppingList '" + cookieAutoSaveListId + "' from cookies", module);
+                            }
+                        }
+                    }
                     break;
                 }
             }
@@ -695,11 +754,14 @@ public class ShoppingListEvents {
                     }
                     if (newListResult != null) {
                         autoSaveListId = (String) newListResult.get("shoppingListId");
+                        shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
                     }
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                 }
-                Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, autoSaveListId);
+                // SCIPIO: include shoppingListAuthToken
+                //Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, autoSaveListId);
+                Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, makeShoppingListCookieValue(autoSaveListId, shoppingListAuthToken));
                 guestShoppingListCookie.setMaxAge(cookieAge);
                 guestShoppingListCookie.setPath("/");
                 guestShoppingListCookie.setSecure(true);
@@ -719,10 +781,24 @@ public class ShoppingListEvents {
         return "success";
     }
 
+    private static String makeShoppingListCookieValue(String autoSaveListId, String shoppingListAuthToken) { // shoppingListId::shoppingListAuthToken
+        if (autoSaveListId == null) {
+            return null;
+        }
+        return autoSaveListId + (shoppingListAuthToken != null ? "::" + shoppingListAuthToken : "");
+    }
+
+    private static String[] splitShoppingListCookieValue(String value) {
+        if (value == null) {
+            return new String[]{null};
+        }
+        return value.split("::", 2);
+    }
+
     /**
      * Clear the guest cookies for a shopping list
      */
-    public static String clearGuestShoppingListCookies (HttpServletRequest request, HttpServletResponse response){
+    public static String clearGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
         Properties systemProps = System.getProperties();
         String guestShoppingUserName = "GuestShoppingListId_" + systemProps.getProperty("user.name").replace(" ", "_");
         Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, null);

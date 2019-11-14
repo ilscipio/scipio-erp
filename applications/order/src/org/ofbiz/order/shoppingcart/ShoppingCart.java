@@ -64,6 +64,7 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
+import org.ofbiz.order.shoppinglist.ShoppingListWorker;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.category.CategoryWorker;
@@ -1770,6 +1771,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return partyId;
     }
 
+    /**
+     * Sets the auto-save list ID.
+     * SCIPIO: WARNING: The system implicitly trusts this ID - caller is responsible for ensuring security - use {@link ShoppingListWorker#checkShoppingListSecurity}.
+     */
     public void setAutoSaveListId(String id) {
         this.autoSaveListId = id;
     }

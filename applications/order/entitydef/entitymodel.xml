@@ -2836,6 +2836,7 @@ code package.
       <field name="lastOrderedDate" type="date-time"></field>
       <field name="lastAdminModified" type="date-time"></field>
       <field name="productPromoCodeId" type="id"></field>
+      <field name="shoppingListAuthToken" type="long-varchar"><description>Token used to authenticate anonymous shopping list cookie (SCIPIO)</description></field>
       <prim-key field="shoppingListId"/>
       <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
         <key-map field-name="parentShoppingListId" rel-field-name="shoppingListId"/>

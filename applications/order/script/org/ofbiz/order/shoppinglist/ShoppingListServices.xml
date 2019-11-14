@@ -53,12 +53,20 @@ code package.
             </if-compare>
         </if-empty>
 
+        <!-- SCIPIO: If no partyId, generate shoppingListAuthToken -->
+        <if-empty field="newEntity.partyId">
+            <script lang="groovy"><![CDATA[
+                newEntity.shoppingListAuthToken = org.ofbiz.order.shoppinglist.ShoppingListWorker.generateShoppingListAuthToken(delegator);
+            ]]></script>
+            <field-to-result field="newEntity.shoppingListAuthToken" result-name="shoppingListAuthToken"/>
+        </if-empty>
+
         <sequenced-id sequence-name="ShoppingList" field="newEntity.shoppingListId"/>
         <field-to-result field="newEntity.shoppingListId" result-name="shoppingListId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
 
-    <simple-method method-name="updateShoppingList" short-description="Update a ShoppingList">
+    <simple-method method-name="updateShoppingList" short-description="Update a ShoppingList" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <entity-one entity-name="ShoppingList" value-field="shoppingList"/>
 
         <set field="parentMethodName" value="updateShoppingList"/>
@@ -75,6 +83,7 @@ code package.
             <then>
                 <script lang="groovy"><![CDATA[
                     parameters.remove("partyId");
+                    parameters.remove("shoppingListAuthToken");
                 ]]></script>
             </then>
         </if>
@@ -102,7 +111,7 @@ code package.
         <store-value value-field="shoppingList"/>
     </simple-method>
 
-    <simple-method method-name="removeShoppingList" short-description="Remove a ShoppingList">
+    <simple-method method-name="removeShoppingList" short-description="Remove a ShoppingList" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <entity-one entity-name="ShoppingList" value-field="shoppingList"/>
 
         <set field="parentMethodName" value="removeShoppingList"/>
@@ -121,7 +130,9 @@ code package.
         <if-empty field="shoppingListItems">
             <set field="parentMethodName" value="createShoppingListItem"/>
             <set field="permissionAction" value="CREATE"/>
-            <entity-one entity-name="ShoppingList" value-field="shoppingList"/>
+            <!-- SCIPIO: Covered by checkShoppingListItemSecurity
+            <entity-one entity-name="ShoppingList" value-field="shoppingList"/>-->
+            <!-- SCIPIO: Can now simply call checkShoppingListItemSecurity, because our new shoppingListAuthToken erases distinctions about empty shoppingList.partyId
             <if>
                 <condition>
                     <and>
@@ -134,6 +145,9 @@ code package.
                     <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunForAnotherParty"/></add-error>
                 </then>
             </if>
+            <check-errors/>
+            -->
+            <call-simple-method method-name="checkShoppingListItemSecurity"/>
             <check-errors/>
 
             <entity-one entity-name="Product" value-field="product"/>
@@ -163,12 +177,13 @@ code package.
             <field-to-result field="shoppingListItem.shoppingListItemSeqId" result-name="shoppingListItemSeqId"/>
             <set-service-fields service-name="updateShoppingListItem" map="shoppingListItem" to-map="shoppingListItemParameters"/>
             <set field="shoppingListItemParameters.quantity" from-field="totalquantity"/>
+            <set field="shoppingListItemParameters.shoppingListAuthToken" from-field="parameters.shoppingListAuthToken"/>
             <call-service service-name="updateShoppingListItem" in-map-name="shoppingListItemParameters"/>
         </else>
         </if-empty>
     </simple-method>
 
-    <simple-method method-name="updateShoppingListItem" short-description="Update a ShoppingListItem">
+    <simple-method method-name="updateShoppingListItem" short-description="Update a ShoppingListItem" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <set field="parentMethodName" value="updateShoppingListItem"/>
         <set field="permissionAction" value="UPDATE"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
@@ -185,7 +200,7 @@ code package.
         </if-compare-field>
     </simple-method>
 
-    <simple-method method-name="removeShoppingListItem" short-description="Remove a ShoppingListItem">
+    <simple-method method-name="removeShoppingListItem" short-description="Remove a ShoppingListItem" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <set field="parentMethodName" value="removeShoppingListItem"/>
         <set field="permissionAction" value="DELETE"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
@@ -202,7 +217,7 @@ code package.
     </simple-method>
 
     <simple-method method-name="addDistinctShoppingListItem"
-                   short-description="Adds a shopping list item if one with the same productId does not exist">
+                   short-description="Adds a shopping list item if one with the same productId does not exist" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <entity-condition entity-name="ShoppingListItem" list="shoppingListItemList">
             <condition-expr field-name="shoppingListId" from-field="parameters.shoppingListId"/>
         </entity-condition>
@@ -218,7 +233,7 @@ code package.
         </call-service>
     </simple-method>
 
-    <simple-method method-name="calculateShoppingListDeepTotalPrice" short-description="Calculate Deep Total Price for a ShoppingList">
+    <simple-method method-name="calculateShoppingListDeepTotalPrice" short-description="Calculate Deep Total Price for a ShoppingList" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <set field="parentMethodName" value="calculateShoppingListDeepTotalPrice"/>
         <set field="permissionAction" value="VIEW"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
@@ -281,12 +296,30 @@ code package.
         <field-to-result field="totalPrice" result-name="totalPrice"/>
     </simple-method>
 
-    <simple-method method-name="checkShoppingListSecurity" short-description="Checks security on a ShoppingList">
+    <!-- SCIPIO: DEV NOTE: This logic is now replicated in: org.ofbiz.order.shoppinglist.ShoppingListWorker.checkShoppingListSecurity -->
+    <simple-method method-name="checkShoppingListSecurity" short-description="Checks security on a ShoppingList" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <if>
             <condition>
                 <and>
-                    <not><if-compare-field to-field="shoppingList.partyId" field="userLogin.partyId" operator="equals"/></not>
+                    <!-- SCIPIO: Explicitly disallow anonymous modification unless shoppingListAuthToken is set (below)
+                        NOTE: In old ofbiz code this was done implicitly through the auth="true" limitation, but that may need to be disabled
+                    <not><if-compare-field to-field="shoppingList.partyId" field="userLogin.partyId" operator="equals"/></not>-->
+                    <not>
+                        <and>
+                            <not><if-empty field="shoppingList.partyId"/></not>
+                            <if-compare-field to-field="shoppingList.partyId" field="userLogin.partyId" operator="equals"/>
+                        </and>
+                    </not>
                     <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
+                    <not><!-- SCIPIO: Only allow ShoppingList modifications for party-less lists if shoppingListAuthToken is provided -->
+                        <and>
+                            <not><if-empty field="shoppingList.shoppingListAuthToken"/></not>
+                            <if-compare-field to-field="shoppingList.shoppingListAuthToken" field="parameters.shoppingListAuthToken" operator="equals"/>
+                            <!-- As precaution (for now), do not allow shoppingListAuthToken modification attempts on lists having a partyId,
+                                because we currently have no cases (except admin) where this is a good idea to allow -->
+                            <if-empty field="shoppingList.partyId"/>
+                        </and>
+                    </not>
                 </and>
             </condition>
             <then>
@@ -294,19 +327,10 @@ code package.
             </then>
         </if>
     </simple-method>
-    <simple-method method-name="checkShoppingListItemSecurity" short-description="Checks security on a ShoppingListItem">
+    <simple-method method-name="checkShoppingListItemSecurity" short-description="Checks security on a ShoppingListItem" login-required="false"><!-- SCIPIO: Removed login requirement thanks to shoppingListAuthToken -->
         <entity-one entity-name="ShoppingList" value-field="shoppingList"/>
-        <if>
-            <condition>
-                <and>
-                    <not><if-compare-field field="userLogin.partyId" to-field="shoppingList.partyId" operator="equals"/></not>
-                    <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
-                </and>
-            </condition>
-            <then>
-                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunForAnotherParty"/></add-error>
-            </then>
-        </if>
+        <call-simple-method method-name="checkShoppingListSecurity"/><!-- SCIPIO: Now delegates as both implementations should be the same -->
+        <check-errors/>
     </simple-method>
     <simple-method method-name="addSuggestionsToShoppingList" short-description="Add suggestions to a shopping list">
         <!-- first check the ProductStore.enableAutoSuggestionList indicator -->

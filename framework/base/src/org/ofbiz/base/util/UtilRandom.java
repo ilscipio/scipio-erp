@@ -84,7 +84,7 @@ public class UtilRandom {
         String nums="0123456789";
         String symbols="!@#$%^&*()_+-=.,/';:?><~*/-+";
         String passSymbols=charsCaps + Chars + nums +symbols;
-        Random rnd=new Random();
+        Random rnd=new SecureRandom();
         char[] password=new char[len];
 
         for(int i=0; i<len;i++){
@@ -131,5 +131,26 @@ public class UtilRandom {
     public static double getRandomDouble(double min, double max) {                
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
-    
+
+    public static String generateAlphaNumericString(int len) {
+        return generateStringFromCharset(len, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    }
+
+    public static String generateAlphaNumericStringLower(int len) {
+        return generateStringFromCharset(len, "abcdefghijklmnopqrstuvwxyz0123456789");
+    }
+
+    public static String generateAlphaNumericStringUpper(int len) {
+        return generateStringFromCharset(len, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+    }
+
+    public static String generateStringFromCharset(int len, String charSet) {
+        Random rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<len;i++){
+            sb.append(charSet.charAt(rnd.nextInt(charSet.length())));
+        }
+        return sb.toString();
+    }
+
 }

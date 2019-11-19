@@ -731,7 +731,8 @@ public class ShoppingListEvents {
                                 autoSaveListId = cookieAutoSaveListId;
                                 shoppingListAuthToken = cookieAuthToken;
                             } else {
-                                Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '" + userLogin.getString("partyId")
+                                Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '"
+                                        + (userLogin != null ? userLogin.getString("partyId") : "(anonymous)")
                                         + "' to use ShoppingList '" + cookieAutoSaveListId + "' from cookies", module);
                             }
                         }

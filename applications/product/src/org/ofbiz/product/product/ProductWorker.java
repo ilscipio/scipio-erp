@@ -1618,6 +1618,22 @@ nextProd:
     }
 
     /**
+     * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
+     * for the specified product store. Does not include counts for other stores.
+     * <p>
+     * Based on {@link #filterOutOfStockProducts} but with additional support for variant inventory calculation.
+     * <p>
+     * Added 2018-06-06.
+     */
+    public static BigDecimal getProductStockForProductStore(Delegator delegator, LocalDispatcher dispatcher,
+                                                            GenericValue product, GenericValue productStore,
+                                                            Timestamp moment, boolean useCache) throws GeneralException {
+        Map<String, BigDecimal> results = getProductStockPerProductStore(delegator, dispatcher, product, UtilMisc.toList(productStore),
+                false, Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc")), moment, useCache);
+        return results.get(productStore.getString("productStoreId"));
+    }
+
+    /**
      * SCIPIO: Returns the virtual products of a variant product, first-level only.
      * The returned instances are specifically Product instances.
      * <p>

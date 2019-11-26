@@ -1368,6 +1368,18 @@ code package.
         <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity</description>
         <attribute name="inventoryItemId" mode="IN" type="String" optional="false"/>
     </service>
+    <service name="setProductLastInventoryCount" engine="simple"
+             location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setLastInventoryCount">
+        <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity
+            - runs for specified productId</description>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="setAllProductsLastInventoryCount" engine="java"
+             location="org.ofbiz.product.inventory.InventoryServices" invoke="setAllProductsLastInventoryCount" transaction-timeout="14400">
+        <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity
+            - runs for all products in the system (SCIPIO)</description>
+        <permission-service service-name="facilityGenericPermission" main-action="ADMIN"/>
+    </service>
     <service name="createUpdateFacilityGeoPoint" engine="simple" default-entity-name="GeoPoint"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="createUpdateFacilityGeoPoint">
         <description>Create or update GeoPoint assigned to facility</description>

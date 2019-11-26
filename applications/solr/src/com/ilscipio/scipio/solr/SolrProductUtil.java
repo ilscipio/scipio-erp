@@ -651,6 +651,16 @@ public abstract class SolrProductUtil {
             // NOTE: for variant products, we also include the keywords from the virtual/parent
             getProductKeywords(keywords, delegator, useCache, productId, parentProductId);
             targetCtx.put("keywords", new ArrayList<>(keywords));
+
+            /*
+             * CLIENT CODE HOOK
+             * As a quick solution, client code may be patched in after this line (recommended: call to external method)
+             */
+
+            /*
+             * /CLIENT CODE HOOK (END)
+             */
+
         } catch (Exception e) {
             Debug.logError(e, "Solr: getProductContent: Error reading product '" + productId + "': " + e.getMessage(), module);
         }

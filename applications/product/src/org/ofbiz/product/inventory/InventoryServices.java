@@ -1035,7 +1035,9 @@ public class InventoryServices {
                 }
                 successCount++;
             }
-            return ServiceUtil.returnSuccess("Updated ProductFacility.lastInventoryCount for " + successCount + " products");
+            String msg = "Updated ProductFacility.lastInventoryCount for " + successCount + " products";
+            Debug.logInfo("setAllProductsLastInventoryCount: " + msg, module);
+            return ServiceUtil.returnSuccess(msg);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());

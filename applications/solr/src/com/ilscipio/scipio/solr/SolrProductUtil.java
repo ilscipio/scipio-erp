@@ -33,7 +33,6 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
-import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -429,7 +428,7 @@ public abstract class SolrProductUtil {
      * <b>WARNING:</b> You should use the provided nowTimestamp for filter-by-date operations.
      */
     public static Map<String, Object> getProductContent(GenericValue product, DispatchContext dctx, Map<String, Object> context) {
-        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) product.get("productId");
@@ -440,9 +439,6 @@ public abstract class SolrProductUtil {
         if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
 
         try {
-            if (UtilValidate.isEmpty(productId)) { // sanity check
-                throw new IllegalArgumentException("Missing productId");
-            }
             // 2018: The fields map is needed for arbitrarily-named fields such as dynamicFields.
             // It is much more flexible than the stock static field names in the
             // solrProductAttributes service interface and in the future may replace it entirely.
@@ -655,10 +651,8 @@ public abstract class SolrProductUtil {
             // NOTE: for variant products, we also include the keywords from the virtual/parent
             getProductKeywords(keywords, delegator, useCache, productId, parentProductId);
             targetCtx.put("keywords", new ArrayList<>(keywords));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
         } catch (Exception e) {
-            Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
+            Debug.logError(e, "Solr: getProductContent: Error reading product '" + productId + "': " + e.getMessage(), module);
         }
         return targetCtx;
     }

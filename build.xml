@@ -1305,6 +1305,12 @@ code package.
             <arg value="readers=seed,seed-initial,ext"/>
         </exec-scipio-jar>
     </target>
+    <target name="load-extseedonly" depends="build"
+            description="Load seed and ext data, but not seed-initial; meant for reseeding during manual/generic testing, development, or going into production with a derived system based on stock Scipio ERP where the ext data basically replaces the demo data"><!-- SCIPIO -->
+        <exec-scipio-jar action="load-data">
+            <arg value="readers=seed,ext"/>
+        </exec-scipio-jar>
+    </target>
     <target name="load-exttest" depends="build"
             description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock Scipio ERP">
         <exec-scipio-jar action="load-data">

@@ -238,11 +238,8 @@ try {
         // TODO: 2017-08-17: only the fields currently exposed in the shop UI are implemented; but several missing
         List<ProductSearchConstraint> pscList = kwsParams.getConstraintList();
         if (pscList) {
-            // NOTE: basically, at the end, the OR list becomes a single entry of the AND list (this is ofbiz behavior,
-            // and because the interface is ambiguous, better to preserve something known than introduce more randomness)
             kwExprList = [];
             kwExprIsAndList = [];
-            kwExprAllIsAnd = true;
             
             kwCatalogCnsts = [];
             kwCategoryCnsts = [];
@@ -342,10 +339,6 @@ try {
                         kwExpr = sanitizeUserQueryExpr(kwExpr);
                         kwExprList.add(kwExpr);
                         kwExprIsAndList.add(kc.isAnd());
-                        kwExprAllIsAnd = kwExprAllIsAnd && kc.isAnd();
-                        // TODO?: handle for cases where no full/solr syntax allowed:
-                        //kc.isAnyPrefix()
-                        //kc.isAnySuffix()
                     }
                 } else if (psc instanceof ProductSearch.ListPriceRangeConstraint) {
                     ProductSearch.ListPriceRangeConstraint lprc = (ProductSearch.ListPriceRangeConstraint) psc;
@@ -378,35 +371,10 @@ try {
                 }
             }
             
-            resolveKwExprListIsAndManual = { forceOp ->
-                if (forceOp == "OR") return;
-                kwExprListPrev = kwExprList;
-                kwExprList = [];
-                for(int i=0; i<kwExprListPrev.size(); i++) {
-                    if (kwExprIsAndList[i] || forceOp == "AND") {
-                        // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
-                        kwExprList.add(SolrExprUtil.addPrefixToAllTerms(kwExprListPrev[i], "+"));
-                    } else {
-                        kwExprList.add(kwExprListPrev[i]);
-                    }
-                }
-            };
-            // here we decide how we'll handle the default operator
-            // if user query and all search strings are AND we can use defaultOp on solrKeywordSearch for edismax,
-            // otherwise we have to use a custom method (much less reliable).
-            // NOTE: if defaultOp was already set in context (override), it is treated as an override (forceOp)
-            // and we always respect it (i.e. it overrides every isAnd() of every SEARCH_STRING)
-            if (kwsArgs.searchSyntax == "user") {
-                if (kwExprAllIsAnd) {
-                    if (!kwsArgs.defaultOp) kwsArgs.defaultOp = "AND";
-                    else if (kwsArgs.defaultOp != "AND") {
-                        resolveKwExprListIsAndManual(kwsArgs.defaultOp);
-                    }
-                } else {
-                    resolveKwExprListIsAndManual(kwsArgs.defaultOp);
-                }
-            } else {
-                resolveKwExprListIsAndManual(kwsArgs.defaultOp);
+            // 2019-11-28: Simply use the first AND/OR KeywordConstraint.isAnd() parameter (parameters.SEARCH_OPERATOR)
+            // as the default operator (defaults to configured), otherwise use the configured if missing
+            if (!kwsArgs.defaultOp) {
+                kwsArgs.defaultOp = (kwExprIsAndList) ? (kwExprIsAndList[0] ? "AND" : "OR") : ProductSearchSession.getDefaultSearchOperator(request);
             }
 
             combineKwExpr = { exprList, joinOp ->
@@ -425,6 +393,7 @@ try {
             };
             // make expression from AND list
             if (!kwsArgs.searchString && kwExprList) {
+                // FIXME?: this currently doesn't support the full KeywordConstraint.isAnd() settings, but nobody uses them, and we sort of hijacked the first one above
                 kwsArgs.searchString = combineKwExpr(kwExprList, "AND");
                 searchStringCount = kwExprList.size();
             }
@@ -517,27 +486,14 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         }
         
         if (kwsArgs.searchCategories) {
-            catExprList = [];
-            for (category in kwsArgs.searchCategories) {
-                if (category instanceof String) category = [productCategoryId:category];
-
-                // NOTE: exclude is tri-state (follows CategoryConstraint, makes sense)
-                StringBuilder sb = new StringBuilder();
-                if (category.exclude != null) {
-                    sb.append(category.exclude ? "-" : "+");
-                }
-                sb.append(SolrExprUtil.makeCategoryIdFieldQueryEscape("cat", category.productCategoryId, category.includeSub != false));
-                catExprList.add(sb.toString());
-            }
-            // TODO: REVIEW: should this be a whole filter, or instead add each to searchFilters?
-            kwsArgs.searchFilters.add(catExprList.join(" "));
+            SolrExprUtil.addCategoryOrInExFilters(kwsArgs.searchFilters, "cat", kwsArgs.searchCategories);
             // TODO: (see CommonSearchOptions.groovy)
             //context.searchCategoryIdEff = ...;
         }
 
-        viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+        def viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
         if (viewProductCategoryId) {
-            kwsArgs.searchFilters.add("cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
+            kwsArgs.searchFilters.add("+cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
         }
 
         // TODO: REVIEW: added this initially, but upon further review the +catalog: filter above should be sufficient,
@@ -620,7 +576,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             spellcheck: kwsArgs.spellcheck,
             spellDict: kwsArgs.spellDict,
             facet: kwsArgs.facet,
-            defaultOp: kwsArgs.defaultOp?:"OR", // TODO: REVIEW: hardcoding the default hardcoded here to follow the search param logic (not the solr config)
+            defaultOp: kwsArgs.defaultOp?:"OR",
             queryFields: queryFields?:null,
             queryParams: kwsArgs.queryParams,
             excludeVariants: kwsArgs.excludeVariants,

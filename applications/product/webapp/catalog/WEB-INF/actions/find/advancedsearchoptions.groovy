@@ -39,7 +39,7 @@ productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMa
 
 searchOperator = parameters.SEARCH_OPERATOR;
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
-  searchOperator = "OR";
+  searchOperator = ProductSearchSession.getDefaultSearchOperator(request); // SCIPIO: Configurable default operator
 }
 
 searchConstraintStrings = ProductSearchSession.searchGetConstraintStrings(false, session, delegator);

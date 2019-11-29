@@ -95,7 +95,7 @@ if (searchString == null) {
 if (resetSearch) searchString = null;
 context.searchString = searchString;
 if (resetSearch) searchOperator = null;
-searchOperatorDef = context.searchOperatorDef ?: "OR";
+searchOperatorDef = context.searchOperatorDef ?: ProductSearchSession.getDefaultSearchOperator(request); // SCIPIO: Configurable default operator
 context.searchOperatorDef = searchOperatorDef;
 if (searchApplyDefaults && !searchOperator) searchOperator = searchOperatorDef;
 context.searchOperator = searchOperator;

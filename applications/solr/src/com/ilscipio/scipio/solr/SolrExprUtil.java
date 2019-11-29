@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
@@ -534,11 +535,15 @@ public abstract class SolrExprUtil {
         // NOTE: at this time, should not be any CATID/*,
         // because there should always be a category depth as first entry (this was the chosen convention)
         StringBuilder sb = new StringBuilder();
-        sb.append(fieldName);
-        sb.append(":(*\\/");
+        if (fieldName != null) {
+            sb.append(fieldName);
+            sb.append(":(*\\/");
+        } else {
+            sb.append("(*\\/");
+        }
         sb.append(escapedProductCategoryId);
         if (includeSubCategories) {
-            sb.append("* *\\/");
+            sb.append("* OR *\\/");
             sb.append(escapedProductCategoryId);
             sb.append("\\/*)");
         } else {
@@ -554,6 +559,74 @@ public abstract class SolrExprUtil {
      */
     public static String makeCategoryIdFieldQueryEscape(String fieldName, String escapedProductCategoryId, boolean includeSubCategories) {
         return makeCategoryIdFieldQueryRaw(fieldName, escapeTermFull(escapedProductCategoryId), includeSubCategories);
+    }
+
+    /**
+     * Adds one or more OR, include or exclude filters for categories to the given filter query list.
+     * Produces filters that are independent of the default operator.
+     * Intended for KeywordSearch.groovy category filters or equivalent.
+     */
+    public static <T extends Collection<String>> T addCategoryOrInExFilters(T outFilterQueries, String fieldName, Collection<?> categoryMaps) {
+        StringBuilder catOrStr = null;
+        int catOrCount = 0;
+        StringBuilder catExStr = null;
+        int catExCount = 0;
+        StringBuilder catInStr = null;
+        int catInCount = 0;
+
+        for (Object category : categoryMaps) {
+            String productCategoryId;
+            Boolean includeSub;
+            Boolean exclude;
+            if (category instanceof String) {
+                productCategoryId = (String) category;
+                includeSub = null;
+                exclude = null;
+            } else {
+                Map<String, Object> categoryMap = UtilGenerics.checkMap(category);
+                productCategoryId = (String) categoryMap.get("productCategoryId");
+                includeSub = (Boolean) categoryMap.get("includeSub");
+                exclude = (Boolean) categoryMap.get("exclude");
+            }
+
+            String catTerm = makeCategoryIdFieldQueryEscape(null, productCategoryId, !Boolean.FALSE.equals(includeSub));
+            if (category instanceof String || exclude == null) {
+                if (catOrStr != null) {
+                    catOrStr.append(" OR ");
+                } else {
+                    catOrStr = new StringBuilder();
+                }
+                catOrStr.append(catTerm);
+                catOrCount++;
+            } else if (exclude) {
+                if (catExStr != null) {
+                    catExStr.append(" OR ");
+                } else {
+                    catExStr = new StringBuilder();
+                }
+                catExStr.append(catTerm);
+                catExCount++;
+            } else {
+                if (catInStr != null) {
+                    catInStr.append(" AND ");
+                } else {
+                    catInStr = new StringBuilder();
+                }
+                catInStr.append(catTerm);
+                catInCount++;
+            }
+        }
+        String fieldStr = (fieldName != null) ? fieldName + ":" : "";
+        if (catOrCount > 0) {
+            outFilterQueries.add(catOrCount > 1 ? "+" + fieldStr + "(" + catOrStr.toString() + ")" : "+" + fieldStr + catOrStr.toString());
+        }
+        if (catExCount > 0) {
+            outFilterQueries.add(catExCount > 1 ? "-" + fieldStr + "(" + catExStr.toString() + ")" : "+" + fieldStr + catExStr.toString());
+        }
+        if (catInCount > 0) {
+            outFilterQueries.add(catInCount > 1 ? "+" + fieldStr + "(" + catInStr.toString() + ")" : "+" + fieldStr + catInStr.toString());
+        }
+        return outFilterQueries;
     }
 
     public enum UserQueryMode {

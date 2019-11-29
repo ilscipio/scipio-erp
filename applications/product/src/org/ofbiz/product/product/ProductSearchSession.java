@@ -955,7 +955,17 @@ public class ProductSearchSession {
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
             // defaults to true/Y, ie anything but N is true/Y
             boolean anyPrefixSuffix = !"N".equals(parameters.get("SEARCH_ANYPRESUF"));
-            searchAddConstraintCore(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
+            // SCIPIO: configurable default
+            //boolean isAnd = "AND".equals(searchOperator);
+            boolean isAnd;
+            if ("AND".equals(searchOperator)) {
+                isAnd = true;
+            } else if ("OR".equals(searchOperator)) {
+                isAnd = false;
+            } else {
+                isAnd = "AND".equals(getDefaultSearchOperator(request));
+            }
+            searchAddConstraintCore(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, isAnd), session);
             constraintsChanged = true;
         }
 
@@ -979,7 +989,17 @@ public class ProductSearchSession {
                 String searchOperator = (String) parameters.get("SEARCH_OPERATOR" + kwNum);
                 // defaults to true/Y, ie anything but N is true/Y
                 boolean anyPrefixSuffix = !"N".equals(parameters.get("SEARCH_ANYPRESUF" + kwNum));
-                searchAddConstraintCore(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, "AND".equals(searchOperator)), session);
+                // SCIPIO: configurable default
+                //boolean isAnd = "AND".equals(searchOperator);
+                boolean isAnd;
+                if ("AND".equals(searchOperator)) {
+                    isAnd = true;
+                } else if ("OR".equals(searchOperator)) {
+                    isAnd = false;
+                } else {
+                    isAnd = "AND".equals(getDefaultSearchOperator(request));
+                }
+                searchAddConstraintCore(new ProductSearch.KeywordConstraint(keywordString, anyPrefixSuffix, anyPrefixSuffix, null, isAnd), session);
                 constraintsChanged = true;
             }
         }
@@ -1795,5 +1815,33 @@ public class ProductSearchSession {
         Object syncObj = createSyncObject();
         session.setAttribute("_PRODUCT_SEARCH_SYNC_", syncObj);
         return syncObj;
+    }
+
+    /**
+     * SCIPIO: Gets the configured default operator (abstracted).
+     * NOTE: implementation subject to change (may get stored in ProductSearchOptions).
+     */
+    public static String getDefaultSearchOperator(HttpServletRequest request) {
+        return getConfiguredDefaultSearchOperator(request);
+    }
+
+    /**
+     * SCIPIO: Gets the configured default operator for the app/process.
+     */
+    public static String getConfiguredDefaultSearchOperator(HttpServletRequest request) {
+        // Check for explicit web.xml config
+        String defaultOperator = (String) request.getServletContext().getAttribute("scpProductSearchDefaultOp");
+        if (UtilValidate.isNotEmpty(defaultOperator)) {
+            return defaultOperator;
+        }
+        // Check for shop config
+        String cfgPropRes = (String) request.getServletContext().getAttribute("shopSearchCfgRes");
+        if (cfgPropRes == null) { // If this is not set at all, assume we don't have a shop (shop sets it to empty by default)
+            return "OR"; // legacy default
+        }
+        if (UtilValidate.isEmpty(cfgPropRes)) {
+            cfgPropRes = "shop";
+        }
+        return UtilProperties.getPropertyValue(cfgPropRes, "shop.search.defaultOperator", "OR");
     }
 }

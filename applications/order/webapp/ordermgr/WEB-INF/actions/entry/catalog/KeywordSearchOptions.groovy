@@ -22,7 +22,8 @@
  * should not contain order component's specific code.
  */
 
-import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.catalog.*
+import org.ofbiz.product.product.*;
 
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 searchCategoryId = CatalogWorker.getCatalogSearchCategoryId(request, currentCatalogId);
@@ -30,7 +31,7 @@ otherSearchProdCatalogCategories = CatalogWorker.getProdCatalogCategories(reques
 
 searchOperator = request.getParameter("SEARCH_OPERATOR");
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
-  searchOperator = "OR";
+  searchOperator = ProductSearchSession.getDefaultSearchOperator(request); // SCIPIO: Configurable default operator
 }
 
 context.currentCatalogId = currentCatalogId;

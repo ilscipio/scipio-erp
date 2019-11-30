@@ -26,15 +26,15 @@ code package.
                         <a href="<@pageUrl>ViewGeneric?${record.findString}&amp;enableEdit=true</@pageUrl>">${uiLabelMap.CommonEdit}</a>
                     </@td>
                     <#list fieldList as field>
-                        <@td>
-                            <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it 
+                        <@td><#t/>
+                            <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it
                                2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
                             <#assign fieldValue = (record.fields[raw(field.name)])! />
                             <#if !fieldValue?is_method && fieldValue?has_content>
                                 <#if (isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean)>
-                                    ${fieldValue?string}
+                                    ${fieldValue?string}<#t/>
                                 <#else>
-                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em>
+                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em><#t/>
                                 </#if>
                             </#if>
                         </@td>
@@ -52,5 +52,5 @@ code package.
 <#else>
    <@panel><@commonMsg type="result-norecord">${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@commonMsg></@panel>
 </#if>
-    
+
 

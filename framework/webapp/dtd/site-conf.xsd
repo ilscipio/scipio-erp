@@ -1049,6 +1049,15 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:boolean" name="allow-cache-redirect"><!-- default="false" -->
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: For redirects only: If set to true, allow browser to cache 301 redirects.
+                    Default: false (new behavior, set on 2019-12-04)
+                    Added 2019-12-04.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="redirect-parameter">
         <xs:annotation>

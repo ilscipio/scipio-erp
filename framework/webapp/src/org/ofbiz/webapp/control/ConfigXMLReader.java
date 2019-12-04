@@ -2193,6 +2193,7 @@ public class ConfigXMLReader {
         private final ValueExpr valueExpr; // SCIPIO: 2018-11-19: precompiled value expression
         private final AttributesSpec redirectAttributes; // SCIPIO
         private final String connectionState; // SCIPIO
+        private final Boolean allowCacheRedirect; // SCIPIO
         
         /**
          * @deprecated SCIPIO: 2018-11-07: This does nothing useful, all fields are final and should never have been
@@ -2217,6 +2218,7 @@ public class ConfigXMLReader {
             this.valueExpr = null;
             this.redirectAttributes = AttributesSpec.NONE;
             this.connectionState = null;
+            this.allowCacheRedirect = null;
         }
 
         private RequestResponse(String name, String type, String value, Type typeEnum) { // SCIPIO: 2018-11-07
@@ -2237,6 +2239,7 @@ public class ConfigXMLReader {
             this.valueExpr = null;
             this.redirectAttributes = (typeEnum != null) ? typeEnum.getRedirectAttributesDefault() : AttributesSpec.NONE;
             this.connectionState = null;
+            this.allowCacheRedirect = null;
         }
 
         public RequestResponse(Element responseElement) {
@@ -2323,6 +2326,8 @@ public class ConfigXMLReader {
             this.redirectAttributes = spec;
             String connectionState = responseElement.getAttribute("connection-state");
             this.connectionState = connectionState.isEmpty() ? null : connectionState;
+            Boolean allowCacheRedirect = UtilMisc.booleanValue(responseElement.getAttribute("allow-cache-redirect")); // SCIPIO
+            this.allowCacheRedirect = allowCacheRedirect;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -2394,6 +2399,8 @@ public class ConfigXMLReader {
         public String getConnectionState() { // SCIPIO
             return connectionState;
         }
+
+        public Boolean getAllowCacheRedirect() { return allowCacheRedirect; }
 
         public enum Type { // SCIPIO: 2018-06
             NONE("none"),

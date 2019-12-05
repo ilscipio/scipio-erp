@@ -707,6 +707,21 @@ public class RequestHandler {
                 Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_URL_"), String.class, Object.class);
                 String queryString = UtilHttp.urlEncodeArgs(previousParamMap, false);
                 String redirectTarget = previousRequest;
+
+                // JB: SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
+                // FIXME?: NOTE: Like the other attributes ofbiz did above, we are forced to use a separate attribute for this, but it risks breaking
+                //  due to concurrency... for now, this is moot because the others all suffer from this as well
+                String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                if (UtilValidate.isNotEmpty(previousServletRequest)) {
+                    request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                    redirectTarget = previousServletRequest;
+                    if (UtilValidate.isNotEmpty(queryString)) {
+                        redirectTarget += "?" + queryString;
+                    }
+                    callRedirect(makeLink(request, response, redirectTarget, null, (FullWebappInfo) null, false, true, null, null), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
+                    return;
+                }
+
                 if (UtilValidate.isNotEmpty(queryString)) {
                     redirectTarget += "?" + queryString;
                 }

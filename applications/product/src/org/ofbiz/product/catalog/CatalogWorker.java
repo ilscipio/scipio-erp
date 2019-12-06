@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.product.catalog;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -521,13 +523,13 @@ public final class CatalogWorker {
      * SCIPIO: Imported from SolrCategoryUtil.
      * Added 2017-11-09.
      */
-    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, Timestamp moment, boolean useCache) {
         List<GenericValue> stores = new ArrayList<>();
         Set<String> storeIds = new HashSet<>();
         for(String catalogId : catalogIds) {
             try {
                 List<GenericValue> productStoreCatalogs = EntityQuery.use(delegator).from("ProductStoreCatalog").where("prodCatalogId", catalogId)
-                        .filterByDate().cache(useCache).queryList();
+                        .filterByDate(moment).cache(useCache).queryList();
                 for(GenericValue productStoreCatalog : productStoreCatalogs) {
                     if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
                         stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
@@ -539,5 +541,9 @@ public final class CatalogWorker {
             }
         }
         return stores;
+    }
+
+    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+        return getProductStoresFromCatalogIds(delegator, catalogIds, UtilDateTime.nowTimestamp(), useCache);
     }
 }

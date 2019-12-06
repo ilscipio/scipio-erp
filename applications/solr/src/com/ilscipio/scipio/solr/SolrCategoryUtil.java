@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.solr;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,20 +36,20 @@ public abstract class SolrCategoryUtil {
      * <p>
      * This method is a supplement to CatalogWorker methods.
      */
-    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
-        List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, useCache);
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment, boolean useCache) {
+        List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, moment, useCache);
         return UtilMisc.getMapValuesForKeyOrNewList(catalogs, "prodCatalogId");
     }
 
-    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
-        return getCatalogIdsByCategoryId(delegator, productCategoryId, false); // legacy
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment) {
+        return getCatalogIdsByCategoryId(delegator, productCategoryId, moment, false); // legacy
     }
 
-    static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
+    static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment, boolean useCache) {
         List<GenericValue> catalogs;
         try {
             catalogs = EntityQuery.use(delegator).from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
-                    .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
+                    .filterByDate(moment).orderBy("sequenceNum").cache(useCache).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Solr: Error looking up catalogs for productCategoryId: " + productCategoryId, module);
             catalogs = new ArrayList<>();
@@ -56,11 +57,11 @@ public abstract class SolrCategoryUtil {
         return catalogs;
     }
 
-    static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, boolean useCache) {
+    static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, Timestamp moment, boolean useCache) {
         Map<String, List<String>> map = new HashMap<>();
         if (categoryIds == null) return map;
         for(String categoryId : categoryIds) {
-            map.put(categoryId, UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, categoryId, useCache), "prodCatalogId"));
+            map.put(categoryId, UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, categoryId, moment, useCache), "prodCatalogId"));
         }
         return map;
     }
@@ -78,8 +79,8 @@ public abstract class SolrCategoryUtil {
     /**
      * Best-effort.
      */
-    static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
-        return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, useCache);
+    static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, Timestamp moment, boolean useCache) {
+        return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, moment, useCache);
     }
 
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {

@@ -184,7 +184,7 @@ try {
         context.solrProducts = solrProducts;
 
         context.listIndex = 0;
-        if (result.viewSize > 0) {
+        if (result.viewSize != null && result.viewSize > 0) {
             context.listIndex = Math.ceil(result.listSize / result.viewSize);
         }
 

@@ -217,6 +217,78 @@ public final class ProductWorker {
         return getVariantVirtualId(variantProduct, true);
     }
 
+    /**
+     * Get variant product's parent virtual product's id, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static String getVariantVirtualIdSafe(GenericValue variantProduct, boolean useCache) {
+        try {
+            return getVariantVirtualId(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product's id, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static String getVariantVirtualIdSafe(GenericValue variantProduct) {
+        try {
+            return getVariantVirtualId(variantProduct);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProduct(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+        String virtualProductId = getVariantVirtualId(variantProduct, useCache);
+        if (virtualProductId != null) {
+            return variantProduct.getDelegator().findOne("Product", UtilMisc.toMap("productId", virtualProductId), useCache);
+        }
+        return null;
+    }
+
+    /**
+     * Get variant product's parent virtual product, with caching enabled (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProduct(GenericValue variantProduct) throws GenericEntityException {
+        return getVariantVirtualProduct(variantProduct, true);
+    }
+
+    /**
+     * Get variant product's parent virtual product, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProductSafe(GenericValue variantProduct, boolean useCache) {
+        try {
+            return getVariantVirtualProduct(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product, with caching enabled, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProductSafe(GenericValue variantProduct) {
+        try {
+            return getVariantVirtualProduct(variantProduct, true);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
     // SCIPIO: 2017-09-14: now support useCache
     public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
         if (variantProduct != null && "Y".equals(variantProduct.getString("isVariant"))) {
@@ -228,6 +300,25 @@ public final class ProductWorker {
 
     public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct) throws GenericEntityException {
         return getVariantVirtualAssocs(variantProduct, true);
+    }
+
+
+    public static List<GenericValue> getVariantVirtualAssocsSafe(GenericValue variantProduct, boolean useCache) { // SCIPIO
+        try {
+            return getVariantVirtualAssocs(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    public static List<GenericValue> getVariantVirtualAssocsSafe(GenericValue variantProduct) { // SCIPIO
+        try {
+            return getVariantVirtualAssocs(variantProduct, true);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
     }
 
     /**

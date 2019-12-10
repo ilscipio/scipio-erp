@@ -62,6 +62,18 @@ code package.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
+
+    <service name="sendWebsocketMessage" engine="java" auth="true" location="com.ilscipio.scipio.common.CommonServices" invoke="sendWebsocketMessage">
+        <description>Sends a message (preferrably json object) to connected clients</description>
+        <attribute name="channel" mode="IN" type="String"/>
+        <attribute name="message" mode="IN" type="String"/>
+    </service>
+
+    <service name="sendWebsocketObject" engine="java" auth="true" location="com.ilscipio.scipio.common.CommonServices" invoke="sendWebsocketObject">
+        <description>Converts a map to JSON and sends it to websocket clients</description>
+        <attribute name="channel" mode="IN" type="String"/>
+        <attribute name="data" mode="IN" type="Map"/>
+    </service>
     
     <!-- Partial Screen renderer
         removed for now: this cannot be called as request event due to security risk, so

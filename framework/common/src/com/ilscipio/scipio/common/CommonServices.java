@@ -10,7 +10,9 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.ilscipio.scipio.web.SocketSessionManager;
 import org.ofbiz.base.component.ComponentConfig;
+import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
@@ -329,5 +331,49 @@ public class CommonServices {
 
         return responseMap;
     }
+
+    /**
+     * Sends message to client connected to a websocket
+     *
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> sendWebsocketObject(DispatchContext dctx, Map<String, ?> context) {
+        try {
+            Object key;
+            String channel = (String) context.get("channel");
+            Map data = (Map) context.get("data");
+            String message = JSON.from(data).toString();
+            SocketSessionManager.broadcastToChannel(message,channel);
+            return ServiceUtil.returnSuccess("Message sent to websocket clients");
+        } catch(Exception e) {
+            final String errorMsg = "Exception sending message to websocket clients";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sends message to client connected to a websocket
+     *
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> sendWebsocketMessage(DispatchContext dctx, Map<String, ?> context) {
+        try {
+            Object key;
+            String channel = (String) context.get("channel");
+            String message = (String) context.get("message");
+            SocketSessionManager.broadcastToChannel(message,channel);
+            return ServiceUtil.returnSuccess("Message sent to websocket clients");
+        } catch(Exception e) {
+            final String errorMsg = "Exception sending message to websocket clients";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+    }
+
 
 }

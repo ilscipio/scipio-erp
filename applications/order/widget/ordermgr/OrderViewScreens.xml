@@ -17,10 +17,10 @@ code package.
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                                <include-screen name="DashboardWSLiveOrders" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                <include-screen name="DashboardStatsOrderTotalWeek" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
+                                <include-screen name="DashboardStatsOrderTotalDay" location="component://order/widget/ordermgr/CommonWidgets.xml"/>
                             </container>
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <include-screen name="DashboardStatsOrderTotalMonth" location="component://order/widget/ordermgr/CommonWidgets.xml"/>

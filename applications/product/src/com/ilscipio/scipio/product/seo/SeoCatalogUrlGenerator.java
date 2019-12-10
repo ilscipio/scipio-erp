@@ -137,6 +137,9 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("productCategoryId", productCategoryId);
         servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
         servCtx.put("fixedIdPat", getTravConfig().getCatFixedIdPat());
+        if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
+            servCtx.put("webSiteId", getWebSiteId());
+        }
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
 
@@ -173,6 +176,9 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
         servCtx.put("fixedIdPat", getTravConfig().getProdFixedIdPat());
         servCtx.put("skipProductIds", getSeenProductIds());
+        if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
+            servCtx.put("webSiteId", getWebSiteId());
+        }
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
 

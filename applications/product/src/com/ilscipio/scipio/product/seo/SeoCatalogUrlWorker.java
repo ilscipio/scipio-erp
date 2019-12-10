@@ -523,10 +523,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (trailEntities == null || trailEntities.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trailEntities.size());
         ListIterator<GenericValue> trailIt = trailEntities.listIterator();
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext();
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext();
         if (targetSanitizeCtx != null) {
-            sanitizeCtx.setTargetProductId(targetSanitizeCtx.getTargetProductId());
-            sanitizeCtx.setTargetCategoryId(targetSanitizeCtx.getTargetCategoryId());
+            sanitizeCtx.setTargetProduct(targetSanitizeCtx.getTargetProduct());
+            sanitizeCtx.setTargetCategory(targetSanitizeCtx.getTargetCategory());
             sanitizeCtx.setTotalNames(targetSanitizeCtx.getTotalNames());
         }
         sanitizeCtx.setNameIndex(0);
@@ -751,8 +751,8 @@ public class SeoCatalogUrlWorker implements Serializable {
             trailEntities = new ArrayList<>(1);
             trailEntities.add(lastElem);
         }
-        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext()
-                .setTargetCategoryId(productCategoryId).setLast(true).setNameIndex(trailEntities.size() - 1).setTotalNames(trailEntities.size());
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext()
+                .setTargetCategory(productCategory).setLast(true).setNameIndex(trailEntities.size() - 1).setTotalNames(trailEntities.size());
         List<String> trailNames = getCategoryTrailPathParts(delegator, dispatcher, locale, trailEntities,
                 productCategory, getConfig().getCategoryUrlTrailFormat(), SeoConfig.TrailFormat.NAME, targetSanitizeCtx, useCache);
         // NOTE: pass null productCategory because already resolved in trailNames
@@ -785,7 +785,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (productCategory != null) {
             if (sanitizeCtx == null) {
-                sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategory.getString("productCategoryId"))
+                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
                         .setLast(true).setNameIndex(trailNames.size()).setTotalNames(trailNames.size() + 1);
             }
             String catTrailName = getCategoryPathPart(delegator, dispatcher, locale, productCategory, null, sanitizeCtx, useCache);
@@ -944,7 +944,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
     public StringBuilder makeProductUrlCore(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product,
                                             String currentCatalogId, String previousCategoryId, List<GenericValue> trailEntities, FullWebappInfo targetWebappInfo, boolean useCache) {
-        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setLast(true).setNameIndex(trailEntities.size()).setTotalNames(trailEntities.size() + 1);
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setLast(true).setNameIndex(trailEntities.size()).setTotalNames(trailEntities.size() + 1);
         List<String> trailNames = Collections.emptyList();
         if (UtilValidate.isNotEmpty(trailEntities) && getConfig().isCategoryNameEnabled() && getConfig().getProductUrlTrailFormat().isOn()) {
             trailNames = getCategoryTrailPathParts(delegator, dispatcher, locale, trailEntities,
@@ -996,7 +996,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             //}
 
             if (sanitizeCtx == null) {
-                sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetProductId(product.getString("productId"));
+                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product);
             }
             urlBuilder.append(getProductPathPart(delegator, dispatcher, locale, product, sanitizeCtx, useCache));
         }

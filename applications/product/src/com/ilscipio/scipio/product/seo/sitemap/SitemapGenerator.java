@@ -446,7 +446,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setNameIndex(state.getPhysicalDepth());
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setNameIndex(state.getPhysicalDepth());
         Map<Locale, List<String>> trailNames = getTrailNames(state);
         if (getConfig().isPreProcessTrail()) {
             for (Locale locale : locales) {
@@ -493,7 +493,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             if (getConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetCategoryId(productCategoryId)
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
                         .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
                 url = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
             } else {
@@ -529,7 +529,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             if (getConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = new CatalogAltUrlSanitizer.SanitizeContext().setTargetProductId(productId)
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product)
                         .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
                 url = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), sanitizeCtx, isUseCache()).toString();
             } else {

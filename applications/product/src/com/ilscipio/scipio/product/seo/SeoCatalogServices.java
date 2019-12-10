@@ -67,7 +67,8 @@ public abstract class SeoCatalogServices {
      * Returned instance can only perform generic (non-website-specific) operations.
      */
     private static CatalogAltUrlSanitizer getCatalogAltUrlSanitizer(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return SeoCatalogUrlWorker.getDefaultInstance(dctx.getDelegator()).getCatalogAltUrlSanitizer();
+        String webSiteId = (String) context.get("webSiteId"); // NOTE: may be null, difficult to ensure
+        return SeoCatalogUrlWorker.getInstance(dctx.getDelegator(), webSiteId).getCatalogAltUrlSanitizer();
     }
 
     /**
@@ -229,12 +230,13 @@ public abstract class SeoCatalogServices {
 
             // make seo names for assoc records
             CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetProduct(product);
             Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT,
-                    CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.<String, String>emptyMap();
+                    sanitizeCtx) : Collections.<String, String>emptyMap();
 
             // make seo name for main record (may or may not already be in localeUrlMap)
             String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.PRODUCT,
-                    nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, useCache);
+                    nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, sanitizeCtx, useCache);
 
             // store
             if (productContent != null) {
@@ -393,12 +395,13 @@ public abstract class SeoCatalogServices {
 
         // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetCategory(productCategory);
         Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY,
-                CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.emptyMap();
+                sanitizeCtx) : Collections.emptyMap();
 
         // make seo name for main record (may or may not already be in localeUrlMap)
         String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.CATEGORY,
-                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, useCache);
+                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, sanitizeCtx, useCache);
 
         // store
         if (productCategoryContent != null) {
@@ -438,7 +441,7 @@ public abstract class SeoCatalogServices {
      */
     private static String determineMainRecordUrl(Delegator delegator, LocalDispatcher dispatcher, CatalogAltUrlSanitizer sanitizer, CatalogUrlType urlType,
             GenericValue nameMainContent, String mainLocaleString, Map<String, String> localeUrlMap,
-            GenericValue prodOrCatEntity, String entityNameField, boolean useCache) throws GeneralException, IOException {
+            GenericValue prodOrCatEntity, String entityNameField, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) throws GeneralException, IOException {
 
         if (UtilValidate.isNotEmpty(mainLocaleString)) {
             String mainUrl = localeUrlMap.get(mainLocaleString);
@@ -461,7 +464,7 @@ public abstract class SeoCatalogServices {
         if (nameMainContent != null) {
             mainText = LocalizedContentWorker.getSimpleTextContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
             if (UtilValidate.isNotEmpty(mainText)) {
-                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, CatalogAltUrlSanitizer.SanitizeContext.undefined());
+                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, sanitizeCtx);
             }
         }
 
@@ -472,7 +475,7 @@ public abstract class SeoCatalogServices {
             mainText = ProductContentWrapper.getEntityFieldValue(prodOrCatEntity, productNameField, delegator, dispatcher, useCache);
         }
         if (UtilValidate.isNotEmpty(mainText)) {
-            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, CatalogAltUrlSanitizer.SanitizeContext.undefined());
+            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, sanitizeCtx);
         }
 
         // NOTE: will not fallback on productCategoryId/productId here - this empty textData

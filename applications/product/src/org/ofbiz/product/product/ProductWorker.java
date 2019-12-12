@@ -291,17 +291,25 @@ public final class ProductWorker {
         }
     }
 
-    // SCIPIO: 2017-09-14: now support useCache
-    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+    // SCIPIO: 2017-09-14: now support useCache, moment
+    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, Timestamp moment, boolean useCache) throws GenericEntityException {
         if (variantProduct != null && "Y".equals(variantProduct.getString("isVariant"))) {
-            List<GenericValue> productAssocs = EntityUtil.filterByDate(variantProduct.getRelated("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), null, useCache));
+            List<GenericValue> productAssocs = variantProduct.getRelated("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), null, useCache);
+            if (moment != null) {
+                productAssocs = EntityUtil.filterByDate(productAssocs, moment);
+            }
             return productAssocs;
         }
         return null;
     }
 
+    // SCIPIO: 2019-12-11: now support useCache,
+    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+        return getVariantVirtualAssocs(variantProduct, UtilDateTime.nowTimestamp(), useCache);
+    }
+
     public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct) throws GenericEntityException {
-        return getVariantVirtualAssocs(variantProduct, true);
+        return getVariantVirtualAssocs(variantProduct, UtilDateTime.nowTimestamp(), true);
     }
 
 

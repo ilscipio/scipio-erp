@@ -482,6 +482,81 @@ public final class CategoryWorker {
         }
     }
 
+    /**
+     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     */
+    public static boolean isProductInCategories(Delegator delegator, String productId, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productId)) {
+            return false;
+        }
+        return isProductInCategories(delegator, productId, null, productCategoryIds, moment, useCache);
+    }
+
+    /**
+     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     */
+    public static boolean isProductInCategories(Delegator delegator, String productId, Collection<String> productCategoryIds, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productId)) {
+            return false;
+        }
+        return isProductInCategories(delegator, productId, null, productCategoryIds, UtilDateTime.nowTimestamp(), useCache);
+    }
+
+    /**
+     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     */
+    public static boolean isProductInCategories(Delegator delegator, GenericValue product, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) throws GenericEntityException {
+        if (product == null) {
+            return false;
+        }
+        return isProductInCategories(delegator, product.getString("productId"), product, productCategoryIds, moment, useCache);
+    }
+
+    /**
+     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     */
+    public static boolean isProductInCategories(Delegator delegator, GenericValue product, Collection<String> productCategoryIds, boolean useCache) throws GenericEntityException {
+        if (product == null) {
+            return false;
+        }
+        return isProductInCategories(delegator, product.getString("productId"), product, productCategoryIds, UtilDateTime.nowTimestamp(), useCache);
+    }
+
+    private static boolean isProductInCategories(Delegator delegator, String productId, GenericValue product, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productCategoryIds)) {
+            return false;
+        }
+        List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
+                .select("productCategoryId")
+                .where("productId", productId)
+                .cache(useCache)
+                .filterByDate(moment)
+                .queryList();
+        for(GenericValue pcm : productCategoryMembers) {
+            if (productCategoryIds.contains(pcm.getString("productCategoryId"))) {
+                return true;
+            }
+        }
+        // before giving up see if this is a variant product, and if so look up the virtual product and check it...
+        if (product == null) {
+            product = delegator.from("Product").where("productId", productId).cache(useCache).queryOne();
+        }
+        List<GenericValue> productAssocs = ProductWorker.getVariantVirtualAssocs(product, moment, useCache);
+        // this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
+        if (productAssocs != null) {
+            for (GenericValue productAssoc: productAssocs) {
+                if (isProductInCategories(delegator, productAssoc.getString("productId"), productCategoryIds, moment, useCache)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId) throws GenericEntityException {
         return filterProductsInCategory(delegator, valueObjects, productCategoryId, "productId");
     }

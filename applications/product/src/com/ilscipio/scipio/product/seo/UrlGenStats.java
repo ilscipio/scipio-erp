@@ -43,6 +43,30 @@ public class UrlGenStats {
         this.doContent = doContent;
     }
 
+    /**
+     * Copy constructor.
+     */
+    public UrlGenStats(UrlGenStats other) {
+        this.doProducts = other.doProducts;
+        this.doCategory = other.doCategory;
+        this.doContent = other.doContent;
+        this.productSuccess = other.productSuccess;
+        this.productError = other.productError;
+        this.productSkipped = other.productSkipped;
+        this.productDupSkip = other.productDupSkip;
+        this.productFiltered = other.productFiltered;
+        this.categorySuccess = other.categorySuccess;
+        this.categoryError = other.categoryError;
+        this.categorySkipped = other.categorySkipped;
+        this.categoryDupSkip = other.categoryDupSkip;
+        this.categoryFiltered = other.categoryFiltered;
+        this.contentSuccess = other.contentSuccess;
+        this.contentError = other.contentError;
+        this.contentSkipped = other.contentSkipped;
+        this.contentDupSkip = other.contentDupSkip;
+        this.contentFiltered = other.contentFiltered;
+    }
+
     public boolean hasError() {
         return productError > 0 || categoryError > 0 || contentError > 0;
     }

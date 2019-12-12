@@ -36,7 +36,7 @@ public abstract class SitemapServices {
             // TODO: LOCALIZE
 
             generator = SitemapGenerator.getWorkerForWebsite(delegator, dispatcher, webSiteId, context, useCache);
-            generator.buildSitemapDeepForWebsite();
+            generator.buildSitemapForWebsite();
             generator.commitSitemapsAndIndex();
 
             UrlGenStats stats = generator.getStats();

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import com.ilscipio.scipio.product.category.CatalogFilter;
+import com.ilscipio.scipio.product.category.CatalogFilters;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -34,6 +35,10 @@ public class SitemapConfig implements Serializable {
 
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
+
+    private static final List<CatalogFilter> DEFAULT_CATALOG_FILTERS = Collections.unmodifiableList(UtilMisc.toList(
+            CatalogFilters.ViewAllowCategoryProductFilter.getInstance()
+    ));
 
     // NOTE: This is a special cache that contains only one map as entry: "_all_"- may be re-adapted in the future
     private static final UtilCache<String, Object> websiteCache = UtilCache.createUtilCache("scipio.seo.sitemap.config.website");
@@ -88,7 +93,12 @@ public class SitemapConfig implements Serializable {
 
     private final boolean includeVariant;
 
+    private final SitemapGenerator.SitemapGeneratorFactory generatorFactory;
     private final List<CatalogFilter> catalogFilters;
+    private final boolean useDefaultCatalogFilters;
+
+    private final String categoryTraversalMode;
+    private final String productTraversalMode;
 
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
         this.webSiteId = webSiteId;
@@ -149,7 +159,24 @@ public class SitemapConfig implements Serializable {
         this.prodCatalogCategoryTypeIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogCategoryTypeIds")));
         this.includeVariant = asBoolean(map.get("includeVariant"), false);
 
+        String generatorFactoryClsStr = asNormString(map.get("generatorFactory"));
+        SitemapGenerator.SitemapGeneratorFactory generatorFactory = null;
+        if (UtilValidate.isNotEmpty(generatorFactoryClsStr)) {
+            try {
+                Class<? extends SitemapGenerator.SitemapGeneratorFactory> generatorFactoryCls = (Class<? extends SitemapGenerator.SitemapGeneratorFactory>)
+                        Thread.currentThread().getContextClassLoader().loadClass(generatorFactoryClsStr);
+                generatorFactory = generatorFactoryCls.newInstance();
+            } catch(Exception e) {
+                throw new IllegalArgumentException("Error loading generatorFactory " + generatorFactoryClsStr, e);
+            }
+        }
+        this.generatorFactory = generatorFactory;
+
         this.catalogFilters = Collections.unmodifiableList(readCatalogFilters(map.get("catalogFilters")));
+        this.useDefaultCatalogFilters = asBoolean(map.get("useDefaultCatalogFilters"), true);
+
+        this.categoryTraversalMode = asNormString(map.get("categoryTraversalMode"), "depth-first");
+        this.productTraversalMode = asNormString(map.get("productTraversalMode"), "depth-first");
     }
 
     private static List<CatalogFilter> readCatalogFilters(Object catalogFiltersObj) {
@@ -457,9 +484,32 @@ public class SitemapConfig implements Serializable {
         return includeVariant;
     }
 
+    public SitemapGenerator.SitemapGeneratorFactory getGeneratorFactory() { return generatorFactory; }
+
     public List<CatalogFilter> getCatalogFilters() {
         return catalogFilters;
     }
+
+    public boolean isUseDefaultCatalogFilters() {
+        return useDefaultCatalogFilters;
+    }
+
+    public List<CatalogFilter> getDefaultCatalogFilters() { return DEFAULT_CATALOG_FILTERS; }
+
+    public List<CatalogFilter> getDefaultCatalogFiltersIfEnabled() { return isUseDefaultCatalogFilters() ? DEFAULT_CATALOG_FILTERS : Collections.emptyList(); }
+
+    public List<CatalogFilter> getAllCatalogFilters() {
+        if (!isUseDefaultCatalogFilters()) {
+            return getCatalogFilters();
+        }
+        List<CatalogFilter> filters = new ArrayList<>(getDefaultCatalogFilters());
+        filters.addAll(getCatalogFilters());
+        return filters;
+    }
+
+    public String getCategoryTraversalMode() { return categoryTraversalMode; }
+
+    public String getProductTraversalMode() { return productTraversalMode; }
 
     // ADVANCED GETTERS
 
@@ -499,6 +549,7 @@ public class SitemapConfig implements Serializable {
         WebappInfo webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
         return webAppInfo.getContextRoot();
     }
+
 
     /**
      * Concats paths while handling bad input (to an extent).

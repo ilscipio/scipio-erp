@@ -56,26 +56,23 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
 public class SitemapGenerator extends SeoCatalogTraverser {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final SitemapGeneratorFactory DEFAULT_FACTORY = new SitemapGeneratorFactory() {};
 
     static final String logPrefix = "Seo: Sitemap: ";
 
-    protected final List<Locale> locales;
-    protected final String webSiteId;
-    protected final String baseUrl;
-    protected final String sitemapWebappPathPrefix;
-    protected final String sitemapContextPath;
-    protected final String webappPathPrefix;
-    protected final String contextPath;
-    protected final SitemapConfig config;
-    protected final SeoCatalogUrlWorker urlWorker;
-    protected final OfbizUrlBuilder ofbizUrlBuilder;
+    protected List<Locale> locales;
+    protected String baseUrl;
+    protected String sitemapWebappPathPrefix;
+    protected String sitemapContextPath;
+    protected String webappPathPrefix;
+    protected String contextPath;
+    protected SitemapConfig config;
+    protected SeoCatalogUrlWorker urlWorker;
+    protected OfbizUrlBuilder ofbizUrlBuilder;
 
     protected ScipioUrlRewriter urlRewriter;
     protected Map<String, Object> urlRewriterCtx;
-    protected final FullWebappInfo webappInfo;
-
-    protected final GenericValue webSite;
-    protected final GenericValue productStore;
+    protected FullWebappInfo webappInfo;
 
     protected final String fullSitemapDir;
 
@@ -88,14 +85,15 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected final Map<String, ?> servCtxOpts;
 
+    // DEV NOTE: If adding fields, beware of copy constructor below, needed for extension
+
     protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapWebappPathPrefix, String sitemapContextPath,
             String webappPathPrefix, String contextPath, SitemapConfig config,
             SeoCatalogUrlWorker urlWorker, OfbizUrlBuilder ofbizUrlBuilder, ScipioUrlRewriter urlRewriteConf, Map<String, Object> urlRewriterCtx, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
         super(delegator, dispatcher, travConfig);
+        setWebSite(webSite);
+        setProductStore(productStore);
         this.locales = locales;
-        this.webSiteId = webSiteId;
-        this.webSite = webSite;
-        this.productStore = productStore;
         this.baseUrl = baseUrl;
         this.sitemapWebappPathPrefix = sitemapWebappPathPrefix;
         this.sitemapContextPath = sitemapContextPath;
@@ -111,6 +109,46 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         this.servCtxOpts = servCtxOpts;
         getSitemapDirFile(); // test this for exception
         reset();
+    }
+
+    /**
+     * Copy constructor.
+     */
+    protected SitemapGenerator(SitemapGenerator other) {
+        super(other);
+        this.locales = other.locales;
+        this.baseUrl = other.baseUrl;
+        this.sitemapWebappPathPrefix = other.sitemapWebappPathPrefix;
+        this.sitemapContextPath = other.sitemapContextPath;
+        this.webappPathPrefix = other.webappPathPrefix;
+        this.contextPath = other.contextPath;
+        this.config = other.config;
+        this.urlWorker = other.urlWorker;
+        this.ofbizUrlBuilder = other.ofbizUrlBuilder;
+        this.urlRewriter = other.urlRewriter;
+        this.urlRewriterCtx = other.urlRewriterCtx;
+        this.webappInfo = other.webappInfo;
+        this.fullSitemapDir = other.fullSitemapDir;
+        this.elemHandlers = other.elemHandlers;
+        this.categoryElemHandler = other.categoryElemHandler;
+        this.productElemHandler = other.productElemHandler;
+        this.contentElemHandler = other.contentElemHandler;
+        this.servCtxOpts = other.servCtxOpts;
+    }
+
+    /**
+     * Generator factory: this works by creating a new instance from an already-created one using copy construction.
+     * The returned instance must super to the copy constructor {@link #SitemapGenerator(SitemapGenerator)}
+     * (this is a kludge, but otherwise there are too many parameters).
+     */
+    public interface SitemapGeneratorFactory {
+        default SitemapGenerator createFrom(SitemapGenerator baseInstance) {
+            return new SitemapGenerator(baseInstance);
+        }
+    }
+
+    public static SitemapGeneratorFactory getDefaultFactory() {
+        return DEFAULT_FACTORY;
     }
 
     public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, Map<String, ?> servCtxOpts, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
@@ -174,8 +212,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config)
                 .setDoContent(config.isDoContent())
                 .setUseCache(useCache)
-                .addFilters(config.getCatalogFilters());
-        return new SitemapGenerator(delegator, dispatcher,
+                .addFilters(config.getAllCatalogFilters());
+        SitemapGenerator inst = new SitemapGenerator(delegator, dispatcher,
                 locales,
                 webSiteId, webSite, productStore,
                 baseUrl, sitemapWebappPathPrefix, sitemapContextPath, webappPathPrefix, contextPath, config,
@@ -185,6 +223,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 urlRewriterCtx,
                 travConfig,
                 servCtxOpts);
+        if (config.getGeneratorFactory() != null) {
+            // kludge using copy construction because we simply have too many parameters and too much work to redesign
+            inst = config.getGeneratorFactory().createFrom(inst);
+        }
+        return inst;
     }
 
     public static class SitemapTraversalConfig extends SeoTraversalConfig {
@@ -352,13 +395,35 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * The main iteration call for product/category sitemap generation - wrapper
      * around {@link #traverseCategoriesDepthFirst(List)}, plus content.
      */
-    public void buildSitemapDeepForWebsite() throws GeneralException {
-        traverseProductStoreDfs(productStore);
+    public void buildSitemapForWebsite() throws GeneralException {
+        if ("all-system".equals(getConfig().getCategoryTraversalMode()) || "all-system".equals(getConfig().getProductTraversalMode())) {
+            setProdCatalogFromProductStore();
+            if (isDoCategory()) {
+                try(DoStateHandler dsh = doCategoryOnlySection()) {
+                    if ("all-system".equals(getConfig().getCategoryTraversalMode())) {
+                        traverseAllCategoriesInSystem();
+                    } else {
+                        traverseProductStoreDepthFirst();
+                    }
+                }
+            }
+            if (isDoProduct()) {
+                try(DoStateHandler dsh = doProductOnlySection()) {
+                    if ("all-system".equals(getConfig().getProductTraversalMode())) {
+                        traverseAllProductsInSystem();
+                    } else {
+                        traverseProductStoreDepthFirst();
+                    }
+                }
+            }
+        } else {
+            traverseProductStoreDepthFirst();
+        }
         buildSitemapForContent();
     }
 
     /**
-     * Content link generation.
+     * Content link generation. Includes CMS if enabled ({@link #buildSitemapForCmsPage}).
      */
     public void buildSitemapForContent() throws GeneralException {
         if (!config.isDoContent()) return;
@@ -366,7 +431,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     /**
-     * CMS link generation.
+     * CMS link generation (but not other content).
      */
     public void buildSitemapForCmsPage() throws GeneralException {
         if (!config.isDoCmsPage()) return;

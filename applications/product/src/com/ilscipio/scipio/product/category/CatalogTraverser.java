@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.product.category;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +20,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.product.category.CatalogTraversalException.StopCatalogTraversalException;
@@ -65,6 +70,16 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     protected GenericValue webSite = null;
     protected String productStoreId = null;
     protected GenericValue productStore = null;
+    protected String prodCatalogId = null;
+    protected GenericValue prodCatalog = null;
+    protected String viewAllowCategoryId = null; // if none, this is set to empty string internally
+    protected GenericValue viewAllowCategory = null;
+
+    // NOTE: There can be modified by the traverser instance or anyone; if overriding configuration, be careful to preserve it as appropriate using try/finally
+    protected boolean doCategory;
+    protected boolean doProduct;
+
+    // DEV NOTE: If adding fields, beware of copy constructor below, needed for extension
 
     /**
      * Composed visitor constructor, with explicit visitor.
@@ -74,6 +89,8 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
         this.travConfig = (travConfig != null) ? travConfig : newTravConfig();
+        this.doCategory = travConfig.isDoCategory();
+        this.doProduct = travConfig.isDoProduct();
     }
 
     /**
@@ -81,6 +98,28 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      */
     public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher, TraversalConfig travConfig) {
         this(null, delegator, dispatcher, travConfig);
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public CatalogTraverser(CatalogTraverser other) {
+        this.visitor = other.visitor;
+        this.delegator = other.delegator;
+        this.dispatcher = other.dispatcher;
+        this.travConfig = other.travConfig;
+        this.seenCategoryIds = (other.seenCategoryIds != null) ? new HashSet<>(other.seenCategoryIds) : null;
+        this.seenProductIds = (other.seenProductIds != null) ? new HashSet<>(other.seenProductIds) : null;
+        this.webSiteId = other.webSiteId;
+        this.webSite = other.webSite;
+        this.productStoreId = other.productStoreId;
+        this.productStore = other.productStore;
+        this.prodCatalogId = other.prodCatalogId;
+        this.prodCatalog = other.prodCatalog;
+        this.viewAllowCategoryId = other.viewAllowCategoryId;
+        this.viewAllowCategory = other.viewAllowCategory;
+        this.doCategory = other.doCategory;
+        this.doProduct = other.doProduct;
     }
 
     public static class TraversalConfig {
@@ -318,12 +357,70 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
 
     protected boolean isDoCategory(GenericValue productCategory) {
-        return travConfig.isDoCategory();
+        return isDoCategory();
     }
 
-    protected boolean isDoProducts(GenericValue productCategory) {
-        return travConfig.isDoProduct();
+    protected boolean isDoCategory() {
+        return doCategory;
     }
+
+    /**
+     * Sets the current state of whether to lookup categories.
+     * WARN: The initial value is provided by the traversal config and this overrides it; use try/finally to restore if important.
+     */
+    public void setDoCategory(boolean doCategory) {
+        this.doCategory = doCategory;
+    }
+
+    protected boolean isDoProduct(GenericValue productCategory) {
+        return isDoProduct();
+    }
+
+    public boolean isDoProduct() {
+        return doProduct;
+    }
+
+    /**
+     * Sets the current state of whether to lookup products.
+     * WARN: The initial value is provided by the traversal config and this overrides it; use try/finally to restore if important.
+     */
+    public void setDoProduct(boolean doProduct) {
+        this.doProduct = doProduct;
+    }
+
+    public DoStateHandler doCategoryOnlySection() {
+        DoStateHandler handler = getDoStateHandler();
+        setDoProduct(false);
+        return handler;
+    }
+
+    public DoStateHandler doProductOnlySection() {
+        DoStateHandler handler = getDoStateHandler();
+        setDoCategory(false);
+        return handler;
+    }
+
+    protected DoStateHandler getDoStateHandler() { return new DoStateHandler(doCategory, doProduct); }
+
+    /**
+     * This can be used in a try-with-resources block around the traverse* calls to produce only products or only categories.
+     */
+    public class DoStateHandler implements Closeable {
+        private boolean doCategoryPrev;
+        private boolean doProductPrev;
+
+        protected DoStateHandler(boolean doCategoryPrev, boolean doProductPrev) {
+            this.doCategoryPrev = doCategoryPrev;
+            this.doProductPrev = doProductPrev;
+        }
+
+        @Override
+        public void close() {
+            setDoCategory(doCategoryPrev);
+            setDoProduct(doProductPrev);
+        }
+    }
+
 
     /**
      * Gives additional info about the category, product, and traversal to the catalog visitor.
@@ -509,11 +606,11 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      * product in the system, bypassing catalog/category rollup, for simplistic operations only.
      */
     public boolean traverseAllInSystem() throws GeneralException {
-        if (travConfig.isDoCategory()) {
+        if (isDoCategory()) {
             boolean cnt = traverseAllCategoriesInSystem();
             if (!cnt) return cnt;
         }
-        if (travConfig.isDoProduct()) {
+        if (isDoProduct()) {
             boolean cnt = traverseAllProductsInSystem();
             if (!cnt) return cnt;
         }
@@ -526,9 +623,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      */
     public boolean traverseAllCategoriesInSystem() throws GeneralException {
         TraversalState state = newTraversalState();
-        EntityListIterator productCategoryIt = null;
-        try {
-            productCategoryIt = EntityQuery.use(delegator).from("ProductCategory").cache(isUseCache()).queryIterator();
+        try (EntityListIterator productCategoryIt = delegator.from("ProductCategory").cache(isUseCache()).queryIterator()) {
             GenericValue productCategory;
             while ((productCategory = productCategoryIt.next()) != null) {
                 if (useCategory(productCategory, state)) {
@@ -539,14 +634,6 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
             return false;
-        } finally {
-            if (productCategoryIt != null) {
-                try {
-                    productCategoryIt.close();
-                } catch(Throwable t) {
-                    Debug.logError(t, module);
-                }
-            }
         }
     }
 
@@ -556,9 +643,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      */
     public boolean traverseAllProductsInSystem() throws GeneralException {
         TraversalState state = newTraversalState();
-        EntityListIterator productIt = null;
-        try {
-            productIt = EntityQuery.use(delegator).from("Product").cache(isUseCache()).queryIterator();
+        try (EntityListIterator productIt = delegator.from("Product").cache(isUseCache()).queryIterator()) {
             GenericValue product;
             while ((product = productIt.next()) != null) {
                 // NOTE: doChildProducts = false, because already counted in our global query here
@@ -570,26 +655,22 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
             return false;
-        } finally {
-            if (productIt != null) {
-                try {
-                    productIt.close();
-                } catch(Throwable t) {
-                    Debug.logError(t, module);
-                }
-            }
         }
     }
 
     /**
-     * Traverse ProductStore categories using depth-first search algorithm.
+     * Traverse ProductStore categories using depth-first search algorithm using the current ProductStore (must be set).
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
      */
-    public boolean traverseProductStoreDfs(GenericValue productStore) throws GeneralException {
-        setProductStore(productStore);
+    public boolean traverseProductStoreDepthFirst() throws GeneralException {
+        GenericValue productStore = getProductStore();
+        if (productStore == null) {
+            throw new IllegalStateException("ProductStore not set on CatalogTraverser");
+        }
         List<GenericValue> prodCatalogList = queryProductStoreCatalogList(productStore);
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
+                setProdCatalog(prodCatalog);
                 List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
                 traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
             }
@@ -611,15 +692,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         setWebSiteId(webSiteId);
         List<GenericValue> prodCatalogList = getTargetCatalogList(prodCatalogId, prodCatalogIdList,
                 productStoreId, webSiteId, returnProdCatalogEntityOnly);
-        try {
-            for(GenericValue prodCatalog : prodCatalogList) {
-                List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
-                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
-            }
-            return true;
-        } catch(StopCatalogTraversalException e) {
-            return false; // NOTE: not an error - just stop
-        }
+        return traverseCatalogsDepthFirst(prodCatalogList);
     }
 
     /**
@@ -631,6 +704,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     public boolean traverseCatalogsDepthFirst(List<GenericValue> prodCatalogList) throws GeneralException {
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
+                setProdCatalog(prodCatalog);
                 List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
                 traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
             }
@@ -818,9 +892,118 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         this.productStoreId = (productStore != null) ? productStore.getString("productStoreId") : null;
     }
 
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getProdCatalogId() {
+        return prodCatalogId;
+    }
+
+    public void setProdCatalogId(String prodCatalogId) {
+        this.prodCatalogId = prodCatalogId;
+        this.prodCatalog = null;
+        setViewAllowCategoryId(null); // reset
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getProdCatalog() {
+        if (prodCatalog == null && prodCatalogId != null) {
+            prodCatalog = getDelegator().from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOneSafe();
+        }
+        return prodCatalog;
+    }
+
+    public void setProdCatalog(GenericValue prodCatalog) {
+        this.prodCatalog = prodCatalog;
+        this.prodCatalogId = (prodCatalog != null) ? prodCatalog.getString("prodCatalogId") : null;
+        setViewAllowCategoryId(null); // reset
+    }
+
+    /**
+     * This may be needed by callers/implementers for traverse* methods that don't set a catalog themselves.
+     */
+    public void setProdCatalogFromProductStore() {
+        String productStoreId = getProductStoreId();
+        String prodCatalogId = null;
+        if (productStoreId != null) {
+            GenericValue productStoreCatalog = null;
+            try {
+                productStoreCatalog = queryProductStoreCatalogMain(productStoreId);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (productStoreCatalog != null) {
+                prodCatalogId = productStoreCatalog.getString("prodCatalogId");
+            }
+        }
+        setProdCatalogId(prodCatalogId);
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getViewAllowCategoryId() {
+        String viewAllowCategoryId = this.viewAllowCategoryId;
+        if (UtilValidate.isNotEmpty(viewAllowCategoryId)) {
+            return viewAllowCategoryId;
+        }
+        if (viewAllowCategoryId == null) {
+            String prodCatalogId = getProdCatalogId();
+            if (prodCatalogId != null) {
+                viewAllowCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(getDelegator(), prodCatalogId);
+            }
+            if (viewAllowCategoryId == null) {
+                viewAllowCategoryId = ""; // found nothing
+            }
+            this.viewAllowCategoryId = viewAllowCategoryId;
+        }
+        return UtilValidate.isNotEmpty(viewAllowCategoryId) ? viewAllowCategoryId : null;
+    }
+
+    private void setViewAllowCategoryId(String viewAllowCategoryId) {
+        this.viewAllowCategoryId = viewAllowCategoryId;
+        this.viewAllowCategory = null;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getViewAllowCategory() {
+        String viewAllowCategoryId = getViewAllowCategoryId();
+        if (viewAllowCategory == null && viewAllowCategoryId != null) {
+            viewAllowCategory = getDelegator().from("ProductCategory").where("productCategoryId", viewAllowCategoryId).queryOneSafe();
+        }
+        return viewAllowCategory;
+    }
+
+    private void setViewAllowCategory(GenericValue viewAllowCategory) {
+        this.viewAllowCategory = viewAllowCategory;
+        this.viewAllowCategoryId = (viewAllowCategory != null) ? viewAllowCategory.getString("productCategoryId") : null;
+    }
+
+    /**
+     * Checks if the view-product is in the view-allow category for the current product.
+     * NOTE: This is only a helper, not used in the abstract implementation! Subclasses and configurations must specify.
+     */
+    public boolean isViewAllowProduct(GenericValue product) {
+        String viewAllowCategoryId = getViewAllowCategoryId();
+        try {
+            return (viewAllowCategoryId != null) ? isViewAllowProduct(product, viewAllowCategoryId) : true; // default true
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return false; // return false here enough default true because otherwise errors could have security implications
+        }
+    }
+
+    protected boolean isViewAllowProduct(GenericValue product, String viewAllowCategoryId) throws GenericEntityException { // May be overridden in case different behavior needed
+        return CategoryWorker.isProductInCategory(getDelegator(), product.getString("productId"), viewAllowCategoryId);
+    }
+
     protected void queryAndVisitCategoryProducts(GenericValue productCategory, TraversalState state) throws GeneralException {
         // products
-        if (isDoProducts(productCategory)) {
+        if (isDoProduct(productCategory)) {
             List<GenericValue> productCategoryMembers = queryCategoryProductList(productCategory);
             if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                 for (GenericValue productCategoryMember : productCategoryMembers) {
@@ -849,12 +1032,20 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     // GENERAL QUERIES (overridable)
 
-    public List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
+    public List<GenericValue> queryProductStoreCatalogList(String productStoreId) throws GenericEntityException {
         return filterProductStoreCatalogList(EntityQuery.use(delegator).from("ProductStoreCatalog")
-                .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
+                .where(makeProductStoreCatalogCond(productStoreId))
                 .filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
 
+    public final List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
+        return queryProductStoreCatalogList(productStore.getString("productStoreId"));
+    }
+
+    public GenericValue queryProductStoreCatalogMain(String productStoreId) throws GenericEntityException {
+        List<GenericValue> catalogs = queryProductStoreCatalogList(productStoreId);
+        return EntityUtil.getFirst(catalogs);
+    }
 
     public EntityCondition makeProductStoreCatalogCond(String productStoreId) {
         return EntityCondition.makeCondition("productStoreId", productStoreId);

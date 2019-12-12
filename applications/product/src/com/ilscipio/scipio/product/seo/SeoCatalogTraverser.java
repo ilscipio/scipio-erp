@@ -16,8 +16,18 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
 
     protected UrlGenStats stats = null;
 
+    // DEV NOTE: If adding fields, beware of copy constructor below, needed for extension
+
     public SeoCatalogTraverser(Delegator delegator, LocalDispatcher dispatcher, SeoTraversalConfig travConfig) {
         super(delegator, dispatcher, travConfig);
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public SeoCatalogTraverser(SeoCatalogTraverser other) {
+        super(other);
+        this.stats = (other.stats != null) ? new UrlGenStats(other.stats) : null;
     }
 
     public static class SeoTraversalConfig extends TraversalConfig {

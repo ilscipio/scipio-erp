@@ -18,16 +18,20 @@
  *******************************************************************************/
 package org.ofbiz.product.category;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +52,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
@@ -840,17 +845,17 @@ public final class CategoryWorker {
      * SCIPIO: Returns all rollups for a category.
      * Imported from SolrCategoryUtil, 2017-11-09.
      */
-    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, boolean useCache) {
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) {
         List<List<String>> trailElements = new ArrayList<>();
         try {
             // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
             List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().cache(useCache).queryList();
+                    .where("productCategoryId", productCategoryId).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).filterByDate(moment).cache(useCache).queryList();
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                 // For each parent cat, get its trails recursively and add our own
                 for (GenericValue productCategoryRollup : productCategoryRollups) {
                     String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                    List<List<String>> parentTrails = getCategoryRollupTrails(delegator, parentProductCategoryId, useCache);
+                    List<List<String>> parentTrails = getCategoryRollupTrails(delegator, parentProductCategoryId, moment, ordered, useCache);
                     for (List<String> trail : parentTrails) {
                         // WARN: modifying the parent trail in-place for speed
                         trail.add(productCategoryId);
@@ -869,6 +874,10 @@ public final class CategoryWorker {
         return trailElements;
     }
 
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, boolean useCache) {
+        return getCategoryRollupTrails(delegator, productCategoryId, UtilDateTime.nowTimestamp(), true, useCache);
+    }
+
     /**
      * SCIPIO: Returns all rollups for a category that have the given top categories.
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
@@ -885,4 +894,22 @@ public final class CategoryWorker {
         }
         return filtered;
     }
+
+    public static <C extends Collection<String>> C getAllCatalogCategoryIds(C outCategoryIds, Delegator delegator, String catalogId, Collection<String> prodCatalogCategoryTypeIds,
+                                                       Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        List<GenericValue> pccList = CatalogWorker.getProdCatalogCategories(delegator, catalogId, prodCatalogCategoryTypeIds, moment, false, useCache);
+        getAllCatalogCategoryIdsImpl(outCategoryIds, delegator, pccList, moment, ordered, useCache);
+        return outCategoryIds;
+    }
+
+    private static <C extends Collection<String>> void getAllCatalogCategoryIdsImpl(C outCategoryIds, Delegator delegator, List<GenericValue> catList,
+                                                 Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        for(GenericValue cat : catList) {
+            String categoryId = cat.getString("productCategoryId");
+            outCategoryIds.add(categoryId);
+            List<GenericValue> rollups = delegator.from("ProductCategoryRollup").where("parentProductCategoryId", categoryId).filterByDate(moment).cache(useCache).queryList();
+            getAllCatalogCategoryIdsImpl(outCategoryIds, delegator, rollups, moment, ordered, useCache);
+        }
+    }
+
 }

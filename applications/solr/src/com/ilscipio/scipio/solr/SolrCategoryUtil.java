@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
@@ -17,6 +18,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
@@ -74,13 +76,6 @@ public abstract class SolrCategoryUtil {
     @Deprecated
     static void addAllStringFieldList(Collection<String> out, List<GenericValue> values, String fieldName) {
         UtilMisc.getMapValuesForKey(values, fieldName, out);
-    }
-
-    /**
-     * Best-effort.
-     */
-    static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, Timestamp moment, boolean useCache) {
-        return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, moment, useCache);
     }
 
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
@@ -318,6 +313,47 @@ public abstract class SolrCategoryUtil {
         } catch(Exception e) {
             return productCategoryId;
         }
+    }
+
+    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) {
+        for (String productCategoryId : productCategoryIds) {
+            List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
+            formatCategoryTrails(trails, dctx, trailElements, moment, useCache);
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C formatCategoryTrails(C trails, DispatchContext dctx, List<List<String>> trailElements, Timestamp moment, boolean useCache) {
+        for (List<String> trailElement : trailElements) {
+            StringBuilder catMember = new StringBuilder();
+            int i = 0;
+            for(String trailString : trailElement) {
+                if (catMember.length() > 0){
+                    catMember.append("/");
+                    i++;
+                }
+                catMember.append(trailString);
+                String cm = i +"/"+ catMember.toString();
+                trails.add(cm);
+            }
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, Collection<String> trails, Timestamp moment, boolean useCache) {
+        Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
+        for (String trail : trails) {
+            String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
+            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId);
+            if (catalogMembers == null) {
+                catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(dctx.getDelegator(), productCategoryId, moment, useCache);
+                categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
+            }
+            for (String catalogMember : catalogMembers) {
+                catalogIds.add(catalogMember);
+            }
+        }
+        return catalogIds;
     }
 
     /**

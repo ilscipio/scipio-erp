@@ -40,6 +40,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
@@ -457,20 +458,15 @@ public abstract class SolrProductUtil {
             }
 
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
-            Set<String> productCategoryIds = new LinkedHashSet<>();
-            getProductCategoryIds(productCategoryIds, dctx, productId, productVariantAssocs, moment, useCache);
-
-            // Trying to set a correctand trail
-            Collection<String> trails = new LinkedHashSet<String>();
-            getCategoryTrails(trails, dctx, productCategoryIds, moment, useCache);
-
+            Set<String> productCategoryIds = ProductWorker.getCategoryIdsForProduct(new LinkedHashSet<>(), delegator, productId, productVariantAssocs != null ? productVariantAssocs : Collections.emptyList(), moment, true, useCache);
+            // Trying to set a correct trail
+            Collection<String> trails = SolrCategoryUtil.getCategoryTrails(new LinkedHashSet<>(), dctx, productCategoryIds, moment, useCache);
             // Get the catalogs that have associated the categories
-            Collection<String> catalogs = new LinkedHashSet<>();
-            getCatalogIdsFromCategoryTrails(catalogs, dctx, trails, moment, useCache);
+            Collection<String> catalogs = SolrCategoryUtil.getCatalogIdsFromCategoryTrails(new LinkedHashSet<>(), dctx, trails, moment, useCache);
 
             List<GenericValue> productStores;
             if (!catalogs.isEmpty()) {
-                productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, moment, useCache);
+                productStores = CatalogWorker.getProductStoresForCatalogIds(delegator, catalogs, moment, true, useCache);
             } else {
                 productStores = new ArrayList<>();
             }
@@ -489,17 +485,17 @@ public abstract class SolrProductUtil {
                 relatedTrails = new LinkedHashSet<>();
                 relatedCatalogs = new LinkedHashSet<>();
                 // Self and virtuals are covered above
-                Collection<String> relatedProductIds = new LinkedHashSet<>();
                 Set<String> catCheckedProductIds = new HashSet<>();
                 // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
                 catCheckedProductIds.add(productId);
                 catCheckedProductIds.addAll(UtilMisc.getMapValuesForKey(productVariantAssocs, "productId"));
-                getProductCategoryIdsAggressive(relatedCategoryIds, relatedProductIds, catCheckedProductIds, dctx, productId, productVariantAssocs, productAssocFromList, productAssocToList,
-                        false, moment, useCache); // NOTE: firstFoundOnly==false
-                getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, moment, useCache);
-                getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, moment, useCache);
+                ProductWorker.getCategoryIdsForProductAggressive(relatedCategoryIds, new LinkedHashSet<>(), catCheckedProductIds, delegator, productId,
+                        productVariantAssocs != null ? productVariantAssocs : Collections.emptyList(), productAssocFromList, productAssocToList,
+                        false, moment, true, useCache); // NOTE: firstFoundOnly==false
+                SolrCategoryUtil.getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, moment, useCache);
+                SolrCategoryUtil.getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, moment, useCache);
                 catalogs.addAll(relatedCatalogs);
-                productStores.addAll(SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, moment, useCache));
+                productStores.addAll(CatalogWorker.getProductStoresForCatalogIds(delegator, relatedCatalogs, moment, true, useCache));
             }
 
             List<String> productStoreIdList = UtilMisc.getMapValuesForKeyOrNewList(productStores, "productStoreId");
@@ -519,7 +515,6 @@ public abstract class SolrProductUtil {
 
             targetCtx.put("category", new ArrayList<>(trails));
             targetCtx.put("catalog", new ArrayList<>(catalogs));
-
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
             // NOTE: we skip the isContentReference warning if there's both a forced locale and forced currency.
@@ -552,8 +547,6 @@ public abstract class SolrProductUtil {
             if (product.get("productTypeId") != null) {
                 targetCtx.put("productTypeId", product.get("productTypeId"));
             }
-            // GenericValue manu = product.getRelatedOneCache("Manufacturer");
-            // if (product.get("manu") != null) targetCtx.put("manu", "");
             String smallImage = (String) product.get("smallImageUrl");
             if (smallImage != null) {
                 targetCtx.put("smallImage", smallImage);
@@ -566,12 +559,6 @@ public abstract class SolrProductUtil {
             if (largeImage != null) {
                 targetCtx.put("largeImage", largeImage);
             }
-
-            // if(product.get("weight") != null) targetCtx.put("weight", "");
-
-            // Alternative
-            // if(category.size()>0) targetCtx.put("category", category);
-            // if(product.get("popularity") != null) targetCtx.put("popularity", "");
 
             Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId, "emptyAction", "success", "useCache", useCache));
             if (featureSet != null) {
@@ -666,126 +653,6 @@ public abstract class SolrProductUtil {
             Debug.logError(e, "Solr: getProductContent: Error reading product '" + productId + "': " + e.getMessage(), module);
         }
         return targetCtx;
-    }
-
-    protected static void getProductCategoryIds(Collection<String> productCategoryIds, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
-            Timestamp moment, boolean useCache) throws GenericEntityException {
-        List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
-                .filterByDate(moment).cache(useCache).queryList();
-        UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
-
-        if (UtilValidate.isNotEmpty(productVariantAssocs)) {
-            for(GenericValue productVariantAssoc : productVariantAssocs) {
-                String virtualProductId = productVariantAssoc.getString("productId");
-                List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
-                        .where("productId", virtualProductId).filterByDate(moment).cache(useCache).queryList();
-                UtilMisc.getMapValuesForKey(virtualCategories, "productCategoryId", productCategoryIds);
-            }
-        }
-    }
-
-    /**
-     * Aggressively collects ProductCategoryMember from specified product or any related product. Slow and should only be used (for now)
-     * in the cases where getProductCategoryIds returns nothing.
-     * NOTE: The categoryIds returned do NOT necessarily indicate the product belongs to them; it is mainly used
-     * to determine the productStoreIds for the product.
-     * NOTE: This re-runs the check on "this" product and its virtual.
-     */
-    protected static void getProductCategoryIdsAggressive(Collection<String> productCategoryIds, Collection<String> productIds, Set<String> productsCatChecked, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
-            List<GenericValue> productAssocFromList, List<GenericValue> productAssocToList, boolean firstFoundOnly, Timestamp moment, boolean useCache) throws GenericEntityException {
-        if (productIds.contains(productId)) { // NOTE: This prevents both endless loops in edge cases as well as a few needless duplicate queries
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("Solr: Product assoc loop detected/product already visited: '" + productId + "'", module);
-            }
-            return;
-        }
-        productIds.add(productId);
-
-        if (!productsCatChecked.contains(productId)) { // this check prevents needless re-queries (better than nothing)
-            productsCatChecked.add(productId);
-            List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
-                    .filterByDate(moment).cache(useCache).queryList();
-            if (!categories.isEmpty()) {
-                UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
-                if (firstFoundOnly) {
-                    return;
-                }
-            }
-        }
-
-        if (productVariantAssocs == null) {
-            productVariantAssocs = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productId")
-                .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate(moment).cache(useCache).queryList();
-        }
-        for(GenericValue productVariantAssoc : productVariantAssocs) {
-            String virtualProductId = productVariantAssoc.getString("productId");
-            /* go deep
-            List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
-                    .where("productId", virtualProductId).filterByDate(moment).cache(useCache).queryList();
-            if (!virtualCategories.isEmpty()) {
-                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
-                if (firstFoundOnly) {
-                    return;
-                }
-            }*/
-            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, virtualProductId, null, null, null, firstFoundOnly, moment, useCache);
-            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
-                return;
-            }
-        }
-        List<GenericValue> altPkgAssocs = (productAssocFromList != null) ? 
-                EntityUtil.filterByAnd(productAssocFromList, UtilMisc.toMap("productAssocTypeId", "ALTERNATIVE_PACKAGE")) :
-                EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productIdTo").where("productId", productId, "productAssocTypeId", "ALTERNATIVE_PACKAGE").filterByDate(moment).cache(useCache).queryList();
-        for(GenericValue altPkgAssoc : altPkgAssocs) {
-            String productIdTo = altPkgAssoc.getString("productIdTo");
-            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, productIdTo, null, null, null, firstFoundOnly, moment, useCache);
-            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
-                return;
-            }
-        }
-        List<GenericValue> configProductList = EntityQuery.use(dctx.getDelegator()).from("ProductConfigAndConfigProduct")
-                .select("productId").where("configProductId", productId).cache(useCache).queryList();
-        for(GenericValue configProduct : configProductList) {
-            String parentProductId = configProduct.getString("productId");
-            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, parentProductId, null, null, null, firstFoundOnly, moment, useCache);
-            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
-                return;
-            }
-        }
-    }
-
-    protected static void getCategoryTrails(Collection<String> trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) {
-        for (String productCategoryId : productCategoryIds) {
-            List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
-            for (List<String> trailElement : trailElements) {
-                StringBuilder catMember = new StringBuilder();
-                int i = 0;
-                for(String trailString : trailElement) {
-                    if (catMember.length() > 0){
-                        catMember.append("/");
-                        i++;
-                    }
-                    catMember.append(trailString);
-                    String cm = i +"/"+ catMember.toString();
-                    trails.add(cm);
-                }
-            }
-        }
-    }
-
-    protected static void getCatalogIdsFromCategoryTrails(Collection<String> catalogIds, DispatchContext dctx, Collection<String> trails, Timestamp moment, boolean useCache) {
-        Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
-        for (String trail : trails) {
-            String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
-            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId);
-            if (catalogMembers == null) {
-                catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(dctx.getDelegator(), productCategoryId, moment, useCache);
-                categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
-            }
-            for (String catalogMember : catalogMembers) {
-                catalogIds.add(catalogMember);
-            }
-        }
     }
 
     /**

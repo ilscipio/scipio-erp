@@ -39,6 +39,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         private boolean generateFixedIds = true;
         private String prodFixedIdPat = null;
         private String catFixedIdPat = null;
+        private boolean sepTrans = false;
 
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
@@ -99,6 +100,15 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             this.catFixedIdPat = catFixedIdPat;
             return this;
         }
+
+        public boolean isSepTrans() {
+            return sepTrans;
+        }
+
+        public RemoveTraversalConfig setSepTrans(boolean sepTrans) {
+            this.sepTrans = sepTrans;
+            return this;
+        }
     }
 
     @Override
@@ -135,8 +145,12 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("removeProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("productCategory", productCategory);
         servCtx.put("productCategoryId", productCategoryId);
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("removeProductCategoryAlternativeUrlsCore", servCtx, -1, true);
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("removeProductCategoryAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("removeProductCategoryAlternativeUrlsCore", servCtx);
+        }
 
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
@@ -169,8 +183,12 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         servCtx.put("doChildProducts", getTravConfig().isDoChildProducts());
         servCtx.put("includeVariant", includeVariant);
         servCtx.put("skipProductIds", getSeenProductIds());
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("removeProductAlternativeUrlsCore", servCtx, -1, true);
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("removeProductAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("removeProductAlternativeUrlsCore", servCtx);
+        }
 
         Integer numUpdated = (Integer) recordResult.get("numUpdated");
         Integer numSkipped = (Integer) recordResult.get("numSkipped");

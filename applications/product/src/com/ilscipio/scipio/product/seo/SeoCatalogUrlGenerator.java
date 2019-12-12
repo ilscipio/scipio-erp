@@ -39,6 +39,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         private boolean generateFixedIds = true;
         private String prodFixedIdPat = null;
         private String catFixedIdPat = null;
+        private boolean sepTrans = false;
 
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
@@ -99,6 +100,15 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             this.catFixedIdPat = catFixedIdPat;
             return this;
         }
+
+        public boolean isSepTrans() {
+            return sepTrans;
+        }
+
+        public GenTraversalConfig setSepTrans(boolean sepTrans) {
+            this.sepTrans = sepTrans;
+            return this;
+        }
     }
 
     @Override
@@ -140,9 +150,12 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
             servCtx.put("webSiteId", getWebSiteId());
         }
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx);
+        }
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
                 getStats().categorySuccess++;
@@ -179,8 +192,12 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
             servCtx.put("webSiteId", getWebSiteId());
         }
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx);
+        }
 
         Integer numUpdated = (Integer) recordResult.get("numUpdated");
         Integer numSkipped = (Integer) recordResult.get("numSkipped");

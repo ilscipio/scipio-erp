@@ -541,6 +541,7 @@ public abstract class SeoCatalogServices {
         boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
         String prodFixedIdPat = (String) context.get("prodFixedIdPat");
         String catFixedIdPat = (String) context.get("catFixedIdPat");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         String webSiteIdStr = "";
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -550,6 +551,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
@@ -596,10 +598,12 @@ public abstract class SeoCatalogServices {
         boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
         String prodFixedIdPat = (String) context.get("prodFixedIdPat");
         String catFixedIdPat = (String) context.get("catFixedIdPat");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
@@ -840,6 +844,7 @@ public abstract class SeoCatalogServices {
         String prodCatalogId = (String) context.get("prodCatalogId");
         if ("all".equals(prodCatalogId)) prodCatalogId = null; // legacy compat
         Collection<String> prodCatalogIdList = UtilGenerics.checkCollection(context.get("prodCatalogIdList"));
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         String webSiteIdStr = "";
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -849,6 +854,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlRemover traverser;
         try {
             RemoveTraversalConfig travConfig = (RemoveTraversalConfig) new RemoveTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
                     .setDoChildProducts(doChildProducts)
@@ -881,6 +887,7 @@ public abstract class SeoCatalogServices {
         //Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         // NOTE: don't search for child product in this case, because using massive all-products query
         final boolean doChildProducts = false;
@@ -888,6 +895,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlRemover traverser;
         try {
             RemoveTraversalConfig travConfig = (RemoveTraversalConfig) new RemoveTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
                     .setDoChildProducts(doChildProducts)

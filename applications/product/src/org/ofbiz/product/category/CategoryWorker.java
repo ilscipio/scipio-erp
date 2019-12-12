@@ -454,37 +454,46 @@ public final class CategoryWorker {
         }
     }
 
-    public static boolean isProductInCategory(Delegator delegator, String productId, String productCategoryId) throws GenericEntityException {
+    // SCIPIO: Added moment and useCache support, overloads
+    public static boolean isProductInCategory(Delegator delegator, String productId, String productCategoryId, Timestamp moment, boolean useCache) throws GenericEntityException {
         if (productCategoryId == null) return false;
         if (UtilValidate.isEmpty(productId)) return false;
 
         List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
                 .where("productCategoryId", productCategoryId, "productId", productId)
-                .cache(true)
-                .filterByDate()
+                .cache(useCache)
+                .filterByDate(moment)
                 .queryList();
         if (UtilValidate.isEmpty(productCategoryMembers)) {
             //before giving up see if this is a variant product, and if so look up the virtual product and check it...
-            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
-            List<GenericValue> productAssocs = ProductWorker.getVariantVirtualAssocs(product);
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
+            List<GenericValue> productAssocs = ProductWorker.getVariantVirtualAssocs(product, moment, useCache);
             //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
             if (productAssocs != null) {
                 for (GenericValue productAssoc: productAssocs) {
-                    if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId)) {
+                    if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId, moment, useCache)) {
                         return true;
                     }
                 }
             }
-
             return false;
         } else {
             return true;
         }
     }
 
+    public static boolean isProductInCategory(Delegator delegator, String productId, String productCategoryId, boolean useCache) throws GenericEntityException {
+        return isProductInCategory(delegator, productId, productCategoryId, UtilDateTime.nowTimestamp(), useCache);
+    }
+
+    public static boolean isProductInCategory(Delegator delegator, String productId, String productCategoryId) throws GenericEntityException {
+        return isProductInCategory(delegator, productId, productCategoryId, UtilDateTime.nowTimestamp(), true);
+    }
+
     /**
-     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * Checks if the given product is member of any of the passed category IDs (SCIPIO).
      * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     * @see ProductWorker#getCategoryIdsForProduct
      */
     public static boolean isProductInCategories(Delegator delegator, String productId, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isEmpty(productId)) {
@@ -494,8 +503,9 @@ public final class CategoryWorker {
     }
 
     /**
-     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * Checks if the given product is member of any of the passed category IDs (SCIPIO).
      * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     * @see ProductWorker#getCategoryIdsForProduct
      */
     public static boolean isProductInCategories(Delegator delegator, String productId, Collection<String> productCategoryIds, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isEmpty(productId)) {
@@ -505,8 +515,9 @@ public final class CategoryWorker {
     }
 
     /**
-     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * Checks if the given product is member of any of the passed category IDs (SCIPIO).
      * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     * @see ProductWorker#getCategoryIdsForProduct
      */
     public static boolean isProductInCategories(Delegator delegator, GenericValue product, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) throws GenericEntityException {
         if (product == null) {
@@ -516,8 +527,9 @@ public final class CategoryWorker {
     }
 
     /**
-     * Checks if the given product is part of any of the passed category IDs (SCIPIO).
+     * Checks if the given product is member of any of the passed category IDs (SCIPIO).
      * NOTE: This is optimized for a large number of productCategoryIds being passed.
+     * @see ProductWorker#getCategoryIdsForProduct
      */
     public static boolean isProductInCategories(Delegator delegator, GenericValue product, Collection<String> productCategoryIds, boolean useCache) throws GenericEntityException {
         if (product == null) {
@@ -549,12 +561,44 @@ public final class CategoryWorker {
         // this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
         if (productAssocs != null) {
             for (GenericValue productAssoc: productAssocs) {
-                if (isProductInCategories(delegator, productAssoc.getString("productId"), productCategoryIds, moment, useCache)) {
+                if (isProductInCategories(delegator, productAssoc.getString("productId"), null, productCategoryIds, moment, useCache)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * SCIPIO: Returns true only if the category contains the product, NON-recursive.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryContainsProduct(Delegator delegator, LocalDispatcher dispatcher, String productCategoryId, String productId) {
+        if (UtilValidate.isEmpty(productCategoryId) || UtilValidate.isEmpty(productId)) {
+            return false;
+        }
+        try {
+            List<EntityCondition> conds = new ArrayList<>();
+            conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+            conds.add(EntityCondition.makeCondition("productId", productId));
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
+                    .where(conds).filterByDate().cache(true).queryList();
+            return !productCategoryMembers.isEmpty();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return false; // can't tell, return false to play it safe
+    }
+
+    /**
+     * SCIPIO: Returns true only if the category contains the product, NON-recursive.
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryContainsProduct(ServletRequest request, String productCategoryId, String productId) {
+        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"),
+                (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId, productId);
     }
 
     public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId) throws GenericEntityException {
@@ -706,41 +750,6 @@ public final class CategoryWorker {
         return isCategoryTop((Delegator) request.getAttribute("delegator"),
                 (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId);
     }
-
-    /**
-     * SCIPIO: Returns true only if the category ID is a top category.
-     * <p>
-     * NOTE: is caching
-     */
-    public static boolean isCategoryContainsProduct(Delegator delegator, LocalDispatcher dispatcher, String productCategoryId, String productId) {
-        if (UtilValidate.isEmpty(productCategoryId) || UtilValidate.isEmpty(productId)) {
-            return false;
-        }
-        try {
-            List<EntityCondition> conds = new ArrayList<>();
-            conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            conds.add(EntityCondition.makeCondition("productId", productId));
-            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
-                    .where(conds).filterByDate().cache(true).queryList();
-            return !productCategoryMembers.isEmpty();
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
-        }
-        return false; // can't tell, return false to play it safe
-    }
-
-    /**
-     * SCIPIO: Returns true only if the category contains the product, NON-recursive.
-     * <p>
-     * NOTE: is caching
-     */
-    public static boolean isCategoryContainsProduct(ServletRequest request, String productCategoryId, String productId) {
-        return isCategoryContainsProduct((Delegator) request.getAttribute("delegator"),
-                (LocalDispatcher) request.getAttribute("dispatcher"), productCategoryId, productId);
-    }
-
-
-
 
     /**
      * SCIPIO: Returns a valid category path/trail (as parts) from the given trail,

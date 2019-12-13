@@ -78,7 +78,6 @@ public abstract class CatalogAltUrlSanitizer {
      * @return the StringBuilder
      */
     public StringBuilder adjustCategoryLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
-        org.ofbiz.base.util.Debug.logInfo("adjustCategoryLiveAltUrlPath: " + url, CatalogAltUrlSanitizer.class.getName());
         return url;
     }
 
@@ -87,7 +86,6 @@ public abstract class CatalogAltUrlSanitizer {
      * @return the StringBuilder
      */
     public StringBuilder adjustProductLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
-        org.ofbiz.base.util.Debug.logInfo("adjustProductLiveAltUrlPath: " + url, CatalogAltUrlSanitizer.class.getName());
         return url;
     }
 

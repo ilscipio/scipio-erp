@@ -33,13 +33,13 @@ public class CatalogFilters {
 
         @Override
         public boolean filterCategory(GenericValue productCategory, CatalogTraverser.TraversalState state) throws GeneralException {
-            Debug.logInfo("Allowing: " + productCategory.get("productCategoryId") + " [category]", module);
+            Debug.logInfo("Allowing category: " + productCategory.get("productCategoryId"), module);
             return true;
         }
 
         @Override
         public boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
-            Debug.logInfo("Allowing: " + product.get("productId") + " [product]", module);
+            Debug.logInfo("Allowing product: " + product.get("productId"), module);
             return true;
         }
     }
@@ -54,4 +54,13 @@ public class CatalogFilters {
         }
     }
 
+    public static class ExcludeVariantsProductFilter implements CatalogFilter, Serializable {
+        private static final ExcludeVariantsProductFilter INSTANCE = new ExcludeVariantsProductFilter();
+        public static ExcludeVariantsProductFilter getInstance() { return INSTANCE; }
+
+        @Override
+        public boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
+            return !Boolean.TRUE.equals(product.getBoolean("isVariant"));
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.product.category;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,9 +65,10 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     protected Set<String> seenProductIds = null;
 
     // These are the "last" webSiteId and productStoreId queried and are updated anywhere a store or website is queried - can also be set manually by caller
+    // NOTE: some of these IDs are set to empty string internally to indicate "not found"
     protected String webSiteId = null;
     protected GenericValue webSite = null;
-    protected String productStoreId = null;
+    protected String productStoreId = null; // if none, this is set to empty string internally
     protected GenericValue productStore = null;
     protected String prodCatalogId = null;
     protected GenericValue prodCatalog = null;
@@ -601,11 +601,154 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     protected void notifyCategoryFiltered(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
     }
 
+    /*
+     * Current store/website/catalog setters
+     * It is up to the caller to set as appropriate.
+     */
+
+    /**
+     * Initialize the current product store. NOTE: This is not automatically done by the traversal methods below.
+     */
+    public void setProductStoreAndWebSite(String productStoreId, String webSiteId) {
+        setWebSite(webSiteId);
+        setProductStore(productStoreId);
+    }
+
+    public void setWebSite(String webSiteId) {
+        this.webSiteId = webSiteId;
+        this.webSite = null;
+    }
+
+    public void setWebSite(GenericValue webSite) {
+        this.webSite = webSite;
+        this.webSiteId = (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+
+    public void setProductStore(String productStoreId) {
+        this.productStoreId = productStoreId;
+        this.productStore = null;
+    }
+
+    public void setProductStore(GenericValue productStore) {
+        this.productStore = productStore;
+        this.productStoreId = (productStore != null) ? productStore.getString("productStoreId") : null;
+    }
+
+    public void setProdCatalog(String prodCatalogId) {
+        this.prodCatalogId = prodCatalogId;
+        this.prodCatalog = null;
+        setViewAllowCategoryId(null); // reset
+    }
+
+    public void setProdCatalog(GenericValue prodCatalog) {
+        this.prodCatalog = prodCatalog;
+        this.prodCatalogId = (prodCatalog != null) ? prodCatalog.getString("prodCatalogId") : null;
+        setViewAllowCategoryId(null); // reset
+    }
+
+    /*
+     * Current store/website/catalog getters
+     */
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getWebSiteId() {
+        return webSiteId;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getWebSite() {
+        if (webSite == null && UtilValidate.isNotEmpty(webSiteId)) {
+            webSite = getDelegator().from("WebSite").where("webSiteId", webSiteId).queryOneSafe();
+        }
+        return webSite;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getProductStoreId() {
+        String productStoreId = this.productStoreId;
+        if (UtilValidate.isNotEmpty(productStoreId)) {
+            return productStoreId;
+        }
+        if (productStoreId == null) {
+            GenericValue webSite = getWebSite();
+            if (webSite != null) {
+                productStoreId = webSite.getString("productStoreId");
+                if (productStoreId == null) {
+                    productStoreId = ""; // none or could not determine
+                }
+            }
+        }
+        return UtilValidate.isNotEmpty(productStoreId) ? productStoreId : null;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getProductStore() {
+        GenericValue productStore = this.productStore;
+        if (productStore == null) {
+            String productStoreId = getProductStoreId();
+            if (productStoreId != null) {
+                productStore = getDelegator().from("ProductStore").where("productStoreId", productStoreId).cache(isUseCache()).queryOneSafe();
+            }
+        }
+        return productStore;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public String getProdCatalogId() {
+        return prodCatalogId;
+    }
+
+    /**
+     * WARNING: May be null depending on caller's setup and usage.
+     */
+    public GenericValue getProdCatalog() {
+        if (prodCatalog == null && UtilValidate.isNotEmpty(prodCatalogId)) {
+            prodCatalog = getDelegator().from("ProdCatalog").where("prodCatalogId", prodCatalogId).cache(isUseCache()).queryOneSafe();
+        }
+        return prodCatalog;
+    }
+
+    /**
+     * This may be needed by callers/implementers for traverse* methods that don't set a catalog themselves.
+     */
+    public void setProdCatalogFromProductStore() {
+        String productStoreId = getProductStoreId();
+        String prodCatalogId = null;
+        if (productStoreId != null) {
+            GenericValue productStoreCatalog = null;
+            try {
+                productStoreCatalog = queryProductStoreCatalogMain(productStoreId);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (productStoreCatalog != null) {
+                prodCatalogId = productStoreCatalog.getString("prodCatalogId");
+            }
+        }
+        setProdCatalog(prodCatalogId);
+    }
+
+    /*
+     * Traversal methods
+     * NOTE: Generally caller is responsible to set the appropriate ProductStore/WebSite/ProdCatalog, except
+     * for cases where the traversal iterates the catalogs (so it must set them).
+     */
+
     /**
      * Simply calls the {@link CatalogVisitor#visitCategory} and {@link CatalogVisitor#visitProduct} method for every single
-     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     * product in the system, bypassing catalog/category rollup; for crude operations.
      */
-    public boolean traverseAllInSystem() throws GeneralException {
+    public boolean traverseAllCategoriesAndProductsInSystem() throws GeneralException {
         if (isDoCategory()) {
             boolean cnt = traverseAllCategoriesInSystem();
             if (!cnt) return cnt;
@@ -619,7 +762,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     /**
      * Simply calls the {@link CatalogVisitor#visitCategory} method for every single
-     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     * product in the system, bypassing catalog/category rollup; for crude operations.
      */
     public boolean traverseAllCategoriesInSystem() throws GeneralException {
         TraversalState state = newTraversalState();
@@ -639,7 +782,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     /**
      * Simply calls the {@link CatalogVisitor#visitProduct} method for every single
-     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     * product in the system, bypassing catalog/category rollup; for crude operations.
      */
     public boolean traverseAllProductsInSystem() throws GeneralException {
         TraversalState state = newTraversalState();
@@ -659,10 +802,11 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
 
     /**
-     * Traverse ProductStore categories using depth-first search algorithm using the current ProductStore (must be set).
+     * Traverse ProductStore categories using depth-first search algorithm using the current ProductStore (must already be set);
+     * automatically sets the current ProdCatalog.
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
      */
-    public boolean traverseProductStoreDepthFirst() throws GeneralException {
+    public boolean traverseStoreCatalogsDepthFirst() throws GeneralException {
         GenericValue productStore = getProductStore();
         if (productStore == null) {
             throw new IllegalStateException("ProductStore not set on CatalogTraverser");
@@ -682,21 +826,19 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
 
     /**
-     * Traverse ProdCatalog categories of the given product store and website using depth-first search algorithm.
+     * Traverse ProdCatalog categories of the given product store and website using depth-first search algorithm;
+     * convenience method that looks up the catalogs from the given IDs;
+     * automatically sets the current ProdCatalog.
      * <p>
      * NOTE: 2019-10-03: This should be preferred over the overload that takes only prodCatalogList as this provides more information.
      */
-    public boolean traverseCatalogsDepthFirst(String prodCatalogId, Collection<String> prodCatalogIdList,
-                                              String productStoreId, String webSiteId, boolean returnProdCatalogEntityOnly) throws GeneralException {
-        setProductStoreId(productStoreId);
-        setWebSiteId(webSiteId);
-        List<GenericValue> prodCatalogList = getTargetCatalogList(prodCatalogId, prodCatalogIdList,
-                productStoreId, webSiteId, returnProdCatalogEntityOnly);
-        return traverseCatalogsDepthFirst(prodCatalogList);
+    public boolean traverseCatalogsDepthFirst(String prodCatalogId, Collection<String> prodCatalogIdList, boolean returnProdCatalogEntityOnly) throws GeneralException {
+        return traverseCatalogsDepthFirst(getTargetCatalogList(prodCatalogId, prodCatalogIdList, returnProdCatalogEntityOnly));
     }
 
     /**
-     * Traverse ProdCatalog categories using depth-first search algorithm.
+     * Traverse ProdCatalog categories using depth-first search algorithm;
+     * automatically sets the current ProdCatalog.
      * <p>
      * WARNING: This does not set the current product store or website, you may want another overload, otherwise you may have to set them manually
      * for filters to have access to them.
@@ -724,7 +866,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
 
     /**
-     * Traverse categories using depth-first search algorithm.
+     * Traverse categories using depth-first search algorithm; does not set current store or website.
      * @param categoryOrAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @param physicalDepth if non-null, overrides the physical category depth the algorithm should assume;
      *                      [TODO: NOT IMPLEMENTED] if null, determines the depth automatically (extra step);
@@ -837,110 +979,6 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return seenProductIds;
     }
 
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public String getWebSiteId() {
-        return webSiteId;
-    }
-
-    public void setWebSiteId(String webSiteId) {
-        this.webSiteId = webSiteId;
-        this.webSite = null;
-    }
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public GenericValue getWebSite() {
-        if (webSite == null && webSiteId != null) {
-            webSite = getDelegator().from("WebSite").where("webSiteId", webSiteId).queryOneSafe();
-        }
-        return webSite;
-    }
-
-    public void setWebSite(GenericValue webSite) {
-        this.webSite = webSite;
-        this.webSiteId = (webSite != null) ? webSite.getString("webSiteId") : null;
-    }
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
-        this.productStoreId = productStoreId;
-        this.productStore = null;
-    }
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public GenericValue getProductStore() {
-        if (productStore == null && productStoreId != null) {
-            productStore = getDelegator().from("ProductStore").where("productStoreId", productStoreId).queryOneSafe();
-        }
-        return productStore;
-    }
-
-    public void setProductStore(GenericValue productStore) {
-        this.productStore = productStore;
-        this.productStoreId = (productStore != null) ? productStore.getString("productStoreId") : null;
-    }
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public String getProdCatalogId() {
-        return prodCatalogId;
-    }
-
-    public void setProdCatalogId(String prodCatalogId) {
-        this.prodCatalogId = prodCatalogId;
-        this.prodCatalog = null;
-        setViewAllowCategoryId(null); // reset
-    }
-
-    /**
-     * WARNING: May be null depending on caller's setup and usage.
-     */
-    public GenericValue getProdCatalog() {
-        if (prodCatalog == null && prodCatalogId != null) {
-            prodCatalog = getDelegator().from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOneSafe();
-        }
-        return prodCatalog;
-    }
-
-    public void setProdCatalog(GenericValue prodCatalog) {
-        this.prodCatalog = prodCatalog;
-        this.prodCatalogId = (prodCatalog != null) ? prodCatalog.getString("prodCatalogId") : null;
-        setViewAllowCategoryId(null); // reset
-    }
-
-    /**
-     * This may be needed by callers/implementers for traverse* methods that don't set a catalog themselves.
-     */
-    public void setProdCatalogFromProductStore() {
-        String productStoreId = getProductStoreId();
-        String prodCatalogId = null;
-        if (productStoreId != null) {
-            GenericValue productStoreCatalog = null;
-            try {
-                productStoreCatalog = queryProductStoreCatalogMain(productStoreId);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            }
-            if (productStoreCatalog != null) {
-                prodCatalogId = productStoreCatalog.getString("prodCatalogId");
-            }
-        }
-        setProdCatalogId(prodCatalogId);
-    }
-
     /**
      * WARNING: May be null depending on caller's setup and usage.
      */
@@ -1033,7 +1071,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     // GENERAL QUERIES (overridable)
 
     public List<GenericValue> queryProductStoreCatalogList(String productStoreId) throws GenericEntityException {
-        return filterProductStoreCatalogList(EntityQuery.use(delegator).from("ProductStoreCatalog")
+        return filterProductStoreCatalogList(delegator.from("ProductStoreCatalog")
                 .where(makeProductStoreCatalogCond(productStoreId))
                 .filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
@@ -1062,7 +1100,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      * NOTE: prodCatalog may be ProdCatalog or ProductStoreCatalog (just read prodCatalogId).
      */
     public List<GenericValue> queryProdCatalogCategoryList(GenericValue prodCatalog) throws GenericEntityException {
-        return filterProdCatalogCategoryList(EntityQuery.use(delegator).from("ProdCatalogCategory")
+        return filterProdCatalogCategoryList(delegator.from("ProdCatalogCategory")
                 .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
                 .filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
@@ -1109,8 +1147,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      * <p>
      * @param returnProdCatalogEntityOnly if false, may return ProductStoreCatalog instead of ProdCatalog
      */
-    public List<GenericValue> getTargetCatalogList(String prodCatalogId, Collection<String> prodCatalogIdList,
-            String productStoreId, String webSiteId, boolean returnProdCatalogEntityOnly) throws GeneralException {
+    protected List<GenericValue> getTargetCatalogList(String prodCatalogId, Collection<String> prodCatalogIdList, boolean returnProdCatalogEntityOnly) throws GeneralException {
         if (UtilValidate.isNotEmpty(prodCatalogId) || UtilValidate.isNotEmpty(prodCatalogIdList)) {
             List<GenericValue> prodCatalogList = new ArrayList<>();
             if (UtilValidate.isNotEmpty(prodCatalogId)) {
@@ -1127,19 +1164,11 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             }
             return prodCatalogList;
         } else {
-            if (UtilValidate.isEmpty(productStoreId)) {
-                if (UtilValidate.isEmpty(webSiteId)) {
-                    throw new GeneralException("missing webSiteId, productStoreId or prodCatalogId");
-                }
-                GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), isUseCache());
-                if (webSite == null) throw new GeneralException("website '" + webSiteId + "' not found");
-                productStoreId = webSite.getString("productStoreId");
-                if (UtilValidate.isEmpty(productStoreId)) throw new GeneralException("website '" + webSiteId + "' has no product store");
-            }
+            String productStoreId = getProductStoreId();
             GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), isUseCache());
             if (productStore == null) throw new GeneralException("product store '" + productStoreId + " not found");
 
-            List<GenericValue> productStoreCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
+            List<GenericValue> productStoreCatalogList = delegator.from("ProductStoreCatalog").where("productStoreId", productStoreId)
                     .filterByDate().orderBy("sequenceNum").cache(isUseCache()).queryList();
 
             if (returnProdCatalogEntityOnly && productStoreCatalogList.size() > 0) {

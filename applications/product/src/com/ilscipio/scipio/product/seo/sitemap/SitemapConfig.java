@@ -55,7 +55,6 @@ public class SitemapConfig implements Serializable {
     }
 
     private final String webSiteId;
-
     private final String urlConfPath;
     private final String baseUrl;
     private final boolean baseUrlSecure;
@@ -96,11 +95,15 @@ public class SitemapConfig implements Serializable {
     private final SitemapGenerator.SitemapGeneratorFactory generatorFactory;
     private final List<CatalogFilter> catalogFilters;
     private final boolean useDefaultCatalogFilters;
+    private final boolean useAutoCatalogFilters;
 
     private final String categoryTraversalMode;
     private final String productTraversalMode;
 
+    private final Map<String, Object> settingsMap; // copy of the settings map, for print/reference/other
+
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
+        this.settingsMap = Collections.unmodifiableMap(new HashMap<>(map));
         this.webSiteId = webSiteId;
         this.urlConfPath = asNormString(map.get("urlConfPath"));
         String baseUrl = asNormString(map.get("baseUrl"));
@@ -174,6 +177,7 @@ public class SitemapConfig implements Serializable {
 
         this.catalogFilters = Collections.unmodifiableList(readCatalogFilters(map.get("catalogFilters")));
         this.useDefaultCatalogFilters = asBoolean(map.get("useDefaultCatalogFilters"), true);
+        this.useAutoCatalogFilters = asBoolean(map.get("useAutoCatalogFilters"), true);
 
         this.categoryTraversalMode = asNormString(map.get("categoryTraversalMode"), "depth-first");
         this.productTraversalMode = asNormString(map.get("productTraversalMode"), "depth-first");
@@ -293,21 +297,21 @@ public class SitemapConfig implements Serializable {
         return configs;
     }
 
-    private static String asNormString(Object obj, String defaultValue) {
+    protected static String asNormString(Object obj, String defaultValue) {
         if (obj == null) return defaultValue;
         String str = obj.toString().trim();
         return str.isEmpty() ? defaultValue : str;
     }
 
-    private static String asNormString(Object obj) {
+    protected static String asNormString(Object obj) {
         return asNormString(obj, null);
     }
 
-    private static Boolean asBoolean(Object obj, Boolean defaultValue) {
+    protected static Boolean asBoolean(Object obj, Boolean defaultValue) {
         return UtilMisc.booleanValueVersatile(obj, defaultValue);
     }
 
-    private static Integer asInteger(Object obj, Integer defaultValue) {
+    protected static Integer asInteger(Object obj, Integer defaultValue) {
         if (obj == null) return defaultValue;
         else if (obj instanceof Integer) return (Integer) obj;
         else if (obj instanceof Long) return ((Long) obj).intValue();
@@ -327,6 +331,9 @@ public class SitemapConfig implements Serializable {
     }
 
     // SIMPLE GETTERS
+
+    /** Returns the original settings map used to build the instance (raw). */
+    public Map<String, Object> getSettingsMap() { return settingsMap; }
 
     public String getWebSiteId() {
         return webSiteId;
@@ -494,18 +501,11 @@ public class SitemapConfig implements Serializable {
         return useDefaultCatalogFilters;
     }
 
+    public boolean isUseAutoCatalogFilters() {
+        return useAutoCatalogFilters;
+}
+
     public List<CatalogFilter> getDefaultCatalogFilters() { return DEFAULT_CATALOG_FILTERS; }
-
-    public List<CatalogFilter> getDefaultCatalogFiltersIfEnabled() { return isUseDefaultCatalogFilters() ? DEFAULT_CATALOG_FILTERS : Collections.emptyList(); }
-
-    public List<CatalogFilter> getAllCatalogFilters() {
-        if (!isUseDefaultCatalogFilters()) {
-            return getCatalogFilters();
-        }
-        List<CatalogFilter> filters = new ArrayList<>(getDefaultCatalogFilters());
-        filters.addAll(getCatalogFilters());
-        return filters;
-    }
 
     public String getCategoryTraversalMode() { return categoryTraversalMode; }
 

@@ -567,8 +567,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            traverser.setProductStoreAndWebSite(productStoreId, webSiteId);
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
         } catch(Exception e) {
             String message = "Error generating alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
@@ -618,7 +618,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseAllInSystem();
+            traverser.traverseAllCategoriesAndProductsInSystem();
         } catch (Exception e) {
             String message = "Error generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+"generateAllAlternativeUrls: " + message, module);
@@ -867,8 +867,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            traverser.setProductStoreAndWebSite(productStoreId, webSiteId);
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
         } catch(Exception e) {
             String message = "Error removing alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"removeWebsiteAlternativeUrls: "+message, module);
@@ -908,7 +908,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseAllInSystem();
+            traverser.traverseAllCategoriesAndProductsInSystem();
         } catch (Exception e) {
             String message = "Error removing alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+"removeAllAlternativeUrls: " + message, module);
@@ -966,8 +966,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            exporter.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            exporter.setProductStoreAndWebSite(productStoreId, webSiteId);
+            exporter.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
             out.processOutput(exporter);
         } catch(Exception e) {
             String message = "Error exporting alternative URLs for website '" + webSiteId + "': " + e.getMessage();
@@ -1012,7 +1012,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            exporter.traverseAllInSystem();
+            exporter.traverseAllCategoriesAndProductsInSystem();
             out.processOutput(exporter);
         } catch (Exception e) {
             String message = "Error exporting alternative URLs: " + e.getMessage();

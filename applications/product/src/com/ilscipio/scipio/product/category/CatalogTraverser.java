@@ -104,7 +104,11 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      * Copy constructor.
      */
     public CatalogTraverser(CatalogTraverser other) {
-        this.visitor = other.visitor;
+        this(other, null);
+    }
+
+    public CatalogTraverser(CatalogTraverser other, CatalogVisitor visitor) {
+        this.visitor = (visitor != null) ? visitor : ((other.visitor == other) ? this : other.visitor); // SPECIAL: if visitor was set to itself, so it to ourselves
         this.delegator = other.delegator;
         this.dispatcher = other.dispatcher;
         this.travConfig = other.travConfig;

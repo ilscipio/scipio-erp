@@ -59,7 +59,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final SitemapGeneratorFactory DEFAULT_FACTORY = new SitemapGeneratorFactory();
 
-    protected static final String logPrefix = "Seo: Sitemap: ";
+    static final String logPrefix = "Seo: Sitemap: ";
 
     protected List<Locale> locales;
     protected String baseUrl;
@@ -73,12 +73,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected ScipioUrlRewriter urlRewriter;
     protected Map<String, Object> urlRewriterCtx;
     protected FullWebappInfo webappInfo;
-    protected final String fullSitemapDir;
+    protected String fullSitemapDir;
     protected Map<ElemType, ElemHandler> elemHandlers = null;
     protected ElemHandler categoryElemHandler = null; // optimization
     protected ElemHandler productElemHandler = null; // optimization
     protected ElemHandler contentElemHandler = null; // optimization
-    protected final Map<String, ?> servCtxOpts;
+    protected Map<String, ?> servCtxOpts;
 
     public enum ElemType { CATEGORY, PRODUCT, CONTENT }
 
@@ -126,7 +126,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         this.urlRewriterCtx = other.urlRewriterCtx;
         this.webappInfo = other.webappInfo;
         this.fullSitemapDir = other.fullSitemapDir;
-        this.elemHandlers = other.elemHandlers;
+        this.elemHandlers = copyElemHandlers(other.elemHandlers);
         this.categoryElemHandler = other.categoryElemHandler;
         this.productElemHandler = other.productElemHandler;
         this.contentElemHandler = other.contentElemHandler;
@@ -351,7 +351,6 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public void reset() throws GeneralException {
         super.reset();
         resetElemHandlers();
-        //resetTrailNames(); // moved to TraversalState
     }
 
     // moved to TraversalState
@@ -670,9 +669,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         try {
             uri = PathUtil.concatPaths(getContextPath(), uri);
             String url = postprocessElementLink(uri);
-
-            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
-
+            if (Debug.verboseOn()) {
+                Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
+            }
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getContentElemHandler().addUrl(libUrl);
         } catch(Exception e) {
@@ -683,9 +682,6 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected void resetElemHandlers() {
         this.elemHandlers = createElemHandlers();
-        this.categoryElemHandler = elemHandlers.get(ElemType.CATEGORY);
-        this.productElemHandler = elemHandlers.get(ElemType.PRODUCT);
-        this.contentElemHandler = elemHandlers.get(ElemType.CONTENT);
     }
 
     protected Map<ElemType, ElemHandler> createElemHandlers() {
@@ -702,25 +698,49 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return elemHandlers;
     }
 
-    protected ElemHandler getCategoryElemHandler() {
-        return categoryElemHandler;
+    protected Map<ElemType, ElemHandler> copyElemHandlers(Map<ElemType, ElemHandler> otherHandlers) {
+        Map<ElemType, ElemHandler> elemHandlers = new EnumMap<>(ElemType.class);
+        for(Map.Entry<ElemType, ElemHandler> entry : otherHandlers.entrySet()) {
+            // DEV NOTE: don't use copy() abstraction in order to avoid super "this" reference issues
+            if (entry.getKey() == ElemType.CATEGORY) {
+                elemHandlers.put(entry.getKey(), new CategoryElemHandler((CategoryElemHandler) entry.getValue()));
+            } else if (entry.getKey() == ElemType.PRODUCT) {
+                elemHandlers.put(entry.getKey(), new ProductElemHandler((ProductElemHandler) entry.getValue()));
+            } else if (entry.getKey() == ElemType.CONTENT) {
+                elemHandlers.put(entry.getKey(), new ContentElemHandler((ContentElemHandler) entry.getValue()));
+            }
+        }
+        return elemHandlers;
     }
 
-    protected ElemHandler getProductElemHandler() {
-        return productElemHandler;
-    }
+    protected ElemHandler getCategoryElemHandler() { return elemHandlers.get(ElemType.CATEGORY); }
 
-    protected ElemHandler getContentElemHandler() {
-        return contentElemHandler;
-    }
+    protected ElemHandler getProductElemHandler() { return elemHandlers.get(ElemType.PRODUCT); }
+
+    protected ElemHandler getContentElemHandler() { return elemHandlers.get(ElemType.CONTENT); }
 
     protected abstract class ElemHandler {
-        private WebSitemapGenerator wsg = null;
-        private List<String> sitemapFiles = new ArrayList<>();
-        private long urlCount = 0;
-        private long sitemapFileIndex = 0;
+        private WebSitemapGenerator wsg;
+        private List<String> sitemapFiles;
+        private long urlCount;
+        private long sitemapFileIndex;
+        private Set<String> seenUrls;
 
-        private Set<String> seenUrls = new LinkedHashSet<>();
+        protected ElemHandler() {
+            this.wsg = null;
+            this.sitemapFiles = new ArrayList<>();
+            this.urlCount = 0;
+            this.sitemapFileIndex = 0;
+            this.seenUrls = new LinkedHashSet<>();
+        }
+
+        protected ElemHandler(ElemHandler other) {
+            this.wsg = other.wsg;
+            this.sitemapFiles = new ArrayList<>(other.sitemapFiles);
+            this.urlCount = other.urlCount;
+            this.sitemapFileIndex = other.sitemapFileIndex;
+            this.seenUrls = new LinkedHashSet<>(other.seenUrls);
+        }
 
         public WebSitemapGenerator getWsg() { return wsg; }
         public List<String> getSitemapFiles() { return sitemapFiles; }
@@ -775,18 +795,24 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     protected class CategoryElemHandler extends ElemHandler {
+        protected CategoryElemHandler() { super(); }
+        protected CategoryElemHandler(CategoryElemHandler other) { super(other); }
         @Override protected ElemType getType() { return ElemType.CATEGORY; }
         @Override protected void updateStatsCount() { getStats().categorySuccess++; }
         @Override public String getTypeFilenamePrefix() { return sitemapConfig.getCategoryFilePrefix(); }
     }
 
     protected class ProductElemHandler extends ElemHandler {
+        protected ProductElemHandler() { super(); }
+        protected ProductElemHandler(ProductElemHandler other) { super(other); }
         @Override protected ElemType getType() { return ElemType.PRODUCT; }
         @Override protected void updateStatsCount() { getStats().productSuccess++; }
         @Override public String getTypeFilenamePrefix() { return sitemapConfig.getProductFilePrefix(); }
     }
 
     protected class ContentElemHandler extends ElemHandler {
+        protected ContentElemHandler() { super(); }
+        protected ContentElemHandler(ContentElemHandler other) { super(other); }
         @Override protected ElemType getType() { return ElemType.CONTENT; }
         @Override protected void updateStatsCount() { getStats().contentSuccess++; }
         @Override public String getTypeFilenamePrefix() { return sitemapConfig.getContentFilePrefix(); }

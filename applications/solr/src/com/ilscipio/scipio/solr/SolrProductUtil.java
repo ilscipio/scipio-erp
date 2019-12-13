@@ -438,7 +438,7 @@ public abstract class SolrProductUtil {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         Timestamp moment = nowTimestamp;
 
-        if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for product '" + productId + "'", module);
 
         try {
             // 2018: The fields map is needed for arbitrarily-named fields such as dynamicFields.
@@ -446,21 +446,28 @@ public abstract class SolrProductUtil {
             // solrProductAttributes service interface and in the future may replace it entirely.
             Map<String, Object> fields = getGenSolrDocFieldsMap(targetCtx);
 
+            targetCtx.put("productId", productId);
+
             // Get all product assoc
             List<GenericValue> productAssocFromList = delegator.from("ProductAssoc").where("productId", productId).filterByDate(moment).cache(useCache).queryList();
             List<GenericValue> productAssocToList = delegator.from("ProductAssoc").where("productIdTo", productId).filterByDate(moment).cache(useCache).queryList();
 
-            // 2017-09: if variant, must also get virtual's categories
-            //List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
             List<GenericValue> productVariantAssocs = null;
-            if ("Y".equals(product.getString("isVariant"))) { // 2018-12-20: reuse productAssocTo
+            if (Boolean.TRUE.equals(product.getBoolean("isVariant"))) { // 2018-12-20: reuse productAssocTo
                 productVariantAssocs = EntityUtil.filterByAnd(productAssocToList, UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
             }
+            List<GenericValue> productVariantAssocsOrEmpty = (productVariantAssocs != null) ? productVariantAssocs : Collections.emptyList(); // to optimize worker calls
 
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
-            Set<String> productCategoryIds = ProductWorker.getCategoryIdsForProduct(new LinkedHashSet<>(), delegator, productId, productVariantAssocs != null ? productVariantAssocs : Collections.emptyList(), moment, true, useCache);
+            Set<String> ownCategoryIds = ProductWorker.getOwnCategoryIdsForProduct(new LinkedHashSet<>(), delegator, productId, product, moment, true, useCache);
+            Set<String> assocCategoryIds = ProductWorker.getAssocCategoryIdsForProduct(new LinkedHashSet<>(), delegator, productId, product, productVariantAssocsOrEmpty, moment, true, useCache);
+            Set<String> productCategoryIds = new LinkedHashSet<>(ownCategoryIds);
+            productCategoryIds.addAll(assocCategoryIds);
             // Trying to set a correct trail
-            Collection<String> trails = SolrCategoryUtil.getCategoryTrails(new LinkedHashSet<>(), dctx, productCategoryIds, moment, useCache);
+            Collection<String> ownTrails = SolrCategoryUtil.getCategoryTrails(new LinkedHashSet<>(), dctx, ownCategoryIds, moment, true, useCache);
+            Collection<String> assocTrails = SolrCategoryUtil.getCategoryTrails(new LinkedHashSet<>(), dctx, assocCategoryIds, moment, true, useCache);
+            Collection<String> trails = new LinkedHashSet<>(ownTrails);
+            trails.addAll(assocTrails);
             // Get the catalogs that have associated the categories
             Collection<String> catalogs = SolrCategoryUtil.getCatalogIdsFromCategoryTrails(new LinkedHashSet<>(), dctx, trails, moment, useCache);
 
@@ -474,25 +481,20 @@ public abstract class SolrProductUtil {
             Collection<String> relatedCategoryIds = null;
             Collection<String> relatedTrails = null;
             Collection<String> relatedCatalogs = null;
-            // TODO: REVIEW: If we could not determine catalog of store directly, usually due to config, alternative package
-            // or other complex products, search product assoc to try to determine (slow)
-            // NOTE: We do NOT subscribe the product to any specific categories in this case...
-            // Leaving that up to the entities
-            if (catalogs.isEmpty() || productStores.isEmpty()) {
-                // SPECIAL: If we could not determine a product store, look up any related products
-                // TODO: REVIEW: For now we do NOT set categories or catalog from this; store is most basic
+            if (catalogs.isEmpty()) { // 2019-12: REMOVED: || productStores.isEmpty() -> if there's a catalog but not associated to a store, something is misconfigured
+                // TODO: REVIEW: If we could not determine catalog directly, usually due to config, alternative package
+                //  or other complex products, search product assoc categories to try to determine a catalog, so can get a store
+                // NOTE: The found relatedCategoryIds are NOT added to the categoryIds in solr, must only be used to determine logical store/catalog
                 relatedCategoryIds = new LinkedHashSet<>();
                 relatedTrails = new LinkedHashSet<>();
                 relatedCatalogs = new LinkedHashSet<>();
                 // Self and virtuals are covered above
-                Set<String> catCheckedProductIds = new HashSet<>();
-                // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
+                Set<String> catCheckedProductIds = new HashSet<>(); // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
                 catCheckedProductIds.add(productId);
-                catCheckedProductIds.addAll(UtilMisc.getMapValuesForKey(productVariantAssocs, "productId"));
-                ProductWorker.getCategoryIdsForProductAggressive(relatedCategoryIds, new LinkedHashSet<>(), catCheckedProductIds, delegator, productId,
-                        productVariantAssocs != null ? productVariantAssocs : Collections.emptyList(), productAssocFromList, productAssocToList,
-                        false, moment, true, useCache); // NOTE: firstFoundOnly==false
-                SolrCategoryUtil.getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, moment, useCache);
+                catCheckedProductIds.addAll(UtilMisc.getMapValuesForKey(productVariantAssocsOrEmpty, "productId"));
+                ProductWorker.getAnyRelatedCategoryIdsForProduct(relatedCategoryIds, new LinkedHashSet<>(), catCheckedProductIds, delegator, productId, product,
+                        productVariantAssocsOrEmpty, productAssocFromList, productAssocToList,false, moment, true, useCache); // NOTE: firstFoundOnly==false
+                SolrCategoryUtil.getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, moment, true, useCache);
                 SolrCategoryUtil.getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, moment, useCache);
                 catalogs.addAll(relatedCatalogs);
                 productStores.addAll(CatalogWorker.getProductStoresForCatalogIds(delegator, relatedCatalogs, moment, true, useCache));
@@ -502,18 +504,23 @@ public abstract class SolrProductUtil {
             targetCtx.put("productStore", productStoreIdList);
 
             if (productStores.isEmpty()) {
-                Debug.logInfo("Solr: Cannot determine store for product '" + productId + "'", module);
+                if (catalogs.isEmpty()) {
+                    Debug.logInfo("Solr: Could not determine store for product '" + productId + "'; no catalogs", module);
+                } else {
+                    Debug.logInfo("Solr: Could not determine store for product '" + productId + "' from catalogs: " + catalogs, module);
+                }
             } else {
                 if (SolrUtil.verboseOn()) {
                     if (relatedCatalogs != null) {
-                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' indirectly (" + productStoreIdList + ")", module);
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' indirectly (" + productStoreIdList + ") from related catalogs: " + catalogs, module);
                     } else {
-                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' directly (" + productStoreIdList + ")", module);
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' directly (" + productStoreIdList + ") from catalogs: " + catalogs, module);
                     }
                 }
             }
 
             targetCtx.put("category", new ArrayList<>(trails));
+            fields.put("ownCat_ss", new ArrayList<>(ownTrails));
             targetCtx.put("catalog", new ArrayList<>(catalogs));
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
@@ -539,7 +546,6 @@ public abstract class SolrProductUtil {
                 parentProductId = ProductWorker.getParentProductId(productId, delegator, useCache);
             }
 
-            targetCtx.put("productId", productId);
             // if (product.get("sku") != null) targetCtx.put("sku", product.get("sku"));
             if (product.get("internalName") != null) {
                 targetCtx.put("internalName", product.get("internalName"));

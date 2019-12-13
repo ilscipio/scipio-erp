@@ -2258,8 +2258,26 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * TODO?: perhaps can cache with UtilCache in future, or read from a cached category tree.
      */
+    protected List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Set<String> topCategoryIds, boolean useCache) {
+        return ProductWorker.getProductRollupTrails(delegator, productId, topCategoryIds, useCache);
+    }
+
+    /**
+     * Return all paths from the given topCategoryIds to the product.
+     * <p>
+     * TODO?: perhaps can cache with UtilCache in future, or read from a cached category tree.
+     */
     protected List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Set<String> topCategoryIds) {
-        return ProductWorker.getProductRollupTrails(delegator, productId, topCategoryIds, true);
+        return getProductRollupTrails(delegator, productId, topCategoryIds, true);
+    }
+
+    /**
+     * Return all paths from the given topCategoryIds to the category.
+     * <p>
+     * TODO?: perhaps can cache with UtilCache in future, or read from a cached category tree.
+     */
+    protected List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+        return CategoryWorker.getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds, useCache);
     }
 
     /**
@@ -2268,7 +2286,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * TODO?: perhaps can cache with UtilCache in future, or read from a cached category tree.
      */
     protected List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds) {
-        return CategoryWorker.getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds, true);
+        return getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds, true);
     }
 
     /*

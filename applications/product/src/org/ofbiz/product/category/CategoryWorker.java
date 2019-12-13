@@ -967,8 +967,8 @@ public final class CategoryWorker {
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
      * Added 2017-11-09.
      */
-    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Collection<String> topCategoryIds, boolean useCache) {
-        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Collection<String> topCategoryIds, Timestamp moment, boolean ordered, boolean useCache) {
+        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, moment, ordered, useCache);
         if (topCategoryIds == null) return trails;
         List<List<String>> filtered = new ArrayList<>(trails.size());
         for(List<String> trail : trails) {
@@ -978,6 +978,11 @@ public final class CategoryWorker {
         }
         return filtered;
     }
+
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Collection<String> topCategoryIds, boolean useCache) {
+        return getCategoryRollupTrails(delegator, productCategoryId, topCategoryIds, UtilDateTime.nowTimestamp(), true, useCache);
+    }
+
 
     public static <C extends Collection<String>> C getAllCatalogCategoryIds(C outCategoryIds, Delegator delegator, String catalogId, Collection<String> prodCatalogCategoryTypeIds,
                                                        Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {

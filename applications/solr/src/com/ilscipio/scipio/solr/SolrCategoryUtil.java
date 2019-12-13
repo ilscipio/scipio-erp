@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
@@ -18,7 +17,6 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
@@ -39,8 +37,7 @@ public abstract class SolrCategoryUtil {
      * This method is a supplement to CatalogWorker methods.
      */
     static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment, boolean useCache) {
-        List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, moment, useCache);
-        return UtilMisc.getMapValuesForKeyOrNewList(catalogs, "prodCatalogId");
+        return UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, productCategoryId, moment, useCache), "prodCatalogId");
     }
 
     static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment) {
@@ -82,8 +79,8 @@ public abstract class SolrCategoryUtil {
         return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, true);
     }
 
-    public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, boolean useCache) {
-        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, useCache);
+    public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, Timestamp moment, boolean ordered, boolean useCache) {
+        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, moment, ordered, useCache);
     }
 
     /**
@@ -315,27 +312,31 @@ public abstract class SolrCategoryUtil {
         }
     }
 
-    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean useCache) {
+    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) {
         for (String productCategoryId : productCategoryIds) {
-            List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
-            formatCategoryTrails(trails, dctx, trailElements, moment, useCache);
+            formatCategoryTrails(trails, dctx, getCategoryTrail(productCategoryId, dctx, moment, ordered, useCache));
         }
         return trails;
     }
 
-    public static <C extends Collection<String>> C formatCategoryTrails(C trails, DispatchContext dctx, List<List<String>> trailElements, Timestamp moment, boolean useCache) {
-        for (List<String> trailElement : trailElements) {
-            StringBuilder catMember = new StringBuilder();
-            int i = 0;
-            for(String trailString : trailElement) {
-                if (catMember.length() > 0){
-                    catMember.append("/");
-                    i++;
-                }
-                catMember.append(trailString);
-                String cm = i +"/"+ catMember.toString();
-                trails.add(cm);
+    public static <C extends Collection<String>> C formatCategoryTrails(C trails, DispatchContext dctx, List<List<String>> trailElements) {
+        for (List<String> trail : trailElements) {
+            formatCategoryTrail(trails, dctx, trail);
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C formatCategoryTrail(C trails, DispatchContext dctx, List<String> trail) {
+        StringBuilder catMember = new StringBuilder();
+        int i = 0;
+        for(String trailString : trail) {
+            if (catMember.length() > 0){
+                catMember.append("/");
+                i++;
             }
+            catMember.append(trailString);
+            String cm = i +"/"+ catMember.toString();
+            trails.add(cm);
         }
         return trails;
     }

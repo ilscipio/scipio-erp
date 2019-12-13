@@ -2,6 +2,7 @@ package com.ilscipio.scipio.product.category;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -55,6 +56,42 @@ public abstract class CatalogAltUrlSanitizer {
     public abstract String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
+     * Adjust category trail of category live URLs - can be used as a limited (but faster) URL rewrite.
+     * Does not contain the last element.
+     * @return the original trail or a substituted trail - must be an ArrayList
+     */
+    public List<String> adjustCategoryLiveAltUrlTrail(List<String> trail, Locale locale, SanitizeContext ctxInfo) {
+        return trail;
+    }
+
+    /**
+     * Adjust category trail of product live URLs - can be used as a limited (but faster) URL rewrite.
+     * Does not contain the last element.
+     * @return the original trail or a substituted trail - must be an ArrayList
+     */
+    public List<String> adjustProductLiveAltUrlTrail(List<String> trail, Locale locale, SanitizeContext ctxInfo) {
+        return trail;
+    }
+
+    /**
+     * Adjust the StringBuilder containing the category alt URL core path - this includes the .html extension if configured, but not any parameters.
+     * @return the StringBuilder
+     */
+    public StringBuilder adjustCategoryLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
+        org.ofbiz.base.util.Debug.logInfo("adjustCategoryLiveAltUrlPath: " + url, CatalogAltUrlSanitizer.class.getName());
+        return url;
+    }
+
+    /**
+     * Adjust the StringBuilder containing the category alt URL core path - this includes the .html extension if configured, but not any parameters.
+     * @return the StringBuilder
+     */
+    public StringBuilder adjustProductLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
+        org.ofbiz.base.util.Debug.logInfo("adjustProductLiveAltUrlPath: " + url, CatalogAltUrlSanitizer.class.getName());
+        return url;
+    }
+
+    /**
      * TODO: REVIEW: this doesn't belong here but it's the only way to make the parsing consistent.
      */
     public Locale parseLocale(String localeString) {
@@ -81,6 +118,7 @@ public abstract class CatalogAltUrlSanitizer {
         private Integer totalNames;
         private GenericValue targetProduct;
         private GenericValue targetCategory;
+        private Boolean useCache;
 
         protected SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) { // NOTE: avoid using this
             this.last = last;
@@ -160,6 +198,15 @@ public abstract class CatalogAltUrlSanitizer {
 
         public SanitizeContext setTargetCategory(GenericValue targetCategory) {
             this.targetCategory = targetCategory; return this;
+        }
+
+        public Boolean getUseCache() {
+            return useCache;
+        }
+
+        public SanitizeContext setUseCache(Boolean useCache) {
+            this.useCache = useCache;
+            return this;
         }
 
         public static class ReadOnlySanitizeContext extends SanitizeContext {

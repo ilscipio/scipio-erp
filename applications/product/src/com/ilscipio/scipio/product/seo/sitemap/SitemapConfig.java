@@ -89,6 +89,8 @@ public class SitemapConfig implements Serializable {
 
     private final Set<String> prodCatalogIds;
     private final Set<String> prodCatalogCategoryTypeIds;
+    private final Set<String> excludeSpecificCategoryIds;
+    private final Set<String> excludeSpecificProductIds;
 
     private final boolean includeVariant;
 
@@ -160,6 +162,9 @@ public class SitemapConfig implements Serializable {
 
         this.prodCatalogIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogIds")));
         this.prodCatalogCategoryTypeIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogCategoryTypeIds")));
+        this.excludeSpecificCategoryIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("excludeSpecificCategoryIds")));
+        this.excludeSpecificProductIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("excludeSpecificProductIds")));
+
         this.includeVariant = asBoolean(map.get("includeVariant"), false);
 
         String generatorFactoryClsStr = asNormString(map.get("generatorFactory"));
@@ -481,6 +486,14 @@ public class SitemapConfig implements Serializable {
      */
     public Set<String> getProdCatalogCategoryTypeIds() {
         return prodCatalogCategoryTypeIds;
+    }
+
+    public Set<String> getExcludeSpecificCategoryIds() {
+        return excludeSpecificCategoryIds;
+    }
+
+    public Set<String> getExcludeSpecificProductIds() {
+        return excludeSpecificProductIds;
     }
 
     /**

@@ -5,6 +5,8 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericValue;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Common filters, specific implementations.
@@ -61,6 +63,32 @@ public class CatalogFilters {
         @Override
         public boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
             return !Boolean.TRUE.equals(product.getBoolean("isVariant"));
+        }
+    }
+
+    public static class ExcludeSpecificCategoryFilter implements CatalogFilter, Serializable {
+        protected final Set<String> excludeIds;
+
+        public ExcludeSpecificCategoryFilter(Set<String> excludeIds) {
+            this.excludeIds = (excludeIds != null) ? excludeIds : Collections.emptySet();
+        }
+
+        @Override
+        public boolean filterCategory(GenericValue productCategory, CatalogTraverser.TraversalState state) throws GeneralException {
+            return !excludeIds.contains(productCategory.get("productCategoryId"));
+        }
+    }
+
+    public static class ExcludeSpecificProductFilter implements CatalogFilter, Serializable {
+        protected final Set<String> excludeIds;
+
+        public ExcludeSpecificProductFilter(Set<String> excludeIds) {
+            this.excludeIds = (excludeIds != null) ? excludeIds : Collections.emptySet();
+        }
+
+        @Override
+        public boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
+            return !excludeIds.contains(product.get("productId"));
         }
     }
 }

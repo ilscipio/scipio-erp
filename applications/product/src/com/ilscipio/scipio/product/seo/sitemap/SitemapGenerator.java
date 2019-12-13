@@ -272,6 +272,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 if (!sitemapConfig.isIncludeVariant()) {
                     travConfig.addFilter(CatalogFilters.ExcludeVariantsProductFilter.getInstance());
                 }
+                if (UtilValidate.isNotEmpty(sitemapConfig.getExcludeSpecificCategoryIds())) {
+                    travConfig.addFilter(new CatalogFilters.ExcludeSpecificCategoryFilter(sitemapConfig.getExcludeSpecificCategoryIds()));
+                }
+                if (UtilValidate.isNotEmpty(sitemapConfig.getExcludeSpecificProductIds())) {
+                    travConfig.addFilter(new CatalogFilters.ExcludeSpecificProductFilter(sitemapConfig.getExcludeSpecificProductIds()));
+                }
             }
             travConfig.addFilters(sitemapConfig.getCatalogFilters());
             return travConfig;

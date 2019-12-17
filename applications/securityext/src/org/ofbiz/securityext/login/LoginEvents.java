@@ -239,7 +239,9 @@ public class LoginEvents {
             passwordToSend = URLEncoder.encode(passwordToSend, "UTF-8");
         } catch (GenericEntityException  | UnsupportedEncodingException e) {
             Debug.logWarning(e, "", module);
-            Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+            // SCIPIO: 2019-12-17: This is not appropriate to show to users by default, for security reasons, and already logged (just shove the friendlier one in)
+            //Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+            Map<String, String> messageMap = UtilMisc.toMap("errorMessage", UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request)));
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_accessing_password", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";

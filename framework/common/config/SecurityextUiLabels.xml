@@ -64,7 +64,7 @@
     </property>
     <property key="loginevents.error_unable_email_password_contact_customer_service">
         <value xml:lang="de">Fehler: Passwort konnte nicht per E-Mail verschickt werden. Versuchen Sie es später noch einmal oder wenden Sie sich an den Kundenservice.</value>
-        <value xml:lang="en">Error occurred: unable to email password.  Please try again later or contact customer service.</value>
+        <value xml:lang="en">Error occurred: unable to email password. Please try again later or contact customer service.</value>
         <value xml:lang="es">Error: no se pudo enviar la clave por correo. Intente nuevamente o contacte el servicio de soporte</value>
         <value xml:lang="fr">Erreur : impossible d'envoyer le mot de passe par courriel. Merci de réessayer ultérieurement ou de contacter votre service commercial.</value>
         <value xml:lang="it">Errore: non è possibile mandare la password per e-mail. Riprovare più tardi o contattare il servizio clienti.</value>
@@ -79,7 +79,7 @@
     </property>
     <property key="loginevents.error_unable_email_password_contact_customer_service_errorwas">
         <value xml:lang="de">Fehler: Passwort konnte nicht per E-Mail verschickt werden. Versuchen Sie es später noch einmal oder wenden Sie sich an den Kundenservice. (Fehler war: ${errorMessage}).</value>
-        <value xml:lang="en">Error occurred: unable to email password.  Please try again later or contact customer service. (error was: ${errorMessage}).</value>
+        <value xml:lang="en">Error occurred: unable to email password. Please try again later or contact customer service. (error was: ${errorMessage}).</value>
         <value xml:lang="es">Error: no se pudo enviar la clave por correo. Intente nuevamente o contacte el servicio de soporte. (el error fue: ${errorMessage}).</value>
         <value xml:lang="fr">Erreur : impossible d'envoyer le mot de passe par courriel. Merci de réessayer ultérieurement ou de contacter votre service commercial. (erreur: ${errorMessage}).</value>
         <value xml:lang="it">Errore: non è possibile mandare la password per e-mail. Riprovare più tardi o contattare il servizio clienti. (errore: ${errorMessage})</value>

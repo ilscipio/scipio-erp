@@ -325,8 +325,10 @@ public class LoginEvents {
             Map<String, Object> result = dispatcher.runSync("sendMailHiddenInLogFromScreen", serviceContext);
 
             if (ServiceUtil.isError(result)) { // SCIPIO: 2018-10-04: Corrected error check
-                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
-                errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
+                // SCIPIO: 2019-12-17: This is not appropriate to show to users by default, for security reasons, and service engine should have logged it
+                //Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
+                //errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }

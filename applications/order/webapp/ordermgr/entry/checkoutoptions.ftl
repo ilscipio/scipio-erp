@@ -76,7 +76,7 @@ function updateShippingMethod(shippingMethod) {
 }
 
 $(document).ready(function() {
-    var selectedShippingMethod = '${rawString(chosenShippingMethod!parameters.shipping_method)!''}';
+    var selectedShippingMethod = '${rawString(chosenShippingMethod!parameters.shipping_method!)!''}';
     if (selectedShippingMethod) {
         shippingMethod = selectedShippingMethod.split('@');
         if (shippingMethod.length == 2) {

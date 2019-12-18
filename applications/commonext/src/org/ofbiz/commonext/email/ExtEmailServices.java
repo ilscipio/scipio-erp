@@ -34,6 +34,12 @@ public abstract class ExtEmailServices {
         }
     }
 
+    public static Map<String, Object> sendMailHiddenInLogFromScreen(DispatchContext dctx, Map<String, Object> context) {
+        Map<String, Object> serviceContext = UtilMisc.makeMapWritable(context);
+        serviceContext.put("hideInLog", true);
+        return sendMailFromScreen(dctx, serviceContext);
+    }
+
     /**
      * SCIPIO: Attempts to auto-determine and normalize the webSiteId and productStoreId fields in service context
      * and bodyParameters, using each other as well as orderId.

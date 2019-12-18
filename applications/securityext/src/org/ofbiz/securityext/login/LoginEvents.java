@@ -55,6 +55,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
@@ -322,6 +323,11 @@ public class LoginEvents {
         }
         serviceContext.put("sendTo", emails.toString());
         serviceContext.put("partyId", party.getString("partyId"));
+        // SCIPIO: Set webSiteId, if available - otherwise will be inferred from productStoreId by scipio extensions
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            serviceContext.put("webSiteId", webSiteId);
+        }
 
         try {
             Map<String, Object> result = dispatcher.runSync("sendMailHiddenInLogFromScreen", serviceContext);

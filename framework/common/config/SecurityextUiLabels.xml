@@ -71,26 +71,26 @@
         <value xml:lang="ja">エラーが発生しました: パスワードをEメールで送信することができません。後で再度実行するかカスタマサービスに連絡してください。</value>
         <value xml:lang="nl">Fout: het nieuwe wachtwoord kan niet gemaild worden. Probeert u het later a.u.b. of neem contact op met de klantenservice.</value>
         <value xml:lang="pt-BR">Ocorreu um erro: não foi possível enviar a senha. Por favor, tente novamente mais tarde ou contate o serviço ao cliente.</value>
-        <value xml:lang="ro">Eroare aparuta: nu este posibila trimiterea parolei e-mail.Va rugam  incercati mai tarziu sau contactati serviciul clienti. loginevents.error_saving_new_password_email_not_correct_password=Eroare la  salvarea noii parole, e-mail-ul la care tu vei primi mesate nu are o parola corecta, vechia parola este deja folosita: ${errorMessage}.</value>
+        <value xml:lang="ro">Eroare aparuta: nu este posibila trimiterea parolei e-mail.Va rugam  incercati mai tarziu sau contactati serviciul clienti. Eroare la salvarea noii parole, e-mail-ul la care tu vei primi mesate nu are o parola corecta, vechia parola este deja folosita: ${errorMessage}.</value>
         <value xml:lang="ru">Произошла ошибка: невозможно отправить пароль по эл. почте.  Повторите попытку позже или свяжитесь со службой поддержки.</value>
         <value xml:lang="th">สิ่งที่เกิดขึ้นผิดพลาด: ไม่สามารถถึงรหัสผ่านอีเมล.  กรุณาลองอีกครั้งหรือติดต่อบริการลูกค้า.</value>
         <value xml:lang="zh">发生错误：无法发送带有密码的电子邮件。请重试或与客户服务联系。</value>
         <value xml:lang="zh-TW">發生錯誤: 無法送出帶有密碼的電子郵件, 請重試或聯絡客服.</value>
     </property>
     <property key="loginevents.error_unable_email_password_contact_customer_service_errorwas">
-        <value xml:lang="de">Fehler: Passwort konnte nicht per E-Mail verschickt werden. Versuchen Sie es später noch einmal oder wenden Sie sich an den Kundenservice. (Fehler war: ${errorMessage}).</value>
-        <value xml:lang="en">Error occurred: unable to email password. Please try again later or contact customer service. (error was: ${errorMessage}).</value>
-        <value xml:lang="es">Error: no se pudo enviar la clave por correo. Intente nuevamente o contacte el servicio de soporte. (el error fue: ${errorMessage}).</value>
-        <value xml:lang="fr">Erreur : impossible d'envoyer le mot de passe par courriel. Merci de réessayer ultérieurement ou de contacter votre service commercial. (erreur: ${errorMessage}).</value>
-        <value xml:lang="it">Errore: non è possibile mandare la password per e-mail. Riprovare più tardi o contattare il servizio clienti. (errore: ${errorMessage})</value>
-        <value xml:lang="ja">エラーが発生しました: パスワードをEメールで送信することができません。後で再度実行するかカスタマサービスに連絡してください。(エラー: ${errorMessage})</value>
-        <value xml:lang="nl">Fout: het nieuwe wachtwoord kan niet gemaild worden. Probeert u het later a.u.b. of neem contact op met de klantenservice.(fout is ${errorMessage}).</value>
-        <value xml:lang="pt-BR">Ocorreu um erro: não foi possível enviar a senha. Por favor, tente novamente mais tarde ou contate o serviço ao cliente. (Erro foi: $ {errorMessage}).</value>
-        <value xml:lang="ro">Eroare aparuta: nu este posibila trimiterea parolei e-mail.Va rugam  incercati mai tarziu sau contactati serviciul clienti.(eroarea era: ${errorMessage}).</value>
-        <value xml:lang="ru">Произошла ошибка: невозможно отправить пароль по эл. почте.  Повторите попытку позже или свяжитесь со службой поддержки. (ошибка: ${errorMessage}).</value>
-        <value xml:lang="th">สิ่งที่เกิดขึ้นผิดพลาด: ไม่สามารถถึงรหัสผ่านอีเมล.  กรุณาลองอีกครั้งหรือติดต่อบริการลูกค้า. (ผิดพลาดคือ: ${errorMessage}).</value>
-        <value xml:lang="zh">发生错误：无法发送带有密码的电子邮件。请重试或与客户服务联系(错误是：${errorMessage})。</value>
-        <value xml:lang="zh-TW">發生錯誤: 無法送出帶有密碼的電子郵件, 請重試或聯絡客服(錯誤為: ${errorMessage}).</value>
+        <value xml:lang="de">Fehler: Passwort konnte nicht per E-Mail verschickt werden. Versuchen Sie es später noch einmal oder wenden Sie sich an den Kundenservice.</value>
+        <value xml:lang="en">Error occurred: unable to email password. Please try again later or contact customer service.</value>
+        <value xml:lang="es">Error: no se pudo enviar la clave por correo. Intente nuevamente o contacte el servicio de soporte.</value>
+        <value xml:lang="fr">Erreur : impossible d'envoyer le mot de passe par courriel. Merci de réessayer ultérieurement ou de contacter votre service commercial.</value>
+        <value xml:lang="it">Errore: non è possibile mandare la password per e-mail. Riprovare più tardi o contattare il servizio clienti.</value>
+        <value xml:lang="ja">エラーが発生しました: パスワードをEメールで送信することができません。後で再度実行するかカスタマサービスに連絡してください。</value>
+        <value xml:lang="nl">Fout: het nieuwe wachtwoord kan niet gemaild worden. Probeert u het later a.u.b. of neem contact op met de klantenservice.</value>
+        <value xml:lang="pt-BR">Ocorreu um erro: não foi possível enviar a senha. Por favor, tente novamente mais tarde ou contate o serviço ao cliente.</value>
+        <value xml:lang="ro">Eroare aparuta: nu este posibila trimiterea parolei e-mail.Va rugam  incercati mai tarziu sau contactati serviciul clienti.</value>
+        <value xml:lang="ru">Произошла ошибка: невозможно отправить пароль по эл. почте. Повторите попытку позже или свяжитесь со службой поддержки.</value>
+        <value xml:lang="th">สิ่งที่เกิดขึ้นผิดพลาด: ไม่สามารถถึงรหัสผ่านอีเมล.  กรุณาลองอีกครั้งหรือติดต่อบริการลูกค้า.</value>
+        <value xml:lang="zh">发生错误：无法发送带有密码的电子邮件。请重试或与客户服务联系。</value>
+        <value xml:lang="zh-TW">發生錯誤: 無法送出帶有密碼的電子郵件, 請重試或聯絡客服.</value>
     </property>
     <property key="loginevents.following_error_occurred_during_login">
         <value xml:lang="de">${errorMessage}</value>

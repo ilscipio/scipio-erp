@@ -2380,6 +2380,8 @@ public class ShoppingCartEvents {
                 cart.setOrderPartyId(partyId);
                 if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
                     cart.setBillFromVendorPartyId(partyId);
+                } else if (UtilValidate.isEmpty(cart.getBillFromVendorPartyId()) && UtilValidate.isNotEmpty(productStore.get("payToPartyId"))) {
+                    cart.setBillFromVendorPartyId(productStore.getString("payToPartyId"));
                 }
             } else if (partyId != null && partyId.length() == 0) {
                 cart.setOrderPartyId("_NA_");

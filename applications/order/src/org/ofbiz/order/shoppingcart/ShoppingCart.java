@@ -1747,7 +1747,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public String getBillFromVendorPartyId() {
-        return this.billFromVendorPartyId != null ? this.billFromVendorPartyId : this.getPartyId();
+        // SCIPIO (12-16-2019): it's really error prone to set billFromVendorPartyId=orderPartyId if billFromVendorPartyId is null,
+        // It's hard to see any possible scenario where the orderPartyId (likely the customer) is at the same time the one who bill.
+        //this.billFromVendorPartyId != null ? this.billFromVendorPartyId : this.getPartyId();
+        return this.billFromVendorPartyId;
     }
 
     public void setBillFromVendorPartyId(String billFromVendorPartyId) {

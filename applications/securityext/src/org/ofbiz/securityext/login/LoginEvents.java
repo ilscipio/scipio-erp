@@ -335,7 +335,9 @@ public class LoginEvents {
                 return "error";
             }
         } catch (GenericServiceException e) {
-            Debug.logWarning("emailPassword: Error sending email: " + e.toString() + "; context: " + serviceContext, module);
+            Map<String, Object> sanitizedCtx = new HashMap<>(serviceContext);
+            sanitizedCtx.put("password", "[HIDDEN]");
+            Debug.logWarning("emailPassword: Error sending email: " + e.toString() + "; context: " + sanitizedCtx, module);
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";

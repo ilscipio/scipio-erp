@@ -269,7 +269,7 @@ code package.
         label=uiLabelMap.PartyState postWidgetContent=extraFieldContent>
         <#-- Populated by JS -->
         <#if parameters.CUSTOMER_STATE?has_content>
-          <option value="${parameters.CUSTOMER_STATE?html}">${parameters.CUSTOMER_STATE?html}</option>
+          <option value="${escapeVal(parameters.CUSTOMER_STATE, 'html')}" selected="selected">${escapeVal(parameters.CUSTOMER_STATE, 'html')}</option>
         </#if>
     </@field>
 

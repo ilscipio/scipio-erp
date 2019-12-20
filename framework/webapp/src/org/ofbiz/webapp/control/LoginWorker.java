@@ -417,6 +417,7 @@ public class LoginWorker {
         }
 
         List<String> unpwErrMsgList = new LinkedList<String>();
+
         if (UtilValidate.isEmpty(username)) {
             unpwErrMsgList.add(UtilProperties.getMessage(resourceWebapp, "loginevents.username_was_empty_reenter", UtilHttp.getLocale(request)));
         }
@@ -424,9 +425,20 @@ public class LoginWorker {
             unpwErrMsgList.add(UtilProperties.getMessage(resourceWebapp, "loginevents.password_was_empty_reenter", UtilHttp.getLocale(request)));
         }
         boolean requirePasswordChange = "Y".equals(request.getParameter("requirePasswordChange"));
+        if ("GET".equals(request.getMethod()) && username == null && password == null) {
+            // SCIPIO: If this is a GET request with no username or password (checked using null instead of empty to make sure nothing tried to set them),
+            // just direct to login without the messages because they are meaningless and complicate flow for nothing
+            if (requirePasswordChange) {
+                return "requirePasswordChange";
+            }
+            // TODO: returning "login" response would be better if could support it without breaking compatibility (check if it's defined),
+            //  but currently only "error" is sure to send back to login, and we can't know if some other event delegated to us, so this is safer
+            //return "login";
+            return "error";
+        }
         if (!unpwErrMsgList.isEmpty()) {
             request.setAttribute("_ERROR_MESSAGE_LIST_", unpwErrMsgList);
-            return  requirePasswordChange ? "requirePasswordChange" : "error";
+            return requirePasswordChange ? "requirePasswordChange" : "error";
         }
 
         boolean setupNewDelegatorEtc = false;

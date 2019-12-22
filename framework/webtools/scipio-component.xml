@@ -11,10 +11,11 @@ code package.
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
-    <!-- SCIPIO: NOTE: requires webSocket=true in catalina.properties -->
+    <!-- SCIPIO: NOTE: requires webSocket=true in catalina.properties
+    // 2019-12-21: This is not required any longer, as the default scanner will include the jar files in build/lib/*
     <classpath-special purpose="websockets" type="jar" location="build/lib/ofbiz-webtools-example.jar">
-        <webapp name="admin"/><!-- Limit JAR scanning to admin webapp only (otherwise all webapps globally) -->
-    </classpath-special>
+        <webapp name="admin"/>
+    </classpath-special> -->
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_scipio.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WebtoolsSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/WebtoolsSecurityGroupDemoData.xml"/>

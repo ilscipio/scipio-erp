@@ -23,6 +23,9 @@ import org.ofbiz.order.shoppingcart.*;
 
 if (userLogin) {
     party = userLogin.getRelatedOne("Party", false);
+    if (party == null) {
+        return; // SCIPIO
+    }
     context.partyId = party.partyId
     if ("PERSON".equals(party.partyTypeId)) {
         person = from("Person").where("partyId", party.partyId).queryOne();

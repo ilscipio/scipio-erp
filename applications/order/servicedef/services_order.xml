@@ -315,4 +315,15 @@ code package.
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- Websocket services -->
+    <service name="sendOrderLiveData" engine="java" require-new-transaction="true" max-retry="3"
+             location="com.ilscipio.scipio.order.web.OrderWebServices" invoke="sendOrderLiveData">
+        <description>Sends order data to listening websockets on channel. Requires interval to be set (HOURLY, DAILY, MONTHLY, YEARHLY) prevents miscalculated columns)</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="channel" type="String" mode="IN" optional="false"/>
+        <attribute name="interval" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+
 </services>

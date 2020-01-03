@@ -1,6 +1,6 @@
 <@script>
       $(function(){
-            var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/orderdata/subscribe</@appUrl>');
+            var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/orderdatalive/subscribe</@appUrl>');
 
             webSocket.onopen = function(event){
                 var msg = {
@@ -19,12 +19,24 @@
                       message = jsonObject.message;
                     } catch (error) {
                     }
-                  $('#testMessage code').append(message);
+
             };
+
+
+            function addChartData(chart, label, data) {
+                myLineChart.data.datasets[0].data.push(Math.random() * 100);
+                myLineChart.data.datasets[1].data.push(Math.random() * 100);
+                myLineChart.data.labels.push(time)
+                chart.data.labels.push(label);
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(data);
+                });
+                chart.update();
+            }
       });
 </@script>
+<@section>
+    <@chart id="orderchart"  label1="" label2="" type="bar">
 
-<div id="testMessage">
-    <@code>
-    </@code>
-</div>
+    </@chart>
+</@section>

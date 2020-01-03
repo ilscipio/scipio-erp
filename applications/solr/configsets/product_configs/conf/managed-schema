@@ -176,7 +176,10 @@
    <field name="sku" type="text_general" indexed="true" stored="true"/><!-- type="text_en_splitting_tight" omitNorms="true" -->
    <!--<field name="name" type="text_general" indexed="true" stored="true"/>-->
    <field name="manu" type="text_general" indexed="true" stored="true" omitNorms="true"/>
+   <!-- SCIPIO: cat is all the categories the product is logically member of, including parent product categories - variants inherit virtual's categories -->
    <field name="cat" type="string" indexed="true" stored="true" multiValued="true"/>
+   <!-- SCIPIO: ownCat_ss (dynamic field) is the categories this product is directly linked to via ProductCategoryMember - does not include categories of parent products or other -->
+   <!--<field name="ownCat_ss" type="string" indexed="true" stored="true" multiValued="true"/>-->
    <field name="features" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <!--<field name="includes" type="text_general" indexed="true" stored="true" termVectors="true" termPositions="true" termOffsets="true" />-->
 

@@ -39,6 +39,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         private boolean generateFixedIds = true;
         private String prodFixedIdPat = null;
         private String catFixedIdPat = null;
+        private boolean sepTrans = false;
 
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
@@ -99,6 +100,15 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             this.catFixedIdPat = catFixedIdPat;
             return this;
         }
+
+        public boolean isSepTrans() {
+            return sepTrans;
+        }
+
+        public GenTraversalConfig setSepTrans(boolean sepTrans) {
+            this.sepTrans = sepTrans;
+            return this;
+        }
     }
 
     @Override
@@ -137,9 +147,15 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("productCategoryId", productCategoryId);
         servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
         servCtx.put("fixedIdPat", getTravConfig().getCatFixedIdPat());
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-
+        if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
+            servCtx.put("webSiteId", getWebSiteId());
+        }
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx);
+        }
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
                 getStats().categorySuccess++;
@@ -173,8 +189,15 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
         servCtx.put("fixedIdPat", getTravConfig().getProdFixedIdPat());
         servCtx.put("skipProductIds", getSeenProductIds());
-        // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
+        if (!servCtx.containsKey("webSiteId") && getWebSiteId() != null) {
+            servCtx.put("webSiteId", getWebSiteId());
+        }
+        Map<String, Object> recordResult;
+        if (getTravConfig().isSepTrans()) {
+            recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
+        } else {
+            recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx);
+        }
 
         Integer numUpdated = (Integer) recordResult.get("numUpdated");
         Integer numSkipped = (Integer) recordResult.get("numSkipped");

@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -389,16 +390,19 @@ public abstract class LocalizedContentWorker {
 
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String textData) throws GenericEntityException {
         GenericValue elecText = getSimpleTextContentElectronicText(delegator, dispatcher, content);
-        elecText.put("textData", textData);
-        elecText.store();
+        // 2019-12-09: Do not update textData if it hasn't changed - this way we can avoid needless DB write and potential ECA and solr triggers for nothing
+        if (!sameText(elecText.getString("textData"), textData)) {
+            elecText.put("textData", textData);
+            elecText.store();
+        }
     }
 
     private static boolean sameLocale(String first, String second) {
-        if (UtilValidate.isNotEmpty(first)) {
-            return first.equals(second);
-        } else {
-            return UtilValidate.isEmpty(second);
-        }
+        return UtilValidate.isNotEmpty(first) ? first.equals(second) : UtilValidate.isEmpty(second);
+    }
+
+    private static boolean sameText(String first, String second) {
+        return UtilValidate.isNotEmpty(first) ? first.equals(second) : UtilValidate.isEmpty(second);
     }
 
     public static GenericValue getSimpleTextContentElectronicText(Delegator delegator, LocalDispatcher dispatcher, GenericValue content) throws GenericEntityException {
@@ -438,7 +442,6 @@ public abstract class LocalizedContentWorker {
 
     /**
      * Replaces the textData of the Content and its associated ALTERNATE_LOCALE Contents.
-     * NOTE: The first entry
      * <p>
      * TODO?: move elsewhere, may need to reuse...
      * @param localeEntryMap can be either a map of localeString to textData strings,

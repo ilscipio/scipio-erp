@@ -74,16 +74,30 @@ code package.
 
     <service name="sendMailFromScreenExt" max-retry="3" engine="java"
         location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
-        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+        <description>SCIPIO: Send E-Mail From Screen Widget Service, application-level enhanced
             This version provides improved webSiteId/productStoreId/orderId handling.</description>
         <implements service="sendMailFromScreenStd"/>
     </service>
 
+    <service name="sendMailHiddenInLogFromScreenExt" max-retry="3" engine="java" hideResultInLog="true"
+             location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailHiddenInLogFromScreen">
+        <description>SCIPIO: Send E-Mail hidden in log (password, etc.) From Screen Widget Service, application-level enhanced
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailFromScreenInterface"/>
+    </service>
+
     <service name="sendMailFromScreen" max-retry="3" engine="java"
         location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
-        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+        <description>SCIPIO: Send E-Mail From Screen Widget Service, application-level enhanced (CommonExt override)
             This version provides improved webSiteId/productStoreId/orderId handling.</description>
         <implements service="sendMailFromScreenExt"/>
+    </service>
+
+    <service name="sendMailHiddenInLogFromScreen" max-retry="3" engine="java" hideResultInLog="true"
+             location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailHiddenInLogFromScreen">
+        <description>SCIPIO: Send E-Mail hidden in log (password, etc.) From Screen Widget Service, application-level enhanced (CommonExt override)
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailHiddenInLogFromScreenExt"/>
     </service>
 
 </services>

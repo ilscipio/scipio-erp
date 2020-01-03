@@ -26,19 +26,4 @@ public interface CatalogFilter {
      */
     default boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException { return true; }
 
-    static class LoggingCatalogFilter implements CatalogFilter, Serializable {
-        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-
-        @Override
-        public boolean filterCategory(GenericValue productCategory, CatalogTraverser.TraversalState state) throws GeneralException {
-            Debug.logInfo("Allowing: " + productCategory.get("productCategoryId") + " [category]", module);
-            return true;
-        }
-
-        @Override
-        public boolean filterProduct(GenericValue product, CatalogTraverser.TraversalState state) throws GeneralException {
-            Debug.logInfo("Allowing: " + product.get("productId") + " [product]", module);
-            return true;
-        }
-    }
 }

@@ -92,7 +92,7 @@
       </#if>
 
       <#if invoice.billingAccountId?has_content>
-        <#assign billingAcct = invoice.getRelatedOne("BillingAccountAndRole", false)/>
+        <#assign billingAcct = invoice.getRelatedOne("BillingAccount", false)/>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.CommonTo}</@td>
             <@td colspan="3"><a href="<@pageUrl>EditBillingAccount?billingAccountId=${invoice.billingAccountId!}</@pageUrl>">${billingAcct.get('description',locale)}</a></@td>

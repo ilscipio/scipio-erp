@@ -1256,6 +1256,10 @@ public final class UtilHttp {
         response.setHeader("Pragma", "no-cache"); // HTTP/1.0
     }
 
+    public static void setResponseBrowserProxyNoCacheRedirect(HttpServletResponse response) { // SCIPIO
+        setResponseBrowserProxyNoCache(response);
+    }
+
     public static String getContentTypeByFileName(String fileName) {
         FileNameMap mime = URLConnection.getFileNameMap();
         return mime.getContentTypeFor(fileName);

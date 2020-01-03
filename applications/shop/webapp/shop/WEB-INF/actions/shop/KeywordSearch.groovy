@@ -608,8 +608,9 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         if (kwsParams) kwsParams.setPaging(kwsArgs.paging); // update this after-the fact
         
         context.listIndex = 0;
-        if (result.viewSize != null && result.viewSize > 0)
-            context.listIndex = Math.ceil(result.listSize/result.viewSize);
+        if (result.viewSize != null && result.viewSize > 0) {
+            context.listIndex = Math.ceil(result.listSize / result.viewSize);
+        }
         // SCIPIO: this may not make sense anymore since SOLR patches
         //if (!viewSize.equals(String.valueOf(result.viewSize))) {
         //    pageViewSize = Integer.parseInt(viewSize).intValue();

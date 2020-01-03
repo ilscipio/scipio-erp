@@ -674,7 +674,7 @@ code package.
                 <set field="responseName" value="stateList"/>
                 <set field="dependentKeyName" value="geoId"/>
                 <set field="descName" value="geoName"/>
-                <set field="selectedDependentOption" default-value="_none_"/>
+                <set field="selectedDependentOption" default-value="_previous_"/>
                 
             </actions>
             <widgets>

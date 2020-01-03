@@ -405,7 +405,7 @@ public class RequestHandler {
                     //if (newUrl.toUpperCase().startsWith("HTTPS")) {
                     if (RequestLinkUtil.isUrlProtocol(newUrl, "https")) {
                         // if we are supposed to be secure, redirect secure.
-                        callRedirect(newUrl, response, request, statusCode, AttributesSpec.NONE, "close"); // SCIPIO: save-request="none" here
+                        callRedirect(newUrl, response, request, statusCode, AttributesSpec.NONE, "close", true); // SCIPIO: save-request="none" here
                         return;
                     }
                 }
@@ -707,13 +707,28 @@ public class RequestHandler {
                 Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_URL_"), String.class, Object.class);
                 String queryString = UtilHttp.urlEncodeArgs(previousParamMap, false);
                 String redirectTarget = previousRequest;
+
+                // JB: SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
+                // FIXME?: NOTE: Like the other attributes ofbiz did above, we are forced to use a separate attribute for this, but it risks breaking
+                //  due to concurrency... for now, this is moot because the others all suffer from this as well
+                String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                if (UtilValidate.isNotEmpty(previousServletRequest)) {
+                    request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                    redirectTarget = previousServletRequest;
+                    if (UtilValidate.isNotEmpty(queryString)) {
+                        redirectTarget += "?" + queryString;
+                    }
+                    callRedirect(makeLink(request, response, redirectTarget, null, (FullWebappInfo) null, false, true, null, null), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
+                    return;
+                }
+
                 if (UtilValidate.isNotEmpty(queryString)) {
                     redirectTarget += "?" + queryString;
                 }
 
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
-                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCode, AttributesSpec.NONE, null); // SCIPIO: save-request="none" here
+                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
                 return;
             }
         }
@@ -801,7 +816,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
-                callRedirect(nextRequestResponseValue, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(nextRequestResponseValue, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
             } else if (RequestResponse.Type.CROSS_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
@@ -821,7 +836,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -837,7 +852,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -853,14 +868,14 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_LAST == nextRequestResponse.getTypeEnum()) {
                 String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
                 if (UtilValidate.isNotEmpty(lastGetUrl)) {
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
                     // Perform URL encoding
                     lastGetUrl = response.encodeURL(lastGetUrl);
-                    callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                    callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
                 } else {
                     // SCIPIO: New type: request-redirect-last
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
@@ -876,7 +891,7 @@ public class RequestHandler {
                         Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                         throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                     }
-                    callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState()); // SCIPIO: save-request
+                    callRedirect(targetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), Boolean.TRUE.equals(nextRequestResponse.getAllowCacheRedirect())); // SCIPIO: save-request
                 }
             } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
@@ -1215,8 +1230,10 @@ public class RequestHandler {
      * If need to remove jsessionId from redirects, could uncomment the lines below.
      * <p>
      * SCIPIO: 2018-12-12: Modified to take Integer statusCode instead of statusCodeString.
+     * <p>
+     * SCIPIO: 2019-12-04: Added allowCacheRedirect to preventing caching 301 redirects.
      */
-    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, int statusCode, AttributesSpec saveAttrMap, String httpConnectionHeader) throws RequestHandlerException {
+    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, int statusCode, AttributesSpec saveAttrMap, String httpConnectionHeader, Boolean allowCacheRedirect) throws RequestHandlerException {
         // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]." + showSessionId(req), module);
@@ -1259,6 +1276,11 @@ public class RequestHandler {
             statusCode = 303;
         }
         */
+
+        // SCIPIO: By default, don't allow caching 301 redirects as this messes with most controller logic
+        if (!Boolean.TRUE.equals(allowCacheRedirect)) {
+            UtilHttp.setResponseBrowserProxyNoCacheRedirect(resp);
+        }
 
         // send the redirect
         try {
@@ -3039,7 +3061,7 @@ public class RequestHandler {
      * <p>
      * NOTE: The url is NOT sent through URL encoding automatically; caller must do this (through {@link #makeLink} or other)!
      */
-    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IllegalStateException {
+    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url, Boolean allowCacheRedirect) throws IllegalStateException {
         Integer statusCode = null;
         try {
             //statusCodeString = controllerConfig.getStatusCode();
@@ -3052,6 +3074,12 @@ public class RequestHandler {
             statusCode = defaultStatusCodeNumber;
         }
 
+        // TODO: REVIEW: Currently this has no central controller config, but because cache can introduce unexpected behavior, turn it off by default,
+        //  because callers can't know if this is a 301 or 302 configured... callers may pass true as needed
+        if (!Boolean.TRUE.equals(allowCacheRedirect)) {
+            UtilHttp.setResponseBrowserProxyNoCacheRedirect(response);
+        }
+
         // send the redirect
         response.setStatus(statusCode);
         response.setHeader("Location", url);
@@ -3062,14 +3090,32 @@ public class RequestHandler {
     /**
      * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
      * or requestHandler.properties.
+     * <p>
+     * NOTE: The url is NOT sent through URL encoding automatically; caller must do this (through {@link #makeLink} or other)!
      */
-    public static void sendControllerUriRedirect(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IllegalStateException {
+        sendRedirect(request, response, url, null);
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties.
+     */
+    public static void sendControllerUriRedirect(HttpServletRequest request, HttpServletResponse response, String uri, Boolean allowCacheRedirect) throws IllegalStateException {
         String url = makeUrlFull(request, response, uri);
         if (url != null) {
-            sendRedirect(request, response, url);
+            sendRedirect(request, response, url, allowCacheRedirect);
         } else {
             throw new IllegalStateException("Cannot redirect to controller uri because failed to generate link: " + uri);
         }
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties.
+     */
+    public static void sendControllerUriRedirect(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+        sendControllerUriRedirect(request, response, uri, null);
     }
 
     /**
@@ -3078,14 +3124,25 @@ public class RequestHandler {
      * <p>
      * FIXME: If uri provides any parameters, they may be crushed or duplicated by the incoming ones.
      */
-    public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+    public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri, Boolean allowCacheRedirect) throws IllegalStateException {
         ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         String url = rh.makeLinkFull(request, response, uri + rh.makeQueryString(request, null, null));
         if (url != null) {
-            sendRedirect(request, response, url);
+            sendRedirect(request, response, url, allowCacheRedirect);
         } else {
             throw new IllegalStateException("Cannot redirect to controller uri because failed to generate link: " + uri);
         }
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties, preserving the incoming query string.
+     * @deprecated 2019-12-04: use {@link }
+     * <p>
+     * FIXME: If uri provides any parameters, they may be crushed or duplicated by the incoming ones.
+     */
+    public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+        sendControllerUriRedirectWithQueryString(request, response, uri, null);
     }
 }

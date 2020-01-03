@@ -2,10 +2,12 @@ package com.ilscipio.scipio.product.category;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.GenericValue;
 
 public abstract class CatalogAltUrlSanitizer {
 
@@ -54,6 +56,40 @@ public abstract class CatalogAltUrlSanitizer {
     public abstract String convertIdToLiveAltUrl(String id, Locale locale, CatalogUrlType entityType, SanitizeContext ctxInfo);
 
     /**
+     * Adjust category trail of category live URLs - can be used as a limited (but faster) URL rewrite.
+     * Does not contain the last element.
+     * @return the original trail or a substituted trail - must be an ArrayList
+     */
+    public List<String> adjustCategoryLiveAltUrlTrail(List<String> trail, Locale locale, SanitizeContext ctxInfo) {
+        return trail;
+    }
+
+    /**
+     * Adjust category trail of product live URLs - can be used as a limited (but faster) URL rewrite.
+     * Does not contain the last element.
+     * @return the original trail or a substituted trail - must be an ArrayList
+     */
+    public List<String> adjustProductLiveAltUrlTrail(List<String> trail, Locale locale, SanitizeContext ctxInfo) {
+        return trail;
+    }
+
+    /**
+     * Adjust the StringBuilder containing the category alt URL core path - this includes the .html extension if configured, but not any parameters.
+     * @return the StringBuilder
+     */
+    public StringBuilder adjustCategoryLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
+        return url;
+    }
+
+    /**
+     * Adjust the StringBuilder containing the category alt URL core path - this includes the .html extension if configured, but not any parameters.
+     * @return the StringBuilder
+     */
+    public StringBuilder adjustProductLiveAltUrlPath(StringBuilder url, Locale locale, SanitizeContext ctxInfo) {
+        return url;
+    }
+
+    /**
      * TODO: REVIEW: this doesn't belong here but it's the only way to make the parsing consistent.
      */
     public Locale parseLocale(String localeString) {
@@ -66,6 +102,10 @@ public abstract class CatalogAltUrlSanitizer {
         public abstract T getInstance(Map<String, Object> options);
     }
 
+    public SanitizeContext makeSanitizeContext() {
+        return new SanitizeContext();
+    }
+
     /**
      * Class to pass arguments to methods above, needed to prevent compatibility breakage.
      * NOTE: Unless otherwise specified, all fields may be null.
@@ -74,10 +114,11 @@ public abstract class CatalogAltUrlSanitizer {
         private Boolean last;
         private Integer nameIndex;
         private Integer totalNames;
-        private String targetProductId;
-        private String targetCategoryId;
+        private GenericValue targetProduct;
+        private GenericValue targetCategory;
+        private Boolean useCache;
 
-        public SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) {
+        protected SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) { // NOTE: avoid using this
             this.last = last;
             this.nameIndex = nameIndex;
             this.totalNames = totalNames;
@@ -140,31 +181,39 @@ public abstract class CatalogAltUrlSanitizer {
         }
 
         public String getTargetProductId() {
-            return targetProductId;
+            return (getTargetProduct() != null) ? getTargetProduct().getString("productId") : null;
         }
 
-        public SanitizeContext setTargetProductId(String targetProductId) {
-            this.targetProductId = targetProductId; return this;
+        public GenericValue getTargetProduct() { return targetProduct; }
+
+        public SanitizeContext setTargetProduct(GenericValue targetProduct) {
+            this.targetProduct = targetProduct; return this;
         }
 
-        public String getTargetCategoryId() {
-            return targetCategoryId;
+        public String getTargetCategoryId() { return (getTargetCategory() != null) ? getTargetCategory().getString("productCategoryId") : null; }
+
+        public GenericValue getTargetCategory() { return targetCategory; }
+
+        public SanitizeContext setTargetCategory(GenericValue targetCategory) {
+            this.targetCategory = targetCategory; return this;
         }
 
-        public SanitizeContext setTargetCategoryId(String targetCategoryId) {
-            this.targetCategoryId = targetCategoryId; return this;
+        public Boolean getUseCache() {
+            return useCache;
+        }
+
+        public SanitizeContext setUseCache(Boolean useCache) {
+            this.useCache = useCache;
+            return this;
         }
 
         public static class ReadOnlySanitizeContext extends SanitizeContext {
-            private static final SanitizeContext UNDEFINED = new ReadOnlySanitizeContext(); // FIXME: should be unmodifiable
-            private static final SanitizeContext LAST = new ReadOnlySanitizeContext(true, null, null); // FIXME: should be unmodifiable
-            private static final SanitizeContext NON_LAST = new ReadOnlySanitizeContext(false, null, null); // FIXME: should be unmodifiable
+            private static final SanitizeContext UNDEFINED = new ReadOnlySanitizeContext(null, null, null);
+            private static final SanitizeContext LAST = new ReadOnlySanitizeContext(true, null, null);
+            private static final SanitizeContext NON_LAST = new ReadOnlySanitizeContext(false, null, null);
 
             public ReadOnlySanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) {
                 super(last, nameIndex, totalNames);
-            }
-
-            public ReadOnlySanitizeContext() {
             }
 
             @Override
@@ -183,10 +232,10 @@ public abstract class CatalogAltUrlSanitizer {
             }
 
             @Override
-            public SanitizeContext setTargetProductId(String targetProductId) { throw new UnsupportedOperationException(); }
+            public SanitizeContext setTargetProduct(GenericValue targetProduct) { throw new UnsupportedOperationException(); }
 
             @Override
-            public SanitizeContext setTargetCategoryId(String targetCategoryId) { throw new UnsupportedOperationException(); }
+            public SanitizeContext setTargetCategory(GenericValue targetCategory) { throw new UnsupportedOperationException(); }
         }
     }
 }

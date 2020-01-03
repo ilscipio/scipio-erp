@@ -189,7 +189,7 @@ public class PartyServices {
 
         if (person != null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "person.create.person_exists", locale));
+                    "person.create.person_exists", locale) + " [" + partyId + "]"); // SCIPIO: print the ID
         }
 
         person = delegator.makeValue("Person", UtilMisc.toMap("partyId", partyId));

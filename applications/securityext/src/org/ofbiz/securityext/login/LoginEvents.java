@@ -55,6 +55,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
@@ -238,8 +239,10 @@ public class LoginEvents {
             */
             passwordToSend = URLEncoder.encode(passwordToSend, "UTF-8");
         } catch (GenericEntityException  | UnsupportedEncodingException e) {
-            Debug.logWarning(e, "", module);
-            Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+            Debug.logWarning("emailPassword: Error accessing password for userLoginId: " + (supposedUserLogin != null ? supposedUserLogin.getString("userLoginId") : "n/a") + ": " + e.toString(), module);
+            // SCIPIO: 2019-12-17: This is not appropriate to show to users by default, for security reasons, and already logged (just shove the friendlier one in)
+            //Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+            Map<String, String> messageMap = UtilMisc.toMap("errorMessage", UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request)));
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_accessing_password", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -320,18 +323,27 @@ public class LoginEvents {
         }
         serviceContext.put("sendTo", emails.toString());
         serviceContext.put("partyId", party.getString("partyId"));
+        // SCIPIO: Set webSiteId, if available - otherwise will be inferred from productStoreId by scipio extensions
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            serviceContext.put("webSiteId", webSiteId);
+        }
 
         try {
             Map<String, Object> result = dispatcher.runSync("sendMailHiddenInLogFromScreen", serviceContext);
 
             if (ServiceUtil.isError(result)) { // SCIPIO: 2018-10-04: Corrected error check
-                Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
-                errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
+                // SCIPIO: 2019-12-17: This is not appropriate to show to users by default, for security reasons, and service engine should have logged it
+                //Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", ServiceUtil.getErrorMessage(result));
+                //errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } catch (GenericServiceException e) {
-            Debug.logWarning(e, "", module);
+            Map<String, Object> sanitizedCtx = new HashMap<>(serviceContext);
+            sanitizedCtx.put("password", "[HIDDEN]");
+            Debug.logWarning("emailPassword: Error sending email: " + e.toString() + "; context: " + sanitizedCtx, module);
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -342,9 +354,11 @@ public class LoginEvents {
             try {
                 supposedUserLogin.store();
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, "", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-                errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
+                Debug.logWarning("emailPassword: Could not store userLoginId: " + (supposedUserLogin != null ? supposedUserLogin.getString("userLoginId") : "n/a") + ": " + e.toString(), module);
+                // SCIPIO: 2019-12-17: This is not appropriate to show to users by default, for security reasons, and already logged (NOTE: label was changed to omit message)
+                //Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+                //errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }

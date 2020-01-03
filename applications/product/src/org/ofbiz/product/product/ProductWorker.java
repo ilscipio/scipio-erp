@@ -23,6 +23,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -217,17 +218,116 @@ public final class ProductWorker {
         return getVariantVirtualId(variantProduct, true);
     }
 
-    // SCIPIO: 2017-09-14: now support useCache
-    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+    /**
+     * Get variant product's parent virtual product's id, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static String getVariantVirtualIdSafe(GenericValue variantProduct, boolean useCache) {
+        try {
+            return getVariantVirtualId(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product's id, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static String getVariantVirtualIdSafe(GenericValue variantProduct) {
+        try {
+            return getVariantVirtualId(variantProduct);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProduct(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+        String virtualProductId = getVariantVirtualId(variantProduct, useCache);
+        if (virtualProductId != null) {
+            return variantProduct.getDelegator().findOne("Product", UtilMisc.toMap("productId", virtualProductId), useCache);
+        }
+        return null;
+    }
+
+    /**
+     * Get variant product's parent virtual product, with caching enabled (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProduct(GenericValue variantProduct) throws GenericEntityException {
+        return getVariantVirtualProduct(variantProduct, true);
+    }
+
+    /**
+     * Get variant product's parent virtual product, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProductSafe(GenericValue variantProduct, boolean useCache) {
+        try {
+            return getVariantVirtualProduct(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    /**
+     * Get variant product's parent virtual product, with caching enabled, no exceptions (SCIPIO).
+     * Added 2019-12-04.
+     */
+    public static GenericValue getVariantVirtualProductSafe(GenericValue variantProduct) {
+        try {
+            return getVariantVirtualProduct(variantProduct, true);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    // SCIPIO: 2017-09-14: now support useCache, moment
+    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, Timestamp moment, boolean useCache) throws GenericEntityException {
         if (variantProduct != null && "Y".equals(variantProduct.getString("isVariant"))) {
-            List<GenericValue> productAssocs = EntityUtil.filterByDate(variantProduct.getRelated("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), null, useCache));
+            List<GenericValue> productAssocs = variantProduct.getRelated("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), null, useCache);
+            if (moment != null) {
+                productAssocs = EntityUtil.filterByDate(productAssocs, moment);
+            }
             return productAssocs;
         }
         return null;
     }
 
+    // SCIPIO: 2019-12-11: now support useCache,
+    public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+        return getVariantVirtualAssocs(variantProduct, UtilDateTime.nowTimestamp(), useCache);
+    }
+
     public static List<GenericValue> getVariantVirtualAssocs(GenericValue variantProduct) throws GenericEntityException {
-        return getVariantVirtualAssocs(variantProduct, true);
+        return getVariantVirtualAssocs(variantProduct, UtilDateTime.nowTimestamp(), true);
+    }
+
+
+    public static List<GenericValue> getVariantVirtualAssocsSafe(GenericValue variantProduct, boolean useCache) { // SCIPIO
+        try {
+            return getVariantVirtualAssocs(variantProduct, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    public static List<GenericValue> getVariantVirtualAssocsSafe(GenericValue variantProduct) { // SCIPIO
+        try {
+            return getVariantVirtualAssocs(variantProduct, true);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
     }
 
     /**
@@ -807,6 +907,223 @@ public final class ProductWorker {
             Debug.logError(e, module);
         }
         return categories;
+    }
+
+    public static List<GenericValue> getProductCategoryMembers(GenericValue product, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return product.getDelegator().from("ProductCategoryMember")
+                .where("productId", product.getString("productId")).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).filterByDate(moment).cache(useCache).queryList();
+    }
+
+    public static List<GenericValue> getProductCategoryMembers(Delegator delegator, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return delegator.from("ProductCategoryMember")
+                .where("productId", productId).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).filterByDate(moment).cache(useCache).queryList();
+    }
+
+    public static List<GenericValue> getProductCategoryMembers(Delegator delegator, String productId, GenericValue product, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productId)) {
+            productId = product.getString("productId");
+        }
+        return delegator.from("ProductCategoryMember")
+                .where("productId", productId).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).filterByDate(moment).cache(useCache).queryList();
+    }
+
+    public static List<GenericValue> getProductCategoryMembersSafe(GenericValue product, Timestamp moment, boolean ordered, boolean useCache) {
+        try {
+            return getProductCategoryMembers(product, moment, ordered, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return Collections.emptyList();
+        }
+    }
+
+    public static List<GenericValue> getProductCategoryMembersSafe(Delegator delegator, String productId, Timestamp moment, boolean ordered, boolean useCache) {
+        try {
+            return getProductCategoryMembers(delegator, productId, moment, ordered, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs immediately associated to the given productId and passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * Reflects the standard membership logic.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getCategoryIdsForProduct(C outCategoryIds, GenericValue product, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return getCategoryIdsForProduct(outCategoryIds, product.getDelegator(), null, product, null, moment, ordered, useCache);
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs immediately associated to the given productId and passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * Reflects the standard membership logic.
+     * <p>
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getCategoryIdsForProduct(C outCategoryIds, Delegator delegator, String productId, GenericValue product, Collection<GenericValue> productVariantAssocs,
+                                                                            Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        getOwnCategoryIdsForProduct(outCategoryIds, delegator, productId, product, moment, ordered, useCache);
+        getAssocCategoryIdsForProduct(outCategoryIds, delegator, productId, product, productVariantAssocs, moment, ordered, useCache);
+        return outCategoryIds;
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs immediately associated to the given productId and passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * <p>
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getOwnCategoryIdsForProduct(C outCategoryIds, GenericValue product, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return UtilMisc.getMapValuesForKey(getProductCategoryMembers(product, moment, ordered, useCache), "productCategoryId", outCategoryIds);
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs immediately associated to the given productId and passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * <p>
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getOwnCategoryIdsForProduct(C outCategoryIds, Delegator delegator, String productId, GenericValue product, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return UtilMisc.getMapValuesForKey(getProductCategoryMembers(delegator, productId, product, moment, ordered, useCache), "productCategoryId", outCategoryIds);
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs NOT immediately associated to the given productId but
+     * rather to its passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * <p>
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getAssocCategoryIdsForProduct(C outCategoryIds, GenericValue product,
+                                                                                 Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        return getAssocCategoryIdsForProduct(outCategoryIds, product.getDelegator(), null, product, null, moment, ordered, useCache);
+    }
+
+    /**
+     * Gets the ProductCategoryMember category IDs NOT immediately associated to the given productId but
+     * rather to its passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).
+     * <p>
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * <p>
+     * Uses the same logic as {@link CategoryWorker#isProductInCategory(Delegator, String, String)}.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getAssocCategoryIdsForProduct(C outCategoryIds, Delegator delegator, String productId, GenericValue product, Collection<GenericValue> productVariantAssocs,
+                                                                                 Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productId)) {
+            productId = product.getString("productId");
+        }
+        productVariantAssocs = checkVariantAssocListForAssocCategoryIds(delegator, productId, product, productVariantAssocs, moment, ordered, useCache);
+        if (productVariantAssocs == null) {
+            return outCategoryIds;
+        }
+        if (productVariantAssocs.size() > 0) {
+            for(GenericValue productVariantAssoc : productVariantAssocs) {
+                getOwnCategoryIdsForProduct(outCategoryIds, delegator, productVariantAssoc.getString("productId"), null, moment, ordered, useCache);
+            }
+        }
+        return outCategoryIds;
+    }
+
+    private static Collection<GenericValue> checkVariantAssocListForAssocCategoryIds(Delegator delegator, String productId, GenericValue product, Collection<GenericValue> productVariantAssocs,
+                                                                                     Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        if (productVariantAssocs == null) {
+            if (product == null) {
+                // DEV NOTE: if in the callers product has to be reused, you will have to refactor this to avoid multiple lookups - they become costly in bulk
+                product = delegator.from("Product").where("productId", productId).cache(useCache).queryOne();
+                if (product == null) {
+                    return null;
+                }
+            }
+            if (Boolean.TRUE.equals(product.getBoolean("isVariant"))) {
+                productVariantAssocs = delegator.from("ProductAssoc").select("productId")
+                        .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate(moment).cache(useCache).queryList();
+            } else {
+                productVariantAssocs = Collections.emptyList();
+            }
+        }
+        return productVariantAssocs; // null means abort, empty means success
+    }
+
+    /**
+     * Aggressively collects ProductCategoryMember from specified product or any related product (SCIPIO).
+     * <p>
+     * Slow and should only be used (for now) for determining store/catalog in cases where {@link #getCategoryIdsForProduct} returns nothing.
+     * NOTE: The results of this (in solr) is NOT be used to determine which categories the product belongs to and are not added to solr;
+     * they are used only to infer the catalog/store the product logically belongs to, in cases where it could not be determined using other logic.
+     * The categoryIds returned do not guarantee the product "belongs" to those categories under standard logic.
+     * NOTE: To avoid extra lookups, pass empty list to productVariantAssocs if already known there are no variants.
+     * NOTE: This was originally written for Solr and is subject to further improvements.
+     * @see CategoryWorker#isProductInCategories(Delegator, String, Collection, Timestamp, boolean)
+     */
+    public static <C extends Collection<String>> C getAnyRelatedCategoryIdsForProduct(C outCategoryIds, Collection<String> outVisitedProductIds, Collection<String> outCatCheckedProductIds, Delegator delegator, String productId, GenericValue product, Collection<GenericValue> productVariantAssocs,
+                                                                                      List<GenericValue> productAssocFromList, List<GenericValue> productAssocToList, boolean firstFoundOnly, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(productId)) {
+            productId = product.getString("productId");
+        }
+        if (outVisitedProductIds.contains(productId)) { // NOTE: This prevents both endless loops in edge cases as well as a few needless duplicate queries
+            return outCategoryIds;
+        }
+        outVisitedProductIds.add(productId);
+
+        if (!outCatCheckedProductIds.contains(productId)) { // this check prevents needless re-queries (better than nothing)
+            outCatCheckedProductIds.add(productId);
+            List<GenericValue> categories = getProductCategoryMembers(delegator, productId, moment, ordered, useCache);
+            if (!categories.isEmpty()) {
+                UtilMisc.getMapValuesForKey(categories, "productCategoryId", outCategoryIds);
+                if (firstFoundOnly) {
+                    return outCategoryIds;
+                }
+            }
+        }
+
+        productVariantAssocs = checkVariantAssocListForAssocCategoryIds(delegator, productId, product, productVariantAssocs, moment, ordered, useCache);
+        if (productVariantAssocs == null) {
+            return outCategoryIds;
+        }
+        if (UtilValidate.isNotEmpty(productVariantAssocs)) {
+            for (GenericValue productVariantAssoc : productVariantAssocs) {
+                String virtualProductId = productVariantAssoc.getString("productId");
+                getAnyRelatedCategoryIdsForProduct(outCategoryIds, outVisitedProductIds, outCatCheckedProductIds, delegator,
+                        virtualProductId, null,null, null, null, firstFoundOnly, moment, ordered, useCache);
+                if (firstFoundOnly && !outCategoryIds.isEmpty()) {
+                    return outCategoryIds;
+                }
+            }
+        }
+        List<GenericValue> altPkgAssocs = (productAssocFromList != null) ?
+                EntityUtil.filterByAnd(productAssocFromList, UtilMisc.toMap("productAssocTypeId", "ALTERNATIVE_PACKAGE")) :
+                delegator.from("ProductAssoc").select("productIdTo").where("productId", productId, "productAssocTypeId", "ALTERNATIVE_PACKAGE").filterByDate(moment).cache(useCache).queryList();
+        for(GenericValue altPkgAssoc : altPkgAssocs) {
+            String productIdTo = altPkgAssoc.getString("productIdTo");
+            getAnyRelatedCategoryIdsForProduct(outCategoryIds, outVisitedProductIds, outCatCheckedProductIds, delegator,
+                    productIdTo, null, null, null, null, firstFoundOnly, moment, ordered, useCache);
+            if (firstFoundOnly && !outCategoryIds.isEmpty()) {
+                return outCategoryIds;
+            }
+        }
+        List<GenericValue> configProductList = delegator.from("ProductConfigAndConfigProduct")
+                .select("productId").where("configProductId", productId).cache(useCache).queryList();
+        for(GenericValue configProduct : configProductList) {
+            String parentProductId = configProduct.getString("productId");
+            getAnyRelatedCategoryIdsForProduct(outCategoryIds, outVisitedProductIds, outCatCheckedProductIds, delegator,
+                    parentProductId, null, null, null, null, firstFoundOnly, moment, ordered, useCache);
+            if (firstFoundOnly && !outCategoryIds.isEmpty()) {
+                return outCategoryIds;
+            }
+        }
+        return outCategoryIds;
     }
 
     /**
@@ -1988,4 +2305,5 @@ nextProd:
     public static boolean isConfigProductOrConfig(GenericValue product) {
         return isConfigProduct(product) || isConfigProductConfig(product);
     }
+
 }

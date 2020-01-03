@@ -18,8 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.product.catalog;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +34,15 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryWorker;
@@ -149,6 +154,23 @@ public final class CatalogWorker {
             Debug.logError(e, "Error looking up ProdCatalogCategories for prodCatalog with id " + prodCatalogId, module);
         }
         return null;
+    }
+
+    /** SCIPIO: More versatile version of getProdCatalogCategories */
+    public static List<GenericValue> getProdCatalogCategories(Delegator delegator, String prodCatalogId, Collection<String> prodCatalogCategoryTypeIds,
+                                                              Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
+        List<GenericValue> pccList = delegator.from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
+                .filterByDate(moment).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).cache(useCache).queryList();
+        if (UtilValidate.isNotEmpty(prodCatalogCategoryTypeIds)) {
+            List<GenericValue> newPccList = new ArrayList<>(pccList.size());
+            for(GenericValue pcc : pccList) {
+                if (prodCatalogCategoryTypeIds.contains(pcc.getString("prodCatalogCategoryTypeId"))) {
+                    newPccList.add(pcc);
+                }
+            }
+            pccList = newPccList;
+        }
+        return pccList;
     }
 
     /**
@@ -521,23 +543,37 @@ public final class CatalogWorker {
      * SCIPIO: Imported from SolrCategoryUtil.
      * Added 2017-11-09.
      */
-    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+    public static List<GenericValue> getProductStoresForCatalogIds(Delegator delegator, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) {
         List<GenericValue> stores = new ArrayList<>();
         Set<String> storeIds = new HashSet<>();
         for(String catalogId : catalogIds) {
-            try {
-                List<GenericValue> productStoreCatalogs = EntityQuery.use(delegator).from("ProductStoreCatalog").where("prodCatalogId", catalogId)
-                        .filterByDate().cache(useCache).queryList();
-                for(GenericValue productStoreCatalog : productStoreCatalogs) {
-                    if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
+            List<GenericValue> productStoreCatalogs = getProductStoreCatalogsForCatalogId(delegator, catalogId, moment, ordered, useCache);
+            for(GenericValue productStoreCatalog : productStoreCatalogs) {
+                if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
+                    try {
                         stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
-                        storeIds.add(productStoreCatalog.getString("productStoreId"));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error looking up ProductStore for catalogId: " + catalogId, module);
                     }
+                    storeIds.add(productStoreCatalog.getString("productStoreId"));
                 }
-            } catch(Exception e) {
-                Debug.logError(e, "Solr: Error looking up ProductStore for catalogId: " + catalogId, module);
             }
         }
         return stores;
+    }
+
+    public static List<GenericValue> getProductStoreCatalogsForCatalogId(Delegator delegator, String catalogId, Timestamp moment, boolean ordered, boolean useCache) {
+        try {
+            return EntityQuery.use(delegator).from("ProductStoreCatalog").where("prodCatalogId", catalogId)
+                    .filterByDate(moment).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).cache(useCache).queryList();
+        } catch(Exception e) {
+            Debug.logError(e, "Error looking up ProductStoreCatalog for catalogId: " + catalogId, module);
+            return Collections.emptyList();
+        }
+    }
+
+    @Deprecated
+    public static List<GenericValue> getProductStoresForCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+        return getProductStoresForCatalogIds(delegator, catalogIds, UtilDateTime.nowTimestamp(), true, useCache);
     }
 }

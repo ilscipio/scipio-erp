@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.solr;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,20 +36,19 @@ public abstract class SolrCategoryUtil {
      * <p>
      * This method is a supplement to CatalogWorker methods.
      */
-    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
-        List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, useCache);
-        return UtilMisc.getMapValuesForKeyOrNewList(catalogs, "prodCatalogId");
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment, boolean useCache) {
+        return UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, productCategoryId, moment, useCache), "prodCatalogId");
     }
 
-    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
-        return getCatalogIdsByCategoryId(delegator, productCategoryId, false); // legacy
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment) {
+        return getCatalogIdsByCategoryId(delegator, productCategoryId, moment, false); // legacy
     }
 
-    static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
+    static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, Timestamp moment, boolean useCache) {
         List<GenericValue> catalogs;
         try {
             catalogs = EntityQuery.use(delegator).from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
-                    .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
+                    .filterByDate(moment).orderBy("sequenceNum").cache(useCache).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Solr: Error looking up catalogs for productCategoryId: " + productCategoryId, module);
             catalogs = new ArrayList<>();
@@ -56,11 +56,11 @@ public abstract class SolrCategoryUtil {
         return catalogs;
     }
 
-    static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, boolean useCache) {
+    static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, Timestamp moment, boolean useCache) {
         Map<String, List<String>> map = new HashMap<>();
         if (categoryIds == null) return map;
         for(String categoryId : categoryIds) {
-            map.put(categoryId, UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, categoryId, useCache), "prodCatalogId"));
+            map.put(categoryId, UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, categoryId, moment, useCache), "prodCatalogId"));
         }
         return map;
     }
@@ -75,19 +75,12 @@ public abstract class SolrCategoryUtil {
         UtilMisc.getMapValuesForKey(values, fieldName, out);
     }
 
-    /**
-     * Best-effort.
-     */
-    static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
-        return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, useCache);
-    }
-
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
         return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, true);
     }
 
-    public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, boolean useCache) {
-        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, useCache);
+    public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, Timestamp moment, boolean ordered, boolean useCache) {
+        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, moment, ordered, useCache);
     }
 
     /**
@@ -317,6 +310,51 @@ public abstract class SolrCategoryUtil {
         } catch(Exception e) {
             return productCategoryId;
         }
+    }
+
+    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) {
+        for (String productCategoryId : productCategoryIds) {
+            formatCategoryTrails(trails, dctx, getCategoryTrail(productCategoryId, dctx, moment, ordered, useCache));
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C formatCategoryTrails(C trails, DispatchContext dctx, List<List<String>> trailElements) {
+        for (List<String> trail : trailElements) {
+            formatCategoryTrail(trails, dctx, trail);
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C formatCategoryTrail(C trails, DispatchContext dctx, List<String> trail) {
+        StringBuilder catMember = new StringBuilder();
+        int i = 0;
+        for(String trailString : trail) {
+            if (catMember.length() > 0){
+                catMember.append("/");
+                i++;
+            }
+            catMember.append(trailString);
+            String cm = i +"/"+ catMember.toString();
+            trails.add(cm);
+        }
+        return trails;
+    }
+
+    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, Collection<String> trails, Timestamp moment, boolean useCache) {
+        Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
+        for (String trail : trails) {
+            String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
+            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId);
+            if (catalogMembers == null) {
+                catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(dctx.getDelegator(), productCategoryId, moment, useCache);
+                categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
+            }
+            for (String catalogMember : catalogMembers) {
+                catalogIds.add(catalogMember);
+            }
+        }
+        return catalogIds;
     }
 
     /**

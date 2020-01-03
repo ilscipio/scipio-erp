@@ -67,7 +67,8 @@ public abstract class SeoCatalogServices {
      * Returned instance can only perform generic (non-website-specific) operations.
      */
     private static CatalogAltUrlSanitizer getCatalogAltUrlSanitizer(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return SeoCatalogUrlWorker.getDefaultInstance(dctx.getDelegator()).getCatalogAltUrlSanitizer();
+        String webSiteId = (String) context.get("webSiteId"); // NOTE: may be null, difficult to ensure
+        return SeoCatalogUrlWorker.getInstance(dctx.getDelegator(), webSiteId).getCatalogAltUrlSanitizer();
     }
 
     /**
@@ -229,12 +230,13 @@ public abstract class SeoCatalogServices {
 
             // make seo names for assoc records
             CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetProduct(product);
             Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT,
-                    CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.<String, String>emptyMap();
+                    sanitizeCtx) : Collections.<String, String>emptyMap();
 
             // make seo name for main record (may or may not already be in localeUrlMap)
             String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.PRODUCT,
-                    nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, useCache);
+                    nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, sanitizeCtx, useCache);
 
             // store
             if (productContent != null) {
@@ -393,12 +395,13 @@ public abstract class SeoCatalogServices {
 
         // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetCategory(productCategory);
         Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY,
-                CatalogAltUrlSanitizer.SanitizeContext.undefined()) : Collections.emptyMap();
+                sanitizeCtx) : Collections.emptyMap();
 
         // make seo name for main record (may or may not already be in localeUrlMap)
         String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.CATEGORY,
-                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, useCache);
+                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, sanitizeCtx, useCache);
 
         // store
         if (productCategoryContent != null) {
@@ -438,7 +441,7 @@ public abstract class SeoCatalogServices {
      */
     private static String determineMainRecordUrl(Delegator delegator, LocalDispatcher dispatcher, CatalogAltUrlSanitizer sanitizer, CatalogUrlType urlType,
             GenericValue nameMainContent, String mainLocaleString, Map<String, String> localeUrlMap,
-            GenericValue prodOrCatEntity, String entityNameField, boolean useCache) throws GeneralException, IOException {
+            GenericValue prodOrCatEntity, String entityNameField, CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx, boolean useCache) throws GeneralException, IOException {
 
         if (UtilValidate.isNotEmpty(mainLocaleString)) {
             String mainUrl = localeUrlMap.get(mainLocaleString);
@@ -461,7 +464,7 @@ public abstract class SeoCatalogServices {
         if (nameMainContent != null) {
             mainText = LocalizedContentWorker.getSimpleTextContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
             if (UtilValidate.isNotEmpty(mainText)) {
-                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, CatalogAltUrlSanitizer.SanitizeContext.undefined());
+                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, sanitizeCtx);
             }
         }
 
@@ -472,7 +475,7 @@ public abstract class SeoCatalogServices {
             mainText = ProductContentWrapper.getEntityFieldValue(prodOrCatEntity, productNameField, delegator, dispatcher, useCache);
         }
         if (UtilValidate.isNotEmpty(mainText)) {
-            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, CatalogAltUrlSanitizer.SanitizeContext.undefined());
+            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType, sanitizeCtx);
         }
 
         // NOTE: will not fallback on productCategoryId/productId here - this empty textData
@@ -538,6 +541,7 @@ public abstract class SeoCatalogServices {
         boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
         String prodFixedIdPat = (String) context.get("prodFixedIdPat");
         String catFixedIdPat = (String) context.get("catFixedIdPat");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         String webSiteIdStr = "";
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -547,6 +551,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
@@ -562,8 +567,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            traverser.setProductStoreAndWebSite(productStoreId, webSiteId);
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
         } catch(Exception e) {
             String message = "Error generating alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
@@ -593,10 +598,12 @@ public abstract class SeoCatalogServices {
         boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
         String prodFixedIdPat = (String) context.get("prodFixedIdPat");
         String catFixedIdPat = (String) context.get("catFixedIdPat");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
@@ -611,7 +618,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseAllInSystem();
+            traverser.traverseAllCategoriesAndProductsInSystem();
         } catch (Exception e) {
             String message = "Error generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+"generateAllAlternativeUrls: " + message, module);
@@ -837,6 +844,7 @@ public abstract class SeoCatalogServices {
         String prodCatalogId = (String) context.get("prodCatalogId");
         if ("all".equals(prodCatalogId)) prodCatalogId = null; // legacy compat
         Collection<String> prodCatalogIdList = UtilGenerics.checkCollection(context.get("prodCatalogIdList"));
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         String webSiteIdStr = "";
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -846,6 +854,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlRemover traverser;
         try {
             RemoveTraversalConfig travConfig = (RemoveTraversalConfig) new RemoveTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
                     .setDoChildProducts(doChildProducts)
@@ -858,8 +867,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            traverser.setProductStoreAndWebSite(productStoreId, webSiteId);
+            traverser.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
         } catch(Exception e) {
             String message = "Error removing alternative links for website" + webSiteIdStr + ": " + e.getMessage();
             Debug.logError(e, logPrefix+"removeWebsiteAlternativeUrls: "+message, module);
@@ -878,6 +887,7 @@ public abstract class SeoCatalogServices {
         //Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
+        boolean sepTrans = Boolean.TRUE.equals(context.get("sepTrans"));
 
         // NOTE: don't search for child product in this case, because using massive all-products query
         final boolean doChildProducts = false;
@@ -885,6 +895,7 @@ public abstract class SeoCatalogServices {
         SeoCatalogUrlRemover traverser;
         try {
             RemoveTraversalConfig travConfig = (RemoveTraversalConfig) new RemoveTraversalConfig()
+                    .setSepTrans(sepTrans)
                     .setServCtxOpts(context)
                     .setIncludeVariant(!Boolean.FALSE.equals(context.get("includeVariant")))
                     .setDoChildProducts(doChildProducts)
@@ -897,7 +908,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            traverser.traverseAllInSystem();
+            traverser.traverseAllCategoriesAndProductsInSystem();
         } catch (Exception e) {
             String message = "Error removing alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+"removeAllAlternativeUrls: " + message, module);
@@ -955,8 +966,8 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            exporter.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList,
-                    productStoreId, webSiteId, false);
+            exporter.setProductStoreAndWebSite(productStoreId, webSiteId);
+            exporter.traverseCatalogsDepthFirst(prodCatalogId, prodCatalogIdList, false);
             out.processOutput(exporter);
         } catch(Exception e) {
             String message = "Error exporting alternative URLs for website '" + webSiteId + "': " + e.getMessage();
@@ -1001,7 +1012,7 @@ public abstract class SeoCatalogServices {
         }
 
         try {
-            exporter.traverseAllInSystem();
+            exporter.traverseAllCategoriesAndProductsInSystem();
             out.processOutput(exporter);
         } catch (Exception e) {
             String message = "Error exporting alternative URLs: " + e.getMessage();

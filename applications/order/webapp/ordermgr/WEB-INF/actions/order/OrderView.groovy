@@ -528,9 +528,12 @@ shipments = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPM
 if (shipments) {
     pickedShipmentId = EntityUtil.getFirst(shipments).shipmentId;
     shipmentRouteSegment = from("ShipmentRouteSegment").where("shipmentId", pickedShipmentId).queryFirst();
-    context.shipmentRouteSegmentId = shipmentRouteSegment.shipmentRouteSegmentId;
+
+    if(shipmentRouteSegment!= null && shipmentRouteSegment.shipmentRouteSegmentId){
+        context.shipmentRouteSegmentId = shipmentRouteSegment.shipmentRouteSegmentId;
+    }
     context.pickedShipmentId = pickedShipmentId;
-    if (pickedShipmentId && shipmentRouteSegment.trackingIdNumber) {
+    if (pickedShipmentId && shipmentRouteSegment != null && shipmentRouteSegment.trackingIdNumber) {
         if ("UPS" == shipmentRouteSegment.carrierPartyId && productStore) {
             resultMap = runService('upsShipmentAlternateRatesEstimate', [productStoreId: productStore.productStoreId, shipmentId: pickedShipmentId]);
             shippingRates = resultMap.shippingRates;

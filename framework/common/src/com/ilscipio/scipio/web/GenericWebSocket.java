@@ -44,9 +44,9 @@ public class GenericWebSocket {
         try{
             Map params = session.getRequestParameterMap();
             if(params != null){
-                if(params.get("channel") != null){
-                    String channelName = SocketSessionManager.DATA_KEY_CHANNEL+(String) params.get("channel");
-                    String type = (String) params.get("type");
+                if(params.get("channel") != null && params.get("type") != null) {
+                    String channelName = SocketSessionManager.DATA_KEY_CHANNEL+params.get("channel");
+                    String type = params.get("type").toString();
 
                     if("subscribe".equals(type)){
                         SocketSessionManager.addToClientData(channelName,session);

@@ -203,7 +203,9 @@ public class ModelGroupReader implements Serializable {
         }
         getGroupCache(delegatorBaseName);
         if (this.groupNames == null) return null;
-        Set<String> newSet = new HashSet<>();
+        // SCIPIO: Preserve group names to prevent randomness in UI and processing order
+        //Set<String> newSet = new HashSet<>();
+        Set<String> newSet = new TreeSet<>();
         try {
             newSet.add(EntityConfig.getInstance().getDelegator(delegatorBaseName).getDefaultGroupName());
         } catch (GenericEntityConfException e) {
@@ -219,7 +221,9 @@ public class ModelGroupReader implements Serializable {
      */
     public Set<String> getEntityNamesByGroup(String delegatorBaseName, String groupName) {
         Map<String, String> gc = getGroupCache(delegatorBaseName);
-        Set<String> enames = new HashSet<>();
+        // SCIPIO: Preserve group names to prevent randomness in UI and processing order
+        //Set<String> enames = new HashSet<>();
+        Set<String> enames = new TreeSet<>();
 
         if (UtilValidate.isEmpty(groupName)) return enames;
         if (UtilValidate.isEmpty(gc)) return enames;

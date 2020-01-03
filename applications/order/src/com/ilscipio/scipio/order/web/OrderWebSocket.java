@@ -32,18 +32,10 @@ public class OrderWebSocket extends GenericWebSocket {
             String type = (String) ((List) params.get("type")).get(0);
 
             if("subscribe".equals(type)){
+                SocketSessionManager.addSession("ORDERMGR", session,config);
                 SocketSessionManager.addToClientData(channelName,session);
             }
-
-            if("unsubscribe".equals(type)){
-                //ToDo: Implement
-            }
-
-            if("message".equals(type)){
-                //ToDo: Implement
-            }
         }
-        SocketSessionManager.addSession("ORDERMGR", session,config);
     }
 }
 

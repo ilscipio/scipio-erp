@@ -23,18 +23,11 @@ public class GenericWebSocket {
             String type = (String) params.get("type");
 
             if("subscribe".equals(type)){
-                    SocketSessionManager.addToClientData(channelName,session);
+                SocketSessionManager.addSession("OFBTOOLS", session,config);
+                SocketSessionManager.addToClientData(channelName,session);
             }
 
-            if("unsubscribe".equals(type)){
-                //ToDo: Implement
-            }
-
-            if("message".equals(type)){
-                //ToDo: Implement
-            }
         }
-        SocketSessionManager.addSession("OFBTOOLS", session,config);
     }
 
     @OnClose
@@ -49,10 +42,25 @@ public class GenericWebSocket {
     @OnMessage
     public void onJsonMessage(String message, Session session) {
         try{
-            Map<String,?> parameters = JSON.from(message).toObject(Map.class);
-            if(parameters != null){
+            Map params = session.getRequestParameterMap();
+            if(params != null){
+                if(params.get("channel") != null){
+                    String channelName = SocketSessionManager.DATA_KEY_CHANNEL+(String) params.get("channel");
+                    String type = (String) params.get("type");
 
-             //TODO: trigger service
+                    if("subscribe".equals(type)){
+                        SocketSessionManager.addToClientData(channelName,session);
+                    }
+
+                    if("unsubscribe".equals(type)){
+                        SocketSessionManager.removeClientData(channelName,session);
+                    }
+
+                    if("message".equals(type)){
+                        SocketSessionManager.broadcastToChannel(message,channelName);
+                    }
+                }
+
 
             }
         }catch (Exception e){

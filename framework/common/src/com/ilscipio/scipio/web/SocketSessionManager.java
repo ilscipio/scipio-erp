@@ -100,7 +100,7 @@ public class SocketSessionManager {
     }
 
     /**
-     * Removes or adds clientInfo
+     * Adds clientInfo
      * */
     public static void addToClientData(String key, Object data){
         synchronized(clientData) {
@@ -110,6 +110,17 @@ public class SocketSessionManager {
                 List e = new ArrayList();
                 e.add(data);
                 clientData.put(key, e);
+            }
+        }
+    }
+
+    /**
+     * Removes clientInfo - seldom used as clients will most likely just drop out of session.
+     * */
+    public static void removeClientData(String key, Object data){
+        synchronized(clientData) {
+            if (clientData.containsKey(key)) {
+                clientData.remove(key);
             }
         }
     }

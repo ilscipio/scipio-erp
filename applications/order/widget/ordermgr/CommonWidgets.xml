@@ -87,6 +87,16 @@ code package.
 
     <screen name="DashboardWSLiveOrders">
         <section>
+            <actions>
+                <set field="chartIntervalScope" value="hour"/>
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonHour}"/>
+                <set field="chartIntervalCount" value="24" type="Integer"/> <!-- Look back x days/weeks/months/years -->
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerHour})"/>
+            </actions>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrders.ftl"/></html>

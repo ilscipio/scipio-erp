@@ -79,6 +79,7 @@ public class OrderWebServices {
 
                 List<EntityCondition> curConditions = UtilMisc.toList(
                         EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
+                        EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
                         EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, begin),
                         EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, orderDate)
                 );
@@ -104,22 +105,24 @@ public class OrderWebServices {
                 BigDecimal totalSubRemainingAmount = ZERO;
                 Long totalOrders = Long.valueOf(0);
                 for(GenericValue sale : sales){
-                    BigDecimal amount = new BigDecimal(sale.getString("totalGrandAmount"));
-                    totalAmount.add(amount).setScale(decimals, rounding);
-                    BigDecimal subamount = new BigDecimal(sale.getString("totalSubRemainingAmount"));
-                    totalSubRemainingAmount.add(subamount).setScale(decimals, rounding);
+                    BigDecimal amount = sale.getBigDecimal("totalGrandAmount");
+                    totalAmount = totalAmount.add(amount).setScale(decimals, rounding);
+                    BigDecimal subamount = sale.getBigDecimal("totalSubRemainingAmount");
+                    totalSubRemainingAmount =totalSubRemainingAmount.add(subamount).setScale(decimals, rounding);
                     totalOrders+= sale.getLong("totalOrders");
                 }
 
                 Map orderGlobal = UtilMisc.toMap(
-                        "dateTime",begin,
+                        "dateTime",begin.toLocalDateTime(),
+                        "dateTimeStr",begin.toLocalDateTime().toString(),
                         "totalAmount",totalAmount.setScale(decimals, rounding)
                         ,"totalSubRemainingAmount",totalSubRemainingAmount,
                         "totalOrders",totalOrders
                 );
 
                 Map orderMap =  UtilMisc.toMap(
-                        "dateTime",orderDate,
+                        "dateTime",orderDateTime,
+                        "dateTimeStr",orderDateTime.toString(),
                         "totalAmount", orh.getOrderGrandTotal()
                         ,"totalAdjustments",orh.getOrderAdjustmentsTotal(),
                         "totalQuantity",orh.getTotalOrderItemsQuantity()

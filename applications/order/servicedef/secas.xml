@@ -484,7 +484,7 @@ code package.
 
     <!-- Websocket based live updates -->
     <eca service="storeOrder" event="global-commit-post-run">
-        <condition field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
         <set field-name="channel" value="orderdatalive"/>
         <set field-name="interval" value="HOUR"/> <!-- HOUR | DAY | WEEK | MONTH  | YEAR -->
         <action service="sendOrderLiveData" mode="sync" />

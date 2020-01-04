@@ -9211,6 +9211,10 @@
         <value xml:lang="en">Per</value>
         <value xml:lang="nl">Per</value>
     </property>
+    <property key="CommonPerHour">
+        <value xml:lang="de">pro Stunde</value>
+        <value xml:lang="en">per hour</value>
+    </property>
     <property key="CommonPerDay">
         <value xml:lang="de">pro Tag</value>
         <value xml:lang="en">per day</value>

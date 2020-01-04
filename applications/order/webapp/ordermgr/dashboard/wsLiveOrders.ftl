@@ -16,27 +16,43 @@
                  message = text;
                   try {
                       jsonObject =  JSON.parse(text);
-                      message = jsonObject.message;
+                      var chart = orderchart;
+                      var curIndex = orderchart.data.labels.indexOf(jsonObject.global.dateTimeStr)
+                      if(curIndex > -1){
+                         chart.data.datasets[0].data[index] = jsonObject.global.totalAmount;
+                         console.log(chart.data.datasets[0].data[index]);
+                         chart.data.datasets[1].data[index] = jsonObject.global.totalOrders;
+                         console.log(chart.data.datasets[1].data[index]);
+                      }else{
+                         <#-- Remove old data and add new -->
+                         chart.data.labels.shift();
+                         chart.data.datasets[0].data.shift();
+                         chart.data.datasets[1].data.shift();
+                         <#-- Add new element -->
+                         chart.data.labels.push(jsonObject.global.dateTimeStr);
+                         chart.data.datasets[0].data.push(jsonObject.global.totalAmount);
+                         chart.data.datasets[1].data.push(jsonObject.global.totalOrders);
+                      }
+                      chart.update();
                     } catch (error) {
+                        console.log(error);
                     }
-
             };
-
-
-            function addChartData(chart, label, data) {
-                myLineChart.data.datasets[0].data.push(Math.random() * 100);
-                myLineChart.data.datasets[1].data.push(Math.random() * 100);
-                myLineChart.data.labels.push(time)
-                chart.data.labels.push(label);
-                chart.data.datasets.forEach((dataset) => {
-                    dataset.data.push(data);
-                });
-                chart.update();
-            }
       });
 </@script>
-<@section>
-    <@chart id="orderchart"  label1="" label2="" type="bar">
 
+<#assign currData=rewrapMap(orderStats!{}, "raw-simple")/>
+<#assign fieldIdNum=fieldIdNum!0/>
+<@section title=title!"">
+    <@chart id="orderchart"  label1=label1 label2=label2 xlabel=xlabel ylabel=ylabel type="bar">
+        <#if currData?has_content>
+            <#list mapKeys(currData) as key>
+                <#if chartType=="bar" || chartType=="line">
+                    <@chartdata value=((currData[key].total)!0) value2=((currData[key].count)!0) title=(currData[key]["dateTime"])/>
+                <#else>
+                    <@chartdata value=((currData[key].total)!0) title=key/>
+                </#if>
+            </#list>
+        </#if>
     </@chart>
 </@section>

@@ -19,10 +19,8 @@
                       var chart = orderchart;
                       var curIndex = orderchart.data.labels.indexOf(jsonObject.global.dateTimeStr)
                       if(curIndex > -1){
-                         chart.data.datasets[0].data[index] = jsonObject.global.totalAmount;
-                         console.log(chart.data.datasets[0].data[index]);
-                         chart.data.datasets[1].data[index] = jsonObject.global.totalOrders;
-                         console.log(chart.data.datasets[1].data[index]);
+                         chart.data.datasets[0].data[curIndex] = jsonObject.global.totalAmount;
+                         chart.data.datasets[1].data[curIndex] = jsonObject.global.totalOrders;
                       }else{
                          <#-- Remove old data and add new -->
                          chart.data.labels.shift();

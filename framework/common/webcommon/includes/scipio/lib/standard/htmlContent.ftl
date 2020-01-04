@@ -1175,6 +1175,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <span class="chart-data">&nbsp;</span>
     <canvas id="${escapeVal(id, 'html')}" height="300" width="500"></canvas>
     <@script>
+        var ${escapeVal(id, 'html')};
         $(function(){
             var chartDataEl = $('.chart-data').first();
             var chartData = chartDataEl.sassToJs({pseudoEl:"::before", cssProperty: "content"});
@@ -1354,9 +1355,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            var newChart = new Chart(ctx,config);
+            ${escapeVal(id, 'html')} = new Chart(ctx, config);
             ${nestedContent}
-            newChart.update();
+            ${escapeVal(id, 'html')}.update();
         });
     </@script>
   </#if>

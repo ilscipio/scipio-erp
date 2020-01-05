@@ -88,7 +88,7 @@ code package.
     <screen name="DashboardWSLiveOrders">
         <section>
             <actions>
-                <set field="chartIntervalScope" value="hour"/>
+                <set field="chartIntervalScope" value="day"/>
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonHour}"/>
                 <set field="chartIntervalCount" value="24" type="Integer"/> <!-- Look back x days/weeks/months/years -->

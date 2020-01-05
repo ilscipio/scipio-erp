@@ -1734,7 +1734,7 @@ code package.
 
   <!-- SCIPIO: Added 2020-01-03 -->
   <view-entity entity-name="OrderStats"
-               package-name="org.ofbiz.order.order"
+               package-name="com.ilscipio.scipio.ce.stats"
                title="Order Statistics" auto-clear-cache="true">
     <member-entity entity-alias="OH" entity-name="OrderHeader" />
     <alias entity-alias="OH" name="productStoreId" group-by="true"/>

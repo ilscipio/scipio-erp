@@ -1,12 +1,13 @@
 <@script>
       $(function(){
             var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/orderdatalive/subscribe</@appUrl>');
-
             webSocket.onopen = function(event){
                 var msg = {
-
                 };
               webSocket.send(JSON.stringify(msg));
+              setTimeout(function() {
+                    setInterval(timedUpdater, 60000); <#-- Run every minute -->
+              }, ((60 - new Date().getMinutes()) * 60000)); <#-- start after an hour -->
             };
 
 
@@ -36,13 +37,32 @@
                         console.log(error);
                     }
             };
+
+            function timedUpdater(){
+                var time = moment("YYYY-MM-DD'T'HH:mm");
+                var curIndex = orderchart.data.labels.indexOf(time)
+                if(curIndex == -1){
+                     var chart = orderchart;
+                     chart.data.labels.push(time);
+                     chart.data.datasets[0].data.push(0);
+                     chart.data.datasets[1].data.push(0);
+                }
+            }
       });
 </@script>
 
 <#assign currData=rewrapMap(orderStats!{}, "raw-simple")/>
 <#assign fieldIdNum=fieldIdNum!0/>
 <@section title=title!"">
-    <@chart id="orderchart"  label1=label1 label2=label2 xlabel=xlabel ylabel=ylabel type="bar">
+    <@chart id="orderchart" label1=label1 label2=label2 xlabel=xlabel ylabel=ylabel type="bar">
+        <#-- Additional chart options -->
+        try{
+            orderchart.config.options.scales.xAxes[0].ticks.display=false;
+        }catch(e){
+
+        }
+
+        <#-- Chart data -->
         <#if currData?has_content>
             <#list mapKeys(currData) as key>
                 <#if chartType=="bar" || chartType=="line">

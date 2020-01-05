@@ -34,18 +34,19 @@ $(function(){
           try {
               message = jsonObject.message;
               type = jsonObject.type;
-              if($('#log code').children().length == maxLines){
-                $('#log code').first().remove();
+              if(message.length > 0){
+                  if($('#log code').children().length == maxLines){
+                    $('#log code').first().remove();
+                  }
+                  $('<div/>', {
+                        class: type.standardLevel
+                  }).html(message).appendTo('#log code');
+                  if(atBottom){
+                    $('#log pre').scrollTop($('#log pre').prop('scrollHeight'));
+                  }
               }
-              $('<div/>', {
-                    class: type.standardLevel
-              }).html(message).appendTo('#log code');
-              if(atBottom){
-                $('#log pre').scrollTop($('#log pre').prop('scrollHeight'));
-              }
-
-            } catch (error) {
-            }
+          } catch (error) {
+          }
     };
 });
 </@script>

@@ -32,14 +32,6 @@ public class AdminWebSocket extends GenericWebSocket {
             if("subscribe".equals(type)){
                 SocketSessionManager.addToClientData(channelName,session);
             }
-
-            if("unsubscribe".equals(type)){
-                //ToDo: Implement
-            }
-
-            if("message".equals(type)){
-                //ToDo: Implement
-            }
         }
         SocketSessionManager.addSession("OFBTOOLS", session,config);
     }

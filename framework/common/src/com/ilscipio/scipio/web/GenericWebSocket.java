@@ -2,6 +2,7 @@ package com.ilscipio.scipio.web;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -57,7 +58,9 @@ public class GenericWebSocket {
                     }
 
                     if("message".equals(type)){
-                        SocketSessionManager.broadcastToChannel(message,channelName);
+                        if(UtilValidate.isNotEmpty(message)){
+                            SocketSessionManager.broadcastToChannel(message,channelName);
+                        }
                     }
                 }
 

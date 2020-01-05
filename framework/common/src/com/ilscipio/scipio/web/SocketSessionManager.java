@@ -80,19 +80,19 @@ public class SocketSessionManager {
         String channel = DATA_KEY_CHANNEL+channelName;
         synchronized(clients) {
             List<Session> channelInfo = clientData.get(channel);
-            for (Session session : channelInfo) {
-                try {
-                    if (session.isOpen()) {
-                        for (Session client : clients) {
-                            client.getBasicRemote().sendText(message);
-                        }
-                    }
-                } catch (IOException e) {
+            if(channelInfo != null){
+                for (Session session : channelInfo) {
                     try {
-                        channelInfo.remove(session);
-                        session.close();
-                    } catch (IOException ioe) {
-                        Debug.logError(ioe.getMessage(), module);
+                        if (session.isOpen()) {
+                            session.getBasicRemote().sendText(message);
+                        }
+                    } catch (IOException e) {
+                        try {
+                            channelInfo.remove(session);
+                            session.close();
+                        } catch (IOException ioe) {
+                            Debug.logError(ioe.getMessage(), module);
+                        }
                     }
                 }
             }

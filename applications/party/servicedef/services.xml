@@ -1663,4 +1663,12 @@ code package.
         <attribute name="facilityPurposeCount" mode="OUT" type="Long" optional="false"/>
         <attribute name="totalPurposeCount" mode="OUT" type="Long" optional="false"/>
     </service>
+
+    <!-- Websocket services -->
+    <service name="sendHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0"
+             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="sendHitBinLiveData">
+        <description>Sends request data to listening websockets on channel. Requires interval to be set (HOURLY, DAILY, MONTHLY, YEARHLY) prevents miscalculated columns)</description>
+        <attribute name="channel" type="String" mode="IN" optional="false"/>
+        <attribute name="interval" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

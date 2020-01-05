@@ -23,4 +23,35 @@
     <!-- create recurring job to check email communication events with the status COM_IN_PROGRESS to send these emails.. -->
     <TemporalExpression tempExprId="SENDEMAIL" tempExprTypeId="FREQUENCY" description="Every 15 Minutes" integer1="12" integer2="15"/>
     <JobSandbox jobId="SENDEMAIL" jobName="Send Email" runTime="2000-01-01 00:00:00.000" serviceName="sendEmailDated" poolId="pool" runAsUser="system" tempExprId="SENDEMAIL" maxRecurrenceCount="-1"/>
+
+    <!-- Send live data to listening websockets for the current request stats  -->
+    <RuntimeData runtimeDataId="WSREQUESTS">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <ofbiz-ser>
+                <map-HashMap>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="channel" />
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="requestdatalive"/>
+                        </map-Value>
+                    </map-Entry>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="interval" />
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="hour"/>
+                        </map-Value>
+                    </map-Entry>
+                </map-HashMap>
+            </ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <TemporalExpression tempExprId="SECOND_EVERY_10" tempExprTypeId="FREQUENCY" description="Every 10 seconds" integer1="13" integer2="10" />
+    <JobSandbox jobId="WSREQUESTS" jobName="Update websockets on recent requests"
+                runTime="2008-05-14 00:00:00.000" serviceName="sendHitBinLiveData" runtimeDataId="WSREQUESTS"
+                tempExprId="SECOND_EVERY_10" maxRecurrenceCount="-1"
+                poolId="pool" runAsUser="system" />
 </entity-engine-xml>

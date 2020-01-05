@@ -2,7 +2,6 @@
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=(chartDatasets!1)?number />
 <#assign userRequestCount=rewrapMap(userRequestCount, "raw-simple")>
-
 <#if userRequestCount?has_content> 
     <#if chartType == "line" || chartType == "bar">
         <@chart type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>

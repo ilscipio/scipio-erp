@@ -480,8 +480,10 @@ public class ModelViewEntity extends ModelEntity {
 
         for (ModelAlias alias: aliases) {
             // show a warning if function is specified and groupBy is true
-            if (UtilValidate.isNotEmpty(alias.function) && alias.groupBy) {
-                Debug.logWarning("[" + this.getEntityName() + "]: The view-entity alias with name=" + alias.name + " has a function value and is specified as a group-by field; this may be an error, but is not necessarily.", module);
+            if(Debug.verboseOn()){
+                if (UtilValidate.isNotEmpty(alias.function) && alias.groupBy) {
+                    Debug.logWarning("[" + this.getEntityName() + "]: The view-entity alias with name=" + alias.name + " has a function value and is specified as a group-by field; this may be an error, but is not necessarily.", module);
+                }
             }
             String description = alias.description;
             String name = alias.name;

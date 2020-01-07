@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.Debug.OfbizLogger;
 import org.ofbiz.base.util.UtilValidate;
@@ -147,6 +148,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
         // NOTE: the default for paramDelim is highly heuristic... for now just follow rawParams (even though it's not its exact meaning)
         final String paramDelimDefault = rawParams ? "&" : "&amp;";
         final String paramDelim = TransformUtil.getStringArg(args, "paramDelim", paramDelimDefault, true, true);
+        String paramStr = TransformUtil.getParamString(args, "params", paramDelim, rawParams);
 
         try {
             if (body != null) {
@@ -156,6 +158,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
             } else if (uri == null) {
                 throw new TemplateException("Cannot build URL: missing path/uri (null)", env);
             }
+            uri = TemplateFtlUtil.appendParamString(uri, paramStr);
 
             HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
             HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));

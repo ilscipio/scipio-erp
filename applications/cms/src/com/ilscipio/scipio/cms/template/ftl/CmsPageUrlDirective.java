@@ -151,7 +151,6 @@ public class CmsPageUrlDirective implements TemplateDirectiveModel, Serializable
         // NOTE: the default for paramDelim is highly heuristic... for now just follow rawParams (even though it's not its exact meaning)
         final String paramDelimDefault = rawParams ? "&" : "&amp;";
         final String paramDelim = TransformUtil.getStringArg(args, "paramDelim", paramDelimDefault, true, true);
-        TemplateModel paramsModel = args.get("params");
 
         boolean isFindById = false;
         String value = null;
@@ -196,21 +195,7 @@ public class CmsPageUrlDirective implements TemplateDirectiveModel, Serializable
                 throw new IllegalArgumentException("Could not locate page");
             }
             
-            String paramStr;
-            if (paramsModel == null) {
-                paramStr = null;
-            } else if (OfbizFtlObjectType.STRING.isObjectType(paramsModel)) {
-                paramStr = TransformUtil.getStringArg(paramsModel, rawParams);
-            } else if (OfbizFtlObjectType.MAP.isObjectType(paramsModel)) {
-                // SPECIAL: we're forced to duplicate the params map for the case where
-                // rawParams=false, to trigger the html auto-escaping
-                TemplateHashModelEx paramsHashModel = (TemplateHashModelEx) paramsModel;
-                paramStr = TemplateFtlUtil.makeParamString(paramsHashModel, paramDelim, rawParams);
-            } else {
-                throw new IllegalArgumentException("pageUrl parameters: Expected string or map, but instead got: "
-                        + paramsModel.getClass());
-            }
-
+            String paramStr = TransformUtil.getParamString(args, "params", paramDelim, rawParams);
             if (extLoginKey == Boolean.TRUE) {
                 if (paramStr == null) {
                     paramStr = "";
@@ -343,13 +328,7 @@ public class CmsPageUrlDirective implements TemplateDirectiveModel, Serializable
                     + "for target webSiteId '" + targetWebSiteId + "'; cannot build link");
         }
 
-        if (paramStr != null && !paramStr.isEmpty()) {
-            if (paramStr.startsWith("?")) {
-                path += paramStr;
-            } else {
-                path += "?" + paramStr;
-            }
-        }
+        path = TemplateFtlUtil.appendParamString(path, paramStr);
 
         final boolean absUrl = false; // the page path (sourcePath) is never from server root; always relative to context root
         final boolean controller = false; // TODO?: no way to exploit controller currently, not sure how could...

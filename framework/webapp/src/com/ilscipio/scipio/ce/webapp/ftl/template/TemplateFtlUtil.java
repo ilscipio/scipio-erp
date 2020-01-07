@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
@@ -636,6 +637,35 @@ public abstract class TemplateFtlUtil {
             sb.delete(0, delim.length());
         }
         return sb.toString();
+    }
+
+    public static String makeParamString(TemplateModel paramsModel, String delim, boolean nonEscaping) throws TemplateModelException, IllegalArgumentException {
+        String paramStr;
+        if (paramsModel == null) {
+            paramStr = null;
+        } else if (OfbizFtlObjectType.STRING.isObjectType(paramsModel)) {
+            paramStr = TransformUtil.getStringArg(paramsModel, nonEscaping);
+        } else if (OfbizFtlObjectType.MAP.isObjectType(paramsModel)) {
+            // SPECIAL: we're forced to duplicate the params map for the case where
+            // rawParams=false, to trigger the html auto-escaping
+            TemplateHashModelEx paramsHashModel = (TemplateHashModelEx) paramsModel;
+            paramStr = TemplateFtlUtil.makeParamString(paramsHashModel, delim, nonEscaping);
+        } else {
+            throw new IllegalArgumentException("url params argument: Expected string or map, but instead got: "
+                    + paramsModel.getClass());
+        }
+        return paramStr;
+    }
+
+    public static String appendParamString(String path, String paramStr) {
+        if (paramStr != null && !paramStr.isEmpty()) {
+            if (paramStr.startsWith("?")) {
+                path += paramStr;
+            } else {
+                path += "?" + paramStr;
+            }
+        }
+        return path;
     }
 
     private static Object getRawVal(TemplateModel model) throws TemplateModelException {

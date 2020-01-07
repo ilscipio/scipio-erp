@@ -1988,6 +1988,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li><@pageUrl fullPath=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li><@pageUrl fullPath=true secure="false">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li><@pageUrl fullPath=true encode=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true encode=false params={"param1":"val1","param2":"val2"}>LayoutDemo</@pageUrl></li>
+      <li><@pageUrl fullPath=true encode=false params={"param1":"val1","param2":"val2"} paramDelim="&">LayoutDemo</@pageUrl></li>
       <li><@pageUrl uri="main" webSiteId=shopWebSiteId/></li>
 
       <li><@appUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
@@ -2008,6 +2010,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li>${escapeFullUrl(makeServerUrl(shopMainUri), 'html')}</li>
       <li>${escapeFullUrl(makeServerUrl("main", shopWebSiteId), 'html')}</li>
       <li>${escapeFullUrl(makeServerUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
+      <li>${escapeFullUrl(makeServerUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true, "params":{"param1":"val1","param2":"val2"}}), 'html')}</li>
       <li>${escapeFullUrl(makeServerUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
      
 

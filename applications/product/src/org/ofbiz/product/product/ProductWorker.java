@@ -817,18 +817,22 @@ public final class ProductWorker {
     }
 
     public static BigDecimal getAverageProductRating(GenericValue product, List<GenericValue> reviews, String productStoreId, boolean useCache) { // SCIPIO: Added useCache
+        return getAverageProductRating(product, reviews, productStoreId, BigDecimal.ZERO, useCache);
+    }
+
+    public static BigDecimal getAverageProductRating(GenericValue product, List<GenericValue> reviews, String productStoreId, BigDecimal defaultRating, boolean useCache) { // SCIPIO: Added defaultRating, useCache
         if (product == null) {
             Debug.logWarning("Invalid product entity passed; unable to obtain valid product rating", module);
-            return BigDecimal.ZERO;
+            return defaultRating; // BigDecimal.ZERO; // SCIPIO
         }
 
-        BigDecimal productRating = BigDecimal.ZERO;
+        BigDecimal productRating = defaultRating; // BigDecimal.ZERO; // SCIPIO
         BigDecimal productEntityRating = product.getBigDecimal("productRating");
         String entityFieldType = product.getString("ratingTypeEnum");
 
         // null check
         if (productEntityRating == null) {
-            productEntityRating = BigDecimal.ZERO;
+            productEntityRating = defaultRating; // BigDecimal.ZERO; // SCIPIO
         }
         if (entityFieldType == null) {
             entityFieldType = "";
@@ -870,12 +874,20 @@ public final class ProductWorker {
 
             if ("PRDR_MIN".equals(entityFieldType)) {
                 // check for min
-                if (productEntityRating.compareTo(productRating) > 0) {
+                if (productEntityRating != null && productRating != null) { // SCIPIO: null checks
+                    if (productEntityRating.compareTo(productRating) > 0) {
+                        productRating = productEntityRating;
+                    }
+                } else if (productEntityRating != null) {
                     productRating = productEntityRating;
                 }
             } else if ("PRDR_MAX".equals(entityFieldType)) {
                 // check for max
-                if (productRating.compareTo(productEntityRating) > 0) {
+                if (productEntityRating != null && productRating != null) { // SCIPIO: null checks
+                    if (productRating.compareTo(productEntityRating) > 0) {
+                        productRating = productEntityRating;
+                    }
+                } else if (productEntityRating != null) {
                     productRating = productEntityRating;
                 }
             }

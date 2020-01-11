@@ -422,6 +422,11 @@ public final class RequestAttrPolicy {
                         Map<String, Object> saveAttrMap) {
                     return policy.doViewLastAttrSave(request, attrName, saveAttrMap);
                 }
+                public boolean isAttrNameExcluded(Map<String, Object> saveAttrMap, String attrName, Object value) {
+                    // SCIPIO: 2020-01: Always exclude java servlet attributes, because transferring them across a redirect
+                    // is a violation of their behaviors according to java servlet spec.
+                    return isFilterAttrNames() && (getAttrNameExcludes().contains(attrName) || attrName.startsWith("javax.servlet."));
+                }
             };
 
             public static SaveAttrPolicyInvoker<SavePolicy> getInvoker(HttpServletRequest request) {
@@ -605,6 +610,13 @@ public final class RequestAttrPolicy {
                 @Override
                 public Set<String> getExtraAttrNameExcludes() {
                     return ATTR_NAME_EXCLUDES;
+                }
+
+                @Override
+                public boolean isAttrNameExcluded(Map<String, Object> saveAttrMap, String attrName, Object value) {
+                    // SCIPIO: 2020-01: Always exclude java servlet attributes, because transferring them across a redirect
+                    // is a violation of their behaviors according to java servlet spec.
+                    return isFilterAttrNames() && (getAttrNameExcludes().contains(attrName) || attrName.startsWith("javax.servlet."));
                 }
             };
 

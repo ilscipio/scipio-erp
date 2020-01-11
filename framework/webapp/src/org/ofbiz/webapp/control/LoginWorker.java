@@ -350,7 +350,8 @@ public class LoginWorker {
                 ViewAsJsonConfig viewAsJsonConfig = ViewAsJsonUtil.getViewAsJsonConfigOrDefault(request);
                 if (!ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig) || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
                     // keep the previous request name in the session
-                    session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
+                    // SCIPIO: Fixed
+                    //session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
 
                     // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
                     // keep 2 maps: one for URL parameters and one for form parameters
@@ -360,15 +361,16 @@ public class LoginWorker {
                         for(String name : ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL) {
                             urlParams.remove(name);
                         }
-                        session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
+                        //session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
                     }
                     Set<String> excludes = new HashSet<>();
                     excludes.addAll(urlParams.keySet());
                     excludes.addAll(ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
                     Map<String, Object> formParams = UtilHttp.getParameterMap(request, excludes, false);
                     if (UtilValidate.isNotEmpty(formParams)) {
-                        session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
+                        //session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
                     }
+                    PreviousRequestInfo.createInfo(request, request.getPathInfo(), null, urlParams, formParams, null).setInfo(request);
                 }
 
                 //if (Debug.infoOn()) Debug.logInfo("checkLogin: PathInfo=" + request.getPathInfo(), module);

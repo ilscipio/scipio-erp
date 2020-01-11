@@ -259,8 +259,12 @@ public class RequestHandler {
         // Grab data from request object to process
         String defaultRequestUri = RequestHandler.getRequestUri(request.getPathInfo());
         if (request.getAttribute("targetRequestUri") == null) {
-            if (request.getSession().getAttribute("_PREVIOUS_REQUEST_") != null) {
-                request.setAttribute("targetRequestUri", request.getSession().getAttribute("_PREVIOUS_REQUEST_"));
+            // SCIPIO: Fixed
+            //if (request.getSession().getAttribute("_PREVIOUS_REQUEST_") != null) {
+            //    request.setAttribute("targetRequestUri", request.getSession().getAttribute("_PREVIOUS_REQUEST_"));
+            String previousRequest = PreviousRequestInfo.getPreviousRequest(request);
+            if (previousRequest != null) {
+                request.setAttribute("targetRequestUri", previousRequest);
             } else {
                 request.setAttribute("targetRequestUri", "/" + defaultRequestUri);
             }
@@ -579,14 +583,19 @@ public class RequestHandler {
 
         // after security check but before running the event, see if a post-login redirect has completed and we have data from the pre-login request form to use now
         // we know this is the case if the _PREVIOUS_PARAM_MAP_ attribute is there, but the _PREVIOUS_REQUEST_ attribute has already been removed
-        if (request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_") != null && request.getSession().getAttribute("_PREVIOUS_REQUEST_") == null) {
-            Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_"), String.class, Object.class);
-            for (Map.Entry<String, Object> previousParamEntry: previousParamMap.entrySet()) {
+        // SCIPIO: Fixed
+        //if (request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_") != null && request.getSession().getAttribute("_PREVIOUS_REQUEST_") == null) {
+            //Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_"), String.class, Object.class);
+        PreviousRequestInfo prevReqInfo = PreviousRequestInfo.getInfoOrUnset(request);
+        if (prevReqInfo.getPreviousParamMapForm() != null && prevReqInfo.getPreviousRequest() == null) {
+            for (Map.Entry<String, Object> previousParamEntry: prevReqInfo.getPreviousParamMapForm().entrySet()) {
                 request.setAttribute(previousParamEntry.getKey(), previousParamEntry.getValue());
             }
 
             // to avoid this data being included again, now remove the _PREVIOUS_PARAM_MAP_ attribute
-            request.getSession().removeAttribute("_PREVIOUS_PARAM_MAP_FORM_");
+            // SCIPIO: Fixed
+            //request.getSession().removeAttribute("_PREVIOUS_PARAM_MAP_FORM_");
+            PreviousRequestInfo.getUnset(request).setInfo(request);
         }
 
         // now we can start looking for the next request response to use
@@ -667,7 +676,10 @@ public class RequestHandler {
         if (eventReturnBasedRequestResponse != null && (!"success".equals(eventReturnBasedRequestResponse.name) || "none".equals(eventReturnBasedRequestResponse.type))) nextRequestResponse = eventReturnBasedRequestResponse;
 
         // get the previous request info
-        String previousRequest = (String) request.getSession().getAttribute("_PREVIOUS_REQUEST_");
+        // SCIPIO: Fixed
+        //String previousRequest = (String) request.getSession().getAttribute("_PREVIOUS_REQUEST_");
+        prevReqInfo = PreviousRequestInfo.getInfoOrUnset(request);
+        String previousRequest = prevReqInfo.getPreviousRequest();
         String loginPass = (String) request.getAttribute("_LOGIN_PASSED_");
 
         // restore previous redirected request's attribute, so redirected page can display previous request's error msg etc.
@@ -695,29 +707,36 @@ public class RequestHandler {
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")" + showSessionId(request), module);
 
         // if previous request exists, and a login just succeeded, do that now.
-        if (previousRequest != null && loginPass != null && "TRUE".equalsIgnoreCase(loginPass)) {
-            request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
+        if (previousRequest != null && "TRUE".equalsIgnoreCase(loginPass)) {
+            // SCIPIO: Fixed. NOTE: we must not remove _PREVIOUS_PARAM_MAP_FORM_ here, only the request
+            //request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
+            //String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_"); // SCIPIO
+            //request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
+            prevReqInfo.removePreviousRequest().setInfo(request);
             // special case to avoid login/logout looping: if request was "logout" before the login, change to null for default success view; do the same for "login" to avoid going back to the same page
             if ("logout".equals(previousRequest) || "/logout".equals(previousRequest) || "login".equals(previousRequest) || "/login".equals(previousRequest) || "checkLogin".equals(previousRequest) || "/checkLogin".equals(previousRequest) || "/checkLogin/login".equals(previousRequest)) {
-                Debug.logWarning("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
+                // SCIPIO: This is likely to happen, so should not be a warning
+                //Debug.logWarning("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
+                Debug.logInfo("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
             } else {
-                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
+                // SCIPIO: now below
+                //if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
 
                 // note that the previous form parameters are not setup (only the URL ones here), they will be found in the session later and handled when the old request redirect comes back
-                Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_URL_"), String.class, Object.class);
+                Map<String, Object> previousParamMap = prevReqInfo.getPreviousParamMapUrl();
                 String queryString = UtilHttp.urlEncodeArgs(previousParamMap, false);
                 String redirectTarget = previousRequest;
 
-                // JB: SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
+                // SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
                 // FIXME?: NOTE: Like the other attributes ofbiz did above, we are forced to use a separate attribute for this, but it risks breaking
                 //  due to concurrency... for now, this is moot because the others all suffer from this as well
-                String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                String previousServletRequest = prevReqInfo.getPreviousServletRequest();
                 if (UtilValidate.isNotEmpty(previousServletRequest)) {
-                    request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
                     redirectTarget = previousServletRequest;
                     if (UtilValidate.isNotEmpty(queryString)) {
                         redirectTarget += "?" + queryString;
                     }
+                    if (Debug.infoOn()) Debug.logInfo("[Doing Previous Servlet Request]: " + previousServletRequest + showSessionId(request), module);
                     callRedirect(makeLink(request, response, redirectTarget, null, (FullWebappInfo) null, false, true, null, null), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
                     return;
                 }
@@ -726,6 +745,7 @@ public class RequestHandler {
                     redirectTarget += "?" + queryString;
                 }
 
+                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here

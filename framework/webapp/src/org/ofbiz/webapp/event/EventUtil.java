@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
@@ -46,6 +47,9 @@ import org.ofbiz.service.ServiceValidationException;
 
 /**
  * SCIPIO: (New) Event utilities and definitions.
+ * <p>
+ * TODO/FIXME: {@link #runServiceAsEvent} static method should be replaced with a helper invoker instance because there are too many possible options,
+ *  so for now only the readable overloads are public (calling code will be unreadable/too complicated)
  */
 public final class EventUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -199,6 +203,33 @@ public final class EventUtil {
      */
     public static void clearRequestMessages(HttpServletRequest request) {
         ServiceUtil.clearRequestMessages(request);
+    }
+
+    /**
+     * Sets default success message for service events if no other messages in service.
+     * NOTE: This must be called after setRequestMessagesFromService.
+     */
+    public static void setDefaultSuccessMessageForService(HttpServletRequest request, Locale locale) {
+        if (!EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
+            String defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale);
+            request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
+            request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
+        }
+    }
+
+    public static void setRequestAttributesForServiceResult(HttpServletRequest request, Map<String, ?> result) {
+        for (Map.Entry<String, ?> rme: result.entrySet()) {
+            String resultKey = rme.getKey();
+            Object resultValue = rme.getValue();
+
+            // SCIPIO: This is ridiculous
+            //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
+            //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
+            //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+            if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
+                request.setAttribute(resultKey, resultValue);
+            }
+        }
     }
 
     /**
@@ -361,14 +392,30 @@ public final class EventUtil {
      * @return the event error response
      */
     public static String returnServiceAsEvent(HttpServletRequest request, Map<String, ? extends Object> serviceResult) {
-        appendRequestMessagesFromService(request, serviceResult);
+        return returnServiceAsEvent(request, serviceResult, true, true, true);
+    }
+
+    // FIXME: currently private because there are too many possible options - this needs a helper class or a helper invoker class, because too many booleans, so caller events will become unreadable...
+    //  so for now we will simply emulate the full service event handler (all true by default) since that should be the most common usage
+    private static String returnServiceAsEvent(HttpServletRequest request, Map<String, ? extends Object> serviceResult, boolean messagesToRequest, boolean useDefaultSuccessMessage, boolean resultToRequest) {
+        if (messagesToRequest) {
+            appendRequestMessagesFromService(request, serviceResult);
+        }
+        if (useDefaultSuccessMessage) {
+            if (ServiceUtil.isSuccess(serviceResult)) {
+                EventUtil.setDefaultSuccessMessageForService(request, UtilHttp.getLocale(request));
+            }
+        }
+        if (resultToRequest) {
+            setRequestAttributesForServiceResult(request, serviceResult);
+        }
         // NOTE: Usually this is success/error/fail, so we don't have to convert it for now...
         String responseMessage =  (String) serviceResult.get(ModelService.RESPONSE_MESSAGE);
         return UtilValidate.isNotEmpty(responseMessage) ? responseMessage : "success";
     }
 
     private static String runServiceAsEvent(HttpServletRequest request, HttpServletResponse response, String serviceName,
-            Map<String, ?> serviceContext, boolean async, boolean validate) throws GenericServiceException {
+            Map<String, ?> serviceContext, boolean async, boolean validate, boolean messagesToRequest, boolean useDefaultSuccessMessage, boolean resultToRequest) throws GenericServiceException {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         try {
             ModelService model = dispatcher.getModelService(serviceName);
@@ -410,7 +457,7 @@ public final class EventUtil {
                 return "success";
             } else {
                 Map<String, Object> servResult = dispatcher.runSync(serviceName, serviceContext);
-                return returnServiceAsEvent(request, servResult);
+                return returnServiceAsEvent(request, servResult, messagesToRequest, useDefaultSuccessMessage, resultToRequest);
             }
         } catch (ServiceAuthException e) {
             // not logging since the service engine already did
@@ -442,7 +489,7 @@ public final class EventUtil {
      */
     public static String runServiceAsEvent(HttpServletRequest request, HttpServletResponse response, String serviceName,
             Map<String, ?> serviceContext) throws GenericServiceException {
-        return runServiceAsEvent(request, response, serviceName, serviceContext, false, true);
+        return runServiceAsEvent(request, response, serviceName, serviceContext, false, true, true, true ,true);
     }
 
     /**
@@ -456,7 +503,7 @@ public final class EventUtil {
      */
     public static String runAsyncServiceAsEvent(HttpServletRequest request, HttpServletResponse response, String serviceName,
             Map<String, ?> serviceContext) throws GenericServiceException {
-        return runServiceAsEvent(request, response, serviceName, serviceContext, true, true);
+        return runServiceAsEvent(request, response, serviceName, serviceContext, true, true, true, true ,true);
     }
 
     /**
@@ -472,7 +519,7 @@ public final class EventUtil {
      */
     public static String runServiceAsEventNoValid(HttpServletRequest request, HttpServletResponse response, String serviceName,
             Map<String, ?> serviceContext) throws GenericServiceException {
-        return runServiceAsEvent(request, response, serviceName, serviceContext, false, false);
+        return runServiceAsEvent(request, response, serviceName, serviceContext, false, false, true, true, true);
     }
 
     /**
@@ -488,6 +535,6 @@ public final class EventUtil {
      */
     public static String runAsyncServiceAsEventNoValid(HttpServletRequest request, HttpServletResponse response, String serviceName,
             Map<String, ?> serviceContext) throws GenericServiceException {
-        return runServiceAsEvent(request, response, serviceName, serviceContext, true, false);
+        return runServiceAsEvent(request, response, serviceName, serviceContext, true, false, true, true, true);
     }
 }

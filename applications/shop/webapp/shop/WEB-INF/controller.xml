@@ -129,21 +129,21 @@ code package.
 
     <request-map uri="createShoppingListFromOrder">
         <security auth="true" https="true"/>
-        <event type="service" invoke="makeShoppingListFromOrder"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createShoppingListFromOrder"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="updateShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="updateShoppingList"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="updateShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addItemToShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="createShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addItemToShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
@@ -164,14 +164,14 @@ code package.
 
     <request-map uri="updateShoppingListItem">
         <security auth="true" https="true"/>
-        <event type="service" invoke="updateShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="updateShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="removeFromShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="removeShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="removeFromShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>

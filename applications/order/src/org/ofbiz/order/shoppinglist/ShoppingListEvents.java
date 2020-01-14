@@ -59,6 +59,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.event.EventUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
@@ -79,8 +80,8 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
-        String shoppingListAuthToken = request.getParameter("shoppingListAuthToken"); // SCIPIO
-        
+        String shoppingListAuthToken = getShoppingListAuthTokenForList(request, shoppingListId); // SCIPIO
+
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
@@ -217,7 +218,7 @@ public class ShoppingListEvents {
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
         // SCIPIO: Security check to make sure we have access to the list
-        String shoppingListAuthToken = request.getParameter("shoppingListAuthToken");
+        String shoppingListAuthToken = getShoppingListAuthTokenForList(request, shoppingListId); // SCIPIO
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
         if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingListId, shoppingListAuthToken)) {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonPermissionErrorTryAccountSupport", UtilHttp.getLocale(request)));
@@ -376,7 +377,7 @@ public class ShoppingListEvents {
         serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
         serviceInMap.put("productId", request.getParameter("add_product_id"));
         serviceInMap.put("userLogin", userLogin);
-        serviceInMap.put("shoppingListAuthToken", request.getParameter("shoppingListAuthToken")); // SCIPIO
+        checkSetShoppingListAuthTokenForService(request, serviceInMap); // SCIPIO
         if (quantity != null) serviceInMap.put("quantity", quantity);
         Map<String, Object> result = null;
         try {
@@ -687,8 +688,7 @@ public class ShoppingListEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        Properties systemProps = System.getProperties();
-        String guestShoppingUserName = "GuestShoppingListId_" + systemProps.getProperty("user.name").replace(" ", "_");
+        String guestShoppingUserName = getAutoSaveShoppingListCookieName(request); // SCIPIO
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         int cookieAge = (60 * 60 * 24 * 30);
         String autoSaveListId = null;
@@ -704,40 +704,29 @@ public class ShoppingListEvents {
         }
 
         // find shopping list ID
-        if (cookies != null) {
-            for (Cookie cookie: cookies) {
-                if (cookie.getName().equals(guestShoppingUserName)) {
-                    // SCIPIO
-                    //autoSaveListId = cookie.getValue();
-                    String[] parts = splitShoppingListCookieValue(cookie.getValue());
-                    String cookieAutoSaveListId = (parts.length >= 1 && UtilValidate.isNotEmpty(parts[0])) ? parts[0] : null;
-                    String cookieAuthToken = (parts.length >= 2 && UtilValidate.isNotEmpty(parts[1])) ? parts[1] : null;
-                    // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
-                    if (UtilValidate.isNotEmpty(cookieAutoSaveListId)) {
-                        GenericValue shoppingList = null;
-                        try {
-                            // DEV NOTE: I have left out the .cache() call here, because this is only run on first-visit, but .cache(true) might be ok
-                            // since the ShoppingList.partyId and shoppingListAuthToken fields never get modified...
-                            shoppingList = delegator.from("ShoppingList").where("shoppingListId", cookieAutoSaveListId).queryOne();
-                        } catch (GenericEntityException e) {
-                            Debug.logError("createGuestShoppingListCookies: Could not get ShoppingList '" + cookieAutoSaveListId + "'", module);
-                        }
-                        if (shoppingList == null) {
-                            if (Debug.verboseOn()) {
-                                Debug.logVerbose("createGuestShoppingListCookies: Cookies pointed to non-existent ShoppingList '" + cookieAutoSaveListId + "'", module);
-                            }
-                        } else {
-                            if (ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, cookieAuthToken)) {
-                                autoSaveListId = cookieAutoSaveListId;
-                                shoppingListAuthToken = cookieAuthToken;
-                            } else {
-                                Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '"
-                                        + (userLogin != null ? userLogin.getString("partyId") : "(anonymous)")
-                                        + "' to use ShoppingList '" + cookieAutoSaveListId + "' from cookies", module);
-                            }
-                        }
-                    }
-                    break;
+        ShoppingListCookieInfo autoSaveCookieInfo = ShoppingListCookieInfo.fromCookie(request, guestShoppingUserName);
+        // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
+        if (autoSaveCookieInfo != null) {
+            GenericValue shoppingList = null;
+            try {
+                // DEV NOTE: I have left out the .cache() call here, because this is only run on first-visit, but .cache(true) might be ok
+                // since the ShoppingList.partyId and shoppingListAuthToken fields never get modified...
+                shoppingList = delegator.from("ShoppingList").where("shoppingListId", autoSaveCookieInfo.getShoppingListId()).queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logError("createGuestShoppingListCookies: Could not get ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "'", module);
+            }
+            if (shoppingList == null) {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("createGuestShoppingListCookies: Cookies pointed to non-existent ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "'", module);
+                }
+            } else {
+                if (ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, autoSaveCookieInfo.getAuthToken())) {
+                    autoSaveListId = autoSaveCookieInfo.getShoppingListId();
+                    shoppingListAuthToken = autoSaveCookieInfo.getAuthToken();
+                } else {
+                    Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '"
+                            + (userLogin != null ? userLogin.getString("partyId") : "(anonymous)")
+                            + "' to use ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "' from cookies", module);
                 }
             }
         }
@@ -789,13 +778,6 @@ public class ShoppingListEvents {
         return autoSaveListId + (shoppingListAuthToken != null ? "::" + shoppingListAuthToken : "");
     }
 
-    private static String[] splitShoppingListCookieValue(String value) {
-        if (value == null) {
-            return new String[]{null};
-        }
-        return value.split("::", 2);
-    }
-
     /**
      * Clear the guest cookies for a shopping list
      */
@@ -807,5 +789,119 @@ public class ShoppingListEvents {
         guestShoppingListCookie.setPath("/");
         response.addCookie(guestShoppingListCookie);
         return "success";
+    }
+
+    public static class ShoppingListCookieInfo { // SCIPIO
+        private final String shoppingListId;
+        private final String authToken;
+        private final Cookie cookie; // may be null if not exist yet
+
+        public ShoppingListCookieInfo(String shoppingListId, String authToken, Cookie cookie) {
+            this.shoppingListId = shoppingListId;
+            this.authToken = authToken;
+            this.cookie = cookie;
+        }
+
+        private static ShoppingListCookieInfo fromStringRepr(String value, Cookie cookie) {
+            if (value == null) {
+                return null;
+            }
+            String[] parts = value.split("::", 2);
+            if (parts.length >= 2 && UtilValidate.isNotEmpty(parts[0])) {
+                return new ShoppingListCookieInfo(parts[0], UtilValidate.isNotEmpty(parts[1]) ? parts[1] : null, cookie);
+            }
+            return null;
+        }
+
+        public static ShoppingListCookieInfo fromStringRepr(String value) {
+            return fromStringRepr(value, null);
+        }
+
+        public static ShoppingListCookieInfo fromCookie(Cookie cookie) {
+            return fromStringRepr(cookie != null ? cookie.getValue() : null, cookie);
+        }
+
+        public static ShoppingListCookieInfo fromCookie(HttpServletRequest request, String cookieName) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie: cookies) {
+                    if (cookie.getName().equals(cookieName)) {
+                        return ShoppingListCookieInfo.fromCookie(cookie);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public String getShoppingListId() { return shoppingListId; }
+        public String getAuthToken() { return authToken; }
+        public Cookie getCookie() { return cookie; }
+    }
+
+    public static String  getAutoSaveShoppingListCookieName(HttpServletRequest request) { // SCIPIO
+        return "GuestShoppingListId_" + System.getProperties().getProperty("user.name").replace(" ", "_");
+    }
+
+    public static ShoppingListCookieInfo getAutoSaveShoppingListCookieInfo(HttpServletRequest request) { // SCIPIO
+        return ShoppingListCookieInfo.fromCookie(request, getAutoSaveShoppingListCookieName(request));
+    }
+
+    public static String getShoppingListAuthTokenForList(HttpServletRequest request, String shoppingListId) { // SCIPIO
+        if (UtilValidate.isEmpty(shoppingListId)) {
+            return null;
+        }
+        String authToken = (String) request.getAttribute("shoppingListAuthToken");
+        if (authToken == null) {
+            authToken = request.getParameter("shoppingListAuthToken");
+        }
+        if (UtilValidate.isNotEmpty(authToken)) {
+            return authToken;
+        } else {
+            authToken = null;
+        }
+        ShoppingListCookieInfo cookieInfo = getAutoSaveShoppingListCookieInfo(request);
+        if (cookieInfo != null && shoppingListId.equals(cookieInfo.getShoppingListId()) && UtilValidate.isNotEmpty(cookieInfo.getAuthToken())) {
+            authToken = cookieInfo.getAuthToken();
+        }
+        return authToken;
+    }
+
+    public static void checkSetShoppingListAuthTokenForService(HttpServletRequest request, Map<String, Object> servCtx) { // SCIPIO
+        if (!servCtx.containsKey("shoppingListAuthToken")) {
+            String authToken = getShoppingListAuthTokenForList(request, (String) servCtx.get("shoppingListId"));
+            if (authToken != null) {
+                servCtx.put("shoppingListAuthToken", authToken);
+            }
+        }
+    }
+
+    public static String updateShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "updateShoppingList");
+        checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "updateShoppingList", servCtx);
+    }
+
+    public static String createShoppingListFromOrder(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "makeShoppingListFromOrder");
+        checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "makeShoppingListFromOrder", servCtx);
+    }
+
+    public static String addItemToShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "createShoppingListItem");
+        checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "createShoppingListItem", servCtx);
+    }
+
+    public static String updateShoppingListItem(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "updateShoppingListItem");
+        checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "updateShoppingListItem", servCtx);
+    }
+
+    public static String removeFromShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "removeShoppingListItem");
+        checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "removeShoppingListItem", servCtx);
     }
 }

@@ -383,25 +383,12 @@ public class ServiceEventHandler implements EventHandler {
             // 2019-03-06: We now also don't add this if there was already an error message from a prior service.
             // NOTE: See also org.ofbiz.webapp.control.RequestHandler#cleanupEventMessages for the code that handles _DEF_EVENT_MSG_; it unsets
             // _EVENT_MESSAGE_ if an error message exists and _EVENT_MESSAGE_ is still set to _DEF_EVENT_MSG_ by the time the events are done.
-            if (ModelService.RESPOND_SUCCESS.equals(responseString) && !EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
-                String defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale);
-                request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
-                request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
+            if (ModelService.RESPOND_SUCCESS.equals(responseString)) {
+                EventUtil.setDefaultSuccessMessageForService(request, locale);
             }
 
             // set the results in the request
-            for (Map.Entry<String, Object> rme: result.entrySet()) {
-                String resultKey = rme.getKey();
-                Object resultValue = rme.getValue();
-
-                // SCIPIO: This is ridiculous
-                //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
-                if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
-                    request.setAttribute(resultKey, resultValue);
-                }
-            }
+            EventUtil.setRequestAttributesForServiceResult(request, result);
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + responseString, module);

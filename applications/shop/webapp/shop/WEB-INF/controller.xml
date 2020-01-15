@@ -1025,7 +1025,7 @@ code package.
     <request-map uri="createcustomer">
         <security https="true" auth="false"/>
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomer"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
 

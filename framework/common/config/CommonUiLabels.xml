@@ -197,6 +197,10 @@
         <value xml:lang="de">Konto</value>
         <value xml:lang="en">Account</value>
     </property>
+    <property key="CommonAccountRegistered">
+        <value xml:lang="de">Ihr Konto wurde registriert!</value>
+        <value xml:lang="en">Your account has been registered!</value>
+    </property>
     <property key="CommonActions">
         <value xml:lang="de">Aktionen</value>
         <value xml:lang="en">Actions</value>

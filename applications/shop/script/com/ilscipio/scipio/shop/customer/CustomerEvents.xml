@@ -384,6 +384,10 @@ code package.
             <script lang="groovy"><![CDATA[
                 import org.ofbiz.order.shoppingcart.*;
                 org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
+
+                // SCIPIO: Run after-login events (based on doMainLogin)
+                org.ofbiz.webapp.control.RequestHandler.getRequestHandler(request.getServletContext()).runAfterLoginEvents(request, response);
+
                 org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
 
                 CartUpdate cartUpdate = CartUpdate.updateSection(request);
@@ -441,6 +445,10 @@ code package.
         <!-- tell the control servlet that we just logged in the user... -->
         <set value="TRUE" field="_LOGIN_PASSED_"/>
         <field-to-request field="_LOGIN_PASSED_"/>
+
+        <!-- SCIPIO -->
+        <property-to-field field="successMessage" resource="CommonUiLabels" property="CommonAccountRegistered"/>
+        <set field="_event_message_" value="${successMessage}" />
     </simple-method>
 
     <!-- =========================================== -->

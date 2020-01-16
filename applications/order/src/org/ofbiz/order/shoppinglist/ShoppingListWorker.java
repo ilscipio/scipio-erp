@@ -1,14 +1,19 @@
 package org.ofbiz.order.shoppinglist;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilRandom;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.DispatchContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * SCIPIO: ShoppingList utils.
@@ -64,5 +69,58 @@ public abstract class ShoppingListWorker {
             Debug.logError("Could not get ShoppingList '" + shoppingListId + "'", module);
         }
         return checkShoppingListSecurity(dctx, userLogin, permissionAction, shoppingList, shoppingListAuthToken);
+    }
+
+    public static GenericValue getUserDefaultShoppingList(HttpServletRequest request, boolean useCache) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String currentShoppingListId = (String) session.getAttribute("currentShoppingListId");
+            if (UtilValidate.isNotEmpty(currentShoppingListId)) {
+                Delegator delegator = (Delegator) request.getAttribute("delegator");
+                try {
+                    return delegator.from("ShoppingList").where("shoppingListId", currentShoppingListId).cache(useCache).queryOne();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return null;
+                }
+            }
+        }
+        GenericValue userLogin = (session != null) ? (GenericValue) session.getAttribute("userLogin") : null;
+        if (userLogin == null || userLogin.getString("partyId") == null) {
+            return null;
+        }
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        try {
+            return delegator.from("ShoppingList")
+                    .where(UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+                            EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save"))).orderBy("listName").cache(useCache).queryFirst();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    public static String getUserDefaultShoppingListId(HttpServletRequest request, boolean useCache) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String currentShoppingListId = (String) session.getAttribute("currentShoppingListId");
+            if (UtilValidate.isNotEmpty(currentShoppingListId)) {
+                return currentShoppingListId;
+            }
+        }
+        GenericValue userLogin = (session != null) ? (GenericValue) session.getAttribute("userLogin") : null;
+        if (userLogin == null || userLogin.getString("partyId") == null) {
+            return null;
+        }
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        try {
+            GenericValue shoppingList = delegator.from("ShoppingList")
+                    .where(UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+                            EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save"))).orderBy("listName").cache(useCache).queryFirst();
+            return  (shoppingList != null) ? shoppingList.getString("shoppingListId") : null;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
     }
 }

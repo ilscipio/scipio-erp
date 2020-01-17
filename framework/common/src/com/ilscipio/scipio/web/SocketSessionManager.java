@@ -22,10 +22,18 @@ public class SocketSessionManager {
     }
 
     /**
-     * Adds Websocket Session to Session Manager
+     * Adds Websocket Session to Session Manager (defaults to true)
      * */
     public static void addSession(String permission, Session session, EndpointConfig config) {
-        if (!checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
+        addSession(Boolean.TRUE, permission, session, config);
+    }
+
+    public static void addUnsecureSession(Session session, EndpointConfig config) {
+        addSession(Boolean.FALSE, null, session, config);
+    }
+
+    public static void addSession(Boolean requiresPermission, String permission, Session session, EndpointConfig config) {
+        if (requiresPermission && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
             return;
         }
         synchronized(clients) { // SCIPIO: added block
@@ -69,6 +77,32 @@ public class SocketSessionManager {
                         Debug.logError(ioe.getMessage(), module);
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Broadcasts to a single client
+     * */
+    public static void broadcastToClient(String message,String clientId){
+        synchronized(clients) {
+            for (Session session : clients) {
+                if(clientId.equals(session.getId())){
+                    try {
+                        if (session.isOpen()) {
+                            session.getBasicRemote().sendText(message);
+                        }
+                    } catch (IOException e) {
+                        try {
+                            clients.remove(session);
+                            session.close();
+                        } catch (IOException ioe) {
+                            Debug.logError(ioe.getMessage(), module);
+                        }
+                    }
+
+                }
+
             }
         }
     }

@@ -6,6 +6,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,8 +21,8 @@ public class GenericWebSocket {
     public void onOpen(Session session, EndpointConfig config) {
         Map params = session.getRequestParameterMap();
         if(params.get("channel") != null){
-            String channelName = SocketSessionManager.DATA_KEY_CHANNEL+(String) params.get("channel");
-            String type = (String) params.get("type");
+            String channelName = SocketSessionManager.DATA_KEY_CHANNEL+ ((List) params.get("channel")).get(0);
+            String type = (String) ((List) params.get("type")).get(0);
 
             if("subscribe".equals(type)){
                 SocketSessionManager.addSession("OFBTOOLS", session,config);

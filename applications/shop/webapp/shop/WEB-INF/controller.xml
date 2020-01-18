@@ -122,7 +122,7 @@ code package.
 
     <request-map uri="createEmptyShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="createShoppingList"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createEmptyShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
@@ -144,6 +144,13 @@ code package.
     <request-map uri="addItemToShoppingList">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addItemToShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="addItemToDefaultShoppingList"><!-- SCIPIO -->
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addItemToDefaultShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
@@ -172,6 +179,13 @@ code package.
     <request-map uri="removeFromShoppingList">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="removeFromShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="removeFromDefaultShoppingList">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="removeFromDefaultShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>

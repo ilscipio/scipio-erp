@@ -31,13 +31,12 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.service.calendar.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-if (userLogin) 
-{
+def isAnonUser = ShoppingListWorker.isAnonUser((GenericValue) userLogin); // SCIPIO
+if (userLogin && !isAnonUser) {
     party = userLogin.getRelatedOne("Party", false);
-}  else {
+} else if (!ShoppingListWorker.useAnonShoppingList(request)) {
     return; // session ended, prevents a NPE
 }
-
 
 cart = ShoppingCartEvents.getCartObject(request);
 currencyUomId = cart.getCurrency();
@@ -52,10 +51,15 @@ context.currencyUomId = currencyUomId;
 // SCIPIO: Some patches to prevent missing userLogin crash
 
 // get the top level shopping lists for the logged in user
-exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),
-        EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
-condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
+// SCIPIO: Added limited query support for anon user list
+if (isAnonUser) {
+    anonShoppingList = ShoppingListWorker.getAnonUserDefaultWishList(request, userLogin, false);
+    allShoppingLists = (anonShoppingList != null) ? [anonShoppingList] : [];
+} else if (userLogin?.partyId) {
+    exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),
+                EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
+    allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
+}
 shoppingLists = EntityUtil.filterByAnd(allShoppingLists, [parentShoppingListId : null]);
 context.allShoppingLists = allShoppingLists;
 context.shoppingLists = shoppingLists;
@@ -64,9 +68,37 @@ context.shoppingLists = shoppingLists;
 shoppingListTypes = from("ShoppingListType").orderBy("description").cache(true).queryList();
 context.shoppingListTypes = shoppingListTypes;
 
-// get the shoppingListId for this reqest
+// get the shoppingListId for this request
 parameterMap = UtilHttp.getParameterMap(request);
-shoppingListId = parameterMap.shoppingListId ?: request.getAttribute("shoppingListId") ?: session.getAttribute("currentShoppingListId");
+// SCIPIO: Treat currentShoppingListId differently because it's likely it can go out of sync or become invalid, at which point we should simply ignore it
+// (the request parameter must however be treated as an explicit request)
+//shoppingListId = parameterMap.shoppingListId ?: request.getAttribute("shoppingListId") ?: session.getAttribute("currentShoppingListId");
+shoppingListId = parameterMap.shoppingListId ?: request.getAttribute("shoppingListId");
+canView = false;
+// SCIPIO: Simplify the allowed shoppingListId by making sure it's at least within allShoppingLists - this covers canView (though it can still be a child list)
+// NOTE: This explicitly will prevent manually editing the auto-save shopping list and prevent anyone from trying to - this should help prevent bugs...
+def isValidShoppingListId = { shoppingListId ->
+    if (allShoppingLists) {
+        for(sl in allShoppingLists) {
+            if (sl.shoppingListId == shoppingListId) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+if (shoppingListId) {
+    canView = isValidShoppingListId(shoppingListId);
+} else {
+    shoppingListId = session.getAttribute("currentShoppingListId");
+    if (shoppingListId) {
+        if (isValidShoppingListId(shoppingListId)) {
+            canView = true;
+        } else {
+            shoppingListId = null; // SCIPIO: ignore currentShoppingListId if invalid
+        }
+    }
+}
 context.shoppingListId = shoppingListId;
 
 // no passed shopping list id default to first list
@@ -74,9 +106,13 @@ if (!shoppingListId) {
     firstList = EntityUtil.getFirst(shoppingLists);
     if (firstList) {
         shoppingListId = firstList.shoppingListId;
+        canView = true;
     }
 }
-session.setAttribute("currentShoppingListId", shoppingListId);
+if (canView) { // SCIPIO: Don't store in session if you can't view it!
+    session.setAttribute("currentShoppingListId", shoppingListId);
+}
+context.canView = canView;
 
 // if we passed a shoppingListId get the shopping list info
 if (shoppingListId) {
@@ -188,7 +224,8 @@ if (shoppingListId) {
         parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList", false);
         context.parentShoppingList = parentShoppingList;
 
-        context.canView = (userLogin?.partyId) && (userLogin?.partyId.equals(shoppingList.partyId));
+        // SCIPIO: it makes no sense to validate this here - don't run the code if user not allowed - this is done and partly implied in
+        //context.canView = ((userLogin?.partyId) && (userLogin?.partyId.equals(shoppingList.partyId)));
 
         // auto-reorder info
         if ("SLT_AUTO_REODR".equals(shoppingListType?.shoppingListTypeId)) {

@@ -2836,7 +2836,9 @@ code package.
       <field name="lastOrderedDate" type="date-time"></field>
       <field name="lastAdminModified" type="date-time"></field>
       <field name="productPromoCodeId" type="id"></field>
-      <field name="shoppingListAuthToken" type="long-varchar"><description>Token used to authenticate anonymous shopping list cookie (SCIPIO)</description></field>
+      <field name="shoppingListAuthToken" type="long-varchar"><description>Token used to authenticate anonymous shopping list cookie (SCIPIO).</description></field>
+      <field name="userAddr" type="description"><description>For guest lists, this is address information of the user, or simply the I.P. address (SCIPIO).</description></field>
+      <field name="isUserDefault" type="indicator"><description>Optional flag to indicate the default list to use (SCIPIO), per-user (partyId or device), per-shoppingListTypeId.</description></field>
       <prim-key field="shoppingListId"/>
       <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
         <key-map field-name="parentShoppingListId" rel-field-name="shoppingListId"/>

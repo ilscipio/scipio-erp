@@ -1998,6 +1998,36 @@ public final class UtilHttp {
         return getRequestAttrNames(request, new HashSet<>());
     }
 
+    /**
+     * SCIPIO: Get the given session attribute if the session exists, otherwise null.
+     */
+    public static <T> T getSessionAttribute(HttpServletRequest request, String attrName) {
+        return getSessionAttribute(request.getSession(false), attrName);
+    }
+
+    /**
+     * SCIPIO: Get the given session attribute if the session exists, otherwise null.
+     */
+    public static <T> T getSessionAttribute(HttpSession session, String attrName) {
+        return (session != null) ? (T) session.getAttribute(attrName) : null;
+    }
+
+    /**
+     * SCIPIO: Remove the given session attribute if the session exists.
+     */
+    public static void removeSessionAttribute(HttpServletRequest request, String attrName) {
+        removeSessionAttribute(request.getSession(false), attrName);
+    }
+
+    /**
+     * SCIPIO: Remove the given session attribute if the session is non-null.
+     */
+    public static void removeSessionAttribute(HttpSession session, String attrName) {
+        if (session != null) {
+            session.removeAttribute(attrName);
+        }
+    }
+
 
     /**
      * SCIPIO: Returns an object which can be used for full session synchronization (never null).

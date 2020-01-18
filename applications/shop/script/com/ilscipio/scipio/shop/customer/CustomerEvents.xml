@@ -379,6 +379,33 @@ code package.
             <store-value value-field="personVo"/>
         </if-not-empty>
 
+        <!-- Associated to Product Store (SCIPIO: Moved to before login) -->
+        <entity-one entity-name="UserLogin" value-field="systemUserLogin">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>
+        <set field="createProductStoreRoleMap.userLogin" from-field="systemUserLogin"/>
+        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
+        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
+        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.emailProductStoreId"/>
+        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+
+        <!-- security for manage profile (SCIPIO: Moved to before login) -->
+        <set field="securityParams.userLoginId" from-field="createdUserLogin.userLoginId"/>
+        <set field="securityParams.groupId" value="ECOMMERCE_CUSTOMER"/>
+        <set field="securityParams.userLogin" from-field="systemUserLogin"/>
+        <call-service service-name="addUserLoginToSecurityGroup" in-map-name="securityParams"/>
+
+        <!-- SCIPIO: If the store supports the default anon list, convert it now -->
+        <if-not-empty field="createdUserLogin">
+            <script lang="groovy"><![CDATA[
+                context.convertListResult = org.ofbiz.order.shoppinglist.ShoppingListEvents.convertAnonShoppingListsToRegisteredForStore(request, response, context.createdUserLogin);
+            ]]></script>
+            <if-compare-field field="convertListResult" operator="not-equals" value="success">
+                <add-error><fail-property resource="OrderErrorUiLabels" property="shoppinglistevents.error_converting_wishlist_contact_support"/></add-error>
+                <check-errors/>
+            </if-compare-field>
+        </if-not-empty>
+
         <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
         <if-compare field="allowPassword" operator="equals" value="Y">
             <script lang="groovy"><![CDATA[
@@ -403,16 +430,6 @@ code package.
             ]]></script>
         </if-compare>
 
-        <!-- Associated to Product Store -->
-        <entity-one entity-name="UserLogin" value-field="userLogin">
-            <field-map field-name="userLoginId" value="system"/>
-        </entity-one>
-        <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
-        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
-        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
-        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.emailProductStoreId"/>
-        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
-
         <!-- send off the registration email -->
         <if-not-empty field="emailContext.emailAddress">
             <set from-field="parameters.emailProductStoreId" field="storeEmailLookup.productStoreId"/>
@@ -435,12 +452,6 @@ code package.
                 <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams" include-user-login="true"/>
             </if-not-empty>
         </if-not-empty>
-
-        <!-- security for manage profile  -->
-        <set field="securityParams.userLoginId" from-field="createdUserLogin.userLoginId"/>
-        <set field="securityParams.groupId" value="ECOMMERCE_CUSTOMER"/>
-        <set field="securityParams.userLogin" from-field="userLogin"/>
-        <call-service service-name="addUserLoginToSecurityGroup" in-map-name="securityParams"/>
 
         <!-- tell the control servlet that we just logged in the user... -->
         <set value="TRUE" field="_LOGIN_PASSED_"/>

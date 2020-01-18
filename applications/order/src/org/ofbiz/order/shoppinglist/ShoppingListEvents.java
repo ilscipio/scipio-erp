@@ -25,9 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -54,7 +52,6 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
-import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -71,6 +68,7 @@ public class ShoppingListEvents {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static final String PERSISTANT_LIST_NAME = "auto-save";
+    public static final String DEFAULT_ANON_LIST_NAME = "default-wishlist"; // SCIPIO
 
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -80,7 +78,7 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListTypeId = request.getParameter("shoppingListTypeId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
-        String shoppingListAuthToken = getShoppingListAuthTokenForList(request, shoppingListId); // SCIPIO
+        String shoppingListAuthToken = ShoppingListWorker.getShoppingListAuthTokenForRequest(request, shoppingListId); // SCIPIO
 
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
@@ -153,7 +151,7 @@ public class ShoppingListEvents {
             }
         } else if (!append) {
             // SCIPIO: Verify before making any modifications
-            if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, shoppingListAuthToken)) {
+            if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), shoppingList, "UPDATE", userLogin, shoppingListAuthToken, false)) {
                 throw new IllegalArgumentException(UtilProperties.getMessage("CommonErrorUiLabels", "CommonPermissionErrorTryAccountSupport", cart.getLocale()));
             }
             try {
@@ -218,9 +216,9 @@ public class ShoppingListEvents {
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
 
         // SCIPIO: Security check to make sure we have access to the list
-        String shoppingListAuthToken = getShoppingListAuthTokenForList(request, shoppingListId); // SCIPIO
+        String shoppingListAuthToken = ShoppingListWorker.getShoppingListAuthTokenForRequest(request, shoppingListId); // SCIPIO
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
-        if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingListId, shoppingListAuthToken)) {
+        if (!ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), shoppingListId, "UPDATE", userLogin, shoppingListAuthToken, false)) {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonPermissionErrorTryAccountSupport", UtilHttp.getLocale(request)));
             return "error";
         }
@@ -377,7 +375,7 @@ public class ShoppingListEvents {
         serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
         serviceInMap.put("productId", request.getParameter("add_product_id"));
         serviceInMap.put("userLogin", userLogin);
-        checkSetShoppingListAuthTokenForService(request, serviceInMap); // SCIPIO
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, serviceInMap); // SCIPIO
         if (quantity != null) serviceInMap.put("quantity", quantity);
         Map<String, Object> result = null;
         try {
@@ -681,19 +679,21 @@ public class ShoppingListEvents {
     }
 
     /**
-     * Create the guest cookies for a shopping list
+     * Create the guest cookies for a shopping list.
+     * <p>
+     * SCIPIO: NOTE: This does NOT create the new Scipio anon shopping list cookies; those are created on-demand
+     * by {@link #addItemToShoppingList(HttpServletRequest, HttpServletResponse)} and similar calls, otherwise
+     * too many needless lists will be created.
      */
     public static String createGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        String guestShoppingUserName = getAutoSaveShoppingListCookieName(request); // SCIPIO
+        String guestShoppingUserName = ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request); // SCIPIO
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
-        int cookieAge = (60 * 60 * 24 * 30);
         String autoSaveListId = null;
         String shoppingListAuthToken = null; // SCIPIO: shoppingListAuthToken for lists with no partyId
-        Cookie[] cookies = request.getCookies();
 
         // check userLogin
         if (userLogin != null) {
@@ -706,36 +706,17 @@ public class ShoppingListEvents {
         // find shopping list ID
         ShoppingListCookieInfo autoSaveCookieInfo = ShoppingListCookieInfo.fromCookie(request, guestShoppingUserName);
         // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
-        if (autoSaveCookieInfo != null) {
-            GenericValue shoppingList = null;
-            try {
-                // DEV NOTE: I have left out the .cache() call here, because this is only run on first-visit, but .cache(true) might be ok
-                // since the ShoppingList.partyId and shoppingListAuthToken fields never get modified...
-                shoppingList = delegator.from("ShoppingList").where("shoppingListId", autoSaveCookieInfo.getShoppingListId()).queryOne();
-            } catch (GenericEntityException e) {
-                Debug.logError("createGuestShoppingListCookies: Could not get ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "'", module);
-            }
-            if (shoppingList == null) {
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("createGuestShoppingListCookies: Cookies pointed to non-existent ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "'", module);
-                }
-            } else {
-                if (ShoppingListWorker.checkShoppingListSecurity(dispatcher.getDispatchContext(), userLogin, "UPDATE", shoppingList, autoSaveCookieInfo.getAuthToken())) {
-                    autoSaveListId = autoSaveCookieInfo.getShoppingListId();
-                    shoppingListAuthToken = autoSaveCookieInfo.getAuthToken();
-                } else {
-                    Debug.logWarning("createGuestShoppingListCookies: Could not authenticate user '"
-                            + (userLogin != null ? userLogin.getString("partyId") : "(anonymous)")
-                            + "' to use ShoppingList '" + autoSaveCookieInfo.getShoppingListId() + "' from cookies", module);
-                }
-            }
+        if (autoSaveCookieInfo != null && ShoppingListWorker.getValidUserShoppingList(request, autoSaveCookieInfo, userLogin, false) != null) {
+            autoSaveListId = autoSaveCookieInfo.getShoppingListId();
+            shoppingListAuthToken = autoSaveCookieInfo.getAuthToken();
         }
 
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
             if (UtilValidate.isEmpty(autoSaveListId)) {
                 try {
-                    Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+                    Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME,
+                            "userAddr", request.getRemoteAddr()); // SCIPIO: userAddr
                     Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
                     if (ServiceUtil.isError(newListResult)) {
                         String errorMessage = ServiceUtil.getErrorMessage(newListResult);
@@ -751,12 +732,7 @@ public class ShoppingListEvents {
                 }
                 // SCIPIO: include shoppingListAuthToken
                 //Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, autoSaveListId);
-                Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, makeShoppingListCookieValue(autoSaveListId, shoppingListAuthToken));
-                guestShoppingListCookie.setMaxAge(cookieAge);
-                guestShoppingListCookie.setPath("/");
-                guestShoppingListCookie.setSecure(true);
-                guestShoppingListCookie.setHttpOnly(true);
-                response.addCookie(guestShoppingListCookie);
+                ShoppingListCookieInfo.createShoppingListCookie(request, response, guestShoppingUserName, autoSaveListId, shoppingListAuthToken);
             }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
@@ -771,137 +747,263 @@ public class ShoppingListEvents {
         return "success";
     }
 
-    private static String makeShoppingListCookieValue(String autoSaveListId, String shoppingListAuthToken) { // shoppingListId::shoppingListAuthToken
-        if (autoSaveListId == null) {
-            return null;
-        }
-        return autoSaveListId + (shoppingListAuthToken != null ? "::" + shoppingListAuthToken : "");
-    }
-
     /**
      * Clear the guest cookies for a shopping list
      */
     public static String clearGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
-        Properties systemProps = System.getProperties();
-        String guestShoppingUserName = "GuestShoppingListId_" + systemProps.getProperty("user.name").replace(" ", "_");
-        Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, null);
-        guestShoppingListCookie.setMaxAge(0);
-        guestShoppingListCookie.setPath("/");
-        response.addCookie(guestShoppingListCookie);
+        ShoppingListCookieInfo.clearShoppingListCookie(request, response, ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request));
+        if (ShoppingListWorker.useAnonShoppingList(request)) { // SCIPIO
+            ShoppingListCookieInfo.clearShoppingListCookie(request, response, ShoppingListCookieInfo.getAnonShoppingListCookieName(request));
+        }
+        // SCIPIO: After login (where this event should be hooked), make sure to clear the session list to get rid of the anon list
+        clearCurrentShoppingList(request, response);
         return "success";
     }
 
-    public static class ShoppingListCookieInfo { // SCIPIO
-        private final String shoppingListId;
-        private final String authToken;
-        private final Cookie cookie; // may be null if not exist yet
-
-        public ShoppingListCookieInfo(String shoppingListId, String authToken, Cookie cookie) {
-            this.shoppingListId = shoppingListId;
-            this.authToken = authToken;
-            this.cookie = cookie;
-        }
-
-        private static ShoppingListCookieInfo fromStringRepr(String value, Cookie cookie) {
-            if (value == null) {
-                return null;
-            }
-            String[] parts = value.split("::", 2);
-            if (parts.length >= 2 && UtilValidate.isNotEmpty(parts[0])) {
-                return new ShoppingListCookieInfo(parts[0], UtilValidate.isNotEmpty(parts[1]) ? parts[1] : null, cookie);
-            }
-            return null;
-        }
-
-        public static ShoppingListCookieInfo fromStringRepr(String value) {
-            return fromStringRepr(value, null);
-        }
-
-        public static ShoppingListCookieInfo fromCookie(Cookie cookie) {
-            return fromStringRepr(cookie != null ? cookie.getValue() : null, cookie);
-        }
-
-        public static ShoppingListCookieInfo fromCookie(HttpServletRequest request, String cookieName) {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie: cookies) {
-                    if (cookie.getName().equals(cookieName)) {
-                        return ShoppingListCookieInfo.fromCookie(cookie);
-                    }
-                }
-            }
-            return null;
-        }
-
-        public String getShoppingListId() { return shoppingListId; }
-        public String getAuthToken() { return authToken; }
-        public Cookie getCookie() { return cookie; }
+    public static String clearCurrentShoppingList(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        // SCIPIO: After login (where this event should be hooked), make sure to clear the session list to get rid of the anon list
+        UtilHttp.removeSessionAttribute(request, "currentShoppingListId");
+        return "success";
     }
 
-    public static String  getAutoSaveShoppingListCookieName(HttpServletRequest request) { // SCIPIO
-        return "GuestShoppingListId_" + System.getProperties().getProperty("user.name").replace(" ", "_");
-    }
+    // SCIPIO: TODO: EventUtil.runServiceAsEvent calls are intended to be replaced with a small helper class based on EventUtil because EventUtil is too limited
 
-    public static ShoppingListCookieInfo getAutoSaveShoppingListCookieInfo(HttpServletRequest request) { // SCIPIO
-        return ShoppingListCookieInfo.fromCookie(request, getAutoSaveShoppingListCookieName(request));
-    }
-
-    public static String getShoppingListAuthTokenForList(HttpServletRequest request, String shoppingListId) { // SCIPIO
-        if (UtilValidate.isEmpty(shoppingListId)) {
-            return null;
+    public static String createEmptyShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        // SCIPIO: TODO: REVIEW: For now, disallow this request for anonymous users even if anon users are enabled - this request is not likely useful for anon requests
+        //          as they should be automated through addItemToShoppingList to create the single default list on first use... maybe support in future
+        boolean anonUser = ShoppingListWorker.isAnonUser(request);
+        if (anonUser) {
+            //request.setAttribute("_ERROR_MESSAGE_"); // TODO? or better not?
+            return "error";
         }
-        String authToken = (String) request.getAttribute("shoppingListAuthToken");
-        if (authToken == null) {
-            authToken = request.getParameter("shoppingListAuthToken");
-        }
-        if (UtilValidate.isNotEmpty(authToken)) {
-            return authToken;
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "createShoppingList");
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        if (anonUser) {
+            servCtx.put("userAddr", request.getRemoteAddr());
         } else {
-            authToken = null;
+            servCtx.remove("userAddr"); // Not necessary for registered users
         }
-        ShoppingListCookieInfo cookieInfo = getAutoSaveShoppingListCookieInfo(request);
-        if (cookieInfo != null && shoppingListId.equals(cookieInfo.getShoppingListId()) && UtilValidate.isNotEmpty(cookieInfo.getAuthToken())) {
-            authToken = cookieInfo.getAuthToken();
-        }
-        return authToken;
-    }
-
-    public static void checkSetShoppingListAuthTokenForService(HttpServletRequest request, Map<String, Object> servCtx) { // SCIPIO
-        if (!servCtx.containsKey("shoppingListAuthToken")) {
-            String authToken = getShoppingListAuthTokenForList(request, (String) servCtx.get("shoppingListId"));
-            if (authToken != null) {
-                servCtx.put("shoppingListAuthToken", authToken);
-            }
-        }
+        return EventUtil.runServiceAsEvent(request, response, "createShoppingList", servCtx);
     }
 
     public static String updateShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        boolean anonUser = ShoppingListWorker.isAnonUser(request);
         Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "updateShoppingList");
-        checkSetShoppingListAuthTokenForService(request, servCtx);
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        if (anonUser) {
+            servCtx.put("userAddr", request.getRemoteAddr());
+        } else {
+            servCtx.remove("userAddr"); // Not necessary for registered users
+        }
         return EventUtil.runServiceAsEvent(request, response, "updateShoppingList", servCtx);
     }
 
     public static String createShoppingListFromOrder(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
         Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "makeShoppingListFromOrder");
-        checkSetShoppingListAuthTokenForService(request, servCtx);
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
         return EventUtil.runServiceAsEvent(request, response, "makeShoppingListFromOrder", servCtx);
     }
 
     public static String addItemToShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        boolean anonUser = ShoppingListWorker.isAnonUser(request);
+        // SCIPIO: SPECIAL: Automatically create the new anon shopping list, but for anon users we can only allow at most one for now, so it needs special handling
+        // 2019-01-16: TODO: REVIEW: Do not do this through this call for now, because it's a legacy call and in current cases will probably do funny things
+        //              Stores that need this can explicitly send to addItemToDefaultShoppingList instead, which will behave more consistent for anon + registered users.
+        //if (anonUser && ShoppingListWorker.useAnonShoppingList(request)) {
+        //    return addItemToDefaultAnonShoppingList(request, response, true);
+        //}
         Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "createShoppingListItem");
-        checkSetShoppingListAuthTokenForService(request, servCtx);
-        return EventUtil.runServiceAsEvent(request, response, "createShoppingListItem", servCtx);
+        boolean hasShoppingListId = UtilValidate.isNotEmpty((String) servCtx.get("shoppingListId"));
+        if (anonUser && !hasShoppingListId) {
+            // SCIPIO: If anon shopping list is not enabled and no shoppingListId was passed, disallow this call to prevent list creations
+            Debug.logWarning("addItemToShoppingList: anonymous user tried to create a ShoppingList by adding an item, but not allowed by store", module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "shoppinglistevents.error_must_be_logged_in_modify_list", UtilHttp.getLocale(request)));
+            return "error";
+        }
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        String result = EventUtil.runServiceAsEvent(request, response, "createShoppingListItem", servCtx);
+        if ("success".equals(result) && hasShoppingListId && UtilValidate.isNotEmpty((String) request.getAttribute("shoppingListId"))) {
+            request.setAttribute("shoppingListCreated", true);
+        }
+        return result;
+    }
+
+    public static String addItemToDefaultShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        if (request.getParameter("shoppingListId") != null) { // prevent from interfering with service or screens, because we can't remove/override this parameter when request attribute is null (do not pass - you can get out of request attributes)
+            Debug.logError("addItemToDefaultShoppingList: shoppingListId parameter passed, not allowed here", module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+            return "error";
+        }
+        boolean anonUser = ShoppingListWorker.isAnonUser(request);
+        if (anonUser && ShoppingListWorker.useAnonShoppingList(request)) {
+            return addItemToDefaultAnonShoppingList(request, response, true);
+        }
+        String shoppingListId = ShoppingListWorker.getUserDefaultWishListId(request, false);
+        // NOTE: If shoppingListId is null, createShoppingListItem will automatically create one, so this is fine
+        request.setAttribute("shoppingListId", shoppingListId);
+        boolean hasDefaultList = UtilValidate.isNotEmpty(shoppingListId);
+        String result = ShoppingListEvents.addItemToShoppingList(request, response);
+        if ("success".equals(result) && !hasDefaultList) {
+            // FIXME: This is a kludge due to the way the ECA on createShoppingListItem works... fine for now
+            shoppingListId = (String) request.getAttribute("shoppingListId");
+            if (UtilValidate.isEmpty(shoppingListId)) {
+                Debug.logError("addItemToDefaultShoppingList: no shoppingListId found after addItemToShoppingList", module);
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                return "error";
+            }
+            GenericValue shoppingList = ((Delegator) request.getAttribute("delegator")).from("ShoppingList").where("shoppingListId", shoppingListId).queryOneSafe();
+            if (shoppingList == null) {
+                Debug.logError("addItemToDefaultShoppingList: Could not find ShoppingList '" + shoppingListId + "'", module);
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                return "error";
+            }
+            shoppingList.put("isUserDefault", "Y");
+            try {
+                shoppingList.store();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                return "error";
+            }
+        }
+        return result;
+    }
+
+    /**
+     * SCIPIO: Adds the item to the anonymous user single shopping list (distinct from the auto-save list), creating and storing in cookie if necessary.
+     * Do not call directly as event.
+     * NOTE: Currently there is only support for one list per anonymous user, and must be enabled with ProductStore.
+     */
+    public static String addItemToDefaultAnonShoppingList(HttpServletRequest request, HttpServletResponse response, boolean setErrorMessage) throws GenericServiceException { // SCIPIO
+        boolean shoppingListCreated = false;
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "createShoppingListItem");
+        String shoppingListId = (String) servCtx.get("shoppingListId");
+        if (UtilValidate.isEmpty(shoppingListId)) { // NOTE: 2019-01-16: This should always be null currently, unless addItem above is changed...
+            String anonListCookieName = ShoppingListCookieInfo.getAnonShoppingListCookieName(request);
+            ShoppingListCookieInfo anonListCookieInfo = ShoppingListCookieInfo.fromCookie(request, anonListCookieName);
+            if (anonListCookieInfo != null && anonListCookieInfo.getShoppingListId() != null && ShoppingListWorker.getValidUserShoppingList(request, anonListCookieInfo, false) != null) {
+                anonListCookieInfo.toFields(servCtx);
+            } else {
+                try {
+                    // SCIPIO: NOTE: Create this list as SLT_WISH_LIST, not SLT_SPEC_PURP, because it's meant as manual user wishlist, and can still detect using partyId null and listName DEFAULT_ANON_LIST_NAME
+                    Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", servCtx.get("userLogin"), "productStoreId", servCtx.get("productStoreId"), "shoppingListTypeId", "SLT_WISH_LIST", "listName", DEFAULT_ANON_LIST_NAME,
+                            "userAddr", request.getRemoteAddr(), "isUserDefault", "Y");
+                    Map<String, Object> newListResult = ((LocalDispatcher) request.getAttribute("dispatcher")).runSync("createShoppingList", listFields);
+                    if (ServiceUtil.isError(newListResult)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(newListResult);
+                        Debug.logError(errorMessage, module);
+                        if (setErrorMessage) {
+                            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                        }
+                        return "error";
+                    }
+                    anonListCookieInfo = ShoppingListCookieInfo.fromFields(newListResult);
+                    if (anonListCookieInfo == null) {
+                        if (setErrorMessage) {
+                            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                        }
+                        return "error";
+                    }
+                    ShoppingListCookieInfo.createShoppingListCookie(request, response, anonListCookieName, anonListCookieInfo);
+                    anonListCookieInfo.toFields(servCtx);
+                } catch (GeneralException e) {
+                    Debug.logError(e, module);
+                    if (setErrorMessage) {
+                        request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+                    }
+                    return "error";
+                }
+                shoppingListCreated = true;
+            }
+        }
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        String result = EventUtil.runServiceAsEvent(request, response, "createShoppingListItem", servCtx);
+        if (!"error".equals(result) && shoppingListCreated) {
+            request.setAttribute("shoppingListCreated", true);
+            request.setAttribute("anonShoppingListCreated", true);
+        }
+        return result;
     }
 
     public static String updateShoppingListItem(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
         Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "updateShoppingListItem");
-        checkSetShoppingListAuthTokenForService(request, servCtx);
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
         return EventUtil.runServiceAsEvent(request, response, "updateShoppingListItem", servCtx);
     }
 
     public static String removeFromShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
         Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "removeShoppingListItem");
-        checkSetShoppingListAuthTokenForService(request, servCtx);
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
         return EventUtil.runServiceAsEvent(request, response, "removeShoppingListItem", servCtx);
+    }
+
+    public static String removeFromDefaultShoppingList(HttpServletRequest request, HttpServletResponse response) throws GenericServiceException { // SCIPIO
+        if (request.getParameter("shoppingListId") != null) { // prevent from interfering with service or screens, because we can't remove/override this parameter when request attribute is null (do not pass - you can get out of request attributes)
+            Debug.logError("removeFromDefaultShoppingList: shoppingListId parameter passed, not allowed here", module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+            return "error";
+        }
+        boolean anonUser = ShoppingListWorker.isAnonUser(request);
+        if (anonUser && ShoppingListWorker.useAnonShoppingList(request)) {
+            return removeFromDefaultAnonShoppingList(request, response, true); // There is only one, default anon list
+        }
+        String shoppingListId = ShoppingListWorker.getUserDefaultWishListId(request, false);
+        if (shoppingListId == null) {
+            Debug.logInfo("removeFromDefaultShoppingList: no default ShoppingList found for user; not removing anything", module);
+            return "success"; // be permissive, no need for error here because stale requests are likely
+        }
+        request.setAttribute("shoppingListId", shoppingListId);
+        return ShoppingListEvents.removeFromShoppingList(request, response);
+    }
+
+    public static String removeFromDefaultAnonShoppingList(HttpServletRequest request, HttpServletResponse response, boolean setErrorMessage) throws GenericServiceException { // SCIPIO
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "removeShoppingListItem");
+        String shoppingListId = (String) servCtx.get("shoppingListId");
+        if (UtilValidate.isEmpty(shoppingListId)) { // NOTE: 2019-01-16: This should always be null currently, unless calls above are changed...
+            String anonListCookieName = ShoppingListCookieInfo.getAnonShoppingListCookieName(request);
+            ShoppingListCookieInfo anonListCookieInfo = ShoppingListCookieInfo.fromCookie(request, anonListCookieName);
+            if (anonListCookieInfo != null && anonListCookieInfo.getShoppingListId() != null && ShoppingListWorker.getValidUserShoppingList(request, anonListCookieInfo, false) != null) {
+                anonListCookieInfo.toFields(servCtx);
+            } else {
+                Debug.logInfo("removeFromDefaultAnonShoppingList: no default ShoppingList found for anonymous user; not removing anything", module);
+                return "success"; // be permissive, no need for error here because the list is created on-demand and stale requests are likely
+            }
+        }
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        return EventUtil.runServiceAsEvent(request, response, "removeShoppingListItem", servCtx);
+    }
+
+    /**
+     * SCIPIO: See applications/shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml#createCustomer for usage.
+     */
+    public static String convertAnonShoppingListsToRegisteredForStore(HttpServletRequest request, HttpServletResponse response, GenericValue userLogin) { // SCIPIO
+        if (!ShoppingListWorker.useAnonShoppingList(request)) {
+            return "success";
+        }
+        GenericValue shoppingList = ShoppingListWorker.getAnonUserDefaultWishList(request, userLogin, false);
+        if (shoppingList == null) {
+            return "success";
+        }
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Locale locale = UtilHttp.getLocale(request);
+
+        // Cannot be anon to do this
+        Map<String, Object> servCtx = new HashMap<>();
+        servCtx.put("userLogin", userLogin);
+        servCtx.put("locale", locale);
+        servCtx.put("shoppingListId", shoppingList.get("shoppingListId"));
+        servCtx.put("shoppingListAuthToken", shoppingList.get("shoppingListAuthToken")); // NOTE: In most cases you should not do this!! But here the returned list was already validated.
+
+        Map<String, Object> servResult = null;
+        try {
+            servResult = dispatcher.runSync("convertAnonShoppingListToRegistered", servCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return "error";
+        }
+        if (!ServiceUtil.isSuccess(servResult)) {
+            return "error";
+        }
+        return "success";
     }
 }

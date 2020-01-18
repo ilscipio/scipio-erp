@@ -56,9 +56,16 @@ if (isAnonUser) {
     anonShoppingList = ShoppingListWorker.getAnonUserDefaultWishList(request, userLogin, false);
     allShoppingLists = (anonShoppingList != null) ? [anonShoppingList] : [];
 } else if (userLogin?.partyId) {
-    exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),
-                EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
-    allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
+    if (context.forceDefaultWishList) { // SCIPIO
+        userShoppingList = ShoppingListWorker.getRegisteredUserDefaultWishList(request, userLogin, false);
+        allShoppingLists = (userShoppingList != null) ? [userShoppingList] : [];
+    } else {
+        exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin?.partyId),
+                    EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")];
+        allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList();
+    }
+} else {
+    allShoppingLists = [];
 }
 shoppingLists = EntityUtil.filterByAnd(allShoppingLists, [parentShoppingListId : null]);
 context.allShoppingLists = allShoppingLists;

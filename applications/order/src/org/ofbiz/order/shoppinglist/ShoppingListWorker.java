@@ -114,7 +114,7 @@ public abstract class ShoppingListWorker {
         //}
         GenericValue userLogin = UtilHttp.getSessionAttribute(request, "userLogin");
         if (userLogin != null && userLogin.getString("partyId") != null) {
-            return getRegisteredUserDefaultWishList(userLogin, useCache);
+            return getRegisteredUserDefaultWishList(request, userLogin, useCache);
         }
         if (useAnonShoppingList(request) && isAnonUser(userLogin)) {
             return getAnonUserDefaultWishList(request, userLogin, useCache);
@@ -130,7 +130,7 @@ public abstract class ShoppingListWorker {
         //}
         GenericValue userLogin = UtilHttp.getSessionAttribute(request, "userLogin");
         if (userLogin != null && userLogin.getString("partyId") != null) {
-            GenericValue shoppingList = getRegisteredUserDefaultWishList(userLogin, useCache);
+            GenericValue shoppingList = getRegisteredUserDefaultWishList(request, userLogin, useCache);
             return (shoppingList != null) ? shoppingList.getString("shoppingListId") : null;
         }
         if (useAnonShoppingList(request) && isAnonUser(userLogin)) {
@@ -171,7 +171,7 @@ public abstract class ShoppingListWorker {
     /**
      * Returns the default wishlist for the given user (partyId, required). Prioritizes isUserDefault, must not be a child list, must be active.
      */
-    public static GenericValue getRegisteredUserDefaultWishList(GenericValue userLogin, boolean useCache) {
+    public static GenericValue getRegisteredUserDefaultWishList(HttpServletRequest request, GenericValue userLogin, boolean useCache) {
         return getRegisteredUserDefaultShoppingList(userLogin, "SLT_WISH_LIST", useCache);
     }
 

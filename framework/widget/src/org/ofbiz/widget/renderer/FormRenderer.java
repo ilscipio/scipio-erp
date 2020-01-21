@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.MapState;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericEntity;
@@ -243,61 +244,73 @@ public class FormRenderer {
             WidgetWorker.incrementPaginatorNumber(context);
         }
 
-        // Populate the viewSize and viewIndex so they are available for use during form actions
-        context.put("viewIndex", Paginator.getViewIndex(modelForm, context));
-        context.put("viewSize", Paginator.getViewSize(modelForm, context));
+        // SCIPIO: All the fields that are set below must be restored at the original context
+        // because although most caller push scope it is not guaranteed, nesting and this code location currently has no way of knowing
+        // if the context was saved or not, and some of the field names here are too generic
+        // TODO: REVIEW: This might not currently cover all possible context fields changed by the renderer... in some cases it's fine, others not
+        MapState<String, Object> savedContextState = MapState.saveKeys(context, "viewIndex", "viewSize", "useRequestParameters", "itemIndex");
+        try {
+            // SCIPIO: itemIndex has a special usage in form renderer; don't allow field from caller to interfere
+            context.put("itemIndex", null);
 
-        modelForm.runFormActions(context);
+            // Populate the viewSize and viewIndex so they are available for use during form actions
+            context.put("viewIndex", Paginator.getViewIndex(modelForm, context));
+            context.put("viewSize", Paginator.getViewSize(modelForm, context));
 
-        // if this is a list form, don't use Request Parameters
-        if (modelForm instanceof ModelGrid) {
-            context.put("useRequestParameters", Boolean.FALSE);
-        }
+            modelForm.runFormActions(context);
 
-        // find the highest position number to get the max positions used
-        // SCIPIO: use explicit if set, and also take position-span into account here
-        Integer positions = modelForm.getPositions();
-        if (positions == null || positions < 1) {
-            positions = 1;
-            for (ModelFormField modelFormField : modelForm.getFieldList()) {
-                int curPos = modelFormField.getPosition();
+            // if this is a list form, don't use Request Parameters
+            if (modelForm instanceof ModelGrid) {
+                context.put("useRequestParameters", Boolean.FALSE);
+            }
 
-                Integer positionSpan = modelFormField.getPositionSpan();
-                if (positionSpan == null) {
-                    positionSpan = modelForm.getDefaultPositionSpan();
-                }
-                if (positionSpan != null && positionSpan > 0) {
-                    curPos += (positionSpan - 1);
-                }
+            // find the highest position number to get the max positions used
+            // SCIPIO: use explicit if set, and also take position-span into account here
+            Integer positions = modelForm.getPositions();
+            if (positions == null || positions < 1) {
+                positions = 1;
+                for (ModelFormField modelFormField : modelForm.getFieldList()) {
+                    int curPos = modelFormField.getPosition();
 
-                if (curPos > positions) {
-                    positions = curPos;
-                }
+                    Integer positionSpan = modelFormField.getPositionSpan();
+                    if (positionSpan == null) {
+                        positionSpan = modelForm.getDefaultPositionSpan();
+                    }
+                    if (positionSpan != null && positionSpan > 0) {
+                        curPos += (positionSpan - 1);
+                    }
 
-                FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
-                if (currentFieldInfo == null) {
-                    throw new IllegalArgumentException(
-                            "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
-                                    + modelFormField.getName());
+                    if (curPos > positions) {
+                        positions = curPos;
+                    }
+
+                    FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
+                    if (currentFieldInfo == null) {
+                        throw new IllegalArgumentException(
+                                "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
+                                        + modelFormField.getName());
+                    }
                 }
             }
-        }
 
-        if ("single".equals(modelForm.getType())) {
-            this.renderSingleFormString(writer, context, positions);
-        } else if ("list".equals(modelForm.getType())) {
-            this.renderListFormString(writer, context, positions);
-        } else if ("multi".equals(modelForm.getType())) {
-            this.renderMultiFormString(writer, context, positions);
-        } else if ("upload".equals(modelForm.getType())) {
-            this.renderSingleFormString(writer, context, positions);
-        } else {
-            if (UtilValidate.isEmpty(modelForm.getType())) {
-                throw new IllegalArgumentException("The form 'type' tag is missing or empty on the form with the name "
-                        + modelForm.getName());
+            if ("single".equals(modelForm.getType())) {
+                this.renderSingleFormString(writer, context, positions);
+            } else if ("list".equals(modelForm.getType())) {
+                this.renderListFormString(writer, context, positions);
+            } else if ("multi".equals(modelForm.getType())) {
+                this.renderMultiFormString(writer, context, positions);
+            } else if ("upload".equals(modelForm.getType())) {
+                this.renderSingleFormString(writer, context, positions);
+            } else {
+                if (UtilValidate.isEmpty(modelForm.getType())) {
+                    throw new IllegalArgumentException("The form 'type' tag is missing or empty on the form with the name "
+                            + modelForm.getName());
+                }
+                throw new IllegalArgumentException("The form type " + modelForm.getType()
+                        + " is not supported for form with name " + modelForm.getName());
             }
-            throw new IllegalArgumentException("The form type " + modelForm.getType()
-                    + " is not supported for form with name " + modelForm.getName());
+        } finally {
+            savedContextState.restore(context);
         }
     }
 

@@ -2846,7 +2846,9 @@
             <display-entity entity-name="Enumeration" description="${description}" key-field-name="enumId" />
         </field>
         <field name="relevancyWeight">
-            <display />
+            <!-- SCIPIO
+            <display />-->
+            <text/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">

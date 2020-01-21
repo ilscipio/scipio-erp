@@ -1,11 +1,14 @@
-package org.ofbiz.widget.model;
+package org.ofbiz.widget.renderer;
 
 import java.io.Serializable;
 import java.util.Map;
 
 import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
+import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 import org.ofbiz.widget.model.ModelMenu.SeparateMenuConfig;
+import org.ofbiz.widget.model.ModelMenuItem;
+import org.ofbiz.widget.model.ModelSubMenu;
 
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
@@ -300,12 +303,12 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         private boolean selectedAncestor;
         private Boolean conditionResult;
 
-        public MenuItemState(boolean selected, boolean selectedAncestor) {
+        protected MenuItemState(boolean selected, boolean selectedAncestor) {
             this(selected, selectedAncestor, null);
             this.conditionResult = null;
         }
 
-        public MenuItemState(boolean selected, boolean selectedAncestor, Boolean conditionResult) {
+        protected MenuItemState(boolean selected, boolean selectedAncestor, Boolean conditionResult) {
             this.selected = selected;
             this.selectedAncestor = selectedAncestor;
             this.conditionResult = conditionResult;

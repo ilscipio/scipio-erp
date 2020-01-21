@@ -42,6 +42,7 @@ import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
 import org.ofbiz.widget.model.ModelMenuItem.ModelMenuItemAlias;
+import org.ofbiz.widget.renderer.MenuRenderState;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

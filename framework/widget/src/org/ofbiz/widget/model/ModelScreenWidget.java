@@ -57,6 +57,7 @@ import org.ofbiz.widget.model.ScreenFallback.SimpleFlexibleScreenFallbackSetting
 import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.ofbiz.widget.renderer.MenuRenderState;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.WidgetRenderOptions;
 import org.ofbiz.widget.renderer.ScreenRenderer;

@@ -241,19 +241,44 @@ public class ModelFormField extends ModelWidget implements Serializable { // SCI
         return this.name;
     }
 
+    /**
+     * getCurrentContainerId.
+     * SCIPIO: NOTE: If idName is set, it is used as-is, to simply refer in JS scripts, otherwise a complex ID is generated.
+     * SCIPIO: TODO: REVIEW: This uses getFieldName instead of getName, but this is inconsistent with FormRenderer.makeLinkHiddenFormName
+     *          and less unique... It is left as-is for now due to _potential_ javascript compatibility problems from changing this.
+     */
     public String getCurrentContainerId(Map<String, Object> context) {
         ModelForm modelForm = this.getModelForm();
-        String idName = FlexibleStringExpander.expandString(this.getIdName(), context);
-
-        if (modelForm != null) {
-            Integer itemIndex = (Integer) context.get("itemIndex");
-            if ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType())) {
-                if (itemIndex != null) {
-                    return idName + modelForm.getItemIndexSeparator() + itemIndex;
-                }
+        // SCIPIO: This couldn't be right: If id-name is explicit, then we don't want to append the itemIndex stuff
+        // below because it means someone is setting an ID to use in javascript, but then the itemIndex will make it unpredictable
+        // In the other case, we need to append the "real" form ID with possible prefix, to ensure unique IDs
+        //String idName = FlexibleStringExpander.expandString(this.getIdName(), context);
+        //if (modelForm != null) {
+        //    Integer itemIndex = (Integer) context.get("itemIndex");
+        //    if ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType())) {
+        //        if (itemIndex != null) {
+        //            return idName + modelForm.getItemIndexSeparator() + itemIndex;
+        //        }
+        //    }
+        //}
+        String id;
+        if (UtilValidate.isNotEmpty(idName)) {
+            id = FlexibleStringExpander.expandString(idName, context);
+            // Explicit ID, do not pass anything
+        } else {
+            String parentFormName = this.getParentFormName();
+            if (UtilValidate.isNotEmpty(parentFormName)) {
+                // TODO: REVIEW: should parentFormName be passed through ModelForm.getFormName(context, parentFormName)??
+                //  Do it for now because it will still be predictable for single forms, I think...
+                //id = FlexibleStringExpander.expandString(parentFormName + "_" + this.FieldName(), context);
+                id = ModelForm.getFormName(context, parentFormName) + "_" + this.getFieldName();
+            } else { // SCIPIO: NOTE: This is the common case, the two previous are not often used
+                // TODO: REVIEW: should this call modelForm.getContainerId(context) instead??
+                id = this.modelForm.getFormName(context) + "_" + this.getFieldName();
             }
+            id += FormRenderer.getItemIndexIdSuffix(context, modelForm, "");
         }
-        return idName;
+        return id;
     }
 
     public boolean getEncodeOutput() {
@@ -533,6 +558,11 @@ public class ModelFormField extends ModelWidget implements Serializable { // SCI
         return headerLinkStyle;
     }
 
+    /** getIdName.
+     * SCIPIO: WARN: This does not currently generate anything matching what we want - see {@link #getCurrentContainerId(Map)}.
+     * SCIPIO: TODO: REVIEW: This uses getFieldName instead of getName, but this is inconsistent with FormRenderer.makeLinkHiddenFormName
+     *          and less unique... It is left as-is for now due to _potential_ javascript compatibility problems from changing this.
+     */
     public String getIdName() {
         if (UtilValidate.isNotEmpty(idName)) {
             return idName;

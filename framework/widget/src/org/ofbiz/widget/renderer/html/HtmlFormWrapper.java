@@ -253,7 +253,9 @@ public class HtmlFormWrapper {
     @Deprecated
     public void setFormOverrideName(String formName) {
         Debug.logError("Scipio: Known broken stock HtmlFormWrapper method called, setFormOverrideName(string) - please fix or remove this call", module);
-        this.userContext.put("formName", formName); // SCIPIO: callContext
+        //this.userContext.put("formName", formName); // SCIPIO: callContext
+        // SCIPIO: TODO: REVIEW: Changed due to bad name causing conflicts
+        this.userContext.put("scpFormName", formName);
     }
 
     public void putInContext(String name, Object value) {

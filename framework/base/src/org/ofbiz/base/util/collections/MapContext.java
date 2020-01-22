@@ -659,6 +659,14 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     }
 
     /**
+     * SCIPIO: Returns the current level's context map, or null if none, or the original map if it's not a MapContext.
+     * WARN: Client code should not modify the returned map! Only implementations could do this.
+     */
+    public static <K, V> Map<K, V> getCurrentMap(Map<K, V> map) {
+        return (map instanceof MapContext) ? ((MapContext<K, V>) map).getCurrentMap() : map;
+    }
+
+    /**
      * SCIPIO: Event handler for MapContext calls.
      * Added 2019-05-29.
      */

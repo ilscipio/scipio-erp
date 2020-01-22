@@ -256,7 +256,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             try {
                 size = Integer.parseInt(displayField.getSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field [" + displayField.getModelFormField().getFieldName() + "] form [" + displayField.getModelFormField().getModelForm().getFullLocationAndName() + "]", module);
                 handleError(writer, nfe); // SCIPIO
             }
         }
@@ -842,7 +842,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             try {
                 textSize = Integer.parseInt(dropDownField.getTextSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field [" + dropDownField.getModelFormField().getFieldName() + "] form [" + dropDownField.getModelFormField().getModelForm().getFullLocationAndName() + "]", module);
                 handleError(writer, nfe); // SCIPIO
             }
             if (textSize > 0 && UtilValidate.isNotEmpty(currentValue) && currentValue.length() > textSize) {
@@ -856,7 +856,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         String multiple = dropDownField.getAllowMultiple() ? "multiple" : "";
         String otherFieldName = "";
-        String formName = modelForm.getName();
+        String formName = modelForm.getFormName(context); // SCIPIO: Replaced getName();
         String size = dropDownField.getSize();
         String dDFCurrent = dropDownField.getCurrent();
         String firstInList = "";
@@ -1422,7 +1422,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     sr = new StringWriter();
                     sr.append("<@renderHyperlinkTitle ");
                     sr.append(" name=");
-                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getName()));
+                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getFormName(context))); // SCIPIO: Replaced getName();
                     sr.append(" title=");
                     sr.append(ftlFmt.makeStringLiteral(title)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(title)
                     sr.append(" />");
@@ -1433,7 +1433,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                     StringWriter sr = new StringWriter();
                     sr.append("<@renderHyperlinkTitle ");
                     sr.append(" name=");
-                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getName()));
+                    sr.append(ftlFmt.makeStringLiteral(modelFormField.getModelForm().getFormName(context))); // SCIPIO: Replaced getName();
                     sr.append(" title=");
                     sr.append(ftlFmt.makeStringLiteral(titleText));
                     sr.append(" showSelectAll=\"Y\"/>");
@@ -1692,7 +1692,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperOpen ");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context)));
         sr.append(" columnStyles=[");
@@ -1723,7 +1723,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperClose");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append(" />");
         executeMacro(writer, sr.toString());
         if (this.renderPagination) {
@@ -1835,7 +1835,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowOpen ");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append(" itemIndex=");
         sr.append(Integer.toString(itemIndex));
         sr.append(" altRowStyles=");
@@ -1852,7 +1852,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatItemRowClose ");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append("/>");
         executeMacro(writer, sr.toString());
     }
@@ -1901,7 +1901,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatSingleWrapperOpen ");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(style));
         sr.append(" />");
@@ -1912,7 +1912,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatSingleWrapperClose");
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Replaced getName();
         sr.append("/>");
         executeMacro(writer, sr.toString());
     }
@@ -2569,7 +2569,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             targetService = "${targetService}";
         }
         if (UtilValidate.isEmpty(targetService) && updateAreas == null) {
-            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getFullLocationAndName(), module);
             return;
         }
         // get the parameterized pagination index and size fields
@@ -3150,7 +3150,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         String paginateTarget = modelForm.getPaginateTarget(context);
         if (paginateTarget.isEmpty() && updateAreas == null) {
-            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getFullLocationAndName(), module);
             return;
         }
         String oldSortField = modelForm.getSortField(context);
@@ -3483,7 +3483,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             String width = "";
             String height = "";
             String imgTitle = "";
-            String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelFormField);
+            String hiddenFormName = FormRenderer.makeLinkHiddenFormName(context, modelFormField);
             if (UtilValidate.isNotEmpty(modelFormField.getEvent()) && UtilValidate.isNotEmpty(modelFormField.getAction(context))) {
                 event = modelFormField.getEvent();
                 action = modelFormField.getAction(context);
@@ -3570,7 +3570,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void makeHiddenFormLinkAnchor(Appendable writer, String linkStyle, String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException { // SCIPIO: modified for exception
         if (UtilValidate.isNotEmpty(description) || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
-            String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelFormField);
+            String hiddenFormName = FormRenderer.makeLinkHiddenFormName(context, modelFormField);
             String event = "";
             String action = "";
             String imgSrc = "";
@@ -3610,7 +3610,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private void makeHiddenFormLinkForm(Appendable writer, String target, String targetType, String targetWindow, String parameterFtlArg, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) throws IOException {
         StringBuilder actionUrl = new StringBuilder();
         WidgetWorker.buildHyperlinkUrl(actionUrl, target, targetType, null, null, null, null, null, request, response, context); // SCIPIO: pass null for fullPath/secure/encode
-        String name = WidgetWorker.makeLinkHiddenFormName(context, modelFormField);
+        String name = FormRenderer.makeLinkHiddenFormName(context, modelFormField);
         StringWriter sr = new StringWriter();
         sr.append("<@makeHiddenFormLinkForm ");
         sr.append("actionUrl=");
@@ -3670,7 +3670,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderContainerFindField(Appendable writer, Map<String, Object> context, ContainerField containerField) throws IOException {
-        String id = containerField.getModelFormField().getIdName();
+        // SCIPIO: TODO: REVIEW: Appears to be an error?
+        //String id = containerField.getModelFormField().getIdName();
+        String id = containerField.getModelFormField().getCurrentContainerId(context);
         String className = UtilFormatOut.checkNull(containerField.getModelFormField().getWidgetStyle(context)); // SCIPIO: pass context to getWidgetStyle
         StringWriter sr = new StringWriter();
         sr.append("<@renderContainerField ");
@@ -3744,8 +3746,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
         // SCIPIO: WARN: the FTL must encode everything passed below!
 
-        String hiddenFormName = WidgetWorker.makeLinkHiddenFormName(context, modelForm,
-                modelForm.getSubmitHiddenFormName(Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm))));
+        // SCIPIO: NOTE: 2020-01-21: The unique ID is less important than before because scpFormIdNameSuffix can now mitigate, but many screens
+        // may not set any such thing currently so this prevents *one* type of bug...
+        String hiddenFormName = modelForm.getSubmitHiddenFormName(context, Integer.toString(getNextRenderSubmitFormIdNum(writer, context, modelForm)));
 
         StringWriter targetUrlSw = new StringWriter();
         String target = modelForm.getTarget(context, modelForm.getTargetType());
@@ -3784,9 +3787,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" hiddenFormName=");
         sr.append(ftlFmt.makeStringLiteral(hiddenFormName));
         sr.append(" formId=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getContainerId()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getContainerId(context))); // SCIPIO: Added context/evaluation
         sr.append(" formName=");
-        sr.append(ftlFmt.makeStringLiteral(modelForm.getName()));
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getFormName(context))); // SCIPIO: Added context/evaluation
         sr.append(" formType=");
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
         sr.append(" targetUrl=");
@@ -3808,7 +3811,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     /**
      * SCIPIO: returns a new submit form hidden form unique count.
      */
-    private int getNextRenderSubmitFormIdNum(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    protected int getNextRenderSubmitFormIdNum(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         try {
             Object numObj = ContextFtlUtil.getRequestVar("renderSubmitForm_formIdNum", request, contextHandler.getRenderContext(writer, context));
             Integer num = (Integer) LangFtlUtil.unwrap(numObj);

@@ -408,8 +408,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         }
     }
 
-
-    public void setRenderFormUniqueSeq (int renderFormSeqNumber) {
+    /**
+     * setRenderFormUniqueSeq.
+     * SCIPIO: TODO: REVIEW: Currently this is as good as unused as only a few form renderer forms were setting it... pointless for now
+     */
+    public void setRenderFormUniqueSeq(int renderFormSeqNumber) {
         this.renderFormSeqNumber = renderFormSeqNumber;
     }
 

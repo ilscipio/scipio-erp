@@ -79,15 +79,15 @@ code package.
                       <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                           <#if orderType == "SALES_ORDER">
                               <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>
                                   <#if orderShipment.quantity?has_content & orderShipment.quantity != 0.0>
-                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                                   <#else>
                                       <#assign shipmentItem = orderShipment.getShipmentItem()>
-                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
                                   </#if>
                               </#list>
                           </#if>
@@ -580,7 +580,9 @@ code package.
                        <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                        <input type="hidden" name="shipmentTypeId" value="PURCHASE_SHIPMENT"/>
                        <input type="hidden" name="statusId" value="PURCH_SHIP_CREATED"/>
+                   <#if externalLoginKey?has_content>
                        <input type="hidden" name="externalLoginKey" value="${externalLoginKey}"/>
+                   </#if>
                        <input type="hidden" name="estimatedShipDate" value="${shipGroup.estimatedShipDate!}"/>
                        <input type="hidden" name="estimatedArrivalDate" value="${shipGroup.estimatedDeliveryDate!}"/>
                        <select name="destinationFacilityId">
@@ -597,15 +599,19 @@ code package.
                    <form name="quickDropShipOrder_${shipGroup_index}" method="post" action="<@pageUrl>quickDropShipOrder</@pageUrl>">
                         <input type="hidden" name="orderId" value="${orderId}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+                   <#if externalLoginKey?has_content>
                         <input type="hidden" name="externalLoginKey" value="${externalLoginKey}" />
-                    </form>
-                    <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
+                   </#if>
+                   </form>
+                   <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
                         <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                         <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         <input type="hidden" name="shipmentTypeId" value="DROP_SHIPMENT" />
                         <input type="hidden" name="statusId" value="PURCH_SHIP_CREATED" />
+                   <#if externalLoginKey?has_content>
                         <input type="hidden" name="externalLoginKey" value="${externalLoginKey}" />
-                    </form>
+                   </#if>
+                   </form>
                </#if>
              </#if>
             </@td>

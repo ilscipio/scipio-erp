@@ -121,7 +121,7 @@ code package.
                     <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
                     <#list trackingCodes as trackingCode>
                         <#if trackingCode?has_content>
-                            <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${trackingCode.trackingCodeId}</a><br />
+                            <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}<#if (requestAttributes.externalLoginKey)?has_content>&amp;externalLoginKey=${requestAttributes.externalLoginKey}</#if></@serverUrl>">${trackingCode.trackingCodeId}</a><br />
                         </#if>
                     </#list>
                   </@td>

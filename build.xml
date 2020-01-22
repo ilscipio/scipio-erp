@@ -191,6 +191,9 @@ code package.
     <target name="set-reindex-solr">
         <property name="scipio.solr.reindex.startup.force" value="true"/>
     </target>
+    <target name="set-no-reindex-solr">
+        <property name="scipio.solr.reindex.startup.force" value="false"/>
+    </target>
     
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
@@ -1270,8 +1273,14 @@ code package.
     <target name="start-reindex-solr" depends="set-reindex-solr,start"
                 description="Start Scipio and force Solr to reindex on startup">
     </target>
+    <target name="start-no-reindex-solr" depends="set-no-reindex-solr,start"
+            description="Start Scipio and prevent Solr reindex on startup">
+    </target>
     <target name="start-debug-reindex-solr" depends="set-reindex-solr,start-debug"
                 description="Start Scipio in debug mode and force Solr to reindex on startup">
+    </target>
+    <target name="start-debug-no-reindex-solr" depends="set-no-reindex-solr,start-debug"
+            description="Start Scipio in debug mode and prevent Solr reindex on startup">
     </target>
 
     <!-- ================================================================== -->

@@ -92,7 +92,7 @@ if (sqlCommand && selGroup) {
             TransactionUtil.commit(beganTransaction);
         } catch (Exception e) {
             resultMessage = e.getMessage();
-            errMsg = "SQL command error for command: " + sqlCommand + ": " + resultMessage;
+            errMsg = "SQL command error for command: " + resultMessage;
             Debug.logError(e, errMsg, module);
             try {
                 TransactionUtil.rollback(beganTransaction, errMsg, e);

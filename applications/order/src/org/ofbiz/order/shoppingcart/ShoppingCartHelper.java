@@ -957,10 +957,22 @@ public class ShoppingCartHelper {
         return true;
     }
 
+    /** Returns the delegator (SCIPIO). */
+    public Delegator getDelegator() { return delegator; }
+
+    /** Returns the dispatcher (SCIPIO). */
+    public LocalDispatcher getDispatcher() { return dispatcher; }
+
     /** Returns the shopping cart this helper is wrapping. */
     public ShoppingCart getCartObject() {
         return this.cart;
     }
+
+    /** Returns the locale, from the cart (SCIPIO). */
+    public Locale getLocale() { return getCartObject().getLocale(); }
+
+    /** Returns the productStoreId, from the cart (SCIPIO). */
+    public String getProductStoreId() { return getCartObject().getProductStoreId(); }
 
     public GenericValue getFeatureAppl(String productId, String optionField, String featureId) {
         if (delegator == null) {

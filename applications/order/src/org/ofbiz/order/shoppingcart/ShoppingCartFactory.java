@@ -18,6 +18,10 @@ import java.util.Properties;
 /**
  * SCIPIO: Cart factory to replace hardcoded ShoppingCart and WebShoppingCart constructors.
  * <p>
+ * NOTE: The actual instance is represented by {@link ShoppingCartFactory.Factory}, due to the static
+ * methods being the exact same as the instance methods which will lead to obscure-bug-making-errors
+ * if try to put both in same class with slightly different names (this way the compiler will catch everything).
+ * <p>
  * To use this class, create a file named <code>orderstoreconfig.properties</code> in your component's config folder
  * and the following entry using your store's ID (the default factory class is given here):
  * <ul>
@@ -34,6 +38,9 @@ public abstract class ShoppingCartFactory {
     private static final Map<String, Factory> storeIdCache = readInstances();
     private static final Factory defaultFactory = readDefaultInstance(storeIdCache);
 
+    /** The instance is represented by {@link Factory} nested class. */
+    private ShoppingCartFactory() {}
+
     public static Factory get(Delegator delegator, String productStoreId) {
         Factory factory = storeIdCache.get(productStoreId);
         return (factory != null) ? factory : defaultFactory;
@@ -47,120 +54,6 @@ public abstract class ShoppingCartFactory {
     @Deprecated
     public static Factory get(String productStoreId) {
         return get(null, productStoreId);
-    }
-
-    // Static helper wrapper methods around the factory methods to help simplify code (the get() calls are unnecessary overhead almost every time)
-
-    /**
-     * Full web shopping cart constructor.
-     * <p>
-     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
-     * block, because it modifies session variables that must match the cart contents.
-     */
-    public static ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
-        return get(request).createWebShoppingCart(request, locale, currencyUom);
-    }
-
-    /**
-     * Common web shopping cart constructor.
-     * <p>
-     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
-     * block, because it modifies session variables that must match the cart contents.
-     */
-    public static ShoppingCart createWebShoppingCart(HttpServletRequest request) {
-        return get(request).createWebShoppingCart(request);
-    }
-
-    /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart) {
-        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart);
-    }
-
-    /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy) {
-        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart, exactCopy);
-    }
-
-    /** Performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
-    public static ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
-        return get(request).copyWebShoppingCart(request, locale, currencyUom);
-    }
-
-    /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-    public static ShoppingCart copyShoppingCart(ShoppingCart cart) {
-        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart);
-    }
-
-    /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-    public static ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy) {
-        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart, exactCopy);
-    }
-
-    /** Creates new empty ShoppingCart object. */
-    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
-        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom, billToCustomerPartyId, billFromVendorPartyId);
-    }
-
-    /** Creates new empty ShoppingCart object. */
-    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
-        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom);
-    }
-
-    /** Creates a new empty ShoppingCart object. */
-    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
-        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom);
-    }
-
-    /** Creates a new empty ShoppingCartHelper object. */
-    public static ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
-        return get(delegator, cart.getProductStoreId()).createShoppingCartHelper(delegator, dispatcher, cart);
-    }
-
-    /** The actual factory methods (mostly identical to the static methods) */
-    public interface Factory extends Serializable {
-
-        /**
-         * Full web shopping cart constructor.
-         * <p>
-         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
-         * block, because it modifies session variables that must match the cart contents.
-         */
-        ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
-
-        /**
-         * Common web shopping cart constructor.
-         * <p>
-         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
-         * block, because it modifies session variables that must match the cart contents.
-         */
-        ShoppingCart createWebShoppingCart(HttpServletRequest request);
-
-        /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-        ShoppingCart copyWebShoppingCart(ShoppingCart cart);
-
-        /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-        ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy);
-
-        /** Performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
-        ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
-
-        /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-        ShoppingCart copyShoppingCart(ShoppingCart cart);
-
-        /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-        ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy);
-
-        /** Creates new empty ShoppingCart object. */
-        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId);
-
-        /** Creates new empty ShoppingCart object. */
-        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom);
-
-        /** Creates a new empty ShoppingCart object. */
-        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom);
-
-        /** Creates a new empty ShoppingCartHelper object. */
-        ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart);
     }
 
     private static Map<String, Factory> readInstances() {
@@ -194,17 +87,124 @@ public abstract class ShoppingCartFactory {
         return factory;
     }
 
+    // Static standard helper wrapper methods around the Factory methods, to help simplify code
+    // (the get() calls are unnecessary to write manually in code in all known cases, because delegator and productStoreId are always already known to the factory methods)
+
+    /** Creates new empty (non-web) ShoppingCart object. */
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom, billToCustomerPartyId, billFromVendorPartyId);
+    }
+
+    /** Creates new empty (non-web) ShoppingCart object. */
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom);
+    }
+
+    /** Creates a new empty (non-web) ShoppingCart object. */
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom);
+    }
+
+    /** Creates a new cloned (non-web) ShoppingCart Object, using legacy (partial) cloning. */
+    public static ShoppingCart copyShoppingCart(ShoppingCart cart) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart);
+    }
+
+    /** Creates a new cloned (non-web) ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+    public static ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart, exactCopy);
+    }
+
+    /**
+     * Creates a new web ShoppingCart Object - full web shopping cart constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
+    public static ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
+        return get(request).createWebShoppingCart(request, locale, currencyUom);
+    }
+
+    /**
+     * Creates a new web ShoppingCart Object - common web shopping cart constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
+    public static ShoppingCart createWebShoppingCart(HttpServletRequest request) {
+        return get(request).createWebShoppingCart(request);
+    }
+
+    /** Creates a new cloned web ShoppingCart Object, using legacy (partial) cloning. */
+    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart);
+    }
+
+    /** Creates a new cloned web ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart, exactCopy);
+    }
+
+    /** Creates a new cloned web ShoppingCart Object - performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
+    public static ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
+        return get(request).copyWebShoppingCart(request, locale, currencyUom);
+    }
+
+    /** Creates a new empty (web) ShoppingCartHelper object. */
+    public static ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
+        return get(delegator, cart.getProductStoreId()).createShoppingCartHelper(delegator, dispatcher, cart);
+    }
+
+    // Instance methods and interfaces
+
+    /** Actual ShoppingCart factory and instance methods (mostly identical to the static methods) */
+    public interface Factory extends Serializable {
+
+        /** Creates new empty (non-web) ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId);
+
+        /** Creates new empty (non-web) ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom);
+
+        /** Creates a new empty (non-web) ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom);
+
+        /** Creates a new cloned (non-web) ShoppingCart Object, using legacy (partial) cloning. */
+        ShoppingCart copyShoppingCart(ShoppingCart cart);
+
+        /** Creates a new cloned (non-web) ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+        ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy);
+
+        /**
+         * Creates a new web ShoppingCart Object - full web shopping cart constructor.
+         * <p>
+         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+         * block, because it modifies session variables that must match the cart contents.
+         */
+        ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+
+        /**
+         * Creates a new web ShoppingCart Object - common web shopping cart constructor.
+         * <p>
+         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+         * block, because it modifies session variables that must match the cart contents.
+         */
+        ShoppingCart createWebShoppingCart(HttpServletRequest request);
+
+        /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
+        ShoppingCart copyWebShoppingCart(ShoppingCart cart);
+
+        /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+        ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy);
+
+        /** Creates a new cloned web ShoppingCart Object - performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
+        ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+
+        /** Creates a new empty (web) ShoppingCartHelper object. */
+        ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart);
+    }
+
     public static abstract class BasicFactory implements Factory {
-        @Override
-        public ShoppingCart copyShoppingCart(ShoppingCart cart) {
-            return new ShoppingCart(cart);
-        }
-
-        @Override
-        public ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy) {
-            return new ShoppingCart(cart, exactCopy);
-        }
-
         @Override
         public ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
             return new ShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom, billToCustomerPartyId, billFromVendorPartyId);
@@ -218,6 +218,16 @@ public abstract class ShoppingCartFactory {
         @Override
         public ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
             return new ShoppingCart(delegator, productStoreId, locale, currencyUom);
+        }
+
+        @Override
+        public ShoppingCart copyShoppingCart(ShoppingCart cart) {
+            return new ShoppingCart(cart);
+        }
+
+        @Override
+        public ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy) {
+            return new ShoppingCart(cart, exactCopy);
         }
 
         @Override

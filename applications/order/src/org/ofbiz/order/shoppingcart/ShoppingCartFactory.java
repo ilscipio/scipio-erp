@@ -5,8 +5,8 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.service.LocalDispatcher;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -25,23 +25,31 @@ import java.util.Properties;
  * <li>Global default config: <code>store.DEFAULT.cart.factoryClass=org.ofbiz.order.shoppingcart.ShoppingCartFactory$DefaultShoppingCartFactory</code></li>
  * </ul>
  */
-public abstract class ShoppingCartFactory implements Serializable {
+public abstract class ShoppingCartFactory {
 
     public static final String ORDER_STORE_CONFIG_PROPFILE = "orderstoreconfig";
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final Map<String, ShoppingCartFactory> storeIdCache = readInstances();
-    private static final ShoppingCartFactory defaultFactory = readDefaultInstance(storeIdCache);
+    private static final Map<String, Factory> storeIdCache = readInstances();
+    private static final Factory defaultFactory = readDefaultInstance(storeIdCache);
 
-    public static ShoppingCartFactory get(String productStoreId) {
-        ShoppingCartFactory factory = storeIdCache.get(productStoreId);
+    public static Factory get(Delegator delegator, String productStoreId) {
+        Factory factory = storeIdCache.get(productStoreId);
         return (factory != null) ? factory : defaultFactory;
     }
 
-    public static ShoppingCartFactory get(HttpServletRequest request) {
-        return get(ProductStoreWorker.getProductStoreId(request));
+    public static Factory get(HttpServletRequest request) {
+        return get(null, ProductStoreWorker.getProductStoreId(request));
     }
+
+    /** @deprecated Not passing delegator was a bad idea */
+    @Deprecated
+    public static Factory get(String productStoreId) {
+        return get(null, productStoreId);
+    }
+
+    // Static helper wrapper methods around the factory methods to help simplify code (the get() calls are unnecessary overhead almost every time)
 
     /**
      * Full web shopping cart constructor.
@@ -49,7 +57,9 @@ public abstract class ShoppingCartFactory implements Serializable {
      * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
      * block, because it modifies session variables that must match the cart contents.
      */
-    public abstract ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+    public static ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
+        return get(request).createWebShoppingCart(request, locale, currencyUom);
+    }
 
     /**
      * Common web shopping cart constructor.
@@ -57,34 +67,104 @@ public abstract class ShoppingCartFactory implements Serializable {
      * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
      * block, because it modifies session variables that must match the cart contents.
      */
-    public abstract ShoppingCart createWebShoppingCart(HttpServletRequest request);
+    public static ShoppingCart createWebShoppingCart(HttpServletRequest request) {
+        return get(request).createWebShoppingCart(request);
+    }
 
     /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-    public abstract ShoppingCart copyWebShoppingCart(ShoppingCart cart);
+    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart);
+    }
 
     /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-    public abstract ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy);
+    public static ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyWebShoppingCart(cart, exactCopy);
+    }
 
     /** Performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
-    public abstract ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+    public static ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
+        return get(request).copyWebShoppingCart(request, locale, currencyUom);
+    }
 
     /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
-    public abstract ShoppingCart copyShoppingCart(ShoppingCart cart);
+    public static ShoppingCart copyShoppingCart(ShoppingCart cart) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart);
+    }
 
     /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
-    public abstract ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy);
+    public static ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy) {
+        return get(cart.getDelegator(), cart.getProductStoreId()).copyShoppingCart(cart, exactCopy);
+    }
 
     /** Creates new empty ShoppingCart object. */
-    public abstract ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId);
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom, billToCustomerPartyId, billFromVendorPartyId);
+    }
 
     /** Creates new empty ShoppingCart object. */
-    public abstract ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom);
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, webSiteId, locale, currencyUom);
+    }
 
     /** Creates a new empty ShoppingCart object. */
-    public abstract ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom);
+    public static ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
+        return get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom);
+    }
 
-    private static Map<String, ShoppingCartFactory> readInstances() {
-        Map<String, ShoppingCartFactory> factoryMap = new HashMap<>();
+    /** Creates a new empty ShoppingCartHelper object. */
+    public static ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
+        return get(delegator, cart.getProductStoreId()).createShoppingCartHelper(delegator, dispatcher, cart);
+    }
+
+    /** The actual factory methods (mostly identical to the static methods) */
+    public interface Factory extends Serializable {
+
+        /**
+         * Full web shopping cart constructor.
+         * <p>
+         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+         * block, because it modifies session variables that must match the cart contents.
+         */
+        ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+
+        /**
+         * Common web shopping cart constructor.
+         * <p>
+         * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+         * block, because it modifies session variables that must match the cart contents.
+         */
+        ShoppingCart createWebShoppingCart(HttpServletRequest request);
+
+        /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
+        ShoppingCart copyWebShoppingCart(ShoppingCart cart);
+
+        /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+        ShoppingCart copyWebShoppingCart(ShoppingCart cart, boolean exactCopy);
+
+        /** Performs an exact, deep copy of the cart. Changes to this copy do not affect the main cart. */
+        ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom);
+
+        /** Creates a new cloned ShoppingCart Object, using legacy (partial) cloning. */
+        ShoppingCart copyShoppingCart(ShoppingCart cart);
+
+        /** Creates a new cloned ShoppingCart Object, with option between legacy (partial) and full/exact cloning the whole cart. */
+        ShoppingCart copyShoppingCart(ShoppingCart cart, boolean exactCopy);
+
+        /** Creates new empty ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId);
+
+        /** Creates new empty ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom);
+
+        /** Creates a new empty ShoppingCart object. */
+        ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom);
+
+        /** Creates a new empty ShoppingCartHelper object. */
+        ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart);
+    }
+
+    private static Map<String, Factory> readInstances() {
+        Map<String, Factory> factoryMap = new HashMap<>();
         Properties props = UtilProperties.readMergedPropertiesFromAllComponents(ORDER_STORE_CONFIG_PROPFILE);
         Map<String, Map<String, String>> configs = new LinkedHashMap<>();
         UtilProperties.extractPropertiesWithPrefixAndId(configs, props, "store.");
@@ -93,8 +173,8 @@ public abstract class ShoppingCartFactory implements Serializable {
             String factoryClsName = entry.getValue().get("cart.factoryClass");
             if (UtilValidate.isNotEmpty(factoryClsName)) {
                 try {
-                    Class<? extends ShoppingCartFactory> factoryCls = (Class<? extends ShoppingCartFactory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
-                    ShoppingCartFactory factory = factoryCls.newInstance();
+                    Class<? extends Factory> factoryCls = (Class<? extends Factory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
+                    Factory factory = factoryCls.newInstance();
                     factoryMap.put(productStoreId, factory);
                 } catch(Exception e) {
                     Debug.logError("Could not load factory [" + factoryClsName + "] for store [" + productStoreId + "]", module);
@@ -105,16 +185,16 @@ public abstract class ShoppingCartFactory implements Serializable {
         return factoryMap;
     }
 
-    private static ShoppingCartFactory readDefaultInstance(Map<String, ShoppingCartFactory> storeIdCache) {
-        ShoppingCartFactory factory = storeIdCache.get("DEFAULT");
+    private static Factory readDefaultInstance(Map<String, Factory> storeIdCache) {
+        Factory factory = storeIdCache.get("DEFAULT");
         if (factory == null) {
-            factory = DefaultShoppingCartFactory.INSTANCE;
+            factory = DefaultFactory.INSTANCE;
         }
         Debug.logInfo("Read default shopping cart factory: " + factory, module);
         return factory;
     }
 
-    public static abstract class BasicShoppingCartFactory extends ShoppingCartFactory {
+    public static abstract class BasicFactory implements Factory {
         @Override
         public ShoppingCart copyShoppingCart(ShoppingCart cart) {
             return new ShoppingCart(cart);
@@ -139,10 +219,15 @@ public abstract class ShoppingCartFactory implements Serializable {
         public ShoppingCart createShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
             return new ShoppingCart(delegator, productStoreId, locale, currencyUom);
         }
+
+        @Override
+        public ShoppingCartHelper createShoppingCartHelper(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
+            return new ShoppingCartHelper(delegator, dispatcher, cart);
+        }
     }
 
-    public static class DefaultShoppingCartFactory extends BasicShoppingCartFactory {
-        private static final DefaultShoppingCartFactory INSTANCE = new DefaultShoppingCartFactory();
+    public static class DefaultFactory extends BasicFactory {
+        private static final DefaultFactory INSTANCE = new DefaultFactory();
 
         @Override
         public ShoppingCart createWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
@@ -168,7 +253,5 @@ public abstract class ShoppingCartFactory implements Serializable {
         public ShoppingCart copyWebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
             return new WebShoppingCart(request, locale, currencyUom);
         }
-
     }
-
 }

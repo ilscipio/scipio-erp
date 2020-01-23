@@ -317,7 +317,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
             
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         
         // Get the ProductConfigWrapper (it's not null only for configurable items)
         ProductConfigWrapper configWrapper = null;
@@ -762,7 +762,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll, itemGroupNumber);
         controlDirective = processResult(result, request);
 
@@ -793,7 +793,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulk(catalogId, categoryId, paramMap);
         controlDirective = processResult(result, request);
 
@@ -822,9 +822,9 @@ public class ShoppingCartEvents {
         try {
             GenericValue supplierParty = EntityQuery.use(delegator).from("Party").where("partyId", supplierPartyId).queryOne();
             if (UtilValidate.isNotEmpty(supplierParty.getString("preferredCurrencyUomId"))) {
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId")); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId")); // SCIPIO: use factory
             } else {
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
             }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
@@ -858,7 +858,7 @@ public class ShoppingCartEvents {
         cart.setOrderId(orderId);
         String agreementId = request.getParameter("agreementId_o_0");
         if (UtilValidate.isNotEmpty(agreementId)) {
-            ShoppingCartHelper sch = new ShoppingCartHelper(delegator, dispatcher, cart);
+            ShoppingCartHelper sch = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
             sch.selectAgreement(agreementId);
         }
 
@@ -898,7 +898,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulkRequirements(catalogId, paramMap);
         controlDirective = processResult(result, request);
 
@@ -932,7 +932,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addCategoryDefaults(catalogId, categoryId, itemGroupNumber);
         controlDirective = processResult(result, request);
 
@@ -966,7 +966,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
 
@@ -998,7 +998,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems, locale);
         controlDirective = processResult(result, request);
 
@@ -1165,7 +1165,7 @@ public class ShoppingCartEvents {
                 cart = sessionCart;
                 if (cart == null) {
                     // NEW CART
-                    cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                    cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
                     // Update both session and req attr (or per modifyScopesFilter)
                     ShoppingCartEvents.setCartObject(request, cart, modifyScopesFilter);
                     requestCart = cart; // Don't re-update below; done by setCartObject
@@ -1528,7 +1528,7 @@ public class ShoppingCartEvents {
                 }
             } catch(CartUserInvalidException e) {
                 Debug.logWarning("Invalid cart state: " + e.getMessage() + "; clearing cart", module);
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
                 modifyCart = true;
             }
 
@@ -1785,7 +1785,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.selectAgreement(agreementId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
@@ -1807,7 +1807,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.setCurrency(currencyUomId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
@@ -2435,7 +2435,7 @@ public class ShoppingCartEvents {
         } else {
             try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
-            ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+            ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
 
             for (int i = 0; i < rowCount; i++) {
                 controlDirective = null;                // re-initialize each time
@@ -2559,7 +2559,7 @@ public class ShoppingCartEvents {
 
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createShoppingCartHelper(delegator, dispatcher, cart);
             
         // set the agreement if specified otherwise set the currency
         if (UtilValidate.isNotEmpty(agreementId)) {

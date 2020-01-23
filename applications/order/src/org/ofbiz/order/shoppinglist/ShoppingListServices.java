@@ -459,7 +459,7 @@ public class ShoppingListServices {
 
             if (UtilValidate.isNotEmpty(items)) {
                 if (listCart == null) {
-                    listCart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom); // SCIPIO: use factory
+                    listCart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currencyUom); // SCIPIO: use factory
                     listCart.setOrderPartyId(shoppingList.getString("partyId"));
                     listCart.setAutoOrderShoppingListId(shoppingList.getString("shoppingListId"));
                 } else {

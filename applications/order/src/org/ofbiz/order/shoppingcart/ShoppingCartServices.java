@@ -198,7 +198,7 @@ public class ShoppingCartServices {
         String currentStatusString = orh.getCurrentStatusString();
 
         // create the cart
-        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, website, locale, currency); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, website, locale, currency); // SCIPIO: use factory
 
         cart.setDoPromotions(!includePromoItems);
         cart.setOrderType(orderTypeId);
@@ -695,7 +695,7 @@ public class ShoppingCartServices {
         String currency = quote.getString("currencyUomId");
 
         // create the cart
-        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
         // set shopping cart type
         if ("PURCHASE_QUOTE".equals(quote.getString("quoteTypeId"))) {
             cart.setOrderType("PURCHASE_ORDER");
@@ -1008,7 +1008,7 @@ public class ShoppingCartServices {
         }
 
         // create the cart
-        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
 
         try {
             cart.setUserLogin(userLogin, dispatcher);

@@ -39,7 +39,7 @@ public abstract class ShoppingCartFactory {
     private static final Factory defaultFactory = readDefaultInstance(storeIdCache);
 
     /** The instance is represented by {@link Factory} nested class. */
-    private ShoppingCartFactory() {}
+    protected ShoppingCartFactory() {}
 
     public static Factory get(Delegator delegator, String productStoreId) {
         Factory factory = storeIdCache.get(productStoreId);

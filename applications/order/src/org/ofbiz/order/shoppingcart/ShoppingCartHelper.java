@@ -198,6 +198,7 @@ public class ShoppingCartHelper {
                 product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Unable to lookup product : " + productId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
             }
             if (product == null || product.get("requireAmount") == null || "N".equals(product.getString("requireAmount"))) {
                 amount = null;
@@ -221,6 +222,7 @@ public class ShoppingCartHelper {
                             .queryFirst();
                 } catch (GenericEntityException gee) {
                     Debug.logError(gee, module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                 }
                 if (productFeatureAndAppl != null) {
                     productFeatureAndAppl.set("productFeatureApplTypeId", "STANDARD_FEATURE");
@@ -337,9 +339,10 @@ public class ShoppingCartHelper {
                             aggregatedProdId = ProductWorker.getInstanceAggregatedId(delegator, productId);
                             configWrapper = ProductConfigWorker.loadProductConfigWrapper(delegator, dispatcher, configId, aggregatedProdId, cart.getProductStoreId(), catalogId, cart.getWebSiteId(), cart.getCurrency(), cart.getLocale(), cart.getAutoUserLogin());
                         } catch (GenericEntityException e) {
-                            errorMsgs.add(e.getMessage());
+                            // SCIPIO: inappropriate
+                            //errorMsgs.add(e.getMessage());
+                            errorMsgs.add(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                         }
-
                     }
                     try {
                         this.cart.addOrIncreaseItem(UtilValidate.isNotEmpty(aggregatedProdId) ? aggregatedProdId :  productId, amount, orderItem.getBigDecimal("quantity"),
@@ -423,6 +426,7 @@ public class ShoppingCartHelper {
                     quantity = new BigDecimal(quantStr);
                 } catch (NumberFormatException nfe) {
                     quantity = BigDecimal.ZERO;
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                 }
                 if (quantity.compareTo(BigDecimal.ZERO) > 0) {
                     // check for alternative packing
@@ -434,6 +438,7 @@ public class ShoppingCartHelper {
                             originalProduct = EntityQuery.use(delegator).from("Product").where("productId", originalProductId).queryOne();
                         } catch (GenericEntityException e) {
                             Debug.logError(e, "Error getting parent product", module);
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                         }
                         if(originalProduct != null){
                             BigDecimal piecesIncluded = new BigDecimal(originalProduct.getLong("piecesIncluded"));
@@ -456,6 +461,7 @@ public class ShoppingCartHelper {
                     } catch(GenericEntityException e) {
                         Debug.logError(e.getMessage(), module);
                         quantity = BigDecimal.ONE;
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                     }
                     if (quantity.compareTo(BigDecimal.ZERO) < 0) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "cart.quantity_not_positive_number", this.cart.getLocale()));
@@ -519,6 +525,7 @@ public class ShoppingCartHelper {
                     requirement = EntityQuery.use(delegator).from("Requirement").where("requirementId", requirementId).queryOne();
                 } catch (GenericEntityException gee) {
                     Debug.logError(gee, module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                 }
                 if (requirement == null) {
                     return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
@@ -532,6 +539,7 @@ public class ShoppingCartHelper {
                         quantity = (BigDecimal) ObjectType.simpleTypeConvert(quantStr, "BigDecimal", null, cart.getLocale());
                     } catch (GeneralException ge) {
                         quantity = BigDecimal.ZERO;
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                     }
                     if (quantity.compareTo(BigDecimal.ZERO) > 0) {
                         Iterator<ShoppingCartItem> items = this.cart.iterator();
@@ -647,6 +655,7 @@ public class ShoppingCartHelper {
                     }
                 } catch (NumberFormatException nfe) {
                     Debug.logError("Error deleting from cart: " + nfe.getMessage(), module);
+                    errorMsgs.add(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", this.cart.getLocale())); // SCIPIO
                 }
             }
         }
@@ -884,8 +893,10 @@ public class ShoppingCartHelper {
                     }
                 } catch (NumberFormatException nfe) {
                     Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
+                    errorMsgs.add(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", locale)); // SCIPIO
                 } catch (Exception e) {
                     Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
+                    errorMsgs.add(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", locale)); // SCIPIO
                 }
             } // else not a parameter we need
         }
@@ -899,6 +910,7 @@ public class ShoppingCartHelper {
                     item = this.cart.findCartItem(index);
                 } catch (Exception e) {
                     Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", Debug.getLogLocale())); // SCIPIO: log locale
+                    errorMsgs.add(UtilProperties.getMessage(resource_error, "OrderErrorOnCartUpdate", locale)); // SCIPIO
                 }
                 if (item != null) {
                     deleteList.add(item);

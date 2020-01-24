@@ -476,6 +476,12 @@ public class ShoppingListEvents {
      * Saves the shopping cart to the specialized (auto-save) shopping list
      */
     public static String saveCartToAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
+        // SCIPIO: Introduced request attribute/parameter to skip restore if requested (non-sensitive functionality, so parameter permissible)
+        String skipSaveCartToAutoSaveList = (String) request.getAttribute("skipSaveCartToAutoSaveList");
+        if ("Y".equals(skipSaveCartToAutoSaveList) || (skipSaveCartToAutoSaveList == null && "Y".equals(request.getParameter("skipSaveCartToAutoSaveList")))) {
+            return "success";
+        }
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
@@ -502,6 +508,12 @@ public class ShoppingListEvents {
 
         if (!ProductStoreWorker.autoSaveCart(productStore)) {
             // if auto-save is disabled just return here
+            return "success";
+        }
+
+        // SCIPIO: Introduced request attribute/parameter to skip restore if requested (non-sensitive functionality, so parameter permissible)
+        String skipRestoreAutoSaveList = (String) request.getAttribute("skipRestoreAutoSaveList");
+        if ("Y".equals(skipRestoreAutoSaveList) || (skipRestoreAutoSaveList == null && "Y".equals(request.getParameter("skipRestoreAutoSaveList")))) {
             return "success";
         }
 

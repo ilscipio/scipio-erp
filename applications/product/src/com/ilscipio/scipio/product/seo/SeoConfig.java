@@ -93,6 +93,7 @@ public class SeoConfig {
     private final boolean seoUrlEnabled;
     private final boolean categoryNameEnabled;
     private final String seoUrlSuffix;
+    private final boolean seoUrlSuffixMatchRequired;
     private final Pattern regexpIfMatch;
     private final boolean useUrlRegexp;
     private final Map<String, String> seoReplacements;
@@ -268,6 +269,7 @@ public class SeoConfig {
         boolean seoUrlEnabled = true;
         boolean categoryNameEnabled = false;
         String seoUrlSuffix = null;
+        boolean seoUrlSuffixMatchRequired = false;
         Pattern regexpIfMatch = null;
         boolean useUrlRegexp = false;
         Map<String, String> seoReplacements = new HashMap<>();
@@ -368,7 +370,8 @@ public class SeoConfig {
                         if (UtilValidate.isEmpty(seoUrlSuffix)) {
                             seoUrlSuffix = null; // for legacy code compatibility
                         }
-                        Debug.logInfo("  seo-url-suffix: " + seoUrlSuffix, module);
+                        seoUrlSuffixMatchRequired = booleanSetting(catUrlElem, "seo-url-suffix-match-required", seoUrlSuffixMatchRequired);
+                        Debug.logInfo("  seo-url-suffix: " + seoUrlSuffix + " (required: " + seoUrlSuffixMatchRequired + ")", module);
 
                         categoryNameMaxLength = integerSetting(catUrlElem, "category-name-max-length", null, false);
                         productNameMaxLength = integerSetting(catUrlElem, "product-name-max-length", null, false);
@@ -592,6 +595,7 @@ public class SeoConfig {
         this.seoUrlEnabled = seoUrlEnabled;
         this.categoryNameEnabled = categoryNameEnabled;
         this.seoUrlSuffix = seoUrlSuffix;
+        this.seoUrlSuffixMatchRequired = seoUrlSuffixMatchRequired;
         this.regexpIfMatch = regexpIfMatch;
         this.useUrlRegexp = useUrlRegexp;
         this.seoReplacements = seoReplacements;
@@ -750,6 +754,10 @@ public class SeoConfig {
      */
     public String getSeoUrlSuffix() {
         return seoUrlSuffix;
+    }
+
+    public boolean isSeoUrlSuffixMatchRequired() {
+        return seoUrlSuffixMatchRequired;
     }
 
     /**
@@ -1108,7 +1116,7 @@ public class SeoConfig {
     }
 
     /**
-     * SCIPIO: Boolean check for enable/disable features, supports old and new standard values.
+     * SCIPIO: Boolean check for enable/disable features, supports standard and alternative value formats.
      */
     static Boolean booleanSetting(String value, Boolean defaultValue) {
         if ("enable".equals(value) || "enabled".equals(value)) return true;

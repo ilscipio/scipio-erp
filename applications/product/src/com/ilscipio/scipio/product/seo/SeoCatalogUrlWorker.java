@@ -148,7 +148,6 @@ public class SeoCatalogUrlWorker implements Serializable {
     //protected final String contextPath;
 
     protected final String configResourceName;
-    protected final String urlSuffix;
 
     // lazy load, these do not require sync
     protected LocalizedName productPathName = null;
@@ -168,7 +167,6 @@ public class SeoCatalogUrlWorker implements Serializable {
     protected SeoCatalogUrlWorker(SeoConfig config) {
         this.config = config;
         this.configResourceName = DEFAULT_CONFIG_RESOURCE;
-        this.urlSuffix = config.getSeoUrlSuffix() != null ? config.getSeoUrlSuffix() : "";
         this.catalogUrlBuilder = createCatalogUrlBuilder();
         this.catalogAltUrlBuilder = createCatalogAltUrlBuilder();
         this.catalogAltUrlSanitizer = createCatalogAltUrlSanitizer();
@@ -331,7 +329,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
 
     public String getUrlSuffix() {
-        return urlSuffix;
+        return config.getSeoUrlSuffix();
     }
 
 //    public String extractProductServletPrefix(String path) {
@@ -1047,7 +1045,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     protected void checkAddUrlSuffix(StringBuilder sb) {
         String urlSuffix = getUrlSuffix();
         if (UtilValidate.isNotEmpty(urlSuffix) && (sb.length() > 0) && (sb.charAt(sb.length() - 1) != '/')) {
-            sb.append(getUrlSuffix());
+            sb.append(urlSuffix);
         }
     }
 
@@ -1143,6 +1141,20 @@ public class SeoCatalogUrlWorker implements Serializable {
             return null;
         }
 
+        // check/strip the URL suffix
+        // 2020-01-24: This used to be done in preprocessInboundSeoCatalogUrlPath, but the trailing slash
+        // has to be stripped BEFORE the suffix stripped (it makes no sense for suffix to be separated by a slash)
+        // and we need to handle when the suffix is configured but missing
+        String urlSuffix = getUrlSuffix();
+        boolean urlSuffixFail = false;
+        if (UtilValidate.isNotEmpty(urlSuffix)) {
+            if (pathInfo.endsWith(urlSuffix)) {
+                pathInfo = pathInfo.substring(0, pathInfo.length() - urlSuffix.length());
+            } else if (config.isSeoUrlSuffixMatchRequired()) {
+                urlSuffixFail = true;
+            }
+        }
+
         // split path into alt-url parts
         List<String> pathElements = StringUtil.split(pathInfo, "/");
         if (UtilValidate.isEmpty(pathElements)) {
@@ -1196,7 +1208,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         PathPartAndTrailMatch pathPartAndTrailMatch = null;
         List<String> allPathElements = new ArrayList<>(pathElements);
         Timestamp moment = UtilDateTime.nowTimestamp();
-        if (UtilValidate.isNotEmpty(lastPathElem)) {
+        if (UtilValidate.isNotEmpty(lastPathElem) && !urlSuffixFail) {
             pathElements.remove(pathElements.size() - 1);
             String firstPathElem = (pathElements.size() > 0) ? pathElements.get(0) : lastPathElem;
             try {
@@ -1476,20 +1488,8 @@ public class SeoCatalogUrlWorker implements Serializable {
         // path must start with a slash, and remove it
         if (!pathInfo.startsWith("/")) return null;
         pathInfo = pathInfo.substring(1);
-
-        // path may require suffix
-        String urlSuffix = getUrlSuffix();
-        if (UtilValidate.isNotEmpty(urlSuffix)) {
-            if (pathInfo.endsWith(urlSuffix)) {
-                pathInfo = pathInfo.substring(0, pathInfo.length() - urlSuffix.length());
-            } else {
-                return null;
-            }
-        }
-
         // if path ends with slash (for whatever reason it was added), remove it
         if (pathInfo.endsWith("/")) pathInfo = pathInfo.substring(0, pathInfo.length() - 1);
-
         return pathInfo;
     }
 

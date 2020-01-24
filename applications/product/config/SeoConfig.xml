@@ -42,6 +42,15 @@
         <!-- Suffix to add to all SEO URLs. e.g.: 
         <seo-url-suffix>.html</seo-url-suffix>-->
         <seo-url-suffix></seo-url-suffix>
+
+        <!-- Suffix behavior when matching incoming URLs:
+            disable (default) - The suffix is simply stripped, can still work without it.
+            enable - The suffix is required; if not provided in the incoming URL:
+                     for implicit product/category requests, the URL is ignored by the filter (will give 404 or something else)
+                     for explicit (servlet-like) product/category requests, a forward is made to the product/category request but with a null product/category ID
+        -->
+        <seo-url-suffix-match-required>disable</seo-url-suffix-match-required>
+
         <!-- max name lengths -->
         <category-name-max-length>24</category-name-max-length>
         <product-name-max-length>40</product-name-max-length>

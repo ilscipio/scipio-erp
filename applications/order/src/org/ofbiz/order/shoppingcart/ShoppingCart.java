@@ -2527,7 +2527,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 CartShipInfo csi = shipInfo.get(i);
                 CartShipInfo.CartShipItemInfo csii = csi.shipItemInfo.get(item);
                 if (csii != null) {
-                    if (this.checkShipItemInfo(csi, csii)) {
+                    // SCIPIO: DO NOT call this method in this getter because it causes implicit cart modifications
+                    //if (this.checkShipItemInfo(csi, csii)) {
+                    if (this.checkShipItemInfoReadOnly(csi, csii)) {
                         shipGroups.put(i, csii.quantity);
                     }
                 }
@@ -2707,6 +2709,14 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected boolean checkShipItemInfo(CartShipInfo csi, CartShipInfo.CartShipItemInfo csii) {
         if (csii.quantity.compareTo(BigDecimal.ZERO) == 0 || csii.item.getQuantity().compareTo(BigDecimal.ZERO) == 0) {
             csi.shipItemInfo.remove(csii.item);
+            return false;
+        }
+        return true;
+    }
+
+    // returns true if no zero quantity - without modifying cart (SCIPIO)
+    protected boolean checkShipItemInfoReadOnly(CartShipInfo csi, CartShipInfo.CartShipItemInfo csii) {
+        if (csii.quantity.compareTo(BigDecimal.ZERO) == 0 || csii.item.getQuantity().compareTo(BigDecimal.ZERO) == 0) {
             return false;
         }
         return true;

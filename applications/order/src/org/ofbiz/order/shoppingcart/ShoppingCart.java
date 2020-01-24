@@ -1335,7 +1335,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * SCIPIO: Remove an item from the cart object.
+     * Remove an item from the cart object.
      * <p>
      * SCIPIO: Modified to support triggerExternalOps bool.
      */
@@ -1361,7 +1361,6 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         */
         item = cartLines.remove(index);
-
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks
         item.setQuantity(BigDecimal.ZERO, dispatcher, this, triggerExternalOps, true, false, true);
@@ -2743,19 +2742,33 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-    * Return index of the ship group where the item is located
-    * @return
-    */
+     * Return index of the (last) ship group where the item is located.
+     * SCIPIO: <strong>WARN:</strong> This stock method returns 0 (the first ship group) if the item is not in any ship group; it's only appropriate
+     * for operations intending to add an item to a ship group; to test if it's in any ship group (usually should be?), use
+     * {@link #getItemShipGroupIndexIfSet(int)} instead, which returns -1 if not found.
+     */
     public int getItemShipGroupIndex(int itemId) {
-        int shipGroupIndex = this.getShipGroupSize() - 1;
-        ShoppingCartItem item = this.findCartItem(itemId);
-        int result=0;
-        for (int i = 0; i <(shipGroupIndex + 1); i++) {
-           CartShipInfo csi = this.getShipInfo(i);
-           Iterator<ShoppingCartItem> it = csi.shipItemInfo.keySet().iterator();
-            while (it.hasNext()) {
-                ShoppingCartItem item2 = it.next();
-                if (item.equals(item2) ) {
+        int result = getItemShipGroupIndexIfSet(itemId);
+        return (result >= 0) ? result : 0;
+    }
+
+    /**
+     * Return index of the (last) ship group where the item is located, or -1 if it's not in any ship group for some reason (SCIPIO).
+     */
+    public int getItemShipGroupIndexIfSet(int itemId) {
+        return getItemShipGroupIndexIfSet(this.findCartItem(itemId));
+    }
+
+    /**
+     * Return index of the (last) ship group where the item is located, or -1 if it's not in any ship group for some reason (SCIPIO).
+     */
+    public int getItemShipGroupIndexIfSet(ShoppingCartItem item) {
+        int shipGroupIndex = this.getShipGroupSize();
+        int result = -1;
+        for (int i = 0; i < shipGroupIndex; i++) {
+            CartShipInfo csi = this.getShipInfo(i);
+            for(ShoppingCartItem item2 : csi.shipItemInfo.keySet()) {
+                if (item.equals(item2)) {
                     result = i;
                 }
             }

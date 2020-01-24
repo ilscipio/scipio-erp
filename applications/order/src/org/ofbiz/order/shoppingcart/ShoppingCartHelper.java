@@ -925,8 +925,12 @@ public class ShoppingCartHelper {
                 Debug.logInfo("Removing item index: " + itemIndex, module);
             }
             try {
+                // SCIPIO: Moved setShipmentMethodTypeId before the removal and added correct lookup for shipGroupIndex
+                int shipGroupIndex = cart.getItemShipGroupIndexIfSet(item);
+                if (shipGroupIndex >= 0) {
+                    cart.setShipmentMethodTypeId(shipGroupIndex, null);
+                }
                 this.cart.removeCartItem(itemIndex, dispatcher);
-                cart.setShipmentMethodTypeId(itemIndex, null);
             } catch (CartItemModifyException e) {
                 result = ServiceUtil.returnError(new ArrayList<String>());
                 errorMsgs.add(e.getMessage());

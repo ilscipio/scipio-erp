@@ -933,11 +933,13 @@ public class ShoppingCartHelper {
             }
         }
 
+        /* SCIPIO: 2020-01-23: This appears unused and squashes ProductStore.viewCartOnAdd for the whole session
         if (context.containsKey("alwaysShowcart")) {
             this.cart.setViewCartOnAdd(true);
         } else {
             this.cart.setViewCartOnAdd(false);
         }
+         */
 
         // Promotions are run again.
         ProductPromoWorker.doPromotions(this.cart, dispatcher);

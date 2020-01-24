@@ -926,8 +926,7 @@ public class ShoppingCartHelper {
             }
             try {
                 // SCIPIO: Moved setShipmentMethodTypeId before the removal and added correct lookup for shipGroupIndex
-                int shipGroupIndex = cart.getItemShipGroupIndexIfSet(item);
-                if (shipGroupIndex >= 0) {
+                for(Integer shipGroupIndex : cart.getShipGroups(item).keySet()) {
                     cart.setShipmentMethodTypeId(shipGroupIndex, null);
                 }
                 this.cart.removeCartItem(itemIndex, dispatcher);

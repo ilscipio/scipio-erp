@@ -412,6 +412,9 @@ code package.
                 import org.ofbiz.order.shoppingcart.*;
                 org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
 
+                // SCIPIO: Tell login passed _before_ the after-login events, so they can tell
+                request.setAttribute("_LOGIN_PASSED_", "TRUE");
+
                 // SCIPIO: Run after-login events (based on doMainLogin)
                 org.ofbiz.webapp.control.RequestHandler.getRequestHandler(request.getServletContext()).runAfterLoginEvents(request, response);
 
@@ -453,9 +456,11 @@ code package.
             </if-not-empty>
         </if-not-empty>
 
-        <!-- tell the control servlet that we just logged in the user... -->
+        <!-- tell the control servlet that we just logged in the user...
+            SCIPIO: This belongs above
         <set value="TRUE" field="_LOGIN_PASSED_"/>
         <field-to-request field="_LOGIN_PASSED_"/>
+        -->
 
         <!-- SCIPIO -->
         <property-to-field field="successMessage" resource="CommonUiLabels" property="CommonAccountRegistered"/>

@@ -150,6 +150,10 @@ public class CartUpdate implements AutoCloseable {
      * NOTE: This should rarely if ever be needed by client code.
      */
     public static CartUpdate getCurrentUpdate(HttpServletRequest request) {
+        return getCurrentUpdate();
+    }
+
+    static CartUpdate getCurrentUpdate() {
         CartUpdateStatus status = currentStatus.get();
         return (status != null) ? status.currentUpdate : null;
     }

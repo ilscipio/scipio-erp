@@ -1582,7 +1582,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * @param shipBeforeDate
      */
    public void setShipBeforeDate(int idx, Timestamp shipBeforeDate) {
-       CartShipInfo csi = this.getShipInfo(idx);
+       CartShipInfo csi = this.getOrAddShipInfo(idx);
        csi.shipBeforeDate  = shipBeforeDate;
    }
 
@@ -1618,7 +1618,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     * @param shipAfterDate the ship after date to be set for the given ship group
     */
    public void setShipAfterDate(int idx, Timestamp shipAfterDate) {
-       CartShipInfo csi = this.getShipInfo(idx);
+       CartShipInfo csi = this.getOrAddShipInfo(idx);
        csi.shipAfterDate  = shipAfterDate;
    }
 
@@ -2542,7 +2542,33 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return this.getShipGroups(this.findCartItem(itemIndex));
     }
 
+    /**
+     * Returns the ship info at the given index.
+     * SCIPIO: <strong>WARN: DEPRECATION:</strong> Currently, this method adds a ship group if the index points to the end,
+     * but this behavior must soon be changed - please use {@link #getOrAddShipInfo(int)} instead if you required this behavior.
+     */
     public CartShipInfo getShipInfo(int idx) {
+        if (idx == -1) {
+            return null;
+        }
+
+        if (shipInfo.size() == idx) {
+            Debug.logWarning("getShipInfo: Deprecated cart modification triggered by ship info index '"
+                    + idx + "'; please use getOrAddShipInfo instead or prevent the index going of bounds", module);
+            CartShipInfo csi = new CartShipInfo();
+            csi.orderTypeId = getOrderType();
+            shipInfo.add(csi);
+        }
+
+        return shipInfo.get(idx);
+    }
+
+    /**
+     * Gets the ship info, or if the index is at the end of the ship groups, creates another (SCIPIO).
+     * NOTE: This method must be used instead of {@link #getShipInfo(int)}. The getShipInfo method will
+     * be modifi
+     */
+    public CartShipInfo getOrAddShipInfo(int idx) {
         if (idx == -1) {
             return null;
         }
@@ -2582,7 +2608,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setItemShipGroupEstimate(BigDecimal amount, int idx) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.shipEstimate = amount;
     }
 
@@ -2594,14 +2620,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public void setShipGroupShipDatesFromItem(ShoppingCartItem item) {
         Map<Integer, BigDecimal> shipGroups = this.getShipGroups(item);
+        for (Integer shipGroup : shipGroups.keySet()) {
+            CartShipInfo cartShipInfo = this.getShipInfo(shipGroup);
 
-        if (shipGroups.keySet() != null) {
-            for (Integer shipGroup : shipGroups.keySet()) {
-                CartShipInfo cartShipInfo = this.getShipInfo(shipGroup);
-
-                cartShipInfo.resetShipAfterDateIfBefore(item.getShipAfterDate());
-                cartShipInfo.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
-            }
+            cartShipInfo.resetShipAfterDateIfBefore(item.getShipAfterDate());
+            cartShipInfo.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
         }
     }
 
@@ -2623,7 +2646,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     public void setItemShipGroupQty(ShoppingCartItem item, int itemIndex, BigDecimal quantity, int idx) {
         if (itemIndex > -1) {
-            CartShipInfo csi = this.getShipInfo(idx);
+            CartShipInfo csi = this.getOrAddShipInfo(idx);
 
             // never set less than zero
             if (quantity.compareTo(BigDecimal.ZERO) < 0) {
@@ -2673,7 +2696,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
 
         // get the ship groups; create the TO group if needed
-        CartShipInfo fromGroup = this.getShipInfo(fromIndex);
+        CartShipInfo fromGroup = this.getOrAddShipInfo(fromIndex);
         CartShipInfo toGroup = null;
         if (toIndex == -1) {
             toGroup = new CartShipInfo();
@@ -2681,7 +2704,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.shipInfo.add(toGroup);
             toIndex = this.shipInfo.size() - 1;
         } else {
-            toGroup = this.getShipInfo(toIndex);
+            toGroup = this.getOrAddShipInfo(toIndex);
         }
 
         // adjust the quantities
@@ -2788,7 +2811,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Sets the shipping contact mech id. */
     public void setShippingContactMechId(int idx, String shippingContactMechId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         if (isSalesOrder() && UtilValidate.isNotEmpty(shippingContactMechId)) {
             // Verify if the new address is compatible with the ProductGeos rules of
             // the products already in the cart
@@ -2850,7 +2873,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Sets the shipment method type. */
     public void setShipmentMethodTypeId(int idx, String shipmentMethodTypeId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.shipmentMethodTypeId = shipmentMethodTypeId;
     }
 
@@ -2892,7 +2915,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Sets the supplier for the given ship group (drop shipment). */
     public void setSupplierPartyId(int idx, String supplierPartyId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         // TODO: before we set the value we have to verify if all the products
         //       already in this ship group are drop shippable from the supplier
         csi.supplierPartyId = supplierPartyId;
@@ -2906,7 +2929,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Sets the shipping instructions. */
     public void setShippingInstructions(int idx, String shippingInstructions) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.shippingInstructions = shippingInstructions;
     }
 
@@ -2933,7 +2956,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setMaySplit(int idx, Boolean maySplit) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         if (UtilValidate.isNotEmpty(maySplit)) {
             csi.setMaySplit(maySplit);
         }
@@ -2963,7 +2986,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setGiftMessage(int idx, String giftMessage) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.giftMessage = giftMessage;
     }
 
@@ -2989,7 +3012,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setIsGift(int idx, Boolean isGift) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         if (UtilValidate.isNotEmpty(isGift)) {
             csi.isGift = isGift ? "Y" : "N";
         }
@@ -3017,7 +3040,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setCarrierPartyId(int idx, String carrierPartyId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.carrierPartyId = carrierPartyId;
     }
 
@@ -3052,7 +3075,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setProductStoreShipMethId(int idx, String productStoreShipMethId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.productStoreShipMethId = productStoreShipMethId;
     }
 
@@ -3069,7 +3092,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setShipGroupFacilityId(int idx, String facilityId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.facilityId = facilityId;
     }
 
@@ -3079,7 +3102,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setShipGroupVendorPartyId(int idx, String vendorPartyId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.vendorPartyId = vendorPartyId;
     }
 
@@ -3089,7 +3112,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public void setShipGroupSeqId(int idx, String shipGroupSeqId) {
-        CartShipInfo csi = this.getShipInfo(idx);
+        CartShipInfo csi = this.getOrAddShipInfo(idx);
         csi.shipGroupSeqId = shipGroupSeqId;
     }
 

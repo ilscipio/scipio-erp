@@ -907,7 +907,7 @@ public class ShoppingCartServices {
             // We're creating the cart right now using data from the quote, so there cannot yet be more than one ship group.
 
             List<GenericValue> cartAdjs = cart.getAdjustments();
-            CartShipInfo shipInfo = cart.getShipInfo(0);
+            CartShipInfo shipInfo = cart.getOrAddShipInfo(0);
 
             List<GenericValue> adjs = orderAdjsMap.get(quoteId);
 

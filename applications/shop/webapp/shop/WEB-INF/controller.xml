@@ -1036,9 +1036,15 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="newcustomer"/>
     </request-map>
-    <request-map uri="createcustomer">
+    <request-map uri="createcustomer" method="POST">
         <security https="true" auth="false"/>
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <response name="success" type="request" value="createcustomersuccess"/>
+        <response name="error" type="view" value="newcustomer"/>
+    </request-map>
+    <request-map uri="createcustomersuccess"><!-- SCIPIO: Performs the login, if applicable -->
+        <security direct-request="false"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomerSuccess"/>
         <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>

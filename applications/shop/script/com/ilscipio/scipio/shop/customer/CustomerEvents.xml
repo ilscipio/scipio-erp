@@ -280,6 +280,7 @@ code package.
             <result-to-field result-name="newUserLogin" field="createdUserLogin"/>
         </call-service>
         <set-current-user-login value-field="createdUserLogin"/>
+        <field-to-request field="createdUserLogin"/><!-- SCIPIO: Pass to createCustomerSuccess -->
 
         <!-- now that we have the partyId, put it where it needs to go... -->
         <set from-field="tempMap.partyId" field="partyDataSource.partyId"/>
@@ -406,32 +407,7 @@ code package.
             </if-compare-field>
         </if-not-empty>
 
-        <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
-        <if-compare field="allowPassword" operator="equals" value="Y">
-            <script lang="groovy"><![CDATA[
-                import org.ofbiz.order.shoppingcart.*;
-                org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
-
-                // SCIPIO: Tell login passed _before_ the after-login events, so they can tell
-                request.setAttribute("_LOGIN_PASSED_", "TRUE");
-
-                // SCIPIO: Run after-login events (based on doMainLogin)
-                org.ofbiz.webapp.control.RequestHandler.getRequestHandler(request.getServletContext()).runAfterLoginEvents(request, response);
-
-                org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-
-                CartUpdate cartUpdate = CartUpdate.updateSection(request);
-                try { // SCIPIO
-                    cart = cartUpdate.getCartForUpdate();
-                    
-                    cart.setOrderPartyId(tempMap.get("partyId"));
-                    
-                    cart = cartUpdate.commit(cart); // SCIPIO
-                } finally {
-                    cartUpdate.close();
-                }
-            ]]></script>
-        </if-compare>
+        <!-- SCIPIO: NOTE: Login moved to createCustomerSuccess -->
 
         <!-- send off the registration email -->
         <if-not-empty field="emailContext.emailAddress">
@@ -465,6 +441,50 @@ code package.
         <!-- SCIPIO -->
         <property-to-field field="successMessage" resource="CommonUiLabels" property="CommonAccountRegistered"/>
         <set field="_event_message_" value="${successMessage}" />
+    </simple-method>
+
+    <simple-method method-name="createCustomerSuccess" short-description="Create Customer Success, executed if createCustomer succeeds (SCIPIO)" login-required="false">
+        <!-- SCIPIO: We must do the login in a separate event because the first may trigger transaction rollback leading to non-existent UserLogin in session -->
+        <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field="productStore">
+            <field field="request" type="javax.servlet.ServletRequest"/>
+        </call-class-method>
+        <set from-field="productStore.allowPassword" field="allowPassword"/>
+        <if-empty field="allowPassword">
+            <set field="allowPassword" value="Y"/>
+        </if-empty>
+
+        <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
+        <if-compare field="allowPassword" operator="equals" value="Y">
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.order.shoppingcart.*;
+                createdUserLogin = request.getAttribute("createdUserLogin");
+                if (!createdUserLogin) {
+                    return;
+                }
+                org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
+
+                // SCIPIO: Tell login passed _before_ the after-login events, so they can tell
+                request.setAttribute("_LOGIN_PASSED_", "TRUE");
+
+                // SCIPIO: Run after-login events (based on doMainLogin)
+                org.ofbiz.webapp.control.RequestHandler.getRequestHandler(request.getServletContext()).runAfterLoginEvents(request, response);
+
+                org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
+
+                // TODO: REVIEW: Is it really necessary to set the setOrderPartyId here? I'm not sure is done by after-login events, but
+                //  why is it needed to be done here manually at all?
+                CartUpdate cartUpdate = CartUpdate.updateSection(request);
+                try { // SCIPIO
+                    cart = cartUpdate.getCartForUpdate();
+
+                    cart.setOrderPartyId(createdUserLogin.partyId);
+
+                    cart = cartUpdate.commit(cart); // SCIPIO
+                } finally {
+                    cartUpdate.close();
+                }
+            ]]></script>
+        </if-compare>
     </simple-method>
 
     <!-- =========================================== -->

@@ -515,6 +515,9 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
             }
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.postPreprocessorEvents(request, response, this);
+            }
         }
 
         // Pre-Processor/First-Visit event(s) can interrupt the flow by returning null.
@@ -815,6 +818,10 @@ public class RequestHandler {
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
+            }
+
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.postEvents(request, response, this);
             }
 
             // SCIPIO: 2019-03-06: Cleanup event messages (e.g. the default service event success message).

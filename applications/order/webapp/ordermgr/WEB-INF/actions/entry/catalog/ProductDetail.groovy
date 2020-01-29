@@ -54,6 +54,8 @@ productId = null;
 product = context.product;
 priceMap = [:];
 
+cart.setAttribute("Test1", UtilRandom.generateRandom());
+
 if(product){
     productId = product.productId;
 }else{

@@ -1,6 +1,8 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -294,13 +296,14 @@ public class CartUpdate implements AutoCloseable {
         }
         ShoppingCart newCart = cart.copy(true);
         if (isDebug()) {
-            try {
-                newCart.ensureExactEquals(cart);
+            List<String> errorMessages = new ArrayList<>(0);
+            newCart.ensureExactEquals(cart, errorMessages);
+            if (errorMessages.size() <= 0) {
                 Debug.logInfo("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
                     + " for update" + getLogSuffix(), module);
-            } catch(IllegalStateException e) {
-                Debug.logError(e, "Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
-                    + " for update, but differences encountered - please report this issue"
+            } else {
+                Debug.logError("Cloned cart " + getLogCartDesc(cart) + " to " + getLogCartDesc(newCart)
+                    + " for update, but differences encountered - please report this issue: " + errorMessages
                     + getLogSuffixDetailed(), module);
             }
         }

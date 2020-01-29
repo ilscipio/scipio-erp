@@ -113,6 +113,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("order", "shoppingcart.debug", false); // SCIPIO
 
+    static { // SCIPIO
+        if (ShoppingCart.verboseOn()) {
+            ShoppingCartRequestHookHandler.register();
+        }
+    }
+
     // SCIPIO: NOTE: 2018-11-22: Many default values have been moved to the constructors, or removed and defaults used (null/false)
 
     private String orderType = "SALES_ORDER"; // default orderType
@@ -516,117 +522,116 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
-    void ensureExactEquals(ShoppingCart other) throws IllegalStateException {
-        try {
-            ShoppingCart.ensureExactEquals(this.orderType, other.orderType);
-            ShoppingCart.ensureExactEquals(this.channel, other.channel);
-            ShoppingCart.ensureExactEquals(this.poNumber, other.poNumber);
-            ShoppingCart.ensureExactEquals(this.orderId, other.orderId);
-            ShoppingCart.ensureExactEquals(this.orderName, other.orderName);
-            ShoppingCart.ensureExactEquals(this.orderStatusId, other.orderStatusId);
-            ShoppingCart.ensureExactEquals(this.orderStatusString, other.orderStatusString);
-            ShoppingCart.ensureExactEquals(this.firstAttemptOrderId, other.firstAttemptOrderId);
-            ShoppingCart.ensureExactEquals(this.externalId, other.externalId);
-            ShoppingCart.ensureExactEquals(this.internalCode, other.internalCode);
-            ShoppingCart.ensureExactEquals(this.billingAccountId, other.billingAccountId);
-            ShoppingCart.ensureExactEquals(this.billingAccountAmt, other.billingAccountAmt);
-            ShoppingCart.ensureExactEquals(this.agreementId, other.agreementId);
-            ShoppingCart.ensureExactEquals(this.quoteId, other.quoteId);
-            ShoppingCart.ensureExactEquals(this.workEffortId, other.workEffortId);
-            ShoppingCart.ensureExactEquals(this.nextItemSeq, other.nextItemSeq);
-            ShoppingCart.ensureExactEquals(this.defaultItemDeliveryDate, other.defaultItemDeliveryDate);
-            ShoppingCart.ensureExactEquals(this.defaultItemComment, other.defaultItemComment);
-            ShoppingCart.ensureExactEquals(this.orderAdditionalEmails, other.orderAdditionalEmails);
-            ShoppingCart.ensureExactEquals(this.viewCartOnAdd, other.viewCartOnAdd);
-            ShoppingCart.ensureExactEquals(this.readOnlyCart, other.readOnlyCart);
-            ShoppingCart.ensureExactEquals(this.lastListRestore, other.lastListRestore);
-            ShoppingCart.ensureExactEquals(this.autoSaveListId, other.autoSaveListId);
-            ShoppingCart.ensureExactEquals(this.adjustments, other.adjustments);
-            ShoppingCart.ensureExactEquals(this.orderTermSet, other.orderTermSet);
-            ShoppingCart.ensureExactEquals(this.orderTerms, other.orderTerms);
-            ShoppingCart.ensureExactEquals(this.cartLines, other.cartLines);
-            ShoppingCart.ensureExactEquals(this.itemGroupByNumberMap, other.itemGroupByNumberMap);
-            ShoppingCart.ensureExactEquals(this.nextGroupNumber, other.nextGroupNumber);
-            ShoppingCart.ensureExactEquals(this.paymentInfo, other.paymentInfo);
-            ShoppingCart.ensureExactEquals(this.shipInfo, other.shipInfo);
-            ShoppingCart.ensureExactEquals(this.contactMechIdsMap, other.contactMechIdsMap);
-            ShoppingCart.ensureExactEquals(this.orderAttributes, other.orderAttributes);
-            ShoppingCart.ensureExactEquals(this.attributes, other.attributes);
-            ShoppingCart.ensureExactEquals(this.internalOrderNotes, other.internalOrderNotes);
-            ShoppingCart.ensureExactEquals(this.orderNotes, other.orderNotes);
-            ShoppingCart.ensureExactEquals(this.additionalPartyRole, other.additionalPartyRole);
-            ShoppingCart.ensureExactEquals(this.defaultShipAfterDate, other.defaultShipAfterDate);
-            ShoppingCart.ensureExactEquals(this.defaultShipBeforeDate, other.defaultShipBeforeDate);
-            ShoppingCart.ensureExactEquals(this.productPromoUseInfoList, other.productPromoUseInfoList);
-            ShoppingCart.ensureExactEquals(this.productPromoCodes, other.productPromoCodes);
-            ShoppingCart.ensureExactEquals(this.freeShippingProductPromoActions, other.freeShippingProductPromoActions);
-            ShoppingCart.ensureExactEquals(this.desiredAlternateGiftByAction, other.desiredAlternateGiftByAction);
-            ShoppingCart.ensureExactEquals(this.cartCreatedTs, other.cartCreatedTs);
-            ShoppingCart.ensureExactEquals(this.delegator, other.delegator);
-            ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName);
-            ShoppingCart.ensureExactEquals(this.productStoreId, other.productStoreId);
-            ShoppingCart.ensureExactEquals(this.doPromotions, other.doPromotions);
-            ShoppingCart.ensureExactEquals(this.transactionId, other.transactionId);
-            ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId);
-            ShoppingCart.ensureExactEquals(this.webSiteId, other.webSiteId);
-            ShoppingCart.ensureExactEquals(this.terminalId, other.terminalId);
-            ShoppingCart.ensureExactEquals(this.autoOrderShoppingListId, other.autoOrderShoppingListId);
-            ShoppingCart.ensureExactEquals(this.orderPartyId, other.orderPartyId);
-            ShoppingCart.ensureExactEquals(this.placingCustomerPartyId, other.placingCustomerPartyId);
-            ShoppingCart.ensureExactEquals(this.billToCustomerPartyId, other.billToCustomerPartyId);
-            ShoppingCart.ensureExactEquals(this.shipToCustomerPartyId, other.shipToCustomerPartyId);
-            ShoppingCart.ensureExactEquals(this.endUserCustomerPartyId, other.endUserCustomerPartyId);
-            ShoppingCart.ensureExactEquals(this.billFromVendorPartyId, other.billFromVendorPartyId);
-            ShoppingCart.ensureExactEquals(this.shipFromVendorPartyId, other.shipFromVendorPartyId);
-            ShoppingCart.ensureExactEquals(this.supplierAgentPartyId, other.supplierAgentPartyId);
-            ShoppingCart.ensureExactEquals(this.userLogin, other.userLogin);
-            ShoppingCart.ensureExactEquals(this.autoUserLogin, other.autoUserLogin);
-            ShoppingCart.ensureExactEquals(this.locale, other.locale);
-            ShoppingCart.ensureExactEquals(this.currencyUom, other.currencyUom);
-            ShoppingCart.ensureExactEquals(this.holdOrder, other.holdOrder);
-            ShoppingCart.ensureExactEquals(this.orderDate, other.orderDate);
-            ShoppingCart.ensureExactEquals(this.cancelBackOrderDate, other.cancelBackOrderDate);
-            ShoppingCart.ensureExactEquals(this.allowMissingShipEstimates, other.allowMissingShipEstimates);
-        } catch(IllegalStateException e) {
-            throw new IllegalStateException("ShoppingCart field not equal: " + e.getMessage(), e);
-        }
+    protected void ensureExactEquals(ShoppingCart other, List<String> errorMessages) {
+        ShoppingCart.ensureExactEquals(this.orderType, other.orderType, "ShoppingCart.orderType", errorMessages);
+        ShoppingCart.ensureExactEquals(this.channel, other.channel, "ShoppingCart.channel", errorMessages);
+        ShoppingCart.ensureExactEquals(this.poNumber, other.poNumber, "ShoppingCart.poNumber", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderId, other.orderId, "ShoppingCart.orderId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderName, other.orderName, "ShoppingCart.orderName", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderStatusId, other.orderStatusId, "ShoppingCart.orderStatusId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderStatusString, other.orderStatusString, "ShoppingCart.orderStatusString", errorMessages);
+        ShoppingCart.ensureExactEquals(this.firstAttemptOrderId, other.firstAttemptOrderId, "ShoppingCart.firstAttemptOrderId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.externalId, other.externalId, "ShoppingCart.externalId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.internalCode, other.internalCode, "ShoppingCart.internalCode", errorMessages);
+        ShoppingCart.ensureExactEquals(this.billingAccountId, other.billingAccountId, "ShoppingCart.billingAccountId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.billingAccountAmt, other.billingAccountAmt, "ShoppingCart.billingAccountAmt", errorMessages);
+        ShoppingCart.ensureExactEquals(this.agreementId, other.agreementId, "ShoppingCart.agreementId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quoteId, other.quoteId, "ShoppingCart.quoteId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.workEffortId, other.workEffortId, "ShoppingCart.workEffortId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.nextItemSeq, other.nextItemSeq, "ShoppingCart.nextItemSeq", errorMessages);
+        ShoppingCart.ensureExactEquals(this.defaultItemDeliveryDate, other.defaultItemDeliveryDate, "ShoppingCart.defaultItemDeliveryDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.defaultItemComment, other.defaultItemComment, "ShoppingCart.defaultItemComment", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderAdditionalEmails, other.orderAdditionalEmails, "ShoppingCart.orderAdditionalEmails", errorMessages);
+        ShoppingCart.ensureExactEquals(this.viewCartOnAdd, other.viewCartOnAdd, "ShoppingCart.viewCartOnAdd", errorMessages);
+        ShoppingCart.ensureExactEquals(this.readOnlyCart, other.readOnlyCart, "ShoppingCart.readOnlyCart", errorMessages);
+        ShoppingCart.ensureExactEquals(this.lastListRestore, other.lastListRestore, "ShoppingCart.lastListRestore", errorMessages);
+        ShoppingCart.ensureExactEquals(this.autoSaveListId, other.autoSaveListId, "ShoppingCart.autoSaveListId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.adjustments, other.adjustments, "ShoppingCart.adjustments", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderTermSet, other.orderTermSet, "ShoppingCart.orderTermSet", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderTerms, other.orderTerms, "ShoppingCart.orderTerms", errorMessages);
+        ShoppingCart.ensureExactEquals(this.cartLines, other.cartLines, "ShoppingCart.cartLines", errorMessages);
+        ShoppingCart.ensureExactEquals(this.itemGroupByNumberMap, other.itemGroupByNumberMap, "ShoppingCart.itemGroupByNumberMap", errorMessages);
+        ShoppingCart.ensureExactEquals(this.nextGroupNumber, other.nextGroupNumber, "ShoppingCart.nextGroupNumber", errorMessages);
+        ShoppingCart.ensureExactEquals(this.paymentInfo, other.paymentInfo, "ShoppingCart.paymentInfo", errorMessages);
+        ShoppingCart.ensureExactEquals(this.shipInfo, other.shipInfo, "ShoppingCart.shipInfo", errorMessages);
+        ShoppingCart.ensureExactEquals(this.contactMechIdsMap, other.contactMechIdsMap, "ShoppingCart.contactMechIdsMap", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderAttributes, other.orderAttributes, "ShoppingCart.orderAttributes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.attributes, other.attributes, "ShoppingCart.attributes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.internalOrderNotes, other.internalOrderNotes, "ShoppingCart.internalOrderNotes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderNotes, other.orderNotes, "ShoppingCart.orderNotes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.additionalPartyRole, other.additionalPartyRole, "ShoppingCart.additionalPartyRole", errorMessages);
+        ShoppingCart.ensureExactEquals(this.defaultShipAfterDate, other.defaultShipAfterDate, "ShoppingCart.defaultShipAfterDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.defaultShipBeforeDate, other.defaultShipBeforeDate, "ShoppingCart.defaultShipBeforeDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.productPromoUseInfoList, other.productPromoUseInfoList, "ShoppingCart.productPromoUseInfoList", errorMessages);
+        ShoppingCart.ensureExactEquals(this.productPromoCodes, other.productPromoCodes, "ShoppingCart.productPromoCodes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.freeShippingProductPromoActions, other.freeShippingProductPromoActions, "ShoppingCart.freeShippingProductPromoActions", errorMessages);
+        ShoppingCart.ensureExactEquals(this.desiredAlternateGiftByAction, other.desiredAlternateGiftByAction, "ShoppingCart.desiredAlternateGiftByAction", errorMessages);
+        ShoppingCart.ensureExactEquals(this.cartCreatedTs, other.cartCreatedTs, "ShoppingCart.cartCreatedTs", errorMessages);
+        ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCart.delegator", errorMessages);
+        ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName, "ShoppingCart.delegatorName", errorMessages);
+        ShoppingCart.ensureExactEquals(this.productStoreId, other.productStoreId, "ShoppingCart.productStoreId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.doPromotions, other.doPromotions, "ShoppingCart.doPromotions", errorMessages);
+        ShoppingCart.ensureExactEquals(this.transactionId, other.transactionId, "ShoppingCart.transactionId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId, "ShoppingCart.facilityId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.webSiteId, other.webSiteId, "ShoppingCart.webSiteId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.terminalId, other.terminalId, "ShoppingCart.terminalId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.autoOrderShoppingListId, other.autoOrderShoppingListId, "ShoppingCart.autoOrderShoppingListId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderPartyId, other.orderPartyId, "ShoppingCart.orderPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.placingCustomerPartyId, other.placingCustomerPartyId, "ShoppingCart.placingCustomerPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.billToCustomerPartyId, other.billToCustomerPartyId, "ShoppingCart.billToCustomerPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.shipToCustomerPartyId, other.shipToCustomerPartyId, "ShoppingCart.shipToCustomerPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.endUserCustomerPartyId, other.endUserCustomerPartyId, "ShoppingCart.endUserCustomerPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.billFromVendorPartyId, other.billFromVendorPartyId, "ShoppingCart.billFromVendorPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.shipFromVendorPartyId, other.shipFromVendorPartyId, "ShoppingCart.shipFromVendorPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.supplierAgentPartyId, other.supplierAgentPartyId, "ShoppingCart.supplierAgentPartyId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.userLogin, other.userLogin, "ShoppingCart.userLogin", errorMessages);
+        ShoppingCart.ensureExactEquals(this.autoUserLogin, other.autoUserLogin, "ShoppingCart.autoUserLogin", errorMessages);
+        ShoppingCart.ensureExactEquals(this.locale, other.locale, "ShoppingCart.locale", errorMessages);
+        ShoppingCart.ensureExactEquals(this.currencyUom, other.currencyUom, "ShoppingCart.currencyUom", errorMessages);
+        ShoppingCart.ensureExactEquals(this.holdOrder, other.holdOrder, "ShoppingCart.holdOrder", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderDate, other.orderDate, "ShoppingCart.orderDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.cancelBackOrderDate, other.cancelBackOrderDate, "ShoppingCart.cancelBackOrderDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.allowMissingShipEstimates, other.allowMissingShipEstimates, "ShoppingCart.allowMissingShipEstimates", errorMessages);
     }
 
-    static void ensureExactEquals(Object first, Object second) {
+    protected static void ensureExactEquals(Object first, Object second, String fieldName, List<String> errorMessages) { // WARN: subject to change without notice
         if (first == null) {
             if (second != null) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                errorMessages.add("values not equal for " + fieldName + ": " + first + ", " + second);
+                return;
             } else {
                 return;
             }
         }
         if (!first.getClass().equals(second.getClass())) {
-            throw new IllegalStateException("values not equal: " + first + " (" + first.getClass() + "), " 
+            errorMessages.add("values not equal for " + fieldName + ": " + first + " (" + first.getClass() + "), "
                     + second + " (" + second.getClass() + ")");
+            return;
         }
         if (first instanceof ShoppingCartItem) {
-            ((ShoppingCartItem) first).ensureExactEquals((ShoppingCartItem) second);
+            ((ShoppingCartItem) first).ensureExactEquals((ShoppingCartItem) second, errorMessages);
         } else if (first instanceof ShoppingCartItemGroup) {
-            ((ShoppingCartItemGroup) first).ensureExactEquals((ShoppingCartItemGroup) second);
+            ((ShoppingCartItemGroup) first).ensureExactEquals((ShoppingCartItemGroup) second, errorMessages);
         } else if (first instanceof CartPaymentInfo) {
-            ((CartPaymentInfo) first).ensureExactEquals((CartPaymentInfo) second);
+            ((CartPaymentInfo) first).ensureExactEquals((CartPaymentInfo) second, errorMessages);
         } else if (first instanceof CartShipInfo) {
-            ((CartShipInfo) first).ensureExactEquals((CartShipInfo) second);
+            ((CartShipInfo) first).ensureExactEquals((CartShipInfo) second, errorMessages);
         } else if (first instanceof CartShipInfo.CartShipItemInfo) {
-            ((CartShipInfo.CartShipItemInfo) first).ensureExactEquals((CartShipInfo.CartShipItemInfo) second);
+            ((CartShipInfo.CartShipItemInfo) first).ensureExactEquals((CartShipInfo.CartShipItemInfo) second, errorMessages);
         } else if (first instanceof ProductPromoUseInfo) {
-            ((ProductPromoUseInfo) first).ensureExactEquals((ProductPromoUseInfo) second);
+            ((ProductPromoUseInfo) first).ensureExactEquals((ProductPromoUseInfo) second, errorMessages);
         } else if (first instanceof ProductConfigWrapper) {
-            ((ProductConfigWrapper) first).ensureExactEquals((ProductConfigWrapper) second);
+            ((ProductConfigWrapper) first).ensureExactEquals((ProductConfigWrapper) second, errorMessages);
         } else if (first instanceof GenericValue) {
             if (!first.equals(second)) {
-                throw new IllegalStateException("GenericValues not equal: " + first + ", " + second);
+                errorMessages.add("GenericValues not equal for " + fieldName + ": " + first + ", " + second);
             }
         } else if (first instanceof Map) {
             Map<?, ?> firstMap = (Map<?, ?>) first;
             Map<?, ?> secondMap = (Map<?, ?>) second;
             if (firstMap.size() != secondMap.size()) {
-                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+                errorMessages.add("Maps not equal for " + fieldName + ": " + first + ", " + second);
+                return;
             }
             boolean comparable = true;
             for(Map.Entry<?, ?> entry : firstMap.entrySet()) {
@@ -635,29 +640,30 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                     comparable = false;
                     continue;
                 }
-                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()));
+                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()), fieldName, errorMessages);
             }
             if (comparable) {
                 if (!first.equals(second)) { // WARN: This may break on new fields
-                    throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+                    errorMessages.add("Maps not equal for " + fieldName + ": " + first + ", " + second);
                 }
             }
         } else if (first instanceof List) {
             List<?> firstList = (List<?>) first;
             List<?> secondList = (List<?>) second;
             if (firstList.size() != secondList.size()) {
-                throw new IllegalStateException("Lists not equal: " + first + ", " + second);
+                errorMessages.add("Lists not equal for " + fieldName + ": " + first + ", " + second);
+                return;
             }
             for(int i=0; i<firstList.size(); i++) {
-                ensureExactEquals(firstList.get(i), secondList.get(i));
+                ensureExactEquals(firstList.get(i), secondList.get(i), fieldName, errorMessages);
             }
         } else if (first.getClass().isArray()) {
             if (!Arrays.equals((Object[]) first, (Object[]) second)) {
-                throw new IllegalStateException("Arrays not equal: " + first + ", " + second);
+                errorMessages.add("Arrays not equal for " + fieldName + ": " + first + ", " + second);
             }
         } else {
             if (!first.equals(second)) {
-                throw new IllegalStateException("Values not equal: " + first + ", " + second);
+                errorMessages.add("Values not equal for " + fieldName + ": " + first + ", " + second);
             }
         }
     }
@@ -5077,14 +5083,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
          * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(ShoppingCartItemGroup other) {
-            try {
-                ShoppingCart.ensureExactEquals(this.groupNumber, other.groupNumber);
-                ShoppingCart.ensureExactEquals(this.groupName, other.groupName);
-                ShoppingCart.ensureExactEquals(this.parentGroup, other.parentGroup);
-            } catch(IllegalStateException e) {
-                throw new IllegalStateException("ShoppingCartItemGroup field not equal: " + e.getMessage(), e);
-            }
+        protected void ensureExactEquals(ShoppingCartItemGroup other, List<String> errorMessages) {
+            ShoppingCart.ensureExactEquals(this.groupNumber, other.groupNumber, "ShoppingCartItemGroup.groupNumber", errorMessages);
+            ShoppingCart.ensureExactEquals(this.groupName, other.groupName, "ShoppingCartItemGroup.groupName", errorMessages);
+            ShoppingCart.ensureExactEquals(this.parentGroup, other.parentGroup, "ShoppingCartItemGroup.parentGroup", errorMessages);
         }
 
         public String getGroupNumber() {
@@ -5192,16 +5194,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
          * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(ProductPromoUseInfo other) {
-            try {
-                ShoppingCart.ensureExactEquals(this.productPromoId, other.productPromoId);
-                ShoppingCart.ensureExactEquals(this.productPromoCodeId, other.productPromoCodeId);
-                ShoppingCart.ensureExactEquals(this.totalDiscountAmount, other.totalDiscountAmount);
-                ShoppingCart.ensureExactEquals(this.quantityLeftInActions, other.quantityLeftInActions);
-                ShoppingCart.ensureExactEquals(this.usageInfoMap, other.usageInfoMap);
-            } catch(IllegalStateException e) {
-                throw new IllegalStateException("ProductPromoUseInfo field not equal: " + e.getMessage(), e);
-            }
+        protected void ensureExactEquals(ProductPromoUseInfo other, List<String> errorMessages) {
+            ShoppingCart.ensureExactEquals(this.productPromoId, other.productPromoId, "ProductPromoUseInfo.productPromoId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.productPromoCodeId, other.productPromoCodeId, "ProductPromoUseInfo.productPromoCodeId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.totalDiscountAmount, other.totalDiscountAmount, "ProductPromoUseInfo.totalDiscountAmount", errorMessages);
+            ShoppingCart.ensureExactEquals(this.quantityLeftInActions, other.quantityLeftInActions, "ProductPromoUseInfo.quantityLeftInActions", errorMessages);
+            ShoppingCart.ensureExactEquals(this.usageInfoMap, other.usageInfoMap, "ProductPromoUseInfo.usageInfoMap", errorMessages);
         }
 
         public String getProductPromoId() { return this.productPromoId; }
@@ -5331,30 +5329,30 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
          * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(CartShipInfo other) {
+        protected void ensureExactEquals(CartShipInfo other, List<String> errorMessages) {
             try {
-                ShoppingCart.ensureExactEquals(this.shipItemInfo, other.shipItemInfo);
-                ShoppingCart.ensureExactEquals(this.shipTaxAdj, other.shipTaxAdj);
-                ShoppingCart.ensureExactEquals(this.orderTypeId, other.orderTypeId);
-                ShoppingCart.ensureExactEquals(this.internalContactMechId, other.internalContactMechId);
-                ShoppingCart.ensureExactEquals(this.telecomContactMechId, other.telecomContactMechId);
-                ShoppingCart.ensureExactEquals(this.shipmentMethodTypeId, other.shipmentMethodTypeId);
-                ShoppingCart.ensureExactEquals(this.supplierPartyId, other.supplierPartyId);
-                ShoppingCart.ensureExactEquals(this.carrierRoleTypeId, other.carrierRoleTypeId);
-                ShoppingCart.ensureExactEquals(this.carrierPartyId, other.carrierPartyId);
-                ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId);
-                ShoppingCart.ensureExactEquals(this.giftMessage, other.giftMessage);
-                ShoppingCart.ensureExactEquals(this.shippingInstructions, other.shippingInstructions);
-                ShoppingCart.ensureExactEquals(this.maySplit, other.maySplit);
-                ShoppingCart.ensureExactEquals(this.isGift, other.isGift);
-                ShoppingCart.ensureExactEquals(this.shipEstimate, other.shipEstimate);
-                ShoppingCart.ensureExactEquals(this.shipBeforeDate, other.shipBeforeDate);
-                ShoppingCart.ensureExactEquals(this.shipAfterDate, other.shipAfterDate);
-                ShoppingCart.ensureExactEquals(this.shipGroupSeqId, other.shipGroupSeqId);
-                ShoppingCart.ensureExactEquals(this.associatedShipGroupSeqId, other.associatedShipGroupSeqId);
-                ShoppingCart.ensureExactEquals(this.vendorPartyId, other.vendorPartyId);
-                ShoppingCart.ensureExactEquals(this.productStoreShipMethId, other.productStoreShipMethId);
-                ShoppingCart.ensureExactEquals(this.attributes, other.attributes);
+                ShoppingCart.ensureExactEquals(this.shipItemInfo, other.shipItemInfo, "CartShipInfo.shipItemInfo", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipTaxAdj, other.shipTaxAdj, "CartShipInfo.shipTaxAdj", errorMessages);
+                ShoppingCart.ensureExactEquals(this.orderTypeId, other.orderTypeId, "CartShipInfo.orderTypeId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.internalContactMechId, other.internalContactMechId, "CartShipInfo.internalContactMechId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.telecomContactMechId, other.telecomContactMechId, "CartShipInfo.telecomContactMechId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipmentMethodTypeId, other.shipmentMethodTypeId, "CartShipInfo.shipmentMethodTypeId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.supplierPartyId, other.supplierPartyId, "CartShipInfo.supplierPartyId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.carrierRoleTypeId, other.carrierRoleTypeId, "CartShipInfo.carrierRoleTypeId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.carrierPartyId, other.carrierPartyId, "CartShipInfo.carrierPartyId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.facilityId, other.facilityId, "CartShipInfo.facilityId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.giftMessage, other.giftMessage, "CartShipInfo.giftMessage", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shippingInstructions, other.shippingInstructions, "CartShipInfo.shippingInstructions", errorMessages);
+                ShoppingCart.ensureExactEquals(this.maySplit, other.maySplit, "CartShipInfo.maySplit", errorMessages);
+                ShoppingCart.ensureExactEquals(this.isGift, other.isGift, "CartShipInfo.isGift", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipEstimate, other.shipEstimate, "CartShipInfo.shipEstimate", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipBeforeDate, other.shipBeforeDate, "CartShipInfo.shipBeforeDate", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipAfterDate, other.shipAfterDate, "CartShipInfo.shipAfterDate", errorMessages);
+                ShoppingCart.ensureExactEquals(this.shipGroupSeqId, other.shipGroupSeqId, "CartShipInfo.shipGroupSeqId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.associatedShipGroupSeqId, other.associatedShipGroupSeqId, "CartShipInfo.associatedShipGroupSeqId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.vendorPartyId, other.vendorPartyId, "CartShipInfo.vendorPartyId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.productStoreShipMethId, other.productStoreShipMethId, "CartShipInfo.productStoreShipMethId", errorMessages);
+                ShoppingCart.ensureExactEquals(this.attributes, other.attributes, "CartShipInfo.attributes", errorMessages);
             } catch(IllegalStateException e) {
                 throw new IllegalStateException("CartShipInfo field not equal: " + e.getMessage(), e);
             }
@@ -5674,11 +5672,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
              * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
              * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
              */
-            void ensureExactEquals(CartShipItemInfo other) {
+            protected void ensureExactEquals(CartShipItemInfo other, List<String> errorMessages) {
                 try {
-                    ShoppingCart.ensureExactEquals(this.itemTaxAdj, other.itemTaxAdj);
-                    ShoppingCart.ensureExactEquals(this.item, other.item);
-                    ShoppingCart.ensureExactEquals(this.quantity, other.quantity);
+                    ShoppingCart.ensureExactEquals(this.itemTaxAdj, other.itemTaxAdj, "CartShipItemInfo.itemTaxAdj", errorMessages);
+                    ShoppingCart.ensureExactEquals(this.item, other.item, "CartShipItemInfo.item", errorMessages);
+                    ShoppingCart.ensureExactEquals(this.quantity, other.quantity, "CartShipItemInfo.quantity", errorMessages);
                 } catch(IllegalStateException e) {
                     throw new IllegalStateException("CartShipItemInfo field not equal: " + e.getMessage(), e);
                 }
@@ -5764,25 +5762,21 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
          * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify {@link #copy}.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(CartPaymentInfo other) {
-            try {
-                ShoppingCart.ensureExactEquals(this.paymentMethodTypeId, other.paymentMethodTypeId);
-                ShoppingCart.ensureExactEquals(this.paymentMethodId, other.paymentMethodId);
-                ShoppingCart.ensureExactEquals(this.finAccountId, other.finAccountId);
-                ShoppingCart.ensureExactEquals(this.securityCode, other.securityCode);
-                ShoppingCart.ensureExactEquals(this.postalCode, other.postalCode);
-                ShoppingCart.ensureExactEquals(this.refNum, other.refNum);
-                ShoppingCart.ensureExactEquals(this.track2, other.track2);
-                ShoppingCart.ensureExactEquals(this.partyId, other.partyId);
-                ShoppingCart.ensureExactEquals(this.amount, other.amount);
-                ShoppingCart.ensureExactEquals(this.singleUse, other.singleUse);
-                ShoppingCart.ensureExactEquals(this.isPresent, other.isPresent);
-                ShoppingCart.ensureExactEquals(this.isSwiped, other.isSwiped);
-                ShoppingCart.ensureExactEquals(this.overflow, other.overflow);
-                ShoppingCart.ensureExactEquals(this.origAmount, other.origAmount);
-            } catch(IllegalStateException e) {
-                throw new IllegalStateException("CartPaymentInfo field not equal: " + e.getMessage(), e);
-            }
+        protected void ensureExactEquals(CartPaymentInfo other, List<String> errorMessages) {
+            ShoppingCart.ensureExactEquals(this.paymentMethodTypeId, other.paymentMethodTypeId, "CartPaymentInfo.paymentMethodTypeId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.paymentMethodId, other.paymentMethodId, "CartPaymentInfo.paymentMethodId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.finAccountId, other.finAccountId, "CartPaymentInfo.finAccountId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.securityCode, other.securityCode, "CartPaymentInfo.securityCode", errorMessages);
+            ShoppingCart.ensureExactEquals(this.postalCode, other.postalCode, "CartPaymentInfo.postalCode", errorMessages);
+            ShoppingCart.ensureExactEquals(this.refNum, other.refNum, "CartPaymentInfo.refNum", errorMessages);
+            ShoppingCart.ensureExactEquals(this.track2, other.track2, "CartPaymentInfo.track2", errorMessages);
+            ShoppingCart.ensureExactEquals(this.partyId, other.partyId, "CartPaymentInfo.partyId", errorMessages);
+            ShoppingCart.ensureExactEquals(this.amount, other.amount, "CartPaymentInfo.amount", errorMessages);
+            ShoppingCart.ensureExactEquals(this.singleUse, other.singleUse, "CartPaymentInfo.singleUse", errorMessages);
+            ShoppingCart.ensureExactEquals(this.isPresent, other.isPresent, "CartPaymentInfo.isPresent", errorMessages);
+            ShoppingCart.ensureExactEquals(this.isSwiped, other.isSwiped, "CartPaymentInfo.isSwiped", errorMessages);
+            ShoppingCart.ensureExactEquals(this.overflow, other.overflow, "CartPaymentInfo.overflow", errorMessages);
+            ShoppingCart.ensureExactEquals(this.origAmount, other.origAmount, "CartPaymentInfo.origAmount", errorMessages);
         }
         
         public GenericValue getValueObject(Delegator delegator) {

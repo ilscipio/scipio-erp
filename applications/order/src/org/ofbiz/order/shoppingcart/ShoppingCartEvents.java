@@ -56,6 +56,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+import org.ofbiz.order.shoppinglist.ShoppingListWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -71,6 +72,7 @@ import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestVarScopes;
+import org.ofbiz.webapp.event.EventUtil;
 
 /**
  * Shopping cart events.
@@ -1010,6 +1012,32 @@ public class ShoppingCartEvents {
         cartUpdate.commit(cart); // SCIPIO
         }
         return "success";
+    }
+
+    public static String modifyCartAndGetCartData(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        return getShoppingCartDataAfterEvent(request, response, modifyCart(request, response));
+    }
+
+    /**
+     * Gets shopping cart data after an event without losing the original event response or error messages (SCIPIO).
+     */
+    public static String getShoppingCartDataAfterEvent(HttpServletRequest request, HttpServletResponse response, String eventResponse) { // SCIPIO
+        Map<String, Object> modifyCartMsgs = EventUtil.getEventErrorAttributesAsMap(request);
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "getShoppingCartData"); // FIXME: EventUtil will be replaced later
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        String cartDataResult = null;
+        try {
+            cartDataResult = EventUtil.runServiceAsEvent(request, response, "getShoppingCartData", servCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "getShoppingCartDataAfterEvent exception: " + e.toString(), module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+            request.removeAttribute("_ERROR_MESSAGE_LIST_");
+            cartDataResult = "error";
+        }
+        if ("error".equals(eventResponse) || !"error".equals(cartDataResult)) { // NOTE: modifyCart result messages takes precedence
+            EventUtil.setEventErrorAttributesFromMap(request, modifyCartMsgs);
+        }
+        return "error".equals(cartDataResult) ? cartDataResult : eventResponse;
     }
 
     /** Empty the shopping cart. */

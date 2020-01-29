@@ -2028,6 +2028,78 @@ public final class UtilHttp {
         }
     }
 
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMap(HttpServletRequest request, Map<String, Object> outMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            outMap.put(attrName, request.getAttribute(attrName));
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMap(HttpServletRequest request, Map<String, Object> outMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            outMap.put(attrName, request.getAttribute(attrName));
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMapNoNull(HttpServletRequest request, Map<String, Object> outMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            Object attrValue = request.getAttribute(attrName);
+            if (attrValue != null) {
+                outMap.put(attrName, attrValue);
+            }
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMapNoNull(HttpServletRequest request, Map<String, Object> outMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            Object attrValue = request.getAttribute(attrName);
+            if (attrValue != null) {
+                outMap.put(attrName, attrValue);
+            }
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from named map keys, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            request.setAttribute(attrName, attrMap.get(attrName));
+        }
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from named map keys, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            request.setAttribute(attrName, attrMap.get(attrName));
+        }
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from all map entries, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap) {
+        for(Map.Entry<String, ?> entry : attrMap.entrySet()) {
+            request.setAttribute(entry.getKey(), entry.getValue());
+        }
+    }
 
     /**
      * SCIPIO: Returns an object which can be used for full session synchronization (never null).

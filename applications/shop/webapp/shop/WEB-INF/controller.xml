@@ -1670,9 +1670,14 @@ code package.
 
     <request-map uri="cartItemQtyUpdate">
         <security https="true" auth="false"/>
+        <!-- SCIPIO: Loses the error due to getCartData response
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="request" value="getCartData"/>
         <response name="error" type="request" value="getCartData"/>
+        -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCartAndGetCartData"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     <request-map uri="silentAddPromoCode">
         <security https="true" auth="false"/>

@@ -62,13 +62,15 @@ public final class EventUtil {
 
     private static final Set<String> eventMsgAttrNames = UtilMisc.unmodifiableHashSet(
             EVENT_MESSAGE_LIST, EVENT_MESSAGE);
-
     private static final Set<String> errorMsgAttrNames = UtilMisc.unmodifiableHashSet(
             ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, ERROR_MESSAGE);
-
     private static final Set<String> eventErrorMsgAttrNames = UtilMisc.unmodifiableHashSet(
             ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, ERROR_MESSAGE,
             EVENT_MESSAGE_LIST, EVENT_MESSAGE);
+
+    private static final List<String> eventMsgAttrNamesList = Collections.unmodifiableList(new ArrayList<>(eventMsgAttrNames));
+    private static final List<String> errorMsgAttrNamesList = Collections.unmodifiableList(new ArrayList<>(errorMsgAttrNames));
+    private static final List<String> eventErrorMsgAttrNamesList = Collections.unmodifiableList(new ArrayList<>(eventErrorMsgAttrNames));
 
     private EventUtil() {
     }
@@ -81,8 +83,28 @@ public final class EventUtil {
         return eventErrorMsgAttrNames;
     }
 
+    /**
+     * Returns the standard event regular (success) AND error message attribute names as a list:
+     *  _ERROR_MESSAGE_LIST_, _EVENT_MESSAGE_LIST_, etc.
+     */
+    public static List<String> getEventErrorMsgAttrNamesList() {
+        return eventErrorMsgAttrNamesList;
+    }
+
     public static boolean isEventErrorMsgAttrName(String attributeName) {
         return eventErrorMsgAttrNames.contains(attributeName);
+    }
+
+    public static Map<String, Object> getEventErrorAttributesAsMap(HttpServletRequest request, Map<String, Object> outMap) {
+        return UtilHttp.requestAttributesToMap(request, outMap, eventErrorMsgAttrNamesList);
+    }
+
+    public static Map<String, Object> getEventErrorAttributesAsMap(HttpServletRequest request) {
+        return getEventErrorAttributesAsMap(request, new HashMap<>());
+    }
+
+    public static void setEventErrorAttributesFromMap(HttpServletRequest request, Map<String, ?> outMap) {
+        UtilHttp.setRequestAttributesFromMap(request, outMap, eventErrorMsgAttrNamesList);
     }
 
     /**
@@ -93,8 +115,28 @@ public final class EventUtil {
         return eventMsgAttrNames;
     }
 
+    /**
+     * Returns the standard event message attribute names as a list:
+     *  _EVENT_MESSAGE_LIST_, etc.
+     */
+    public static List<String> getEventMsgAttrNamesList() {
+        return eventMsgAttrNamesList;
+    }
+
     public static boolean isEventMsgAttrName(String attributeName) {
         return eventMsgAttrNames.contains(attributeName);
+    }
+
+    public static Map<String, Object> getEventAttributesAsMap(HttpServletRequest request, Map<String, Object> outMap) {
+        return UtilHttp.requestAttributesToMap(request, outMap, eventMsgAttrNamesList);
+    }
+
+    public static Map<String, Object> getEventAttributesAsMap(HttpServletRequest request) {
+        return getEventAttributesAsMap(request, new HashMap<>());
+    }
+
+    public static void setEventAttributesFromMap(HttpServletRequest request, Map<String, ?> outMap) {
+        UtilHttp.setRequestAttributesFromMap(request, outMap, eventMsgAttrNamesList);
     }
 
     /**
@@ -105,8 +147,28 @@ public final class EventUtil {
         return errorMsgAttrNames;
     }
 
+    /**
+     * Returns the standard error message attribute names as a list:
+     *  _ERROR_MESSAGE_LIST_, etc.
+     */
+    public static List<String> getErrorMsgAttrNamesList() {
+        return errorMsgAttrNamesList;
+    }
+
     public static boolean isErrorMsgAttrName(String attributeName) {
         return errorMsgAttrNames.contains(attributeName);
+    }
+
+    public static Map<String, Object> getErrorAttributesAsMap(HttpServletRequest request, Map<String, Object> outMap) {
+        return UtilHttp.requestAttributesToMap(request, outMap, errorMsgAttrNamesList);
+    }
+
+    public static Map<String, Object> getErrorAttributesAsMap(HttpServletRequest request) {
+        return getErrorAttributesAsMap(request, new HashMap<>());
+    }
+
+    public static void setErrorAttributesFromMap(HttpServletRequest request, Map<String, ?> outMap) {
+        UtilHttp.setRequestAttributesFromMap(request, outMap, errorMsgAttrNamesList);
     }
 
     public static boolean hasError(HttpServletRequest request) {
@@ -136,6 +198,8 @@ public final class EventUtil {
         }
         return eventMessageList;
     }
+
+
 
     /**
      * Adds a message to the request event message list attribute.

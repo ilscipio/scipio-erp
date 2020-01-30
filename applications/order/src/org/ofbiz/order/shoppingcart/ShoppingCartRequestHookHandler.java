@@ -19,29 +19,52 @@ import java.util.Map;
 public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private static final ShoppingCartRequestHookHandler INSTANCE = new ShoppingCartRequestHookHandler();
+
     static void register() {
-        RequestHandlerHooks.subscribe(new ShoppingCartRequestHookHandler());
+        RequestHandlerHooks.subscribe(INSTANCE);
+    }
+
+    static ShoppingCartRequestHookHandler getInstance() {
+        return INSTANCE;
     }
 
     // maps the original cart to a copy of that cart
     private final ThreadLocal<Map<ShoppingCart, ShoppingCart>> origCartsLocal = new ThreadLocal<>();
 
     private void recordCarts(HttpServletRequest request) {
+        ShoppingCart requestCart = (ShoppingCart) request.getAttribute("shoppingCart");
+        HttpSession session = request.getSession(false);
+        ShoppingCart sessionCart = (session != null) ? (ShoppingCart) session.getAttribute("shoppingCart") : null;
+        boolean applicableRequestCart = (requestCart != null && !ShoppingCart.class.equals(requestCart.getClass())); // Must be web cart
+        boolean applicableSessionCart = (sessionCart != null && !ShoppingCart.class.equals(sessionCart.getClass())); // Must be web cart
+        if (!applicableRequestCart && !applicableSessionCart) {
+            return;
+        }
         Map<ShoppingCart, ShoppingCart> origCarts = origCartsLocal.get();
         if (origCarts == null) {
             origCarts = new HashMap<>();
         }
-        ShoppingCart cart = (ShoppingCart) request.getAttribute("shoppingCart");
-        if (cart != null && !origCarts.containsKey(cart) && !ShoppingCart.class.equals(cart.getClass())) {
-            origCarts.put(cart, cart.copy(true));
+        if (applicableRequestCart && !origCarts.containsKey(requestCart)) {
+            origCarts.put(requestCart, requestCart.copy(true));
         }
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            cart = (ShoppingCart) session.getAttribute("shoppingCart");
-            if (cart != null && !origCarts.containsKey(cart) && !ShoppingCart.class.equals(cart.getClass())) {
-                origCarts.put(cart, cart.copy(true));
-            }
+        if (applicableSessionCart && !origCarts.containsKey(sessionCart)) {
+            origCarts.put(sessionCart, sessionCart.copy(true));
         }
+        origCartsLocal.set(origCarts);
+    }
+
+    void recordCart(ShoppingCart cart) {
+        if (cart == null || ShoppingCart.class.equals(cart.getClass())) { // Must be web cart
+            return;
+        }
+        Map<ShoppingCart, ShoppingCart> origCarts = origCartsLocal.get();
+        if (origCarts == null) {
+            origCarts = new HashMap<>();
+        } else if (origCarts.containsKey(cart)) {
+            return;
+        }
+        origCarts.put(cart, cart.copy(true));
         origCartsLocal.set(origCarts);
     }
 
@@ -54,7 +77,7 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
             List<String> errorMessages = new ArrayList<>(0);
             entry.getKey().ensureExactEquals(entry.getValue(), errorMessages);
             if (errorMessages.size() > 0) {
-                Debug.logWarning("ShoppingCart " + entry.getKey() + " was modified in place during request, please use a CartUpdate section: "
+                Debug.logWarning("ShoppingCart " + entry.getKey() + " was modified in-place during request, please use a CartUpdate section: "
                         + errorMessages, module);
             }
         }

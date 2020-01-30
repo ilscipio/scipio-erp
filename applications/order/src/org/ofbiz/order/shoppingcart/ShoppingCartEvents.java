@@ -1304,6 +1304,9 @@ public class ShoppingCartEvents {
                 return cart;
             }
         }
+        if (ShoppingCart.verboseOn() && modifyScopesFilter.session()) {
+            ShoppingCartRequestHookHandler.getInstance().recordCart(cart);
+        }
         RequestVarScopes.REQUEST_AND_SESSION.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", cart);
         if (modifyScopesFilter.session()) {
             markCartChanged(request);

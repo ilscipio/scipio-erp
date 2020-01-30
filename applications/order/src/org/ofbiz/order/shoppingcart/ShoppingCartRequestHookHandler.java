@@ -87,23 +87,26 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
     }
 
     @Override
-    public void beginAllDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {
+    public void beginDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
         recordCarts(request);
     }
 
     @Override
-    public void postPreprocessorEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {
+    public void postPreprocessorEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
         recordCarts(request);
     }
 
     @Override
-    public void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {
+    public void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
         recordCarts(request);
     }
 
     @Override
-    public void endAllDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {
-        verifyCarts(request);
-        origCartsLocal.remove();
+    public void endDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
+        // DEV NOTE: This is called in a finally block by RequestHandler, so it will always run (unless something corrupts java extremely badly)
+        if (requestState.getNestedLevel() <= 1) {
+            verifyCarts(request);
+            origCartsLocal.remove();
+        }
     }
 }

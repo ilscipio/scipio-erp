@@ -27,9 +27,9 @@ public abstract class RequestHandlerHooks {
     }
 
     public interface HookHandler {
-        default void beginAllDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {};
-        default void postPreprocessorEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {};
-        default void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {};
-        default void endAllDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler) {};
+        default void beginDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {};
+        default void postPreprocessorEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {};
+        default void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {};
+        default void endDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {};
     }
 }

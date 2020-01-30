@@ -245,10 +245,6 @@ public class ControlServlet extends HttpServlet {
         // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
         request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, Boolean.TRUE);
 
-        for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
-            hh.beginAllDoRequest(request, response, requestHandler);
-        }
-
         String errorPage = null;
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
@@ -285,10 +281,6 @@ public class ControlServlet extends HttpServlet {
             Debug.logError(e, "Error in request handler: ", module);
             request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
             errorPage = requestHandler.getDefaultErrorPage(request);
-        } finally {
-            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
-                hh.endAllDoRequest(request, response, requestHandler);
-            }
         }
 
         // Forward to the JSP

@@ -221,7 +221,38 @@ public class RequestHandler {
 
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
             GenericValue userLogin, Delegator delegator) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+        // SCIPIO: Refactored for RequestState and easier better try/finally
+        // DEV NOTE: Internally the implementation must call doRequest having RequestState, not the public overloads
+        doRequest(request, response, chain, userLogin, delegator, new RequestState());
+    }
 
+    public static class RequestState {
+        private int nestedLevel = 0;
+
+        public int getNestedLevel() { return nestedLevel; }
+
+        public boolean isTopLevel() { return (nestedLevel <= 1); } // (should be == 1 but just to be safe)
+    }
+
+    private void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
+                           GenericValue userLogin, Delegator delegator, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+        // SCIPIO: extra wrapping to increase the nested level
+        requestState.nestedLevel++;
+        try {
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.beginDoRequest(request, response, this, requestState);
+            }
+            doRequestCore(request, response, chain, userLogin, delegator, requestState);
+        } finally {
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.endDoRequest(request, response, this, requestState);
+            }
+            requestState.nestedLevel--;
+        }
+    }
+
+    private void doRequestCore(HttpServletRequest request, HttpServletResponse response, String chain,
+                               GenericValue userLogin, Delegator delegator, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         final boolean throwRequestHandlerExceptionOnMissingLocalRequest = EntityUtilProperties.propertyValueEqualsIgnoreCase(
                 "requestHandler", "throwRequestHandlerExceptionOnMissingLocalRequest", "Y", delegator);
         long startTime = System.currentTimeMillis();
@@ -229,7 +260,7 @@ public class RequestHandler {
 
         // get the controllerConfig once for this method so we don't have to get it over and over inside the method
         ConfigXMLReader.ControllerConfig controllerConfig = this.getControllerConfig();
-        
+
         if (controllerConfig == null) { // SCIPIO: 2018-11-08: Handle error more cleanly
             throw new RequestHandlerException("Could not process controller request"
                     + " for webapp [" + request.getContextPath() + "] because its controller failed to load ("
@@ -516,7 +547,7 @@ public class RequestHandler {
                 throw new RequestHandlerException(e);
             }
             for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
-                hh.postPreprocessorEvents(request, response, this);
+                hh.postPreprocessorEvents(request, response, this, requestState);
             }
         }
 
@@ -799,7 +830,7 @@ public class RequestHandler {
         if ("request".equals(nextRequestResponse.type)) {
             // chained request
             Debug.logInfo("[RequestHandler.doRequest]: Response is a chained request." + showSessionId(request), module);
-            doRequest(request, response, nextRequestResponseValue, userLogin, delegator);
+            doRequest(request, response, nextRequestResponseValue, userLogin, delegator, requestState); // SCIPIO: doRequestImpl, recursive
         } else {
             // ======== handle views ========
 
@@ -821,7 +852,7 @@ public class RequestHandler {
             }
 
             for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
-                hh.postEvents(request, response, this);
+                hh.postEvents(request, response, this, requestState);
             }
 
             // SCIPIO: 2019-03-06: Cleanup event messages (e.g. the default service event success message).
@@ -905,7 +936,7 @@ public class RequestHandler {
                     callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
                 } else {
                     // SCIPIO: New type: request-redirect-last
-                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
+                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: "
                             + nextRequestResponseValue.isEmpty() + showSessionId(request), module);
                     // SCIPIO: Sanity check
                     if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
@@ -930,7 +961,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST == nextRequestResponse.getTypeEnum()) { //} else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -963,11 +994,11 @@ public class RequestHandler {
                                 || "_EVENT_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_LIST_".equals(key))) {
                             // SCIPIO: New RequestAttrPolicy callbacks
                             //request.setAttribute(key, urlParamEntry.getValue());
-                            attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams); 
+                            attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams);
                         }
                     }
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -987,7 +1018,7 @@ public class RequestHandler {
                  if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
                      viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_HOME == nextRequestResponse.getTypeEnum()) { //} else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -1008,7 +1039,7 @@ public class RequestHandler {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.NONE == nextRequestResponse.getTypeEnum()) { //} else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + showSessionId(request), module);
@@ -1323,7 +1354,7 @@ public class RequestHandler {
         }
     }
 
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1550,7 +1581,9 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
             }
-            doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
+            // SCIPIO: TODO: REVIEW: Although this is technically a separate doRequest invocation, we'll call doRequestImpl here for technical reasons
+            //doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
+            doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"), requestState);
         }
 
         // before getting the view generation time flush the response output to get more consistent results

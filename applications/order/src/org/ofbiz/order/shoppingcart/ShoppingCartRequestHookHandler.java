@@ -77,7 +77,8 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
             List<String> errorMessages = new ArrayList<>(0);
             entry.getKey().ensureExactEquals(entry.getValue(), errorMessages);
             if (errorMessages.size() > 0) {
-                Debug.logWarning("ShoppingCart " + entry.getKey() + " was modified in-place during request, please use a CartUpdate section: "
+                Debug.logWarning("ShoppingCart " + entry.getKey() + " modified in-place during request ["
+                        + request.getPathInfo() + "]; please wrap in CartUpdate section: "
                         + errorMessages, module);
             }
         }

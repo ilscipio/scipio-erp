@@ -1,6 +1,7 @@
 package org.ofbiz.order.shoppingcart;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerHooks;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private static final int LOG_LEVEL = Debug.getLevelFromString(UtilProperties.getPropertyValue("order", "shoppingcart.debug.cartImmutabilityCheck.logLevel", "warning"));
     private static final ShoppingCartRequestHookHandler INSTANCE = new ShoppingCartRequestHookHandler();
 
     static void register() {
@@ -77,7 +79,7 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
             List<String> errorMessages = new ArrayList<>(0);
             entry.getKey().ensureExactEquals(entry.getValue(), errorMessages);
             if (errorMessages.size() > 0) {
-                Debug.logWarning("ShoppingCart " + entry.getKey() + " modified in-place during request ["
+                Debug.log(LOG_LEVEL, null, "ShoppingCart " + entry.getKey() + " modified in-place during request ["
                         + request.getPathInfo() + "]; please wrap in CartUpdate section: "
                         + errorMessages, module);
             }

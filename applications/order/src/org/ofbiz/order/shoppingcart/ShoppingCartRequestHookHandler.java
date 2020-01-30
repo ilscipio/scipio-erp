@@ -105,8 +105,11 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
     public void endDoRequest(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
         // DEV NOTE: This is called in a finally block by RequestHandler, so it will always run (unless something corrupts java extremely badly)
         if (requestState.getNestedLevel() <= 1) {
-            verifyCarts(request);
-            origCartsLocal.remove();
+            try {
+                verifyCarts(request);
+            } finally {
+                origCartsLocal.remove();
+            }
         }
     }
 }

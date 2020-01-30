@@ -602,6 +602,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             } else {
                 return;
             }
+        } else if (second == null) {
+            errorMessages.add("values not equal for " + fieldName + ": " + first + ", " + second);
+            return;
         }
         if (!first.getClass().equals(second.getClass())) {
             errorMessages.add("values not equal for " + fieldName + ": " + first + " (" + first.getClass() + "), "

@@ -98,12 +98,12 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
 
     @Override
     public void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
-        recordCarts(request);
         try {
             verifyCarts(request, "post-events");
         } catch(Throwable t) {
             Debug.logError(t, "Unexpected error in verifyCarts", module);
         }
+        recordCarts(request);
     }
 
     @Override

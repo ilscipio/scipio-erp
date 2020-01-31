@@ -445,4 +445,8 @@ public class CartUpdate implements AutoCloseable {
             //this.cartWasChanged = cartWasChanged;
         }
     }
+
+    public static boolean isCartCopiesEnabled() {
+        return CART_COPIES_ENABLED;
+    }
 }

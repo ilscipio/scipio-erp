@@ -15,6 +15,9 @@ public abstract class RequestHandlerHooks {
     private static volatile List<HookHandler> hookHandlers = Collections.emptyList();
 
     public static void subscribe(HookHandler hookHandler) {
+        if (hookHandlers.contains(hookHandler)) {
+            return;
+        }
         synchronized(RequestHandlerHooks.class) {
             List<HookHandler> hookHandlers = new ArrayList<>(RequestHandlerHooks.hookHandlers);
             hookHandlers.add(hookHandler);

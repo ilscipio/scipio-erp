@@ -17,17 +17,25 @@ import java.util.Map;
  * SCIPIO: INTERNAL helper class for developer use - client code should not use at this time! Subject to change frequently
  * or may be removed at later date.
  */
-public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookHandler {
+public class ShoppingCartChangeVerifier implements RequestHandlerHooks.HookHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final int LOG_LEVEL = Debug.getLevelFromString(UtilProperties.getPropertyValue("order", "shoppingcart.debug.cartImmutabilityCheck.logLevel", "warning"));
-    private static final ShoppingCartRequestHookHandler INSTANCE = new ShoppingCartRequestHookHandler();
+    private static final ShoppingCartChangeVerifier INSTANCE = new ShoppingCartChangeVerifier();
 
     static void register() {
         RequestHandlerHooks.subscribe(INSTANCE);
     }
 
-    static ShoppingCartRequestHookHandler getInstance() {
+    public static void record(HttpServletRequest request) {
+        getInstance().recordCarts(request);
+    }
+
+    public static void verify(HttpServletRequest request, String eventName) {
+        getInstance().verifyCarts(request, eventName);
+    }
+
+    static ShoppingCartChangeVerifier getInstance() {
         return INSTANCE;
     }
 

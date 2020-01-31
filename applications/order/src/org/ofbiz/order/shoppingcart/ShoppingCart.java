@@ -114,8 +114,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("order", "shoppingcart.debug", false); // SCIPIO
 
     static { // SCIPIO
-        if (ShoppingCart.verboseOn()) {
-            ShoppingCartRequestHookHandler.register();
+        if (ShoppingCart.verboseOn() && CartUpdate.isCartCopiesEnabled()) {
+            ShoppingCartChangeVerifier.register();
         }
     }
 

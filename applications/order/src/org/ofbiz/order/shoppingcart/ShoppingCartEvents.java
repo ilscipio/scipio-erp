@@ -2313,6 +2313,11 @@ public class ShoppingCartEvents {
             }
         }
 
+        // SCIPIO: Set webSiteId if applicable (by default, do NOT set it here - it is done by setOrderCurrencyAgreementShipDatesForOrderEntry; but screen may request it here instead)
+        if (UtilMisc.booleanValueVersatile(request.getParameter("initCartWebSiteId"), false)) {
+            setCartWebSiteIdForOrderEntry(request, response, cart);
+        }
+
         if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderAProductStoreMustBeSelectedForASalesOrder", locale));
             cart.clear();
@@ -2434,8 +2439,7 @@ public class ShoppingCartEvents {
         }
         return "success";
     }
-
-
+    
     public static String bulkAddProducts(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2575,7 +2579,6 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-
         String agreementId = request.getParameter("agreementId");
         String currencyUomId = request.getParameter("currencyUomId");
         String workEffortId = request.getParameter("workEffortId");
@@ -2671,14 +2674,39 @@ public class ShoppingCartEvents {
                 return result;
             }
 
-            // SCIPIO: Set webSiteId if applicable
-            String cartWebSiteId = request.getParameter("cartWebSiteId");
-            if (cartWebSiteId != null) {
-                // TODO?: Verify website is valid (not a real security concern in backend, for now)
-                cart.setWebSiteId(cartWebSiteId.isEmpty() ? null : cartWebSiteId);
+            // SCIPIO: Set webSiteId if applicable (by default, set it here)
+            if (UtilMisc.booleanValueVersatile(request.getParameter("setCartWebSiteId"), true)) {
+                setCartWebSiteIdForOrderEntry(request, response, cart);
             }
 
             cartUpdate.commit(cart); // SCIPIO
+        }
+        return "success";
+    }
+
+    public static String setCartWebSiteIdForOrderEntry(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+            String result = setCartWebSiteIdForOrderEntry(request, response, cart);
+            cartUpdate.commit(cart);
+            return result;
+        }
+    }
+
+    public static String setCartWebSiteIdForOrderEntry(HttpServletRequest request, HttpServletResponse response, ShoppingCart cart) { // SCIPIO
+        String cartWebSiteId = request.getParameter("cartWebSiteId");
+        if (cartWebSiteId != null) { // NOTE: May be empty string, which means explicit none (don't do default)
+            // TODO?: Verify website is valid (not a real security concern in backend, for now)
+            cart.setWebSiteId(cartWebSiteId.isEmpty() ? null : cartWebSiteId);
+        } else {
+            // SCIPIO: If cartWebSiteId not set as an option and this is a sales order, by default we'll use the default webSiteId for the order
+            boolean useDefaultCartWebSiteId = UtilMisc.booleanValueVersatile(request.getParameter("useDefaultCartWebSiteId"), "SALES_ORDER".equals(cart.getOrderType()));
+            if (useDefaultCartWebSiteId) {
+                cartWebSiteId = ProductStoreWorker.getStoreDefaultWebSiteId((Delegator) request.getAttribute("delegator"), cart.getProductStoreId(), false);
+                cart.setWebSiteId(cartWebSiteId);
+            } else {
+                cart.setWebSiteId(null);
+            }
         }
         return "success";
     }

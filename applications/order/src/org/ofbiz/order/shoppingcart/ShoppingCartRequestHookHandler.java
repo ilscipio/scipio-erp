@@ -70,7 +70,7 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
         origCartsLocal.set(origCarts);
     }
 
-    private void verifyCarts(HttpServletRequest request) {
+    private void verifyCarts(HttpServletRequest request, String eventName) {
         Map<ShoppingCart, ShoppingCart> origCarts = origCartsLocal.get();
         if (origCarts == null) {
             return;
@@ -79,7 +79,7 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
             List<String> errorMessages = new ArrayList<>(0);
             entry.getKey().ensureExactEquals(entry.getValue(), errorMessages);
             if (errorMessages.size() > 0) {
-                Debug.log(LOG_LEVEL, null, "ShoppingCart " + entry.getKey() + " modified in-place during request ["
+                Debug.log(LOG_LEVEL, null, eventName + ": ShoppingCart " + entry.getKey() + " modified in-place during request ["
                         + request.getPathInfo() + "]; please wrap in CartUpdate section: "
                         + errorMessages, module);
             }
@@ -99,6 +99,11 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
     @Override
     public void postEvents(HttpServletRequest request, HttpServletResponse response, RequestHandler requestHandler, RequestHandler.RequestState requestState) {
         recordCarts(request);
+        try {
+            verifyCarts(request, "post-events");
+        } catch(Throwable t) {
+            Debug.logError(t, "Unexpected error in verifyCarts", module);
+        }
     }
 
     @Override
@@ -106,7 +111,9 @@ public class ShoppingCartRequestHookHandler implements RequestHandlerHooks.HookH
         // DEV NOTE: This is called in a finally block by RequestHandler, so it will always run (unless something corrupts java extremely badly)
         if (requestState.getNestedLevel() <= 1) {
             try {
-                verifyCarts(request);
+                verifyCarts(request, "post-request");
+            } catch(Throwable t) {
+                Debug.logError(t, "Unexpected error in verifyCarts", module);
             } finally {
                 origCartsLocal.remove();
             }

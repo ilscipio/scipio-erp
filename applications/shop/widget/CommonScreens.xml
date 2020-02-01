@@ -417,7 +417,9 @@ code package.
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="activeMainMenuItem" value="login"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
-                <set field="shoppingCart" value="${groovy:sessionAttributes.shoppingCart}"/>
+                <script lang="groovy"><![CDATA[
+                    context.shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObjectIfExists(request);
+                ]]></script>
                 <set field="checkoutType" value="full" />
                 <set field="activeStep" value="shippingAddress" />
             </actions>

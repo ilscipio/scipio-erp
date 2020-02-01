@@ -22,14 +22,18 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.order.order.*;
+import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 
-cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
-context.cart = cart;
+//cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
+//context.cart = cart;
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO: TODO: REVIEW: This belongs in events; screens should not trigger cart modifications
+cart = cartUpdate.getCartForUpdate();
 
 orderItems = cart.makeOrderItems();
 orderAdjustments = cart.makeAllAdjustments();
@@ -178,3 +182,9 @@ context.orderEmailList = cart.getOrderEmailList();
 
 // SCIPIO: exact payment amounts for all pay types
 context.paymentMethodAmountMap = cart.getPaymentAmountsByIdOrType();
+
+cart = cartUpdate.commit(cart);
+context.cart = cart;
+} finally {
+	cartUpdate.close();
+}

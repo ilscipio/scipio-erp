@@ -47,9 +47,13 @@ context.productId = productId;
 CatalogWorker.getCurrentCatalogId(request);
 
 // Get the Cart and Prepare Size
-shoppingCart = ShoppingCartEvents.getCartObject(request);
+//shoppingCart = ShoppingCartEvents.getCartObject(request);
+//context.shoppingCart = shoppingCart;
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO: TODO: REVIEW: This belongs in events; screens should not trigger cart modifications
+shoppingCart = cartUpdate.getCartForUpdate();
+
 context.shoppingCartSize = shoppingCart.size();
-context.shoppingCart = shoppingCart;
 context.currencyUomId = shoppingCart.getCurrency();
 context.orderType = shoppingCart.getOrderType();
 
@@ -131,3 +135,8 @@ context.purchaseOrderItemTypeList = purchaseOrderItemTypeList;
 supplierPartyId = shoppingCart.getSupplierPartyId();
 context.supplierPartyId = supplierPartyId;
 
+shoppingCart = cartUpdate.commit(shoppingCart);
+context.shoppingCart = shoppingCart;
+} finally {
+	cartUpdate.close();
+}

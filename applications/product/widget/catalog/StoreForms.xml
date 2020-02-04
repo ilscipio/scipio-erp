@@ -26,6 +26,9 @@ code package.
         <field name="inventoryFacilityId" sort-field="true">
             <display-entity entity-name="Facility" description="${facilityName}" key-field-name="facilityId"/>
         </field>
+        <field name="defaultPriority" sort-field="true">
+            <display/>
+        </field>
     </form>
     
     <form name="FindProductStoreRole" type="single" target="FindProductStoreRoles" default-entity-name="ProductStoreRole">

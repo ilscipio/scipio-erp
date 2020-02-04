@@ -1071,7 +1071,7 @@ code package.
         <attribute name="giftMessage" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createAlsoBoughtProductAssocs" engine="java" auth="true" 
-            location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs">
+            location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs" hideResultInLog="true" log="quiet">
         <description>
             Cycles through all newly created sales orders and creates ProductAssoc records (of type ALSO_BOUGHT) for products 
             that were purchased together.  If a ProductAssoc record already exists then the quantity field is incremented by one.
@@ -1083,7 +1083,7 @@ code package.
         <attribute name="orderEntryFromDateTime" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="processAllOrders" mode="IN" type="Boolean" optional="true"/>
     </service>
-    <service name="createAlsoBoughtProductAssocsForOrder" engine="java" auth="true"
+    <service name="createAlsoBoughtProductAssocsForOrder" engine="java" auth="true" hideResultInLog="true" log="quiet"
             location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocsForOrder">
         <description>
             Creates ProductAssoc records (of type ALSO_BOUGHT) for products that were purchased together in the Order.  If a ProductAssoc record already exists then the quantity field is incremented by one.  If a variant product has

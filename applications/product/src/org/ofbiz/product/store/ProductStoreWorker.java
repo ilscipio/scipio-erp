@@ -737,37 +737,39 @@ public final class ProductStoreWorker {
         return defaultProductStoreEmailScreenLocation.get(emailType);
     }
 
+    private static final List<String> CONTENT_REF_SORT_FIELDS = UtilMisc.toList("defaultPriority", "isContentReference DESC");
+
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or null if none.
+     * <p>
+     * NOTE: 2020-02-03: For compatibility reasons, isContentReference="N" is treated the same as unset.
      */
     public static GenericValue getContentReferenceStore(List<GenericValue> productStores) {
-        if (productStores == null) {
+        if (UtilValidate.isEmpty(productStores)) {
             return null;
         }
-        for(GenericValue productStore : productStores) {
-            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
-                return productStore;
-            }
-        }
-        return null;
+        return findBestContentReferenceStore(productStores);
     }
 
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or the first in list (with a warning) if none.
      * Prints warning if no content reference and multiple stores with different defaultLocaleString.
+     * <p>
+     * NOTE: 2020-02-03: For compatibility reasons, isContentReference="N" is treated the same as unset.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores, String multiWarningInfo) {
-        if (productStores == null || productStores.size() == 0) {
+        if (UtilValidate.isEmpty(productStores)) {
             return null;
         }
-        for(GenericValue productStore : productStores) {
-            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
-                return productStore;
-            }
+        GenericValue productStore = findBestContentReferenceStore(productStores);
+        if (productStore != null) {
+            return productStore;
         }
-        GenericValue productStore = productStores.get(0);
+        productStore = productStores.get(0);
         if (productStores.size() > 1 && multiWarningInfo != null) {
-            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\""
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify defaultPriority or isContentReference=\"Y\""
                     + "; defaultLocaleString and other content settings may be ambiguous; selecting first store ("
                     + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
                     + ") as content reference", module);
@@ -776,11 +778,41 @@ public final class ProductStoreWorker {
     }
 
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or the first in list (no warning) if none.
      * Does not show warning if no content reference and multiple stores.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores) {
         return getContentReferenceStoreOrFirst(productStores, null);
+    }
+
+    private static GenericValue findBestContentReferenceStore(List<GenericValue> productStores) {
+        GenericValue result = null;
+        Long bestDefaultPriority = null;
+        Boolean bestIsContentReference = null;
+        // Find the isContentReference record with the lowest defaultPriority, or otherwise the store with simply the lowest defaultPriority
+        for(GenericValue productStore : productStores) {
+            Long defaultPriority = productStore.getLong("defaultPriority");
+            Boolean isContentReference = productStore.getBoolean("isContentReference");
+            if (Boolean.TRUE.equals(isContentReference)) {
+                if (result == null || !Boolean.TRUE.equals(bestIsContentReference)) {
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                } else if (defaultPriority != null && (bestDefaultPriority == null || defaultPriority < bestDefaultPriority)) { // prioritize the isContentReference="Y" records
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                }
+            } else if (!Boolean.TRUE.equals(bestIsContentReference)) {
+                if (defaultPriority != null && (bestDefaultPriority == null || defaultPriority < bestDefaultPriority)) { // prioritize the isContentReference="[N]" records
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                }
+            }
+        }
+        return result;
     }
 
     /**

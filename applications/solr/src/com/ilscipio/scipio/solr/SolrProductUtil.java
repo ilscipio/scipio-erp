@@ -499,6 +499,7 @@ public abstract class SolrProductUtil {
                 catalogs.addAll(relatedCatalogs);
                 productStores.addAll(CatalogWorker.getProductStoresForCatalogIds(delegator, relatedCatalogs, moment, true, useCache));
             }
+            productStores = EntityUtil.orderBy(productStores, UtilMisc.toList("defaultPriority"));
 
             List<String> productStoreIdList = UtilMisc.getMapValuesForKeyOrNewList(productStores, "productStoreId");
             targetCtx.put("productStore", productStoreIdList);

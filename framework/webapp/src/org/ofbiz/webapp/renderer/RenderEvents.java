@@ -13,8 +13,8 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerException;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
+import org.ofbiz.webapp.event.JsonEventUtil;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
@@ -151,7 +151,7 @@ public abstract class RenderEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
             return "error";
         } finally {
-            ViewAsJsonUtil.addDefaultRenderOutAttrNames(request);
+            JsonEventUtil.addDefaultOutAttrNames(request);
         }
 
         return "success";

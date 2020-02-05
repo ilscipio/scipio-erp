@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
+import org.ofbiz.webapp.event.JsonEventUtil;
 
 /**
  * Common Services
@@ -69,20 +69,8 @@ public class CommonEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final String[] ignoreAttrs = new String[] { // Attributes removed for security reason; _ERROR_MESSAGE_ is kept
-        "javax.servlet.request.key_size",
-        "_CONTEXT_ROOT_",
-        "_FORWARDED_FROM_SERVLET_",
-        "javax.servlet.request.ssl_session",
-        "javax.servlet.request.ssl_session_id",
-        "multiPartMap",
-        "javax.servlet.request.cipher_suite",
-        "targetRequestUri",
-        "_SERVER_ROOT_URL_",
-        "_CONTROL_PATH_",
-        "thisRequestUri",
-        "org.apache.tomcat.util.net.secure_protocol_version"
-    };
+    // SCIPIO: NOTE: ignoreAttrs moved to JsonEventUtil.DEFAULT_IGNORE_ATTR
+    //private static final String[] ignoreAttrs = new String[] { // Attributes removed for security reason; _ERROR_MESSAGE_ is kept
 
     private static final UtilCache<String, Map<String, String>> appletSessions = UtilCache.createUtilCache("AppletSessions", 0, 600000, true);
 
@@ -282,14 +270,21 @@ public class CommonEvents {
 
     public static String jsonResponseFromRequestAttributes(HttpServletRequest request, HttpServletResponse response) {
         // pull out the service response from the request attribute
-
-        Map<String, Object> attrMap = UtilHttp.getJSONAttributeMap(request);
-
-        for (String ignoreAttr : ignoreAttrs) {
-            if (attrMap.containsKey(ignoreAttr)) {
-                attrMap.remove(ignoreAttr);
-            }
+        Map<String, Object> attrMap = JsonEventUtil.collectOutAttributes(request); // SCIPIO: Refactored
+        try {
+            JSON json = JSON.from(attrMap);
+            writeJSONtoResponse(json, request, response);
+        } catch (IOException e) {
+            return "error";
         }
+        return "success";
+    }
+
+    /**
+     * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that excludes more request attributes, more appropriate for frontend.
+     */
+    public static String jsonResponseFromRequestAttributesRestricted(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> attrMap = JsonEventUtil.collectOutAttributesRestricted(request);
         try {
             JSON json = JSON.from(attrMap);
             writeJSONtoResponse(json, request, response);
@@ -306,7 +301,7 @@ public class CommonEvents {
      * NOTE: this is important for security reasons.
      */
     public static String jsonResponseFromRequestAttributesExplicit(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> attrMap = ViewAsJsonUtil.collectRenderOutAttributes(request);
+        Map<String, Object> attrMap = JsonEventUtil.collectOutAttributesExplicit(request);
         try {
             JSON json = JSON.from(attrMap);
             writeJSONtoResponse(json, request, response);

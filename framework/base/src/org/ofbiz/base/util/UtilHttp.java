@@ -487,26 +487,75 @@ public final class UtilHttp {
     }
 
     /**
+     * Create a map from a HttpRequest (attributes) object used in JSON requests, with attribute filter (SCIPIO).
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getJSONAttributeMap(HttpServletRequest request, AttributeFilter attributeFilter) {
+        // SCIPIO: delegating
+        return transformJSONAttributeMap(getAttributeMap(request), attributeFilter);
+    }
+
+    /**
+     * Create a map from a HttpRequest (attributes) object used in JSON requests, with attribute filter (SCIPIO).
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getJSONAttributeMap(Map<String, Object> returnMap, HttpServletRequest request, AttributeFilter attributeFilter) {
+        return transformJSONAttributeMap(returnMap, getAttributeMap(request), attributeFilter);
+    }
+
+    /**
      * SCIPIO: factored out from getJSONAttributeMap.
      * Added 2017-05-01.
      */
-    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
-        Map<String, Object> returnMap = new HashMap<>();
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> returnMap, Map<String, Object> attrMap, AttributeFilter attributeFilter) {
+        if (attributeFilter == null) {
+            attributeFilter = DefaultAttributeFilter.INSTANCE;
+        }
         for (Map.Entry<String, Object> entry : attrMap.entrySet()) {
             String key = entry.getKey();
             Object val = entry.getValue();
+            Boolean include = attributeFilter.includeAttribute(key, val);
+            if (Boolean.FALSE.equals(include)) {
+                continue;
+            }
             if (val instanceof java.sql.Timestamp) {
                 val = val.toString();
             }
-            if (val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
+            if (Boolean.TRUE.equals(include) || val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Adding attribute to JSON output: " + key, module);
                 }
                 returnMap.put(key, val);
             }
         }
-
         return returnMap;
+    }
+
+    /**
+     * SCIPIO: factored out from getJSONAttributeMap.
+     * Added 2017-05-01.
+     */
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap, AttributeFilter attributeFilter) {
+        return transformJSONAttributeMap(new HashMap<>(), attrMap, attributeFilter);
+    }
+
+    /**
+     * SCIPIO: factored out from getJSONAttributeMap.
+     * Added 2017-05-01.
+     */
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
+        return transformJSONAttributeMap(attrMap, null);
+    }
+
+    public interface AttributeFilter { // SCIPIO
+        /** Return null for default behavior (apply other filters), false to prevent include, true to force include. */
+        Boolean includeAttribute(String key, Object value);
+    }
+
+    public static class DefaultAttributeFilter implements AttributeFilter { // SCIPIO
+        public static final DefaultAttributeFilter INSTANCE = new DefaultAttributeFilter();
+        @Override
+        public Boolean includeAttribute(String key, Object value) { return null; }
     }
 
     /**

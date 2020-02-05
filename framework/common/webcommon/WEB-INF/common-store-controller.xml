@@ -225,7 +225,13 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
     <request-map uri="json">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributesRestricted"/>
+        <response name="success" type="none"/>
+    </request-map>
+    <!-- SCIPIO: version of "json" that will only output attributes specifically requested in "scipioOutParams" map or "scipioOutAttrNames" list -->
+    <request-map uri="jsonExplicit">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributesExplicit"/>
         <response name="success" type="none"/>
     </request-map>
 

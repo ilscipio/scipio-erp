@@ -80,6 +80,7 @@ import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.EventHandlerWrapper;
 import org.ofbiz.webapp.event.EventUtil;
+import org.ofbiz.webapp.event.JsonEventUtil;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
@@ -612,7 +613,7 @@ public class RequestHandler {
                 }
             }
             // SCIPIO: we have to mark a flag to say if was logged in for viewAsJson
-            ViewAsJsonUtil.setRenderOutParam(request, ViewAsJsonUtil.LOGGEDIN_OUTPARAM, "success".equalsIgnoreCase(checkLoginReturnString));
+            JsonEventUtil.setOutParam(request, ViewAsJsonUtil.LOGGEDIN_OUTPARAM, "success".equalsIgnoreCase(checkLoginReturnString));
         }
 
         // after security check but before running the event, see if a post-login redirect has completed and we have data from the pre-login request form to use now
@@ -1573,7 +1574,7 @@ public class RequestHandler {
 
         if (viewAsJson) {
             // SCIPIO: NOTE: we go to handler URI so potentially a webapp can tweak json output behavior.
-            ViewAsJsonUtil.addDefaultRenderOutAttrNames(req);
+            JsonEventUtil.addDefaultOutAttrNames(req);
             String jsonRequestUri;
             try {
                 jsonRequestUri = ViewAsJsonUtil.getViewAsJsonRequestUri(req, viewAsJsonConfig);

@@ -1686,6 +1686,16 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Calls out.addAll for every passed collection on the outCollection.
+     */
+    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O>... collections) {
+        for(Collection<? extends O> collection : collections) {
+            outCollection.addAll(collection);
+        }
+        return outCollection;
+    }
+
+    /**
      * SCIPIO: Returns a new List containing the enumeration's elements.
      */
     public static <T> List<T> toList(Enumeration<T> enumeration) {

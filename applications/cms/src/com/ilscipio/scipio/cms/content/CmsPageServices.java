@@ -378,6 +378,38 @@ public abstract class CmsPageServices {
         return result;
     }
 
+    public static Map<String, Object> unpublishPage(DispatchContext dctx, Map<String, ?> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Delegator delegator = dctx.getDelegator();
+        try {
+            String pageId = (String) context.get("pageId");
+            CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
+            page.setActiveVersion(null);
+
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("active", "N");
+            Collection<String> webSiteIds = page.getPrimaryProcessMappingsWebSiteIds();
+            if (webSiteIds!= null && webSiteIds.size() > 0) {
+                for(String webSiteId : webSiteIds) {
+                    fields.put("webSiteId", webSiteId);
+                    page.setPrimaryProcessMappingFields(fields, true);
+                }
+            } else {
+                Debug.logInfo("Cms: unpublishPage: Page '" + pageId
+                        + "' appears to have no primary process mapping webSiteIds"
+                        + " - no mappings to disable", module);
+            }
+
+            page.store();
+            result.put("pageId", pageId);
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, "Error unpublishing page (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
+        }
+        return result;
+    }
+
     public static Map<String, Object> updatePageScript(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();

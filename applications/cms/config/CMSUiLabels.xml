@@ -995,9 +995,12 @@
     <property key="ImageViewPortLength">
         <value xml:lang="en">Viewport length</value>
     </property>
-
     <property key="CmsPageTxTimeoutInfo">
         <value xml:lang="de">Das Transaktionszeitlimit in Sekunden. Kann auf 0 gesetzt werden, um die Transaktion zu deaktivieren, oder -1 oder leer, um den Standardwert zu verwenden (normalerweise 60 Sekunden). Hinweis: Die Seiteneinstellung überschreibt die Vorlageneinstellung.</value>
         <value xml:lang="en">The transaction timeout, in seconds (s). May be set to 0 to disable transaction, or -1 or empty to use the default (usually 60 seconds). Note: The Page setting overrides the Template setting.</value>
+    </property>
+    <property key="CmsUnpublish">
+        <value xml:lang="de">Veröffentlichung aufheben</value>
+        <value xml:lang="en">Unpublish</value>
     </property>
 </resource>

@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.cms.data;
 
+import com.ilscipio.scipio.cms.CmsUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -112,6 +113,8 @@ public abstract class CmsObjectCache<T extends CmsObject> {
     public abstract void put(String key, T value);
 
     public abstract void remove(String key);
+
+    public abstract void removeByFilter(UtilCache.CacheEntryFilter<String, T> entryFilter);
 
     public static int getDefaultExpiration() {
         return EXPIRATION_TIME_DEFAULT;
@@ -232,8 +235,16 @@ public abstract class CmsObjectCache<T extends CmsObject> {
             cache.remove(key);
         }
 
+        @Override
+        public void removeByFilter(UtilCache.CacheEntryFilter<String, T> entryFilter) {
+            cache.removeByFilter(new UtilCache.CacheEntryFilter<String, SimpleCacheEntry<T>>() {
+                @Override
+                public boolean filter(String key, SimpleCacheEntry<T> value) {
+                    return entryFilter.filter(key, (value != null) ? value.getValue() : null);
+                }
+            });
+        }
     }
-
 
     /**
      * Doesn't cache at all - use this to simplify the implementing methods' logic.
@@ -261,6 +272,28 @@ public abstract class CmsObjectCache<T extends CmsObject> {
         public void remove(String key) {
         }
 
+        @Override
+        public void removeByFilter(UtilCache.CacheEntryFilter<String, T> entryFilter) {
+        }
+    }
+
+    public static class CmsDataObjectIdCacheEntryFilter<String, T extends CmsDataObject> implements UtilCache.CacheEntryFilter<String, T> {
+        private final String id;
+        public CmsDataObjectIdCacheEntryFilter(String id) {
+            this.id = id;
+        }
+        @Override
+        public boolean filter(String key, T value) {
+            if (CmsUtil.verboseOn()) {
+                boolean result = (value != null && id.equals(value.getId()));
+                if (result) {
+                    Debug.logInfo("Filtering value '" + value + "' from cache for id '" + id + "'", module);
+                }
+                return result;
+            } else {
+                return (value != null && id.equals(value.getId()));
+            }
+        }
     }
 
 }

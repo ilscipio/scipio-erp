@@ -50,7 +50,7 @@
 
 <#-- This corresponds to: ServiceForms.xml#runService 
     TODO: REVIEW: parameter handling -->
-<#macro serviceInitFields serviceName srvInput=true srvReadOnly=false params={}>
+<#macro serviceInitFields serviceName srvInput=true srvReadOnly=false params={} defaultSyncMode="sync">
   <#if srvInput>
     <@field type="input" name="SERVICE_NAME" label=uiLabelMap.WebtoolsService value=serviceName readonly=srvReadOnly/>
   <#else>
@@ -58,8 +58,15 @@
   </#if>
     <@field type="input" name="POOL_NAME" label=uiLabelMap.WebtoolsPool value=(params.POOL_NAME!)/>
     <@field type="select" name="_RUN_SYNC_" label=uiLabelMap.WebtoolsMode>
-      <#local syncVal = raw(params._RUN_SYNC_!)> 
-      <option value="Y"<#if "Y" == syncVal> selected="selected"</#if>>Sync</option>
-      <option value="ASYNC"<#if "ASYNC" == syncVal> selected="selected"</#if>>Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})</option>
+      <#local syncMode = raw(params._RUN_SYNC_!)>
+      <#if syncMode == "Y" || syncMode == "sync" || syncMode == "SYNC">
+        <#local syncMode = "sync">
+      <#elseif syncMode == "async" || syncMode == "ASYNC">
+        <#local syncMode = "async">
+      <#else>
+        <#local syncMode = raw(defaultSyncMode)>
+      </#if>
+      <option value="Y"<#if "sync" == syncMode> selected="selected"</#if>>Sync</option>
+      <option value="ASYNC"<#if "async" == syncMode> selected="selected"</#if>>Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})</option>
     </@field>
 </#macro>

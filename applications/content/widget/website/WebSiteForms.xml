@@ -230,6 +230,12 @@ code package.
     <form name="CreateWebsiteSEO" type="single" target="generateMissingSeoUrlForWebsite" title=""
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="webSiteId"><hidden/></field>
+        <field name="serviceMode" title="${uiLabelMap.CommonMode}">
+            <drop-down no-current-selected-key="sync">
+                <option key="sync" description="Sync"/>
+                <option key="async-onetime" description="Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})"/>
+            </drop-down>
+        </field>
         <field name="prodCatalogId" title="${uiLabelMap.Catalog}">
             <drop-down>
                 <option key="all" description="All"/>
@@ -311,6 +317,12 @@ code package.
     <!-- SCIPIO: new -->
     <form name="CreateWebsiteSitemaps" type="single" target="generateSitemapFilesForWebsite">
         <field name="webSiteId"><hidden/></field>
+        <field name="serviceMode" title="${uiLabelMap.CommonMode}">
+            <drop-down no-current-selected-key="sync">
+                <option key="sync" description="Sync"/>
+                <option key="async-onetime" description="Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})"/>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
@@ -318,6 +330,12 @@ code package.
     <form name="RemoveWebsiteSEO" type="single" target="removeSeoUrlForWebsite" title=""
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="webSiteId"><hidden/></field>
+        <field name="serviceMode" title="${uiLabelMap.CommonMode}">
+            <drop-down no-current-selected-key="sync">
+                <option key="sync" description="Sync"/>
+                <option key="async-onetime" description="Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})"/>
+            </drop-down>
+        </field>
         <field name="prodCatalogId" title="${uiLabelMap.Catalog}">
             <drop-down>
                 <option key="all" description="All"/>

@@ -668,6 +668,54 @@ under the License.
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="metric"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="property">
+                    <xs:annotation>
+                        <xs:documentation>
+                            SCIPIO: Defines arbitrary name-value properties that can be used by the event handler depending on
+                            the support by its type (without need to modify the *.xsd) and may even be used by custom handlers
+                            and events. Currently these are load-time properties (not runtime) and currently don't natively support EL expressions
+                            (to facilitate static analysis). TODO: Support runtime properties with EL support
+
+                            Scipio-supported event attributes, by event type:
+                            * service:
+                              * mode-parameter = ((String), default: (disabled)) Name of a request attribute or parameter
+                                                 that will override the default service invocation mode set for the "path" attribute.
+                                                 The parameter supports values: sync, async, async-persist, async-onetime
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="type" default="String">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="PlainString" />
+                                    <xs:enumeration value="String" />
+                                    <xs:enumeration value="BigDecimal" />
+                                    <xs:enumeration value="Double" />
+                                    <xs:enumeration value="Float" />
+                                    <xs:enumeration value="Long" />
+                                    <xs:enumeration value="Integer" />
+                                    <xs:enumeration value="Date" />
+                                    <xs:enumeration value="Time" />
+                                    <xs:enumeration value="Timestamp" />
+                                    <xs:enumeration value="Boolean" />
+                                    <xs:enumeration value="Object" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <!-- TODO: future
+                        <xs:attribute name="scope" default="static">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="static" />
+                                    <xs:enumeration value="runtime" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        -->
+                    </xs:complexType>
+                </xs:element>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="synchronized"/><!-- SCIPIO: 2018-11-19 -->
                 <xs:element minOccurs="0" maxOccurs="1" name="script"><!-- SCIPIO: 2019-02-05 -->
                     <xs:annotation>
@@ -718,6 +766,9 @@ under the License.
                 <xs:documentation>
                     The path to the class or XML file containing this event.
                     Leave empty for services, except if you want to run it as a job, then use "async"
+                    SCIPIO: 2020-02-07: This now supports explicit: async-persist, async-onetime
+                    NOTE: These new modes will print a default success message, like sync invocations, unlike
+                    "async" (due to compatibility issues).
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

@@ -7337,6 +7337,19 @@
         <value xml:lang="zh">其它</value>
         <value xml:lang="zh-TW">其他</value>
     </property>
+    <property key="CommonMode">
+        <value xml:lang="de">Modus</value>
+        <value xml:lang="en">Mode</value>
+        <value xml:lang="fr">Mode</value>
+        <value xml:lang="it">Modo</value>
+        <value xml:lang="ja">モード</value>
+        <value xml:lang="pt">Modo</value>
+        <value xml:lang="ro">Mod</value>
+        <value xml:lang="th">โหมด</value>
+        <value xml:lang="vi">Chế độ</value>
+        <value xml:lang="zh">方法</value>
+        <value xml:lang="zh-TW">方法</value>
+    </property>
     <property key="CommonModifiedBy">
         <value xml:lang="de">Geändert am</value>
         <value xml:lang="en">Modified By</value>
@@ -8660,6 +8673,16 @@
         <value xml:lang="zh">在</value>
         <value xml:lang="zh-CN">在</value>
         <value xml:lang="zh-TW">在</value>
+    </property>
+    <property key="CommonOneTimeExecNotPersisted">
+        <value xml:lang="en">One-time execution, not persisted</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
+        <value xml:lang="fr">Exécution unique, non persistante</value>
+    </property>
+    <property key="CommonOneTimeExecNotPersistedResultsInLog">
+        <value xml:lang="en">One-time execution, not persisted, results in log</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten, ergibt log</value>
+        <value xml:lang="fr">Exécution unique, non persistante, résultats dans le journal</value>
     </property>
     <property key="CommonOnly">
         <value xml:lang="ar">سوى</value>
@@ -11493,6 +11516,18 @@
         <value xml:lang="en">Operation has been executed successfully</value>
         <value xml:lang="es">La operación se ha ejecutado con éxito.</value>
         <value xml:lang="fr">L'opération a été exécutée avec succès</value>
+    </property>
+    <property key="CommonServiceSuccessMessageAsyncPersist">
+        <value xml:lang="de">Service erfolgreich ausgeführt (async)</value>
+        <value xml:lang="en">Operation has been executed successfully (async)</value>
+        <value xml:lang="es">La operación se ha ejecutado con éxito. (async)</value>
+        <value xml:lang="fr">L'opération a été exécutée avec succès (async)</value>
+    </property>
+    <property key="CommonServiceSuccessMessageAsyncOnetime">
+        <value xml:lang="de">Service erfolgreich ausgeführt (async)</value>
+        <value xml:lang="en">Operation has been executed successfully (async)</value>
+        <value xml:lang="es">La operación se ha ejecutado con éxito. (async)</value>
+        <value xml:lang="fr">L'opération a été exécutée avec succès (async)</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
         <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل الدخول</value>

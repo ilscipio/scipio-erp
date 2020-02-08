@@ -42,6 +42,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -68,6 +69,10 @@ public class ServiceEventHandler implements EventHandler {
 
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
+    // SCIPIO: new options
+    public static final String ASYNC_PERSIST = "async-persist";
+    public static final String ASYNC_ONETIME = "async-onetime";
+    public static final Set<String> SERVICE_MODES = UtilMisc.unmodifiableLinkedHashSet(SYNC, ASYNC, ASYNC_PERSIST, ASYNC_ONETIME);
 
     /**
      * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
@@ -97,6 +102,16 @@ public class ServiceEventHandler implements EventHandler {
             mode = SYNC;
         } else {
             mode = event.path;
+        }
+
+        // SCIPIO: support mode-parameter
+        Map<String, Object> eventProperties = event.getProperties(requestMap, request, response, null);
+        String modeParameter = (String) eventProperties.get("mode-parameter");
+        if (UtilValidate.isNotEmpty(modeParameter)) {
+            Object modeParameterValue = UtilHttp.getRequestAttrParam(request, modeParameter);
+            if (SERVICE_MODES.contains(modeParameterValue)) {
+                mode = (String) modeParameterValue;
+            }
         }
 
         // make sure we have a defined service to call
@@ -367,6 +382,18 @@ public class ServiceEventHandler implements EventHandler {
 
         if (result == null) {
             responseString = ModelService.RESPOND_SUCCESS;
+
+            // SCIPIO: TODO: REVIEW: Due to compatibility issues, we can only set message here if explicit -onetime or -persist
+            //          was requested...
+            Object asyncSuccessMsgPropertyRef = eventProperties.get("default-success-property");
+            if (!(asyncSuccessMsgPropertyRef instanceof String)) {
+                asyncSuccessMsgPropertyRef = null;
+            }
+            if (ASYNC_ONETIME.equals(mode)) {
+                EventUtil.setDefaultSuccessMessageForServiceAsync(request, locale, false, (String) asyncSuccessMsgPropertyRef);
+            } else if (ASYNC_PERSIST.equals(mode)) {
+                EventUtil.setDefaultSuccessMessageForServiceAsync(request, locale, true, (String) asyncSuccessMsgPropertyRef);
+            }
         } else {
 
             if (!result.containsKey(ModelService.RESPONSE_MESSAGE)) {
@@ -405,6 +432,10 @@ public class ServiceEventHandler implements EventHandler {
         Map<String, Object> result = null;
         if (ASYNC.equalsIgnoreCase(mode)) {
             dispatcher.runAsync(serviceName, serviceContext);
+        } else if (ASYNC_PERSIST.equalsIgnoreCase(mode)) {
+            dispatcher.runAsync(serviceName, serviceContext, true);
+        } else if (ASYNC_ONETIME.equalsIgnoreCase(mode)) {
+            dispatcher.runAsync(serviceName, serviceContext, false);
         } else {
             result = dispatcher.runSync(serviceName, serviceContext);
         }

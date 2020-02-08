@@ -1769,6 +1769,7 @@ public class ConfigXMLReader {
         protected final List<ValueExpr> synchronizedExprList; // SCIPIO
         protected final String scriptBody; // SCIPIO
         protected Object compiledScript; // SCIPIO: Optimization
+        protected final Map<String, Object> staticProperties; // SCIPIO
         
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -1811,6 +1812,38 @@ public class ConfigXMLReader {
 
             // SCIPIO: Script body
             this.scriptBody = UtilXml.childElementValue(eventElement, "script", null);
+
+            Map<String, Object> properties = null;
+            List<? extends Element> propertyElements = UtilXml.childElementList(eventElement, "property");
+            if (UtilValidate.isNotEmpty(propertyElements)) {
+                properties = new HashMap<>();
+                for(Element propertyElement : propertyElements) {
+                    String name = propertyElement.getAttribute("name");
+                    String type = propertyElement.getAttribute("type");
+                    String valueStr = propertyElement.getAttribute("value");
+                    //String scope = propertyElement.getAttribute("scope"); // TODO?: future
+                    Object value = null;
+                    if (UtilValidate.isNotEmpty(valueStr)) { // NOTE: empty allowed; means override inherited with null
+                        try {
+                            //Map<String, Object> propertyCtx = new HashMap<>();
+                            // TODO?: Don't support this for static properties for now, so they can be analyzed statically
+                            //FlexibleStringExpander expr = FlexibleStringExpander.getInstance(valueStr);
+                            //Object result = expr.expand(propertyCtx);
+                            Object result = valueStr;
+                            if (result != null && UtilValidate.isNotEmpty(type)) {
+                                value = ObjectType.simpleTypeConvert(result, type, null, null);
+                            } else {
+                                value = result;
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Unable to evaluate event property '" + name
+                                    + "' for event (will be null)", module);
+                        }
+                    }
+                    properties.put(name, value);
+                }
+            }
+            this.staticProperties = (properties != null) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1825,6 +1858,7 @@ public class ConfigXMLReader {
             this.metrics = null;
             this.synchronizedExprList = null;
             this.scriptBody = null;
+            this.staticProperties = Collections.emptyMap();
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
@@ -1840,6 +1874,7 @@ public class ConfigXMLReader {
             this.metrics = null;
             this.synchronizedExprList = null;
             this.scriptBody = null;
+            this.staticProperties = Collections.emptyMap();
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1898,6 +1933,21 @@ public class ConfigXMLReader {
 
         public void setCompiledScript(Object compiledScript) { // NOTE: no need for thread safety on this field
             this.compiledScript = compiledScript;
+        }
+
+        public Map<String, Object> getStaticProperties() {
+            return staticProperties;
+        }
+
+        /* TODO?: future
+        public Map<String, Object> getRuntimeProperties(Map<String, Object> context) {
+        }
+        public Map<String, Object> getMergedProperties(Map<String, Object> context) {
+        }
+         */
+
+        public Map<String, Object> getProperties(RequestMap requestMap, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) {
+            return getStaticProperties();
         }
     }
 

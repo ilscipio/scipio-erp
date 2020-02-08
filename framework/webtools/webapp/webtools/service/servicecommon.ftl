@@ -67,6 +67,6 @@
         <#local syncMode = raw(defaultSyncMode)>
       </#if>
       <option value="Y"<#if "sync" == syncMode> selected="selected"</#if>>Sync</option>
-      <option value="ASYNC"<#if "async" == syncMode> selected="selected"</#if>>Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})</option>
+      <option value="ASYNC"<#if "async" == syncMode> selected="selected"</#if>>Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})</option>
     </@field>
 </#macro>

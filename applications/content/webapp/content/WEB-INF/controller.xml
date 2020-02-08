@@ -1836,20 +1836,26 @@ code package.
         <security https="true" auth="true"/>
         <!-- SCIPIO: replaced service
         <event type="service" invoke="generateMissingSeoUrlForWebsite"/>-->
-        <event type="service" invoke="generateWebsiteAlternativeUrls"/>
+        <event type="service" invoke="generateWebsiteAlternativeUrls">
+            <property name="mode-parameter" value="serviceMode"/>
+        </event>
         <response name="success" type="view" value="WebSiteSEO"/>
         <response name="error" type="view" value="WebSiteSEO"/>
     </request-map>
     <request-map uri="removeSeoUrlForWebsite"><!-- SCIPIO: new -->
         <security https="true" auth="true"/>
-        <event type="service" invoke="removeWebsiteAlternativeUrls"/>
+        <event type="service" invoke="removeWebsiteAlternativeUrls">
+            <property name="mode-parameter" value="serviceMode"/>
+        </event>
         <response name="success" type="view" value="WebSiteSEO"/>
         <response name="error" type="view" value="WebSiteSEO"/>
     </request-map>
     <request-map uri="generateSitemapFilesForWebsite">
         <security https="true" auth="true"/>
         <!-- SCIPIO: new sitemap service -->
-        <event type="service" invoke="generateWebsiteAlternativeUrlSitemapFiles"/>
+        <event type="service" invoke="generateWebsiteAlternativeUrlSitemapFiles">
+            <property name="mode-parameter" value="serviceMode"/>
+        </event>
         <response name="success" type="view" value="WebSiteSEO"/>
         <response name="error" type="view" value="WebSiteSEO"/>
     </request-map>

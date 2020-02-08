@@ -281,6 +281,27 @@ public final class EventUtil {
         }
     }
 
+    public static void setDefaultSuccessMessageForServiceAsync(HttpServletRequest request, Locale locale, boolean persist, String propertyRef) {
+        if (!EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
+            Map<String, Object> msgCtx = UtilHttp.getAttributeMap(request);
+            String defSuccessMsg;
+            if (UtilValidate.isNotEmpty(propertyRef)) {
+                String[] parts = propertyRef.split("#", 2);
+                if (parts.length >= 2) {
+                    defSuccessMsg = UtilProperties.getMessage(parts[0], parts[1], msgCtx, locale);
+                } else if (parts.length >= 1) {
+                    defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", parts[0], msgCtx, locale);
+                } else {
+                    defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", persist ? "CommonServiceSuccessMessageAsyncPersist" : "CommonServiceSuccessMessageAsyncOnetime", msgCtx, locale);
+                }
+            } else {
+                defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", persist ? "CommonServiceSuccessMessageAsyncPersist" : "CommonServiceSuccessMessageAsyncOnetime", msgCtx, locale);
+            }
+            request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
+            request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
+        }
+    }
+
     public static void setRequestAttributesForServiceResult(HttpServletRequest request, Map<String, ?> result) {
         for (Map.Entry<String, ?> rme: result.entrySet()) {
             String resultKey = rme.getKey();

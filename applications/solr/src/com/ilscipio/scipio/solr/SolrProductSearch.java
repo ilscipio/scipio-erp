@@ -1978,7 +1978,7 @@ public abstract class SolrProductSearch {
             return ServiceUtil.returnSuccess();
         } catch (Exception e) {
             Debug.logError("Solr: reloadSolrSecurityAuthorizations: error: " + e.getMessage(), module);
-            return ServiceUtil.returnError("Error reloading Solr security authorizations");
+            return ServiceUtil.returnError("Error reloading Solr security authorizations: " + e.getMessage());
         }
     }
 

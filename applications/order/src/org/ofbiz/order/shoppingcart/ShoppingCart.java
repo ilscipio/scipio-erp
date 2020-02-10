@@ -567,7 +567,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         ShoppingCart.ensureExactEquals(this.freeShippingProductPromoActions, other.freeShippingProductPromoActions, "ShoppingCart.freeShippingProductPromoActions", errorMessages);
         ShoppingCart.ensureExactEquals(this.desiredAlternateGiftByAction, other.desiredAlternateGiftByAction, "ShoppingCart.desiredAlternateGiftByAction", errorMessages);
         ShoppingCart.ensureExactEquals(this.cartCreatedTs, other.cartCreatedTs, "ShoppingCart.cartCreatedTs", errorMessages);
-        ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCart.delegator", errorMessages);
+        // NOTE: transient, so only need to be check if both non-null, otherwise false positives
+        //ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCart.delegator", errorMessages); // transient - only name matters
+        if (this.delegator != null && other.delegator != null) {
+            ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCart.delegator", errorMessages);
+        }
         ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName, "ShoppingCart.delegatorName", errorMessages);
         ShoppingCart.ensureExactEquals(this.productStoreId, other.productStoreId, "ShoppingCart.productStoreId", errorMessages);
         ShoppingCart.ensureExactEquals(this.doPromotions, other.doPromotions, "ShoppingCart.doPromotions", errorMessages);

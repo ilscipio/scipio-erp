@@ -62,7 +62,7 @@ Defines a form. Analogous to <form> HTML element.
     Added explicit validate option (1.14.4).
 -->
 <#assign form_defaultArgs = {
-  "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, "validate":"",
+  "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, "validate":"", "method":"post",
   "attribs":{}, "passArgs":{}
 }>
 <#macro form args={} inlineArgs...>
@@ -84,7 +84,7 @@ Defines a form. Analogous to <form> HTML element.
     <#local stackValues = popRequestStack("scipioFormMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
+  <@form_markup type=type name=name id=id class=class open=open close=close method=method attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
   <#if validate?is_boolean && validate == true>
       <@formValidateScript type=type name=name id=id htmlwrap=true/>
   </#if>
@@ -95,9 +95,9 @@ Defines a form. Analogous to <form> HTML element.
 </#macro>
 
 <#-- @form main markup - theme override -->
-<#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
+<#macro form_markup type="" name="" id="" class="" method="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> method="${escapeVal(method, 'html')}"<#rt>
       <#lt><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>

@@ -78,7 +78,7 @@ Defines a form. Analogous to <form> HTML element.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("scipioFormMarkupStack", {
-      "type":type, "name":name, "id":id, "class":class, "attribs":attribs, "origArgs":origArgs, "passArgs":passArgs
+      "type":type, "name":name, "id":id, "class":class, "attribs":attribs, "method":method, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("scipioFormMarkupStack")!{}>

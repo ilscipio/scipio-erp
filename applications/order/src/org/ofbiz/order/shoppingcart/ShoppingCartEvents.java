@@ -999,6 +999,7 @@ public class ShoppingCartEvents {
         
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
+        request.setAttribute("shoppingCartSize", cart.size()); // SCIPIO
 
         ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems, locale);
@@ -1010,6 +1011,7 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
+        request.setAttribute("shoppingCartSize", cart.size()); // SCIPIO
         }
         return "success";
     }

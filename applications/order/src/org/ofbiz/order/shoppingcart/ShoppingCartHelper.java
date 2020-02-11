@@ -926,7 +926,7 @@ public class ShoppingCartHelper {
             }
             try {
                 // SCIPIO: Moved setShipmentMethodTypeId before the removal and added correct lookup for shipGroupIndex
-                for(ShoppingCart.CartShipInfo csi : cart.getItemCartShipInfos(item)) {
+                for(ShoppingCart.CartShipInfo csi : cart.getItemShipInfos(item)) {
                     csi.setShipmentMethodTypeId(null);
                     csi.setShipEstimate(BigDecimal.ZERO); // NOTE: This should get recalculated after by some event after if there are items remaining
                 }

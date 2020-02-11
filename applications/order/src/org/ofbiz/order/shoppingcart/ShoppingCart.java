@@ -2832,9 +2832,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * Returns all the CartShipInfo that contain this item.
+     * Returns all the CartShipInfo that contain this item (SCIPIO).
      */
-    public List<CartShipInfo> getItemCartShipInfos(ShoppingCartItem item) {
+    public List<CartShipInfo> getItemShipInfos(ShoppingCartItem item) {
         List<CartShipInfo> itemCsis = new ArrayList<>();
         for(CartShipInfo csi : this.shipInfo) {
             if (csi.shipItemInfo.containsKey(item)) {

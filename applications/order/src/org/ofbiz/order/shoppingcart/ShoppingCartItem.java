@@ -1333,12 +1333,23 @@ public class ShoppingCartItem implements java.io.Serializable {
         // set the item ship group
         if (resetShipGroup) {
             int itemId = cart.getItemIndex(this);
-            int shipGroupIndex = 0;
-            if (itemId != -1) {
-                shipGroupIndex = cart.getItemShipGroupIndex(itemId);
+            // SCIPIO: If setting quantity 0 we must do different order/logic or this leaves extra ship group data in the cart
+            if (BigDecimal.ZERO.compareTo(quantity) == 0) {
+                // SCIPIO: don't call setItemShipGroupQty here because inappropriate sets, clearItemShipInfo clears the refs anyway
+                // but always reset the ship estimates in this case
+                // TODO: REVIEW: currently done in ShoppingCartHelper.modifyCart, unclear if should be done here
+                //for(ShoppingCart.CartShipInfo csi : cart.getItemCartShipInfos(this)) {
+                //    csi.setShipEstimate(BigDecimal.ZERO); // NOTE: This should get recalculated after by some event after if there are items remaining
+                //}
+                cart.clearItemShipInfo(this);
+            } else {
+                int shipGroupIndex = 0;
+                if (itemId != -1) {
+                    shipGroupIndex = cart.getItemShipGroupIndex(itemId);
+                }
+                cart.clearItemShipInfo(this);
+                cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
             }
-            cart.clearItemShipInfo(this);
-            cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
         }
     }
 

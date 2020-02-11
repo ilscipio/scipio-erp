@@ -1373,10 +1373,17 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             cartSubscriptionItems.remove(prodId);
         }
         */
-        item = cartLines.remove(index);
+        // SCIPIO: Prevents setQuantity from working, do after + index
+        //item = cartLines.remove(index);
+        item = cartLines.get(index);
+        if (item == null) {
+            throw new CartItemModifyException("Invalid cart item index");
+        }
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks
         item.setQuantity(BigDecimal.ZERO, dispatcher, this, triggerExternalOps, true, false, true);
+
+        item = cartLines.remove(index); // SCIPIO
     }
 
     /**
@@ -2660,26 +2667,28 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public void setItemShipGroupQty(ShoppingCartItem item, int itemIndex, BigDecimal quantity, int idx) {
         if (itemIndex > -1) {
             CartShipInfo csi = this.getOrAddShipInfo(idx);
+            setItemShipGroupQty(item, csi, quantity);
+        }
+    }
 
-            // never set less than zero
-            if (quantity.compareTo(BigDecimal.ZERO) < 0) {
-                quantity = BigDecimal.ZERO;
+    public void setItemShipGroupQty(ShoppingCartItem item, CartShipInfo csi, BigDecimal quantity) { // SCIPIO: refactored from above
+        // never set less than zero
+        if (quantity.compareTo(BigDecimal.ZERO) < 0) {
+            quantity = BigDecimal.ZERO;
+        }
+
+        // never set more than quantity ordered
+        if (item != null) {
+            if (quantity.compareTo(item.getQuantity()) > 0) {
+                quantity = item.getQuantity();
             }
 
-            // never set more than quantity ordered
-            if (item != null) {
-                if (quantity.compareTo(item.getQuantity()) > 0) {
-                    quantity = item.getQuantity();
-                }
+            // re-set the ship group's before and after dates based on the item's
+            csi.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
+            csi.resetShipAfterDateIfBefore(item.getShipAfterDate());
 
-
-                // re-set the ship group's before and after dates based on the item's
-                csi.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
-                csi.resetShipAfterDateIfBefore(item.getShipAfterDate());
-
-                CartShipInfo.CartShipItemInfo csii = csi.setItemInfo(item, quantity);
-                this.checkShipItemInfo(csi, csii);
-            }
+            CartShipInfo.CartShipItemInfo csii = csi.setItemInfo(item, quantity);
+            this.checkShipItemInfo(csi, csii);
         }
     }
 
@@ -2820,6 +2829,19 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
         }
         return result;
+    }
+
+    /**
+     * Returns all the CartShipInfo that contain this item.
+     */
+    public List<CartShipInfo> getItemCartShipInfos(ShoppingCartItem item) {
+        List<CartShipInfo> itemCsis = new ArrayList<>();
+        for(CartShipInfo csi : this.shipInfo) {
+            if (csi.shipItemInfo.containsKey(item)) {
+                itemCsis.add(csi);
+            }
+        }
+        return itemCsis;
     }
 
     /** Sets the shipping contact mech id. */
@@ -5388,7 +5410,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public String getCarrierPartyId() { return carrierPartyId; }
         public String getSupplierPartyId() { return supplierPartyId; }
         public String getShipmentMethodTypeId() { return shipmentMethodTypeId; }
+        public void setShipmentMethodTypeId(String shipmentMethodTypeId) { this.shipmentMethodTypeId = shipmentMethodTypeId; } // SCIPIO
+
         public BigDecimal getShipEstimate() { return shipEstimate; }
+        public void setShipEstimate(BigDecimal shipEstimate) { this.shipEstimate = shipEstimate; } // SCIPIO
 
         public String getShipGroupSeqId() { return shipGroupSeqId; }
         public void setShipGroupSeqId(String shipGroupSeqId) {

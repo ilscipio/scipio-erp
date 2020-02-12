@@ -95,6 +95,7 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
         }
         excludes.add("allArgNames");
         excludes.add("localArgNames");
+        excludes.add("attribs"); // 2020-02-12: in most cases this was automatically added by makeArgMaps from default args list, but custom usages need this now
 
         // add the inline attribs over the attribs map (if any)
         if (res == null) {

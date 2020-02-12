@@ -195,6 +195,10 @@ public class OrderReturnServices {
         GenericValue returnHeader = null;
         try {
             returnHeader = EntityQuery.use(delegator).from("ReturnHeader").where("returnId", returnId).queryOne();
+            if (returnHeader == null) { // SCIPIO
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorUnableToGetReturnHeaderForID", UtilMisc.toMap("returnId",returnId), locale));
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,

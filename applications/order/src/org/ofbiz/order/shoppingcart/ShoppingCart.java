@@ -5880,7 +5880,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         pmObj = getBillingAddressFromParty(delegator);
                     }
                     if (pmObj != null) {
-                        postalAddress = pmObj.getRelatedOne("PostalAddress", false);
+                        postalAddress = delegator.from("PostalAddress").where("contactMechId", pmObj.get("contactMechId")).queryOne();
                     } else {
                         Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
                     }

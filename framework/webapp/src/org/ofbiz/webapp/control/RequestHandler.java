@@ -730,7 +730,7 @@ public class RequestHandler {
                     // SCIPIO: Let's be smarter
                     //if ("_ERROR_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_MAP_".equals(key) || "_ERROR_MESSAGE_".equals(key) ||
                     //        "_EVENT_MESSAGE_LIST_".equals(key) || "_EVENT_MESSAGE_".equals(key)) {
-                    if (EventUtil.isEventErrorMsgAttrName(key)) {
+                    if (EventUtil.isEventErrorMessageAttrName(key)) {
                         // SCIPIO: New RequestAttrPolicy callbacks
                         //request.setAttribute(key, entry.getValue());
                         attrPolicyInvoker.filterRestoreAttrToRequest(entry, preRequestMap);
@@ -1115,7 +1115,7 @@ public class RequestHandler {
      * See {@link org.ofbiz.webapp.event.ServiceEventHandler#invoke} for the code that sets these.
      */
     void cleanupEventMessages(HttpServletRequest request) {
-        if (EventUtil.hasErrorMsg(request) && request.getAttribute("_DEF_EVENT_MSG_") != null && 
+        if (EventUtil.hasErrorMessage(request) && request.getAttribute("_DEF_EVENT_MSG_") != null &&
                 request.getAttribute("_DEF_EVENT_MSG_").equals(request.getAttribute("_EVENT_MESSAGE_"))) {
             request.removeAttribute("_EVENT_MESSAGE_");
         }

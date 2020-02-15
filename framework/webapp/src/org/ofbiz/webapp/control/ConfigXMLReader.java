@@ -2530,13 +2530,13 @@ public class ConfigXMLReader {
                 }
             };
             public static final AttributesSpec EVENT_MESSAGES = new AttributesSpec() {
-                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMsgAttrNames().contains(attributeName); }
+                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMessageAttrNames().contains(attributeName); }
                 @Override
                 public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
                     if (UtilValidate.isEmpty(includeAttributes)) {
                         return this;
                     }
-                    Set<String> newIncludes = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    Set<String> newIncludes = new HashSet<>(EventUtil.getEventErrorMessageAttrNames());
                     newIncludes.addAll(includeAttributes);
                     return new IncludeAttributesSpec(newIncludes);
                 }
@@ -2560,14 +2560,14 @@ public class ConfigXMLReader {
                         return EVENT_MESSAGES;
                     }
                     // SPECIAL: here, include messages plus/minus extras
-                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMessageAttrNames());
                     if (includeAttributes != null) {
                         includeAttr.addAll(includeAttributes);
                     }
                     if (excludeAttributes != null) {
                         includeAttr.removeAll(excludeAttributes);
                     }
-                    if (includeAttr.equals(EventUtil.getEventErrorMsgAttrNames())) { // avoid needless copies
+                    if (includeAttr.equals(EventUtil.getEventErrorMessageAttrNames())) { // avoid needless copies
                         return EVENT_MESSAGES;
                     }
                     return new IncludeAttributesSpec(includeAttr);

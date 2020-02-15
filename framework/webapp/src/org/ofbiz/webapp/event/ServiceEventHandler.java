@@ -43,7 +43,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -403,7 +402,7 @@ public class ServiceEventHandler implements EventHandler {
             }
 
             // set the messages in the request; this will be picked up by messages.ftl and displayed
-            EventUtil.setRequestMessagesFromService(request, result); // SCIPIO: Factored out
+            EventUtil.setMessagesFromService(request, result); // SCIPIO: Factored out
 
             // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
@@ -415,7 +414,7 @@ public class ServiceEventHandler implements EventHandler {
             }
 
             // set the results in the request
-            EventUtil.setRequestAttributesForServiceResult(request, result);
+            EventUtil.setAttributesFromServiceResults(request, result);
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + responseString, module);

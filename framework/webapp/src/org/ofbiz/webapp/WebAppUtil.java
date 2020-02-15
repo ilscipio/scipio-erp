@@ -709,5 +709,27 @@ public final class WebAppUtil {
         return UtilHttp.getUserLogin(session);
     }
 
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.base.util.UtilHttp#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    public static GenericValue getSessionUserLogin(HttpServletRequest request) {
+        return UtilHttp.getSessionUserLogin(request);
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.base.util.UtilHttp#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    public static GenericValue getSessionUserLogin(HttpSession session) {
+        return UtilHttp.getSessionUserLogin(session);
+    }
+
     private WebAppUtil() {}
 }

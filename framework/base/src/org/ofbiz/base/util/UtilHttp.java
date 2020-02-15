@@ -790,6 +790,7 @@ public final class UtilHttp {
         return makeParamListWithSuffix(request, null, suffix, prefix);
     }
 
+    // SCIPIO: TODO: this should use getCombinedMap as above by default and corresponding overload
     public static List<Object> makeParamListWithSuffix(HttpServletRequest request, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
         List<Object> paramList = new ArrayList<>();
         Enumeration<String> parameterNames = UtilGenerics.cast(request.getParameterNames());
@@ -1076,6 +1077,38 @@ public final class UtilHttp {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Map<String, Object>> T getUserLogin(HttpSession session) {
+        return getSessionUserLogin(session);
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getSessionUserLogin(HttpServletRequest request) {
+        return getSessionUserLogin(request.getSession(false));
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getSessionUserLogin(HttpSession session) {
         return (session != null) ? (T) session.getAttribute("userLogin") : null;
     }
 

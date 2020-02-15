@@ -1763,4 +1763,14 @@ public final class UtilMisc {
     public static <K, V> boolean containsKey(Map<K, V> map, K key, Object value) {
         return (value != null || map.containsKey(key));
     }
+
+    /**
+     * SCIPIO: Transfers the specified keys from srcMap to dstMap and returns dstMap.
+     */
+    public static <K, V> Map<K, V> copyKeys(Map<K, ? extends V> srcMap, Map<K, V> dstMap, Iterable<K> keys) {
+        for(K key : keys) {
+            dstMap.put(key, srcMap.get(key));
+        }
+        return dstMap;
+    }
 }

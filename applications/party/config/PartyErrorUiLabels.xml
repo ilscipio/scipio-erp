@@ -1339,6 +1339,7 @@
     <property key="PartyCaptchaMissingError">
         <value xml:lang="de">Falsches Captcha. Bitte versuche es erneut.</value>
         <value xml:lang="en">Wrong captcha. Please try again.</value>
+        <value xml:lang="es">Captcha incorrecto. Por favor, inténtalo de nuevo..</value>
     </property>
     <property key="PartyRequiredFieldMissingContactMechTypeId">
         <value xml:lang="de">Pflichtfeld fehlt: ContactMech Type Id.</value>

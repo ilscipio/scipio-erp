@@ -3671,6 +3671,7 @@
     <property key="EcommerceSubjectMissing">
         <value xml:lang="de">Betreff fehlt</value>
         <value xml:lang="en">Subject is missing</value>
+        <value xml:lang="es">Falta el asunto</value>
         <value xml:lang="ja">件名が正しくありません</value>
         <value xml:lang="vi">Chủ đề chưa có</value>
         <value xml:lang="zh">缺少主题</value>

@@ -1021,15 +1021,9 @@ code package.
     </request-map>
     <request-map uri="requestReturn">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createReturnHeader"/>
-        <response name="success" type="request" value="setReturnItems"/>
-        <response name="error" type="view" value="orderstatus"/>
-    </request-map>
-    <request-map uri="setReturnItems">
-        <security https="true" auth="true" direct-request="false"/>
-        <event type="service-multi" invoke="createReturnItem"/>
-        <response name="success" type="view" value="orderstatus"/>
-        <response name="error" type="view" value="orderstatus"/>
+        <event type="java" path="org.ofbiz.order.order.OrderReturnEvents" invoke="createReturnHeaderAndItems"/>
+        <response name="success" type="request" value="orderstatus"/>
+        <response name="error" type="view" value="requestreturn"/>
     </request-map>
 
     <request-map uri="newcustomer">

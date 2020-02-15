@@ -2148,6 +2148,10 @@
         <value xml:lang="de">Keine returnAmount für die Bestellung gefunden: ${orderId}</value>
         <value xml:lang="en">No returnAmount found for order: ${orderId}</value>
     </property>
+    <property key="OrderNoReturnItemsSelected">
+        <value xml:lang="de">Keine Artikel für die Rücksendung ausgewählt</value>
+        <value xml:lang="en">No items selected for return</value>
+    </property>
     <property key="OrderNoReturnQuantityAvailablePreviousReturnsMayExist">
         <value xml:lang="ar">كمية المسترجع غير متوفرة: احتمال وجود مسترجعات سابقة.</value>
         <value xml:lang="de">Retourenmenge nicht vorhanden; vorherige Retouren könnten vorhanden sein.</value>

@@ -1,6 +1,10 @@
 package org.ofbiz.order.shoppinglist;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.control.LoginWorker;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class ShoppingListCookieInfo { // SCIPIO
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    public static final String AUTO_SAVE_LIST = "autoSave"; // "guest"
+    public static final String ANON_WISH_LIST = "anonWish";
+    public static final int COOKIE_MAX_AGE_DEFAULT = 60 * 60 * 24 * 30; // 1 month
+
     private final String shoppingListId;
     private final String authToken;
     private final Cookie cookie; // may be null if not exist yet
@@ -97,35 +107,46 @@ public class ShoppingListCookieInfo { // SCIPIO
         return autoSaveListId + "::" + shoppingListAuthToken;
     }
 
+    public static String getShoppingListCookieName(HttpServletRequest request, String listType) {
+        String defaultNamePat = AUTO_SAVE_LIST.equals(listType) ? "GuestShoppingListId_${sysName}" : (ANON_WISH_LIST.equals(listType) ? "AnonShoppingListId_${sysName}" : null);
+        String namePat = EntityUtilProperties.getPropertyValue("order", "shoppinglist." + listType + ".cookie.name", defaultNamePat, (Delegator) request.getAttribute("delegator"));
+        if (UtilValidate.isEmpty(namePat)) {
+            Debug.logError("Cannot get shopping list cookie name for list type (order.properties): " + listType, module);
+            return "";
+        }
+        return LoginWorker.expandCookieName(request, namePat);
+    }
+
+    public static int getShoppingListCookieMaxAge(HttpServletRequest request, String listType) {
+        return EntityUtilProperties.getPropertyAsInteger("order", "shoppinglist." + listType + ".cookie.maxAge", COOKIE_MAX_AGE_DEFAULT, (Delegator) request.getAttribute("delegator"));
+    }
+
     public static String getAutoSaveShoppingListCookieName(HttpServletRequest request) {
-        // originally from ShoppingListEvents
-        return "GuestShoppingListId_" + System.getProperties().getProperty("user.name").replace(" ", "_");
+        return getShoppingListCookieName(request, AUTO_SAVE_LIST);
     }
 
     public static ShoppingListCookieInfo getAutoSaveShoppingListCookieInfo(HttpServletRequest request) {
-        return fromCookie(request, getAutoSaveShoppingListCookieName(request));
+        return fromCookie(request, getShoppingListCookieName(request, AUTO_SAVE_LIST));
     }
 
     public static String getAnonShoppingListCookieName(HttpServletRequest request) {
-        // NOTE: ofbiz used "GuestShoppingListId_" for the auto-save list, so we'll just use "anon" here, reflecting the "anonymous" user
-        return "AnonShoppingListId_" + System.getProperties().getProperty("user.name").replace(" ", "_");
+        return getShoppingListCookieName(request, ANON_WISH_LIST);
     }
 
     public static ShoppingListCookieInfo getAnonShoppingListCookieInfo(HttpServletRequest request) { // SCIPIO
-        return fromCookie(request, getAutoSaveShoppingListCookieName(request));
+        return fromCookie(request, getShoppingListCookieName(request, ANON_WISH_LIST));
     }
 
-    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String guestShoppingUserName, ShoppingListCookieInfo cookieInfo) { // SCIPIO: refactored from createGuestShoppingListCookies
-        createShoppingListCookie(request, response, new Cookie(guestShoppingUserName, cookieInfo.toValueString()));
+    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String guestShoppingUserName, ShoppingListCookieInfo cookieInfo) { // SCIPIO: refactored from createGuestShoppingListCookies
+        createShoppingListCookie(request, response, listType, new Cookie(guestShoppingUserName, cookieInfo.toValueString()));
     }
 
-    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String guestShoppingUserName, String shoppingListId, String authToken) { // SCIPIO: refactored from createGuestShoppingListCookies
-        createShoppingListCookie(request, response, new Cookie(guestShoppingUserName, toValueString(shoppingListId, authToken)));
+    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String guestShoppingUserName, String shoppingListId, String authToken) { // SCIPIO: refactored from createGuestShoppingListCookies
+        createShoppingListCookie(request, response, listType, new Cookie(guestShoppingUserName, toValueString(shoppingListId, authToken)));
     }
 
-    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, Cookie guestShoppingListCookie) { // SCIPIO: refactored from createGuestShoppingListCookies
-        int cookieAge = (60 * 60 * 24 * 30); // TODO: unhardcode
-        guestShoppingListCookie.setMaxAge(cookieAge);
+    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, Cookie guestShoppingListCookie) { // SCIPIO: refactored from createGuestShoppingListCookies
+        guestShoppingListCookie.setMaxAge(getShoppingListCookieMaxAge(request, listType));
         guestShoppingListCookie.setPath("/");
         guestShoppingListCookie.setSecure(true);
         guestShoppingListCookie.setHttpOnly(true);

@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +60,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
@@ -825,7 +827,9 @@ public class LoginWorker {
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         if (isAutoUserLoginEnabled(request) && userLogin != null) { // SCIPIO: 2018-07-11: only set if enabled for webapp
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-            autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+            // SCIPIO
+            //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+            autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
             autoLoginCookie.setDomain(domain);
             autoLoginCookie.setPath("/");
             autoLoginCookie.setSecure(true);
@@ -838,14 +842,45 @@ public class LoginWorker {
     }
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
-        return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        // SCIPIO
+        //return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        String namePat = EntityUtilProperties.getPropertyValue("security", "security.autoLogin.cookie.name", "${appName}.autoUserLoginId", delegator);
+        return expandCookieName(request, namePat);
     }
 
+    /**
+     * @deprecated SCIPIO: this missing delegator, currently unused
+     */
+    @Deprecated
     protected static String getAutoLoginCookieName(String webappName) {
         // SCIPIO: OFBiz patch - Original does not work when the mount point has multiple slashes:  example: /en/shop vs /shop
         // NOTE: UtilHttp.getApplicationName above now already does this for us - this one is left here for backward-compatibility only
         //return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
         return webappName.replaceAll("/", "_") + ".autoUserLoginId";
+    }
+
+    protected static int getAutoLoginCookieMaxAge(HttpServletRequest request) { // SCIPIO
+        return EntityUtilProperties.getPropertyAsInteger("security", "security.autoLogin.cookie.maxAge", 60*60*24*365, (Delegator) request.getAttribute("delegator"));
+    }
+
+    public static String expandCookieName(HttpServletRequest request, String cookieNamePattern) { // SCIPIO
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("delegator", request.getAttribute("delegator"));
+        ctx.put("request", request);
+        ctx.put("sysName", System.getProperties().getProperty("user.name").replace(" ", "_"));
+        ctx.put("appName", UtilHttp.getApplicationName(request));
+        return FlexibleStringExpander.expandString(cookieNamePattern, ctx);
+    }
+
+    public static String getUserNameCookieName(HttpServletRequest request) { // SCIPIO
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        String namePat = EntityUtilProperties.getPropertyValue("security", "security.userName.cookie.name", "${appName}.autoUserLoginId", delegator);
+        return expandCookieName(request, namePat);
+    }
+
+    public static int getUserNameCookieMaxAge(HttpServletRequest request) { // SCIPIO
+        return EntityUtilProperties.getPropertyAsInteger("security", "security.userName.cookie.maxAge", 60*60*24*365, (Delegator) request.getAttribute("delegator"));
     }
 
     public static String getAutoUserLoginId(HttpServletRequest request) {

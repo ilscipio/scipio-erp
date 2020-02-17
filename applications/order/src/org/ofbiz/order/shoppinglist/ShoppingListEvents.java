@@ -744,7 +744,7 @@ public class ShoppingListEvents {
                 }
                 // SCIPIO: include shoppingListAuthToken
                 //Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, autoSaveListId);
-                ShoppingListCookieInfo.createShoppingListCookie(request, response, guestShoppingUserName, autoSaveListId, shoppingListAuthToken);
+                ShoppingListCookieInfo.createShoppingListCookie(request, response, ShoppingListCookieInfo.AUTO_SAVE_LIST, guestShoppingUserName, autoSaveListId, shoppingListAuthToken);
             }
         }
         if (UtilValidate.isNotEmpty(autoSaveListId)) {
@@ -916,7 +916,7 @@ public class ShoppingListEvents {
                         }
                         return "error";
                     }
-                    ShoppingListCookieInfo.createShoppingListCookie(request, response, anonListCookieName, anonListCookieInfo);
+                    ShoppingListCookieInfo.createShoppingListCookie(request, response, ShoppingListCookieInfo.ANON_WISH_LIST, anonListCookieName, anonListCookieInfo);
                     anonListCookieInfo.toFields(servCtx);
                 } catch (GeneralException e) {
                     Debug.logError(e, module);

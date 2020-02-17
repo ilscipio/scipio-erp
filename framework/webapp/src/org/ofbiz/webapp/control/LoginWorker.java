@@ -875,7 +875,7 @@ public class LoginWorker {
 
     public static String getUserNameCookieName(HttpServletRequest request) { // SCIPIO
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String namePat = EntityUtilProperties.getPropertyValue("security", "security.userName.cookie.name", "${appName}.autoUserLoginId", delegator);
+        String namePat = EntityUtilProperties.getPropertyValue("security", "security.userName.cookie.name", "Scipio.Username", delegator);
         return expandCookieName(request, namePat);
     }
 

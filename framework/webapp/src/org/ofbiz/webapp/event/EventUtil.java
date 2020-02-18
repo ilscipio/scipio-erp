@@ -583,6 +583,15 @@ public final class EventUtil {
      * request parameters and session attributes (in that order of priority), also performs validation.
      * This overload performs context validation (makeValid) and adds userLogin/locale/timeZone to the context.
      */
+    public static Map<String, Object> getValidServiceEventParamMap(HttpServletRequest request, String serviceName, Map<String, ?> extraContext, List<? super String> errorMessages) {
+        return getServiceEventParamMap(request, serviceName, extraContext, ServiceParamOptions.VALIDATE, errorMessages);
+    }
+
+    /**
+     * Emulates ServiceEventHandler's parameter handling by preparing a service context from request attributes,
+     * request parameters and session attributes (in that order of priority), also performs validation.
+     * This overload performs context validation (makeValid) and adds userLogin/locale/timeZone to the context.
+     */
     public static Map<String, Object> getValidServiceEventParamMap(HttpServletRequest request, String serviceName, List<? super String> errorMessages) {
         return getServiceEventParamMap(request, serviceName, null, ServiceParamOptions.VALIDATE, errorMessages);
     }

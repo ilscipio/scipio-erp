@@ -1021,7 +1021,7 @@ code package.
     </request-map>
     <request-map uri="requestReturn">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.order.OrderReturnEvents" invoke="createReturnHeaderAndItems"/>
+        <event type="java" path="org.ofbiz.order.order.OrderReturnEvents" invoke="createCustomerReturn"/>
         <response name="success" type="request" value="orderstatus"/>
         <response name="error" type="view" value="requestreturn"/>
     </request-map>

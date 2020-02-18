@@ -443,6 +443,7 @@ public class ShoppingListEvents {
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
             Delegator delegator = cart.getDelegator();
             String autoSaveListId = cart.getAutoSaveListId();
+            boolean hadAutoSaveList = (autoSaveListId != null); // SCIPIO
             if (autoSaveListId == null) {
                 autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
                 cart.setAutoSaveListId(autoSaveListId);
@@ -454,20 +455,24 @@ public class ShoppingListEvents {
                 if (UtilValidate.isNotEmpty(shoppingListItems)) {
                     currentListSize = shoppingListItems.size();
                 }
-            }
-            // SCIPIO: NOTE: It is usually WRONG to get the shoppingListAuthToken from ShoppingList, but in this case the shoppingListId only comes from internal or pre-verified sources
-            // (because callers are expected to validate autoSaveListId before calling cart.setAutoSaveListId(autoSaveListId))
-            String shoppingListAuthToken = shoppingList.getString("shoppingListAuthToken");
 
-            try {
-                String[] itemsArray = makeCartItemsArray(cart);
-                if (itemsArray.length != 0) {
-                    addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, null, itemsArray, false, false, shoppingListAuthToken);
-                } else if (currentListSize != 0) {
-                    clearListInfo(delegator, autoSaveListId);
+                // SCIPIO: NOTE: It is usually WRONG to get the shoppingListAuthToken from ShoppingList, but in this case the shoppingListId only comes from internal or pre-verified sources
+                // (because callers are expected to validate autoSaveListId before calling cart.setAutoSaveListId(autoSaveListId))
+                String shoppingListAuthToken = shoppingList.getString("shoppingListAuthToken");
+
+                try {
+                    String[] itemsArray = makeCartItemsArray(cart);
+                    if (itemsArray.length != 0) {
+                        addBulkFromCart(delegator, dispatcher, cart, userLogin, autoSaveListId, null, itemsArray, false, false, shoppingListAuthToken);
+                    } else if (currentListSize != 0) {
+                        clearListInfo(delegator, autoSaveListId);
+                    }
+                } catch (IllegalArgumentException e) {
+                    throw new GeneralException(e.getMessage(), e);
                 }
-            } catch (IllegalArgumentException e) {
-                throw new GeneralException(e.getMessage(), e);
+            } else {
+                String partyId = (userLogin != null) ? userLogin.getString("partyId") : null;
+                Debug.logWarning("fillAutoSaveList: could not find auto-save list '" + autoSaveListId + "' (" + (hadAutoSaveList ? "ID from cart" : "ID looked up for party '" + partyId + "'") + ")", module);
             }
         }
     }

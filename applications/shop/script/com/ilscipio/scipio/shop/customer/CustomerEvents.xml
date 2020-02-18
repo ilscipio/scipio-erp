@@ -797,6 +797,19 @@ code package.
         <set field="roleMap.partyId" from-field="tempMap.partyId"/>
         <call-service service-name="createPartyRole" in-map-name="roleMap"/>
 
+        <!-- SCIPIO: Create the ProductStoreRole -->
+        <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field="productStore">
+            <field field="request" type="javax.servlet.ServletRequest"/>
+        </call-class-method>
+        <entity-one entity-name="UserLogin" value-field="systemUserLogin">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>
+        <set field="createProductStoreRoleMap.userLogin" from-field="systemUserLogin"/>
+        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
+        <set field="createProductStoreRoleMap.roleTypeId" value="CUSTOMER"/>
+        <set field="createProductStoreRoleMap.productStoreId" from-field="productStore.productStoreId"/>
+        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+
         <set from-field="tempMap.partyId" field="partyId"/>
         <call-simple-method method-name="createUpdateCustomerInfo"/>
 

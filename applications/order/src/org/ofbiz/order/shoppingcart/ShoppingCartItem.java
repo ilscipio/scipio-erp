@@ -1004,9 +1004,10 @@ public class ShoppingCartItem implements java.io.Serializable {
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
     protected void ensureExactEquals(ShoppingCartItem other, List<String> errorMessages) {
-        ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCartItem.delegator", errorMessages);
-        ShoppingCart.ensureExactEquals(this._product, other._product, "ShoppingCartItem._product", errorMessages);
-        ShoppingCart.ensureExactEquals(this._parentProduct, other._parentProduct, "ShoppingCartItem._parentProduct", errorMessages);
+        // transient
+        //ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCartItem.delegator", errorMessages);
+        //ShoppingCart.ensureExactEquals(this._product, other._product, "ShoppingCartItem._product", errorMessages);
+        //ShoppingCart.ensureExactEquals(this._parentProduct, other._parentProduct, "ShoppingCartItem._parentProduct", errorMessages);
         ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName, "ShoppingCartItem.delegatorName", errorMessages);
         ShoppingCart.ensureExactEquals(this.prodCatalogId, other.prodCatalogId, "ShoppingCartItem.prodCatalogId", errorMessages);
         ShoppingCart.ensureExactEquals(this.productId, other.productId, "ShoppingCartItem.productId", errorMessages);

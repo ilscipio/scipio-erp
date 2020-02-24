@@ -449,6 +449,19 @@ code package.
         <entity-one entity-name="ProductStore" value-field="productStore"/>
 
         <if-not-empty field="productStore">
+            <!-- SCIPIO: Proof of purchase check -->
+            <if-compare field="productStore.reviewsPurchased" operator="equals" value="Y">
+                <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="proofOfPurchase" ret-field="proofOfPurchase">
+                    <field field="delegator" type="org.ofbiz.entity.Delegator"/>
+                    <field field="productStore" type="org.ofbiz.entity.GenericValue"/>
+                    <field field="newEntity.productId" />
+                    <field field="newEntity.partyId" />
+                </call-class-method>
+                <if-compare field="proofOfPurchase" type="Boolean" operator="not-equals" value="true">
+
+                </if-compare>
+            </if-compare>
+
             <if-compare field="productStore.autoApproveReviews" operator="equals" value="Y">
                 <set value="PRR_APPROVED" field="newEntity.statusId"/>
             </if-compare>

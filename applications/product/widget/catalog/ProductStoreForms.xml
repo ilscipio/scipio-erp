@@ -71,7 +71,13 @@
         <field name="autoSaveCart" position="2">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="autoApproveReviews">
+        <field name="autoApproveReviews" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="reviewsPurchased" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="multipleReviews" position="2">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field name="autoInvoiceDigitalItems">
@@ -414,10 +420,12 @@
                 <sort-field name="vatTaxAuthPartyId"/>
             </field-group>
             <field-group title="${uiLabelMap.CommonVisitors}" collapsible="true" initially-collapsed="true">
-                <sort-field name="autoApproveReviews"/>
                 <sort-field name="allowPassword"/>
+                <sort-field name="autoApproveReviews"/>
                 <sort-field name="defaultPassword"/>
+                <sort-field name="reviewsPurchased"/>
                 <sort-field name="usePrimaryEmailUsername"/>
+                <sort-field name="multipleReviews"/>
                 <sort-field name="requireCustomerRole"/>
                 <sort-field name="enableAutoSuggestionList"/>
             </field-group>

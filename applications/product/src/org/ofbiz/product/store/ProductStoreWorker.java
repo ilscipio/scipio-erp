@@ -979,4 +979,18 @@ public final class ProductStoreWorker {
         }
         return getStoreWebSiteIdForEmail(delegator, productStore.getString("productStoreId"), webSiteId, useCache);
     }
+
+    /**
+     * SCIPIO: Checks whether a customer has purchased a given product or not
+     *
+     * @param productStore
+     * @param partyId
+     * @param productId
+     * @return
+     */
+    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String partyId, String productId) {
+        // TODO: implement logic to fetch an order item/s that match the productId passed
+        return false;
+    }
+
 }

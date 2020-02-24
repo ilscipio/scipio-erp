@@ -4090,16 +4090,18 @@ code package.
     </entity>
     <!-- SCIPIO: New fields for ProductStore -->
     <extend-entity entity-name="ProductStore">
-      <field name="reqPayMethForFreeOrders" type="indicator"><description>SCIPIO: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
-      <field name="isContentReference" type="indicator"><description>SCIPIO: Default N. If set to Y, this store's defaultLocaleString 
-        (and potentially other settings) is considered the default for its member content records (product/category content, etc.).
-        This is used in multi-store setting by Solr to determine which defaultLocaleString should be used for fields and content that have no localeString and associated to multiple stores.
-        NOTE: 2020-02-03: If multiple stores being considered for a product lookup have isContentReference, they are prioritized by lowest defaultPriority value;
+        <field name="reqPayMethForFreeOrders" type="indicator"><description>SCIPIO: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
+        <field name="isContentReference" type="indicator"><description>SCIPIO: Default N. If set to Y, this store's defaultLocaleString
+            (and potentially other settings) is considered the default for its member content records (product/category content, etc.).
+            This is used in multi-store setting by Solr to determine which defaultLocaleString should be used for fields and content that have no localeString and associated to multiple stores.
+            NOTE: 2020-02-03: If multiple stores being considered for a product lookup have isContentReference, they are prioritized by lowest defaultPriority value;
             if none of the stores looked up have this flag set to Y, the one with lowest defaultPriority value is used as the content reference store.</description></field>
-      <field name="showDiscontinuedProducts" type="indicator"><description>SCIPIO: Default Y. If N, products that have reached their salesDiscontinuationDate will not be shown.</description></field>
-      <field name="useVariantStockCalc" type="indicator"><description>SCIPIO: Default N. If Y, the calculation for showOutOfStockProducts in store for virtual products will include their variants.</description></field>
-      <field name="useAnonShoppingList" type="indicator"><description>SCIPIO: Default N. If Y, the store will support anonymous ShoppingList persisted on device; this is distinct from the auto-save ShoppingList (autoSaveCart) sometimes referred to as the "guest" list.</description></field>
-      <field name="defaultPriority" type="numeric"><description>SCIPIO: Default store lookup priority when looking up a store for a product; lower value means higher priority. Used in conjunction with isContentReference and elsewhere.</description></field>
+        <field name="showDiscontinuedProducts" type="indicator"><description>SCIPIO: Default Y. If N, products that have reached their salesDiscontinuationDate will not be shown.</description></field>
+        <field name="useVariantStockCalc" type="indicator"><description>SCIPIO: Default N. If Y, the calculation for showOutOfStockProducts in store for virtual products will include their variants.</description></field>
+        <field name="useAnonShoppingList" type="indicator"><description>SCIPIO: Default N. If Y, the store will support anonymous ShoppingList persisted on device; this is distinct from the auto-save ShoppingList (autoSaveCart) sometimes referred to as the "guest" list.</description></field>
+        <field name="defaultPriority" type="numeric"><description>SCIPIO: Default store lookup priority when looking up a store for a product; lower value means higher priority. Used in conjunction with isContentReference and elsewhere.</description></field>
+        <field name="reviewsPurchased" type="indicator"><description>SCIPIO: Default N. If Y, the store will support product reviews for purchased products.</description></field>
+        <field name="multipleReviews" type="indicator"><description>SCIPIO: Default N. If Y, the store will support multiple product reviews for unregistered per user.</description></field>
     </extend-entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"

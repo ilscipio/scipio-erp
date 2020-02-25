@@ -454,8 +454,8 @@ code package.
                 <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="proofOfPurchase" ret-field="proofOfPurchase">
                     <field field="delegator" type="org.ofbiz.entity.Delegator"/>
                     <field field="productStore" type="org.ofbiz.entity.GenericValue"/>
+                    <field field="newEntity.userLoginId" />
                     <field field="newEntity.productId" />
-                    <field field="newEntity.partyId" />
                 </call-class-method>
                 <if-compare field="proofOfPurchase" type="Boolean" operator="not-equals" value="true">
 

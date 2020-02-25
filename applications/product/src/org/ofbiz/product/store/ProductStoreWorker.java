@@ -40,6 +40,10 @@ import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -988,8 +992,43 @@ public final class ProductStoreWorker {
      * @param productId
      * @return
      */
-    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String partyId, String productId) {
-        // TODO: implement logic to fetch an order item/s that match the productId passed
+    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String userLoginId, String productId) {
+        DynamicViewEntity dve = new DynamicViewEntity();
+
+        dve.addMemberEntity("OH", "OrderHeader");
+        dve.addMemberEntity("UL", "UserLogin");
+        dve.addMemberEntity("OI", "OrderItem");
+        dve.addMemberEntity("PS", "ProductStore");
+        dve.addMemberEntity("P", "Product");
+
+        dve.addAlias("OI", "orderId", null, null, false, false, null);
+        dve.addAlias("OH", "productStoreId", null, null, false, false, null);
+        dve.addAlias("OH", "createdBy", null, null, false, false, null);
+        dve.addAlias("UL", "userLoginId", null, null, false, false, null);
+        dve.addAlias("OI", "productId", null, null, false, false, null);
+        dve.addAlias("PS", "productStoreId", null, null, false, false, null);
+
+        dve.addViewLink("OH", "OI", false, UtilMisc.toList(new ModelKeyMap("orderId", "orderId")));
+        dve.addViewLink("OH", "PS", false, UtilMisc.toList(new ModelKeyMap("productStoreId", "productStoreId")));
+        dve.addViewLink("OH", "UL", false, UtilMisc.toList(new ModelKeyMap("createdBy", "userLoginId")));
+        dve.addViewLink("OI", "P", false, UtilMisc.toList(new ModelKeyMap("productId", "productId")));
+
+        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("createdBy", EntityOperator.EQUALS, userLoginId),
+                EntityCondition.makeCondition("productId", productId),
+                EntityCondition.makeCondition("productStoreId", productStore.getString("productStoreId"))
+        ), EntityOperator.AND);
+        try {
+            long count = EntityQuery.use(delegator)
+                .from(dve)
+                .where(condition).queryCount();
+            if (count > 0) {
+                return true;
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+
         return false;
     }
 

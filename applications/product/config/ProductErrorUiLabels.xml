@@ -1589,4 +1589,18 @@
         <value xml:lang="zh">缺少必须的变型产品标识， 请为新的变型产品输入一个标识。</value>
         <value xml:lang="zh-TW">缺少必須的變型產品識別, 請為新的變型產品輸入一個識別.</value>
     </property>
+    <!-- SCIPIO: New ProductReview error messages -->
+    <property key="ProductReviewProofOfPurchaseFailed">
+        <value xml:lang="de">Sie müssen ein Produkt kaufen, um eine Bewertung abzugeben.</value>
+        <value xml:lang="en">You must purchase a product in order to submit a review.</value>
+        <value xml:lang="es">Debes comprar el producto para poder dejar una opinión.</value>
+        <value xml:lang="fr">Vous devez acheter un produit afin de soumettre un avis.</value>
+    </property>
+    <property key="MultipleProductReviewsNotAllowed">
+        <value xml:lang="de">Mehrere Bewertungen für dasselbe Produkt sind nicht zulässig</value>
+        <value xml:lang="en">Multiple reviews for the same product not allowed.</value>
+        <value xml:lang="es">No se permiten multiples opiniones para el mismo producto.</value>
+        <value xml:lang="fr">Commentaires multiples pour le même produit non autorisés</value>
+    </property>
+
 </resource>

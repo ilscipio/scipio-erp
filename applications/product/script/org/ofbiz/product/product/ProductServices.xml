@@ -454,13 +454,56 @@ code package.
                 <call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="proofOfPurchase" ret-field="proofOfPurchase">
                     <field field="delegator" type="org.ofbiz.entity.Delegator"/>
                     <field field="productStore" type="org.ofbiz.entity.GenericValue"/>
-                    <field field="newEntity.userLoginId" />
+                    <field field="userLogin.partyId" />
                     <field field="newEntity.productId" />
                 </call-class-method>
                 <if-compare field="proofOfPurchase" type="Boolean" operator="not-equals" value="true">
-
+                    <add-error>
+                        <fail-property resource="ProductErrorUiLabels" property="ProductReviewProofOfPurchaseFailed"/>
+                    </add-error>
+                    <check-errors/>
                 </if-compare>
             </if-compare>
+
+            <!-- SCIPIO: Multiple reviews check -->
+            <if-compare field="productStore.multipleReviews" operator="equals" value="N">
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.GenericValue;
+                    import org.ofbiz.entity.util.EntityQuery;
+                    import org.ofbiz.entity.condition.EntityCondition;
+                    import org.ofbiz.entity.condition.EntityOperator;
+                    import org.ofbiz.base.util.Debug;
+                    import org.ofbiz.base.util.UtilMisc;
+
+                    context.poductReviewAllowed = false;
+                    condition = EntityCondition.makeCondition(UtilMisc.toList(
+                        EntityCondition.makeCondition("userLoginId", userLogin.userLoginId),
+                        EntityCondition.makeCondition("productId", newEntity.productId),
+                        EntityCondition.makeCondition("productStoreId", productStore.getString("productStoreId")),
+                        EntityCondition.makeCondition(UtilMisc.toList(
+                            EntityCondition.makeCondition("postedAnonymous", EntityOperator.EQUALS, null),
+                            EntityCondition.makeCondition("postedAnonymous", EntityOperator.EQUALS, "N")), EntityOperator.OR)
+                    ), EntityOperator.AND);
+
+                    try {
+                        productReviewCount = EntityQuery.use(delegator)
+                            .from("ProductReview")
+                            .where(condition).queryCount();
+                        if (productReviewCount == 0) {
+                            context.poductReviewAllowed = true;
+                        }
+                    } catch (Exception e) {
+                        Debug.logError(e.getMessage(), module);
+                    }
+                ]]></script>
+                <if-compare field="poductReviewAllowed" operator="equals" value="false">
+                    <add-error>
+                        <fail-property resource="ProductErrorUiLabels" property="MultipleProductReviewsNotAllowed"/>
+                    </add-error>
+                    <check-errors/>
+                </if-compare>
+            </if-compare>
+
 
             <if-compare field="productStore.autoApproveReviews" operator="equals" value="Y">
                 <set value="PRR_APPROVED" field="newEntity.statusId"/>

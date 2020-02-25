@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 
+import javax.rmi.CORBA.Util;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -992,41 +993,43 @@ public final class ProductStoreWorker {
      * @param productId
      * @return
      */
-    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String userLoginId, String productId) {
-        DynamicViewEntity dve = new DynamicViewEntity();
+    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String partyId, String productId) {
+        if (UtilValidate.isNotEmpty(partyId) && UtilValidate.isNotEmpty(productStore) && UtilValidate.isNotEmpty(productId)) {
+            DynamicViewEntity dve = new DynamicViewEntity();
 
-        dve.addMemberEntity("OH", "OrderHeader");
-        dve.addMemberEntity("UL", "UserLogin");
-        dve.addMemberEntity("OI", "OrderItem");
-        dve.addMemberEntity("PS", "ProductStore");
-        dve.addMemberEntity("P", "Product");
+            dve.addMemberEntity("OHAI", "OrderHeaderAndItems");
+            dve.addMemberEntity("ORL", "OrderRole");
 
-        dve.addAlias("OI", "orderId", null, null, false, false, null);
-        dve.addAlias("OH", "productStoreId", null, null, false, false, null);
-        dve.addAlias("OH", "createdBy", null, null, false, false, null);
-        dve.addAlias("UL", "userLoginId", null, null, false, false, null);
-        dve.addAlias("OI", "productId", null, null, false, false, null);
-        dve.addAlias("PS", "productStoreId", null, null, false, false, null);
+            dve.addAlias("OHAI", "orderId", null, null, true, true, null);
+            dve.addAlias("OHAI", "orderStatusId", null, null, false, true, null);
+            dve.addAlias("OHAI", "productStoreId", null, null, false, true, null);
+            dve.addAlias("OHAI", "productId", null, null, false, true, null);
+            dve.addAlias("ORL", "orderId", null, null, true, true, null);
+            dve.addAlias("ORL", "partyId", null, null, false, true, null);
+            dve.addAlias("ORL", "roleTypeId", null, null, false, true, null);
 
-        dve.addViewLink("OH", "OI", false, UtilMisc.toList(new ModelKeyMap("orderId", "orderId")));
-        dve.addViewLink("OH", "PS", false, UtilMisc.toList(new ModelKeyMap("productStoreId", "productStoreId")));
-        dve.addViewLink("OH", "UL", false, UtilMisc.toList(new ModelKeyMap("createdBy", "userLoginId")));
-        dve.addViewLink("OI", "P", false, UtilMisc.toList(new ModelKeyMap("productId", "productId")));
+            dve.addViewLink("OHAI", "ORL", true, UtilMisc.toList(new ModelKeyMap("orderId", "orderId")));
 
-        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
-                EntityCondition.makeCondition("createdBy", EntityOperator.EQUALS, userLoginId),
+            // TODO: Handle virtual -> variant products
+
+            EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("partyId", partyId),
                 EntityCondition.makeCondition("productId", productId),
-                EntityCondition.makeCondition("productStoreId", productStore.getString("productStoreId"))
-        ), EntityOperator.AND);
-        try {
-            long count = EntityQuery.use(delegator)
-                .from(dve)
-                .where(condition).queryCount();
-            if (count > 0) {
-                return true;
+                EntityCondition.makeCondition("productStoreId", productStore.getString("productStoreId")),
+                EntityCondition.makeCondition("orderStatusId", "ORDER_COMPLETED"),
+                EntityCondition.makeCondition("roleTypeId", EntityOperator.IN,
+                        UtilMisc.toList("PLACING_CUSTOMER", "END_USER_CUSTOMER", "BILL_TO_CUSTOMER", "SHIP_TO_CUSTOMER", "CUSTOMER"))
+            ), EntityOperator.AND);
+            try {
+                GenericValue productOrdered = EntityQuery.use(delegator)
+                    .from(dve)
+                    .where(condition).queryFirst();
+                if (UtilValidate.isNotEmpty(productOrdered)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                Debug.logError(e.getMessage(), module);
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
         }
 
         return false;

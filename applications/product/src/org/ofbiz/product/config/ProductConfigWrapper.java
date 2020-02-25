@@ -77,7 +77,10 @@ public class ProductConfigWrapper implements Serializable {
      */
     protected BigDecimal originalListPrice = null;
 
-    /** Creates a new instance of ProductConfigWrapper */
+    // NOTE: 2020-02: Use ProductConfigFactory instead of calling these contructors directly
+
+    /** Creates a new instance of ProductConfigWrapper @deprecated SCIPIO: do not use, init method was always private before, so this shouldn't be here. */
+    @Deprecated
     public ProductConfigWrapper() {
     }
 
@@ -109,7 +112,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(new ConfigItem(ci, exactCopy));
+                    questions.add(copyConfigItem(ci, exactCopy)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -127,7 +130,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(new ConfigItem(ci));
+                    questions.add(copyConfigItem(ci, false)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -146,7 +149,8 @@ public class ProductConfigWrapper implements Serializable {
         originalListPrice = pcw.originalListPrice; // SCIPIO
     }
 
-    private void init(Delegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
+    // SCIPIO: switched to protected - for subclasses only!
+    protected void init(Delegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         if (product == null || !"AGGREGATED".equals(product.getString("productTypeId")) && !"AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             throw new ProductConfigWrapperException("Product " + productId + " is not an AGGREGATED product.");
@@ -183,7 +187,7 @@ public class ProductConfigWrapper implements Serializable {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
             Set<String> itemIds = new HashSet<>();
             for (GenericValue questionsValue: questionsValues) {
-                ConfigItem oneQuestion = new ConfigItem(questionsValue);
+                ConfigItem oneQuestion = createConfigItem(questionsValue); // SCIPIO: Use factory method
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
                 if (itemIds.contains(oneQuestion.getConfigItem().getString("configItemId"))) {
                     oneQuestion.setFirst(false);
@@ -193,7 +197,7 @@ public class ProductConfigWrapper implements Serializable {
                 questions.add(oneQuestion);
                 List<GenericValue> configOptions = EntityQuery.use(delegator).from("ProductConfigOption").where("configItemId", oneQuestion.getConfigItemAssoc().getString("configItemId")).orderBy("sequenceNum").queryList();
                 for (GenericValue configOption: configOptions) {
-                    ConfigOption option = new ConfigOption(delegator, dispatcher, configOption, oneQuestion, catalogId, webSiteId, currencyUomId, autoUserLogin);
+                    ConfigOption option = createConfigOption(delegator, dispatcher, configOption, oneQuestion, catalogId, webSiteId, currencyUomId, autoUserLogin); // SCIPIO: use factory method
                     oneQuestion.addOption(option);
                 }
             }
@@ -377,6 +381,10 @@ public class ProductConfigWrapper implements Serializable {
         return dispatcher;
     }
 
+    public String getProductStoreId() { // SCIPIO
+        return productStoreId;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -504,7 +512,7 @@ public class ProductConfigWrapper implements Serializable {
         return totalPrice;
     }
 
-    private void setDefaultPrice() {
+    protected void setDefaultPrice() { // SCIPIO: switched to protected
         BigDecimal totalPrice = basePrice;
         List<ConfigOption> options = getDefaultOptions();
         for (ConfigOption oneOption: options) {
@@ -569,6 +577,14 @@ public class ProductConfigWrapper implements Serializable {
         return null;
     }
 
+    public ConfigItem createConfigItem(GenericValue questionAssoc) throws Exception { // SCIPIO: factory method
+        return new ConfigItem(questionAssoc);
+    }
+
+    public ConfigItem copyConfigItem(ConfigItem ci, boolean exactCopy) { // SCIPIO: factory method
+        return new ConfigItem(ci, exactCopy);
+    }
+
     public class ConfigItem implements java.io.Serializable {
         GenericValue configItem;
         GenericValue configItemAssoc;
@@ -601,7 +617,7 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = ci.configItemAssoc;
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(new ConfigOption(co, exactCopy, this));
+                    options.add(copyConfigOption(co, exactCopy, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             } else {
@@ -610,7 +626,7 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = GenericValue.create(ci.configItemAssoc);
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(new ConfigOption(co, this));
+                    options.add(copyConfigOption(co, false, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             }
@@ -768,6 +784,14 @@ public class ProductConfigWrapper implements Serializable {
         public String toString() {
             return configItem.getString("configItemId");
         }
+    }
+
+    public ConfigOption createConfigOption(Delegator delegator, LocalDispatcher dispatcher, GenericValue option, ConfigItem configItem, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception { // SCIPIO: factory method
+        return new ConfigOption(delegator, dispatcher, option, configItem, catalogId, webSiteId, currencyUomId, autoUserLogin);
+    }
+
+    public ConfigOption copyConfigOption(ConfigOption co, boolean exactCopy, ConfigItem parentConfigItem) { // SCIPIO: factory method
+        return new ConfigOption(co, exactCopy, parentConfigItem);
     }
 
     public class ConfigOption implements java.io.Serializable {
@@ -1114,7 +1138,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         @SuppressWarnings("unused")
-        private ProductConfigWrapper getOuterType() {
+        protected ProductConfigWrapper getOuterType() { // SCIPIO: switched to protected
             return ProductConfigWrapper.this;
         }
 

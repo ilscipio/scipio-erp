@@ -41,6 +41,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.config.ProductConfigFactory;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
@@ -867,7 +868,14 @@ public abstract class SolrProductUtil {
 
     protected static ProductConfigWrapper getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin,
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
-        ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, product.getString("productId"), null, null, null, currencyUomId, priceLocale, userLogin);
+        String productStoreId = null;
+        if (productStore != null) {
+            productStoreId = productStore.getString("productStoreId");
+        } else {
+            //Debug.logWarning("getConfigurableProductStartingPrices: missing product store", module);
+        }
+        // TODO: REVIEW: do we need to pass a specific catalog or webSiteId here?
+        ProductConfigWrapper configWrapper = ProductConfigFactory.createProductConfigWrapper(delegator, dispatcher, product.getString("productId"), productStoreId, null, null, currencyUomId, priceLocale, userLogin); // SCIPIO: Use factory
         configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
         BigDecimal listPrice = configWrapper.getTotalListPrice();
         // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and

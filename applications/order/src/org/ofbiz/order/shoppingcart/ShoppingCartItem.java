@@ -58,6 +58,7 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.config.ProductConfigFactory;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
@@ -825,7 +826,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
             this.additionalProductFeatureAndAppls = new HashMap<>(item.additionalProductFeatureAndAppls);
             this.alternativeOptionProductIds = (item.alternativeOptionProductIds != null) ? new ArrayList<>(item.alternativeOptionProductIds) : null;
-            this.configWrapper = (item.configWrapper != null) ? new ProductConfigWrapper(item.configWrapper, exactCopy) : null;
+            this.configWrapper = (item.configWrapper != null) ? ProductConfigFactory.copyProductConfigWrapper(item.configWrapper, exactCopy) : null; // SCIPIO: Use factory
             this.featuresForSupplier = new ArrayList<>(item.featuresForSupplier);
         } else {
             this.delegator = item.getDelegator();
@@ -901,7 +902,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
             }
             if (item.configWrapper != null) {
-                this.configWrapper = new ProductConfigWrapper(item.configWrapper);
+                this.configWrapper = ProductConfigFactory.copyProductConfigWrapper(item.configWrapper); // SCIPIO: use factory
             }
             this.featuresForSupplier.addAll(item.featuresForSupplier);
         }

@@ -25,8 +25,8 @@ import java.util.Properties;
  * To use this class, create a file named <code>orderstoreconfig.properties</code> in your component's config folder
  * and the following entry using your store's ID (the default factory class is given here):
  * <ul>
- * <li>Per-store config: <code>store.PRODUCT_STORE_ID.cart.factoryClass=org.ofbiz.order.shoppingcart.ShoppingCartFactory$DefaultShoppingCartFactory</code></li>
- * <li>Global default config: <code>store.DEFAULT.cart.factoryClass=org.ofbiz.order.shoppingcart.ShoppingCartFactory$DefaultShoppingCartFactory</code></li>
+ * <li>Per-store config: <code>store.PRODUCT_STORE_ID.cart.factoryClass=org.ofbiz.order.shoppingcart.ShoppingCartFactory$DefaultFactory</code></li>
+ * <li>Global default config: <code>store.DEFAULT.cart.factoryClass=org.ofbiz.order.shoppingcart.ShoppingCartFactory$DefaultFactory</code></li>
  * </ul>
  */
 public abstract class ShoppingCartFactory {

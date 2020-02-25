@@ -14,14 +14,14 @@ code package.
     <@menu type="button" class="+button-style-1">
       <@menuitem type="link" href=makePageUrl("return.pdf?returnId=${returnId!}") text="PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
       <#if returnId??>
-        <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId":returnId, "returnTypeId":"RTN_REFUND"}, null, false)/>
+        <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId":returnId, "returnTypeId":"RTN_REFUND"}, ["returnItemSeqId"], false)/>
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>
           <@menuitem type="link" href=makePageUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&originOrderId=${orderId!}") text="${rawLabel('OrderCreateExchangeOrder')} ${rawLabel('CommonFor')} ${raw(orderId!)}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
         </#if>
         <#if "RETURN_ACCEPTED" == returnHeader.statusId>
-          <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, null, false)/>
+          <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, ["returnItemSeqId"], false)/>
           <#if returnItems?has_content>
             <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
             <#assign shipGroupAssoc = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("OrderItemShipGroupAssoc", {"orderId" : orderId}, null, false))/>

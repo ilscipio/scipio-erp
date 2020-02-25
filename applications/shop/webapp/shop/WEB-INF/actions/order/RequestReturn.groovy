@@ -18,7 +18,8 @@
  */
 
 import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
+import org.ofbiz.entity.*
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.*;
 
 orderId = parameters.orderId;
@@ -38,6 +39,10 @@ if (orderId) {
     context.returnableItems = returnRes.returnableItems;
     orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
     context.orderHeader = orderHeader;
+
+    // SCIPIO
+    orh = new OrderReadHelper(orderHeader);
+    context.orh = orh;
 }
 
 returnItemTypeMap = from("ReturnItemTypeMap").where("returnHeaderTypeId", "CUSTOMER_RETURN").queryList();
@@ -53,3 +58,7 @@ if (orderId) {
 }
 
 context.shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+
+// SCIPIO
+hasReturnPermission = org.ofbiz.order.order.OrderReturnEvents.ReturnHandler.hasReturnPermission(context.security, context.userLogin, context.orderHeader);
+context.hasReturnPermission = hasReturnPermission;

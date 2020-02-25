@@ -677,7 +677,10 @@ code package.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-true field="userHasAccount" />
+                                <and>
+                                    <if-true field="userHasAccount"/>
+                                    <if-true field="hasReturnPermission"/>
+                                </and>
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/requestreturn.ftl"/></html></platform-specific>

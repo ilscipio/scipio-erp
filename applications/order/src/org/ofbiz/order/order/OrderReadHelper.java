@@ -38,6 +38,7 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
@@ -1946,7 +1947,7 @@ public class OrderReadHelper {
         Delegator delegator = orderHeader.getDelegator();
         if (this.orderReturnItems == null) {
             try {
-                this.orderReturnItems = EntityQuery.use(delegator).from("ReturnItem").where("orderId", orderHeader.get("orderId")).queryList();
+                this.orderReturnItems = EntityQuery.use(delegator).from("ReturnItem").where("orderId", orderHeader.get("orderId")).orderBy("returnItemSeqId").queryList();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem getting ReturnItem from order", module);
                 return null;
@@ -3511,6 +3512,48 @@ public class OrderReadHelper {
             }
         }
         return pcwMap;
+    }
+
+    public Map<String, String> getOrderAdjustmentReturnItemTypeMap(String returnHeaderTypeId) { // SCIPIO
+        return getOrderAdjustmentReturnItemTypeMap(getDelegator(), returnHeaderTypeId);
+    }
+
+    public static Map<String, String> getOrderAdjustmentReturnItemTypeMap(Delegator delegator, String returnHeaderTypeId) { // SCIPIO
+        Map<String, String> typeMap = new HashMap<>();
+        try {
+            List<GenericValue> valueList = delegator.from("ReturnItemTypeMap").where("returnHeaderTypeId", returnHeaderTypeId).cache().queryList();
+            if (valueList != null) {
+                for (GenericValue value : valueList) {
+                    typeMap.put(value.getString("returnItemMapKey"), value.getString("returnItemTypeId"));
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return typeMap;
+    }
+
+    /**
+     * SCIPIO: Returns the adjustments for the specified item from the returnableItems map returned by the getReturnableItems service using orderItemSeqId.
+     */
+    public static List<GenericValue> getOrderItemAdjustmentsFromReturnableItems(Map<GenericValue, Map<String, Object>> returnableItems, String orderItemSeqId) {
+        Map<String, Object> info = getReturnableItemInfo(returnableItems, orderItemSeqId);
+        return (info != null) ? UtilGenerics.cast(info.get("adjustments")) : null;
+    }
+
+    /**
+     * SCIPIO: Keys into the returnableItems map returned by the getReturnableItems service using orderItemSeqId.
+     */
+    public static Map<String, Object> getReturnableItemInfo(Map<GenericValue, Map<String, Object>> returnableItems, String orderItemSeqId) {
+        if (returnableItems == null || orderItemSeqId == null) {
+            return null;
+        }
+        for(Map.Entry<GenericValue, Map<String, Object>> entry : returnableItems.entrySet()) {
+            if ("OrderItem".equals(entry.getKey().getEntityName()) && orderItemSeqId.equals(entry.getKey().get("orderItemSeqId"))) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     /**

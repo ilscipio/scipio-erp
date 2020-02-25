@@ -22,6 +22,7 @@ package org.ofbiz.order.order;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -77,6 +79,10 @@ public class OrderReturnServices {
     private static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
+
+    public static final Set<String> RECALC_RETURN_ADJUSTMENTS = UtilMisc.unmodifiableHashSetCopy(Arrays.asList(
+            UtilProperties.getPropertyValue("order", "returnAdjustments.recalc.returnAdjustmentTypeIds",
+            "RET_PROMOTION_ADJ,RET_DISCOUNT_ADJ,RET_SALES_TAX_ADJ").split("\\s*,\\s*")));
 
     // locate the return item's initial inventory item cost
     public static Map<String, Object> getReturnItemInitialCost(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -493,6 +499,7 @@ public class OrderReturnServices {
         }
 
         Map<GenericValue, Map<String, Object>> returnable = new LinkedHashMap<>();
+
         if (orderHeader != null) {
             // OrderItems which have been issued may be returned.
             EntityConditionList<EntityExpr> whereConditions = EntityCondition.makeCondition(UtilMisc.toList(
@@ -574,7 +581,8 @@ public class OrderReturnServices {
                     }
                     returnInfo.put("itemTypeKey", itemTypeKey);
 
-                    returnable.put(item, returnInfo);
+                    // SCIPIO: moved below for safety (just in case)
+                    //returnable.put(item, returnInfo);
 
                     // Order item adjustments
                     List<GenericValue> itemAdjustments = null;
@@ -585,6 +593,12 @@ public class OrderReturnServices {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
                                 "OrderErrorUnableToGetOrderAdjustmentsFromItem", locale));
                     }
+                    if (UtilValidate.isNotEmpty(itemAdjustments)) {
+                        // SCIPIO: We'll also include the item adjustments under the item itself, so it's much easier to iterate in screens
+                        returnInfo.put("adjustments", itemAdjustments);
+                    }
+                    returnable.put(item, returnInfo);
+
                     if (UtilValidate.isNotEmpty(itemAdjustments)) {
                         for (GenericValue itemAdjustment : itemAdjustments) {
                             returnInfo = new HashMap<>();
@@ -2308,8 +2322,7 @@ public class OrderReturnServices {
         List<GenericValue> returnItems = null;
         Map<String, Object> returnAmountByOrder = new HashMap<>();
         try {
-            returnItems = EntityQuery.use(delegator).from("ReturnItem").where("returnId", returnId).queryList();
-
+            returnItems = EntityQuery.use(delegator).from("ReturnItem").where("returnId", returnId).orderBy("returnItemSeqId").queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up return information", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
@@ -2597,10 +2610,11 @@ public class OrderReturnServices {
      * @return returns if the returnn adjustment need to be recalculated
      */
     public static boolean needRecalculate(String returnAdjustmentTypeId) {
-        return "RET_PROMOTION_ADJ".equals(returnAdjustmentTypeId) ||
-                "RET_DISCOUNT_ADJ".equals(returnAdjustmentTypeId) ||
-                "RET_SALES_TAX_ADJ".equals(returnAdjustmentTypeId);
-
+        // SCIPIO: unhardcoded
+        //return "RET_PROMOTION_ADJ".equals(returnAdjustmentTypeId) ||
+        //        "RET_DISCOUNT_ADJ".equals(returnAdjustmentTypeId) ||
+        //        "RET_SALES_TAX_ADJ".equals(returnAdjustmentTypeId);
+        return RECALC_RETURN_ADJUSTMENTS.contains(returnAdjustmentTypeId);
     }
 
     /**

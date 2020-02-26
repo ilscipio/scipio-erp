@@ -1035,4 +1035,13 @@ public final class ProductStoreWorker {
         return false;
     }
 
+    /**
+     * Returns useVariantStockCalc on ProductStore. NOTE: 2020-02-26: The default is now true.
+     */
+    public static boolean isUseVariantStockCalc(GenericValue productStore) { // SCIPIO
+        if (productStore == null) {
+            return true; // TODO: REVIEW: should default be true even when store is missing? Happens in solr... for now let's be consistent
+        }
+        return !Boolean.FALSE.equals(productStore.getBoolean("useVariantStockCalc"));
+    }
 }

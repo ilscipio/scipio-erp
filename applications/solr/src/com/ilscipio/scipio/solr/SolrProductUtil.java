@@ -583,7 +583,7 @@ public abstract class SolrProductUtil {
             */
             final boolean useTotal = true;
             // WARN: here the total (inStock) behavior for variants is determined by the first store found only!
-            final boolean useVariantStockCalcForTotal = (productStore != null && Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc")));
+            final boolean useVariantStockCalcForTotal = ProductStoreWorker.isUseVariantStockCalc(productStore);
             Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, product,
                     productStores, useTotal, useVariantStockCalcForTotal, nowTimestamp, useCache);
             for (Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {

@@ -50,6 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -1896,7 +1897,7 @@ nextProd:
         List<GenericValue> indivStockStores = new ArrayList<>();
         // sort stores by useVariantStockCalc flag
         for(GenericValue productStore : productStores) {
-            if (Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc"))) {
+            if (ProductStoreWorker.isUseVariantStockCalc(productStore)) {
                 variantStockStores.add(productStore);
             } else {
                 indivStockStores.add(productStore);
@@ -1958,7 +1959,7 @@ nextProd:
                                                             GenericValue product, GenericValue productStore,
                                                             Timestamp moment, boolean useCache) throws GeneralException {
         Map<String, BigDecimal> results = getProductStockPerProductStore(delegator, dispatcher, product, UtilMisc.toList(productStore),
-                false, Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc")), moment, useCache);
+                false, ProductStoreWorker.isUseVariantStockCalc(productStore), moment, useCache);
         return results.get(productStore.getString("productStoreId"));
     }
 

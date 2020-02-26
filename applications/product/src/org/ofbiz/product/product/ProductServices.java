@@ -315,7 +315,7 @@ public class ProductServices {
         // Make the selectable feature list
         List<GenericValue> selectableFeatures = null;
         try {
-            selectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").orderBy("sequenceNum").cache(true).filterByDate().queryList();
+            selectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").orderBy("sequenceNum","description").cache(true).filterByDate().queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,

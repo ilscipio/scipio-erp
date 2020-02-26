@@ -221,6 +221,12 @@ public class ShoppingCartItem implements java.io.Serializable {
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
             LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ExtraPurchaseOrderInitArgs extraInitArgs)
                 throws CartItemModifyException, ItemNotFoundException {
+        return cart.makePurchaseOrderItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct, shipBeforeDate, shipAfterDate, cancelBackOrderDate, extraInitArgs);
+    }
+    public static ShoppingCartItem makePurchaseOrderItemImpl(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity,
+                                                         Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                                         LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ExtraPurchaseOrderInitArgs extraInitArgs)
+            throws CartItemModifyException, ItemNotFoundException {
         Delegator delegator = cart.getDelegator();
         GenericValue product = null;
 
@@ -238,7 +244,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(excMsg, module);
             throw new ItemNotFoundException(excMsg);
         }
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, null);
+        ShoppingCartItem newItem = cart.newItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, null); // SCIPIO: use factory method
 
         // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
         newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
@@ -480,6 +486,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * Makes a ShoppingCartItem and adds it to the cart.
      * <p>
      * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
+     * SCIPIO: 2020-02-26: Refactored the core invocation into {@link ShoppingCart#makeItem} so can be overridden by subclasses.
      *
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
@@ -491,8 +498,19 @@ public class ShoppingCartItem implements java.io.Serializable {
             String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
             ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
             ExtraInitArgs extraInitArgs) throws CartItemModifyException {
+        return cart.makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId,
+                shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool,
+                triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks, extraInitArgs);
+    }
 
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, parentProduct);
+    protected static ShoppingCartItem makeItemImpl(Integer cartLocation, GenericValue product, BigDecimal selectedAmount,
+                                            BigDecimal quantity, BigDecimal unitPrice, Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,
+                                            String accommodationMapId,String accommodationSpotId,
+                                            Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
+                                            String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
+                                            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
+                                            ExtraInitArgs extraInitArgs) throws CartItemModifyException {
+        ShoppingCartItem newItem = cart.newItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, parentProduct); // SCIPIO: use factory method
 
         // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
         newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
@@ -693,6 +711,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /**
      * Makes a non-product ShoppingCartItem and adds it to the cart.
      * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
+     * SCIPIO: 2020-02-26: Refactored the core invocation into {@link ShoppingCart#makeItem} so can be overridden by subclasses.
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param itemType The OrderItemTypeId for the item being added
@@ -712,9 +731,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId,
             BigDecimal basePrice, BigDecimal selectedAmount, BigDecimal quantity, Map<String, Object> attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup,
             LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
-
+        return cart.makeItem(cartLocation, itemType, itemDescription, productCategoryId, basePrice, selectedAmount, quantity, attributes, prodCatalogId, itemGroup, dispatcher,
+                cart, triggerExternalOpsBool);
+    }
+    public static ShoppingCartItem makeItemImpl(Integer cartLocation, String itemType, String itemDescription, String productCategoryId,
+                                                BigDecimal basePrice, BigDecimal selectedAmount, BigDecimal quantity, Map<String, Object> attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                                LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
         Delegator delegator = cart.getDelegator();
-        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale(), itemGroup);
+        ShoppingCartItem newItem = cart.newItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale(), itemGroup); // SCIPIO: use factory method
 
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
@@ -917,6 +941,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     public ShoppingCartItem copy(boolean exactCopy) {
         return copy(exactCopy, null);
     }
+
+    // SCIPIO: NOTE: 2020-02-36: These constructors are now called through ShoppingCart.newItem methods
 
     /** Cannot create shopping cart item with no parameters */
     protected ShoppingCartItem() {}

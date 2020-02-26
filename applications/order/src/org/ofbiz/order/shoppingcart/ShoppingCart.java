@@ -1429,7 +1429,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Creates a new Item Group and returns the groupNumber that represents it */
     public String addItemGroup(String groupName, String parentGroupNumber) {
         ShoppingCart.ShoppingCartItemGroup parentGroup = this.getItemGroupByNumber(parentGroupNumber);
-        ShoppingCart.ShoppingCartItemGroup newGroup = new ShoppingCart.ShoppingCartItemGroup(this.nextGroupNumber, groupName, parentGroup);
+        ShoppingCart.ShoppingCartItemGroup newGroup = newItemGroup(this.nextGroupNumber, groupName, parentGroup);
         this.nextGroupNumber++;
         this.itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
         return newGroup.getGroupNumber();
@@ -1443,7 +1443,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(itemGroupNumber);
         if (itemGroup == null) {
             ShoppingCartItemGroup parentGroup = addItemGroup(itemGroupValue.getRelatedOne("ParentOrderItemGroup", true));
-            itemGroup = new ShoppingCartItemGroup(itemGroupNumber, itemGroupValue.getString("groupName"), parentGroup);
+            itemGroup = newItemGroup(itemGroupNumber, itemGroupValue.getString("groupName"), parentGroup);
             int parsedGroupNumber = Integer.parseInt(itemGroupNumber);
             if (parsedGroupNumber > this.nextGroupNumber) {
                 this.nextGroupNumber = parsedGroupNumber + 1;
@@ -2527,7 +2527,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     // ----------------------------------------
 
     public int addShipInfo() {
-        CartShipInfo csi = new CartShipInfo();
+        CartShipInfo csi = newShipInfo();
         csi.orderTypeId = getOrderType();
         shipInfo.add(csi);
         return (shipInfo.size() - 1);
@@ -2572,7 +2572,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (shipInfo.size() == idx) {
             Debug.logWarning("getShipInfo: Deprecated cart modification triggered by ship info index '"
                     + idx + "'; please use getOrAddShipInfo instead or prevent the index going of bounds", module);
-            CartShipInfo csi = new CartShipInfo();
+            CartShipInfo csi = newShipInfo();
             csi.orderTypeId = getOrderType();
             shipInfo.add(csi);
         }
@@ -2591,7 +2591,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
 
         if (shipInfo.size() == idx) {
-            CartShipInfo csi = new CartShipInfo();
+            CartShipInfo csi = newShipInfo();
             csi.orderTypeId = getOrderType();
             shipInfo.add(csi);
         }
@@ -2718,7 +2718,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         CartShipInfo fromGroup = this.getOrAddShipInfo(fromIndex);
         CartShipInfo toGroup = null;
         if (toIndex == -1) {
-            toGroup = new CartShipInfo();
+            toGroup = newShipInfo();
             toGroup.orderTypeId = getOrderType();
             this.shipInfo.add(toGroup);
             toIndex = this.shipInfo.size() - 1;
@@ -5070,6 +5070,27 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
     }
 
+    /**
+     * Factory method (SCIPIO).
+     */
+    public ShoppingCartItemGroup newItemGroup(long groupNumber, String groupName) {
+        return new ShoppingCartItemGroup(groupNumber, groupName);
+    }
+
+    /**
+     * Factory method (SCIPIO).
+     */
+    public ShoppingCartItemGroup newItemGroup(long groupNumber, String groupName, ShoppingCartItemGroup parentGroup) {
+        return new ShoppingCartItemGroup(groupNumber, groupName, parentGroup);
+    }
+
+    /**
+     * Factory method (SCIPIO).
+     */
+    public ShoppingCartItemGroup newItemGroup(String groupNumber, String groupName, ShoppingCartItemGroup parentGroup) {
+        return new ShoppingCartItemGroup(groupNumber, groupName, parentGroup);
+    }
+
     public static class ShoppingCartItemGroup implements Serializable {
         private String groupNumber;
         private String groupName;
@@ -5250,6 +5271,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public int compareTo(ProductPromoUseInfo other) {
             return other.getUsageWeight().compareTo(getUsageWeight());
         }
+    }
+
+    /**
+     * Factory method (SCIPIO).
+     */
+    public CartShipInfo newShipInfo() {
+        return new CartShipInfo();
     }
 
     public static class CartShipInfo implements Serializable {
@@ -5561,7 +5589,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 if (!isShippableToAddress(item)) {
                     throw new IllegalArgumentException("The shipping address is not compatible with ProductGeos rules.");
                 }
-                itemInfo = new CartShipItemInfo();
+                itemInfo = newShipInfoItem();
                 itemInfo.item = item;
                 shipItemInfo.put(item, itemInfo);
             }
@@ -5666,6 +5694,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
 
             return shipItemTotal;
+        }
+
+        /**
+         * Factory method (SCIPIO).
+         */
+        public CartShipItemInfo newShipInfoItem() {
+            return new CartShipItemInfo();
         }
 
         public static class CartShipItemInfo implements Serializable {
@@ -6391,5 +6426,61 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public static boolean verboseOn() {
         return (ShoppingCart.DEBUG || Debug.verboseOn());
+    }
+
+    // SCIPIO: 2020-02-36: New factory methods replace direct ShoppingCartItem constructor calls and static makeItem calls.
+
+    /**
+     * Core makeItem factory method, for overriding by client classes (SCIPIO).
+     */
+    public ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, BigDecimal selectedAmount,
+                                     BigDecimal quantity, BigDecimal unitPrice, Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,
+                                     String accommodationMapId,String accommodationSpotId,
+                                     Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
+                                     String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
+                                     ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
+                                     ShoppingCartItem.ExtraInitArgs extraInitArgs) throws CartItemModifyException {
+        return ShoppingCartItem.makeItemImpl(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId,
+                shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool,
+                triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks, extraInitArgs);
+    }
+
+    /**
+     * Core makeItem factory method, for overriding by client classes (SCIPIO).
+     */
+    public ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId,
+                                     BigDecimal basePrice, BigDecimal selectedAmount, BigDecimal quantity, Map<String, Object> attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                     LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
+        return ShoppingCartItem.makeItemImpl(cartLocation, itemType, itemDescription, productCategoryId, basePrice, selectedAmount, quantity, attributes, prodCatalogId, itemGroup, dispatcher, cart, triggerExternalOpsBool);
+    }
+
+    /**
+     * Core makeItem factory method, for overriding by client classes (SCIPIO).
+     */
+    public ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity,
+                                                         Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                                         LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ShoppingCartItem.ExtraPurchaseOrderInitArgs extraInitArgs)
+            throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makePurchaseOrderItemImpl(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct, shipBeforeDate, shipAfterDate, cancelBackOrderDate, extraInitArgs);
+    }
+
+    /** Creates new ShoppingCartItem object (SCIPIO). */
+    public ShoppingCartItem newItem() {
+        return new ShoppingCartItem();
+    }
+
+    /** Creates new ShoppingCartItem object (SCIPIO). */
+    public ShoppingCartItem newItem(GenericValue product, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, Locale locale, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup) {
+        return new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, locale, itemType, itemGroup);
+    }
+
+    /** Creates new ShoppingCartItem object (SCIPIO). */
+    public ShoppingCartItem newItem(GenericValue product, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, GenericValue parentProduct) {
+        return new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, locale, itemType, itemGroup, parentProduct);
+    }
+
+    /** Creates new ShopingCartItem object (SCIPIO). */
+    public ShoppingCartItem newItem(Delegator delegator, String itemTypeId, String description, String categoryId, BigDecimal basePrice, Map<String, Object> attributes, String prodCatalogId, Locale locale, ShoppingCart.ShoppingCartItemGroup itemGroup) {
+        return new ShoppingCartItem(delegator, itemTypeId, description, categoryId, basePrice, attributes, prodCatalogId, locale, itemGroup);
     }
 }

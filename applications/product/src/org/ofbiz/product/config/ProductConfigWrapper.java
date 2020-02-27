@@ -112,7 +112,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(copyConfigItem(ci, exactCopy)); // SCIPIO: use factory method
+                    questions.add(ci.copy(exactCopy)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -130,7 +130,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(copyConfigItem(ci, false)); // SCIPIO: use factory method
+                    questions.add(ci.copy(false)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -187,7 +187,7 @@ public class ProductConfigWrapper implements Serializable {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
             Set<String> itemIds = new HashSet<>();
             for (GenericValue questionsValue: questionsValues) {
-                ConfigItem oneQuestion = createConfigItem(questionsValue); // SCIPIO: Use factory method
+                ConfigItem oneQuestion = newConfigItem(questionsValue); // SCIPIO: Use factory method
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
                 if (itemIds.contains(oneQuestion.getConfigItem().getString("configItemId"))) {
                     oneQuestion.setFirst(false);
@@ -577,12 +577,8 @@ public class ProductConfigWrapper implements Serializable {
         return null;
     }
 
-    public ConfigItem createConfigItem(GenericValue questionAssoc) throws Exception { // SCIPIO: factory method
+    public ConfigItem newConfigItem(GenericValue questionAssoc) throws Exception { // SCIPIO: factory method
         return new ConfigItem(questionAssoc);
-    }
-
-    public ConfigItem copyConfigItem(ConfigItem ci, boolean exactCopy) { // SCIPIO: factory method
-        return new ConfigItem(ci, exactCopy);
     }
 
     public class ConfigItem implements java.io.Serializable {
@@ -617,7 +613,7 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = ci.configItemAssoc;
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(copyConfigOption(co, exactCopy, this)); // SCIPIO: use factory method
+                    options.add(co.copy(exactCopy, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             } else {
@@ -626,12 +622,16 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = GenericValue.create(ci.configItemAssoc);
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(copyConfigOption(co, false, this)); // SCIPIO: use factory method
+                    options.add(co.copy(false, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             }
             first = ci.first;
             content = ci.content; // SCIPIO: NOTE: The wrapper is immutable so no need to clone
+        }
+
+        public ConfigItem copy(boolean exactCopy) { // SCIPIO
+            return new ConfigItem(this, exactCopy);
         }
 
         /**
@@ -790,10 +790,6 @@ public class ProductConfigWrapper implements Serializable {
         return new ConfigOption(delegator, dispatcher, option, configItem, catalogId, webSiteId, currencyUomId, autoUserLogin);
     }
 
-    public ConfigOption copyConfigOption(ConfigOption co, boolean exactCopy, ConfigItem parentConfigItem) { // SCIPIO: factory method
-        return new ConfigOption(co, exactCopy, parentConfigItem);
-    }
-
     public class ConfigOption implements java.io.Serializable {
         BigDecimal optionListPrice = BigDecimal.ZERO;
         BigDecimal optionPrice = BigDecimal.ZERO;
@@ -906,6 +902,10 @@ public class ProductConfigWrapper implements Serializable {
             optionPrice = co.optionPrice;
             available = co.available;
             selected = co.selected;
+        }
+
+        public ConfigOption copy(boolean exactCopy, ConfigItem parentConfigItem) { // SCIPIO
+            return new ConfigOption(this, exactCopy, parentConfigItem);
         }
 
         /**

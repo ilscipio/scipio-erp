@@ -189,7 +189,7 @@ if (product) {
     context.productContentWrapper = productContentWrapper;
 }
 
-if(!useCache && !cachedValue){
+if(!cachedValue){
     // get the product detail information
     if (product) {
         productTypeId = product.productTypeId;

@@ -577,7 +577,9 @@ public class RequestHandler {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
             if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check." + showSessionId(request), module);
-            ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
+            // SCIPIO: auth-check-event
+            //ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
+            ConfigXMLReader.Event checkLoginEvent = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap).event;
             String checkLoginReturnString = null;
 
             try {
@@ -590,19 +592,19 @@ public class RequestHandler {
                 eventReturn = checkLoginReturnString;
                 // if the request is an ajax request we don't want to return the default login check
                 if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                    requestMap = requestMapMap.get("checkLogin");
+                    requestMap = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap); // SCIPIO: requestMapMap.get("checkLogin");
                 } else {
                     // SCIPIO: 2017-05-15: for viewAsJson we have to check if we should
                     // use the regular or not
                     if (viewAsJson) {
                         if (ViewAsJsonUtil.isViewAsJsonRegularLogin(request, viewAsJsonConfig)) {
-                            requestMap = requestMapMap.get("checkLogin");
+                            requestMap = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap); // SCIPIO: requestMapMap.get("checkLogin");
                         } else {
                             // SCIPIO: If not using the regular login, we have to discard the render target expression, if any
-                            requestMap = requestMapMap.get("ajaxCheckLogin");
+                            requestMap = getSecurityAuthCheckEventRequest(requestMap, "ajaxCheckLogin", requestMapMap); // SCIPIO: requestMapMap.get("ajaxCheckLogin");
                         }
                     } else {
-                        requestMap = requestMapMap.get("ajaxCheckLogin");
+                        requestMap = getSecurityAuthCheckEventRequest(requestMap, "ajaxCheckLogin", requestMapMap); // SCIPIO: requestMapMap.get("ajaxCheckLogin");
                     }
                 }
 
@@ -932,6 +934,18 @@ public class RequestHandler {
                 String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
                 if (UtilValidate.isNotEmpty(lastGetUrl)) {
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
+                    // NOTE: For this type, we ignore request-parameters if the xml element was not specified or it's set to something other than default ("auto")
+                    if (nextRequestResponse.hasExplicitRedirectParameterSpec()) {
+                        String qs = makeQueryString(request, nextRequestResponse);
+                        if (UtilValidate.isNotEmpty(qs) && !"?".equals(qs)) {
+                            int paramDelimLast = lastGetUrl.indexOf('?');
+                            if (paramDelimLast >= 0) {
+                                lastGetUrl = lastGetUrl + "&" + qs.substring(1);
+                            } else {
+                                lastGetUrl = lastGetUrl + qs;
+                            }
+                        }
+                    }
                     // Perform URL encoding
                     lastGetUrl = response.encodeURL(lastGetUrl);
                     callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
@@ -3205,5 +3219,19 @@ public class RequestHandler {
      */
     public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
         sendControllerUriRedirectWithQueryString(request, response, uri, null);
+    }
+
+    private static RequestMap getSecurityAuthCheckEventRequest(RequestMap requestMap, String defaultCheckLoginUri, Map<String, ConfigXMLReader.RequestMap> requestMapMap) { // SCIPIO
+        ConfigXMLReader.RequestMap checkLoginRequest;
+        if (UtilValidate.isNotEmpty(requestMap.getSecurityAuthCheckEvent())) {
+            checkLoginRequest = requestMapMap.get(requestMap.getSecurityAuthCheckEvent());
+            if (checkLoginRequest == null) {
+                checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
+                Debug.logError("Controller event '" + requestMap.uri + "' references invalid security auth-check-event request URI: " + requestMap.getSecurityAuthCheckEvent(), module);
+            }
+        } else {
+            checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
+        }
+        return checkLoginRequest;
     }
 }

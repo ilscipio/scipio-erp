@@ -578,6 +578,13 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="auth-check-event"><!-- default="checkLogin" -->
+            <xs:annotation>
+                <xs:documentation>
+                    Name of an alternative request URI whose event to use for login check (SCIPIO). Default: "checkLogin"
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:boolean" name="cert" default="false">
             <xs:annotation>
                 <xs:documentation>

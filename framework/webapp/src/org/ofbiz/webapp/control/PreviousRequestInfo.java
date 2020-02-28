@@ -5,6 +5,8 @@ import org.ofbiz.base.util.UtilValidate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -35,6 +37,44 @@ public class PreviousRequestInfo {
         this.previousParamMapUrl = previousParamMapUrl;
         this.previousParamMapForm = previousParamMapForm;
         this.attributes = attributes;
+    }
+
+    /**
+     * Merge constructor.
+     */
+    protected PreviousRequestInfo(boolean deepMerge, PreviousRequestInfo other, String previousRequest, String previousServletRequest,
+                                  Map<String, Object> previousParamMapUrl, Map<String, Object> previousParamMapForm, Map<String, Object> attributes) {
+        this.previousRequest = (previousRequest != null) ? previousRequest : other.previousRequest;
+        this.previousServletRequest = (previousServletRequest != null) ? previousServletRequest : other.previousServletRequest;
+        previousParamMapUrl = getMergedMaps(new LinkedHashMap<>(), other.previousParamMapUrl, previousParamMapUrl, deepMerge);
+        this.previousParamMapUrl = previousParamMapUrl.size() > 0 ? Collections.unmodifiableMap(previousParamMapUrl) : null;
+
+        previousParamMapForm = getMergedMaps(new LinkedHashMap<>(), other.previousParamMapForm, previousParamMapForm, deepMerge);
+        this.previousParamMapForm = previousParamMapForm.size() > 0 ? Collections.unmodifiableMap(previousParamMapForm) : null;
+
+        attributes = getMergedMaps(new HashMap<>(), other.attributes, attributes, deepMerge);
+        this.attributes = previousParamMapForm.size() > 0 ? Collections.unmodifiableMap(previousParamMapForm) : Collections.emptyMap();
+    }
+
+    private static Map<String, Object> getMergedMaps(Map<String, Object> merged, Map<String, Object> otherMap, Map<String, Object> prioMap, boolean deepMerge) {
+        // TODO: Optimize
+        if (!deepMerge) {
+            if (prioMap != null) {
+                merged.putAll(prioMap);
+                return merged;
+            }
+            if (otherMap != null) {
+                merged.putAll(otherMap);
+            }
+            return merged;
+        }
+        if (otherMap != null) {
+            merged.putAll(otherMap);
+        }
+        if (prioMap != null) {
+            merged.putAll(prioMap);
+        }
+        return merged;
     }
 
     public static PreviousRequestInfo getInfo(HttpServletRequest request) {
@@ -85,10 +125,6 @@ public class PreviousRequestInfo {
         getUnset(request).setInfo(request);
     }
 
-    public boolean isSet() {
-        return getPreviousRequest() != null || getPreviousServletRequest() != null || getPreviousParamMapUrl() != null || getPreviousParamMapForm() != null || !getAttributes().isEmpty();
-    }
-
     public String getPreviousRequest() { return previousRequest; }
     public String getPreviousServletRequest() { return previousServletRequest; }
     public Map<String, Object> getPreviousParamMapUrl() { return previousParamMapUrl; }
@@ -100,6 +136,61 @@ public class PreviousRequestInfo {
     public static Map<String, Object> getPreviousParamMapUrl(HttpServletRequest request) { return getInfoOrUnset(request).getPreviousParamMapUrl(); }
     public static Map<String, Object> getPreviousParamMapForm(HttpServletRequest request) { return getInfoOrUnset(request).getPreviousParamMapForm(); }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getUrlParam(String name) {
+        if (getPreviousParamMapUrl() != null) {
+            return (T) getPreviousParamMapUrl().get(name);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getFormParam(String name) {
+        if (getPreviousParamMapForm() != null) {
+            return (T) getPreviousParamMapForm().get(name);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getAttribute(String name) {
+        return (T) getAttributes().get(name);
+    }
+
+    public boolean isSet() {
+        return getPreviousRequest() != null || getPreviousServletRequest() != null || getPreviousParamMapUrl() != null || getPreviousParamMapForm() != null || !getAttributes().isEmpty();
+    }
+
+    public PreviousRequestInfo mergeInfo(String previousRequest, String previousServletRequest,
+                                         Map<String, Object> previousParamMapUrl, Map<String, Object> previousParamMapForm, Map<String, Object> attributes) {
+        return new PreviousRequestInfo(true, this, previousRequest, previousServletRequest, previousParamMapUrl, previousParamMapForm, attributes);
+    }
+
+    public PreviousRequestInfo shallowMergeInfo(String previousRequest, String previousServletRequest,
+                                         Map<String, Object> previousParamMapUrl, Map<String, Object> previousParamMapForm, Map<String, Object> attributes) {
+        return new PreviousRequestInfo(false, this, previousRequest, previousServletRequest, previousParamMapUrl, previousParamMapForm, attributes);
+    }
+
+    public PreviousRequestInfo mergePreviousRequest(String previousRequest) {
+        return mergeInfo(previousRequest, null, null, null, null);
+    }
+
+    public PreviousRequestInfo mergePreviousServletRequest(String previousServletRequest) {
+        return mergeInfo(null, previousServletRequest, null, null, null);
+    }
+
+    public PreviousRequestInfo mergeUrlParams(Map<String, Object> previousParamMapUrl) {
+        return mergeInfo(null, null, previousParamMapUrl, null, null);
+    }
+
+    public PreviousRequestInfo mergeFormParams(Map<String, Object> previousParamMapForm) {
+        return mergeInfo(null, null, null, previousParamMapForm, null);
+    }
+
+    public PreviousRequestInfo mergeAttributes(Map<String, Object> attributes) {
+        return mergeInfo(null, null, null, null, attributes);
+    }
+
     /**
      * Returns copy of this that has the requests removed but leaves the _PREVIOUS_PARAM_MAP_URL_ and _PREVIOUS_PARAM_MAP_FORM_ intact.
      * Needed for RequestHandler logic.
@@ -107,4 +198,5 @@ public class PreviousRequestInfo {
     public PreviousRequestInfo removePreviousRequest() {
         return new PreviousRequestInfo(null, null, getPreviousParamMapUrl(), getPreviousParamMapForm(), getAttributes());
     }
+
 }

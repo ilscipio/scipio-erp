@@ -1969,6 +1969,7 @@ public class ConfigXMLReader {
         public final boolean securityCert; // = false;
         public final boolean securityExternalView; // = true;
         public final boolean securityDirectRequest; // = true;
+        public final String securityAuthCheckEvent; // SCIPIO: default "checkLogin"
         public final Map<String, RequestResponse> requestResponseMap; // = new HashMap<String, RequestResponse>();
         public final Metrics metrics; // = null
         public final OverrideMode overrideMode;
@@ -2022,6 +2023,7 @@ public class ConfigXMLReader {
             boolean securityCert = false;
             boolean securityExternalView = true;
             boolean securityDirectRequest = true;
+            String securityAuthCheckEvent = ""; // SCIPIO
             Element securityElement = UtilXml.firstChildElement(requestMapElement, "security");
             if (securityElement != null) {
                 if (!UtilProperties.propertyValueEqualsIgnoreCase("url", "no.http", "Y")) {
@@ -2043,6 +2045,7 @@ public class ConfigXMLReader {
                 securityCert = "true".equals(securityElement.getAttribute("cert"));
                 securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));
                 securityDirectRequest = !"false".equals(securityElement.getAttribute("direct-request"));
+                securityAuthCheckEvent = securityElement.getAttribute("auth-check-event");
                 this.securitySpecified = true; // SCIPIO
             } else {
                 this.securitySpecified = false; // SCIPIO
@@ -2076,6 +2079,7 @@ public class ConfigXMLReader {
                 this.metrics = null;
             }
             this.overrideMode = OverrideMode.fromNameAlways(requestMapElement.getAttribute("override-mode"));
+            this.securityAuthCheckEvent = securityAuthCheckEvent;
         }
 
         /**
@@ -2106,12 +2110,14 @@ public class ConfigXMLReader {
                 this.securityCert = overrideMap.securityCert;
                 this.securityExternalView = overrideMap.securityExternalView;
                 this.securityDirectRequest = overrideMap.securityDirectRequest;
+                this.securityAuthCheckEvent = overrideMap.securityAuthCheckEvent;
             } else {
                 this.securityHttps = baseMap.securityHttps;
                 this.securityAuth = baseMap.securityAuth;
                 this.securityCert = baseMap.securityCert;
                 this.securityExternalView = baseMap.securityExternalView;
                 this.securityDirectRequest = baseMap.securityDirectRequest;
+                this.securityAuthCheckEvent = baseMap.securityAuthCheckEvent;
             }
             
             Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
@@ -2168,6 +2174,8 @@ public class ConfigXMLReader {
         public boolean isSecurityDirectRequest() {
             return securityDirectRequest;
         }
+
+        public String getSecurityAuthCheckEvent() { return securityAuthCheckEvent; } // SCIPIO
 
         public Map<String, RequestResponse> getRequestResponseMap() {
             return requestResponseMap;
@@ -2428,6 +2436,10 @@ public class ConfigXMLReader {
 
         public String getIncludeMode() {
             return includeMode;
+        }
+
+        public boolean hasExplicitRedirectParameterSpec() { // SCIPIO
+            return !"auto".equals(getIncludeMode()) || (getRedirectParameterMap().size() > 0) || (getRedirectParameterValueMap().size() > 0) || (getExcludeParameterSet().size() > 0);
         }
 
         public Boolean getAllowViewSave() { // SCIPIO

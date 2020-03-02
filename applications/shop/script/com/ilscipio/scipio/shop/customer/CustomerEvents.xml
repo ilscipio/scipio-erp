@@ -401,10 +401,10 @@ code package.
             <script lang="groovy"><![CDATA[
                 context.convertListResult = org.ofbiz.order.shoppinglist.ShoppingListEvents.convertAnonShoppingListsToRegisteredForStore(request, response, context.createdUserLogin);
             ]]></script>
-            <if-compare-field field="convertListResult" operator="not-equals" value="success">
+            <if-compare field="convertListResult" operator="not-equals" value="success">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="shoppinglistevents.error_converting_wishlist_contact_support"/></add-error>
                 <check-errors/>
-            </if-compare-field>
+            </if-compare>
         </if-not-empty>
 
         <!-- SCIPIO: NOTE: Login moved to createCustomerSuccess -->

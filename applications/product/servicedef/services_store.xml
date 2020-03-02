@@ -48,7 +48,7 @@ code package.
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"></attribute>
         <attribute name="requireInventory" type="String" mode="OUT" optional="false"><!-- Y/N --></attribute>
     </service>
-    <service name="isStoreInventoryAvailable" engine="simple"
+    <service name="isStoreInventoryAvailable" engine="simple" hideResultInLog="true" log="quiet" log-eca="quiet"
             location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryAvailable" auth="false">
         <description>Checks if Store Inventory is Required</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>
@@ -58,7 +58,7 @@ code package.
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"></attribute>
         <attribute name="available" type="String" mode="OUT" optional="false"><!-- Y/N --></attribute>
     </service>
-    <service name="isStoreInventoryAvailableOrNotRequired" engine="simple"
+    <service name="isStoreInventoryAvailableOrNotRequired" engine="simple" hideResultInLog="true" log="debug" log-eca="quiet"
             location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryAvailableOrNotRequired" auth="false">
         <description>Checks if Store Inventory is Required</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>

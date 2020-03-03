@@ -451,6 +451,7 @@ if(product){
         priceContext.productStoreId = productStoreId;
         priceContext.checkIncludeVat = "Y";
         priceContext.agreementId = cart.getAgreementId();
+        priceContext.getMinimumVariantPrice = true;
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
         priceMap = runService('calculateProductPrice', priceContext);
         priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous

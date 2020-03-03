@@ -65,6 +65,8 @@ import com.googlecode.concurrentlinkedhashmap.EvictionListener;
 @SuppressWarnings("serial")
 public class UtilCache<K, V> implements Serializable, EvictionListener<Object, CacheLine<V>> {
 
+    public static final String SEPARATOR = "::";    // cache key separator
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** A static Map to keep track of all of the UtilCache instances. */
@@ -795,6 +797,23 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
             return;
         }
         cache.clear();
+    }
+
+    /**
+     * Removal of individual cache objects by key
+     * <p>
+     * SCIPIO: 2020-03-02: Added new function
+     */
+    public synchronized void clearCacheValue(String cacheName,String key) {
+        UtilCache<?, ?> cache = findCache(cacheName);
+        if (cache == null) {
+            return;
+        }
+        try {
+            cache.remove(key);
+        }catch(Exception e){
+
+        }
     }
 
     @SuppressWarnings("unchecked")

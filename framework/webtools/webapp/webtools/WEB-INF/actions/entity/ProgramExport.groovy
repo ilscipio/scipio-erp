@@ -55,6 +55,7 @@ langVariant = GroovyUtil.GroovyLangVariant.STANDARD;
 def importCustomizer = new ImportCustomizer()
 importCustomizer.addImport("org.ofbiz.entity.GenericValue");
 importCustomizer.addImport("org.ofbiz.entity.model.ModelEntity");
+importCustomizer.addStarImports("org.ofbiz.entity.condition.", "org.ofbiz.entity.util."); // SCIPIO
 def configuration = new CompilerConfiguration(langVariant.getGroovyCompilerConfiguration()) // SCIPIO: derive from STANDARD 
 configuration.addCompilationCustomizers(importCustomizer)
 

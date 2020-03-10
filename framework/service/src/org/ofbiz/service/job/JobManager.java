@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -69,7 +70,9 @@ import com.ibm.icu.util.Calendar;
 public final class JobManager {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String instanceId = UtilProperties.getPropertyValue("general", "unique.instanceId", "ofbiz0");
+    public static final String instanceId = FlexibleStringExpander.expandString( // SCIPIO: Added simple expansion support
+            UtilProperties.getPropertyValue("general", "unique.instanceId", "scipio0"),
+            UtilMisc.toMap());
     private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<>();
     private static boolean isShutDown = false;
 

@@ -132,6 +132,8 @@ public abstract class CmsImportExportServices {
 
         boolean hasEntityMaintPerm = security.hasPermission("ENTITY_MAINT", userLogin);
 
+        /* 2020-03-10: TODO: REVIEW: relaxed this because it's not strictly necessary for import to work though may need again in future
+            FIXME: getExtCmsEntityNames list is out of date
         Set<String> allowEntity = new HashSet<>();
         allowEntity.addAll(CmsEntityInfo.getInst(delegator).getCmsEntityNames());
         allowEntity.addAll(CmsEntityInfo.getInst(delegator).getExtCmsEntityNames());
@@ -142,6 +144,8 @@ public abstract class CmsImportExportServices {
         }
 
         context.put("allowEntity", allowEntity);
+         */
+
         context.put("allowLocations", hasEntityMaintPerm);
         return WebToolsServices.entityImport(dctx, context);
     }

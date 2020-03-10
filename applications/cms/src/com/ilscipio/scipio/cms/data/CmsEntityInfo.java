@@ -348,6 +348,7 @@ public class CmsEntityInfo {
 
     /**
      * Returns external/extra/ofbiz entity names used by CMS, such as Content, DataResource, etc.
+     * FIXME: out of date - do not rely on this for now
      */
     public Set<String> getExtCmsEntityNames() {
         return extCmsEntityNames;

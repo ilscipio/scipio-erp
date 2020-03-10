@@ -475,9 +475,9 @@ if(product){
             if (featureSet) {
                 //if order is purchase then don't calculate available inventory for product.
                 if (cart.isPurchaseOrder()) {
-                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, checkInventory: false]);
+                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, checkInventory: false, unavailableInTree : context.unavailableInVariantTree]); // SCIPIO: unavailableInTree
                 } else {
-                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId]);
+                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId, unavailableInTree : context.unavailableInVariantTree]); // SCIPIO: unavailableInTree
                 }
                 variantTree = variantTreeMap.variantTree;
                 imageMap = variantTreeMap.variantSample;
@@ -490,6 +490,12 @@ if(product){
                 unavailableVariants = variantTreeMap.unavailableVariants;
                 if (unavailableVariants) {
                     context.unavailableVariants = unavailableVariants;
+                    // SCIPIO
+                    unavailableVariantIds = [];
+                    for(uvProd in unavailableVariants) {
+                        unavailableVariantIds.add(uvProd.productId);
+                    }
+                    context.unavailableVariantIds = unavailableVariantIds;
                 }
                 if (imageMap) {
                     context.variantSample = imageMap;

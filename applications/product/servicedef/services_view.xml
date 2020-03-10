@@ -46,6 +46,9 @@ code package.
         <attribute name="featureOrder" type="java.util.Collection" mode="IN"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
         <attribute name="checkInventory" type="Boolean" mode="IN" default-value="true" optional="true"/>
+        <attribute name="unavailableInTree" type="Boolean" mode="IN" default-value="false" optional="true">
+            <description>If true, out-of-stock items are included in the returned variantTree (SCIPIO)</description>
+        </attribute>
         <attribute name="variantTree" type="java.util.Map" mode="OUT" optional="true"/>
         <attribute name="unavailableVariants" type="java.util.List" mode="OUT" optional="true"/>
         <attribute name="variantSample" type="java.util.Map" mode="OUT" optional="true"/>

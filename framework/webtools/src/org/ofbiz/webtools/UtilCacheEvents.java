@@ -164,7 +164,7 @@ public final class UtilCacheEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) { // SCIPIO: Now using request; was: request.getSession()
+        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) {
             errMsg = UtilProperties.getMessage(err_resource, "utilCacheEvents.permissionEdit", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -174,7 +174,7 @@ public final class UtilCacheEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> results = null;
         try {
-            results = dispatcher.runSync("clearCacheFull", UtilMisc.toMap("userLogin", userLogin));
+            results = dispatcher.runSync("clearAllUtilCaches", UtilMisc.toMap("userLogin", userLogin, "distribute", true));
             if (ServiceUtil.isError(results)) {
                 String errorMessage = ServiceUtil.getErrorMessage(results);
                 errMsg = UtilProperties.getMessage(err_resource, "utilCache.clearAllCaches", locale);

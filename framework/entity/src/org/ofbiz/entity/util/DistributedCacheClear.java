@@ -40,4 +40,7 @@ public interface DistributedCacheClear {
     public void distributedClearCacheLine(GenericPK primaryKey);
 
     public void clearAllCaches();
+
+    /** Clears all util caches, automatically includes entity caches (SCIPIO). */
+    public void clearAllUtilCaches(); // SCIPIO
 }

@@ -68,6 +68,11 @@ import org.w3c.dom.Element;
  * XML properties format, and the OFBiz-specific XML file format
  * (see the <a href="#xmlToProperties(java.io.InputStream,%20java.util.Locale,%20java.util.Properties)">xmlToProperties</a>
  * method).</p>
+ * <p>
+ * SCIPIO: 2020-03-09: Now supports command-line overrides for simple *.properties file in the format:
+ * <code>-Dscipio.property.[resource]#[property-name]=[property-value]</code>
+ * (Example: <code>-Dscipio.property.general#unique.instanceId=scipio4</code>)
+ * </p>
  */
 @SuppressWarnings("serial")
 public final class UtilProperties implements Serializable {
@@ -2439,6 +2444,8 @@ public final class UtilProperties implements Serializable {
      * for the OFBiz custom XML file format.
      */
     public static class ExtendedProperties extends Properties {
+        protected static final Map<String, Map<String, String>> COMMAND_LINE_PROPERTIES = Collections.unmodifiableMap(getCommandLinePropertyOverrides(true));
+
         public ExtendedProperties() {
             super();
         }
@@ -2453,6 +2460,7 @@ public final class UtilProperties implements Serializable {
                     xmlToProperties(in, locale, this);
                 } else {
                     load(in);
+                    loadCommandLineProperties(url); // SCIPIO
                 }
             } finally {
                 if (in != null) {
@@ -2468,6 +2476,77 @@ public final class UtilProperties implements Serializable {
                 in.close();
             }
         }
+
+        /** Replaces any entries with those from command line (SCIPIO). */
+        protected synchronized void loadCommandLineProperties(URL url) throws IOException { // SCIPIO: Added support for reading from command line
+            Map<String, String> cmdProps = COMMAND_LINE_PROPERTIES.get(getResourceFromUrl(url));
+            if (cmdProps != null) {
+                this.putAll(cmdProps);
+            }
+        }
+    }
+
+    private static String getResourceFromUrl(URL url) { // SCIPIO
+        if (url == null) {
+            return null;
+        }
+        String path = url.toString();
+        int i = path.lastIndexOf('/');
+        if (i < 0) {
+            return null;
+        }
+        String resource = path.substring(i+1);
+        if (resource.length() == 0) {
+            return null;
+        }
+        if (resource.endsWith(".properties")) {
+            resource = resource.substring(0, resource.length() - ".properties".length());
+        }
+        return resource;
+    }
+
+    private static Map<String, Map<String, String>> getCommandLinePropertyOverrides(boolean log) { // SCIPIO
+        Map<String, Map<String, String>> allProps = new HashMap<>();
+        Map<String, String> startupServices = UtilProperties.getPropertiesMatching(System.getProperties(),
+                Pattern.compile("^scipio\\.property\\.(.+)"), true);
+        for(Map.Entry<String, String> entry : startupServices.entrySet()) {
+            String fullName = entry.getKey();
+            String resource = "";
+            String property = "";
+            String value = entry.getValue();
+            int sepIndex = fullName.indexOf('#');
+            if (sepIndex >= 0) {
+                resource = fullName.substring(0, sepIndex);
+                property = fullName.substring(sepIndex + 1);
+            } else {
+                sepIndex = fullName.indexOf('.');
+                if (sepIndex >= 0) {
+                    resource = fullName.substring(0, sepIndex);
+                    property = fullName.substring(sepIndex + 1);
+                }
+            }
+            if (resource.endsWith(".properties")) {
+                resource = resource.substring(0, resource.length() - ".properties".length());
+            }
+            if (resource.length() > 0 && property.length() > 0) {
+                Map<String, String> resourceProps = allProps.get(resource);
+                if (resourceProps == null) {
+                    resourceProps = new HashMap<>();
+                    resourceProps.put(property, value);
+                    allProps.put(resource, resourceProps);
+                } else {
+                    resourceProps.put(property, value);
+                }
+            } else {
+                if (log) {
+                    Debug.logError("getCommandLinePropertyOverrides: Invalid scipio.properties command line property override name: " + fullName + "=" + value, module);
+                }
+            }
+        }
+        if (log) {
+            Debug.logInfo("getCommandLinePropertyOverrides: Parsed command line property overrides: " + allProps, module);
+        }
+        return allProps;
     }
 
     /**

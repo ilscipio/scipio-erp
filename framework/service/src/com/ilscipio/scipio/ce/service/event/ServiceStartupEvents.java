@@ -136,7 +136,7 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
             // multiple service invocation
             if (UtilValidate.isNotEmpty(System.getProperty("scipio.startup.service.1"))) {
                 Map<String, String> startupServices = UtilProperties.getPropertiesMatching(System.getProperties(),
-                        Pattern.compile("^scipio.startup.service.(\\d+)$"), true);
+                        Pattern.compile("^scipio\\.startup\\.service\\.(\\d+)$"), true);
                 List<Integer> serviceKeys = new ArrayList<>();
                 for(String key : startupServices.keySet()) serviceKeys.add(Integer.parseInt(key));
                 Collections.sort(serviceKeys);

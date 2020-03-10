@@ -20,16 +20,19 @@ package org.ofbiz.webtools;
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Contains events for the UtilCache class; must be external to access security resources
@@ -156,6 +159,8 @@ public final class UtilCacheEvents {
      */
     public static String clearAllEvent(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
@@ -165,7 +170,21 @@ public final class UtilCacheEvents {
             return "error";
         }
 
-        UtilCache.clearAllCaches();
+        //SCIPIO: Added new call to the distributed cacheClear
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Map<String, Object> results = null;
+        try {
+            results = dispatcher.runSync("clearCacheFull", UtilMisc.toMap("userLogin", userLogin));
+            if (ServiceUtil.isError(results)) {
+                String errorMessage = ServiceUtil.getErrorMessage(results);
+                errMsg = UtilProperties.getMessage(err_resource, "utilCache.clearAllCaches", locale);
+                return "error";
+            }
+        } catch (GenericServiceException e) {
+            errMsg = UtilProperties.getMessage(err_resource, "utilCache.clearAllCaches", locale);
+            return "error";
+        }
+
         errMsg = UtilProperties.getMessage(err_resource, "utilCache.clearAllCaches", locale);
         request.setAttribute("_EVENT_MESSAGE_", errMsg + " (" + UtilDateTime.nowDateString("yyyy-MM-dd HH:mm:ss")  + ").");
         return "success";

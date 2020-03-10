@@ -258,4 +258,13 @@ code package.
         </attribute>
     </service>
 
+    <service name="clearCacheFull" engine="java" debug="false" log="quiet" log-eca="quiet" max-retry="1"
+             location="com.ilscipio.scipio.ce.service.common.ServiceEngineServices" invoke="clearCacheFull" auth="true">
+        <description>Clear the system cache</description>
+    </service>
+
+    <service name="distributedClearCacheFull" engine="jms" location="serviceMessenger" invoke="clearCacheFull" auth="true">
+        <description>Clear the system cache for all Servers listening to the topic</description>
+    </service>
+
 </services>

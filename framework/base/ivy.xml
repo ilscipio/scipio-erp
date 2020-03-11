@@ -142,15 +142,15 @@
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
         <dependency org="org.owasp.antisamy" name="antisamy" rev="1.5.7" conf="base,sources"/><!-- esapi dependency -->
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="20181114.1" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.9" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.9" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.9" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.10.3" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.10.3" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.10.3" conf="base,sources"/>
         <dependency org="org.jdom" name="jdom" rev="1.1.3" conf="base,sources"/><!-- TODO: REVIEW: not used in any code; but some libs _might_ have it as optional dependency -->
         <dependency org="joda-time" name="joda-time" rev="2.10.1" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" conf="base,sources"/>
-        <dependency org="org.apache.tika" name="tika-core" rev="1.20" conf="base,sources"/>
-        <dependency org="org.apache.tika" name="tika-parsers" rev="1.20" transitive="false" conf="base,sources"/><!-- NOTE: intentional transitive="false"; too many deps -->
+        <dependency org="org.apache.tika" name="tika-core" rev="1.23" conf="base,sources"/>
+        <dependency org="org.apache.tika" name="tika-parsers" rev="1.23" transitive="false" conf="base,sources"/><!-- NOTE: intentional transitive="false"; too many deps -->
         <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" conf="base,sources"/>
         <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" conf="base,sources"/>
         <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="base,sources"/>
@@ -158,7 +158,7 @@
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
         <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.1.1" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
         <dependency org="org.mnode.ical4j" name="ical4j" rev="2.2.0" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
-        <dependency org="org.apache.shiro" name="shiro-core" rev="1.4.0" conf="base,sources"/>
+        <dependency org="org.apache.shiro" name="shiro-core" rev="1.5.1" conf="base,sources"/>
         <dependency org="com.google.code.gson" name="gson" rev="2.8.5" conf="base,sources"/>
         <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.10.2" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-common" rev="2.1.0" conf="base,sources"/>
@@ -183,11 +183,11 @@
 
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
-        <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.3" conf="base,commons,sources"/>
+        <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.4" conf="base,commons,sources"/>
         <dependency org="commons-codec" name="commons-codec" rev="1.11" conf="base,commons,sources"/>
         <dependency org="commons-collections" name="commons-collections" rev="3.2.2" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-collections4" rev="4.2" conf="base,commons,sources"/>
-        <dependency org="org.apache.commons" name="commons-compress" rev="1.18" conf="base,commons,sources"/>
+        <dependency org="org.apache.commons" name="commons-compress" rev="1.20" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-csv" rev="1.6" conf="base,commons,sources"/>
         <dependency org="commons-el" name="commons-el" rev="1.0" conf="base,commons,sources"/>
         <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" conf="base,commons,sources"/>
@@ -267,20 +267,20 @@
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
         <!-- catalina: tomcat -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.27" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.31" conf="base,sources"/>
         <!-- gone since 8.5.3+?
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.27" conf="base,sources"/>-->
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.31" conf="base,sources"/>-->
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
@@ -290,10 +290,10 @@
             But for sources, the tomcat files have unusable documentation, so we use the official java API files instead;
             so we put the official servlet API jars in j2eespecs-ref dir (see build/base.xml for the renaming).
             NOTE: the tomcat-provided jar are renamed in base/build.xml so they match the API ones in name (TODO: REVIEW: still necessary?) -->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.27" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.27" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.31" conf="base,sources"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="4.0.1" conf="base,j2eespecs,sources"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.3" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.1-b06" conf="base,j2eespecs,sources"/>
@@ -319,10 +319,10 @@
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3" conf="base,sources"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->
-        <dependency org="org.springframework" name="spring-core" rev="5.1.3.RELEASE" conf="base,sources">
+        <dependency org="org.springframework" name="spring-core" rev="5.2.4.RELEASE" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
-        <dependency org="org.springframework" name="spring-test" rev="5.1.3.RELEASE" conf="base,sources">
+        <dependency org="org.springframework" name="spring-test" rev="5.2.4.RELEASE" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
 
@@ -347,7 +347,7 @@
         <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.13" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.16" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.13" conf="base,sources"/>
-        <dependency org="org.apache.poi" name="poi" rev="4.0.1" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi" rev="4.1.2" conf="base,sources"/>
 
         <!-- solr component (applications/solr/ivy.xml)
             Based on solr-provided JAR libraries found in solr-7.x.x.tgz package (solr-7.x.x/server/lib/)

@@ -1624,10 +1624,14 @@ public abstract class SolrProductSearch {
             }
 
             executed = true;
-            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
-            // this removes everything from the index
-            client.deleteByQuery("*:*");
-            client.commit();
+            if ("delete-all-first".equals(context.get("deleteMode"))) {
+                Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index (deleteMode: delete-all-first)", module);
+                // this removes everything from the index
+                client.deleteByQuery("*:*");
+                client.commit();
+            } else if ("no-delete".equals(context.get("deleteMode"))) {
+                Debug.logInfo("Solr: rebuildSolrIndex: Not clearing solr index (deleteMode: no-delete) - deleted products will remain in index", module);
+            }
 
             // NEW 2017-09-14: clear all entity caches at beginning, and then enable caching during
             // the product reading - this should significantly speed up the process

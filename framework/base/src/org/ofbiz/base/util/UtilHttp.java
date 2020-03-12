@@ -2206,7 +2206,7 @@ public final class UtilHttp {
         synchronized(session) {
             syncObj = session.getAttribute(SESSION_SYNCOBJ);
             if (syncObj != null) {
-                return null;
+                return syncObj;
             }
             syncObj = createSessionSyncObject();
             session.setAttribute(SESSION_SYNCOBJ, syncObj);

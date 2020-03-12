@@ -30,7 +30,7 @@
         <#if value?has_content && !value?is_boolean>
           <#local value = value?boolean>
         </#if>
-        <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name required=required>
+        <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name required=required tooltip=(serviceParameter.description!)>
           <#if !required>
             <option value=""<#if !value?has_content> selected="selected"</#if>><#if defaultValStr?has_content>(${defaultValStr})</#if></option>
           </#if>
@@ -39,10 +39,10 @@
         </@field>
       <#elseif rawType == "Timestamp" || rawType == "java.sql.Timestamp">
         <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name 
-            value=value required=required placeholder=defaultValue/>
+            value=value required=required placeholder=defaultValue tooltip=(serviceParameter.description!)/>
       <#else>
         <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name 
-            value=getServiceParamStrRepr(value, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType)/>
+            value=getServiceParamStrRepr(value, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType) tooltip=(serviceParameter.description!)/>
       </#if>
     </#if>
   </#list>

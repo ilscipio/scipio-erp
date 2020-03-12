@@ -83,9 +83,9 @@ if (serviceName) {
             }
             serviceParam = null;
             if (savedSyncResult?.get(par.name)) {
-                serviceParam = [name : par.name, type : par.type, optional : par.optional ? "Y" : "N", defaultValue : par.defaultValue, value : savedSyncResult.get(par.name)];
+                serviceParam = [name : par.name, type : par.type, optional : par.optional ? "Y" : "N", defaultValue : par.defaultValue, value : savedSyncResult.get(par.name), description : par.description]; // SCIPIO: description
             } else {
-                serviceParam = [name : par.name, type : par.type, optional : par.optional ? "Y" : "N", defaultValue : par.defaultValue];
+                serviceParam = [name : par.name, type : par.type, optional : par.optional ? "Y" : "N", defaultValue : par.defaultValue, description : par.description]; // SCIPIO: description
             }
             serviceParameters.add(serviceParam);
             serviceParameterNames.add(par.name); // SCIPIO: added 2017-09-13

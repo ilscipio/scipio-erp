@@ -38,6 +38,8 @@ public class CmsEntityInfo {
     public static final String CMS_ENTITY_BASE_PKG = "com.ilscipio.scipio.cms";
     public static final String CMS_ENTITY_BASE_PKG_PREFIX = CMS_ENTITY_BASE_PKG + ".";
 
+    static final List<String> cmsEntityPkgExcludes = UtilMisc.unmodifiableArrayList("com.ilscipio.scipio.cms.internal"); // NOTE: acts as prefix
+
     /**
      * Default preferred CMS entity order, mainly for data export, but anything that lists the entities
      * should follow this so the order is the same everywhere.
@@ -735,6 +737,16 @@ public class CmsEntityInfo {
             String name = modelEntity.getEntityName();
             String pkgName = modelEntity.getPackageName();
             if (pkgName != null && pkgName.startsWith(CMS_ENTITY_BASE_PKG_PREFIX)) {
+                boolean isExcluded = false;
+                for(String pkgExcl : cmsEntityPkgExcludes) {
+                    if (pkgExcl.equals(pkgName) || pkgName.startsWith(pkgExcl + ".")) {
+                        isExcluded = true;
+                        break;
+                    }
+                }
+                if (isExcluded) {
+                    continue;
+                }
                 allCmsEntityNames.add(name);
                 String subPkgRel = pkgName.substring(CMS_ENTITY_BASE_PKG_PREFIX.length());
                 String[] subPkgs = EntityInfoUtil.generateSubPackageNames(subPkgRel);

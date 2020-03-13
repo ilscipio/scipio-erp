@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
@@ -88,12 +89,12 @@ public abstract class CmsControlUtil {
         return accessToken.isEmpty() ? null : accessToken;
     }
 
-    public static boolean verifyValidAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
+    public static boolean verifyValidAccessToken(HttpServletRequest request, Delegator delegator, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
         if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
             String accessToken = CmsControlUtil.getAccessTokenParam(request, webSiteConfig);
             // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
             // but won't matter until isValidAccessToken actively checks it
-            if (!CmsAccessHandler.isValidAccessToken(request, request.getRequestURI(), accessToken)) {
+            if (!CmsAccessHandler.isValidAccessToken(request, delegator, request.getRequestURI(), accessToken)) {
                 return false;
             }
         }

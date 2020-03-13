@@ -63,6 +63,7 @@ code package.
             <property name="secure" value="false"/>
             <property name="URIEncoding" value="UTF-8"/>
             <property name="xpoweredBy" value="false"/>
+            <property name="secretRequired" value="false"/><!-- SCIPIO: Starting Tomcat 9.0.31, "requiredSecret" was renamed to "secret" and a new "secretRequired" is true by default -->
             <!-- AJP/13 connector attributes -->
             <!-- commented out because the values match the Tomcat defaults:
             <property name="tomcatAuthentication" value="true"/>
@@ -167,6 +168,7 @@ code package.
             <property name="secure" value="false"/>
             <property name="URIEncoding" value="UTF-8"/>
             <property name="xpoweredBy" value="false"/>
+            <property name="secretRequired" value="false"/><!-- SCIPIO: Starting Tomcat 9.0.31, "requiredSecret" was renamed to "secret" and a new "secretRequired" is true by default -->
         </property>
         <property name="http-connector" value="connector">
             <!--<property name="address" value=""/>-->

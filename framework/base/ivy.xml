@@ -158,7 +158,7 @@
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
         <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.1.1" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
         <dependency org="org.mnode.ical4j" name="ical4j" rev="2.2.0" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
-        <dependency org="org.apache.shiro" name="shiro-core" rev="1.5.1" conf="base,sources"/>
+        <dependency org="org.apache.shiro" name="shiro-core" rev="1.4.2" conf="base,sources"/>
         <dependency org="com.google.code.gson" name="gson" rev="2.8.5" conf="base,sources"/>
         <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.10.2" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-common" rev="2.1.0" conf="base,sources"/>

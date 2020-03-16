@@ -686,8 +686,14 @@ public class PaymentGatewayServices {
         } else {
             // add other payment types here; i.e. gift cards, etc.
             // unknown payment type; ignoring.
-            Debug.logError("ERROR: Unsupported PaymentMethodType passed for authorization", module);
-            return null;
+            // SCIPIO (03-16-20): Added an extra way to get the partyId from the billing info
+            GenericValue orderRole = EntityUtil.getFirst(orh.getOrderHeader().getRelated("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER"), null, false));
+            if (UtilValidate.isNotEmpty(orderRole)) {
+                return orderRole.getString("partyId");
+            } else {
+                Debug.logError("ERROR: Unsupported PaymentMethodType passed for authorization", module);
+                return null;
+            }
         }
 
         // get some contact info.

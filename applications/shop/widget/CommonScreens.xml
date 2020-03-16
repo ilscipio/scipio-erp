@@ -253,8 +253,8 @@ code package.
                     for the main request, but other screens with local scopes should usually set context vars instead (which have priority) -->
                 <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
                 <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
-                
-                <include-screen-actions name="ShopSetupActions"/>
+                <!-- SCIPIO: 2020-03-16: Already run by ShopDecorator, and all decorators should extend from it (or at least call its actions)
+                <include-screen-actions name="ShopSetupActions"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">

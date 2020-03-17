@@ -359,15 +359,18 @@
 
 <#-- Creates a new association between a CmsScriptTemplate and a template record (type implied by form action and passed nested hidden inputs) -->
 <#macro cmsScriptTemplateSelectForm formAction baseId="script-assoc-create" webSiteId="">
+    <#-- 2020-03: we have to show all scripts for now, because re-adding accidentally removed scripts (that are not automatically deleted) may not work otherwise
+    <#local scriptTmpls = standaloneScriptTemplates!>-->
+    <#local scriptTmpls = allScriptTemplates!>
 
     <#-- should always show the existing scripts form, unless there are no existing standalone scripts in the system. -->
-    <#local existingSelected = standaloneScriptTemplates?has_content>
+    <#local existingSelected = scriptTmpls?has_content>
 
     <div id="${(baseId+"-srcsel")}">
       <@form id=(baseId+"-srcsel-form")>
         <@field type="generic"><#-- self-explanatory: label="${rawLabel('CmsUse')}:"  -->
             <@field type="radio" name="scriptAssocSource" value="Existing" label=uiLabelMap.CmsExistingScriptTemplate inline=true 
-                checked=existingSelected disabled=(!(standaloneScriptTemplates?has_content)) tooltip=uiLabelMap.CmsExistingScriptTemplateDescription/>
+                checked=existingSelected disabled=(!(scriptTmpls?has_content)) tooltip=uiLabelMap.CmsExistingScriptTemplateDescription/>
             <@field type="radio" name="scriptAssocSource" value="NewLocation" label=uiLabelMap.CmsNewScriptLocation inline=true 
                 checked=!existingSelected tooltip=uiLabelMap.CmsNewScriptLocationDescription/>
         </@field>
@@ -391,9 +394,14 @@
     <div id="${(baseId+"-existing")}"<#if !existingSelected> style="display: none;"</#if>>
       <@form method="post" action=formAction id=(baseId+"-existing-form")>
         <@field type="select" label=uiLabelMap.CmsScriptTemplate size="30" name="scriptTemplateId" required=true>
-          <#list (standaloneScriptTemplates!) as scriptTmpl>
-            <@field type="option" value=scriptTmpl.id>${scriptTmpl.templateName!scriptTmpl.id} [${scriptTmpl.id}]</@field>
-          </#list>
+            <option disabled="disabled">--- ${uiLabelMap.CmsStandalone}:</option>
+            <#list (standaloneScriptTemplates!) as scriptTmpl>
+              <@field type="option" value=scriptTmpl.id>${scriptTmpl.templateName!scriptTmpl.id} [${scriptTmpl.id}]</@field>
+            </#list>
+            <option disabled="disabled">--- ${uiLabelMap.CmsTemplateDependent}:</option>
+            <#list (slaveScriptTemplates!) as scriptTmpl>
+                <@field type="option" value=scriptTmpl.id>${scriptTmpl.templateName!scriptTmpl.id} [${scriptTmpl.id}]</@field>
+            </#list>
         </@field>
 
         <@cmsScriptTemplateSelectFormCommonFields><#nested></@cmsScriptTemplateSelectFormCommonFields>  

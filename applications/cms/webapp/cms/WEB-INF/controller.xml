@@ -212,6 +212,13 @@
         <response name="success" type="view" value="editTemplate" />
         <response name="error" type="view" value="editTemplate" />
     </request-map>
+
+    <request-map uri="deletePageTemplateScriptAssoc">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeletePageTemplateScriptAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
     
     <request-map uri="addAssetToTemplate">
         <security auth="true" https="true"/>

@@ -509,6 +509,10 @@
         <value xml:lang="de">Ein eigenständiges (Y) Skript wird nie gelöscht, es sei denn, es wird manuell mit der Skript-Löschfunktion gelöscht. Ein Nicht-Standalone-Skript (N) kann automatisch gelöscht werden, wenn alle zugehörigen Seiten oder Assets gelöscht (verwaist) werden. Skripts können als Nicht-Standalone (N) geboren werden, wenn sie als Standortverknüpfungen zu einer Seite oder einer Assetvorlage erstellt wurden; Werden sie auf Standalone (Y) umgeschaltet, sobald eine Änderung an der Scriptvorlage mit dem Scripteditor vorgenommen wird, um Änderungen konservativ zu sichern.</value>
         <value xml:lang="en">A standalone (Y) script is never deleted unless it is manually deleted using the script delete function. A non-standalone (N) script may be automatically deleted when all its associated page(s) or asset(s) are deleted (orphaned). Scripts may be born as non-standalone (N) when they were created as location associations to a page or asset template; they are switched to standalone (Y) as soon as a modification is made to the script template using the script editor, to conservatively safeguard changes.</value>
     </property>
+    <property key="CmsTemplateDependent">
+        <value xml:lang="de">Vorlagenabhängig</value>
+        <value xml:lang="en">Template-dependent</value>
+    </property>
     <property key="CmsAuto">
         <value xml:lang="de">Auto</value>
         <value xml:lang="en">Auto</value>

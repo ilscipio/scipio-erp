@@ -445,7 +445,8 @@
       <field name="inputPosition" type="numeric"><description>Order of evaluation of attributes with respect to other attributes (only).
         NOTE: This is slave to expandPosition, and has no influence on order relative to scripts.</description></field>
       <field name="targetType" type="name"><description>A Java class indicating the target type: String, Integer, java.util.String, ... uses the standard Ofbiz conversion utilities.</description></field>
-      
+      <field name="inheritMode" type="id"><description>ONE: NEVER (default), ATTR_EMPTY, FIELD_NON_NULL, FIELD_NON_EMPTY</description></field>
+
       <prim-key field="attributeTemplateId" />
 
       <relation type="one" fk-name="CMSATTRTMP_ASTMP" rel-entity-name="CmsAssetTemplate">

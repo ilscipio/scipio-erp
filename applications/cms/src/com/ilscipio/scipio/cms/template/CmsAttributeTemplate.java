@@ -9,10 +9,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.ilscipio.scipio.cms.content.CmsPageContent;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
@@ -326,6 +329,98 @@ public class CmsAttributeTemplate extends CmsDataObject {
         return entity.getBoolean("required") != null ? entity.getBoolean("required") : false;
     }
 
+    public enum InheritMode {
+        NEVER {
+            @Override
+            public void setValue(MapStack<String> context, CmsPageContent content, CmsAttributeTemplate attributeTemplate, String name, Object value) {
+                context.put(name, value);
+                // TODO: REVIEW: currently always done by the caller
+                if (content != null) {
+                    content.put(attributeTemplate.getName(), value);
+                }
+            }
+        },
+        ATTR_EMPTY {
+            @Override
+            public void setValue(MapStack<String> context, CmsPageContent content, CmsAttributeTemplate attributeTemplate, String name, Object value) {
+                if (UtilValidate.isEmpty(value)) {
+                    // leave context alone
+                    // TODO: REVIEW: Should we transfer here so context and content are the same?? Unclear for now
+                    if (content != null) {
+                        content.put(name, context.get(name));
+                    }
+                } else {
+                    InheritMode.NEVER.setValue(context, content, attributeTemplate, name, value);
+                }
+            }
+        },
+        FIELD_NON_NULL {
+            @Override
+            public void setValue(MapStack<String> context, CmsPageContent content, CmsAttributeTemplate attributeTemplate, String name, Object value) {
+                if (context.get(name) != null) {
+                    // leave context alone
+                    // TODO: REVIEW: Should we transfer here so context and content are the same?? Unclear for now
+                    if (content != null) {
+                        content.put(name, context.get(name));
+                    }
+                } else {
+                    InheritMode.NEVER.setValue(context, content, attributeTemplate, name, value);
+                }
+            }
+        },
+        FIELD_NON_EMPTY {
+            @Override
+            public void setValue(MapStack<String> context, CmsPageContent content, CmsAttributeTemplate attributeTemplate, String name, Object value) {
+                if (UtilValidate.isNotEmpty(context.get(name))) {
+                    // leave context alone
+                    // TODO: REVIEW: Should we transfer here so context and content are the same?? Unclear for now
+                    if (content != null) {
+                        content.put(name, context.get(name));
+                    }
+                } else {
+                    InheritMode.NEVER.setValue(context, content, attributeTemplate, name, value);
+                }
+            }
+        };
+
+        public static InheritMode fromNameSafe(String name, InheritMode defaultValue) {
+            if (UtilValidate.isEmpty(name)) {
+                return defaultValue;
+            }
+            try {
+                return valueOf(name);
+            } catch(Exception e) {
+                Debug.logError(e, "Invalid inheritMode found: " + name, module);
+                return defaultValue;
+            }
+        }
+
+        public static InheritMode fromNameOrDefaultSafe(String name) {
+            if (UtilValidate.isEmpty(name)) {
+                return NEVER;
+            }
+            try {
+                return valueOf(name);
+            } catch(Exception e) {
+                Debug.logError(e, "Invalid inheritMode found: " + name, module);
+                return NEVER;
+            }
+        }
+
+        public String getLabel(Locale locale) {
+            return UtilProperties.getMessage("CMSUiLabels", "CmsInheritMode_" + this.toString(), locale);
+        }
+        public abstract void setValue(MapStack<String> context, CmsPageContent content, CmsAttributeTemplate attributeTemplate, String name, Object value);
+    }
+
+    public void setInheritMode(InheritMode inheritMode) {
+        entity.set("inheritMode", (inheritMode != InheritMode.NEVER) ? inheritMode : null);
+    }
+
+    public InheritMode getInheritMode() {
+        return InheritMode.fromNameOrDefaultSafe(entity.getString("inheritMode"));
+    }
+
     public void setPermission(String roleTypeId) {
         setPermission(Enum.valueOf(UserRole.class, roleTypeId));
     }
@@ -389,7 +484,8 @@ public class CmsAttributeTemplate extends CmsDataObject {
                     "regularExpression", getRegularExpression().toString(),
                     "expandLang", getExpandLangRaw(),
                     "expandPosition", getExpandPosition(),
-                    "inputPosition", getInputPosition()
+                    "inputPosition", getInputPosition(),
+                    "inheritMode", getInheritMode().toString()
                 ));
         return map;
     }

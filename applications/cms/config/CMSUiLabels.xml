@@ -1007,4 +1007,20 @@
         <value xml:lang="de">Veröffentlichung aufheben</value>
         <value xml:lang="en">Unpublish</value>
     </property>
+    <property key="CmsInheritMode_NEVER">
+        <value xml:lang="de">Never</value>
+        <value xml:lang="en">Never</value>
+    </property>
+    <property key="CmsInheritMode_ATTR_EMPTY">
+        <value xml:lang="de">If attr empty</value>
+        <value xml:lang="en">If attr empty</value>
+    </property>
+    <property key="CmsInheritMode_FIELD_NON_NULL">
+        <value xml:lang="de">Field non null</value>
+        <value xml:lang="en">Field non null</value>
+    </property>
+    <property key="CmsInheritMode_FIELD_NON_EMPTY">
+        <value xml:lang="de">Field non empty</value>
+        <value xml:lang="en">Field non empty</value>
+    </property>
 </resource>

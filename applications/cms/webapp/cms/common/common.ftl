@@ -161,6 +161,11 @@
       </@field>
       <@field type="text" label="inputPosition" name="inputPosition" required=false tooltip=uiLabelMap.CmsInputPositionDescription value=(attrTmpl.inputPosition!)/>
       <@field type="text" label="defaultValue" name="defaultValue" required=false value=(attrTmpl.defaultValue!)/>
+      <@field type="select" label="inheritMode" name="inheritMode" required=false>
+        <#list Static["com.ilscipio.scipio.cms.template.CmsAttributeTemplate$InheritMode"].values() as inheritMode>
+            <option value="${inheritMode}"<#if (inheritMode?string == attrTmpl.inheritMode!) || (inheritMode?string == "NEVER" && !attrTmpl.inheritMode?has_content)> selected="selected"</#if>>${inheritMode.getLabel(locale)}</option>
+        </#list>
+      </@field>
       <@field type="text" label="inputHelp" name="inputHelp" required=false value=(attrTmpl.help!)/>
       <#-- Disabled for now - will be supported later.
       <@field type="text" label="permission" name="permission" required=false/>-->

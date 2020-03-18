@@ -41,7 +41,7 @@
             <!-- base/top/specific map first, then more common map added for shared labels -->
             <property-map resource="@component-resource-name@UiLabels" map-name="uiLabelMap" global="true"/>
 
-            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="${uiLabelMap.@component-resource-name@CompanyName}" global="true"/>
+            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="${uiLabelMap['@component-resource-name@CompanyName']}" global="true"/>
 
             <set field="shopSetupScriptLocation" from-field="shopSetupScriptLocation" default-value="component://@component-name@/webapp/@webapp-name@/WEB-INF/actions/ShopSetup.groovy" />
         </actions>

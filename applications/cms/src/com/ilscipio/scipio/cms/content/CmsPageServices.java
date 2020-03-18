@@ -486,6 +486,8 @@ public abstract class CmsPageServices {
                     pageMap = page.getDescriptor(pageWebSiteId, locale);
                 }
 
+                pageMap.put("cmsPage", page); // 2020-03-18: put the page itself into here to simplify code
+
                 if (editable) {
                     String userId = CmsServiceUtil.getUserId(context);
                     UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);

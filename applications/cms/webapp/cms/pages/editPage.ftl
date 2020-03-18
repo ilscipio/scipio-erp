@@ -588,7 +588,7 @@
                                  <#if meta.pageTemplateId?has_content>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
                                      <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
-                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId)/>"><#t><#-- target="_blank" -->
+                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId) escapeAs='html'/>"><#t><#-- target="_blank" -->
                                      <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
                                  <#else>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>

@@ -1978,6 +1978,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li><@pageUrl>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li>${escapeFullUrl(makePageUrl("LayoutDemo?param1=val1&amp;param2=val2"), 'html')}</li>
       <li><@pageUrl fullPath=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl localhost=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl localhost=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li><@pageUrl fullPath="true">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li><@pageUrl secure=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
       <li><@pageUrl secure="true">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
@@ -2133,6 +2135,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         ${escapeVal(urlContent, 'html')} <em>(no pre-escaping (raw explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>
       </li>
       <li><@contentUrl>${demoScreenContentUri}</@contentUrl> <em>(has html pre-escaping)</em></li>
+      <li><@contentUrl localhost=true>${demoScreenContentUri}</@contentUrl> <em>(has html pre-escaping)</em></li>
+      <li><@contentUrl localhost=true secure=false>${demoScreenContentUri}</@contentUrl> <em>(has html pre-escaping)</em></li>
       <li><@contentUrl uri=demoScreenContentUri /> <em>(has html pre-escaping)</em></li>
       <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>
       <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>

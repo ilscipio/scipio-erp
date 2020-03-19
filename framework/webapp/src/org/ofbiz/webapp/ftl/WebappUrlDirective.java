@@ -33,9 +33,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.Debug.OfbizLogger;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.FtlTransformFactory;
+import org.ofbiz.catalina.container.ScipioConnectorInfo;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.control.RequestHandler;
@@ -194,6 +196,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
                 String link = RequestHandler.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
                 if (link != null) {
+                    link = checkForceHost(link, UtilGenerics.cast(args), secure,false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
                 } else {
                     // If link is null, it means there was an error building link; write nothing, so that
@@ -205,6 +208,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath,
                         interWebappEff, controller, fullPath, secure, encode);
                 if (link != null) {
+                    link = checkForceHost(link, UtilGenerics.cast(args), secure, false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
                 }
             } else {
@@ -503,5 +507,57 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
             return LangFtlUtil.getWrappedOrAdaptAsMap((TemplateHashModelEx) firstArg);
         }
         return null;
+    }
+
+    /** Workaround for force localhost integration. WARN: subject to change */
+    public static String checkForceHost(String url, Map<String, TemplateModel> args, Boolean secure, boolean isContentUrl) throws TemplateModelException {
+        Boolean forceLocal = TransformUtil.getBooleanArg(args, "localhost");
+        if (UtilValidate.isEmpty(url) || !Boolean.TRUE.equals(forceLocal)) {
+            return url;
+        }
+        StringBuilder sb;
+        int hostEnd = -1;
+        int port;
+        if (url.startsWith("https://")) {
+            hostEnd = url.indexOf('/', "https://".length());
+            sb = new StringBuilder("https://");
+            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(true);
+            port = (httpsConnectorInfo != null) ? httpsConnectorInfo.getPort() : 443;
+        } else if (url.startsWith("http://")) {
+            hostEnd = url.indexOf('/', "http://".length());
+            sb = new StringBuilder("http://");
+            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(false);
+            port = (httpsConnectorInfo != null) ? httpsConnectorInfo.getPort() : 80;
+        } else if (url.startsWith("//")) {
+            hostEnd = url.indexOf('/', "//".length());
+            sb = new StringBuilder("//");
+            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(true);
+            port = (httpsConnectorInfo != null) ? httpsConnectorInfo.getPort() : 443;
+        } else {
+            if (url.contains("://")) { // TODO: REVIEW: don't do others because we can't get a port
+                return url;
+            }
+            if (Boolean.FALSE.equals(secure)) {
+                sb = new StringBuilder("http://");
+                hostEnd = 0;
+                ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(false);
+                port = (httpsConnectorInfo != null) ? httpsConnectorInfo.getPort() : 80;
+            } else {
+                sb = new StringBuilder("https://");
+                hostEnd = 0;
+                ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(true);
+                port = (httpsConnectorInfo != null) ? httpsConnectorInfo.getPort() : 443;
+            }
+        }
+        if (port != 80 && port != 443) {
+            sb.append("localhost:");
+            sb.append(port);
+        } else {
+            sb.append("localhost");
+        }
+        if (hostEnd >= 0) {
+            sb.append(url.substring(hostEnd));
+        }
+        return sb.toString();
     }
 }

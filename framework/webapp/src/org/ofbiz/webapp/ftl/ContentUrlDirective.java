@@ -153,6 +153,7 @@ public class ContentUrlDirective implements TemplateDirectiveModel {
                 }
             }
 
+            url = WebappUrlDirective.checkForceHost(url, args, secure, true);
             url = UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env);
         } catch (TemplateException e) {
             throw e;

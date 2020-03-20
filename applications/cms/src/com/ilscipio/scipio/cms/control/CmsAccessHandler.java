@@ -48,8 +48,11 @@ public class CmsAccessHandler implements HttpSessionListener {
     }
 
     public static String getAccessTokenString(HttpServletRequest request, CmsPage cmsPage, String cmsPagePath) {
-        GenericValue tokenRecord = getOrCreateUserAccessToken(UtilHttp.getSessionUserLogin(request), cmsPage.getId(), null, true);
-        return (tokenRecord != null) ? tokenRecord.getString("token") : null;
+        if(UtilValidate.isNotEmpty(cmsPage) && UtilValidate.isNotEmpty(cmsPage.getId())){
+            GenericValue tokenRecord = getOrCreateUserAccessToken(UtilHttp.getSessionUserLogin(request), cmsPage.getId(), null, true);
+            return (tokenRecord != null) ? tokenRecord.getString("token") : null;
+        }
+        return null;
    }
 
     private static GenericValue getOrCreateUserAccessToken(GenericValue userLogin, String pageId, Timestamp nowTimestamp, boolean deleteExpired) {

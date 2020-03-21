@@ -1,16 +1,13 @@
 package com.ilscipio.scipio.order.web;
 
-import java.io.IOException;
 import java.util.*;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 
 import com.ilscipio.scipio.web.BrokerSessionConfigurator;
 import com.ilscipio.scipio.web.GenericWebSocket;
 import com.ilscipio.scipio.web.SocketSessionManager;
-import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 
@@ -23,16 +20,17 @@ public class OrderWebSocket extends GenericWebSocket {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    protected String getRequiredPermission() { return "ORDERMGR"; }
+
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
         Map params = session.getRequestParameterMap();
         if(params.get("channel") != null){
-            String channelName = SocketSessionManager.DATA_KEY_CHANNEL+ ((List) params.get("channel")).get(0);
+            String channelName = (String) ((List) params.get("channel")).get(0);
             String type = (String) ((List) params.get("type")).get(0);
 
             if("subscribe".equals(type)){
-                SocketSessionManager.addSession("ORDERMGR", session,config);
-                SocketSessionManager.addToClientData(channelName,session);
+                SocketSessionManager.addSession(getRequiredPermission(), channelName, session,config);
             }
         }
     }
@@ -44,18 +42,18 @@ public class OrderWebSocket extends GenericWebSocket {
     @OnMessage
     public void onJsonMessage(String message, Session session) {
         try{
-            Map params = session.getRequestParameterMap();
+            Map<String, List<String>> params = session.getRequestParameterMap();
             if(params != null){
                 if(params.get("channel") != null && params.get("type") != null) {
-                    String channelName = SocketSessionManager.DATA_KEY_CHANNEL+params.get("channel");
-                    String type = params.get("type").toString();
+                    String channelName = (String) params.get("channel").get(0);
+                    String type = (String) params.get("type").get(0);
 
                     if("subscribe".equals(type)){
-                        SocketSessionManager.addToClientData(channelName,session);
+                        SocketSessionManager.addSessionInsecure(channelName,session);
                     }
 
                     if("unsubscribe".equals(type)){
-                        SocketSessionManager.removeClientData(channelName,session);
+                        SocketSessionManager.removeSession(channelName,session);
                     }
 
                     if("message".equals(type)){

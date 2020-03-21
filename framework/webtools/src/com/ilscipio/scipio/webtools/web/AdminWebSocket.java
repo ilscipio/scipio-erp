@@ -1,16 +1,13 @@
 package com.ilscipio.scipio.webtools.web;
 
-import java.io.IOException;
 import java.util.*;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 
 import com.ilscipio.scipio.web.BrokerSessionConfigurator;
 import com.ilscipio.scipio.web.GenericWebSocket;
 import com.ilscipio.scipio.web.SocketSessionManager;
-import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 
 
@@ -22,18 +19,20 @@ public class AdminWebSocket extends GenericWebSocket {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    protected String getRequiredPermission() { return "OFBTOOLS"; }
+
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
-        Map params = session.getRequestParameterMap();
+        Map<String, List<String>> params = session.getRequestParameterMap();
+        String channel = null;
         if(params.get("channel") != null){
-            String channelName = SocketSessionManager.DATA_KEY_CHANNEL+ ((List) params.get("channel")).get(0);
+            String channelName = (String) ((List) params.get("channel")).get(0);
             String type = (String) ((List) params.get("type")).get(0);
-
             if("subscribe".equals(type)){
-                SocketSessionManager.addToClientData(channelName,session);
+                channel = channelName;
             }
         }
-        SocketSessionManager.addSession("OFBTOOLS", session,config);
+        SocketSessionManager.addSession(getRequiredPermission(), channel, session, config);
     }
 }
 

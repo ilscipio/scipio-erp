@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.web;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.security.Security;
 import org.ofbiz.webapp.WebAppUtil;
 
@@ -9,100 +10,227 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * SocketSessionManager.
+ * <p>
+ * This was rewritten using ConcurrentHashMaps to remove almost all the synchronized blocks (most unnecessary), which
+ * were poor/contention in the original ofbiz example. The global client list was removed to avoid needless synchronization and as it was not even used anymore;
+ * if channel name null/empty it goes to {@link #DEFAULT_CHANNEL}.
+ * <p>
+ * Security: To simplify and remove need for synchronization (not trivial), currently empty channels are never removed; this is fine for backend
+ * since channel names should be a predefined fixed number; if ever used from frontend, it means channel names gotten over parameters must be
+ * restricted to valid ones, or this could overload the server.
+ * <p>
+ * TODO: REVIEW: There could be issues with Session identity (hashCode/equals) depending on the implementation, and it *might*
+ *  be possible that have to use Session.getId as String keys instead of Session. But may be moot...
+ */
 public class SocketSessionManager {
-    private static final Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final int MAX_CLIENTS = 100;
-    private static Map<String,List> clientData = Collections.synchronizedMap(new HashMap<String,List>());
-    public static final String DATA_KEY_CHANNEL = "channel_";
 
-    public static void addSession(Session session, EndpointConfig config) {
-        addSession("OFBTOOLS", session, config);
-    }
+    /** For clients previously not registered to any specific channel; this distinguishes them. */
+    public static final String DEFAULT_CHANNEL = "default";
+
+    /** Channel info map
+     * NOTE: global client list has been removed because it forces global synchronization for no reason and complexity; DEFAULT_CHANNEL now exists instead. */
+    private static final Map<String, ChannelInfo> channelMap = new ConcurrentHashMap<>();
 
     /**
-     * Adds Websocket Session to Session Manager (defaults to true)
+     * Adds Websocket Session to Session Manager.
      * */
-    public static void addSession(String permission, Session session, EndpointConfig config) {
-        addSession(Boolean.TRUE, permission, session, config);
-    }
-
-    public static void addUnsecureSession(Session session, EndpointConfig config) {
-        addSession(Boolean.FALSE, null, session, config);
-    }
-
-    public static void addSession(Boolean requiresPermission, String permission, Session session, EndpointConfig config) {
-        if (requiresPermission && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
+    public static void addSession(String permission, String channel, Session session, EndpointConfig config) {
+        if (permission != null && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
             return;
         }
-        synchronized(clients) { // SCIPIO: added block
-            if (clients.size() >= MAX_CLIENTS) { // SCIPIO: 2018-10-03
-                Debug.logWarning("Max websockets clients reached for example ("
-                        + MAX_CLIENTS + ")! Denying client registration websockets session "
-                        + getLogIdStr(session), module);
-                return;
+        // Add session to the connected sessions clients set
+        addSessionInsecure(channel, session);
+    }
+
+    /**
+     * Adds client session to channel - no security checks - only use if already verified!
+     */
+    public static void addSessionInsecure(String channel, Session session) {
+        if (UtilValidate.isEmpty(channel)) {
+            channel = DEFAULT_CHANNEL;
+        }
+        ChannelInfo channelInfo = channelMap.get(channel);
+        if (channelInfo == null) {
+            channelInfo = new ChannelInfo(channel);
+            ChannelInfo previousChannelInfo = channelMap.putIfAbsent(channel, channelInfo);
+            if (previousChannelInfo != null) {
+                channelInfo = previousChannelInfo;
             }
-            // Add session to the connected sessions clients set
-            clients.add(session);
+        }
+        channelInfo.addSession(session);
+    }
+
+    /**
+     * Removes session from channel - no security checks - only use if already verified!
+     */
+    public static void removeSession(String channel, Session session) {
+        if (UtilValidate.isEmpty(channel)) {
+            channel = DEFAULT_CHANNEL;
+        }
+        ChannelInfo channelInfo = channelMap.get(channel);
+        if (channelInfo == null) {
+            return;
+        }
+        channelInfo.removeSession(session);
+    }
+
+    /**
+     * Removes session from all channels - no security checks - only use if already verified!
+     */
+    public static void removeSession(Session session) {
+        for(Map.Entry<String, ChannelInfo> entry : channelMap.entrySet()) {
+            entry.getValue().removeSession(session);
         }
     }
 
     /**
-     * Remove Websocket Session
-     * */
-    public static void removeSession(Session session){
-        clients.remove(session);
+     * Removes sessions from all channels - no security checks - only use if already verified!
+     */
+    public static void removeSessions(Collection<Session> sessions) {
+        for(Map.Entry<String, ChannelInfo> entry : channelMap.entrySet()) {
+            for(Session session : sessions) {
+                entry.getValue().removeSession(session);
+            }
+        }
     }
 
+//    public static void removeChannel(String channel) {
+//        channelMap.remove(channel);
+//    }
+
+    // Not easily possible to do without adding expensive synchronization that doesn't appear needed anyway
+//    /** Removes any empty channels from the manager (synchronized - slow). Does NOT check for expired sessions. */
+//    public static void removeEmptyChannels() {
+//        // DEV NOTE: we only partial have to synchronize this with addSessionInsecure because after channelInfo.addSession it
+//        // puts the ChannelInfo back into channelInfoMap, so that even if removeEmptyChannels detects an empty ChannelInfo
+//        // and removes it, addSessionInsecure just puts it back
+//        Set<String> emptyChannels = new HashSet<>();
+//        for (Map.Entry<String, ChannelInfo> entry : channelInfoMap.entrySet()) {
+//            if (entry.getValue().isEmpty()) {
+//                emptyChannels.add(entry.getKey());
+//            }
+//        }
+//        for (String channel : emptyChannels) {
+//            channelInfoMap.remove(channel);
+//        }
+//    }
+
+    // No longer synchronized and these turn out to be unneeded operations, so better to just avoid until something needs these (previously used in code above)
+//    public static Set<String> getSessionChannelNames(Session session) {
+//        Set<String> channels = new HashSet<>();
+//        for(ChannelInfo channelInfo : channelInfoMap.values()) {
+//            if (channelInfo.hasSession(session)) {
+//                channels.add(channelInfo.getName());
+//            }
+//        }
+//        return channels;
+//    }
+//
+//    public static List<ChannelInfo> getSessionChannels(Session session) {
+//        List<ChannelInfo> channels = new ArrayList<>();
+//        for(Map.Entry<String, ChannelInfo> channelInfoEntry : channelInfoMap.entrySet()) {
+//            if (channelInfoEntry.getValue().hasSession(session)) {
+//                channels.add(channelInfoEntry.getValue());
+//            }
+//        }
+//        return channels;
+//    }
+//
+//    /** Returns the first channel the session is in. */
+//    public static ChannelInfo getSessionChannel(Session session) {
+//        for(Map.Entry<String, ChannelInfo> channelInfoEntry : channelInfoMap.entrySet()) {
+//            if (channelInfoEntry.getValue().hasSession(session)) {
+//                return channelInfoEntry.getValue();
+//            }
+//        }
+//        return null;
+//    }
+
+    public static Set<Session> getAllSessions() {
+        Set<Session> sessions = new HashSet<>();
+        for(Map.Entry<String, ChannelInfo> channelEntry : channelMap.entrySet()) {
+            sessions.addAll(channelEntry.getValue().getSessions());
+        }
+        return sessions;
+    }
 
     /**
-     * Broadcasts to all sessions
+     * Broadcasts to all sessions.
      * */
-    public static void broadcast(String message){
-        synchronized(clients) {
-            for (Session session : clients) {
+    public static void broadcastToAll(String message) {
+        Set<Session> invalidSessions = null;
+        for(Session session : getAllSessions()) {
+            try {
+                if (session.isOpen()) {
+                    session.getBasicRemote().sendText(message);
+                } else {
+                    if (invalidSessions == null) {
+                        invalidSessions = new HashSet<>();
+                    }
+                    invalidSessions.add(session);
+                }
+            } catch (IOException e) {
+                if (invalidSessions == null) {
+                    invalidSessions = new HashSet<>();
+                }
+                invalidSessions.add(session);
                 try {
-                    if (session.isOpen()) {
-                        synchronized (clients) {
-                            for (Session client : clients) {
-                                client.getBasicRemote().sendText(message);
+                    session.close();
+                } catch (IOException ioe) {
+                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                }
+            }
+        }
+        if (invalidSessions != null) {
+            removeSessions(invalidSessions);
+        }
+    }
+
+    /**
+     * Broadcasts to a single client.
+     * @return true only if message appears to have been sent
+     */
+    public static boolean broadcastToClient(String message, String clientId) {
+        Set<Session> invalidSessions = null;
+        try {
+            for (Map.Entry<String, ChannelInfo> channelEntry : channelMap.entrySet()) {
+                for (Map.Entry<Session, ChannelInfo.ClientInfo> clientEntry : channelEntry.getValue().getClientMap().entrySet()) {
+                    Session session = clientEntry.getKey();
+                    if (clientId.equals(session.getId())) {
+                        try {
+                            if (session.isOpen()) {
+                                session.getBasicRemote().sendText(message);
+                                return true;
+                            } else {
+                                if (invalidSessions == null) {
+                                    invalidSessions = new HashSet<>();
+                                }
+                                invalidSessions.add(session);
+                            }
+                        } catch (IOException e) {
+                            if (invalidSessions == null) {
+                                invalidSessions = new HashSet<>();
+                            }
+                            invalidSessions.add(session);
+                            try {
+                                session.close();
+                            } catch (IOException ioe) {
+                                Debug.logError("Could not close websocket session: " + ioe.toString(), module);
                             }
                         }
-                    }
-                } catch (IOException e) {
-                    try {
-                        session.close();
-                    } catch (IOException ioe) {
-                        Debug.logError(ioe.getMessage(), module);
+                        return false;
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Broadcasts to a single client
-     * */
-    public static void broadcastToClient(String message,String clientId){
-        synchronized(clients) {
-            for (Session session : clients) {
-                if(clientId.equals(session.getId())){
-                    try {
-                        if (session.isOpen()) {
-                            session.getBasicRemote().sendText(message);
-                        }
-                    } catch (IOException e) {
-                        try {
-                            clients.remove(session);
-                            session.close();
-                        } catch (IOException ioe) {
-                            Debug.logError(ioe.getMessage(), module);
-                        }
-                    }
-
-                }
-
+            return false;
+        } finally {
+            if (invalidSessions != null) {
+                removeSessions(invalidSessions);
             }
         }
     }
@@ -110,77 +238,106 @@ public class SocketSessionManager {
     /**
      * Broadcasts to all sessions on topic
      * */
-    public static void broadcastToChannel(String message,String channelName){
-        String channel = DATA_KEY_CHANNEL+channelName;
-        synchronized(clients) {
-            List<Session> channelInfo = clientData.get(channel);
-            if(channelInfo != null){
-                for (Session session : channelInfo) {
-                    try {
-                        if (session.isOpen()) {
-                            session.getBasicRemote().sendText(message);
-                        }
-                    } catch (IOException e) {
-                        try {
-                            channelInfo.remove(session);
-                            session.close();
-                        } catch (IOException ioe) {
-                            Debug.logError(ioe.getMessage(), module);
-                        }
+    public static void broadcastToChannel(String message, String channel) {
+        ChannelInfo channelInfo = channelMap.get(channel);
+        if (channelInfo == null) {
+            return;
+        }
+        Set<Session> invalidSessions = null;
+        for (Map.Entry<Session, ChannelInfo.ClientInfo> clientEntry : channelInfo.getClientMap().entrySet()) {
+            Session session = clientEntry.getKey();
+            try {
+                if (session.isOpen()) {
+                    session.getBasicRemote().sendText(message);
+                } else {
+                    if (invalidSessions == null) {
+                        invalidSessions = new HashSet<>();
                     }
+                    invalidSessions.add(session);
+                }
+            } catch (IOException e) {
+                if (invalidSessions == null) {
+                    invalidSessions = new HashSet<>();
+                }
+                invalidSessions.add(session);
+                try {
+                    session.close();
+                } catch (IOException ioe) {
+                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
                 }
             }
         }
-    }
-
-    /**
-     * Adds clientInfo
-     * */
-    public static void addToClientData(String key, Object data){
-        synchronized(clientData) {
-            if (clientData.containsKey(key)) {
-                clientData.get(key).add(data);
-            } else {
-                List e = new ArrayList();
-                e.add(data);
-                clientData.put(key, e);
-            }
-        }
-    }
-
-    /**
-     * Removes clientInfo - seldom used as clients will most likely just drop out of session.
-     * */
-    public static void removeClientData(String key, Object data){
-        synchronized(clientData) {
-            if (clientData.containsKey(key)) {
-                clientData.remove(key);
-            }
+        if (invalidSessions != null) {
+            removeSessions(invalidSessions);
         }
     }
 
     private static boolean checkClientAuthorization(String permission, Session session, EndpointConfig config, String errorSuffix) {
+        if (config == null) {
+            Debug.logError("null EndpointConfig for websockets session '"
+                    + session.getId() + "' for client authorization" + errorSuffix, module);
+            return false;
+        }
         HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
         if (httpSession == null) {
-            Debug.logError("Could not get HttpSession for websockets session "
-                    + getLogIdStr(session) + " for client authorization" + errorSuffix, module);
+            Debug.logError("Could not get HttpSession for websockets session '"
+                    + session.getId() + "' for client authorization" + errorSuffix, module);
             return false;
         }
         Security security = WebAppUtil.getSecurity(httpSession);
         if (security == null) {
             Debug.logError("Could not get Security object from HttpSession"
-                    + " for websockets session " + getLogIdStr(session) + " for client authorization"
+                    + " for websockets session '" + session.getId() + "' for client authorization"
                     + errorSuffix, module);
             return false;
         }
         if (!security.hasEntityPermission(permission, "_VIEW", httpSession)) {
-            Debug.logError("Client not authorized for ORDERMGR_VIEW permission for websockets session "
-                    + getLogIdStr(session) +  errorSuffix, module);
+            Debug.logError("Client not authorized for " + permission + "_VIEW permission for websockets session '"
+                    + session.getId() + "'" + errorSuffix, module);
             return false;
         }
         return true;
     }
-    private static String getLogIdStr(Session session) {
-        return "'" + session.getId() + "'";
+
+    public static class ChannelInfo {
+        private final String name;
+        private final Map<Session, ClientInfo> clientMap = new ConcurrentHashMap<>(); // Better than synchronizing on Set
+
+        protected ChannelInfo(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        protected Map<Session, ClientInfo> getClientMap() {
+            return clientMap;
+        }
+
+        public Set<Session> getSessions() {
+            return Collections.unmodifiableSet(clientMap.keySet());
+        }
+
+        public boolean isEmpty() {
+            return clientMap.isEmpty();
+        }
+
+        public boolean hasSession(Session session) {
+            return clientMap.containsKey(session);
+        }
+
+        protected void addSession(Session session) { // TODO: REVIEW: does not yet require synchronized, but may in future for ClientInfo
+            clientMap.putIfAbsent(session, ClientInfo.INSTANCE); // new ClientInfo
+        }
+
+        protected void removeSession(Session session) { // TODO: REVIEW: does not yet require synchronized, but may in future for ClientInfo
+            clientMap.remove(session);
+        }
+
+        private static class ClientInfo {
+            // TODO?: Any required per-channel client info here (NOTE: synchronization or mutable pattern may be needed); for now we can share a single instance
+            private static final ClientInfo INSTANCE = new ClientInfo();
+        }
     }
 }

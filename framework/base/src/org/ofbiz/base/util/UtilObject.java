@@ -311,4 +311,14 @@ public final class UtilObject {
     public static <T> T altIfNotEquals(T value, Object target, T altValue) {
         return (value != null) ? (!value.equals(target) ? altValue : value) : ((value != altValue) ? altValue : value);
     }
+
+    /** SCIPIO: Returns object toString() or null if null. */
+    public static String toStringOrNull(Object object) {
+        return (object != null) ? object.toString() : null;
+    }
+
+    /** SCIPIO: Returns object toString() or empty string if null. */
+    public static String toStringOrEmpty(Object object) {
+        return (object != null) ? object.toString() : "";
+    }
 }

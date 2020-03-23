@@ -1,7 +1,10 @@
 package com.ilscipio.scipio.web;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.webapp.WebAppUtil;
 
@@ -29,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SocketSessionManager {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("catalina", "webSocket.debug", false);
+
     /** For clients previously not registered to any specific channel; this distinguishes them. */
     public static final String DEFAULT_CHANNEL = "default";
 
@@ -36,12 +41,24 @@ public class SocketSessionManager {
      * NOTE: global client list has been removed because it forces global synchronization for no reason and complexity; DEFAULT_CHANNEL now exists instead. */
     private static final Map<String, ChannelInfo> channelMap = new ConcurrentHashMap<>();
 
+    static final ThreadLocal allowLogging = new ThreadLocal<>();
+
     /**
      * Adds Websocket Session to Session Manager.
      * */
     public static void addSession(String permission, String channel, Session session, EndpointConfig config) {
         if (permission != null && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
+            if (isDebug()) {
+                GenericValue userLogin = WebSocketUtil.getUserLogin(session, config);
+                Debug.logInfo("Websocket: Permission denied for client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)" )
+                        + "' for channel '" + (UtilValidate.isNotEmpty(channel) ? channel : DEFAULT_CHANNEL) + "', sessionId '" + session.getId() + "'", module);
+            }
             return;
+        }
+        if (isDebug()) {
+            GenericValue userLogin = WebSocketUtil.getUserLogin(session, config);
+            Debug.logInfo("Websocket: Registering client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)" )
+                    + "' to channel '" + (UtilValidate.isNotEmpty(channel) ? channel : DEFAULT_CHANNEL) + "', sessionId '" + session.getId() + "'", module);
         }
         // Add session to the connected sessions clients set
         addSessionInsecure(channel, session);
@@ -76,6 +93,9 @@ public class SocketSessionManager {
         if (channelInfo == null) {
             return;
         }
+        if (isDebug()) {
+            Debug.logInfo("Websocket: Removing client session from channel '" + channel + "', sessiondId '" + session.getId() + "'", module);
+        }
         channelInfo.removeSession(session);
     }
 
@@ -84,6 +104,9 @@ public class SocketSessionManager {
      */
     public static void removeSession(Session session) {
         for(Map.Entry<String, ChannelInfo> entry : channelMap.entrySet()) {
+            if (isDebug() && entry.getValue().hasSession(session)) {
+                Debug.logInfo("Websocket: Removing client session from channel '" + entry.getKey() + "', sessiondId '" + session.getId() + "'", module);
+            }
             entry.getValue().removeSession(session);
         }
     }
@@ -164,10 +187,13 @@ public class SocketSessionManager {
      * */
     public static void broadcastToAll(String message) {
         Set<Session> invalidSessions = null;
+        int totalCount = 0;
+        int successCount = 0;
         for(Session session : getAllSessions()) {
             try {
                 if (session.isOpen()) {
                     session.getBasicRemote().sendText(message);
+                    successCount++;
                 } else {
                     if (invalidSessions == null) {
                         invalidSessions = new HashSet<>();
@@ -182,12 +208,18 @@ public class SocketSessionManager {
                 try {
                     session.close();
                 } catch (IOException ioe) {
-                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                    if (isLog()) {
+                        Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                    }
                 }
             }
+            totalCount++;
         }
         if (invalidSessions != null) {
             removeSessions(invalidSessions);
+        }
+        if (isDebug()) {
+            Debug.logInfo("Websocket: broadcasted message to " + successCount + "/" + totalCount + " sessions in all channels", module);
         }
     }
 
@@ -205,6 +237,9 @@ public class SocketSessionManager {
                         try {
                             if (session.isOpen()) {
                                 session.getBasicRemote().sendText(message);
+                                if (isDebug()) {
+                                    Debug.logInfo("Websocket: broadcasted message to client '" + clientId + "'", module);
+                                }
                                 return true;
                             } else {
                                 if (invalidSessions == null) {
@@ -220,7 +255,9 @@ public class SocketSessionManager {
                             try {
                                 session.close();
                             } catch (IOException ioe) {
-                                Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                                if (isLog()) {
+                                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                                }
                             }
                         }
                         return false;
@@ -236,19 +273,23 @@ public class SocketSessionManager {
     }
 
     /**
-     * Broadcasts to all sessions on topic
-     * */
+     * Broadcasts to sessions on topic.
+     * NOTE: Logging must be disable-able is for ScipioSocketAppender otherwise this creates endless logging loops.
+     */
     public static void broadcastToChannel(String message, String channel) {
         ChannelInfo channelInfo = channelMap.get(channel);
         if (channelInfo == null) {
             return;
         }
         Set<Session> invalidSessions = null;
+        int totalCount = 0;
+        int successCount = 0;
         for (Map.Entry<Session, ChannelInfo.ClientInfo> clientEntry : channelInfo.getClientMap().entrySet()) {
             Session session = clientEntry.getKey();
             try {
                 if (session.isOpen()) {
                     session.getBasicRemote().sendText(message);
+                    successCount++;
                 } else {
                     if (invalidSessions == null) {
                         invalidSessions = new HashSet<>();
@@ -263,37 +304,52 @@ public class SocketSessionManager {
                 try {
                     session.close();
                 } catch (IOException ioe) {
-                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                    if (isLog()) {
+                        Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                    }
                 }
             }
+            totalCount++;
         }
         if (invalidSessions != null) {
             removeSessions(invalidSessions);
+        }
+        if (isDebug()) {
+            Debug.logInfo("Websocket: broadcasted message to " + successCount + "/" + totalCount + " sessions in channel '" + channel + "'", module);
         }
     }
 
     private static boolean checkClientAuthorization(String permission, Session session, EndpointConfig config, String errorSuffix) {
         if (config == null) {
-            Debug.logError("null EndpointConfig for websockets session '"
-                    + session.getId() + "' for client authorization" + errorSuffix, module);
+            if (isLog()) {
+                Debug.logError("null EndpointConfig for websockets session '"
+                        + session.getId() + "' for client authorization" + errorSuffix, module);
+            }
             return false;
         }
-        HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+        HttpSession httpSession = WebSocketUtil.getHttpSession(session, config);
         if (httpSession == null) {
-            Debug.logError("Could not get HttpSession for websockets session '"
-                    + session.getId() + "' for client authorization" + errorSuffix, module);
+            if (isLog()) {
+                Debug.logError("Could not get HttpSession for websockets session '"
+                        + session.getId() + "' for client authorization" + errorSuffix, module);
+            }
             return false;
         }
         Security security = WebAppUtil.getSecurity(httpSession);
         if (security == null) {
-            Debug.logError("Could not get Security object from HttpSession"
-                    + " for websockets session '" + session.getId() + "' for client authorization"
-                    + errorSuffix, module);
+            if (isLog()) {
+                Debug.logError("Could not get Security object from HttpSession"
+                        + " for websockets session '" + session.getId() + "' for client authorization"
+                        + errorSuffix, module);
+            }
             return false;
         }
-        if (!security.hasEntityPermission(permission, "_VIEW", httpSession)) {
-            Debug.logError("Client not authorized for " + permission + "_VIEW permission for websockets session '"
-                    + session.getId() + "'" + errorSuffix, module);
+        GenericValue userLogin = UtilHttp.getUserLogin(httpSession);
+        if (!security.hasEntityPermission(permission, "_VIEW", userLogin)) {
+            if (isLog()) {
+                Debug.logError("Client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)") + "' not authorized for " + permission + "_VIEW permission for websockets session '"
+                        + session.getId() + "'" + errorSuffix, module);
+            }
             return false;
         }
         return true;
@@ -340,4 +396,8 @@ public class SocketSessionManager {
             private static final ClientInfo INSTANCE = new ClientInfo();
         }
     }
+
+    public static boolean isLog() { return !Boolean.FALSE.equals(allowLogging.get()); }
+
+    public static boolean isDebug() { return isLog() && (DEBUG || Debug.verboseOn()); }
 }

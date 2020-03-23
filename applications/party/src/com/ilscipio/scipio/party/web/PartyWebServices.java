@@ -24,7 +24,6 @@ public class PartyWebServices {
         String channel = (String) context.get("channel");
 
         try {
-
             String interval = ((String) context.get("interval")).toLowerCase();
             Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
             Timestamp begin = nowTimestamp;
@@ -57,12 +56,12 @@ public class PartyWebServices {
                     begin = UtilDateTime.getDayStart(nowTimestamp, 0, timeZone, locale);
             }
 
-            Map findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",begin,"thruDate",nowTimestamp,"dateInterval",interval,"userLogin",userLogin));
+            Map<String, Object> findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",begin,"thruDate",nowTimestamp,"dateInterval",interval,"userLogin",userLogin));
 
             JSON obj = JSON.from(findDataMap.get("requests"));
             SocketSessionManager.broadcastToChannel(obj.toString(),channel);
 
-        }catch(Exception e){
+        } catch(Exception e) {
             Debug.logError("Error while sending order data to websocket",module);
             return ServiceUtil.returnError("Error while sending order data to websocket");
         }

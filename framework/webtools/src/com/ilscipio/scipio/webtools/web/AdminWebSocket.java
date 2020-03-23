@@ -9,6 +9,7 @@ import com.ilscipio.scipio.web.BrokerSessionConfigurator;
 import com.ilscipio.scipio.web.GenericWebSocket;
 import com.ilscipio.scipio.web.SocketSessionManager;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 
 /**
@@ -23,16 +24,12 @@ public class AdminWebSocket extends GenericWebSocket {
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
-        Map<String, List<String>> params = session.getRequestParameterMap();
-        String channel = null;
-        if(params.get("channel") != null){
-            String channelName = (String) ((List) params.get("channel")).get(0);
-            String type = (String) ((List) params.get("type")).get(0);
-            if("subscribe".equals(type)){
-                channel = channelName;
-            }
-        }
-        SocketSessionManager.addSession(getRequiredPermission(), channel, session, config);
+        super.onOpen(session, config);
+    }
+
+    @OnMessage
+    public void onJsonMessage(String message, Session session) {
+        super.onJsonMessage(message, session);
     }
 }
 

@@ -25,18 +25,23 @@ public final class ScipioSocketAppender extends AbstractAppender {
         this.channel=channel;
     }
 
-
     @Override
     public void append(LogEvent event) {
         readLock.lock();
         try {
             final byte[] bytes = getLayout().toByteArray(event);
             String message = new String(bytes);
-            Map logMessage = new HashMap();
-            logMessage.put("message",message);
-            logMessage.put("type",event.getLevel());
+            Map<String, Object> logMessage = new HashMap<>();
+            logMessage.put("message", message);
+            logMessage.put("type", event.getLevel());
             JSON obj = JSON.from(logMessage);
-            SocketSessionManager.broadcastToChannel(obj.toString(),channel);
+            // SPECIAL: Don't let this log anything or else endless logging
+            try {
+                SocketSessionManager.allowLogging.set(false);
+                SocketSessionManager.broadcastToChannel(obj.toString(), channel);
+            } finally {
+                SocketSessionManager.allowLogging.remove();
+            }
         } catch (Exception ex) {
             if (!ignoreExceptions()) {
                 throw new AppenderLoggingException(ex);

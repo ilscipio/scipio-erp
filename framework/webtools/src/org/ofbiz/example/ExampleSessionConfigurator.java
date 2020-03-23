@@ -7,7 +7,7 @@ import javax.websocket.server.ServerEndpointConfig;
 
 /**
  * SCIPIO: A configurator used to make the HttpSession available
- * from {@link ExampleWebSockets#onOpen}.
+ * from {@link ExampleWebSockets#onOpen}. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead.
  * <p>
  * Added 2018-10-03.
  */

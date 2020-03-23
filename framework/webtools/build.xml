@@ -19,6 +19,7 @@ code package.
         <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
         <fileset dir="../base/lib" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
+        <fileset dir="../common/build/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
         <fileset dir="../entityext/build/lib" includes="*.jar"/>

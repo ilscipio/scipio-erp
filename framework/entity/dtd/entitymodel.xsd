@@ -36,6 +36,8 @@ under the License.
             <xs:enumeration value="extract-year"/>
             <xs:enumeration value="extract-month"/>
             <xs:enumeration value="extract-day"/>
+            <xs:enumeration value="extract-hour"/>
+            <xs:enumeration value="extract-minute"/>
         </xs:restriction>
     </xs:simpleType>
 

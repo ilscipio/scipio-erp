@@ -37,7 +37,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.webapp.WebAppUtil;
 
 /**
- * ExampleWebSockets.
+ * ExampleWebSockets. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead.
  * <p>
  * SCIPIO: 2018-10-03: Modified for custom configuration to get access to HttpSession.
  */

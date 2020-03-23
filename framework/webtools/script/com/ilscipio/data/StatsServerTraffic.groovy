@@ -19,11 +19,35 @@ import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
  * This is based on the new SCIPIO getServerRequests services. Sample implementation only
  * */
 Map findDataMap = [:];
-Timestamp startDate = UtilDateTime.getMonthStart(context.nowTimestamp, context.timeZone, context.locale); // This month (Begin)
-Timestamp endDate = UtilDateTime.getMonthEnd(startDate, context.timeZone, context.locale); // This month (End)
+Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+Timestamp begin = nowTimestamp;
+switch (context.chartIntervalScope?context.chartIntervalScope:"day"){
+    case "hour":
+        begin = UtilDateTime.getHourStart(nowTimestamp, 0, timeZone, locale);
+        break;
+
+    case "day":
+        begin = UtilDateTime.getDayStart(nowTimestamp, 0, timeZone, locale);
+        break;
+
+    case "week":
+        begin = UtilDateTime.getWeekStart(nowTimestamp, 0, timeZone, locale);
+        break;
+
+    case "month":
+        begin = UtilDateTime.getMonthStart(nowTimestamp, 0, timeZone, locale);
+        break;
+
+    case "year":
+        begin = UtilDateTime.getYearStart(nowTimestamp, 0, timeZone, locale);
+        break;
+
+    default:
+        begin = UtilDateTime.getDayStart(nowTimestamp, 0, timeZone, locale);
+}
 
 try {
-    findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",startDate,"thruDate",endDate,"dateInterval","day","userLogin",userLogin));
+    findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",begin,"thruDate",nowTimestamp,"dateInterval",context.chartIntervalScope?context.chartIntervalScope:"day","userLogin",userLogin));
     result = findDataMap;
 }catch(Exception e){
     result = ServiceUtil.returnError("Cannot fetch request data");

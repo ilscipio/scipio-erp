@@ -7,21 +7,21 @@ code package.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-        
-  <screen name="DashboardStatsOrderTotal">
-      <section>
+
+    <screen name="DashboardStatsOrderTotal">
+        <section>
             <widgets>
                 <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalDay"/></container>
                 <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
                 <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
             </widgets>
-      </section>
-  </screen>
-  
-  <screen name="DashboardStatsOrderTotalDay">
-      <section>
-            <actions> 
-                <set field="chartType" value="line"/>                
+        </section>
+    </screen>
+
+    <screen name="DashboardStatsOrderTotalDay">
+        <section>
+            <actions>
+                <set field="chartType" value="line"/>
                 <set field="chartIntervalCount" value="1" type="Integer"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="day"/> <!-- day|week|month|year -->
@@ -38,12 +38,12 @@ code package.
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
-      </section>
-  </screen>
-  
-  <screen name="DashboardStatsOrderTotalWeek">
-      <section>
-            <actions> 
+        </section>
+    </screen>
+
+    <screen name="DashboardStatsOrderTotalWeek">
+        <section>
+            <actions>
                 <set field="chartType" value="line"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="week"/> <!-- day|week|month|year -->
@@ -60,12 +60,12 @@ code package.
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
-      </section>
-  </screen>      
-  
-  <screen name="DashboardStatsOrderTotalMonth">
-      <section>
-            <actions> 
+        </section>
+    </screen>
+
+    <screen name="DashboardStatsOrderTotalMonth">
+        <section>
+            <actions>
                 <set field="chartType" value="bar"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
@@ -82,8 +82,28 @@ code package.
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
-      </section>
-  </screen>
+        </section>
+    </screen>
+
+    <screen name="DashboardWSLiveOrders">
+        <section>
+            <actions>
+                <set field="chartIntervalScope" value="day"/>
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonHour}"/>
+                <set field="chartIntervalCount" value="24" type="Integer"/> <!-- Look back x days/weeks/months/years -->
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
+                <set field="title" value="${uiLabelMap.OrderGrossSales} (${uiLabelMap.CommonPerHour})"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrders.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
    
 </screens>
 

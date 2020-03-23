@@ -168,14 +168,17 @@ public Map processResult(List resultList,Timestamp startDate,Timestamp endDate,S
     SimpleDateFormat sdf;
 
     // create new ordered Map of all upcoming dates
+    /*
     if(dateInterval.equals("minute")){sdf = new SimpleDateFormat("hh:mm");}
     if(dateInterval.equals("hour")){sdf = new SimpleDateFormat("MM-dd hh");}
     if(dateInterval.equals("day")){sdf = new SimpleDateFormat("MM-dd");}
     if(dateInterval.equals("week")){sdf = new SimpleDateFormat("yy-w")}
     if(dateInterval.equals("month")){sdf = new SimpleDateFormat("yy-MM")}
     if(dateInterval.equals("year")){sdf = new SimpleDateFormat("yy")}
-    
-        
+    */
+    sdf = new SimpleDateFormat("YYYY-MM-DD'T'HH:mm")
+
+    /*
     while(!startD.after(endD))
     {
         int year = startD.get(Calendar.YEAR);
@@ -196,7 +199,7 @@ public Map processResult(List resultList,Timestamp startDate,Timestamp endDate,S
         if(dateInterval.equals("week")){startD.add(Calendar.WEEK_OF_MONTH, 1);}
         if(dateInterval.equals("month")){startD.add(Calendar.MONTH, 1);}
         if(dateInterval.equals("year")){startD.add(Calendar.YEAR, 1);}
-    }
+    }*/
 
     resultList.each {
         Map p = it;

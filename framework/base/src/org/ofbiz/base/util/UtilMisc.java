@@ -1114,6 +1114,29 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns an unmodifiable hash set copied from the given collection, with support for extra elements.
+     * If collection is null, a new one is created.
+     */
+    public static <T> Set<T> unmodifiableHashSetCopyAdd(Collection<? extends T> collection, T... addValues) {
+        Set<T> set = (collection != null) ? new HashSet<>(collection) : new HashSet<>();
+        for (T value : addValues) {
+            set.add(value);
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable hash set copied from the given collection, with support for extra elements.
+     */
+    public static <T> Set<T> unmodifiableHashSetCopyRemove(Collection<? extends T> collection, T... removeValues) {
+        Set<T> set = new HashSet<>(collection);
+        for (T value : removeValues) {
+            set.remove(value);
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
      * SCIPIO: Returns an unmodifiable linked hash set.
      */
     @SuppressWarnings("unchecked")
@@ -1126,6 +1149,29 @@ public final class UtilMisc {
      */
     public static <T> Set<T> unmodifiableLinkedHashSetCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableSet(new LinkedHashSet<>(collection));
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection, with support for extra elements.
+     * If collection is null, a new one is created.
+     */
+    public static <T> Set<T> unmodifiableLinkedHashSetCopyAdd(Collection<? extends T> collection, T... addValues) {
+        Set<T> set = (collection != null) ? new LinkedHashSet<>(collection) : new LinkedHashSet<>();
+        for(T value : addValues) {
+            set.add(value);
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection, with support for extra elements.
+     */
+    public static <T> Set<T> unmodifiableLinkedHashSetCopyRemove(Collection<? extends T> collection, T... removeValues) {
+        Set<T> set = new LinkedHashSet<>(collection);
+        for(T value : removeValues) {
+            set.remove(value);
+        }
+        return Collections.unmodifiableSet(set);
     }
 
     /**
@@ -1144,6 +1190,29 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns an unmodifiable array list copied from the given collection, with support for extra elements.
+     * If collection is null, a new one is created.
+     */
+    public static <T> List<T> unmodifiableArrayListCopyAdd(Collection<? extends T> collection, T... addValues) {
+        List<T> list = (collection != null) ? new ArrayList<>(collection) : new ArrayList<>();
+        for(T value : addValues) {
+            list.add(value);
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable array list copied from the given collection, with support for extra elements.
+     */
+    public static <T> List<T> unmodifiableArrayListCopyRemove(Collection<? extends T> collection, T... removeValues) {
+        List<T> list = new ArrayList<>(collection);
+        for(T value : removeValues) {
+            list.remove(value);
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    /**
      * SCIPIO: Returns an unmodifiable linked list.
      */
     @SuppressWarnings("unchecked")
@@ -1156,6 +1225,29 @@ public final class UtilMisc {
      */
     public static <T> List<T> unmodifiableLinkedListCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableList(new LinkedList<>(collection));
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable linked list copied from the given collection, with support for extra elements.
+     * If collection is null, a new one is created.
+     */
+    public static <T> List<T> unmodifiableLinkedListCopyAdd(Collection<? extends T> collection, T... addValues) {
+        List<T> list = (collection != null) ? new LinkedList<>(collection) : new LinkedList<>();
+        for(T value : addValues) {
+            list.add(value);
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * SCIPIO: Returns an unmodifiable linked list copied from the given collection, with support for extra elements.
+     */
+    public static <T> List<T> unmodifiableLinkedListCopyRemove(Collection<? extends T> collection, T... removeValues) {
+        List<T> list = new LinkedList<>(collection);
+        for(T value : removeValues) {
+            list.remove(value);
+        }
+        return Collections.unmodifiableList(list);
     }
 
     /**

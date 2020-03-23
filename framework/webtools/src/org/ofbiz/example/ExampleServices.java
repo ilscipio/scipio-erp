@@ -28,6 +28,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+/** ExampleServices. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead. */
 public class ExampleServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

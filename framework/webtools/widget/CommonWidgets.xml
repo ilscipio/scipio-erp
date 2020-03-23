@@ -7,10 +7,10 @@ code package.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-  
-  <screen name="DashboardServerTraffic">
-      <section>
-            <actions> 
+
+    <screen name="DashboardServerTraffic">
+        <section>
+            <actions>
                 <set field="chartType" value="bar"/>
                 <set field="chartValue" value="count"/>
                 <set field="chartData" value="day"/>
@@ -25,7 +25,28 @@ code package.
                     <html><html-template location="component://webtools/webapp/webtools/stats/statsServerTraffic.ftl"/></html>
                 </platform-specific>
             </widgets>
-      </section>
-  </screen>  
+        </section>
+    </screen>
+
+    <screen name="DashboardWSLiveRequests">
+        <section>
+            <actions>
+                <set field="xlabel" value="Requests"/>
+                <set field="ylabel" value="${uiLabelMap.CommonHour}"/>
+                <set field="label1" value="Website Traffic"/>
+                <set field="chartType" value="bar"/>
+                <set field="chartValue" value="count"/>
+                <set field="chartIntervalScope" value="minute"/> <!-- hour|day|week|month|year -->
+                <set field="chartIntervalCount" value="0"/>     <!-- Look back x hours/days/weeks/months/years -->
+                <script location="component://webtools/script/com/ilscipio/data/StatsServerTraffic.groovy"/>
+                <set field="title" value="${uiLabelMap.CommonRequests} (${uiLabelMap.CommonPerHour})"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://webtools/webapp/webtools/dashboard/wsLiveRequests.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 

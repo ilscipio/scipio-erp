@@ -41,6 +41,19 @@ code package.
             </Policies>
             <DefaultRolloverStrategy max="3"/>
         </RollingFile>
+        <!-- Scipio default socket support -->
+        <ScipioSocketAppender name="scipiosocket" channel="log">
+            <PatternLayout pattern="%date{DEFAULT} |%-20.20thread |%-30.30logger{1}|%level{length=1}| %message%n"/>
+        </ScipioSocketAppender>
+
+        <!-- log4j Socket support (not loaded by default)
+        <Socket name="scipiosocketclassic" host="localhost" port="9500">
+            <JsonLayout properties="true"/>
+            <SSL>
+                <KeyStore   location="ofbizcerts.jks" passwordEnvironmentVariable="ofbiz.client.keyStore.password"/>
+                <TrustStore location="ofbiztrust.jks"       passwordEnvironmentVariable="ofbiz.trustStore.password"/>
+            </SSL>
+        </Socket>-->
         <Sentry name="scipiosentry">
             <Filters>
                 <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/><!-- SCIPIO: don't log OFF level in error log -->
@@ -51,6 +64,11 @@ code package.
             <AppenderRef ref="ofbiz"/>
             <AppenderRef ref="stdout"/>
             <AppenderRef ref="error"/>
+            <AppenderRef ref="scipiosocket"/>
+
+            <!-- Enable log4j classic socket appender
+            <AppenderRef ref="scipiosocketclassic"/>
+            -->
             <!-- SCIPIO: Uncomment to enable sentry.io logging - you must set dsn= in sentry.properties for this
             <AppenderRef ref="scipiosentry"/>-->
         </Async>

@@ -1411,7 +1411,7 @@ public final class UtilDateTime {
         DateFormat dateFormat;
         switch (period) {
         case "hour":
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd hha");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
             break;
         case "day":
             dateFormat = new SimpleDateFormat("yyyy-MM-dd");

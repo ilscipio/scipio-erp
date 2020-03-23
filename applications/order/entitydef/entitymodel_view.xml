@@ -1731,4 +1731,27 @@ code package.
         <key-map field-name="productId"/>
       </relation>
   </view-entity>
+
+  <!-- SCIPIO: Added 2020-01-03 -->
+  <view-entity entity-name="OrderStats"
+               package-name="com.ilscipio.scipio.ce.stats"
+               title="Order Statistics" auto-clear-cache="true">
+    <member-entity entity-alias="OH" entity-name="OrderHeader" />
+    <alias entity-alias="OH" name="productStoreId" group-by="true"/>
+    <alias entity-alias="OH" name="webSiteId" group-by="true"/>
+    <alias entity-alias="OH" name="terminalId" group-by="true"/>
+    <alias entity-alias="OH" name="salesChannelEnumId" group-by="true"/>
+    <alias entity-alias="OH" name="orderTypeId" group-by="true"/>
+    <alias entity-alias="OH" name="orderDate"/>
+    <alias entity-alias="OH" name="statusId" group-by="true"/>
+    <alias entity-alias="OH" name="totalGrandAmount" field="grandTotal" function="sum"/>
+    <alias entity-alias="OH" name="totalSubRemainingAmount" field="remainingSubTotal" function="sum"/>
+    <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
+    <!-- Filter cancelled orders
+    <entity-condition>
+      <having-condition-list>
+        <condition-expr entity-alias="OH" field-name="statusId" value="ORDER_CANCELLED" operator="not-equals"/>
+      </having-condition-list>
+    </entity-condition>-->
+  </view-entity>
 </entitymodel>

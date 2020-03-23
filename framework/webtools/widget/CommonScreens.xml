@@ -219,7 +219,7 @@ code package.
                                             <include-screen name="ScipioMemoryInfo" location="component://webtools/widget/CommonScreens.xml"/>
                                         </container>
                                         <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                            <include-screen name="ScipioUserRequestCount" location="component://webtools/widget/CommonScreens.xml"/>
+                                            <include-screen name="DashboardWSLiveRequests" location="component://webtools/widget/CommonWidgets.xml"/>
                                         </container>
                                     </container>
                                 </screenlet>

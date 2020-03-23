@@ -21,17 +21,14 @@ package org.ofbiz.catalina.container;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.websocket.server.ServerContainer;
 
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Context;
@@ -79,6 +76,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.reflections.Reflections;
 import org.w3c.dom.Document;
 
 /*
@@ -584,7 +582,7 @@ public class CatalinaContainer implements Container {
 
         JarScanner jarScanner = context.getJarScanner();
         if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner 
-            jarScanner.setJarScanFilter(new FilterJars(appInfo)); // SCIPIO: 2018-10-03: Pass webapp info
+            jarScanner.setJarScanFilter(new FilterJars(appInfo,context.getServletContext())); // SCIPIO: 2018-10-03: Pass webapp info
         }
         if (jarScanner instanceof StandardJarScanner) {
             StandardJarScanner standardJarScanner = (StandardJarScanner) jarScanner;
@@ -637,7 +635,6 @@ public class CatalinaContainer implements Container {
         // SCIPIO: 2018-12-03: We set a special session listener for all webapps to initialize the session sync object
         context.addApplicationLifecycleListener(UtilHttp.SessionSyncEventListener.getInstance());
         context.addApplicationLifecycleListener(UtilHttp.ServletContextSyncEventListener.getInstance());
-
         return context;
     }
 

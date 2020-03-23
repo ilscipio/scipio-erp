@@ -1,4 +1,5 @@
-import java.math.BigDecimal;
+import java.math.BigDecimal
+import java.math.RoundingMode;
 import java.util.*;
 import java.sql.Timestamp;
 import org.ofbiz.entity.*;
@@ -9,10 +10,11 @@ import org.ofbiz.base.util.*;
 import com.ibm.icu.text.SimpleDateFormat;
 import org.ofbiz.base.util.cache.UtilCache;
 
-beginText = "";
-endText = "";
+
 contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true);
 Map processResult() {
+    int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
     iCount = (context.chartIntervalCount != null) ? context.chartIntervalCount : 0;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year    
     if (iCount <= 0)
@@ -23,24 +25,52 @@ Map processResult() {
     Map resultMap = new TreeMap<String, Object>();
     GenericValue userLogin = context.get("userLogin");
     for (int i = 0; i < iCount; i++) {
-        beginText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);
-        endText = UtilDateTime.timeStampToString(dateIntervals.getDateEnd(), "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);
-        
-        
-        Map findOrderMap = dispatcher.runSync("findOrdersFull", UtilMisc.toMap("minDate", beginText, "maxDate", endText, "userLogin", userLogin));
-        orderList = findOrderMap.orderList;
-        Map newMap = [:];
-        if (orderList) {
-            orderList.each { header ->          
-                BigDecimal total = (newMap.get("total") ?: BigDecimal.ZERO);
-                total = total.plus(header.grandTotal ?: BigDecimal.ZERO);
-                newMap.put("total", total);
-            }
-        } else {
-            newMap.put("total", BigDecimal.ZERO);
+        List<EntityCondition> curConditions = UtilMisc.toList(
+                EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
+                EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
+                EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()),
+                EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd())
+        );
+
+        if(UtilValidate.isNotEmpty(context.productStoreId)){
+            curConditions.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, context.productStoreId));
         }
-        newMap.put("count", findOrderMap.orderListSize);
+
+        if(UtilValidate.isNotEmpty(context.webSiteId)){
+            curConditions.add(EntityCondition.makeCondition("webSiteId", EntityOperator.EQUALS, context.webSiteId));
+        }
+
+        if(UtilValidate.isNotEmpty(context.terminalId)){
+            curConditions.add(EntityCondition.makeCondition("terminalId", EntityOperator.EQUALS, context.terminalId));
+        }
+
+        EntityCondition ecl = EntityCondition.makeCondition(curConditions, EntityOperator.AND);
+        List<GenericValue> sales = delegator.findList("OrderStats",ecl,
+                UtilMisc.toSet("totalGrandAmount","totalOrders","totalSubRemainingAmount")
+                ,null
+                ,null,true);
+        BigDecimal totalAmount =  BigDecimal.ZERO;
+        BigDecimal totalSubRemainingAmount = BigDecimal.ZERO;
+        Long totalOrders = Long.valueOf(0);
+        Map newMap = [:];
+        for(GenericValue sale : sales) {
+            if (sale.get("totalGrandAmount") != null) {
+                BigDecimal amount = sale.getBigDecimal("totalGrandAmount");
+                totalAmount = totalAmount.add(amount).setScale(decimals, rounding);
+            }
+            if (sale.get("totalSubRemainingAmount") != null){
+                BigDecimal subamount = sale.getBigDecimal("totalSubRemainingAmount");
+                totalSubRemainingAmount = totalSubRemainingAmount.add(subamount).setScale(decimals, rounding);
+            }
+            totalOrders+= sale.getLong("totalOrders");
+        }
+
+        newMap.put("total", totalAmount);
+        newMap.put("subamount", totalSubRemainingAmount);
+        newMap.put("count", totalOrders);
+        newMap.put("dateTime", dateIntervals.getDateBegin().toLocalDateTime());
         resultMap.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), newMap);
+
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateBegin(), context.locale, context.timeZone);
     }
     return resultMap;

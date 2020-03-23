@@ -481,4 +481,13 @@ code package.
         <set field-name="moreInfoUrl" value="/ordermgr/control/returnMain"/>
         <action service="createSystemInfoNote" mode="sync"/>
     </eca>
+
+    <!-- Websocket based live updates -->
+    <eca service="storeOrder" event="global-commit-post-run">
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+        <set field-name="channel" value="orderdatalive"/>
+        <set field-name="interval" value="HOUR"/> <!-- HOUR | DAY | WEEK | MONTH  | YEAR -->
+        <action service="sendOrderLiveData" mode="sync" />
+    </eca>
+
 </service-eca>

@@ -63,11 +63,7 @@
       <@editMediaScripts/>
       
         <@row>
-            <#assign mediaUploadColumns = 8>
-            <#if !media?has_content>
-                <#assign mediaUploadColumns = 10>
-            </#if>
-            <@cell id="mediaUpload" columns=mediaUploadColumns>
+            <@cell id="mediaUpload" columns=5>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@pageUrl>${formAction}</@pageUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
@@ -268,7 +264,7 @@
                 </@section>    
             </@cell>
             <#if media?has_content>
-                <@cell id="mediaPreview" columns=4>
+                <@cell id="mediaPreview" columns=7>
                     <@section title=uiLabelMap.CmsMediaPreview>
                         <#assign dataFile = makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">

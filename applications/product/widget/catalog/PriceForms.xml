@@ -94,9 +94,12 @@
         </field>        
         <field name="condValueInput" title="${uiLabelMap.ProductValue}" entry-name="condValue"><text size="10"/></field>
         <field name="condValue" title=" ">
+            <text />
+            <!--
             <drop-down allow-empty="false" current="selected">
                 <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>
             </drop-down>
+            -->
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
@@ -126,9 +129,11 @@
         </field>        
         <field name="condValueInput" title="${uiLabelMap.ProductValue}"><text size="10"/></field>
         <field name="condValue" title=" ">
+            <text/>
+            <!--
             <drop-down allow-empty="false">
-                <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>                
-            </drop-down>
+                <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>
+            </drop-down>-->
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>        
     </form>

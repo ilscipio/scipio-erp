@@ -113,7 +113,7 @@ public class ProductStoreCartAwareEvents {
         // this should always be different given the previous session productStoreId check, but just in case...
         if (!productStoreId.equals(cart.getProductStoreId())) {
             // this is a really simple operation now that we have prepared all of the data, as done above in this method
-            cart = ShoppingCartFactory.get(productStoreId).createWebShoppingCart(request); // SCIPIO: use factory
+            cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
             ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         }
 

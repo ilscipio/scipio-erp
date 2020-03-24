@@ -487,26 +487,75 @@ public final class UtilHttp {
     }
 
     /**
+     * Create a map from a HttpRequest (attributes) object used in JSON requests, with attribute filter (SCIPIO).
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getJSONAttributeMap(HttpServletRequest request, AttributeFilter attributeFilter) {
+        // SCIPIO: delegating
+        return transformJSONAttributeMap(getAttributeMap(request), attributeFilter);
+    }
+
+    /**
+     * Create a map from a HttpRequest (attributes) object used in JSON requests, with attribute filter (SCIPIO).
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getJSONAttributeMap(Map<String, Object> returnMap, HttpServletRequest request, AttributeFilter attributeFilter) {
+        return transformJSONAttributeMap(returnMap, getAttributeMap(request), attributeFilter);
+    }
+
+    /**
      * SCIPIO: factored out from getJSONAttributeMap.
      * Added 2017-05-01.
      */
-    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
-        Map<String, Object> returnMap = new HashMap<>();
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> returnMap, Map<String, Object> attrMap, AttributeFilter attributeFilter) {
+        if (attributeFilter == null) {
+            attributeFilter = DefaultAttributeFilter.INSTANCE;
+        }
         for (Map.Entry<String, Object> entry : attrMap.entrySet()) {
             String key = entry.getKey();
             Object val = entry.getValue();
+            Boolean include = attributeFilter.includeAttribute(key, val);
+            if (Boolean.FALSE.equals(include)) {
+                continue;
+            }
             if (val instanceof java.sql.Timestamp) {
                 val = val.toString();
             }
-            if (val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
+            if (Boolean.TRUE.equals(include) || val instanceof String || val instanceof Number || val instanceof Map<?, ?> || val instanceof List<?> || val instanceof Boolean) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Adding attribute to JSON output: " + key, module);
                 }
                 returnMap.put(key, val);
             }
         }
-
         return returnMap;
+    }
+
+    /**
+     * SCIPIO: factored out from getJSONAttributeMap.
+     * Added 2017-05-01.
+     */
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap, AttributeFilter attributeFilter) {
+        return transformJSONAttributeMap(new HashMap<>(), attrMap, attributeFilter);
+    }
+
+    /**
+     * SCIPIO: factored out from getJSONAttributeMap.
+     * Added 2017-05-01.
+     */
+    public static Map<String, Object> transformJSONAttributeMap(Map<String, Object> attrMap) {
+        return transformJSONAttributeMap(attrMap, null);
+    }
+
+    public interface AttributeFilter { // SCIPIO
+        /** Return null for default behavior (apply other filters), false to prevent include, true to force include. */
+        Boolean includeAttribute(String key, Object value);
+    }
+
+    public static class DefaultAttributeFilter implements AttributeFilter { // SCIPIO
+        public static final DefaultAttributeFilter INSTANCE = new DefaultAttributeFilter();
+        @Override
+        public Boolean includeAttribute(String key, Object value) { return null; }
     }
 
     /**
@@ -741,6 +790,7 @@ public final class UtilHttp {
         return makeParamListWithSuffix(request, null, suffix, prefix);
     }
 
+    // SCIPIO: TODO: this should use getCombinedMap as above by default and corresponding overload
     public static List<Object> makeParamListWithSuffix(HttpServletRequest request, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
         List<Object> paramList = new ArrayList<>();
         Enumeration<String> parameterNames = UtilGenerics.cast(request.getParameterNames());
@@ -1027,6 +1077,38 @@ public final class UtilHttp {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Map<String, Object>> T getUserLogin(HttpSession session) {
+        return getSessionUserLogin(session);
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getSessionUserLogin(HttpServletRequest request) {
+        return getSessionUserLogin(request.getSession(false));
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getSessionUserLogin(HttpSession session) {
         return (session != null) ? (T) session.getAttribute("userLogin") : null;
     }
 
@@ -1998,6 +2080,108 @@ public final class UtilHttp {
         return getRequestAttrNames(request, new HashSet<>());
     }
 
+    /**
+     * SCIPIO: Get the given session attribute if the session exists, otherwise null.
+     */
+    public static <T> T getSessionAttribute(HttpServletRequest request, String attrName) {
+        return getSessionAttribute(request.getSession(false), attrName);
+    }
+
+    /**
+     * SCIPIO: Get the given session attribute if the session exists, otherwise null.
+     */
+    public static <T> T getSessionAttribute(HttpSession session, String attrName) {
+        return (session != null) ? (T) session.getAttribute(attrName) : null;
+    }
+
+    /**
+     * SCIPIO: Remove the given session attribute if the session exists.
+     */
+    public static void removeSessionAttribute(HttpServletRequest request, String attrName) {
+        removeSessionAttribute(request.getSession(false), attrName);
+    }
+
+    /**
+     * SCIPIO: Remove the given session attribute if the session is non-null.
+     */
+    public static void removeSessionAttribute(HttpSession session, String attrName) {
+        if (session != null) {
+            session.removeAttribute(attrName);
+        }
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMap(HttpServletRequest request, Map<String, Object> outMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            outMap.put(attrName, request.getAttribute(attrName));
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMap(HttpServletRequest request, Map<String, Object> outMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            outMap.put(attrName, request.getAttribute(attrName));
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMapNoNull(HttpServletRequest request, Map<String, Object> outMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            Object attrValue = request.getAttribute(attrName);
+            if (attrValue != null) {
+                outMap.put(attrName, attrValue);
+            }
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Transfers the named request attribute to the given map, efficiently.
+     */
+    public static Map<String, Object> requestAttributesToMapNoNull(HttpServletRequest request, Map<String, Object> outMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            Object attrValue = request.getAttribute(attrName);
+            if (attrValue != null) {
+                outMap.put(attrName, attrValue);
+            }
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from named map keys, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap, Collection<String> attrNames) {
+        for(String attrName : attrNames) {
+            request.setAttribute(attrName, attrMap.get(attrName));
+        }
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from named map keys, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap, String... attrNames) {
+        for(String attrName : attrNames) {
+            request.setAttribute(attrName, attrMap.get(attrName));
+        }
+    }
+
+    /**
+     * SCIPIO: Sets request attributes from all map entries, efficiently.
+     */
+    public static void setRequestAttributesFromMap(HttpServletRequest request, Map<String, ?> attrMap) {
+        for(Map.Entry<String, ?> entry : attrMap.entrySet()) {
+            request.setAttribute(entry.getKey(), entry.getValue());
+        }
+    }
 
     /**
      * SCIPIO: Returns an object which can be used for full session synchronization (never null).
@@ -2022,7 +2206,7 @@ public final class UtilHttp {
         synchronized(session) {
             syncObj = session.getAttribute(SESSION_SYNCOBJ);
             if (syncObj != null) {
-                return null;
+                return syncObj;
             }
             syncObj = createSessionSyncObject();
             session.setAttribute(SESSION_SYNCOBJ, syncObj);

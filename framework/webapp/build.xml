@@ -20,6 +20,7 @@ code package.
         <fileset dir="../base/lib" includes="*.jar"/>
         <fileset dir="../start/build/lib" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
+        <fileset dir="../catalina/build/lib" includes="*.jar"/>
         <fileset dir="../catalina/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>

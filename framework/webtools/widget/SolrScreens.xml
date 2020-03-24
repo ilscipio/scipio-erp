@@ -173,7 +173,7 @@
                     <p class="scpadmservlist-servdesc">${uiLabelMap.SolrRebuildIndexServiceDesc}</p>
                     
                     <@solrServiceForm>
-                      <@solrServiceFields initParams={}/>
+                      <@solrServiceFields initParams={} defaultSyncMode="async"/>
                     </@solrServiceForm>
                       
                     <p class="scpadmservlist-servtip">

@@ -247,9 +247,9 @@ public class CmsProcessFilter implements Filter {
         }
 
         // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
-        boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
+        boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, delegator, webSiteConfig, renderMode);
         if (!validAccessToken) {
-            Debug.logWarning("Cms: Invalid access token for session; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
+            Debug.logWarning("Cms: Invalid access token; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module); // SCIPIO: Changed to warning
             try {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             } catch (IOException e) {

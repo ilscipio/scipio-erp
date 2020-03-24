@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -748,5 +749,49 @@ public final class EntityUtil {
             }
         }
         return filteredList;
+    }
+
+    /**
+     * SCIPIO: Returns a list where the values having null for the given field are moved to the beginning.
+     */
+    public static <T extends GenericEntity> List<T> getNullsFirst(Collection<T> values, String fieldName) {
+        if (values == null) return null;
+        if (values.isEmpty()) return new ArrayList<T>();
+        if (UtilValidate.isEmpty(fieldName)) {
+            return new ArrayList<T>(values);
+        }
+        List<T> result = new ArrayList<T>(values.size());
+        List<T> nonNullValues = new ArrayList<T>(values.size());
+        for(T value : values) {
+            if (value.get(fieldName) != null) {
+                nonNullValues.add(value);
+            } else {
+                result.add(value);
+            }
+        }
+        result.addAll(nonNullValues);
+        return result;
+    }
+
+    /**
+     * SCIPIO: Returns a list where the values having null for the given field are moved to the end.
+     */
+    public static <T extends GenericEntity> List<T> getNullsLast(Collection<T> values, String fieldName) {
+        if (values == null) return null;
+        if (values.isEmpty()) return new ArrayList<T>();
+        if (UtilValidate.isEmpty(fieldName)) {
+            return new ArrayList<T>(values);
+        }
+        List<T> result = new ArrayList<T>(values.size());
+        List<T> nullValues = new ArrayList<T>(values.size());
+        for(T value : values) {
+            if (value.get(fieldName) != null) {
+                result.add(value);
+            } else {
+                nullValues.add(value);
+            }
+        }
+        result.addAll(nullValues);
+        return result;
     }
 }

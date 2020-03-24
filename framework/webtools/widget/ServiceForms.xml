@@ -53,7 +53,7 @@ code package.
                 <option key="Y" description="Sync"/>
                 <!-- NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N" 
                     because in legacy code it would imply to use job scheduler. -->
-                <option key="ASYNC" description="Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})"/>
+                <option key="ASYNC" description="Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})"/>
                 <!-- Not sure there is a point to this one; much more useful to use Schedule Job for persisted
                 <option key="ASYNC_PERSIST" description="Async (Persisted)"/>-->
             </drop-down>

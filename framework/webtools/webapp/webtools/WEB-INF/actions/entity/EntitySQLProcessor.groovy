@@ -17,7 +17,13 @@
  * under the License.
  */
 
-import org.ofbiz.entity.jdbc.SQLProcessor;
+
+import org.ofbiz.base.util.Debug
+import org.ofbiz.entity.jdbc.SQLProcessor
+import org.ofbiz.entity.transaction.GenericTransactionException
+import org.ofbiz.entity.transaction.TransactionUtil
+
+import javax.transaction.Transaction;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -26,7 +32,12 @@ import java.util.Iterator;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.model.ModelGroupReader;
 
+def module = "EntitySQLProcessor.groovy";
+
 sqlCommand = context.request.getParameter("sqlCommand");
+if (sqlCommand) {
+    sqlCommand = sqlCommand.trim();
+}
 
 resultMessage = "";
 rs = null;
@@ -36,39 +47,67 @@ mgr = delegator.getModelGroupReader();
 groups = mgr.getGroupNames(delegator.getDelegatorName());
 
 if (sqlCommand && selGroup) {
-    du = new SQLProcessor(delegator, delegator.getGroupHelperInfo(selGroup));
+    // SCIPIO: Fixed transaction breaking screen
+    Transaction suspendedTransaction = null;
     try {
-        if (sqlCommand.toUpperCase().startsWith("SELECT")) {
-            rs = du.executeQuery(sqlCommand);
-            if (rs) {
-                rsmd = rs.getMetaData();
-                numberOfColumns = rsmd.getColumnCount();
-                for (i = 1; i <= numberOfColumns; i++) {
-                    columns.add(rsmd.getColumnName(i));
-                }
-                rowLimitReached = false;
-                while (rs.next()) {
-                    if (records.size() >= rowLimit) {
-                        resultMessage = "Returned top $rowLimit rows.";
-                        rowLimitReached = true;
-                        break;
-                    }
-                    record = [];
-                    for (i = 1; i <= numberOfColumns; i++) {
-                        record.add(rs.getObject(i));
-                    }
-                    records.add(record);
-                }
-                resultMessage = "Returned " + (rowLimitReached? "top " + rowLimit : "" + records.size()) + " rows.";
-                rs.close();
-            }
-        } else {
-            du.prepareStatement(sqlCommand);
-            numOfAffectedRows = du.executeUpdate();
-            resultMessage = "Affected $numOfAffectedRows rows.";
+        if (TransactionUtil.isTransactionInPlace()) { // SCIPIO: 2018-09-04: added check to eliminate useless warnings
+            suspendedTransaction = TransactionUtil.suspend();
         }
-    } catch (Exception exc) {
-        resultMessage = exc.getMessage();
+        beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+            du = new SQLProcessor(delegator, delegator.getGroupHelperInfo(selGroup));
+            if (sqlCommand.toUpperCase().startsWith("SELECT")) {
+                rs = du.executeQuery(sqlCommand);
+                if (rs != null) {
+                    try {
+                        rsmd = rs.getMetaData();
+                        numberOfColumns = rsmd.getColumnCount();
+                        for (i = 1; i <= numberOfColumns; i++) {
+                            columns.add(rsmd.getColumnName(i));
+                        }
+                        rowLimitReached = false;
+                        while (rs.next()) {
+                            if (records.size() >= rowLimit) {
+                                resultMessage = "Returned top $rowLimit rows.";
+                                rowLimitReached = true;
+                                break;
+                            }
+                            record = [];
+                            for (i = 1; i <= numberOfColumns; i++) {
+                                record.add(rs.getObject(i));
+                            }
+                            records.add(record);
+                        }
+                        resultMessage = "Returned " + (rowLimitReached ? "top " + rowLimit : "" + records.size()) + " rows.";
+                    } finally { // SCIPIO: Fixed missing finally
+                        rs.close();
+                    }
+                }
+            } else {
+                du.prepareStatement(sqlCommand);
+                numOfAffectedRows = du.executeUpdate();
+                resultMessage = "Affected $numOfAffectedRows rows.";
+            }
+            TransactionUtil.commit(beganTransaction);
+        } catch (Exception e) {
+            resultMessage = e.getMessage();
+            errMsg = "SQL command error for command: " + resultMessage;
+            Debug.logError(e, errMsg, module);
+            try {
+                TransactionUtil.rollback(beganTransaction, errMsg, e);
+            } catch (GenericTransactionException e2) {
+                Debug.logError(e2, "Unable to rollback transaction", module);
+            }
+        }
+    } finally {
+        if (suspendedTransaction != null) {
+            try {
+                TransactionUtil.resume(suspendedTransaction);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Error resuming suspended transaction", module);
+            }
+        }
     }
 }
 context.groups = groups;

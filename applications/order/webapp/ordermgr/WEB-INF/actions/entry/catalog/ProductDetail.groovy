@@ -189,7 +189,7 @@ if (product) {
     context.productContentWrapper = productContentWrapper;
 }
 
-if(!useCache && !cachedValue){
+if(!cachedValue){
     // get the product detail information
     if (product) {
         productTypeId = product.productTypeId;
@@ -451,6 +451,7 @@ if(product){
         priceContext.productStoreId = productStoreId;
         priceContext.checkIncludeVat = "Y";
         priceContext.agreementId = cart.getAgreementId();
+        priceContext.getMinimumVariantPrice = true;
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
         priceMap = runService('calculateProductPrice', priceContext);
         priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
@@ -474,9 +475,9 @@ if(product){
             if (featureSet) {
                 //if order is purchase then don't calculate available inventory for product.
                 if (cart.isPurchaseOrder()) {
-                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, checkInventory: false]);
+                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, checkInventory: false, unavailableInTree : context.unavailableInVariantTree]); // SCIPIO: unavailableInTree
                 } else {
-                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId]);
+                    variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId, unavailableInTree : context.unavailableInVariantTree]); // SCIPIO: unavailableInTree
                 }
                 variantTree = variantTreeMap.variantTree;
                 imageMap = variantTreeMap.variantSample;
@@ -489,6 +490,12 @@ if(product){
                 unavailableVariants = variantTreeMap.unavailableVariants;
                 if (unavailableVariants) {
                     context.unavailableVariants = unavailableVariants;
+                    // SCIPIO
+                    unavailableVariantIds = [];
+                    for(uvProd in unavailableVariants) {
+                        unavailableVariantIds.add(uvProd.productId);
+                    }
+                    context.unavailableVariantIds = unavailableVariantIds;
                 }
                 if (imageMap) {
                     context.variantSample = imageMap;

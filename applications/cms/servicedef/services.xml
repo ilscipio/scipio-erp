@@ -283,6 +283,13 @@
         <attribute name="versionId" mode="OUT" type="String" optional="false"/>
     </service>
 
+    <service name="cmsUnpublishPage" engine="java" auth="true"
+             location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="unpublishPage">
+        <description>Unpublish page.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <attribute name="pageId" mode="INOUT" type="String" optional="false"/>
+    </service>
+
     <service name="cmsAddPageVersion" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="addPageVersion">
         <description>Adds a new version of a page.</description>
@@ -737,6 +744,8 @@
         <attribute name="expandLang" type="String" mode="IN" optional="true"/>
         <attribute name="expandPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="targetType" type="String" mode="IN" optional="true"/>
+        <attribute name="regularExpression" type="String" mode="IN" optional="true" allow-html="any"/>
+        <attribute name="inheritMode" type="String" mode="IN" optional="true" allow-html="any"/>
     </service>
 
     <service name="cmsDeleteAttribute" default-entity-name="CmsAttributeTemplate" engine="entity-auto" invoke="delete" auth="true">

@@ -258,6 +258,7 @@
                                     <@th>expandPos</@th>
                                     <@th>required</@th>
                                     <@th>defaultValue</@th>
+                                    <@th>inheritMode</@th>
                                     <@th>maxLength</@th>
                                     <@th>regularExpression</@th>
                                     <@th>inputHelp</@th>
@@ -275,6 +276,7 @@
                                    <@td>${attrTmpl.expandPosition!}</@td>
                                    <@td>${(attrTmpl.required!false)?string("Y","N")}</@td>
                                    <@td>${attrTmpl.defaultValue!}</@td>
+                                   <@td>${getLabel('CmsInheritMode_'+raw(attrTmpl.inheritMode!"NEVER"))}</@td>
                                    <@td>${attrTmpl.maxLength!}</@td>
                                    <@td>${attrTmpl.regularExpression!}</@td>
                                    <@td>${attrTmpl.help!}</@td>

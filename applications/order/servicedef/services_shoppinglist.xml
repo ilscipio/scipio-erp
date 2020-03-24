@@ -105,7 +105,7 @@ code package.
             location="component://order/script/org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingListItem">
         <description>Create a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
-        <attribute name="shoppingListId" type="String" mode="IN" optional="true"/>
+        <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/><!-- SCIPIO: Switched to INOUT because ECA may create a ShoppingList -->
         <attribute name="shoppingListAuthToken" type="String" mode="IN" optional="true"/><!-- SCIPIO: Allows modification of lists without partyId -->
         <attribute name="productStoreId" type="String" mode="INOUT" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
@@ -144,10 +144,14 @@ code package.
 
     <service name="autoDeleteAutoSaveShoppingList" engine="java" auth="true" max-retry="3" transaction-timeout="3600"
             location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="autoDeleteAutoSaveShoppingList">
-            <description>
-                Automatic delete auto save shopping list for anonymous users that are not updated in last 30 days.
-                Default to 30 days unless no configuration is specified.
-            </description>
+        <description>
+            Automatic delete auto save shopping list for anonymous users that are not updated in last 30 days.
+            Default to 30 days unless no configuration is specified.
+            SCIPIO: This service now also deletes expired regular anonymous wishlists by default.
+        </description>
+        <!-- SCIPIO: new options -->
+        <attribute name="deleteAutoSaveList" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="deleteAnonWishList" type="Boolean" mode="IN" optional="true" default-value="true"/>
     </service>
 
     <service name="createShoppingListItemSurvey" default-entity-name="ShoppingListItemSurvey" engine="entity-auto" invoke="create" auth="true">
@@ -173,5 +177,15 @@ code package.
     <service name="deleteShoppingListType" default-entity-name="ShoppingListType" engine="entity-auto" invoke="delete" auth="true">
         <description>Delete a ShoppingListType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="convertAnonShoppingListToRegistered" engine="java" auth="true"
+             location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="convertAnonShoppingListToRegistered">
+        <description>Converts an anonymous/guest ShoppingList to a registered one (auth token switched with partyId) (SCIPIO)</description>
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+        <attribute name="shoppingListAuthToken" type="String" mode="IN" optional="true">
+            <description>NOTE: Required if userLogin is non-admin</description>
+        </attribute>
+        <attribute name="targetUserLogin" type="GenericValue" mode="IN" optional="true"/>
     </service>
 </services>

@@ -33,6 +33,7 @@ import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateSequenceModel;
 
 /**
  * SCIPIO: MakeAttribMapFromArgMapMethod - Freemarker Method for getting an attribs map from an args map.
@@ -52,7 +53,18 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
 
         ObjectWrapper objectWrapper = CommonFtlUtil.getCurrentEnvironment().getObjectWrapper();
 
-        TemplateHashModelEx argsMap = (TemplateHashModelEx) args.get(0);
+        // support empty list (ignore, treat as empty hash)
+        TemplateModel argsObj = (TemplateModel) args.get(0);
+        if (argsObj instanceof TemplateSequenceModel) {
+            TemplateSequenceModel argsSeq = (TemplateSequenceModel) argsObj;
+            if (argsSeq.size() == 0) {
+                argsObj = TemplateHashModelEx.NOTHING;
+            } else {
+                throw new TemplateModelException("Invalid argument type (sequence) - expected hash");
+            }
+        }
+
+        TemplateHashModelEx argsMap = (TemplateHashModelEx) argsObj;
 
         // caller-supplied excludes
         TemplateModel excludesModel = (args.size() >=2) ? (TemplateModel) args.get(1) : null;
@@ -83,6 +95,7 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
         }
         excludes.add("allArgNames");
         excludes.add("localArgNames");
+        excludes.add("attribs"); // 2020-02-12: in most cases this was automatically added by makeArgMaps from default args list, but custom usages need this now
 
         // add the inline attribs over the attribs map (if any)
         if (res == null) {

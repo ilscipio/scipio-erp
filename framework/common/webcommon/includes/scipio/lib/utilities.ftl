@@ -596,6 +596,8 @@ if not requested, however.
                               NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+    localhost               = ((boolean), default: false) If true, any full links with protocol receive localhost
+                              and the port of the running scipio instead. Forces fullPath=true, but you may need to set secure=false if needed.
     id                      = ((string)) The ID of a CMS page to render, instead of a non-CMS controller request-map.
                               NOTE: Not all parameters above apply to CMS page link generation.
     name                    = ((string)) The exact name of a CMS page to render, instead of a non-CMS controller request-map.
@@ -607,7 +609,7 @@ if not requested, however.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro pageUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
+<#macro pageUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="" localhost="">
 </#macro>
 -->
 
@@ -697,7 +699,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @pageUr
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro appUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="">
+<#macro appUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="" localhost="">
   <@pageUrl uri=uri absPath=absPath interWebapp=false controller=controller 
     extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@pageUrl><#t>
 </#macro>
@@ -776,7 +778,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @pageUr
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro serverUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="">
+<#macro serverUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="" localhost="">
   <@pageUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
     extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@pageUrl><#t>
 </#macro>
@@ -937,6 +939,8 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               Notably this is useful for renderers such as xsl-fo that fetch
                               graphics from hosted resources and can be used to speed up such renders.                               
                               Added 2018-08-17.
+    localhost               = ((boolean), default: false) If true, any full links with protocol receive localhost
+                              and the port of the running scipio instead. Forces fullPath=true, but you may need to set secure=false if needed.
 
   * History *
     Renamed from @ofbizContentUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.

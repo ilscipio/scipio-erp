@@ -23,6 +23,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -296,6 +297,20 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
         // needed for copy operation
         CmsMasterComplexTemplate.checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
+
+        clearFromCaches();
+    }
+
+    public void clearFromCaches() {
+        clearFromPageCachesById(getId());
+    }
+
+    public static void clearFromPageCachesById(String pageId) {
+        if (UtilValidate.isEmpty(pageId)) {
+            return;
+        }
+        idCache.removeByFilter(new CmsObjectCache.CmsDataObjectIdCacheEntryFilter<>(pageId));
+        nameCache.removeByFilter(new CmsObjectCache.CmsDataObjectIdCacheEntryFilter<>(pageId));
     }
 
     /**

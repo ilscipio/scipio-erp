@@ -1071,7 +1071,8 @@ code package.
         <attribute name="giftMessage" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createAlsoBoughtProductAssocs" engine="java" auth="true" 
-            location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs">
+            location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs" hideResultInLog="true" log="quiet"
+            semaphore="fail">
         <description>
             Cycles through all newly created sales orders and creates ProductAssoc records (of type ALSO_BOUGHT) for products 
             that were purchased together.  If a ProductAssoc record already exists then the quantity field is incremented by one.
@@ -1079,11 +1080,28 @@ code package.
             previous async execution of this service, alternatively the service can be supplied with a orderEntryFromDateTime 
             parameter which will process all orders placed after that date/time or as a final option processAllOrders can be set
             to true to force a calculation of all orders ever placed with orderEntryFromDateTime being ignored.
+            SCIPIO: 2020-03-10: This service is now under a fail semaphore and will fail if already running;
+            this service is by default and usually run as a job every 24h (see OrderScheduledServices.xml)
+            and if an execution tries to run during another, it will fail but should simply pick up at the next execution some time later.
         </description>
         <attribute name="orderEntryFromDateTime" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="processAllOrders" mode="IN" type="Boolean" optional="true"/>
     </service>
-    <service name="createAlsoBoughtProductAssocsForOrder" engine="java" auth="true"
+    <service name="createAlsoBoughtProductAssocsAlways" engine="java" auth="true"
+             location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocs" hideResultInLog="true" log="quiet">
+        <description>
+            Cycles through all newly created sales orders and creates ProductAssoc records (of type ALSO_BOUGHT) for products
+            that were purchased together.  If a ProductAssoc record already exists then the quantity field is incremented by one.
+            Newly created orders are determined by looking for orders that were created after the JobSandbox.startDateTime of the
+            previous async execution of this service, alternatively the service can be supplied with a orderEntryFromDateTime
+            parameter which will process all orders placed after that date/time or as a final option processAllOrders can be set
+            to true to force a calculation of all orders ever placed with orderEntryFromDateTime being ignored.
+            SCIPIO: 2020-03-10: This is simply the original implementation of createAlsoBoughtProductAssocs without semaphore,
+            in case its execution must be forced for some reason.
+        </description>
+        <implements service="createAlsoBoughtProductAssocs"/>
+    </service>
+    <service name="createAlsoBoughtProductAssocsForOrder" engine="java" auth="true" hideResultInLog="true" log="quiet"
             location="org.ofbiz.order.order.OrderServices" invoke="createAlsoBoughtProductAssocsForOrder">
         <description>
             Creates ProductAssoc records (of type ALSO_BOUGHT) for products that were purchased together in the Order.  If a ProductAssoc record already exists then the quantity field is incremented by one.  If a variant product has

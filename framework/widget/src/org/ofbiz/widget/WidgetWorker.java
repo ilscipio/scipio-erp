@@ -43,6 +43,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
+import org.ofbiz.widget.renderer.FormRenderer;
 
 public final class WidgetWorker {
 
@@ -364,37 +365,12 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
 
-    public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {
-        if (UtilValidate.isNotEmpty(modelForm.getName()))
-            return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
-        else if (UtilValidate.isNotEmpty(context.get("formName")))
-            return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
-        return prefix;
-    }
-
+    /**
+     * @deprecated SCIPIO: Use FormRenderer.makeLinkHiddenFormName
+     */
+    @Deprecated
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
-        ModelForm modelForm = null;
-        // SCIPIO: make sure model form field not empty
-        if (modelFormField != null) {
-            modelForm = modelFormField.getModelForm();
-        }
-        Integer itemIndex = (Integer) context.get("itemIndex");
-        String iterateId = "";
-        String formUniqueId = "";
-        String formName = (String) context.get("formName");
-        if (modelForm != null && UtilValidate.isEmpty(formName)) { // SCIPIO: make sure modelForm not empty
-            formName = modelForm.getName();
-        }
-        if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
-            iterateId = (String) context.get("iterateId");
-        }
-        if (UtilValidate.isNotEmpty(context.get("formUniqueId"))) {
-            formUniqueId = (String) context.get("formUniqueId");
-        }
-        if (itemIndex != null) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
-        }
-        return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
+        return FormRenderer.makeLinkHiddenFormName(context, modelFormField); // SCIPIO: Moved
     }
 
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {

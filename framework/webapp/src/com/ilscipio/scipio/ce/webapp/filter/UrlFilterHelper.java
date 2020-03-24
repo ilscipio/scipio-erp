@@ -234,12 +234,21 @@ public class UrlFilterHelper {
         //}
 
         if (outUrlWebappInfo != null) {
-            try {
-                ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(outUrlWebappInfo, request, response, true);
-                url = rewriter.processOutboundUrl(url, outUrlWebappInfo, request, response);
-            } catch (Exception e) {
-                Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + outUrlWebappInfo
-                        + ": " + e.toString(), module);
+            // 2020-03-04: TODO: REVIEW: We can't permit delegation unless the target webapp is different from the current,
+            // but this currentWebappInfo should be reverse-looked up statically instead (if we could determine the 'current' urlrewrite.xml)...
+            // and in some cases it's possible the target outUrlWebappInfo isn't set...
+            FullWebappInfo currentWebappInfo = (FullWebappInfo) request.getAttribute(URLREWRITE_CONF_WEBAPP);
+            if (currentWebappInfo == null) {
+                currentWebappInfo = FullWebappInfo.fromRequestFilterSafe(request); // 2018-07-31
+            }
+            if (currentWebappInfo != null && !currentWebappInfo.equals(outUrlWebappInfo)) {
+                try {
+                    ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(outUrlWebappInfo, request, response, true);
+                    url = rewriter.processOutboundUrl(url, outUrlWebappInfo, request, response);
+                } catch (Exception e) {
+                    Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + outUrlWebappInfo
+                            + ": " + e.toString(), module);
+                }
             }
         }
 

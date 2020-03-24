@@ -64,6 +64,10 @@ public class LoginEvents {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "SecurityextUiLabels";
+    /**
+     * @deprecated SCIPIO: no longer hardcoded, see security.properties
+     */
+    @Deprecated
     public static final String usernameCookieName = "Scipio.Username"; // SCIPIO: renamed cookie
 
     /**
@@ -401,6 +405,7 @@ public class LoginEvents {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Cookies: " + Arrays.toString(cookies), module);
         }
+        String usernameCookieName = LoginWorker.getUserNameCookieName(request); // SCIPIO
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(usernameCookieName)) {
@@ -441,8 +446,11 @@ public class LoginEvents {
                         + "] for cookie; cannot set username cookie: " + e.toString(), module);
                     return;
                 }
-                Cookie cookie = new Cookie(usernameCookieName, usernameParam);
-                cookie.setMaxAge(60 * 60 * 24 * 365);
+                // SCIPIO
+                //Cookie cookie = new Cookie(usernameCookieName, usernameParam);
+                //cookie.setMaxAge(60 * 60 * 24 * 365);
+                Cookie cookie = new Cookie(LoginWorker.getUserNameCookieName(request), usernameParam);
+                cookie.setMaxAge(LoginWorker.getUserNameCookieMaxAge(request));
                 cookie.setPath("/");
                 cookie.setDomain(domain);
                 cookie.setSecure(true);
@@ -451,4 +459,5 @@ public class LoginEvents {
             }
         }
     }
+
 }

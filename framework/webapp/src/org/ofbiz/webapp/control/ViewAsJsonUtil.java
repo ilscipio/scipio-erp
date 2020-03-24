@@ -2,8 +2,6 @@ package org.ofbiz.webapp.control;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,16 +11,16 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
+import org.ofbiz.webapp.event.JsonEventUtil;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 
 /**
  * SCIPIO: helper for viewAsJson mode.
  * viewAsJson mode is enabled by passing request parameter (or attribute, as Boolean)
  * <code>scpViewAsJson=true</code>.
+ * TODO: Move general parts of this to {@link JsonEventUtil}.
  */
 public abstract class ViewAsJsonUtil {
 
@@ -67,15 +65,6 @@ public abstract class ViewAsJsonUtil {
     }
 
     /**
-     * Name of request attribute for a map containing explicit values to output via json.
-     */
-    public static final String RENDEROUTPARAMS_ATTR = "scpOutParams";
-    /**
-     * Name of request attribute for a set of names of request attributes to allow output via json.
-     */
-    public static final String RENDEROUTATTRNAMES_ATTR = "scpOutAttrNames";
-
-    /**
      * The name of the attribute/parameter used to contain the output HTML for the view in
      * viewAsJson mode. Stored in scpOutParams.
      */
@@ -87,98 +76,11 @@ public abstract class ViewAsJsonUtil {
      */
     public static final String LOGGEDIN_OUTPARAM = "isLoggedIn";
 
-    private static final Set<String> defaultRenderOutAttrNames = UtilMisc.unmodifiableHashSet(
-        "_ERROR_MESSAGE_", "_ERROR_MESSAGE_LIST_", "_EVENT_MESSAGE_", "_EVENT_MESSAGE_LIST_"
-    );
-
     private static final Set<String> msgAttrNames = UtilMisc.unmodifiableHashSet(
             "_ERROR_MESSAGE_", "_ERROR_MESSAGE_LIST_", "_EVENT_MESSAGE_", "_EVENT_MESSAGE_LIST_"
-        );
-
-    //private static final String defaultViewAsJsonRequestUri = "jsonExplicit";
+    );
 
     private ViewAsJsonUtil() {
-    }
-
-    public static Set<String> getDefaultRenderOutAttrNames(HttpServletRequest request) {
-        return defaultRenderOutAttrNames;
-    }
-
-    public static void initRenderOutVars(HttpServletRequest request) {
-        getRenderOutParams(request);
-        getRenderOutAttrNames(request);
-    }
-
-    public static void copyRenderOutVarsToCtx(HttpServletRequest request, Map<String, Object> context) {
-        Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
-        globalContext.put(RENDEROUTPARAMS_ATTR, getRenderOutParams(request));
-        globalContext.put(RENDEROUTATTRNAMES_ATTR, getRenderOutAttrNames(request));
-    }
-
-    public static Map<String, Object> getRenderOutParams(HttpServletRequest request) {
-        Map<String, Object> outParams = UtilGenerics.checkMap(request.getAttribute(RENDEROUTPARAMS_ATTR));
-        if (outParams == null) {
-            outParams = new HashMap<>();
-        }
-        request.setAttribute(RENDEROUTPARAMS_ATTR, outParams);
-        return outParams;
-    }
-
-    public static Map<String, Object> getRenderOutParamsOrNull(HttpServletRequest request) {
-        return UtilGenerics.checkMap(request.getAttribute(RENDEROUTPARAMS_ATTR));
-    }
-
-    public static void setRenderOutParams(HttpServletRequest request, Map<String, Object> params) {
-        getRenderOutParams(request).putAll(params);
-    }
-
-    public static void setRenderOutParam(HttpServletRequest request, String name, Object value) {
-        getRenderOutParams(request).put(name, value);
-    }
-
-    public static Set<String> getRenderOutAttrNames(HttpServletRequest request) {
-        Set<String> outAttrNames = UtilGenerics.checkSet(request.getAttribute(RENDEROUTATTRNAMES_ATTR));
-        if (outAttrNames == null) {
-            outAttrNames = new HashSet<>();
-        }
-        request.setAttribute(RENDEROUTATTRNAMES_ATTR, outAttrNames);
-        return outAttrNames;
-    }
-
-    public static Set<String> getRenderOutAttrNamesOrNull(HttpServletRequest request) {
-        return UtilGenerics.checkSet(request.getAttribute(RENDEROUTATTRNAMES_ATTR));
-    }
-
-    public static void addRenderOutAttrName(HttpServletRequest request, String name) {
-        getRenderOutAttrNames(request).add(name);
-    }
-
-    public static void addRenderOutAttrNames(HttpServletRequest request, String... names) {
-        getRenderOutAttrNames(request).addAll(Arrays.asList(names));
-    }
-
-    public static void addRenderOutAttrNames(HttpServletRequest request, Collection<String> names) {
-        getRenderOutAttrNames(request).addAll(names);
-    }
-
-    public static void addDefaultRenderOutAttrNames(HttpServletRequest request) {
-        getRenderOutAttrNames(request).addAll(getDefaultRenderOutAttrNames(request));
-    }
-
-    public static Map<String, Object> collectRenderOutAttributes(HttpServletRequest request) {
-        Map<String, Object> outAttrMap = ViewAsJsonUtil.getRenderOutParamsOrNull(request);
-        Map<String, Object> attrMap = (outAttrMap != null) ? UtilHttp.transformJSONAttributeMap(outAttrMap) : new HashMap<String, Object>();
-        Set<String> attrNames = ViewAsJsonUtil.getRenderOutAttrNamesOrNull(request);
-        if (attrNames != null && attrNames.size() > 0) {
-            // TODO: optimize
-            Map<String, Object> allAttrMap = UtilHttp.getJSONAttributeMap(request);
-            for (String attr : attrNames) {
-                if (allAttrMap.containsKey(attr)) {
-                    attrMap.put(attr, allAttrMap.get(attr));
-                }
-            }
-        }
-        return attrMap;
     }
 
     public static ViewAsJsonConfig getViewAsJsonConfigOrDefault(HttpServletRequest request) {
@@ -247,28 +149,9 @@ public abstract class ViewAsJsonUtil {
         return config.getJsonRequestUriAlways(); // FIXME: unhardcode (needs site-conf.xsd entry)
     }
 
-    public static Map<String, Object> getMessageAttributes(HttpServletRequest request) {
-        Map<String, Object> map = new HashMap<>();
-        for(String attr : msgAttrNames) {
-            Object value = request.getAttribute(attr);
-            if (value != null) {
-                map.put(attr, value);
-            }
-        }
-        return map;
-    }
-
-    public static void setMessageAttributes(HttpServletRequest request, Map<String, Object> map) {
-        for(Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() != null) {
-                request.setAttribute(entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
     public static Writer prepareWriterAndMode(HttpServletRequest request, ViewAsJsonConfig config) {
         // PRE-INITIALIZE the out params map and names list, so that screens can more easily access and so we pre-share the instances
-        initRenderOutVars(request);
+        JsonEventUtil.initOutVars(request);
 
         // TODO: REVIEW/MOVE: SPECIAL TARGETED RENDERING LOGIC NEEDED FOR MULTI-TARGET SUPPORT
         Object expr = RenderTargetUtil.getSetRawRenderTargetExpr(request);
@@ -312,6 +195,25 @@ public abstract class ViewAsJsonUtil {
     }
 
     public static void setRenderOutParamFromWriter(HttpServletRequest request, Writer writer) {
-        ViewAsJsonUtil.setRenderOutParam(request, ViewAsJsonUtil.RENDEROUT_OUTPARAM, makeRenderOutParamValueFromWriter(request, writer));
+        JsonEventUtil.setOutParam(request, ViewAsJsonUtil.RENDEROUT_OUTPARAM, makeRenderOutParamValueFromWriter(request, writer));
+    }
+
+    public static Map<String, Object> getMessageAttributes(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        for(String attr : msgAttrNames) {
+            Object value = request.getAttribute(attr);
+            if (value != null) {
+                map.put(attr, value);
+            }
+        }
+        return map;
+    }
+
+    public static void setMessageAttributes(HttpServletRequest request, Map<String, Object> map) {
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() != null) {
+                request.setAttribute(entry.getKey(), entry.getValue());
+            }
+        }
     }
 }

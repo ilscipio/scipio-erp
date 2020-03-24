@@ -897,8 +897,9 @@ public interface CmsRenderTemplate extends Serializable {
                 // parse and expand the attribute.
                 // NOTE: this both re-stores it in the CmsPageContent (cmsContent)
                 // and in the top-level context.
-                renderArgs.getContext().put(name, renderArgs.getContent().parseExpandAttribute(attributeTemplate,
-                        renderArgs.getContext(), renderArgs.getPageContext(), true));
+                Object value = renderArgs.getContent().parseExpandAttribute(attributeTemplate,
+                        renderArgs.getContext(), renderArgs.getPageContext(), true);
+                attributeTemplate.getInheritMode().setValue(renderArgs.getContext(), renderArgs.getContent(), attributeTemplate, attributeTemplate.getName(), value);
             }
         }
 

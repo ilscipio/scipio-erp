@@ -2667,7 +2667,8 @@ public class GenericDelegator implements Delegator {
         return null;
     }
 
-    protected DistributedCacheClear getDistributedCacheClear() {
+    @Override
+    public DistributedCacheClear getDistributedCacheClear() { // SCIPIO: now overrides Delegator
         Future<DistributedCacheClear> future = this.distributedCacheClear.get();
         try {
             return future != null ? future.get() : null;

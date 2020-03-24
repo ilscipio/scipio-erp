@@ -336,7 +336,7 @@ code package.
                 </then>
             </if>
 
-            <calculate field="roundedValue" type="BigDecimal" decimal-scale="2" rounding-mode="HALF-UP">
+            <calculate field="roundedValue" type="BigDecimal" decimal-scale="2" rounding-mode="HalfUp">
                 <calcop operator="get" field="returnablePrice"/>
             </calculate>
             <set field="returnablePrice" from-field="roundedValue"/>

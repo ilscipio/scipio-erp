@@ -71,16 +71,16 @@ public final class ProductConfigWorker {
             String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId + SEPARATOR + delegator;
             configWrapper = productConfigCache.get(cacheKey);
             if (configWrapper == null) {
-                configWrapper = new ProductConfigWrapper((Delegator)request.getAttribute("delegator"),
+                configWrapper = ProductConfigFactory.createProductConfigWrapper((Delegator)request.getAttribute("delegator"),
                                                          (LocalDispatcher)request.getAttribute("dispatcher"),
                                                          productId, productStoreId, catalogId, webSiteId,
                                                          currencyUomId, UtilHttp.getLocale(request),
-                                                         autoUserLogin);
+                                                         autoUserLogin); // SCIPIO: Use factory
                 // SCIPIO: The wrapper copy must be created from the result, not before being put in
                 //configWrapper = productConfigCache.putIfAbsentAndGet(cacheKey, new ProductConfigWrapper(configWrapper));
-                configWrapper = new ProductConfigWrapper(productConfigCache.putIfAbsentAndGet(cacheKey, configWrapper));
+                configWrapper = ProductConfigFactory.copyProductConfigWrapper(productConfigCache.putIfAbsentAndGet(cacheKey, configWrapper)); // SCIPIO: use factory
             } else {
-                configWrapper = new ProductConfigWrapper(configWrapper);
+                configWrapper = ProductConfigFactory.copyProductConfigWrapper(configWrapper); // SCIPIO: use factory
             }
         } catch (ProductConfigWrapperException we) {
             configWrapper = null;
@@ -425,7 +425,7 @@ public final class ProductConfigWorker {
     public static ProductConfigWrapper loadProductConfigWrapper(Delegator delegator, LocalDispatcher dispatcher, String configId, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) {
         ProductConfigWrapper configWrapper = null;
         try {
-            configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
+            configWrapper = ProductConfigFactory.createProductConfigWrapper(delegator, dispatcher, productId, productStoreId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin); // SCIPIO: Use factory
             if (UtilValidate.isNotEmpty(configId)) {
                 configWrapper.loadConfig(delegator, configId);
             }

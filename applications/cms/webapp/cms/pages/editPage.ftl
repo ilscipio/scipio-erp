@@ -153,6 +153,22 @@
                   }
             });
         }
+
+        function unpublishPage() {
+            var pageId = $("#pageId").val();
+            $.ajax({
+                  type: "POST",
+                  url: "<@pageUrl escapeAs='js'>unpublishPage</@pageUrl>",
+                  data: {pageId:pageId},
+                  cache:false,
+                  async:true,
+                  success: function(data) {
+                      handleCmsEventResponse(data, function(eventMsgs) {
+                          doCmsSuccessRedirect("${escapeFullUrl(editPageUrl, 'js')}", eventMsgs);
+                      });
+                  }
+            });
+        }
             
         <#-- Save current page -->
         <#-- NOTE: javascript: calls to this must end in void(0) otherwise breaks browsers (firefox) -->
@@ -410,6 +426,7 @@
             <@menuitem type="link" href="javascript:addPageVersion($('form#editorForm'),false); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:activateVersion($('#versionId').val()); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsPublish/>
             <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
+            <@menuitem type="link" href="javascript:unpublishPage(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsUnpublish/>
             <#if previewUrl?has_content && webSiteAllowPreview>
               <@menuitem type="link" href=previewUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsPreview/>
             <#else>
@@ -571,7 +588,7 @@
                                  <#if meta.pageTemplateId?has_content>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
                                      <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
-                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId)/>"><#t><#-- target="_blank" -->
+                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId) escapeAs='html'/>"><#t><#-- target="_blank" -->
                                      <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
                                  <#else>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>

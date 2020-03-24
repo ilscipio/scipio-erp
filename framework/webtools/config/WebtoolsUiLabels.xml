@@ -3862,11 +3862,6 @@
         <value xml:lang="zh">大部分是插入？</value>
         <value xml:lang="zh-TW">大部分是插入？</value>
     </property>
-    <property key="WebtoolsOneTimeExecNotPersisted">
-        <value xml:lang="en">One-time execution, not persisted</value>
-        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
-        <value xml:lang="fr">Exécution unique, non persistante</value>
-    </property>
     <property key="WebtoolsOnlyInserts">
         <value xml:lang="de">Kein Ersatzes</value>
         <value xml:lang="en">No replacements</value>

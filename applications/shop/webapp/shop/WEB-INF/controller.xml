@@ -122,28 +122,35 @@ code package.
 
     <request-map uri="createEmptyShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="createShoppingList"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createEmptyShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="createShoppingListFromOrder">
         <security auth="true" https="true"/>
-        <event type="service" invoke="makeShoppingListFromOrder"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createShoppingListFromOrder"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="updateShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="updateShoppingList"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="updateShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="addItemToShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="createShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addItemToShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="addItemToDefaultShoppingList"><!-- SCIPIO -->
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addItemToDefaultShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
@@ -164,14 +171,21 @@ code package.
 
     <request-map uri="updateShoppingListItem">
         <security auth="true" https="true"/>
-        <event type="service" invoke="updateShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="updateShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
     <request-map uri="removeFromShoppingList">
         <security auth="true" https="true"/>
-        <event type="service" invoke="removeShoppingListItem"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="removeFromShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="removeFromDefaultShoppingList">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="removeFromDefaultShoppingList"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
@@ -1007,25 +1021,25 @@ code package.
     </request-map>
     <request-map uri="requestReturn">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createReturnHeader"/>
-        <response name="success" type="request" value="setReturnItems"/>
-        <response name="error" type="view" value="orderstatus"/>
-    </request-map>
-    <request-map uri="setReturnItems">
-        <security https="true" auth="true" direct-request="false"/>
-        <event type="service-multi" invoke="createReturnItem"/>
-        <response name="success" type="view" value="orderstatus"/>
-        <response name="error" type="view" value="orderstatus"/>
+        <event type="java" path="org.ofbiz.order.order.OrderReturnEvents" invoke="createCustomerReturn" abort-transaction="on-any-error"/>
+        <response name="success" type="request" value="orderstatus"/>
+        <response name="error" type="view" value="requestreturn"/>
     </request-map>
 
     <request-map uri="newcustomer">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="newcustomer"/>
     </request-map>
-    <request-map uri="createcustomer">
+    <request-map uri="createcustomer" method="POST">
         <security https="true" auth="false"/>
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomer"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request" value="createcustomersuccess"/>
+        <response name="error" type="view" value="newcustomer"/>
+    </request-map>
+    <request-map uri="createcustomersuccess"><!-- SCIPIO: Performs the login, if applicable -->
+        <security direct-request="false"/>
+        <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="createCustomerSuccess"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
 
@@ -1656,9 +1670,14 @@ code package.
 
     <request-map uri="cartItemQtyUpdate">
         <security https="true" auth="false"/>
+        <!-- SCIPIO: Loses the error due to getCartData response
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="request" value="getCartData"/>
         <response name="error" type="request" value="getCartData"/>
+        -->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCartAndGetCartData"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     <request-map uri="silentAddPromoCode">
         <security https="true" auth="false"/>

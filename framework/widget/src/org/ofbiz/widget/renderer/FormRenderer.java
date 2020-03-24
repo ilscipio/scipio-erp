@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.MapState;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericEntity;
@@ -73,36 +74,93 @@ public class FormRenderer {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getCurrentContainerId(ModelForm modelForm, Map<String, Object> context) {
-        Locale locale = UtilMisc.ensureLocale(context.get("locale"));
-        String retVal = FlexibleStringExpander.expandString(modelForm.getContainerId(), context, locale);
+        //Locale locale = UtilMisc.ensureLocale(context.get("locale"));
+        // SCIPIO: Include suffix
+        //String retVal = FlexibleStringExpander.expandString(modelForm.getContainerId(), context, locale);
+        String retVal = modelForm.getContainerId(context);
         Integer itemIndex = (Integer) context.get("itemIndex");
-        // SCIPIO: 2018-09-04: TODO: REVIEW: following changes from upstream (do we need parentItemIndex? what about this list check?
         //if (itemIndex != null/* && "list".equals(modelForm.getType()) */) {
+        //if (itemIndex != null && ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()))) { // SCIPIO
         //    if (UtilValidate.isNotEmpty(context.get("parentItemIndex"))) {
         //        return retVal + context.get("parentItemIndex") + modelForm.getItemIndexSeparator() + itemIndex;
         //    }
         //    return retVal + modelForm.getItemIndexSeparator() + itemIndex;
         //}
-        if (itemIndex != null && "list".equals(modelForm.getType())) {
-            return retVal + modelForm.getItemIndexSeparator() + itemIndex;
-        }
-        return retVal;
+        //return retVal;
+        return retVal + getItemIndexIdSuffix(context, modelForm, "");
     }
 
     public static String getCurrentFormName(ModelForm modelForm, Map<String, Object> context) {
         Integer itemIndex = (Integer) context.get("itemIndex");
-        String formName = (String) context.get("formName");
-        if (UtilValidate.isEmpty(formName)) {
-            formName = modelForm.getName();
+        // SCIPIO: Rewritten to match
+        //String formName = (String) context.get("formName");
+        //if (UtilValidate.isEmpty(formName)) {
+        //    formName = modelForm.getName();
+        //}
+        String formName = modelForm.getFormName(context);
+        // SCIPIO
+        //if (itemIndex != null && "list".equals(modelForm.getType())) {
+        //    return formName + modelForm.getItemIndexSeparator() + itemIndex;
+        //}
+        //if (itemIndex != null && ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()))) { // SCIPIO
+        //    if (UtilValidate.isNotEmpty(context.get("parentItemIndex"))) {
+        //        return formName + context.get("parentItemIndex") + modelForm.getItemIndexSeparator() + itemIndex;
+        //    }
+        //    return formName + modelForm.getItemIndexSeparator() + itemIndex;
+        //}
+        //return formName;
+        return formName + getItemIndexIdSuffix(context, modelForm, "");
+    }
+
+    /** SCIPIO: Moved from WidgetWorker */
+    public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
+        ModelForm modelForm = null;
+        // SCIPIO: make sure model form field not empty
+        if (modelFormField != null) {
+            modelForm = modelFormField.getModelForm();
+        } else {
+            Debug.logWarning("makeLinkHiddenFormName: null modelFormField passed", module); // SCIPIO: TODO: REVIEW
         }
-        if (itemIndex != null && "list".equals(modelForm.getType())) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex;
+        //Integer itemIndex = (Integer) context.get("itemIndex"); // SCIPIO: using getItemIndexIdSuffix
+        // SCIPIO: This is now taken into account by scpFormIdNameSuffix set by render() method, see getFormName
+        //String iterateId = "";
+        String formUniqueId = "";
+        String formName = modelForm.getFormName(context); // SCIPIO: refactored
+        //if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
+        //    iterateId = (String) context.get("iterateId");
+        //}
+        // SCIPIO: TODO: REVIEW: renderFormSeqNumber and formUniqueId are pretty pointless currently,
+        //          as only a subset of calls are using it and it can't really be applied to top form ID or name
+        //          since when single they must not have any extras, so that JS can be used in a simple way,
+        //          but then we're only doing half the forms so it's completely pointless...
+        //if (UtilValidate.isNotEmpty(context.get("formUniqueId"))) { // SCIPIO: TODO: rename this context field...
+        //    formUniqueId = (String) context.get("formUniqueId");
+        //}
+        //if (itemIndex != null) {
+        //    return formName + modelForm.getItemIndexSeparator() + itemIndex + iterateId + formUniqueId + modelForm.getItemIndexSeparator() + modelFormField.getName();
+        //}
+        // SCIPIO: Flippped this around because didn't match the fields and because the index separator is pointless otherwise
+        //return formName + getItemIndexIdSuffix(context, modelForm, formUniqueId) + modelForm.getItemIndexSeparator() + modelFormField.getName();
+        return formName + "_" + modelFormField.getName() + getItemIndexIdSuffix(context, modelForm, formUniqueId);
+    }
+
+    public static String getItemIndexIdSuffix(Map<String, Object> context, ModelForm modelForm, String extraItemInfoStr) { // SCIPIO: Refactored
+        Integer itemIndex = (Integer) context.get("itemIndex");
+        if (modelForm == null) {
+            Debug.logWarning("getItemIndexIdSuffix: modelForm null", module);
+            return "";
         }
-        return formName;
+        if (itemIndex != null && ("list".equals(modelForm.getType()) || "multi".equals(modelForm.getType()))) { // SCIPIO
+            if (UtilValidate.isNotEmpty(context.get("parentItemIndex"))) {
+                return context.get("parentItemIndex") + modelForm.getItemIndexSeparator() + itemIndex + extraItemInfoStr;
+            }
+            return modelForm.getItemIndexSeparator() + itemIndex + extraItemInfoStr;
+        }
+        return "";
     }
 
     public static String getFocusFieldName(ModelForm modelForm, Map<String, Object> context) {
-        String focusFieldName = (String) context.get(modelForm.getName().concat(".focusFieldName"));
+        String focusFieldName = (String) context.get(modelForm.getFormName(context).concat(".focusFieldName")); // SCIPIO: Replaced getName()
         if (focusFieldName == null) {
             return "";
         }
@@ -243,61 +301,125 @@ public class FormRenderer {
             WidgetWorker.incrementPaginatorNumber(context);
         }
 
-        // Populate the viewSize and viewIndex so they are available for use during form actions
-        context.put("viewIndex", Paginator.getViewIndex(modelForm, context));
-        context.put("viewSize", Paginator.getViewSize(modelForm, context));
+        // SCIPIO: Render state
+        FormRenderState renderState = FormRenderState.push(context, modelForm);
 
-        modelForm.runFormActions(context);
-
-        // if this is a list form, don't use Request Parameters
-        if (modelForm instanceof ModelGrid) {
-            context.put("useRequestParameters", Boolean.FALSE);
-        }
-
-        // find the highest position number to get the max positions used
-        // SCIPIO: use explicit if set, and also take position-span into account here
-        Integer positions = modelForm.getPositions();
-        if (positions == null || positions < 1) {
-            positions = 1;
-            for (ModelFormField modelFormField : modelForm.getFieldList()) {
-                int curPos = modelFormField.getPosition();
-
-                Integer positionSpan = modelFormField.getPositionSpan();
-                if (positionSpan == null) {
-                    positionSpan = modelForm.getDefaultPositionSpan();
+        // SCIPIO: All the fields that are set below must be restored at the original context
+        // because although most caller push scope it is not guaranteed, nesting and this code location currently has no way of knowing
+        // if the context was saved or not, and some of the field names here are too generic
+        // TODO: REVIEW: This might not currently cover all possible context fields changed by the renderer... in some cases it's fine, others not
+        MapState<String, Object> savedContextState = MapState.saveKeys(context, "viewIndex", "viewSize", "useRequestParameters",
+                "itemIndex", "parentItemIndex"); // Not currently used anymore: , "formUniqueId", "renderFormSeqNumber"
+        try {
+            // SCIPIO: If we are at level 1, itemIndex actually comes from <iterate-section> widget, otherwise we can expect it to indicate the current ModelFormField.
+            // This was butchered in stock ofbiz so we must handle this here, carefully.
+            // Unfortunately, it is possible that client code accidentally sets itemIndex as well, so we will only
+            // consider itemIndex if iterateId is also present.
+            // itemIndex from <iterate-section> is automatically transformed to the context field scpFormIdNameSuffix, which client code may also set manually avoid duplicate form IDs
+            if (renderState.getCurrentDepth() <= 1) {
+                Object itemIndexObj = context.get("itemIndex");
+                Object iterateId = context.get("iterateId");
+                if ((itemIndexObj instanceof Integer) && (iterateId instanceof String) && UtilValidate.isNotEmpty((String) iterateId)) {
+                    // Comes from <iterate-section>, remove and transform into renderFormIdPrefix
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("Rendering form [" + modelForm.getFullLocationAndName() + "] as child of iterate-section (itemIndex: " + itemIndexObj + ", iterateId: " + iterateId + ")", module);
+                    }
+                    Integer itemIndex = (Integer) itemIndexObj;
+                    String formIdSuffix = (String) context.get("scpFormIdNameSuffix");
+                    if (formIdSuffix == null) {
+                        context.put("scpFormIdNameSuffix", "_" + iterateId);
+                    }
+                    context.put("itemIndex", null); // NOTE: explicit null overrides lower MapStack levels
+                } else if (itemIndexObj != null) {
+                    Debug.logWarning("Found 'itemIndex' field in render context (appears to be outside of iterate-section widget); this field is reserved for internal use; ignoring", module);
+                    context.put("itemIndex", null);
                 }
-                if (positionSpan != null && positionSpan > 0) {
-                    curPos += (positionSpan - 1);
-                }
 
-                if (curPos > positions) {
-                    positions = curPos;
-                }
+                // Removed from code for now
+                //if (context.get("formUniqueId") != null) {
+                //    Debug.logWarning("Found 'formUniqueId' field in render context; this field is reserved for internal use; ignoring", module);
+                //    context.put("formUniqueId", null);
+                //}
 
-                FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
-                if (currentFieldInfo == null) {
-                    throw new IllegalArgumentException(
-                            "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
-                                    + modelFormField.getName());
+                // TODO: REVIEW: can't, set by renderer in different places, currently
+                //if (context.get("renderFormSeqNumber") != null) {
+                //    Debug.logWarning("Found 'renderFormSeqNumber' field in render context; this field is reserved for internal use; ignoring", module);
+                //    context.put("renderFormSeqNumber", null);
+                //}
+            } else {
+                // SCIPIO: The following code is moved from the renderItemRows because it's easier to follow from here
+                // and it allows us to remove itemIndex before anything else runs - itemIndex is the "current form's current item", and here
+                // it designates the parent form, not our items
+                if (UtilValidate.isNotEmpty(context.get("itemIndex"))) {
+                    if (UtilValidate.isNotEmpty(context.get("parentItemIndex"))) {
+                        context.put("parentItemIndex", context.get("parentItemIndex") + modelForm.getItemIndexSeparator() + context.get("itemIndex"));
+                    } else {
+                        context.put("parentItemIndex", modelForm.getItemIndexSeparator() + context.get("itemIndex"));
+                    }
+                }
+                // SCIPIO: Remove itemIndex itself at this moment (not done in stock)
+                context.put("itemIndex", null);
+            }
+
+            // Populate the viewSize and viewIndex so they are available for use during form actions
+            context.put("viewIndex", Paginator.getViewIndex(modelForm, context));
+            context.put("viewSize", Paginator.getViewSize(modelForm, context));
+
+            modelForm.runFormActions(context);
+
+            // if this is a list form, don't use Request Parameters
+            if (modelForm instanceof ModelGrid) {
+                context.put("useRequestParameters", Boolean.FALSE);
+            }
+
+            // find the highest position number to get the max positions used
+            // SCIPIO: use explicit if set, and also take position-span into account here
+            Integer positions = modelForm.getPositions();
+            if (positions == null || positions < 1) {
+                positions = 1;
+                for (ModelFormField modelFormField : modelForm.getFieldList()) {
+                    int curPos = modelFormField.getPosition();
+
+                    Integer positionSpan = modelFormField.getPositionSpan();
+                    if (positionSpan == null) {
+                        positionSpan = modelForm.getDefaultPositionSpan();
+                    }
+                    if (positionSpan != null && positionSpan > 0) {
+                        curPos += (positionSpan - 1);
+                    }
+
+                    if (curPos > positions) {
+                        positions = curPos;
+                    }
+
+                    FieldInfo currentFieldInfo = modelFormField.getFieldInfo();
+                    if (currentFieldInfo == null) {
+                        throw new IllegalArgumentException(
+                                "Error rendering form, a field has no FieldInfo, ie no sub-element for the type of field for field named: "
+                                        + modelFormField.getName());
+                    }
                 }
             }
-        }
 
-        if ("single".equals(modelForm.getType())) {
-            this.renderSingleFormString(writer, context, positions);
-        } else if ("list".equals(modelForm.getType())) {
-            this.renderListFormString(writer, context, positions);
-        } else if ("multi".equals(modelForm.getType())) {
-            this.renderMultiFormString(writer, context, positions);
-        } else if ("upload".equals(modelForm.getType())) {
-            this.renderSingleFormString(writer, context, positions);
-        } else {
-            if (UtilValidate.isEmpty(modelForm.getType())) {
-                throw new IllegalArgumentException("The form 'type' tag is missing or empty on the form with the name "
-                        + modelForm.getName());
+            if ("single".equals(modelForm.getType())) {
+                this.renderSingleFormString(writer, context, positions);
+            } else if ("list".equals(modelForm.getType())) {
+                this.renderListFormString(writer, context, positions);
+            } else if ("multi".equals(modelForm.getType())) {
+                this.renderMultiFormString(writer, context, positions);
+            } else if ("upload".equals(modelForm.getType())) {
+                this.renderSingleFormString(writer, context, positions);
+            } else {
+                if (UtilValidate.isEmpty(modelForm.getType())) {
+                    throw new IllegalArgumentException("The form 'type' tag is missing or empty on the form with the name "
+                            + modelForm.getName());
+                }
+                throw new IllegalArgumentException("The form type " + modelForm.getType()
+                        + " is not supported for form with name " + modelForm.getName());
             }
-            throw new IllegalArgumentException("The form type " + modelForm.getType()
-                    + " is not supported for form with name " + modelForm.getName());
+        } finally {
+            savedContextState.restore(context);
+            renderState.pop(context);
         }
     }
 
@@ -1042,7 +1164,11 @@ public class FormRenderer {
 
                     localContext.put("itemIndex", itemIndex - lowIndex);
                     if (UtilValidate.isNotEmpty(context.get("renderFormSeqNumber"))) {
-                        localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
+                        // SCIPIO: TODO: REVIEW: renderFormSeqNumber and formUniqueId are pretty pointless currently,
+                        //          as only a subset of calls are using it and it can't really be applied to top form ID or name
+                        //          since when single they must not have any extras, so that JS can be used in a simple way,
+                        //          but then we're only doing half the forms so it's completely pointless...
+                        //localContext.put("formUniqueId", "_" + context.get("renderFormSeqNumber"));
                     }
 
                     if (Debug.verboseOn()) {
@@ -1621,7 +1747,7 @@ public class FormRenderer {
                         && fieldInfo.getFieldType() != FieldInfo.IGNORED
                         && fieldInfo.getFieldType() != FieldInfo.IMAGE) {
                     focusFieldName = currentFormField.getName();
-                    context.put(modelForm.getName().concat(".focusFieldName"), focusFieldName);
+                    context.put(modelForm.getFormName(context).concat(".focusFieldName"), focusFieldName); // SCIPIO: Replaced getName()
                 }
             }
 

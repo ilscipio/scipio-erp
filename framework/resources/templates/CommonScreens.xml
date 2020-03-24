@@ -47,13 +47,13 @@
                 <property-map resource="@component-resource-name@UiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.@component-resource-name@CompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.@component-resource-name@CompanySubtitle" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap['@component-resource-name@CompanyName']" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap['@component-resource-name@CompanySubtitle']" global="true"/>
 
                 <set field="activeApp" value="@webapp-name@" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://@component-name@/widget/@component-resource-name@Menus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.@component-resource-name@Application}" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap['@component-resource-name@Application']}" global="true"/>
                 
                 <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
@@ -105,7 +105,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.@component-resource-name@ViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap['@component-resource-name@ViewPermissionError']}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

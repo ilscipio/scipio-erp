@@ -399,6 +399,19 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             }
         }
         clearCachedProcessViewMappings();
+
+        clearFromCaches();
+    }
+
+    public void clearFromCaches() {
+        clearFromProcessMappingCachesById(getId());
+    }
+
+    public static void clearFromProcessMappingCachesById(String processMappingId) {
+        if (UtilValidate.isEmpty(processMappingId)) {
+            return;
+        }
+        pathCache.removeByFilter(new CmsObjectCache.CmsDataObjectIdCacheEntryFilter<>(processMappingId));
     }
 
     @Override

@@ -949,6 +949,8 @@ public interface Delegator {
      */
     boolean useDistributedCacheClear();
 
+    DistributedCacheClear getDistributedCacheClear(); // SCIPIO: moved here from GenericDelegator for reuse
+
     /**
      * SCIPIO: Helper method to determine if the entity exists by name in the system.
      * Never throws exceptions.

@@ -58,6 +58,7 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.config.ProductConfigFactory;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
@@ -220,6 +221,12 @@ public class ShoppingCartItem implements java.io.Serializable {
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
             LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ExtraPurchaseOrderInitArgs extraInitArgs)
                 throws CartItemModifyException, ItemNotFoundException {
+        return cart.makePurchaseOrderItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct, shipBeforeDate, shipAfterDate, cancelBackOrderDate, extraInitArgs);
+    }
+    public static ShoppingCartItem makePurchaseOrderItemImpl(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity,
+                                                         Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                                         LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ExtraPurchaseOrderInitArgs extraInitArgs)
+            throws CartItemModifyException, ItemNotFoundException {
         Delegator delegator = cart.getDelegator();
         GenericValue product = null;
 
@@ -237,7 +244,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(excMsg, module);
             throw new ItemNotFoundException(excMsg);
         }
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, null);
+        ShoppingCartItem newItem = cart.newItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, null); // SCIPIO: use factory method
 
         // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
         newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
@@ -479,6 +486,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * Makes a ShoppingCartItem and adds it to the cart.
      * <p>
      * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
+     * SCIPIO: 2020-02-26: Refactored the core invocation into {@link ShoppingCart#makeItem} so can be overridden by subclasses.
      *
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
@@ -490,8 +498,19 @@ public class ShoppingCartItem implements java.io.Serializable {
             String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
             ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
             ExtraInitArgs extraInitArgs) throws CartItemModifyException {
+        return cart.makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId,
+                shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool,
+                triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks, extraInitArgs);
+    }
 
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, parentProduct);
+    protected static ShoppingCartItem makeItemImpl(Integer cartLocation, GenericValue product, BigDecimal selectedAmount,
+                                            BigDecimal quantity, BigDecimal unitPrice, Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,
+                                            String accommodationMapId,String accommodationSpotId,
+                                            Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
+                                            String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
+                                            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
+                                            ExtraInitArgs extraInitArgs) throws CartItemModifyException {
+        ShoppingCartItem newItem = cart.newItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, parentProduct); // SCIPIO: use factory method
 
         // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
         newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
@@ -692,6 +711,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /**
      * Makes a non-product ShoppingCartItem and adds it to the cart.
      * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
+     * SCIPIO: 2020-02-26: Refactored the core invocation into {@link ShoppingCart#makeItem} so can be overridden by subclasses.
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param itemType The OrderItemTypeId for the item being added
@@ -711,9 +731,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId,
             BigDecimal basePrice, BigDecimal selectedAmount, BigDecimal quantity, Map<String, Object> attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup,
             LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
-
+        return cart.makeItem(cartLocation, itemType, itemDescription, productCategoryId, basePrice, selectedAmount, quantity, attributes, prodCatalogId, itemGroup, dispatcher,
+                cart, triggerExternalOpsBool);
+    }
+    public static ShoppingCartItem makeItemImpl(Integer cartLocation, String itemType, String itemDescription, String productCategoryId,
+                                                BigDecimal basePrice, BigDecimal selectedAmount, BigDecimal quantity, Map<String, Object> attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup,
+                                                LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
         Delegator delegator = cart.getDelegator();
-        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale(), itemGroup);
+        ShoppingCartItem newItem = cart.newItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale(), itemGroup); // SCIPIO: use factory method
 
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
@@ -825,7 +850,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.quantityUsedPerPromoActual = new HashMap<>(item.quantityUsedPerPromoActual);
             this.additionalProductFeatureAndAppls = new HashMap<>(item.additionalProductFeatureAndAppls);
             this.alternativeOptionProductIds = (item.alternativeOptionProductIds != null) ? new ArrayList<>(item.alternativeOptionProductIds) : null;
-            this.configWrapper = (item.configWrapper != null) ? new ProductConfigWrapper(item.configWrapper, exactCopy) : null;
+            this.configWrapper = (item.configWrapper != null) ? ProductConfigFactory.copyProductConfigWrapper(item.configWrapper, exactCopy) : null; // SCIPIO: Use factory
             this.featuresForSupplier = new ArrayList<>(item.featuresForSupplier);
         } else {
             this.delegator = item.getDelegator();
@@ -901,7 +926,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
             }
             if (item.configWrapper != null) {
-                this.configWrapper = new ProductConfigWrapper(item.configWrapper);
+                this.configWrapper = ProductConfigFactory.copyProductConfigWrapper(item.configWrapper); // SCIPIO: use factory
             }
             this.featuresForSupplier.addAll(item.featuresForSupplier);
         }
@@ -916,6 +941,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     public ShoppingCartItem copy(boolean exactCopy) {
         return copy(exactCopy, null);
     }
+
+    // SCIPIO: NOTE: 2020-02-36: These constructors are now called through ShoppingCart.newItem methods
 
     /** Cannot create shopping cart item with no parameters */
     protected ShoppingCartItem() {}
@@ -1003,67 +1030,64 @@ public class ShoppingCartItem implements java.io.Serializable {
      * SCIPIO: Tests to ensure the cart is an exact copy of the other; used to verify exact code code.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
-    void ensureExactEquals(ShoppingCartItem other) {
-        try {
-            ShoppingCart.ensureExactEquals(this.delegator, other.delegator);
-            ShoppingCart.ensureExactEquals(this._product, other._product);
-            ShoppingCart.ensureExactEquals(this._parentProduct, other._parentProduct);
-            ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName);
-            ShoppingCart.ensureExactEquals(this.prodCatalogId, other.prodCatalogId);
-            ShoppingCart.ensureExactEquals(this.productId, other.productId);
-            ShoppingCart.ensureExactEquals(this.supplierProductId, other.supplierProductId);
-            ShoppingCart.ensureExactEquals(this.parentProductId, other.parentProductId);
-            ShoppingCart.ensureExactEquals(this.externalId, other.externalId);
-            ShoppingCart.ensureExactEquals(this.itemType, other.itemType);
-            ShoppingCart.ensureExactEquals(this.itemGroup, other.itemGroup);
-            ShoppingCart.ensureExactEquals(this.productCategoryId, other.productCategoryId);
-            ShoppingCart.ensureExactEquals(this.itemDescription, other.itemDescription);
-            ShoppingCart.ensureExactEquals(this.reservStart, other.reservStart);
-            ShoppingCart.ensureExactEquals(this.reservLength, other.reservLength);
-            ShoppingCart.ensureExactEquals(this.reservPersons, other.reservPersons);
-            ShoppingCart.ensureExactEquals(this.accommodationMapId, other.accommodationMapId);
-            ShoppingCart.ensureExactEquals(this.accommodationSpotId, other.accommodationSpotId);
-            ShoppingCart.ensureExactEquals(this.quantity, other.quantity);
-            ShoppingCart.ensureExactEquals(this.basePrice, other.basePrice);
-            ShoppingCart.ensureExactEquals(this.displayPrice, other.displayPrice);
-            ShoppingCart.ensureExactEquals(this.recurringBasePrice, other.recurringBasePrice);
-            ShoppingCart.ensureExactEquals(this.recurringDisplayPrice, other.recurringDisplayPrice);
-            ShoppingCart.ensureExactEquals(this.specialPromoPrice, other.specialPromoPrice);
-            ShoppingCart.ensureExactEquals(this.reserv2ndPPPerc, other.reserv2ndPPPerc);
-            ShoppingCart.ensureExactEquals(this.reservNthPPPerc, other.reservNthPPPerc);
-            ShoppingCart.ensureExactEquals(this.listPrice, other.listPrice);
-            ShoppingCart.ensureExactEquals(this.isModifiedPrice, other.isModifiedPrice);
-            ShoppingCart.ensureExactEquals(this.selectedAmount, other.selectedAmount);
-            ShoppingCart.ensureExactEquals(this.requirementId, other.requirementId);
-            ShoppingCart.ensureExactEquals(this.quoteId, other.quoteId);
-            ShoppingCart.ensureExactEquals(this.quoteItemSeqId, other.quoteItemSeqId);
-            ShoppingCart.ensureExactEquals(this.associatedOrderId, other.associatedOrderId);
-            ShoppingCart.ensureExactEquals(this.associatedOrderItemSeqId, other.associatedOrderItemSeqId);
-            ShoppingCart.ensureExactEquals(this.orderItemAssocTypeId, other.orderItemAssocTypeId);
-            ShoppingCart.ensureExactEquals(this.statusId, other.statusId);
-            ShoppingCart.ensureExactEquals(this.orderItemAttributes, other.orderItemAttributes);
-            ShoppingCart.ensureExactEquals(this.attributes, other.attributes);
-            ShoppingCart.ensureExactEquals(this.orderItemSeqId, other.orderItemSeqId);
-            ShoppingCart.ensureExactEquals(this.locale, other.locale);
-            ShoppingCart.ensureExactEquals(this.shipBeforeDate, other.shipBeforeDate);
-            ShoppingCart.ensureExactEquals(this.shipAfterDate, other.shipAfterDate);
-            ShoppingCart.ensureExactEquals(this.estimatedShipDate, other.estimatedShipDate);
-            ShoppingCart.ensureExactEquals(this.cancelBackOrderDate, other.cancelBackOrderDate);
-            ShoppingCart.ensureExactEquals(this.contactMechIdsMap, other.contactMechIdsMap);
-            ShoppingCart.ensureExactEquals(this.orderItemPriceInfos, other.orderItemPriceInfos);
-            ShoppingCart.ensureExactEquals(this.itemAdjustments, other.itemAdjustments);
-            ShoppingCart.ensureExactEquals(this.isPromo, other.isPromo);
-            ShoppingCart.ensureExactEquals(this.promoQuantityUsed, other.promoQuantityUsed);
-            ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoCandidate, other.quantityUsedPerPromoCandidate);
-            ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoFailed, other.quantityUsedPerPromoFailed);
-            ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoActual, other.quantityUsedPerPromoActual);
-            ShoppingCart.ensureExactEquals(this.additionalProductFeatureAndAppls, other.additionalProductFeatureAndAppls);
-            ShoppingCart.ensureExactEquals(this.alternativeOptionProductIds, other.alternativeOptionProductIds);
-            ShoppingCart.ensureExactEquals(this.configWrapper, other.configWrapper);
-            ShoppingCart.ensureExactEquals(this.featuresForSupplier, other.featuresForSupplier);
-        } catch(IllegalStateException e) {
-            throw new IllegalStateException("ShoppingCartItem field not equal: " + e.getMessage(), e);
-        }
+    protected void ensureExactEquals(ShoppingCartItem other, List<String> errorMessages) {
+        // transient
+        //ShoppingCart.ensureExactEquals(this.delegator, other.delegator, "ShoppingCartItem.delegator", errorMessages);
+        //ShoppingCart.ensureExactEquals(this._product, other._product, "ShoppingCartItem._product", errorMessages);
+        //ShoppingCart.ensureExactEquals(this._parentProduct, other._parentProduct, "ShoppingCartItem._parentProduct", errorMessages);
+        ShoppingCart.ensureExactEquals(this.delegatorName, other.delegatorName, "ShoppingCartItem.delegatorName", errorMessages);
+        ShoppingCart.ensureExactEquals(this.prodCatalogId, other.prodCatalogId, "ShoppingCartItem.prodCatalogId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.productId, other.productId, "ShoppingCartItem.productId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.supplierProductId, other.supplierProductId, "ShoppingCartItem.supplierProductId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.parentProductId, other.parentProductId, "ShoppingCartItem.parentProductId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.externalId, other.externalId, "ShoppingCartItem.externalId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.itemType, other.itemType, "ShoppingCartItem.itemType", errorMessages);
+        ShoppingCart.ensureExactEquals(this.itemGroup, other.itemGroup, "ShoppingCartItem.itemGroup", errorMessages);
+        ShoppingCart.ensureExactEquals(this.productCategoryId, other.productCategoryId, "ShoppingCartItem.productCategoryId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.itemDescription, other.itemDescription, "ShoppingCartItem.itemDescription", errorMessages);
+        ShoppingCart.ensureExactEquals(this.reservStart, other.reservStart, "ShoppingCartItem.reservStart", errorMessages);
+        ShoppingCart.ensureExactEquals(this.reservLength, other.reservLength, "ShoppingCartItem.reservLength", errorMessages);
+        ShoppingCart.ensureExactEquals(this.reservPersons, other.reservPersons, "ShoppingCartItem.reservPersons", errorMessages);
+        ShoppingCart.ensureExactEquals(this.accommodationMapId, other.accommodationMapId, "ShoppingCartItem.accommodationMapId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.accommodationSpotId, other.accommodationSpotId, "ShoppingCartItem.accommodationSpotId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quantity, other.quantity, "ShoppingCartItem.quantity", errorMessages);
+        ShoppingCart.ensureExactEquals(this.basePrice, other.basePrice, "ShoppingCartItem.basePrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.displayPrice, other.displayPrice, "ShoppingCartItem.displayPrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.recurringBasePrice, other.recurringBasePrice, "ShoppingCartItem.recurringBasePrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.recurringDisplayPrice, other.recurringDisplayPrice, "ShoppingCartItem.recurringDisplayPrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.specialPromoPrice, other.specialPromoPrice, "ShoppingCartItem.specialPromoPrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.reserv2ndPPPerc, other.reserv2ndPPPerc, "ShoppingCartItem.reserv2ndPPPerc", errorMessages);
+        ShoppingCart.ensureExactEquals(this.reservNthPPPerc, other.reservNthPPPerc, "ShoppingCartItem.reservNthPPPerc", errorMessages);
+        ShoppingCart.ensureExactEquals(this.listPrice, other.listPrice, "ShoppingCartItem.listPrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.isModifiedPrice, other.isModifiedPrice, "ShoppingCartItem.isModifiedPrice", errorMessages);
+        ShoppingCart.ensureExactEquals(this.selectedAmount, other.selectedAmount, "ShoppingCartItem.selectedAmount", errorMessages);
+        ShoppingCart.ensureExactEquals(this.requirementId, other.requirementId, "ShoppingCartItem.requirementId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quoteId, other.quoteId, "ShoppingCartItem.quoteId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quoteItemSeqId, other.quoteItemSeqId, "ShoppingCartItem.quoteItemSeqId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.associatedOrderId, other.associatedOrderId, "ShoppingCartItem.associatedOrderId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.associatedOrderItemSeqId, other.associatedOrderItemSeqId, "ShoppingCartItem.associatedOrderItemSeqId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderItemAssocTypeId, other.orderItemAssocTypeId, "ShoppingCartItem.orderItemAssocTypeId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.statusId, other.statusId, "ShoppingCartItem.statusId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderItemAttributes, other.orderItemAttributes, "ShoppingCartItem.orderItemAttributes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.attributes, other.attributes, "ShoppingCartItem.attributes", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderItemSeqId, other.orderItemSeqId, "ShoppingCartItem.orderItemSeqId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.locale, other.locale, "ShoppingCartItem.locale", errorMessages);
+        ShoppingCart.ensureExactEquals(this.shipBeforeDate, other.shipBeforeDate, "ShoppingCartItem.shipBeforeDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.shipAfterDate, other.shipAfterDate, "ShoppingCartItem.shipAfterDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.estimatedShipDate, other.estimatedShipDate, "ShoppingCartItem.estimatedShipDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.cancelBackOrderDate, other.cancelBackOrderDate, "ShoppingCartItem.cancelBackOrderDate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.contactMechIdsMap, other.contactMechIdsMap, "ShoppingCartItem.contactMechIdsMap", errorMessages);
+        ShoppingCart.ensureExactEquals(this.orderItemPriceInfos, other.orderItemPriceInfos, "ShoppingCartItem.orderItemPriceInfos", errorMessages);
+        ShoppingCart.ensureExactEquals(this.itemAdjustments, other.itemAdjustments, "ShoppingCartItem.itemAdjustments", errorMessages);
+        ShoppingCart.ensureExactEquals(this.isPromo, other.isPromo, "ShoppingCartItem.isPromo", errorMessages);
+        ShoppingCart.ensureExactEquals(this.promoQuantityUsed, other.promoQuantityUsed, "ShoppingCartItem.promoQuantityUsed", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoCandidate, other.quantityUsedPerPromoCandidate, "ShoppingCartItem.quantityUsedPerPromoCandidate", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoFailed, other.quantityUsedPerPromoFailed, "ShoppingCartItem.quantityUsedPerPromoFailed", errorMessages);
+        ShoppingCart.ensureExactEquals(this.quantityUsedPerPromoActual, other.quantityUsedPerPromoActual, "ShoppingCartItem.quantityUsedPerPromoActual", errorMessages);
+        ShoppingCart.ensureExactEquals(this.additionalProductFeatureAndAppls, other.additionalProductFeatureAndAppls, "ShoppingCartItem.additionalProductFeatureAndAppls", errorMessages);
+        ShoppingCart.ensureExactEquals(this.alternativeOptionProductIds, other.alternativeOptionProductIds, "ShoppingCartItem.alternativeOptionProductIds", errorMessages);
+        ShoppingCart.ensureExactEquals(this.configWrapper, other.configWrapper, "ShoppingCartItem.configWrapper", errorMessages);
+        ShoppingCart.ensureExactEquals(this.featuresForSupplier, other.featuresForSupplier, "ShoppingCartItem.featuresForSupplier", errorMessages);
     }
 
     public String getProdCatalogId() {
@@ -1337,12 +1361,23 @@ public class ShoppingCartItem implements java.io.Serializable {
         // set the item ship group
         if (resetShipGroup) {
             int itemId = cart.getItemIndex(this);
-            int shipGroupIndex = 0;
-            if (itemId != -1) {
-                shipGroupIndex = cart.getItemShipGroupIndex(itemId);
+            // SCIPIO: If setting quantity 0 we must do different order/logic or this leaves extra ship group data in the cart
+            if (BigDecimal.ZERO.compareTo(quantity) == 0) {
+                // SCIPIO: don't call setItemShipGroupQty here because inappropriate sets, clearItemShipInfo clears the refs anyway
+                // but always reset the ship estimates in this case
+                // TODO: REVIEW: currently done in ShoppingCartHelper.modifyCart, unclear if should be done here
+                //for(ShoppingCart.CartShipInfo csi : cart.getItemCartShipInfos(this)) {
+                //    csi.setShipEstimate(BigDecimal.ZERO); // NOTE: This should get recalculated after by some event after if there are items remaining
+                //}
+                cart.clearItemShipInfo(this);
+            } else {
+                int shipGroupIndex = 0;
+                if (itemId != -1) {
+                    shipGroupIndex = cart.getItemShipGroupIndex(itemId);
+                }
+                cart.clearItemShipInfo(this);
+                cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
             }
-            cart.clearItemShipInfo(this);
-            cart.setItemShipGroupQty(this, quantity, shipGroupIndex);
         }
     }
 

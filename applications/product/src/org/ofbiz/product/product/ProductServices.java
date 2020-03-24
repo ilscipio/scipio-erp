@@ -25,6 +25,7 @@ import java.io.RandomAccessFile;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -230,13 +231,14 @@ public class ProductServices {
         }
 
         List<GenericValue> variants = UtilGenerics.checkList(prodFindAllVariants(dctx, context).get("assocProducts"));
-        List<String> virtualVariant = new LinkedList<>();
+        List<String> virtualVariant = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
         if (UtilValidate.isEmpty(variants)) {
             return ServiceUtil.returnSuccess();
         }
-        List<String> items = new LinkedList<>();
-        List<GenericValue> outOfStockItems = new LinkedList<>();
+        List<String> items = new ArrayList<>(); // SCIPIO: switched to ArrayList
+        List<GenericValue> outOfStockItems = new ArrayList<>(); // SCIPIO: switched to ArrayList
+        boolean unavailableInTree = Boolean.TRUE.equals(context.get("unavailableInTree")); // SCIPIO
 
         for (GenericValue variant: variants) {
             String productIdTo = variant.getString("productIdTo");
@@ -295,6 +297,9 @@ public class ProductServices {
                             virtualVariant.add(productIdTo);
                         }
                     } else {
+                        if (unavailableInTree) {
+                            items.add(productIdTo); // SCIPIO
+                        }
                         outOfStockItems.add(productTo);
                     }
                 } else {
@@ -315,7 +320,7 @@ public class ProductServices {
         // Make the selectable feature list
         List<GenericValue> selectableFeatures = null;
         try {
-            selectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").orderBy("sequenceNum").cache(true).filterByDate().queryList();
+            selectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").orderBy("sequenceNum","description").cache(true).filterByDate().queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,

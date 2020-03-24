@@ -879,7 +879,7 @@ public abstract class SolrUtil {
             if (httpConnectorInfo != null && port == httpConnectorInfo.getPort()) {
                 return true;
             }
-            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(false);
+            ScipioConnectorInfo httpsConnectorInfo = ScipioConnectorInfo.getWebContainer(true);
             if (httpConnectorInfo != null && port == httpsConnectorInfo.getPort()) {
                 return true;
             }

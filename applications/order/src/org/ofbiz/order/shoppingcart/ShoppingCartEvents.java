@@ -56,6 +56,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+import org.ofbiz.order.shoppinglist.ShoppingListWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -71,6 +72,7 @@ import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestVarScopes;
+import org.ofbiz.webapp.event.EventUtil;
 
 /**
  * Shopping cart events.
@@ -317,7 +319,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
             
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         
         // Get the ProductConfigWrapper (it's not null only for configurable items)
         ProductConfigWrapper configWrapper = null;
@@ -762,7 +764,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll, itemGroupNumber);
         controlDirective = processResult(result, request);
 
@@ -793,7 +795,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulk(catalogId, categoryId, paramMap);
         controlDirective = processResult(result, request);
 
@@ -822,9 +824,9 @@ public class ShoppingCartEvents {
         try {
             GenericValue supplierParty = EntityQuery.use(delegator).from("Party").where("partyId", supplierPartyId).queryOne();
             if (UtilValidate.isNotEmpty(supplierParty.getString("preferredCurrencyUomId"))) {
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId")); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request, locale, supplierParty.getString("preferredCurrencyUomId")); // SCIPIO: use factory
             } else {
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
             }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
@@ -858,7 +860,7 @@ public class ShoppingCartEvents {
         cart.setOrderId(orderId);
         String agreementId = request.getParameter("agreementId_o_0");
         if (UtilValidate.isNotEmpty(agreementId)) {
-            ShoppingCartHelper sch = new ShoppingCartHelper(delegator, dispatcher, cart);
+            ShoppingCartHelper sch = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
             sch.selectAgreement(agreementId);
         }
 
@@ -898,7 +900,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addToCartBulkRequirements(catalogId, paramMap);
         controlDirective = processResult(result, request);
 
@@ -932,7 +934,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.addCategoryDefaults(catalogId, categoryId, itemGroupNumber);
         controlDirective = processResult(result, request);
 
@@ -966,7 +968,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
         
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
 
@@ -997,8 +999,9 @@ public class ShoppingCartEvents {
         
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
+        request.setAttribute("shoppingCartSize", cart.size()); // SCIPIO
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(null, dispatcher, cart);
         result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems, locale);
         controlDirective = processResult(result, request);
 
@@ -1008,8 +1011,35 @@ public class ShoppingCartEvents {
         }
 
         cartUpdate.commit(cart); // SCIPIO
+        request.setAttribute("shoppingCartSize", cart.size()); // SCIPIO
         }
         return "success";
+    }
+
+    public static String modifyCartAndGetCartData(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        return getShoppingCartDataAfterEvent(request, response, modifyCart(request, response));
+    }
+
+    /**
+     * Gets shopping cart data after an event without losing the original event response or error messages (SCIPIO).
+     */
+    public static String getShoppingCartDataAfterEvent(HttpServletRequest request, HttpServletResponse response, String eventResponse) { // SCIPIO
+        Map<String, Object> modifyCartMsgs = EventUtil.getEventErrorAttributesAsMap(request);
+        Map<String, Object> servCtx = EventUtil.getServiceEventParamMap(request, "getShoppingCartData"); // FIXME: EventUtil will be replaced later
+        ShoppingListWorker.checkSetShoppingListAuthTokenForService(request, servCtx);
+        String cartDataResult = null;
+        try {
+            cartDataResult = EventUtil.runServiceAsEvent(request, response, "getShoppingCartData", servCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "getShoppingCartDataAfterEvent exception: " + e.toString(), module);
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", UtilHttp.getLocale(request)));
+            request.removeAttribute("_ERROR_MESSAGE_LIST_");
+            cartDataResult = "error";
+        }
+        if ("error".equals(eventResponse) || !"error".equals(cartDataResult)) { // NOTE: modifyCart result messages takes precedence
+            EventUtil.setEventErrorAttributesFromMap(request, modifyCartMsgs);
+        }
+        return "error".equals(cartDataResult) ? cartDataResult : eventResponse;
     }
 
     /** Empty the shopping cart. */
@@ -1165,7 +1195,7 @@ public class ShoppingCartEvents {
                 cart = sessionCart;
                 if (cart == null) {
                     // NEW CART
-                    cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                    cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
                     // Update both session and req attr (or per modifyScopesFilter)
                     ShoppingCartEvents.setCartObject(request, cart, modifyScopesFilter);
                     requestCart = cart; // Don't re-update below; done by setCartObject
@@ -1275,6 +1305,9 @@ public class ShoppingCartEvents {
                 currentUpdate.commit(cart);
                 return cart;
             }
+        }
+        if (ShoppingCart.verboseOn() && modifyScopesFilter.session()) {
+            ShoppingCartChangeVerifier.getInstance().recordCart(cart);
         }
         RequestVarScopes.REQUEST_AND_SESSION.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", cart);
         if (modifyScopesFilter.session()) {
@@ -1528,7 +1561,7 @@ public class ShoppingCartEvents {
                 }
             } catch(CartUserInvalidException e) {
                 Debug.logWarning("Invalid cart state: " + e.getMessage() + "; clearing cart", module);
-                cart = ShoppingCartFactory.get(request).createWebShoppingCart(request); // SCIPIO: use factory
+                cart = ShoppingCartFactory.createWebShoppingCart(request); // SCIPIO: use factory
                 modifyCart = true;
             }
 
@@ -1785,7 +1818,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.selectAgreement(agreementId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
@@ -1807,7 +1840,7 @@ public class ShoppingCartEvents {
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
 
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
         result = cartHelper.setCurrency(currencyUomId);
         if (ServiceUtil.isError(result)) {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
@@ -2282,6 +2315,11 @@ public class ShoppingCartEvents {
             }
         }
 
+        // SCIPIO: Set webSiteId if applicable (by default, do NOT set it here - it is done by setOrderCurrencyAgreementShipDatesForOrderEntry; but screen may request it here instead)
+        if (UtilMisc.booleanValueVersatile(request.getParameter("initCartWebSiteId"), false)) {
+            setCartWebSiteIdForOrderEntry(request, response, cart);
+        }
+
         if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderAProductStoreMustBeSelectedForASalesOrder", locale));
             cart.clear();
@@ -2403,8 +2441,7 @@ public class ShoppingCartEvents {
         }
         return "success";
     }
-
-
+    
     public static String bulkAddProducts(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2435,7 +2472,7 @@ public class ShoppingCartEvents {
         } else {
             try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             ShoppingCart cart = cartUpdate.getCartForUpdate();
-            ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+            ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
 
             for (int i = 0; i < rowCount; i++) {
                 controlDirective = null;                // re-initialize each time
@@ -2544,7 +2581,6 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
-
         String agreementId = request.getParameter("agreementId");
         String currencyUomId = request.getParameter("currencyUomId");
         String workEffortId = request.getParameter("workEffortId");
@@ -2559,7 +2595,7 @@ public class ShoppingCartEvents {
 
         try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
         ShoppingCart cart = cartUpdate.getCartForUpdate();
-        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        ShoppingCartHelper cartHelper = ShoppingCartFactory.createWebShoppingCartHelper(delegator, dispatcher, cart);
             
         // set the agreement if specified otherwise set the currency
         if (UtilValidate.isNotEmpty(agreementId)) {
@@ -2640,14 +2676,39 @@ public class ShoppingCartEvents {
                 return result;
             }
 
-            // SCIPIO: Set webSiteId if applicable
-            String cartWebSiteId = request.getParameter("cartWebSiteId");
-            if (cartWebSiteId != null) {
-                // TODO?: Verify website is valid (not a real security concern in backend, for now)
-                cart.setWebSiteId(cartWebSiteId.isEmpty() ? null : cartWebSiteId);
+            // SCIPIO: Set webSiteId if applicable (by default, set it here)
+            if (UtilMisc.booleanValueVersatile(request.getParameter("setCartWebSiteId"), true)) {
+                setCartWebSiteIdForOrderEntry(request, response, cart);
             }
 
             cartUpdate.commit(cart); // SCIPIO
+        }
+        return "success";
+    }
+
+    public static String setCartWebSiteIdForOrderEntry(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+            String result = setCartWebSiteIdForOrderEntry(request, response, cart);
+            cartUpdate.commit(cart);
+            return result;
+        }
+    }
+
+    public static String setCartWebSiteIdForOrderEntry(HttpServletRequest request, HttpServletResponse response, ShoppingCart cart) { // SCIPIO
+        String cartWebSiteId = request.getParameter("cartWebSiteId");
+        if (cartWebSiteId != null) { // NOTE: May be empty string, which means explicit none (don't do default)
+            // TODO?: Verify website is valid (not a real security concern in backend, for now)
+            cart.setWebSiteId(cartWebSiteId.isEmpty() ? null : cartWebSiteId);
+        } else {
+            // SCIPIO: If cartWebSiteId not set as an option and this is a sales order, by default we'll use the default webSiteId for the order
+            boolean useDefaultCartWebSiteId = UtilMisc.booleanValueVersatile(request.getParameter("useDefaultCartWebSiteId"), "SALES_ORDER".equals(cart.getOrderType()));
+            if (useDefaultCartWebSiteId) {
+                cartWebSiteId = ProductStoreWorker.getStoreDefaultWebSiteId((Delegator) request.getAttribute("delegator"), cart.getProductStoreId(), false);
+                cart.setWebSiteId(cartWebSiteId);
+            } else {
+                cart.setWebSiteId(null);
+            }
         }
         return "success";
     }

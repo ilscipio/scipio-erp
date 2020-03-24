@@ -30,8 +30,12 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.webapp.website.WebSiteWorker
 
-cart = ShoppingCartEvents.getCartObject(request);
-context.cart = cart;
+//cart = ShoppingCartEvents.getCartObject(request);
+//context.cart = cart;
+CartUpdate cartUpdate = CartUpdate.updateSection(request);
+try { // SCIPIO: TODO: REVIEW: This belongs in events; screens should not trigger cart modifications
+cart = cartUpdate.getCartForUpdate();
+
 context.currencyUomId = cart.getCurrency();
 context.productStore = ProductStoreWorker.getProductStore(request);
 
@@ -165,3 +169,9 @@ orderItemProdCfgMap = cart.getProductConfigWrappersByOrderItemSeqId();
 context.orderItemProdCfgMap = orderItemProdCfgMap;
 orderItemSurvResMap = cart.makeAllOrderItemSurveyResponsesByOrderItemSeqId();
 context.orderItemSurvResMap = orderItemSurvResMap;
+
+cart = cartUpdate.commit(cart);
+context.cart = cart;
+} finally {
+	cartUpdate.close();
+}

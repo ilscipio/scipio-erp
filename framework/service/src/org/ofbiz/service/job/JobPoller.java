@@ -170,6 +170,7 @@ public final class JobPoller implements ServiceConfigListener {
         try {
             executor.execute(job);
         } catch (Exception e) {
+            Debug.logError("Could not execute job [id: " + job.getJobId() + ", name: " + job.getJobName() + "]: " + e.toString(), module); // SCIPIO: Added missing error log
             job.deQueue();
         }
     }

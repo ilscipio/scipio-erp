@@ -884,7 +884,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
 
         // SCIPIO: new
         // TODO: Unhardcode everything below
-        this.submitHiddenFormNamePrefix = "postSubmitForm";
+        this.submitHiddenFormNamePrefix = "postSubmitForm_";
         this.rowSubmitSelectFieldNamePrefix = "selectAction";
         if (getType().equals("multi")) {
             this.rowSubmitSelectFieldParamNamePrefix = UtilHttp.ROW_SUBMIT_PREFIX;
@@ -1101,9 +1101,46 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         return this.getName();
     }
 
+    /**
+     * SCIPIO: Gets the form ID, evaluating it against context and appending the prefix/suffix found in context.
+     */
+    public String getContainerId(Map<String, Object> context) {
+        if (UtilValidate.isNotEmpty(this.containerId)) {
+            String id = FlexibleStringExpander.expandString(this.containerId, context);
+            String suffix = (String) context.get("scpFormIdNameSuffix");
+            if (UtilValidate.isNotEmpty(suffix)) {
+                return id + suffix;
+            }
+            return id;
+        }
+        return getFormName(context);
+    }
+
     @Override
     public String getId() { // SCIPIO: new
         return getContainerId();
+    }
+
+    /**
+     * SCIPIO: Gets the form name, evaluating it against context and appending the prefix/suffix found in context.
+     */
+    public String getFormName(Map<String, Object> context) {
+        return getFormName(context, getName());
+    }
+
+    public static String getFormName(Map<String, Object> context, String defaultFormName) { // SCIPIO
+        // SCIPIO: TODO: REVIEW: I have DISABLED the legacy "formName" parameter for now, because it already produced name conflicts;
+        //          instead, accept "scpFormName" for now (to indicate reserved name)... but it is NOT recommended to use!!!
+        //String name = (String) context.get("formName");
+        String name = (String) context.get("scpFormName");
+        if (UtilValidate.isEmpty(name)) {
+            name = FlexibleStringExpander.expandString(defaultFormName, context);
+        }
+        String suffix = (String) context.get("scpFormIdNameSuffix");
+        if (UtilValidate.isNotEmpty(suffix)) {
+            return name + suffix;
+        }
+        return name;
     }
 
     public String getContainerStyle() {
@@ -1264,14 +1301,11 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         if (UtilValidate.isNotEmpty(val)) {
             if ("true".equals(val)) {
                 return true;
-            }
-            else if ("false".equals(val)) {
+            } else if ("false".equals(val)) {
                 return false;
-            }
-            else {
-                Debug.logError("Model form widget expression for " + name + " attribute of form "
-                        + this.getFormLocation() + "#" + this.getName() + " "
-                        + "did not evaluate to a boolean expression: " + val, module);
+            } else {
+                Debug.logError("Model form widget expression for " + name + " attribute of form ["
+                        + this.getFullLocationAndName() + "] did not evaluate to a boolean expression: " + val, module);
                 return null;
             }
         }
@@ -1806,8 +1840,8 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
     /**
      * SCIPIO: getSubmitHiddenFormName.
      */
-    public String getSubmitHiddenFormName(String uniquefix) {
-        return getSubmitHiddenFormNamePrefix() + getItemIndexSeparator() + uniquefix;
+    public String getSubmitHiddenFormName(Map<String, Object> context, String uniquefix) {
+        return getSubmitHiddenFormNamePrefix() + uniquefix + "_" + getFormName(context);
     }
 
     /**

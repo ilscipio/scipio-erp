@@ -16,7 +16,7 @@ code package.
             <description>SCIPIO: Allow entity names, exception on violations. Replaces "allowedEntityNames". Added 2018-09-17.</description>
         </attribute>
         <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true">
-            <description>SCIPIO: DEPRECATED, use allowEntityNames instead. Added 2017-06-15.</description>
+            <description>SCIPIO: DEPRECATED, use allowEntity instead. Added 2017-06-15.</description>
         </attribute>
         <attribute name="disallowEntity" type="java.util.Set" mode="IN" optional="true">
             <description>SCIPIO: Disallow entity names, exception on violations. Added 2018-09-17.</description>

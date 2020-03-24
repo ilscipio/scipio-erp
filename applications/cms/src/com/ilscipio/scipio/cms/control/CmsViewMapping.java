@@ -134,6 +134,19 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
                     + " targetServletPath field is empty - required (for default, use special value " + TARGET_SERVLET_PATH_DEFAULT + ")");
         }
         super.store();
+
+        clearFromCaches();
+    }
+
+    public void clearFromCaches() {
+        clearFromViewMappingCachesById(getId());
+    }
+
+    public static void clearFromViewMappingCachesById(String viewMappingId) {
+        if (UtilValidate.isEmpty(viewMappingId)) {
+            return;
+        }
+        nameCache.removeByFilter(new CmsObjectCache.CmsDataObjectIdCacheEntryFilter<>(viewMappingId));
     }
 
     public Boolean getActive() {

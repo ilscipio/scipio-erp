@@ -119,7 +119,12 @@ code package.
             <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
         </attribute>
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean" default-value="false">
-            <description>If true, will wait for Solr to be loaded before running the indexing- see waitSolrReady service (added 2018-02-20)</description>
+            <description>If true, will wait for Solr to be loaded before running the indexing- see waitSolrReady service</description><!-- Added 2018-02-20 -->
+        </attribute>
+        <attribute mode="IN" name="deleteMode" optional="true" type="String" default-value="delete-all-first">
+            <description>How old records get cleared from index or not. Supported values:
+                delete-all-first (clears whole index before reindexing, default),
+                no-delete (deleted products will remain in solr index, can use when you know no products have changed since last indexing to minimize impact of reindex)</description><!-- Added 2020-03-12 -->
         </attribute>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />

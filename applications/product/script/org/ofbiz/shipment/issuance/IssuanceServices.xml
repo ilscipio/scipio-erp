@@ -431,6 +431,12 @@ code package.
     </simple-method>
     <simple-method method-name="associateIssueRoles" short-description="Associate Roles for ItemIssuance - meant to be called in-line">
         <!-- make sure the party is in the PACKER role -->
+        <!-- SCIPIO: make sure user has partyId otherwise this is very confusing error -->
+        <if-empty field="userLogin.partyId">
+            <set field="userLoginId" from-field="userLogin.userLoginId"/>
+            <add-error><fail-property resource="CommonErrorUiLabels" property="CommonUserLoginNoPartyIdCannotComplete"/></add-error>
+            <check-errors/>
+        </if-empty>
         <make-value entity-name="PartyRole" value-field="partyRole"/>
         <set field="partyRole.partyId" from-field="userLogin.partyId"/>
         <set field="partyRole.roleTypeId" value="PACKER"/>

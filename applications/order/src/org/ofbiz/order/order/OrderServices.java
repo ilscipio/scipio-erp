@@ -4793,7 +4793,7 @@ public class OrderServices {
     public static Map<String, Object> shoppingCartTest(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         // SCIPIO: Default product store and web site have changed
-        ShoppingCart cart = ShoppingCartFactory.get("ScipioShop").createShoppingCart(dctx.getDelegator(), "ScipioShop", "ScipioWebStore", locale, "USD"); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(dctx.getDelegator(), "ScipioShop", "ScipioWebStore", locale, "USD"); // SCIPIO: use factory
         try {
             cart.addOrIncreaseItem("PH-1005", null, BigDecimal.ONE, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, null, dctx.getDispatcher());
         } catch (CartItemModifyException | ItemNotFoundException e) {
@@ -5215,7 +5215,7 @@ public class OrderServices {
                             currencyUomId = orh.getCurrency();
                         }
                         // create the cart
-                        ShoppingCart cart = ShoppingCartFactory.get(orh.getProductStoreId()).createShoppingCart(delegator, orh.getProductStoreId(), null, currencyUomId); // SCIPIO: use factory
+                        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, orh.getProductStoreId(), null, currencyUomId); // SCIPIO: use factory
                         cart.setOrderType("PURCHASE_ORDER");
                         cart.setBillToCustomerPartyId(cart.getBillFromVendorPartyId()); //Company
                         cart.setBillFromVendorPartyId(supplierPartyId);
@@ -5506,7 +5506,7 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         Map<String, BigDecimal> itemMap = UtilGenerics.checkMap(context.get("itemMap"));
 
-        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, null, locale, currency); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, null, locale, currency); // SCIPIO: use factory
         try {
             cart.setUserLogin(userLogin, dispatcher);
         } catch (CartItemModifyException e) {

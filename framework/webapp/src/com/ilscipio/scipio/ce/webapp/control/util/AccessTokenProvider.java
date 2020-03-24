@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.UtilHttp;
 
 /**
@@ -34,11 +35,12 @@ public abstract class AccessTokenProvider<V> {
 
     /**
      * Creates a new token string ID.
-     * By default, uses same UUID generation as
-     * {@link org.ofbiz.webapp.control.LoginWorker#getExternalLoginKey}.
+     * By default, uses same UUID generation as {@link org.ofbiz.webapp.control.LoginWorker#getExternalLoginKey} except the dashes are removed.
+     * <p>
+     * NOTE: 2020-03-12: By default this now removes dashes so the string is exactly 32 bytes (multiple of 16) for compatibility and special purposes.
      */
     public String newTokenString() {
-        return UUID.randomUUID().toString();
+        return StringUtils.remove(UUID.randomUUID().toString(), '-');
     }
 
     /**
@@ -334,6 +336,38 @@ public abstract class AccessTokenProvider<V> {
     }
 
     /**
+     * Gets session token; if not yet created or registered in the provider for whatever reason, does so, with optional specific token string.
+     * <p>
+     * If the token string is specified and does not match the existing token, the existing session token is replaced - in other words
+     * non-null tokenString "forces" the token to be a specific string.
+     * <p>
+     * After this call, the session is guaranteed to contain a token.
+     * <p>
+     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
+     * e.g. will fail for session replication.
+     * To prevent issues, only call this from controller after-login events or from
+     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
+     */
+    public AccessToken getSessionToken(HttpSession session, HttpServletRequest request, String attrName, String tokenString, V initialValue) {
+        // the following is an optimization to skip synchronized block, at least for ConcurrentHashMap
+        AccessToken token = getLocalSessionToken(session, request, attrName);
+        if (token != null && (tokenString == null || tokenString.equals(token.toString()))) {
+            if (this.get(token) != null) {
+                return token;
+            }
+        }
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
+            token = (AccessToken) session.getAttribute(attrName);
+            if (token != null && (tokenString == null || tokenString.equals(token.toString()))) {
+                if (this.get(token) != null) {
+                    return token;
+                }
+            }
+            return createSessionToken(session, request, attrName, tokenString, initialValue);
+        }
+    }
+
+    /**
      * Gets session token; if not yet created or registered in the provider for whatever reason, does so.
      * <p>
      * After this call, the session is guaranteed to contain a token.
@@ -344,24 +378,33 @@ public abstract class AccessTokenProvider<V> {
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
     public AccessToken getSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
-        // the following is an optimization to skip synchronized block, at least for ConcurrentHashMap
-        AccessToken token = getLocalSessionToken(session, request, attrName);
-        if (token != null) {
-            if (this.get(token) != null) {
-                return token;
-            }
-        }
-        synchronized (UtilHttp.getSessionSyncObject(session)) {
-            token = (AccessToken) session.getAttribute(attrName);
-            if (token != null) {
-                if (this.get(token) != null) {
-                    return token;
-                }
-            }
-            return createSessionToken(session, request, attrName, initialValue);
+        return getSessionToken(session, request, attrName, null, initialValue);
+    }
+
+    /**
+     * Creates token in session with given value, removing any prior, with optional specific token string.
+     * <p>
+     * After this call, the session is guaranteed to contain a token.
+     * <p>
+     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
+     * e.g. will fail for session replication.
+     * To prevent issues, only call this from controller after-login events or from
+     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
+     */
+    public AccessToken createSessionToken(HttpSession session, HttpServletRequest request, String attrName, String tokenString, V initialValue) {
+        synchronized(UtilHttp.getSessionSyncObject(session)) {
+            cleanupSessionToken(session, request, attrName);
+
+            AccessToken token = (tokenString != null) ? newToken(tokenString) : newToken();
+            put(token, initialValue);
+            session.setAttribute(attrName, token);
+            request.setAttribute(attrName, token);
+
+            getEventHandler().sessionTokenCreated(session, request, attrName, token, initialValue);
+            return token;
         }
     }
-    
+
     /**
      * Creates token in session with given value, removing any prior
      * <p>
@@ -373,17 +416,7 @@ public abstract class AccessTokenProvider<V> {
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
     public AccessToken createSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
-        synchronized(UtilHttp.getSessionSyncObject(session)) {
-            cleanupSessionToken(session, request, attrName);
-
-            AccessToken token = newToken();
-            put(token, initialValue);
-            session.setAttribute(attrName, token);
-            request.setAttribute(attrName, token);
-
-            getEventHandler().sessionTokenCreated(session, request, attrName, token, initialValue);
-            return token;
-        }
+        return createSessionToken(session, request, attrName, null, initialValue);
     }
 
     public void cleanupSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
@@ -405,8 +438,8 @@ public abstract class AccessTokenProvider<V> {
     }
 
     public interface EventHandler<V> {
-        void sessionTokenCreated(HttpSession session, HttpServletRequest request,
-                String attrName, AccessToken token, V value);
+        default void sessionTokenCreated(HttpSession session, HttpServletRequest request,
+                String attrName, AccessToken token, V value) {}
     }
 
     public static class NoopEventHandler<V> implements EventHandler<V> {

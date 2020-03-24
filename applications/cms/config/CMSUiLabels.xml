@@ -509,6 +509,10 @@
         <value xml:lang="de">Ein eigenständiges (Y) Skript wird nie gelöscht, es sei denn, es wird manuell mit der Skript-Löschfunktion gelöscht. Ein Nicht-Standalone-Skript (N) kann automatisch gelöscht werden, wenn alle zugehörigen Seiten oder Assets gelöscht (verwaist) werden. Skripts können als Nicht-Standalone (N) geboren werden, wenn sie als Standortverknüpfungen zu einer Seite oder einer Assetvorlage erstellt wurden; Werden sie auf Standalone (Y) umgeschaltet, sobald eine Änderung an der Scriptvorlage mit dem Scripteditor vorgenommen wird, um Änderungen konservativ zu sichern.</value>
         <value xml:lang="en">A standalone (Y) script is never deleted unless it is manually deleted using the script delete function. A non-standalone (N) script may be automatically deleted when all its associated page(s) or asset(s) are deleted (orphaned). Scripts may be born as non-standalone (N) when they were created as location associations to a page or asset template; they are switched to standalone (Y) as soon as a modification is made to the script template using the script editor, to conservatively safeguard changes.</value>
     </property>
+    <property key="CmsTemplateDependent">
+        <value xml:lang="de">Vorlagenabhängig</value>
+        <value xml:lang="en">Template-dependent</value>
+    </property>
     <property key="CmsAuto">
         <value xml:lang="de">Auto</value>
         <value xml:lang="en">Auto</value>
@@ -995,9 +999,28 @@
     <property key="ImageViewPortLength">
         <value xml:lang="en">Viewport length</value>
     </property>
-
     <property key="CmsPageTxTimeoutInfo">
         <value xml:lang="de">Das Transaktionszeitlimit in Sekunden. Kann auf 0 gesetzt werden, um die Transaktion zu deaktivieren, oder -1 oder leer, um den Standardwert zu verwenden (normalerweise 60 Sekunden). Hinweis: Die Seiteneinstellung überschreibt die Vorlageneinstellung.</value>
         <value xml:lang="en">The transaction timeout, in seconds (s). May be set to 0 to disable transaction, or -1 or empty to use the default (usually 60 seconds). Note: The Page setting overrides the Template setting.</value>
+    </property>
+    <property key="CmsUnpublish">
+        <value xml:lang="de">Veröffentlichung aufheben</value>
+        <value xml:lang="en">Unpublish</value>
+    </property>
+    <property key="CmsInheritMode_NEVER">
+        <value xml:lang="de">Never</value>
+        <value xml:lang="en">Never</value>
+    </property>
+    <property key="CmsInheritMode_ATTR_EMPTY">
+        <value xml:lang="de">If attr empty</value>
+        <value xml:lang="en">If attr empty</value>
+    </property>
+    <property key="CmsInheritMode_FIELD_NON_NULL">
+        <value xml:lang="de">Field non null</value>
+        <value xml:lang="en">Field non null</value>
+    </property>
+    <property key="CmsInheritMode_FIELD_NON_EMPTY">
+        <value xml:lang="de">Field non empty</value>
+        <value xml:lang="en">Field non empty</value>
     </property>
 </resource>

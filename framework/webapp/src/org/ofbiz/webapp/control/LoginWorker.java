@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +60,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
@@ -350,7 +352,8 @@ public class LoginWorker {
                 ViewAsJsonConfig viewAsJsonConfig = ViewAsJsonUtil.getViewAsJsonConfigOrDefault(request);
                 if (!ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig) || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
                     // keep the previous request name in the session
-                    session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
+                    // SCIPIO: Fixed
+                    //session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
 
                     // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
                     // keep 2 maps: one for URL parameters and one for form parameters
@@ -360,15 +363,16 @@ public class LoginWorker {
                         for(String name : ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL) {
                             urlParams.remove(name);
                         }
-                        session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
+                        //session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
                     }
                     Set<String> excludes = new HashSet<>();
                     excludes.addAll(urlParams.keySet());
                     excludes.addAll(ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
                     Map<String, Object> formParams = UtilHttp.getParameterMap(request, excludes, false);
                     if (UtilValidate.isNotEmpty(formParams)) {
-                        session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
+                        //session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
                     }
+                    PreviousRequestInfo.createInfo(request, request.getPathInfo(), null, urlParams, formParams, null).setInfo(request);
                 }
 
                 //if (Debug.infoOn()) Debug.logInfo("checkLogin: PathInfo=" + request.getPathInfo(), module);
@@ -823,7 +827,9 @@ public class LoginWorker {
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         if (isAutoUserLoginEnabled(request) && userLogin != null) { // SCIPIO: 2018-07-11: only set if enabled for webapp
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-            autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+            // SCIPIO
+            //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+            autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
             autoLoginCookie.setDomain(domain);
             autoLoginCookie.setPath("/");
             autoLoginCookie.setSecure(true);
@@ -836,14 +842,45 @@ public class LoginWorker {
     }
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
-        return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        // SCIPIO
+        //return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        String namePat = EntityUtilProperties.getPropertyValue("security", "security.autoLogin.cookie.name", "${appName}.autoUserLoginId", delegator);
+        return expandCookieName(request, namePat);
     }
 
+    /**
+     * @deprecated SCIPIO: this missing delegator, currently unused
+     */
+    @Deprecated
     protected static String getAutoLoginCookieName(String webappName) {
         // SCIPIO: OFBiz patch - Original does not work when the mount point has multiple slashes:  example: /en/shop vs /shop
         // NOTE: UtilHttp.getApplicationName above now already does this for us - this one is left here for backward-compatibility only
         //return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
         return webappName.replaceAll("/", "_") + ".autoUserLoginId";
+    }
+
+    protected static int getAutoLoginCookieMaxAge(HttpServletRequest request) { // SCIPIO
+        return EntityUtilProperties.getPropertyAsInteger("security", "security.autoLogin.cookie.maxAge", 60*60*24*365, (Delegator) request.getAttribute("delegator"));
+    }
+
+    public static String expandCookieName(HttpServletRequest request, String cookieNamePattern) { // SCIPIO
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("delegator", request.getAttribute("delegator"));
+        ctx.put("request", request);
+        ctx.put("sysName", System.getProperties().getProperty("user.name").replace(" ", "_"));
+        ctx.put("appName", UtilHttp.getApplicationName(request));
+        return FlexibleStringExpander.expandString(cookieNamePattern, ctx);
+    }
+
+    public static String getUserNameCookieName(HttpServletRequest request) { // SCIPIO
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        String namePat = EntityUtilProperties.getPropertyValue("security", "security.userName.cookie.name", "Scipio.Username", delegator);
+        return expandCookieName(request, namePat);
+    }
+
+    public static int getUserNameCookieMaxAge(HttpServletRequest request) { // SCIPIO
+        return EntityUtilProperties.getPropertyAsInteger("security", "security.userName.cookie.maxAge", 60*60*24*365, (Delegator) request.getAttribute("delegator"));
     }
 
     public static String getAutoUserLoginId(HttpServletRequest request) {

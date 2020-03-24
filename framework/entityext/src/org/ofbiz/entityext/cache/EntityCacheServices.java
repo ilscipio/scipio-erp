@@ -18,10 +18,13 @@
  *******************************************************************************/
 package org.ofbiz.entityext.cache;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -31,6 +34,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entityext.EntityServiceFactory;
+import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -216,5 +220,59 @@ public class EntityCacheServices implements DistributedCacheClear {
             delegator.clearCacheLineByCondition(entityName, condition, distribute);
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    /**
+     * SCIPIO: clearAllUtilCaches - clears all system cache (equivalent to UtilCacheEvents.clearAllEvent)
+     * TODO: REVIEW: belongs somewhere else but too messy for now, may be moved in future
+     * Added 2020-03-10.
+     */
+    public static Map<String, Object> clearAllUtilCaches(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        try {
+            Security security = dctx.getSecurity();
+
+            if (!security.hasPermission("UTIL_CACHE_EDIT", userLogin)) {
+                String errMsg = UtilProperties.getMessage("WebtoolsErrorUiLabels", "utilCacheEvents.permissionEdit", locale) + ".";
+                return ServiceUtil.returnError("Error - cache could not be cleared: " + errMsg);
+            }
+
+            UtilCache.clearAllCaches();
+
+            if (Boolean.TRUE.equals(context.get("distribute"))) {
+                DistributedCacheClear dcc = delegator.getDistributedCacheClear();
+                if (dcc != null) {
+                    dcc.clearAllUtilCaches();
+                }
+            }
+
+            return ServiceUtil.returnSuccess();
+        } catch(Exception e) {
+            return ServiceUtil.returnError("Error - cache could not be cleared: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void clearAllUtilCaches() { // SCIPIO
+        if (this.dispatcher == null) {
+            Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed clear all caches", module);
+            return;
+        }
+
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.", module);
+            return;
+        }
+
+        try {
+            this.dispatcher.runAsync("distributedClearAllUtilCaches", UtilMisc.toMap("userLogin", userLogin), false);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error running the distributedClearAllUtilCaches service", module);
+        }
     }
 }

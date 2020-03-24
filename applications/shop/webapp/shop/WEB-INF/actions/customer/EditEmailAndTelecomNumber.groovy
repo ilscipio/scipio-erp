@@ -22,6 +22,9 @@ import org.ofbiz.party.contact.ContactHelper;
 
 if (userLogin) {
     party = userLogin.getRelatedOne("Party", false);
+    if (party == null) {
+        return; // SCIPIO
+    }
 
     contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
     if (contactMech) {

@@ -32,7 +32,7 @@ code package.
             <#list savedCartItems as savedCartItem>
               <@tr>
                 <@td>${savedCartItem.shoppingListItemSeqId!}</@td>
-                <@td class="button-col"><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}">${savedCartItem.productId!}</a></@td>
+                <@td class="button-col"><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${savedCartItem.productId}<#if requestAttributes.externalLoginKey?has_content>&amp;externalLoginKey=${requestAttributes.externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}">${savedCartItem.productId!}</a></@td>
                 <@td>${savedCartItem.quantity!}</@td>
                 <@td>${savedCartItem.quantityPurchased!}</@td>
               </@tr>

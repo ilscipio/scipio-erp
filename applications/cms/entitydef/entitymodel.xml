@@ -28,6 +28,24 @@
       <field name="sequenceNum" type="numeric"></field>
     </extend-entity>-->
 
+    <entity entity-name="CmsAccessToken" package-name="com.ilscipio.scipio.cms.internal.security"
+            title="CMS User Preview Access Token" author="Ilscipio GmbH" version="1.0">
+        <field name="tokenId" type="id-ne"></field>
+        <!-- FIXME: This field should have encrypt="true", but due to shiro bug concerns will not be set for now - the field may have to be renamed when fixed...
+        <field name="token" type="long-varchar" encrypt="true"></field>-->
+        <field name="token" type="long-varchar"></field>
+        <field name="userId" type="id-vlong-ne"></field>
+        <field name="pageId" type="id"></field>
+        <field name="createdDate" type="date-time"></field>
+        <prim-key field="tokenId"/>
+        <relation type="one" fk-name="CMSACSTKN_USER_ID" rel-entity-name="UserLogin">
+            <key-map field-name="userLoginId"/>
+        </relation>
+        <relation type="one" fk-name="CMSACSTKN_PAGE" rel-entity-name="CmsPage">
+            <key-map field-name="pageId"/>
+        </relation>
+    </entity>
+
     <!-- ========================================================= -->
     <!-- Page and content entities -->
     <!-- ========================================================= -->
@@ -427,7 +445,8 @@
       <field name="inputPosition" type="numeric"><description>Order of evaluation of attributes with respect to other attributes (only).
         NOTE: This is slave to expandPosition, and has no influence on order relative to scripts.</description></field>
       <field name="targetType" type="name"><description>A Java class indicating the target type: String, Integer, java.util.String, ... uses the standard Ofbiz conversion utilities.</description></field>
-      
+      <field name="inheritMode" type="id"><description>ONE: NEVER (default), ATTR_EMPTY, FIELD_NON_NULL, FIELD_NON_EMPTY</description></field>
+
       <prim-key field="attributeTemplateId" />
 
       <relation type="one" fk-name="CMSATTRTMP_ASTMP" rel-entity-name="CmsAssetTemplate">

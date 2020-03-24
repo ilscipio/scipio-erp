@@ -642,7 +642,9 @@ public class TaxAuthorityServices {
 
     // SCIPIO: 2017-12-19: added useCache flag
     private static void handlePartyTaxExempt(GenericValue adjValue, Set<String> billToPartyIdSet, String taxAuthGeoId, String taxAuthPartyId, BigDecimal taxAmount, Timestamp nowTimestamp, Delegator delegator, boolean useCache) throws GenericEntityException {
-        Debug.logInfo("Checking for tax exemption : " + taxAuthGeoId + " / " + taxAuthPartyId, module);
+        if(Debug.verboseOn()) {
+            Debug.logInfo("Checking for tax exemption : " + taxAuthGeoId + " / " + taxAuthPartyId, module);
+        }
         List<EntityCondition> ptiConditionList = UtilMisc.<EntityCondition>toList(
                 EntityCondition.makeCondition("partyId", EntityOperator.IN, billToPartyIdSet),
                 EntityCondition.makeCondition("taxAuthGeoId", EntityOperator.EQUALS, taxAuthGeoId),

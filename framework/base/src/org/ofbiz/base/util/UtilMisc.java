@@ -1778,6 +1778,16 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Calls out.addAll for every passed collection on the outCollection.
+     */
+    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O>... collections) {
+        for(Collection<? extends O> collection : collections) {
+            outCollection.addAll(collection);
+        }
+        return outCollection;
+    }
+
+    /**
      * SCIPIO: Returns a new List containing the enumeration's elements.
      */
     public static <T> List<T> toList(Enumeration<T> enumeration) {
@@ -1844,5 +1854,15 @@ public final class UtilMisc {
      */
     public static <K, V> boolean containsKey(Map<K, V> map, K key, Object value) {
         return (value != null || map.containsKey(key));
+    }
+
+    /**
+     * SCIPIO: Transfers the specified keys from srcMap to dstMap and returns dstMap.
+     */
+    public static <K, V> Map<K, V> copyKeys(Map<K, ? extends V> srcMap, Map<K, V> dstMap, Iterable<K> keys) {
+        for(K key : keys) {
+            dstMap.put(key, srcMap.get(key));
+        }
+        return dstMap;
     }
 }

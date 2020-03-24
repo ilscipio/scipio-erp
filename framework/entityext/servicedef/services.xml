@@ -87,6 +87,15 @@ code package.
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
 
+    <service name="distributedClearAllUtilCaches" engine="jms" location="serviceMessenger" invoke="clearAllUtilCaches" auth="true">
+        <description>Clear all util caches for all Servers listening to the topic (SCIPIO)</description>
+    </service>
+    <service name="clearAllUtilCaches" engine="java" export="true"
+             location="org.ofbiz.entityext.cache.EntityCacheServices" invoke="clearAllUtilCaches" auth="true">
+        <description>Clears all util caches, automatically includes entity caches (SCIPIO)</description>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
+
     <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->
     <service name="localhostClearAllEntityCaches" engine="http"
             location="eedcc-test" invoke="clearAllEntityCaches">

@@ -85,7 +85,7 @@ public class JmsTopicListener extends AbstractJmsListener {
                     subscriber.setMessageListener(this);
                     con.start();
                     this.setConnected(true);
-                    if (Debug.infoOn()) Debug.logInfo("Listening to topic [" + topicName + "] on [" + jndiServer + "]...", module);
+                    if (Debug.verboseOn()) Debug.logInfo("Listening to topic [" + topicName + "] on [" + jndiServer + "]...", module);
                 } else {
                     throw new GenericServiceException("Topic lookup failed.");
                 }

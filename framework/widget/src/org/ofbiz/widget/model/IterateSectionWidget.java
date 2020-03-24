@@ -256,13 +256,12 @@ public class IterateSectionWidget extends ModelScreenWidget {
         int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
         queryString = UtilHttp.stripViewParamsFromQueryString(queryString, "" + paginatorNumber);
 
-
-
-
         if (UtilValidate.isEmpty(targetService)) {
-            Debug.logWarning("TargetService is empty.", module);
+            Debug.logWarning("renderNextPrev: target service for pagination is empty", module); // SCIPIO: Fixed message
             return;
         }
+
+        // SCIPIO: TODO: unhardcode HTML
 
         int viewIndex = -1;
         try {

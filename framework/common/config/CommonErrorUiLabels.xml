@@ -59,6 +59,10 @@
         <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
         <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
     </property>
+    <property key="CommonUserLoginNoPartyIdCannotComplete">
+        <value xml:lang="de">UserLogin '${userLoginId}' hat keine partyId; Vorgang kann nicht abgeschlossen werd</value>
+        <value xml:lang="en">UserLogin '${userLoginId}' has no partyId; cannot complete operation</value>
+    </property>
     <property key="CommonUnsupportedFileType">
         <value xml:lang="en">Unsupported file type for selected media type category</value>
         <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>

@@ -124,7 +124,7 @@ public class OrderTestServices {
 
         Random r = new Random();
 
-        ShoppingCart cart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUomId); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currencyUomId); // SCIPIO: use factory
         cart.setOrderType("SALES_ORDER");
         cart.setChannelType(salesChannel);
         cart.setProductStoreId(productStoreId);

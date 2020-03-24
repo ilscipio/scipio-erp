@@ -555,12 +555,12 @@ var ButtonModifier = function(lookupDiv) {
     function _modifyPagination() {
         // modify nav-pager
         var navPagers = jQuery("#" + lookupDiv + " .nav-pager a");
-        jQuery.each(navPagers, function(navPager) {
-            var onClickEvent = navPagers[navPager].onclick;
-            navPagers[navPager].onclick = function(){
-                this.setAttribute("data-lookupajax", "true");
-                onClickEvent.apply(this);
-            }
+        jQuery.each(navPagers, function() {
+            this.setAttribute("data-lookupajax", "true");
+            $(this).on('click',function(e){
+                e.preventDefault();
+                submitPagination(this,$(this).attr('href'));
+            });
         });
 
         var navPagersSelect = jQuery("#" + lookupDiv + " .nav-pager select");

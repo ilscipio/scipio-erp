@@ -38,6 +38,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
@@ -63,6 +64,8 @@ import com.googlecode.concurrentlinkedhashmap.EvictionListener;
  */
 @SuppressWarnings("serial")
 public class UtilCache<K, V> implements Serializable, EvictionListener<Object, CacheLine<V>> {
+
+    public static final String SEPARATOR = "::";    // cache key separator
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -466,6 +469,41 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         }
     }
 
+    /** Removes all element from the cache matching the given filter (SCIPIO).
+     * WARN: Slow on large caches (TODO: optimize)
+     * @param entryFilter The entry filter - return true to remove key
+     */
+    public synchronized void removeByFilter(CacheEntryFilter<K, V> entryFilter) {
+        Iterator<Map.Entry<Object, CacheLine<V>>> it = memoryTable.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Object, CacheLine<V>> entry = it.next();
+            K key = toKey(entry.getKey());
+            V value = entry.getValue().getValue();
+            if (entryFilter.filter(key, value)) {
+                noteRemoval(key, value);
+                removeHitCount.incrementAndGet();
+                it.remove();
+            }
+        }
+    }
+
+    public interface CacheEntryFilter<K, V> { // SCIPIO
+        boolean filter(K key, V value);
+    }
+
+    public static class KeyPrefixCacheEntryFilter<V> implements CacheEntryFilter<String, V> { // SCIPIO
+        private final String keyPrefix;
+
+        public KeyPrefixCacheEntryFilter(String keyPrefix) {
+            this.keyPrefix = keyPrefix;
+        }
+
+        @Override
+        public boolean filter(String key, V value) {
+            return (key != null && key.startsWith(key));
+        }
+    }
+
     /** Removes all elements from this cache */
     public void clear() {
         erase();
@@ -759,6 +797,23 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
             return;
         }
         cache.clear();
+    }
+
+    /**
+     * Removal of individual cache objects by key
+     * <p>
+     * SCIPIO: 2020-03-02: Added new function
+     */
+    public synchronized void clearCacheValue(String cacheName,String key) {
+        UtilCache<?, ?> cache = findCache(cacheName);
+        if (cache == null) {
+            return;
+        }
+        try {
+            cache.remove(key);
+        }catch(Exception e){
+
+        }
     }
 
     @SuppressWarnings("unchecked")

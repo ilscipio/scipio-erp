@@ -17,16 +17,16 @@ code package.
         <dimension name="width" value="256"/>
     </size>
     <size name="medium">
-        <dimension name="height" value="640"/>
-        <dimension name="width" value="480"/>
+        <dimension name="height" value="480"/>
+        <dimension name="width" value="640"/>
     </size>
     <size name="large">
-        <dimension name="height" value="1024"/>
-        <dimension name="width" value="768"/>
+        <dimension name="height" value="768"/>
+        <dimension name="width" value="1024"/>
     </size>
     <size name="detail">
-        <dimension name="height" value="1440"/>
-        <dimension name="width" value="900"/>
+        <dimension name="height" value="900"/>
+        <dimension name="width" value="1440"/>
     </size>
     <size name="100x75">
         <dimension name="height" value="75"/>

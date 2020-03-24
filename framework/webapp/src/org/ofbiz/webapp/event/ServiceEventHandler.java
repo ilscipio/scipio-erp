@@ -42,7 +42,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -68,6 +68,10 @@ public class ServiceEventHandler implements EventHandler {
 
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
+    // SCIPIO: new options
+    public static final String ASYNC_PERSIST = "async-persist";
+    public static final String ASYNC_ONETIME = "async-onetime";
+    public static final Set<String> SERVICE_MODES = UtilMisc.unmodifiableLinkedHashSet(SYNC, ASYNC, ASYNC_PERSIST, ASYNC_ONETIME);
 
     /**
      * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
@@ -97,6 +101,16 @@ public class ServiceEventHandler implements EventHandler {
             mode = SYNC;
         } else {
             mode = event.path;
+        }
+
+        // SCIPIO: support mode-parameter
+        Map<String, Object> eventProperties = event.getProperties(requestMap, request, response, null);
+        String modeParameter = (String) eventProperties.get("mode-parameter");
+        if (UtilValidate.isNotEmpty(modeParameter)) {
+            Object modeParameterValue = UtilHttp.getRequestAttrParam(request, modeParameter);
+            if (SERVICE_MODES.contains(modeParameterValue)) {
+                mode = (String) modeParameterValue;
+            }
         }
 
         // make sure we have a defined service to call
@@ -367,6 +381,18 @@ public class ServiceEventHandler implements EventHandler {
 
         if (result == null) {
             responseString = ModelService.RESPOND_SUCCESS;
+
+            // SCIPIO: TODO: REVIEW: Due to compatibility issues, we can only set message here if explicit -onetime or -persist
+            //          was requested...
+            Object asyncSuccessMsgPropertyRef = eventProperties.get("default-success-property");
+            if (!(asyncSuccessMsgPropertyRef instanceof String)) {
+                asyncSuccessMsgPropertyRef = null;
+            }
+            if (ASYNC_ONETIME.equals(mode)) {
+                EventUtil.setDefaultSuccessMessageForServiceAsync(request, locale, false, (String) asyncSuccessMsgPropertyRef);
+            } else if (ASYNC_PERSIST.equals(mode)) {
+                EventUtil.setDefaultSuccessMessageForServiceAsync(request, locale, true, (String) asyncSuccessMsgPropertyRef);
+            }
         } else {
 
             if (!result.containsKey(ModelService.RESPONSE_MESSAGE)) {
@@ -376,32 +402,19 @@ public class ServiceEventHandler implements EventHandler {
             }
 
             // set the messages in the request; this will be picked up by messages.ftl and displayed
-            EventUtil.setRequestMessagesFromService(request, result); // SCIPIO: Factored out
+            EventUtil.setMessagesFromService(request, result); // SCIPIO: Factored out
 
             // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
             // 2019-03-06: We now also don't add this if there was already an error message from a prior service.
             // NOTE: See also org.ofbiz.webapp.control.RequestHandler#cleanupEventMessages for the code that handles _DEF_EVENT_MSG_; it unsets
             // _EVENT_MESSAGE_ if an error message exists and _EVENT_MESSAGE_ is still set to _DEF_EVENT_MSG_ by the time the events are done.
-            if (ModelService.RESPOND_SUCCESS.equals(responseString) && !EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
-                String defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale);
-                request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
-                request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
+            if (ModelService.RESPOND_SUCCESS.equals(responseString)) {
+                EventUtil.setDefaultSuccessMessageForService(request, locale);
             }
 
             // set the results in the request
-            for (Map.Entry<String, Object> rme: result.entrySet()) {
-                String resultKey = rme.getKey();
-                Object resultValue = rme.getValue();
-
-                // SCIPIO: This is ridiculous
-                //if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                //        !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                //        !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
-                if (resultKey != null && !ModelService.SYS_RESPONSE_FIELDS_SET.contains(resultKey)) {
-                    request.setAttribute(resultKey, resultValue);
-                }
-            }
+            EventUtil.setAttributesFromServiceResults(request, result);
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + responseString, module);
@@ -418,6 +431,10 @@ public class ServiceEventHandler implements EventHandler {
         Map<String, Object> result = null;
         if (ASYNC.equalsIgnoreCase(mode)) {
             dispatcher.runAsync(serviceName, serviceContext);
+        } else if (ASYNC_PERSIST.equalsIgnoreCase(mode)) {
+            dispatcher.runAsync(serviceName, serviceContext, true);
+        } else if (ASYNC_ONETIME.equalsIgnoreCase(mode)) {
+            dispatcher.runAsync(serviceName, serviceContext, false);
         } else {
             result = dispatcher.runSync(serviceName, serviceContext);
         }

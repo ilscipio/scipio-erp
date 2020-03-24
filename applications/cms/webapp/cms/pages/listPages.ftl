@@ -25,6 +25,7 @@
                     <@th width="100px">${uiLabelMap.CmsWebSite}</@th>
                     <@th width="200px">${uiLabelMap.CommonPath}</@th>
                     <@th>${uiLabelMap.CommonName}</@th>
+                    <@th width="100px">${uiLabelMap.CmsTemplate}</@th>
                     <@th>${uiLabelMap.CommonDescription}</@th>
                 </@tr>
             </@thead>
@@ -61,6 +62,7 @@
                     </@td>
                     <#-- FIXME: the name should always get the pageId link, but right now the javascript has issues -->
                     <@td><a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${item.name!}</a></@td>
+                    <@td><#if item.cmsPage.pageTemplateId??><a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(item.cmsPage.pageTemplateId) escapeAs='html'/>">${(item.cmsPage.template.name)!(item.cmsPage.pageTemplateId)}</a></#if></@td>
                     <@td>${makeShortCmsDesc(item.description!)}</@td>
                 </@tr>
             </#list>

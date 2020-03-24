@@ -459,7 +459,7 @@ public class ShoppingListServices {
 
             if (UtilValidate.isNotEmpty(items)) {
                 if (listCart == null) {
-                    listCart = ShoppingCartFactory.get(productStoreId).createShoppingCart(delegator, productStoreId, locale, currencyUom); // SCIPIO: use factory
+                    listCart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currencyUom); // SCIPIO: use factory
                     listCart.setOrderPartyId(shoppingList.getString("partyId"));
                     listCart.setAutoOrderShoppingListId(shoppingList.getString("shoppingListId"));
                 } else {
@@ -584,23 +584,63 @@ public class ShoppingListServices {
     public static Map<String,Object> autoDeleteAutoSaveShoppingList(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
         List<GenericValue> shoppingList = null;
-        Map<String, Object> result = new HashMap<String, Object>();
-        try {
-            shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
-        } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+        // SCIPIO: Also clear anon ShoppingLists, if applicable
+        boolean deleteAutoSaveList = !Boolean.FALSE.equals(context.get("deleteAutoSaveList"));
+        boolean deleteAnonWishList = !Boolean.FALSE.equals(context.get("deleteAnonWishList"));
+        Map<String, Object> stats = new HashMap<>();
+        if (deleteAutoSaveList) {
+            try {
+                shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
+            } catch (GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+            int maxDays = EntityUtilProperties.getPropertyAsInteger("order", "autosave.max.age", 30, delegator);
+            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays);
+            if (ServiceUtil.isError(servResult)) {
+                return servResult;
+            }
+            stats.put("auto-save lists deleted", servResult.get("deleted"));
+            stats.put("auto-save lists skipped still referenced", servResult.get("skippedReferenced"));
         }
-        String maxDaysStr = EntityUtilProperties.getPropertyValue("order", "autosave.max.age", "30", delegator);
-        int maxDays = 0;
-        try {
-            maxDays = Integer.parseInt(maxDaysStr);
-        } catch (NumberFormatException e) {
-            Debug.logError(e, "Unable to get maxDays", module);
+        if (deleteAnonWishList) {
+            try {
+                shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_WISH_LIST").queryList();
+            } catch (GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+            int maxDays = EntityUtilProperties.getPropertyAsInteger("order", "anonwishlist.max.age", 30, delegator);
+            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays);
+            if (ServiceUtil.isError(servResult)) {
+                return servResult;
+            }
+            stats.put("anon wishlists deleted", servResult.get("deleted"));
+            stats.put("anon wishlists skipped still referenced", servResult.get("skippedReferenced"));
         }
+        String msg = "Auto-delete shopping lists finished with " + stats.toString();
+        Debug.logInfo("autoDeleteAutoSaveShoppingList: " + msg, module);
+        return ServiceUtil.returnSuccess(msg);
+    }
+
+    // SCIPIO: Refactored from autoDeleteAutoSaveShoppingList
+    // FIXME?: Individual failures currently cause whole service to fail... but separate transactions seem like overkill at the moment, usually if this fails
+    //  it reflects a coding error...
+    public static Map<String, Object> deleteExpiredShoppingLists(DispatchContext dctx, Map<String, ? extends Object> context, List<GenericValue> shoppingList, int maxDays) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (shoppingList == null) {
+            return ServiceUtil.returnSuccess();
+        }
+        int skippedReferenced = 0;
+        int deleted = 0;
         for (GenericValue sl : shoppingList) {
             if (maxDays > 0) {
+                // SCIPIO: do not try to delete old lists that are (for whatever reason) associated to OrderHeader, otherwise this ruins the whole execution
+                if (delegator.from("OrderHeader").where("autoOrderShoppingListId", sl.get("shoppingListId")).queryCountSafe() > 0) {
+                    skippedReferenced++;
+                    continue;
+                }
                 Timestamp lastModified = sl.getTimestamp("lastAdminModified");
                 if (lastModified == null) {
                     lastModified = sl.getTimestamp("lastUpdatedStamp");
@@ -615,30 +655,121 @@ public class ShoppingListServices {
                     try {
                         shoppingListItems = sl.getRelated("ShoppingListItem", null, null, false);
                     } catch (GenericEntityException e) {
-                        Debug.logError(e.getMessage(), module);
+                        Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
+                        return ServiceUtil.returnError(e.getMessage());
                     }
-                    for (GenericValue sli : shoppingListItems) {
-                        try {
-                            result = dispatcher.runSync("removeShoppingListItem", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"),
-                                    "shoppingListItemSeqId", sli.getString("shoppingListItemSeqId"),
-                                    "userLogin", userLogin));
-                            if (ServiceUtil.isError(result)) {
-                                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    if (shoppingListItems != null) {
+                        // SCIPIO: Also make sure the dates on the ShoppingListItem are also past the expired date, because
+                        // not all ShoppingList-modifying code updates the main ShoppingList instance
+                        boolean allItemsExpired = true;
+                        for (GenericValue sli : shoppingListItems) {
+                            lastModified = sli.getTimestamp("lastUpdatedStamp");
+                            cal = Calendar.getInstance();
+                            cal.setTimeInMillis(lastModified.getTime());
+                            cal.add(Calendar.DAY_OF_YEAR, maxDays);
+                            expireDate = cal.getTime();
+                            if (expireDate.equals(nowDate) || nowDate.after(expireDate)) {
+                                ; // good
+                            } else {
+                                allItemsExpired = false;
                             }
-                        } catch (GenericServiceException e) {
-                            Debug.logError(e.getMessage(), module);
+                        }
+                        if (!allItemsExpired) {
+                            continue;
+                        }
+                        Debug.logInfo("deleteExpiredShoppingLists: Removing expired ShoppingList [" + sl.get("shoppingListId") + "]", module); // SCIPIO
+                        for (GenericValue sli : shoppingListItems) {
+                            try {
+                                Map<String, Object> servResult = dispatcher.runSync("removeShoppingListItem", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"),
+                                        "shoppingListItemSeqId", sli.getString("shoppingListItemSeqId"),
+                                        "userLogin", userLogin));
+                                if (ServiceUtil.isError(servResult)) {
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(servResult));
+                                }
+                            } catch (GenericServiceException e) {
+                                Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
+                                return ServiceUtil.returnError(e.getMessage());
+                            }
                         }
                     }
                     try {
-                        result = dispatcher.runSync("removeShoppingList", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"), "userLogin", userLogin));
-                        if (ServiceUtil.isError(result)) {
-                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        Map<String, Object> servResult = dispatcher.runSync("removeShoppingList", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"), "userLogin", userLogin));
+                        if (ServiceUtil.isError(servResult)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(servResult));
                         }
+                        deleted++;
                     } catch (GenericServiceException e) {
-                        Debug.logError(e.getMessage(), module);
+                        Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
+                        return ServiceUtil.returnError(e.getMessage());
                     }
                 }
             }
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("skippedReferenced", skippedReferenced);
+        result.put("deleted", deleted);
+        return result;
+    }
+
+    public static Map<String,Object> convertAnonShoppingListToRegistered(DispatchContext dctx, Map<String, ? extends Object> context) { // SCIPIO
+        String shoppingListId = (String) context.get("shoppingListId");
+        String authToken = (String) context.get("shoppingListAuthToken");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue targetUserLogin = (GenericValue) context.get("targetUserLogin");
+
+        // TODO: REVIEW: permission pattern + localize
+        boolean isAdmin = dctx.getSecurity().hasEntityPermission("PARTYMGR", "_UPDATE", userLogin);
+        if (targetUserLogin == null) {
+            targetUserLogin = userLogin;
+        } else {
+            // must be an admin
+            if (!isAdmin) {
+                return ServiceUtil.returnError("Must be admin to modify another user's lists");
+            }
+        }
+        String targetPartyId = targetUserLogin.getString("partyId");
+        if (targetPartyId == null) {
+            return ServiceUtil.returnError("Target user has no partyId");
+        }
+
+        // authToken required if not admin
+        if (!isAdmin && UtilValidate.isEmpty(authToken)) {
+            return ServiceUtil.returnError("Missing shoppingListAuthToken (required for non-admin)");
+        }
+
+        GenericValue shoppingList = dctx.getDelegator().from("ShoppingList").where("shoppingListId", shoppingListId).queryOneSafe();
+        if (shoppingList == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage("OrderErrorUiLabels", "OrderNoShoppingListAvailable", (Locale) context.get("locale")));
+        }
+
+        String currentAuthToken = shoppingList.getString("shoppingListAuthToken");
+        if (UtilValidate.isEmpty(currentAuthToken)) {
+            if (!isAdmin) {
+                // only admins can change lists without auth token
+                return ServiceUtil.returnError("Non-admins cannot modify lists not created with an auth token");
+            } else if (UtilValidate.isNotEmpty(authToken)) {
+                // always match if passed
+                return ServiceUtil.returnError("shoppingListAuthToken does not match");
+            }
+        } else if (!(isAdmin && UtilValidate.isEmpty(authToken))) {
+            // compare the auth token
+            if (!currentAuthToken.equals(authToken)) {
+                return ServiceUtil.returnError("shoppingListAuthToken does not match");
+            }
+        }
+
+        if (UtilValidate.isNotEmpty(shoppingList.getString("partyId"))) {
+            return ServiceUtil.returnError("The shopping list is already registered");
+        }
+
+        // convert
+        shoppingList.put("partyId", targetPartyId);
+        shoppingList.put("shoppingListAuthToken", null);
+        try {
+            shoppingList.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
         }
         return ServiceUtil.returnSuccess();
     }

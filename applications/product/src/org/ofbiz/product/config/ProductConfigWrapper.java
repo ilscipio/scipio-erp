@@ -77,7 +77,10 @@ public class ProductConfigWrapper implements Serializable {
      */
     protected BigDecimal originalListPrice = null;
 
-    /** Creates a new instance of ProductConfigWrapper */
+    // NOTE: 2020-02: Use ProductConfigFactory instead of calling these contructors directly
+
+    /** Creates a new instance of ProductConfigWrapper @deprecated SCIPIO: do not use, init method was always private before, so this shouldn't be here. */
+    @Deprecated
     public ProductConfigWrapper() {
     }
 
@@ -109,7 +112,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(new ConfigItem(ci, exactCopy));
+                    questions.add(ci.copy(exactCopy)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -127,7 +130,7 @@ public class ProductConfigWrapper implements Serializable {
             if (pcw.questions != null) {
                 questions = new ArrayList<>();
                 for (ConfigItem ci: pcw.questions) {
-                    questions.add(new ConfigItem(ci));
+                    questions.add(ci.copy(false)); // SCIPIO: use factory method
                 }
             }
             this.questions = questions;
@@ -146,7 +149,8 @@ public class ProductConfigWrapper implements Serializable {
         originalListPrice = pcw.originalListPrice; // SCIPIO
     }
 
-    private void init(Delegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
+    // SCIPIO: switched to protected - for subclasses only!
+    protected void init(Delegator delegator, LocalDispatcher dispatcher, String productId, String productStoreId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         if (product == null || !"AGGREGATED".equals(product.getString("productTypeId")) && !"AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             throw new ProductConfigWrapperException("Product " + productId + " is not an AGGREGATED product.");
@@ -183,7 +187,7 @@ public class ProductConfigWrapper implements Serializable {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
             Set<String> itemIds = new HashSet<>();
             for (GenericValue questionsValue: questionsValues) {
-                ConfigItem oneQuestion = new ConfigItem(questionsValue);
+                ConfigItem oneQuestion = newConfigItem(questionsValue); // SCIPIO: Use factory method
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
                 if (itemIds.contains(oneQuestion.getConfigItem().getString("configItemId"))) {
                     oneQuestion.setFirst(false);
@@ -193,7 +197,7 @@ public class ProductConfigWrapper implements Serializable {
                 questions.add(oneQuestion);
                 List<GenericValue> configOptions = EntityQuery.use(delegator).from("ProductConfigOption").where("configItemId", oneQuestion.getConfigItemAssoc().getString("configItemId")).orderBy("sequenceNum").queryList();
                 for (GenericValue configOption: configOptions) {
-                    ConfigOption option = new ConfigOption(delegator, dispatcher, configOption, oneQuestion, catalogId, webSiteId, currencyUomId, autoUserLogin);
+                    ConfigOption option = createConfigOption(delegator, dispatcher, configOption, oneQuestion, catalogId, webSiteId, currencyUomId, autoUserLogin); // SCIPIO: use factory method
                     oneQuestion.addOption(option);
                 }
             }
@@ -205,76 +209,78 @@ public class ProductConfigWrapper implements Serializable {
      * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
      * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
      */
-    public void ensureExactEquals(ProductConfigWrapper other) {
-        try {
-            ensureExactEquals(this.dispatcher, other.dispatcher);
-            ensureExactEquals(this.dispatcherName, other.dispatcherName);
-            ensureExactEquals(this.productStoreId, other.productStoreId);
-            ensureExactEquals(this.catalogId, other.catalogId);
-            ensureExactEquals(this.webSiteId, other.webSiteId);
-            ensureExactEquals(this.currencyUomId, other.currencyUomId);
-            ensureExactEquals(this.delegator, other.delegator);
-            ensureExactEquals(this.delegatorName, other.delegatorName);
-            ensureExactEquals(this.product, other.product);
-            ensureExactEquals(this.autoUserLogin, other.autoUserLogin);
-            ensureExactEquals(this.listPrice, other.listPrice);
-            ensureExactEquals(this.basePrice, other.basePrice);
-            ensureExactEquals(this.defaultPrice, other.defaultPrice);
-            ensureExactEquals(this.configId, other.configId);
-            ensureExactEquals(this.questions, other.questions);
-        } catch(IllegalStateException e) {
-            throw new IllegalStateException("ProductConfigWrapper field not equal: " + e.getMessage(), e);
-        }
+    public void ensureExactEquals(ProductConfigWrapper other, List<String> errorMessages) {
+        ensureExactEquals(this.dispatcher, other.dispatcher, "ProductConfigWrapper.dispatcher", errorMessages);
+        ensureExactEquals(this.dispatcherName, other.dispatcherName, "ProductConfigWrapper.dispatcherName", errorMessages);
+        ensureExactEquals(this.productStoreId, other.productStoreId, "ProductConfigWrapper.productStoreId", errorMessages);
+        ensureExactEquals(this.catalogId, other.catalogId, "ProductConfigWrapper.catalogId", errorMessages);
+        ensureExactEquals(this.webSiteId, other.webSiteId, "ProductConfigWrapper.webSiteId", errorMessages);
+        ensureExactEquals(this.currencyUomId, other.currencyUomId, "ProductConfigWrapper.currencyUomId", errorMessages);
+        ensureExactEquals(this.delegator, other.delegator, "ProductConfigWrapper.delegator", errorMessages);
+        ensureExactEquals(this.delegatorName, other.delegatorName, "ProductConfigWrapper.delegatorName", errorMessages);
+        ensureExactEquals(this.product, other.product, "ProductConfigWrapper.product", errorMessages);
+        ensureExactEquals(this.autoUserLogin, other.autoUserLogin, "ProductConfigWrapper.autoUserLogin", errorMessages);
+        ensureExactEquals(this.listPrice, other.listPrice, "ProductConfigWrapper.listPrice", errorMessages);
+        ensureExactEquals(this.basePrice, other.basePrice, "ProductConfigWrapper.basePrice", errorMessages);
+        ensureExactEquals(this.defaultPrice, other.defaultPrice, "ProductConfigWrapper.defaultPrice", errorMessages);
+        ensureExactEquals(this.configId, other.configId, "ProductConfigWrapper.configId", errorMessages);
+        ensureExactEquals(this.questions, other.questions, "ProductConfigWrapper.questions", errorMessages);
     }
 
-    static void ensureExactEquals(Object first, Object second) {
+    protected static void ensureExactEquals(Object first, Object second, String fieldName, List<String> errorMessages) {
         if (first == null) {
             if (second != null) {
-                throw new IllegalStateException("values not equal: " + first + ", " + second);
+                errorMessages.add("values not equal for " + fieldName + ": " + first + ", " + second);
+                return;
             } else {
                 return;
             }
+        } else if (second == null) {
+            errorMessages.add("values not equal for " + fieldName + ": " + first + ", " + second);
+            return;
         }
         if (!first.getClass().equals(second.getClass())) {
-            throw new IllegalStateException("values not equal: " + first + " (" + first.getClass() + "), " 
+            errorMessages.add("values not equal for " + fieldName + ": " + first + " (" + first.getClass() + "), "
                     + second + " (" + second.getClass() + ")");
+            return;
         }
         if (first instanceof ConfigItem) {
-            ((ConfigItem) first).ensureExactEquals((ConfigItem) second);
+            ((ConfigItem) first).ensureExactEquals((ConfigItem) second, errorMessages);
         } else if (first instanceof ConfigOption) {
-            ((ConfigOption) first).ensureExactEquals((ConfigOption) second);
+            ((ConfigOption) first).ensureExactEquals((ConfigOption) second, errorMessages);
         } else if (first instanceof GenericValue) {
             if (!first.equals(second)) {
-                throw new IllegalStateException("GenericValues not equal: " + first + ", " + second);
+                errorMessages.add("GenericValues not equal for " + fieldName + ": " + first + ", " + second);
             }
         } else if (first instanceof Map) {
             Map<?, ?> firstMap = (Map<?, ?>) first;
             Map<?, ?> secondMap = (Map<?, ?>) second;
             if (firstMap.size() != secondMap.size()) {
-                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+                errorMessages.add("Maps not equal for " + fieldName + ": " + first + ", " + second);
+                return;
             }
             for(Map.Entry<?, ?> entry : firstMap.entrySet()) {
-                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()));
+                ensureExactEquals(entry.getValue(), secondMap.get(entry.getKey()), fieldName, errorMessages);
             }
             if (!first.equals(second)) { // WARN: This may break on new fields
-                throw new IllegalStateException("Maps not equal: " + first + ", " + second);
+                errorMessages.add("Maps not equal for " + fieldName + ": " + first + ", " + second);
             }
         } else if (first instanceof List) {
             List<?> firstList = (List<?>) first;
             List<?> secondList = (List<?>) second;
             if (firstList.size() != secondList.size()) {
-                throw new IllegalStateException("Lists not equal: " + first + ", " + second);
+                errorMessages.add("Lists not equal for " + fieldName + ": " + first + ", " + second);
             }
             for(int i=0; i<firstList.size(); i++) {
-                ensureExactEquals(firstList.get(i), secondList.get(i));
+                ensureExactEquals(firstList.get(i), secondList.get(i), fieldName, errorMessages);
             }
         } else if (first.getClass().isArray()) {
             if (!Arrays.equals((Object[]) first, (Object[]) second)) {
-                throw new IllegalStateException("Arrays not equal: " + first + ", " + second);
+                errorMessages.add("Arrays not equal for " + fieldName + ": " + first + ", " + second);
             }
         } else {
             if (!first.equals(second)) {
-                throw new IllegalStateException("Values not equal: " + first + ", " + second);
+                errorMessages.add("Values not equal for " + fieldName + ": " + first + ", " + second);
             }
         }
     }
@@ -373,6 +379,10 @@ public class ProductConfigWrapper implements Serializable {
             dispatcher = ServiceContainer.getLocalDispatcher(dispatcherName, this.getDelegator());
         }
         return dispatcher;
+    }
+
+    public String getProductStoreId() { // SCIPIO
+        return productStoreId;
     }
 
     @Override
@@ -502,7 +512,7 @@ public class ProductConfigWrapper implements Serializable {
         return totalPrice;
     }
 
-    private void setDefaultPrice() {
+    protected void setDefaultPrice() { // SCIPIO: switched to protected
         BigDecimal totalPrice = basePrice;
         List<ConfigOption> options = getDefaultOptions();
         for (ConfigOption oneOption: options) {
@@ -567,6 +577,10 @@ public class ProductConfigWrapper implements Serializable {
         return null;
     }
 
+    public ConfigItem newConfigItem(GenericValue questionAssoc) throws Exception { // SCIPIO: factory method
+        return new ConfigItem(questionAssoc);
+    }
+
     public class ConfigItem implements java.io.Serializable {
         GenericValue configItem;
         GenericValue configItemAssoc;
@@ -599,7 +613,7 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = ci.configItemAssoc;
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(new ConfigOption(co, exactCopy, this));
+                    options.add(co.copy(exactCopy, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             } else {
@@ -608,7 +622,7 @@ public class ProductConfigWrapper implements Serializable {
                 configItemAssoc = GenericValue.create(ci.configItemAssoc);
                 List<ConfigOption> options = new ArrayList<>();
                 for (ConfigOption co: ci.options) {
-                    options.add(new ConfigOption(co, this));
+                    options.add(co.copy(false, this)); // SCIPIO: use factory method
                 }
                 this.options = options;
             }
@@ -616,20 +630,20 @@ public class ProductConfigWrapper implements Serializable {
             content = ci.content; // SCIPIO: NOTE: The wrapper is immutable so no need to clone
         }
 
+        public ConfigItem copy(boolean exactCopy) { // SCIPIO
+            return new ConfigItem(this, exactCopy);
+        }
+
         /**
          * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(ConfigItem other) {
-            try {
-                ProductConfigWrapper.ensureExactEquals(this.configItem, other.configItem);
-                ProductConfigWrapper.ensureExactEquals(this.configItemAssoc, other.configItemAssoc);
-                ProductConfigWrapper.ensureExactEquals(this.content, other.content);
-                ProductConfigWrapper.ensureExactEquals(this.options, other.options);
-                ProductConfigWrapper.ensureExactEquals(this.first, other.first);
-            } catch(IllegalStateException e) {
-                throw new IllegalStateException("ConfigItem field not equal: " + e.getMessage(), e);
-            }
+        protected void ensureExactEquals(ConfigItem other, List<String> errorMessages) {
+            ProductConfigWrapper.ensureExactEquals(this.configItem, other.configItem, "ConfigItem.configItem", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.configItemAssoc, other.configItemAssoc, "ConfigItem.configItemAssoc", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.content, other.content, "ConfigItem.content", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.options, other.options, "ConfigItem.options", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.first, other.first, "ConfigItem.first", errorMessages);
         }
         
         public void setContent(Locale locale, String mimeTypeId) {
@@ -772,6 +786,10 @@ public class ProductConfigWrapper implements Serializable {
         }
     }
 
+    public ConfigOption createConfigOption(Delegator delegator, LocalDispatcher dispatcher, GenericValue option, ConfigItem configItem, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception { // SCIPIO: factory method
+        return new ConfigOption(delegator, dispatcher, option, configItem, catalogId, webSiteId, currencyUomId, autoUserLogin);
+    }
+
     public class ConfigOption implements java.io.Serializable {
         BigDecimal optionListPrice = BigDecimal.ZERO;
         BigDecimal optionPrice = BigDecimal.ZERO;
@@ -886,26 +904,26 @@ public class ProductConfigWrapper implements Serializable {
             selected = co.selected;
         }
 
+        public ConfigOption copy(boolean exactCopy, ConfigItem parentConfigItem) { // SCIPIO
+            return new ConfigOption(this, exactCopy, parentConfigItem);
+        }
+
         /**
          * SCIPIO: Tests to ensure the wrapper is an exact copy of the other; used to verify the exact copy code.
          * NOTE: This is NOT the same as a logical Object equals override! This is mainly for testing.
          */
-        void ensureExactEquals(ConfigOption other) {
-            try {
-                ProductConfigWrapper.ensureExactEquals(this.optionListPrice, other.optionListPrice);
-                ProductConfigWrapper.ensureExactEquals(this.optionPrice, other.optionPrice);
-                ProductConfigWrapper.ensureExactEquals(this.availabilityDate, other.availabilityDate);
-                ProductConfigWrapper.ensureExactEquals(this.componentList, other.componentList);
-                ProductConfigWrapper.ensureExactEquals(this.componentOptions, other.componentOptions);
-                ProductConfigWrapper.ensureExactEquals(this.configOption, other.configOption);
-                ProductConfigWrapper.ensureExactEquals(this.selected, other.selected);
-                ProductConfigWrapper.ensureExactEquals(this.available, other.available);
-                // Skip, otherwise endless loop
-                //ProductConfigWrapper.ensureExactEquals(this.parentConfigItem, other.parentConfigItem);
-                ProductConfigWrapper.ensureExactEquals(this.comments, other.comments);
-            } catch(IllegalStateException e) {
-                throw new IllegalStateException("ConfigOption field not equal: " + e.getMessage(), e);
-            }
+        protected void ensureExactEquals(ConfigOption other, List<String> errorMessages) {
+            ProductConfigWrapper.ensureExactEquals(this.optionListPrice, other.optionListPrice, "ConfigOption.optionListPrice", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.optionPrice, other.optionPrice, "ConfigOption.optionPrice", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.availabilityDate, other.availabilityDate, "ConfigOption.availabilityDate", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.componentList, other.componentList, "ConfigOption.componentList", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.componentOptions, other.componentOptions, "ConfigOption.componentOptions", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.configOption, other.configOption, "ConfigOption.configOption", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.selected, other.selected, "ConfigOption.selected", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.available, other.available, "ConfigOption.available", errorMessages);
+            // Skip, otherwise endless loop
+            //ProductConfigWrapper.ensureExactEquals(this.parentConfigItem, other.parentConfigItem, "ConfigOption.parentConfigItem", errorMessages);
+            ProductConfigWrapper.ensureExactEquals(this.comments, other.comments, "ConfigOption.comments", errorMessages);
         }
         
         public void recalculateOptionPrice(ProductConfigWrapper pcw) throws Exception {
@@ -1120,7 +1138,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         @SuppressWarnings("unused")
-        private ProductConfigWrapper getOuterType() {
+        protected ProductConfigWrapper getOuterType() { // SCIPIO: switched to protected
             return ProductConfigWrapper.this;
         }
 

@@ -3738,6 +3738,10 @@
         <value xml:lang="zh">创建退货运输</value>
         <value xml:lang="zh-TW">建立退貨貨運</value>
     </property>
+    <property key="OrderCreateReturnSuccess">
+        <value xml:lang="de">Rückgabe wurde erstellt</value>
+        <value xml:lang="en">Return has been created</value>
+    </property>
     <property key="OrderCreateShipGroup">
         <value xml:lang="ar">خلق مجموعة شحن جديدة</value>
         <value xml:lang="de">Neue Versandgruppe erstellen</value>

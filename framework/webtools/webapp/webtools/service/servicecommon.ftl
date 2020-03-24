@@ -30,7 +30,7 @@
         <#if value?has_content && !value?is_boolean>
           <#local value = value?boolean>
         </#if>
-        <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name required=required>
+        <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name required=required tooltip=(serviceParameter.description!)>
           <#if !required>
             <option value=""<#if !value?has_content> selected="selected"</#if>><#if defaultValStr?has_content>(${defaultValStr})</#if></option>
           </#if>
@@ -39,10 +39,10 @@
         </@field>
       <#elseif rawType == "Timestamp" || rawType == "java.sql.Timestamp">
         <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name 
-            value=value required=required placeholder=defaultValue/>
+            value=value required=required placeholder=defaultValue tooltip=(serviceParameter.description!)/>
       <#else>
         <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name 
-            value=getServiceParamStrRepr(value, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType)/>
+            value=getServiceParamStrRepr(value, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType) tooltip=(serviceParameter.description!)/>
       </#if>
     </#if>
   </#list>
@@ -50,7 +50,7 @@
 
 <#-- This corresponds to: ServiceForms.xml#runService 
     TODO: REVIEW: parameter handling -->
-<#macro serviceInitFields serviceName srvInput=true srvReadOnly=false params={}>
+<#macro serviceInitFields serviceName srvInput=true srvReadOnly=false params={} defaultSyncMode="sync">
   <#if srvInput>
     <@field type="input" name="SERVICE_NAME" label=uiLabelMap.WebtoolsService value=serviceName readonly=srvReadOnly/>
   <#else>
@@ -58,8 +58,15 @@
   </#if>
     <@field type="input" name="POOL_NAME" label=uiLabelMap.WebtoolsPool value=(params.POOL_NAME!)/>
     <@field type="select" name="_RUN_SYNC_" label=uiLabelMap.WebtoolsMode>
-      <#local syncVal = raw(params._RUN_SYNC_!)> 
-      <option value="Y"<#if "Y" == syncVal> selected="selected"</#if>>Sync</option>
-      <option value="ASYNC"<#if "ASYNC" == syncVal> selected="selected"</#if>>Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})</option>
+      <#local syncMode = raw(params._RUN_SYNC_!)>
+      <#if syncMode == "Y" || syncMode == "sync" || syncMode == "SYNC">
+        <#local syncMode = "sync">
+      <#elseif syncMode == "async" || syncMode == "ASYNC">
+        <#local syncMode = "async">
+      <#else>
+        <#local syncMode = raw(defaultSyncMode)>
+      </#if>
+      <option value="Y"<#if "sync" == syncMode> selected="selected"</#if>>Sync</option>
+      <option value="ASYNC"<#if "async" == syncMode> selected="selected"</#if>>Async (${uiLabelMap.CommonOneTimeExecNotPersistedResultsInLog})</option>
     </@field>
 </#macro>

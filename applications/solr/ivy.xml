@@ -57,11 +57,11 @@
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.6" transitive="false" conf="solr-webapp"/>
         <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.9.6" transitive="false" conf="solr-webapp"/>
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>-->
-        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.9" transitive="false" conf="solr-webapp"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.9" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.10.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.10.3" transitive="false" conf="solr-webapp"/>
         <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.9" transitive="false" conf="solr-webapp"/>
-        <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.9.9" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.10.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.10.3" transitive="false" conf="solr-webapp"/>
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>
         <dependency org="org.codehaus.janino" name="janino" rev="2.7.6" transitive="false" conf="solr-webapp"/>
         <dependency org="joda-time" name="joda-time" rev="2.2" transitive="false" conf="solr-webapp"/>

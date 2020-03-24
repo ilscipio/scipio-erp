@@ -11,7 +11,7 @@
               <#-- FIXME
               <#if !allShipments?has_content>
                   <@menuitem type="generic">
-                     <form action="<@serverUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@serverUrl>" method="post">
+                     <form action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
                        <input type="hidden" name="initialSelected" value="Y"/>
                        <input type="hidden" name="orderId" value="${orderId}"/>
                        <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -24,7 +24,7 @@
                      </form>
                   </@menuitem>
                   <@menuitem type="generic">
-                    <form name="receivePurchaseOrderForm" action="<@serverUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@serverUrl>" method="post">
+                    <form name="receivePurchaseOrderForm" action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="orderId" value="${orderId}"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -67,7 +67,7 @@
               
               <#if orderHeader.statusId != "ORDER_COMPLETED">
                   <@menuitem type="generic">
-                    <form action="<@pageUrl>completePurchaseOrder?externalLoginKey=${externalLoginKey}</@pageUrl>" method="post">
+                    <form action="<@pageUrl>completePurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@pageUrl>" method="post">
                      <input type="hidden" name="orderId" value="${orderId}"/>
                     <select name="facilityId">
                       <#list ownedFacilities as facility>

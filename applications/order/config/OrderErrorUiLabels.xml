@@ -1245,6 +1245,11 @@
         <value xml:lang="zh">错误：没有为订单标识：${orderId} 找到有效的订单头 </value>
         <value xml:lang="zh-TW">錯誤：沒有為訂單ID：${orderId} 找到有效的訂單頭 </value>
     </property>
+    <property key="OrderErrorOnCartUpdate">
+        <value xml:lang="de">Beim Aktualisieren des Einkaufswagens ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Support.</value>
+        <value xml:lang="en">An error occurred updating the shopping cart. Please contact support.</value>
+        <value xml:lang="fr">Une erreur s'est produite lors de la mise à jour du panier. S.v.p. contacter le support technique.</value>
+    </property>
     <property key="OrderErrorOrderHasBeenAlreadyVerified">
         <value xml:lang="de">FEHLER: Auftrag ${orderId} wurde schon geprüft, wechseln Sie zum Abwiegen zur weiteren Verarbeitung</value>
         <value xml:lang="en">ERROR: Order #${orderId} has been already verified, go to Weigh Package Only screen for further processing</value>
@@ -2142,6 +2147,10 @@
     <property key="OrderNoReturnAmountFound">
         <value xml:lang="de">Keine returnAmount für die Bestellung gefunden: ${orderId}</value>
         <value xml:lang="en">No returnAmount found for order: ${orderId}</value>
+    </property>
+    <property key="OrderNoReturnItemsSelected">
+        <value xml:lang="de">Keine Artikel für die Rücksendung ausgewählt</value>
+        <value xml:lang="en">No items selected for return</value>
     </property>
     <property key="OrderNoReturnQuantityAvailablePreviousReturnsMayExist">
         <value xml:lang="ar">كمية المسترجع غير متوفرة: احتمال وجود مسترجعات سابقة.</value>
@@ -6700,6 +6709,10 @@
         <value xml:lang="zh">调用handleShoppingListItemVariant中的updateShoppingListItem时发生错误</value>
         <value xml:lang="zh-TW">調用handleShoppingListItemVariant中的updateShoppingListItem時發生錯誤</value>
     </property>
+    <property key="shoppinglistevents.error_converting_wishlist_contact_support">
+        <value xml:lang="de">Beim Konvertieren Ihrer Wunschliste ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Support.</value>
+        <value xml:lang="en">There was an error converting your wishlist. Please contact support.</value>
+    </property>
     <property key="shoppinglistevents.error_getting_shopping_list_and_items">
         <value xml:lang="ar">خطأ في إحضار قائمة التسوق والبنود</value>
         <value xml:lang="de">Fehler beim Abfragen von Einkaufsliste und Artikel.</value>
@@ -6716,6 +6729,10 @@
         <value xml:lang="zh">获得购物列表和明细时出错。</value>
         <value xml:lang="zh-CN">得到购物列表及其项目错误。</value>
         <value xml:lang="zh-TW">獲得購物列表和明細時出錯。</value>
+    </property>
+    <property key="shoppinglistevents.error_must_be_logged_in_modify_list">
+        <value xml:lang="de">Sie müssen angemeldet sein, um diese Liste zu ändern.</value>
+        <value xml:lang="en">You must be logged in to modify this list.</value>
     </property>
     <property key="shoppinglistevents.no_items_added">
         <value xml:lang="ar">لم يتم إضافة بنود.</value>

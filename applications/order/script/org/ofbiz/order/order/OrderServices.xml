@@ -959,7 +959,8 @@ code package.
 
         <if-empty field="shipToAddressCtx.contactMechId">
             <set field="shipToAddressCtx.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-            <call-service service-name="createPartyPostalAddress" in-map-name="shipToAddressCtx">
+            <set-service-fields service-name="createPartyPostalAddress" map="shipToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+            <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                 <result-to-field result-name="contactMechId" field="parameters.shipToContactMechId"/>
             </call-service>
             <log level="info" message="Shipping address created with contactMechId ${parameters.shipToContactMechId}"/>
@@ -970,8 +971,9 @@ code package.
                 <find-by-primary-key entity-name="PostalAddress" map="newValue" value-field="oldValue"/>
                 <set-nonpk-fields map="shipToAddressCtx" value-field="newValue"/>
                 <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
-                    <set field="shipToAddressCtx.contactMechId" from-field="nullField"/>
-                    <call-service service-name="createPartyPostalAddress" in-map-name="shipToAddressCtx">
+                    <clear-field field="shipToAddressCtx.contactMechId"/><!-- SCIPIO: fixed bad nullField usage -->
+                    <set-service-fields service-name="createPartyPostalAddress" map="shipToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+                    <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                         <result-to-field result-name="contactMechId" field="parameters.shipToContactMechId"/>
                     </call-service>
                 </if-compare-field>
@@ -1026,15 +1028,17 @@ code package.
                             <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
                         </iterate>
                         <set field="shipToAddressCtx.contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-                        <set field="shipToAddressCtx.contactMechId" from-field="nullField"/>
-                        <call-service service-name="createPartyPostalAddress" in-map-name="shipToAddressCtx">
+                        <clear-field field="shipToAddressCtx.contactMechId"/><!-- SCIPIO: fixed bad nullField usage -->
+                        <set-service-fields service-name="createPartyPostalAddress" map="shipToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+                        <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                             <result-to-field result-name="contactMechId" field="parameters.shipToContactMechId"/>
                         </call-service>
                         <log level="info" message="Shipping address updated with contactMechId ${shipToAddressCtx.shipToContactMechId}"/>
                     </if-compare-field>
                 <else>
                     <set field="shipToAddressCtx.userLogin" from-field="parameters.userLogin"/>
-                    <call-service service-name="updatePartyPostalAddress" in-map-name="shipToAddressCtx">
+                    <set-service-fields service-name="updatePartyPostalAddress" map="shipToAddressCtx" to-map="updatePartyPostalAddressCtx"/><!-- SCIPIO -->
+                    <call-service service-name="updatePartyPostalAddress" in-map-name="updatePartyPostalAddressCtx">
                         <result-to-field result-name="contactMechId" field="parameters.shipToContactMechId"/>
                     </call-service>
                     <log level="info" message="Shipping address updated with contactMechId ${shipToAddressCtx.shipToContactMechId}"/>
@@ -1101,20 +1105,23 @@ code package.
         <if-compare field="parameters.useShippingAddressForBilling" operator="not-equals" value="Y">
             <if-empty field="parameters.billToContactMechId">
                 <set field="billToAddressCtx.contactMechPurposeTypeId" value="BILLING_LOCATION"/>
-                <call-service service-name="createPartyPostalAddress" in-map-name="billToAddressCtx">
+                <set-service-fields service-name="createPartyPostalAddress" map="billToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+                <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                     <result-to-field result-name="contactMechId" field="parameters.billToContactMechId"/>
                 </call-service>
                 <log level="info" message="Billing address created with contactmechId ${parameters.billToContactMechId}"/>
             <else>
                 <if-compare-field field="parameters.shipToContactMechId" operator="equals" to-field="parameters.billToContactMechId">
-                    <set field="billToAddressCtx.contactMechId" from-field="nullField"/>
-                    <call-service service-name="createPartyPostalAddress" in-map-name="billToAddressCtx">
+                    <clear-field field="billToAddressCtx.contactMechId"/><!-- SCIPIO: fixed bad nullField usage -->
+                    <set-service-fields service-name="createPartyPostalAddress" map="billToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+                    <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                         <result-to-field result-name="contactMechId" field="parameters.billToContactMechId"/>
                     </call-service>
                     <log level="info" message="Billing address updated with contactMechId ${parameters.billToContactMechId}"/>
                 <else>
                     <if-compare field="keepAddressBook" operator="equals" value="N">
-                        <call-service service-name="updatePartyPostalAddress" in-map-name="billToAddressCtx">
+                        <set-service-fields service-name="updatePartyPostalAddress" map="billToAddressCtx" to-map="updatePartyPostalAddressCtx"/><!-- SCIPIO -->
+                        <call-service service-name="updatePartyPostalAddress" in-map-name="updatePartyPostalAddressCtx">
                             <result-to-field result-name="contactMechId" field="parameters.billToContactMechId"/>
                         </call-service>
                     </if-compare>
@@ -1126,8 +1133,9 @@ code package.
                             <field-map field-name="contactMechId" from-field="billToAddressCtx.contactMechId"/>
                         </entity-one>
                         <if-compare-field field="oldValue" to-field="newValue" operator="not-equals" type="Object">
-                            <set field="billToAddressCtx.contactMechId" from-field="nullField"/>
-                            <call-service service-name="createPartyPostalAddress" in-map-name="billToAddressCtx">
+                            <clear-field field="billToAddressCtx.contactMechId"/><!-- SCIPIO: fixed bad nullField usage -->
+                            <set-service-fields service-name="createPartyPostalAddress" map="billToAddressCtx" to-map="createPartyPostalAddressCtx"/><!-- SCIPIO -->
+                            <call-service service-name="createPartyPostalAddress" in-map-name="createPartyPostalAddressCtx">
                                 <result-to-field result-name="contactMechId" field="parameters.billToContactMechId"/>
                             </call-service>
                         </if-compare-field>

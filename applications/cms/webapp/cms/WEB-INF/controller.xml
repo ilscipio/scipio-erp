@@ -15,10 +15,8 @@
     <postprocessor>
     </postprocessor>
     -->
-
     <after-login>
-        <!-- New login CMS access token handling: creates a new base access token in session -->
-        <event name="createCmsAccessToken" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="createSessionAccessToken"/>
+        <event name="cleanupUserAccessTokens" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="cleanupUserAccessTokens"/>
     </after-login>
 
     <!-- **************** -->
@@ -124,7 +122,14 @@
         <response name="success" type="request" value="json" />
         <response name="error" type="request" value="json" />
     </request-map>
-    
+
+    <request-map uri="unpublishPage">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUnpublishPage"/>
+        <response name="success" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+
     <request-map uri="addRemovePageViewMappings">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsAddRemovePageViewMappings"/>
@@ -204,6 +209,13 @@
     <request-map uri="deleteScriptAndPageTemplateAssoc">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsDeleteScriptAndPageTemplateAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+
+    <request-map uri="deletePageTemplateScriptAssoc">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeletePageTemplateScriptAssoc"/>
         <response name="success" type="view" value="editTemplate" />
         <response name="error" type="view" value="editTemplate" />
     </request-map>

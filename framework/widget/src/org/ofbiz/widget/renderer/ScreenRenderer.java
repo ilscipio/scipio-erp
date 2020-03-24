@@ -59,7 +59,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
+import org.ofbiz.webapp.event.JsonEventUtil;
 import org.ofbiz.webapp.renderer.FtlContextFetcher;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.webapp.renderer.RendererInfo;
@@ -408,8 +408,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         }
     }
 
-
-    public void setRenderFormUniqueSeq (int renderFormSeqNumber) {
+    /**
+     * setRenderFormUniqueSeq.
+     * SCIPIO: TODO: REVIEW: Currently this is as good as unused as only a few form renderer forms were setting it... pointless for now
+     */
+    public void setRenderFormUniqueSeq(int renderFormSeqNumber) {
         this.renderFormSeqNumber = renderFormSeqNumber;
     }
 
@@ -611,7 +614,7 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         WidgetRenderTargetExpr.populateRenderTargetVars(context);
 
         // SCIPIO: 2017-05-19: some new special request parameters/attributes for potential use by renderers
-        ViewAsJsonUtil.copyRenderOutVarsToCtx(request, context);
+        JsonEventUtil.copyOutVarsToCtx(request, context);
 
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);

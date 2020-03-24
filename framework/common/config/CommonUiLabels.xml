@@ -197,6 +197,10 @@
         <value xml:lang="de">Konto</value>
         <value xml:lang="en">Account</value>
     </property>
+    <property key="CommonAccountRegistered">
+        <value xml:lang="de">Ihr Konto wurde registriert!</value>
+        <value xml:lang="en">Your account has been registered!</value>
+    </property>
     <property key="CommonActions">
         <value xml:lang="de">Aktionen</value>
         <value xml:lang="en">Actions</value>
@@ -7076,6 +7080,10 @@
         <value xml:lang="zh">最多250个字符（125个汉字）</value>
         <value xml:lang="zh-TW">最多250個字元(125個漢字)</value>
     </property>
+    <property key="CommonMaxLines">
+        <value xml:lang="de">Maximale Anzahl an Zeilen</value>
+        <value xml:lang="en">Max Lines</value>
+    </property>
     <property key="CommonMay">
         <value xml:lang="ar">مايو</value>
         <value xml:lang="cs">Květen</value>
@@ -7332,6 +7340,19 @@
         <value xml:lang="vi">Còn lại</value>
         <value xml:lang="zh">其它</value>
         <value xml:lang="zh-TW">其他</value>
+    </property>
+    <property key="CommonMode">
+        <value xml:lang="de">Modus</value>
+        <value xml:lang="en">Mode</value>
+        <value xml:lang="fr">Mode</value>
+        <value xml:lang="it">Modo</value>
+        <value xml:lang="ja">モード</value>
+        <value xml:lang="pt">Modo</value>
+        <value xml:lang="ro">Mod</value>
+        <value xml:lang="th">โหมด</value>
+        <value xml:lang="vi">Chế độ</value>
+        <value xml:lang="zh">方法</value>
+        <value xml:lang="zh-TW">方法</value>
     </property>
     <property key="CommonModifiedBy">
         <value xml:lang="de">Geändert am</value>
@@ -8656,6 +8677,16 @@
         <value xml:lang="zh">在</value>
         <value xml:lang="zh-CN">在</value>
         <value xml:lang="zh-TW">在</value>
+    </property>
+    <property key="CommonOneTimeExecNotPersisted">
+        <value xml:lang="en">One-time execution, not persisted</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
+        <value xml:lang="fr">Exécution unique, non persistante</value>
+    </property>
+    <property key="CommonOneTimeExecNotPersistedResultsInLog">
+        <value xml:lang="en">One-time execution, not persisted, results in log</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten, ergibt log</value>
+        <value xml:lang="fr">Exécution unique, non persistante, résultats dans le journal</value>
     </property>
     <property key="CommonOnly">
         <value xml:lang="ar">سوى</value>
@@ -11493,6 +11524,18 @@
         <value xml:lang="en">Operation has been executed successfully</value>
         <value xml:lang="es">La operación se ha ejecutado con éxito.</value>
         <value xml:lang="fr">L'opération a été exécutée avec succès</value>
+    </property>
+    <property key="CommonServiceSuccessMessageAsyncPersist">
+        <value xml:lang="de">Service erfolgreich ausgeführt (async)</value>
+        <value xml:lang="en">Operation has been executed successfully (async)</value>
+        <value xml:lang="es">La operación se ha ejecutado con éxito. (async)</value>
+        <value xml:lang="fr">L'opération a été exécutée avec succès (async)</value>
+    </property>
+    <property key="CommonServiceSuccessMessageAsyncOnetime">
+        <value xml:lang="de">Service erfolgreich ausgeführt (async)</value>
+        <value xml:lang="en">Operation has been executed successfully (async)</value>
+        <value xml:lang="es">La operación se ha ejecutado con éxito. (async)</value>
+        <value xml:lang="fr">L'opération a été exécutée avec succès (async)</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
         <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل الدخول</value>

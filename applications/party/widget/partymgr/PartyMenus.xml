@@ -278,7 +278,7 @@
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
             <link target="EditUserLoginSecurityGroups">
-                <parameter param-name="userLoginId" from-field="userLogin.userLoginId"/>
+                <parameter param-name="userLoginId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
         

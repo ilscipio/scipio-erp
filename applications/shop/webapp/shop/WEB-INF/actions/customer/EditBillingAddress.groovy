@@ -23,6 +23,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 
 if (userLogin) {
     party = userLogin.getRelatedOne("Party", false);
+    if (party == null) {
+        return; // SCIPIO
+    }
     contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "BILLING_LOCATION", "POSTAL_ADDRESS", false));
     if (contactMech) {
         postalAddress = contactMech.getRelatedOne("PostalAddress", false);

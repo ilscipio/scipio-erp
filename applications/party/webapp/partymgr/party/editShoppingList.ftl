@@ -152,7 +152,7 @@ code package.
           <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs!>
           <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")>
           <@tr valign="middle">
-            <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>">${shoppingListItem.productId} -
+            <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${shoppingListItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${shoppingListItem.productId} -
               ${productContentWrapper.get("PRODUCT_NAME")!"No Name"}</a> : ${productContentWrapper.get("DESCRIPTION")!}
             </@td>
             <form method="post" action="<@pageUrl>removeFromShoppingList</@pageUrl>" name="removeform_${shoppingListItem.shoppingListItemSeqId}">

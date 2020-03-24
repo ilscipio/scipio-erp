@@ -216,12 +216,12 @@ code package.
 
     <!-- Product Association Services -->
 
-    <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="entity-auto" invoke="create" auth="true">
+    <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="entity-auto" invoke="create" auth="true" hideResultInLog="true" log="quiet">
         <permission-service service-name="productGenericPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateProductAssoc" default-entity-name="ProductAssoc" engine="entity-auto" invoke="update" auth="true">
+    <service name="updateProductAssoc" default-entity-name="ProductAssoc" engine="entity-auto" invoke="update" auth="true" log="quiet" hideResultInLog="true">
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -1281,7 +1281,7 @@ code package.
     </service>
 
     <!-- Permission Services -->
-    <service name="productGenericPermission" engine="simple"
+    <service name="productGenericPermission" engine="simple" log="quiet" hideResultInLog="true"
         location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="productGenericPermission">
         <implements service="permissionInterface"/>
     </service>

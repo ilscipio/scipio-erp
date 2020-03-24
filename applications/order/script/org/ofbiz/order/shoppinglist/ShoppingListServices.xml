@@ -160,6 +160,7 @@ code package.
             <make-next-seq-id value-field="newEntity" seq-field-name="shoppingListItemSeqId" numeric-padding="5"/>
 
             <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <field-to-result field="newEntity.shoppingListId" result-name="shoppingListId"/><!-- SCIPIO: INOUT -->
             <field-to-result field="newEntity.shoppingListItemSeqId" result-name="shoppingListItemSeqId"/>
             <create-value value-field="newEntity"/>
 
@@ -179,6 +180,7 @@ code package.
             <set field="shoppingListItemParameters.quantity" from-field="totalquantity"/>
             <set field="shoppingListItemParameters.shoppingListAuthToken" from-field="parameters.shoppingListAuthToken"/>
             <call-service service-name="updateShoppingListItem" in-map-name="shoppingListItemParameters"/>
+            <field-to-result field="shoppingListItem.shoppingListId" result-name="shoppingListId"/><!-- SCIPIO: INOUT -->
         </else>
         </if-empty>
     </simple-method>

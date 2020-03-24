@@ -190,10 +190,10 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
      */
     public static boolean updateRequestForSeoCatalogUrl(HttpServletRequest request, Delegator delegator, SeoCatalogUrlWorker.PathMatch pathMatch) {
         if (pathMatch.isProductRequest()) {
-            if (pathMatch.getTargetProductId() != null) {
-                request.setAttribute("product_id", pathMatch.getTargetProductId());
-                request.setAttribute("productId", pathMatch.getTargetProductId());
-            }
+            //if (pathMatch.getTargetProductId() != null) { // 2020-01-24: EVEN IF NULL! Even for productId, in case something tried to set it before, now we clear it
+            request.setAttribute("product_id", pathMatch.getTargetProductId());
+            request.setAttribute("productId", pathMatch.getTargetProductId());
+            //}
             request.setAttribute("productCategoryId", pathMatch.getParentCategoryId()); // EVEN IF NULL!
         } else { // if (CatalogUrlServlet.CATEGORY_REQUEST.equals(targetRequest)) {
             request.setAttribute("productCategoryId", pathMatch.getTargetCategoryId()); // EVEN IF NULL!

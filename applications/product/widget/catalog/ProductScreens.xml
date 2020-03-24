@@ -643,6 +643,7 @@ code package.
                 <entity-one entity-name="Product" value-field="product"/>
                 <entity-and entity-name="Enumeration" list="keywordTypeList">
                     <field-map field-name="enumTypeId" value="KEYWORD_TYPE"/>
+                    <order-by field-name="sequenceId"/><!-- SCIPIO -->
                 </entity-and>
             </actions>
             <widgets>

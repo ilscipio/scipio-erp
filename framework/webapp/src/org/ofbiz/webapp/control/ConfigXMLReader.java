@@ -1769,6 +1769,7 @@ public class ConfigXMLReader {
         protected final List<ValueExpr> synchronizedExprList; // SCIPIO
         protected final String scriptBody; // SCIPIO
         protected Object compiledScript; // SCIPIO: Optimization
+        protected final Map<String, Object> staticProperties; // SCIPIO
         
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -1811,6 +1812,38 @@ public class ConfigXMLReader {
 
             // SCIPIO: Script body
             this.scriptBody = UtilXml.childElementValue(eventElement, "script", null);
+
+            Map<String, Object> properties = null;
+            List<? extends Element> propertyElements = UtilXml.childElementList(eventElement, "property");
+            if (UtilValidate.isNotEmpty(propertyElements)) {
+                properties = new HashMap<>();
+                for(Element propertyElement : propertyElements) {
+                    String name = propertyElement.getAttribute("name");
+                    String type = propertyElement.getAttribute("type");
+                    String valueStr = propertyElement.getAttribute("value");
+                    //String scope = propertyElement.getAttribute("scope"); // TODO?: future
+                    Object value = null;
+                    if (UtilValidate.isNotEmpty(valueStr)) { // NOTE: empty allowed; means override inherited with null
+                        try {
+                            //Map<String, Object> propertyCtx = new HashMap<>();
+                            // TODO?: Don't support this for static properties for now, so they can be analyzed statically
+                            //FlexibleStringExpander expr = FlexibleStringExpander.getInstance(valueStr);
+                            //Object result = expr.expand(propertyCtx);
+                            Object result = valueStr;
+                            if (result != null && UtilValidate.isNotEmpty(type)) {
+                                value = ObjectType.simpleTypeConvert(result, type, null, null);
+                            } else {
+                                value = result;
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Unable to evaluate event property '" + name
+                                    + "' for event (will be null)", module);
+                        }
+                    }
+                    properties.put(name, value);
+                }
+            }
+            this.staticProperties = (properties != null) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1825,6 +1858,7 @@ public class ConfigXMLReader {
             this.metrics = null;
             this.synchronizedExprList = null;
             this.scriptBody = null;
+            this.staticProperties = Collections.emptyMap();
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
@@ -1840,6 +1874,7 @@ public class ConfigXMLReader {
             this.metrics = null;
             this.synchronizedExprList = null;
             this.scriptBody = null;
+            this.staticProperties = Collections.emptyMap();
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1899,6 +1934,21 @@ public class ConfigXMLReader {
         public void setCompiledScript(Object compiledScript) { // NOTE: no need for thread safety on this field
             this.compiledScript = compiledScript;
         }
+
+        public Map<String, Object> getStaticProperties() {
+            return staticProperties;
+        }
+
+        /* TODO?: future
+        public Map<String, Object> getRuntimeProperties(Map<String, Object> context) {
+        }
+        public Map<String, Object> getMergedProperties(Map<String, Object> context) {
+        }
+         */
+
+        public Map<String, Object> getProperties(RequestMap requestMap, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) {
+            return getStaticProperties();
+        }
     }
 
     public static class RequestMap {
@@ -1919,6 +1969,7 @@ public class ConfigXMLReader {
         public final boolean securityCert; // = false;
         public final boolean securityExternalView; // = true;
         public final boolean securityDirectRequest; // = true;
+        public final String securityAuthCheckEvent; // SCIPIO: default "checkLogin"
         public final Map<String, RequestResponse> requestResponseMap; // = new HashMap<String, RequestResponse>();
         public final Metrics metrics; // = null
         public final OverrideMode overrideMode;
@@ -1972,6 +2023,7 @@ public class ConfigXMLReader {
             boolean securityCert = false;
             boolean securityExternalView = true;
             boolean securityDirectRequest = true;
+            String securityAuthCheckEvent = ""; // SCIPIO
             Element securityElement = UtilXml.firstChildElement(requestMapElement, "security");
             if (securityElement != null) {
                 if (!UtilProperties.propertyValueEqualsIgnoreCase("url", "no.http", "Y")) {
@@ -1993,6 +2045,7 @@ public class ConfigXMLReader {
                 securityCert = "true".equals(securityElement.getAttribute("cert"));
                 securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));
                 securityDirectRequest = !"false".equals(securityElement.getAttribute("direct-request"));
+                securityAuthCheckEvent = securityElement.getAttribute("auth-check-event");
                 this.securitySpecified = true; // SCIPIO
             } else {
                 this.securitySpecified = false; // SCIPIO
@@ -2026,6 +2079,7 @@ public class ConfigXMLReader {
                 this.metrics = null;
             }
             this.overrideMode = OverrideMode.fromNameAlways(requestMapElement.getAttribute("override-mode"));
+            this.securityAuthCheckEvent = securityAuthCheckEvent;
         }
 
         /**
@@ -2056,12 +2110,14 @@ public class ConfigXMLReader {
                 this.securityCert = overrideMap.securityCert;
                 this.securityExternalView = overrideMap.securityExternalView;
                 this.securityDirectRequest = overrideMap.securityDirectRequest;
+                this.securityAuthCheckEvent = overrideMap.securityAuthCheckEvent;
             } else {
                 this.securityHttps = baseMap.securityHttps;
                 this.securityAuth = baseMap.securityAuth;
                 this.securityCert = baseMap.securityCert;
                 this.securityExternalView = baseMap.securityExternalView;
                 this.securityDirectRequest = baseMap.securityDirectRequest;
+                this.securityAuthCheckEvent = baseMap.securityAuthCheckEvent;
             }
             
             Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
@@ -2118,6 +2174,8 @@ public class ConfigXMLReader {
         public boolean isSecurityDirectRequest() {
             return securityDirectRequest;
         }
+
+        public String getSecurityAuthCheckEvent() { return securityAuthCheckEvent; } // SCIPIO
 
         public Map<String, RequestResponse> getRequestResponseMap() {
             return requestResponseMap;
@@ -2380,6 +2438,10 @@ public class ConfigXMLReader {
             return includeMode;
         }
 
+        public boolean hasExplicitRedirectParameterSpec() { // SCIPIO
+            return !"auto".equals(getIncludeMode()) || (getRedirectParameterMap().size() > 0) || (getRedirectParameterValueMap().size() > 0) || (getExcludeParameterSet().size() > 0);
+        }
+
         public Boolean getAllowViewSave() { // SCIPIO
             return allowViewSave;
         }
@@ -2480,13 +2542,13 @@ public class ConfigXMLReader {
                 }
             };
             public static final AttributesSpec EVENT_MESSAGES = new AttributesSpec() {
-                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMsgAttrNames().contains(attributeName); }
+                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMessageAttrNames().contains(attributeName); }
                 @Override
                 public AttributesSpec mergeIncludes(Set<String> includeAttributes) {
                     if (UtilValidate.isEmpty(includeAttributes)) {
                         return this;
                     }
-                    Set<String> newIncludes = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    Set<String> newIncludes = new HashSet<>(EventUtil.getEventErrorMessageAttrNames());
                     newIncludes.addAll(includeAttributes);
                     return new IncludeAttributesSpec(newIncludes);
                 }
@@ -2510,14 +2572,14 @@ public class ConfigXMLReader {
                         return EVENT_MESSAGES;
                     }
                     // SPECIAL: here, include messages plus/minus extras
-                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMessageAttrNames());
                     if (includeAttributes != null) {
                         includeAttr.addAll(includeAttributes);
                     }
                     if (excludeAttributes != null) {
                         includeAttr.removeAll(excludeAttributes);
                     }
-                    if (includeAttr.equals(EventUtil.getEventErrorMsgAttrNames())) { // avoid needless copies
+                    if (includeAttr.equals(EventUtil.getEventErrorMessageAttrNames())) { // avoid needless copies
                         return EVENT_MESSAGES;
                     }
                     return new IncludeAttributesSpec(includeAttr);

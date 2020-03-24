@@ -24441,6 +24441,12 @@
         <value xml:lang="zh">发出的货运</value>
         <value xml:lang="zh-TW">發出的貨運</value>
     </property>
+    <property key="ProductOutOfStock">
+        <value xml:lang="de">Nicht vorrättig</value>
+        <value xml:lang="en">Out of stock</value>
+        <value xml:lang="es">Agotado</value>
+        <value xml:lang="fr">En rupture de stock</value>
+    </property>
     <property key="ProductOutstandingPurchaseOrders">
         <value xml:lang="de">Ausstehende Beschaffungsaufträge</value>
         <value xml:lang="en">Outstanding Purchase Orders</value>

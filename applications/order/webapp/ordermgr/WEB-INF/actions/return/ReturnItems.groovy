@@ -37,7 +37,7 @@ context.returnHeader = returnHeader;
 returnHeaderTypeId = returnHeader.returnHeaderTypeId;
 context.toPartyId = returnHeader.toPartyId;
 
-returnItems = from("ReturnItem").where("returnId", returnId).queryList();
+returnItems = from("ReturnItem").where("returnId", returnId).orderBy("returnItemSeqId").queryList();
 context.returnItems = returnItems;
 
 // these are just the adjustments not associated directly with a return item--the rest are gotten with a .getRelated on the returnItems in the .FTL

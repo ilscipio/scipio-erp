@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 
+import javax.rmi.CORBA.Util;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -40,6 +41,10 @@ import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -737,37 +742,39 @@ public final class ProductStoreWorker {
         return defaultProductStoreEmailScreenLocation.get(emailType);
     }
 
+    private static final List<String> CONTENT_REF_SORT_FIELDS = UtilMisc.toList("defaultPriority", "isContentReference DESC");
+
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or null if none.
+     * <p>
+     * NOTE: 2020-02-03: For compatibility reasons, isContentReference="N" is treated the same as unset.
      */
     public static GenericValue getContentReferenceStore(List<GenericValue> productStores) {
-        if (productStores == null) {
+        if (UtilValidate.isEmpty(productStores)) {
             return null;
         }
-        for(GenericValue productStore : productStores) {
-            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
-                return productStore;
-            }
-        }
-        return null;
+        return findBestContentReferenceStore(productStores);
     }
 
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or the first in list (with a warning) if none.
      * Prints warning if no content reference and multiple stores with different defaultLocaleString.
+     * <p>
+     * NOTE: 2020-02-03: For compatibility reasons, isContentReference="N" is treated the same as unset.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores, String multiWarningInfo) {
-        if (productStores == null || productStores.size() == 0) {
+        if (UtilValidate.isEmpty(productStores)) {
             return null;
         }
-        for(GenericValue productStore : productStores) {
-            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
-                return productStore;
-            }
+        GenericValue productStore = findBestContentReferenceStore(productStores);
+        if (productStore != null) {
+            return productStore;
         }
-        GenericValue productStore = productStores.get(0);
+        productStore = productStores.get(0);
         if (productStores.size() > 1 && multiWarningInfo != null) {
-            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\""
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify defaultPriority or isContentReference=\"Y\""
                     + "; defaultLocaleString and other content settings may be ambiguous; selecting first store ("
                     + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
                     + ") as content reference", module);
@@ -776,11 +783,41 @@ public final class ProductStoreWorker {
     }
 
     /**
-     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y set ordering by defaultPriority, or if
+     * none have isContentReference, the lowest defaultPriority, or the first in list (no warning) if none.
      * Does not show warning if no content reference and multiple stores.
      */
     public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores) {
         return getContentReferenceStoreOrFirst(productStores, null);
+    }
+
+    private static GenericValue findBestContentReferenceStore(List<GenericValue> productStores) {
+        GenericValue result = null;
+        Long bestDefaultPriority = null;
+        Boolean bestIsContentReference = null;
+        // Find the isContentReference record with the lowest defaultPriority, or otherwise the store with simply the lowest defaultPriority
+        for(GenericValue productStore : productStores) {
+            Long defaultPriority = productStore.getLong("defaultPriority");
+            Boolean isContentReference = productStore.getBoolean("isContentReference");
+            if (Boolean.TRUE.equals(isContentReference)) {
+                if (result == null || !Boolean.TRUE.equals(bestIsContentReference)) {
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                } else if (defaultPriority != null && (bestDefaultPriority == null || defaultPriority < bestDefaultPriority)) { // prioritize the isContentReference="Y" records
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                }
+            } else if (!Boolean.TRUE.equals(bestIsContentReference)) {
+                if (defaultPriority != null && (bestDefaultPriority == null || defaultPriority < bestDefaultPriority)) { // prioritize the isContentReference="[N]" records
+                    result = productStore;
+                    bestDefaultPriority = defaultPriority;
+                    bestIsContentReference = isContentReference;
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -946,5 +983,65 @@ public final class ProductStoreWorker {
             return null;
         }
         return getStoreWebSiteIdForEmail(delegator, productStore.getString("productStoreId"), webSiteId, useCache);
+    }
+
+    /**
+     * SCIPIO: Checks whether a customer has purchased a given product or not
+     *
+     * @param productStore
+     * @param partyId
+     * @param productId
+     * @return
+     */
+    public static boolean proofOfPurchase(Delegator delegator, GenericValue productStore, String partyId, String productId) {
+        if (UtilValidate.isNotEmpty(partyId) && UtilValidate.isNotEmpty(productStore) && UtilValidate.isNotEmpty(productId)) {
+            DynamicViewEntity dve = new DynamicViewEntity();
+
+            dve.addMemberEntity("OHAI", "OrderHeaderAndItems");
+            dve.addMemberEntity("ORL", "OrderRole");
+
+            dve.addAlias("OHAI", "orderId", null, null, true, true, null);
+            dve.addAlias("OHAI", "orderStatusId", null, null, false, true, null);
+            dve.addAlias("OHAI", "productStoreId", null, null, false, true, null);
+            dve.addAlias("OHAI", "productId", null, null, false, true, null);
+            dve.addAlias("ORL", "orderId", null, null, true, true, null);
+            dve.addAlias("ORL", "partyId", null, null, false, true, null);
+            dve.addAlias("ORL", "roleTypeId", null, null, false, true, null);
+
+            dve.addViewLink("OHAI", "ORL", true, UtilMisc.toList(new ModelKeyMap("orderId", "orderId")));
+
+            // TODO: Handle virtual -> variant products
+
+            EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("partyId", partyId),
+                EntityCondition.makeCondition("productId", productId),
+                EntityCondition.makeCondition("productStoreId", productStore.getString("productStoreId")),
+                EntityCondition.makeCondition("orderStatusId", "ORDER_COMPLETED"),
+                EntityCondition.makeCondition("roleTypeId", EntityOperator.IN,
+                        UtilMisc.toList("PLACING_CUSTOMER", "END_USER_CUSTOMER", "BILL_TO_CUSTOMER", "SHIP_TO_CUSTOMER", "CUSTOMER"))
+            ), EntityOperator.AND);
+            try {
+                GenericValue productOrdered = EntityQuery.use(delegator)
+                    .from(dve)
+                    .where(condition).queryFirst();
+                if (UtilValidate.isNotEmpty(productOrdered)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                Debug.logError(e.getMessage(), module);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns useVariantStockCalc on ProductStore. NOTE: 2020-02-26: The default is now true.
+     */
+    public static boolean isUseVariantStockCalc(GenericValue productStore) { // SCIPIO
+        if (productStore == null) {
+            return true; // TODO: REVIEW: should default be true even when store is missing? Happens in solr... for now let's be consistent
+        }
+        return !Boolean.FALSE.equals(productStore.getBoolean("useVariantStockCalc"));
     }
 }

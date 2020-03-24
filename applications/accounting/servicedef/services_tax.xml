@@ -55,7 +55,7 @@ code package.
         <implements service="calcTaxInterface"/>
     </service>
     <service name="calcTaxForDisplay" engine="java"
-        location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalcForDisplay">
+        location="org.ofbiz.accounting.tax.TaxAuthorityServices" invoke="rateProductTaxCalcForDisplay" hideResultInLog="true" log="quiet" log-eca="quiet">
         <description>Tax Authority Rate Product Calc Service</description>
         <implements service="calcTaxTotalForDisplayInterface"/>
     </service>

@@ -152,7 +152,7 @@ code package.
         <override name="physicalInventoryId" mode="OUT"/>
     </service>
 
-    <service name="getMktgPackagesAvailable" engine="simple"
+    <service name="getMktgPackagesAvailable" engine="simple" hideResultInLog="true" log="quiet" log-eca="quiet"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getMktgPackagesAvailable" auth="false" use-transaction="false">
         <description>Get Marketing Packages Available From Components In Inventory</description>
         <attribute name="productId" type="String" mode="IN" optional="false">
@@ -179,7 +179,7 @@ code package.
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
     </service>
-    <service name="getInventoryAvailableByFacility" engine="simple"
+    <service name="getInventoryAvailableByFacility" engine="simple" hideResultInLog="true" log="debug" log-eca="quiet"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
         <description>Get Inventory Availability for a Product constrained by a facilityId</description>
         <attribute name="productId" type="String" mode="IN" optional="false">

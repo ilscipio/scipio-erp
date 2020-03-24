@@ -228,7 +228,7 @@ if (doExec) {
         
         // DON'T put these in request attributes; they would have been removed by the ScreenRenderer
         servMsgs = [:];
-        org.ofbiz.webapp.event.EventUtil.setServiceMsgsToEventMsgs(servRes, servMsgs); // SCIPIO: refactored
+        org.ofbiz.webapp.event.EventUtil.copyEventErrorMessages(servRes, servMsgs); // SCIPIO: refactored
 
         if (servMsgs._EVENT_MESSAGE_) {
             eventMessageList.add(servMsgs._EVENT_MESSAGE_);

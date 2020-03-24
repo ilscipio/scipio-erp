@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
@@ -621,6 +623,17 @@ public abstract class TransformUtil {
     public static BigDecimal getBigDecimalArg(List<?> args, String key, int position) throws TemplateModelException {
         return getBigDecimalArg(getModel(args, key, position), null);
     }
+
+    // Params arguments
+
+    public static String getParamString(TemplateModel paramsModel, String delim, boolean nonEscaping) throws TemplateModelException, IllegalArgumentException {
+        return TemplateFtlUtil.makeParamString(paramsModel, delim, nonEscaping);
+    }
+
+    public static String getParamString(Map<?, ?> args, String key, String delim, boolean nonEscaping) throws TemplateModelException, IllegalArgumentException {
+        return TemplateFtlUtil.makeParamString(getModel(args, key), delim, nonEscaping);
+    }
+
 
     // TemplateModel (any source)
 

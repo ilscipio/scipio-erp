@@ -80,6 +80,7 @@ import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.EventHandlerWrapper;
 import org.ofbiz.webapp.event.EventUtil;
+import org.ofbiz.webapp.event.JsonEventUtil;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
@@ -221,7 +222,38 @@ public class RequestHandler {
 
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
             GenericValue userLogin, Delegator delegator) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+        // SCIPIO: Refactored for RequestState and easier better try/finally
+        // DEV NOTE: Internally the implementation must call doRequest having RequestState, not the public overloads
+        doRequest(request, response, chain, userLogin, delegator, new RequestState());
+    }
 
+    public static class RequestState {
+        private int nestedLevel = 0;
+
+        public int getNestedLevel() { return nestedLevel; }
+
+        public boolean isTopLevel() { return (nestedLevel <= 1); } // (should be == 1 but just to be safe)
+    }
+
+    private void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
+                           GenericValue userLogin, Delegator delegator, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+        // SCIPIO: extra wrapping to increase the nested level
+        requestState.nestedLevel++;
+        try {
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.beginDoRequest(request, response, this, requestState);
+            }
+            doRequestCore(request, response, chain, userLogin, delegator, requestState);
+        } finally {
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.endDoRequest(request, response, this, requestState);
+            }
+            requestState.nestedLevel--;
+        }
+    }
+
+    private void doRequestCore(HttpServletRequest request, HttpServletResponse response, String chain,
+                               GenericValue userLogin, Delegator delegator, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         final boolean throwRequestHandlerExceptionOnMissingLocalRequest = EntityUtilProperties.propertyValueEqualsIgnoreCase(
                 "requestHandler", "throwRequestHandlerExceptionOnMissingLocalRequest", "Y", delegator);
         long startTime = System.currentTimeMillis();
@@ -229,7 +261,7 @@ public class RequestHandler {
 
         // get the controllerConfig once for this method so we don't have to get it over and over inside the method
         ConfigXMLReader.ControllerConfig controllerConfig = this.getControllerConfig();
-        
+
         if (controllerConfig == null) { // SCIPIO: 2018-11-08: Handle error more cleanly
             throw new RequestHandlerException("Could not process controller request"
                     + " for webapp [" + request.getContextPath() + "] because its controller failed to load ("
@@ -259,8 +291,12 @@ public class RequestHandler {
         // Grab data from request object to process
         String defaultRequestUri = RequestHandler.getRequestUri(request.getPathInfo());
         if (request.getAttribute("targetRequestUri") == null) {
-            if (request.getSession().getAttribute("_PREVIOUS_REQUEST_") != null) {
-                request.setAttribute("targetRequestUri", request.getSession().getAttribute("_PREVIOUS_REQUEST_"));
+            // SCIPIO: Fixed
+            //if (request.getSession().getAttribute("_PREVIOUS_REQUEST_") != null) {
+            //    request.setAttribute("targetRequestUri", request.getSession().getAttribute("_PREVIOUS_REQUEST_"));
+            String previousRequest = PreviousRequestInfo.getPreviousRequest(request);
+            if (previousRequest != null) {
+                request.setAttribute("targetRequestUri", previousRequest);
             } else {
                 request.setAttribute("targetRequestUri", "/" + defaultRequestUri);
             }
@@ -511,6 +547,9 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
             }
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.postPreprocessorEvents(request, response, this, requestState);
+            }
         }
 
         // Pre-Processor/First-Visit event(s) can interrupt the flow by returning null.
@@ -538,7 +577,9 @@ public class RequestHandler {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
             if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check." + showSessionId(request), module);
-            ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
+            // SCIPIO: auth-check-event
+            //ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
+            ConfigXMLReader.Event checkLoginEvent = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap).event;
             String checkLoginReturnString = null;
 
             try {
@@ -551,19 +592,19 @@ public class RequestHandler {
                 eventReturn = checkLoginReturnString;
                 // if the request is an ajax request we don't want to return the default login check
                 if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                    requestMap = requestMapMap.get("checkLogin");
+                    requestMap = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap); // SCIPIO: requestMapMap.get("checkLogin");
                 } else {
                     // SCIPIO: 2017-05-15: for viewAsJson we have to check if we should
                     // use the regular or not
                     if (viewAsJson) {
                         if (ViewAsJsonUtil.isViewAsJsonRegularLogin(request, viewAsJsonConfig)) {
-                            requestMap = requestMapMap.get("checkLogin");
+                            requestMap = getSecurityAuthCheckEventRequest(requestMap, "checkLogin", requestMapMap); // SCIPIO: requestMapMap.get("checkLogin");
                         } else {
                             // SCIPIO: If not using the regular login, we have to discard the render target expression, if any
-                            requestMap = requestMapMap.get("ajaxCheckLogin");
+                            requestMap = getSecurityAuthCheckEventRequest(requestMap, "ajaxCheckLogin", requestMapMap); // SCIPIO: requestMapMap.get("ajaxCheckLogin");
                         }
                     } else {
-                        requestMap = requestMapMap.get("ajaxCheckLogin");
+                        requestMap = getSecurityAuthCheckEventRequest(requestMap, "ajaxCheckLogin", requestMapMap); // SCIPIO: requestMapMap.get("ajaxCheckLogin");
                     }
                 }
 
@@ -574,19 +615,24 @@ public class RequestHandler {
                 }
             }
             // SCIPIO: we have to mark a flag to say if was logged in for viewAsJson
-            ViewAsJsonUtil.setRenderOutParam(request, ViewAsJsonUtil.LOGGEDIN_OUTPARAM, "success".equalsIgnoreCase(checkLoginReturnString));
+            JsonEventUtil.setOutParam(request, ViewAsJsonUtil.LOGGEDIN_OUTPARAM, "success".equalsIgnoreCase(checkLoginReturnString));
         }
 
         // after security check but before running the event, see if a post-login redirect has completed and we have data from the pre-login request form to use now
         // we know this is the case if the _PREVIOUS_PARAM_MAP_ attribute is there, but the _PREVIOUS_REQUEST_ attribute has already been removed
-        if (request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_") != null && request.getSession().getAttribute("_PREVIOUS_REQUEST_") == null) {
-            Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_"), String.class, Object.class);
-            for (Map.Entry<String, Object> previousParamEntry: previousParamMap.entrySet()) {
+        // SCIPIO: Fixed
+        //if (request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_") != null && request.getSession().getAttribute("_PREVIOUS_REQUEST_") == null) {
+            //Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_FORM_"), String.class, Object.class);
+        PreviousRequestInfo prevReqInfo = PreviousRequestInfo.getInfoOrUnset(request);
+        if (prevReqInfo.getPreviousParamMapForm() != null && prevReqInfo.getPreviousRequest() == null) {
+            for (Map.Entry<String, Object> previousParamEntry: prevReqInfo.getPreviousParamMapForm().entrySet()) {
                 request.setAttribute(previousParamEntry.getKey(), previousParamEntry.getValue());
             }
 
             // to avoid this data being included again, now remove the _PREVIOUS_PARAM_MAP_ attribute
-            request.getSession().removeAttribute("_PREVIOUS_PARAM_MAP_FORM_");
+            // SCIPIO: Fixed
+            //request.getSession().removeAttribute("_PREVIOUS_PARAM_MAP_FORM_");
+            PreviousRequestInfo.getUnset(request).setInfo(request);
         }
 
         // now we can start looking for the next request response to use
@@ -667,7 +713,10 @@ public class RequestHandler {
         if (eventReturnBasedRequestResponse != null && (!"success".equals(eventReturnBasedRequestResponse.name) || "none".equals(eventReturnBasedRequestResponse.type))) nextRequestResponse = eventReturnBasedRequestResponse;
 
         // get the previous request info
-        String previousRequest = (String) request.getSession().getAttribute("_PREVIOUS_REQUEST_");
+        // SCIPIO: Fixed
+        //String previousRequest = (String) request.getSession().getAttribute("_PREVIOUS_REQUEST_");
+        prevReqInfo = PreviousRequestInfo.getInfoOrUnset(request);
+        String previousRequest = prevReqInfo.getPreviousRequest();
         String loginPass = (String) request.getAttribute("_LOGIN_PASSED_");
 
         // restore previous redirected request's attribute, so redirected page can display previous request's error msg etc.
@@ -683,7 +732,7 @@ public class RequestHandler {
                     // SCIPIO: Let's be smarter
                     //if ("_ERROR_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_MAP_".equals(key) || "_ERROR_MESSAGE_".equals(key) ||
                     //        "_EVENT_MESSAGE_LIST_".equals(key) || "_EVENT_MESSAGE_".equals(key)) {
-                    if (EventUtil.isEventErrorMsgAttrName(key)) {
+                    if (EventUtil.isEventErrorMessageAttrName(key)) {
                         // SCIPIO: New RequestAttrPolicy callbacks
                         //request.setAttribute(key, entry.getValue());
                         attrPolicyInvoker.filterRestoreAttrToRequest(entry, preRequestMap);
@@ -695,29 +744,36 @@ public class RequestHandler {
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")" + showSessionId(request), module);
 
         // if previous request exists, and a login just succeeded, do that now.
-        if (previousRequest != null && loginPass != null && "TRUE".equalsIgnoreCase(loginPass)) {
-            request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
+        if (previousRequest != null && "TRUE".equalsIgnoreCase(loginPass)) {
+            // SCIPIO: Fixed. NOTE: we must not remove _PREVIOUS_PARAM_MAP_FORM_ here, only the request
+            //request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
+            //String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_"); // SCIPIO
+            //request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
+            prevReqInfo.removePreviousRequest().setInfo(request);
             // special case to avoid login/logout looping: if request was "logout" before the login, change to null for default success view; do the same for "login" to avoid going back to the same page
             if ("logout".equals(previousRequest) || "/logout".equals(previousRequest) || "login".equals(previousRequest) || "/login".equals(previousRequest) || "checkLogin".equals(previousRequest) || "/checkLogin".equals(previousRequest) || "/checkLogin/login".equals(previousRequest)) {
-                Debug.logWarning("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
+                // SCIPIO: This is likely to happen, so should not be a warning
+                //Debug.logWarning("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
+                Debug.logInfo("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
             } else {
-                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
+                // SCIPIO: now below
+                //if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
 
                 // note that the previous form parameters are not setup (only the URL ones here), they will be found in the session later and handled when the old request redirect comes back
-                Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_URL_"), String.class, Object.class);
+                Map<String, Object> previousParamMap = prevReqInfo.getPreviousParamMapUrl();
                 String queryString = UtilHttp.urlEncodeArgs(previousParamMap, false);
                 String redirectTarget = previousRequest;
 
-                // JB: SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
+                // SCIPIO: 2019-12-04: Added support for non-controller paths, to redirect to product and category URLs
                 // FIXME?: NOTE: Like the other attributes ofbiz did above, we are forced to use a separate attribute for this, but it risks breaking
                 //  due to concurrency... for now, this is moot because the others all suffer from this as well
-                String previousServletRequest = (String) request.getSession().getAttribute("_PREVIOUS_SERVLET_REQUEST_");
+                String previousServletRequest = prevReqInfo.getPreviousServletRequest();
                 if (UtilValidate.isNotEmpty(previousServletRequest)) {
-                    request.getSession().removeAttribute("_PREVIOUS_SERVLET_REQUEST_");
                     redirectTarget = previousServletRequest;
                     if (UtilValidate.isNotEmpty(queryString)) {
                         redirectTarget += "?" + queryString;
                     }
+                    if (Debug.infoOn()) Debug.logInfo("[Doing Previous Servlet Request]: " + previousServletRequest + showSessionId(request), module);
                     callRedirect(makeLink(request, response, redirectTarget, null, (FullWebappInfo) null, false, true, null, null), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
                     return;
                 }
@@ -726,6 +782,7 @@ public class RequestHandler {
                     redirectTarget += "?" + queryString;
                 }
 
+                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCode, AttributesSpec.NONE, null, false); // SCIPIO: save-request="none" here
@@ -776,7 +833,7 @@ public class RequestHandler {
         if ("request".equals(nextRequestResponse.type)) {
             // chained request
             Debug.logInfo("[RequestHandler.doRequest]: Response is a chained request." + showSessionId(request), module);
-            doRequest(request, response, nextRequestResponseValue, userLogin, delegator);
+            doRequest(request, response, nextRequestResponseValue, userLogin, delegator, requestState); // SCIPIO: doRequestImpl, recursive
         } else {
             // ======== handle views ========
 
@@ -795,6 +852,10 @@ public class RequestHandler {
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
+            }
+
+            for(RequestHandlerHooks.HookHandler hh : RequestHandlerHooks.getHookHandlers()) { // SCIPIO: Debugging hook
+                hh.postEvents(request, response, this, requestState);
             }
 
             // SCIPIO: 2019-03-06: Cleanup event messages (e.g. the default service event success message).
@@ -873,12 +934,24 @@ public class RequestHandler {
                 String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
                 if (UtilValidate.isNotEmpty(lastGetUrl)) {
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
+                    // NOTE: For this type, we ignore request-parameters if the xml element was not specified or it's set to something other than default ("auto")
+                    if (nextRequestResponse.hasExplicitRedirectParameterSpec()) {
+                        String qs = makeQueryString(request, nextRequestResponse);
+                        if (UtilValidate.isNotEmpty(qs) && !"?".equals(qs)) {
+                            int paramDelimLast = lastGetUrl.indexOf('?');
+                            if (paramDelimLast >= 0) {
+                                lastGetUrl = lastGetUrl + "&" + qs.substring(1);
+                            } else {
+                                lastGetUrl = lastGetUrl + qs;
+                            }
+                        }
+                    }
                     // Perform URL encoding
                     lastGetUrl = response.encodeURL(lastGetUrl);
                     callRedirect(lastGetUrl, response, request, statusCode, getRedirectAttrSpec(request, nextRequestResponse.getRedirectAttributes()), nextRequestResponse.getConnectionState(), nextRequestResponse.getAllowCacheRedirect()); // SCIPIO: save-request
                 } else {
                     // SCIPIO: New type: request-redirect-last
-                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
+                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: "
                             + nextRequestResponseValue.isEmpty() + showSessionId(request), module);
                     // SCIPIO: Sanity check
                     if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
@@ -903,7 +976,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST == nextRequestResponse.getTypeEnum()) { //} else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -936,11 +1009,11 @@ public class RequestHandler {
                                 || "_EVENT_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_LIST_".equals(key))) {
                             // SCIPIO: New RequestAttrPolicy callbacks
                             //request.setAttribute(key, urlParamEntry.getValue());
-                            attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams); 
+                            attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams);
                         }
                     }
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -960,7 +1033,7 @@ public class RequestHandler {
                  if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
                      viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_HOME == nextRequestResponse.getTypeEnum()) { //} else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -981,7 +1054,7 @@ public class RequestHandler {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.NONE == nextRequestResponse.getTypeEnum()) { //} else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + showSessionId(request), module);
@@ -1056,7 +1129,7 @@ public class RequestHandler {
      * See {@link org.ofbiz.webapp.event.ServiceEventHandler#invoke} for the code that sets these.
      */
     void cleanupEventMessages(HttpServletRequest request) {
-        if (EventUtil.hasErrorMsg(request) && request.getAttribute("_DEF_EVENT_MSG_") != null && 
+        if (EventUtil.hasErrorMessage(request) && request.getAttribute("_DEF_EVENT_MSG_") != null &&
                 request.getAttribute("_DEF_EVENT_MSG_").equals(request.getAttribute("_EVENT_MESSAGE_"))) {
             request.removeAttribute("_EVENT_MESSAGE_");
         }
@@ -1296,7 +1369,7 @@ public class RequestHandler {
         }
     }
 
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1515,7 +1588,7 @@ public class RequestHandler {
 
         if (viewAsJson) {
             // SCIPIO: NOTE: we go to handler URI so potentially a webapp can tweak json output behavior.
-            ViewAsJsonUtil.addDefaultRenderOutAttrNames(req);
+            JsonEventUtil.addDefaultOutAttrNames(req);
             String jsonRequestUri;
             try {
                 jsonRequestUri = ViewAsJsonUtil.getViewAsJsonRequestUri(req, viewAsJsonConfig);
@@ -1523,7 +1596,9 @@ public class RequestHandler {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
             }
-            doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
+            // SCIPIO: TODO: REVIEW: Although this is technically a separate doRequest invocation, we'll call doRequestImpl here for technical reasons
+            //doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
+            doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"), requestState);
         }
 
         // before getting the view generation time flush the response output to get more consistent results
@@ -3144,5 +3219,19 @@ public class RequestHandler {
      */
     public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
         sendControllerUriRedirectWithQueryString(request, response, uri, null);
+    }
+
+    private static RequestMap getSecurityAuthCheckEventRequest(RequestMap requestMap, String defaultCheckLoginUri, Map<String, ConfigXMLReader.RequestMap> requestMapMap) { // SCIPIO
+        ConfigXMLReader.RequestMap checkLoginRequest;
+        if (UtilValidate.isNotEmpty(requestMap.getSecurityAuthCheckEvent())) {
+            checkLoginRequest = requestMapMap.get(requestMap.getSecurityAuthCheckEvent());
+            if (checkLoginRequest == null) {
+                checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
+                Debug.logError("Controller event '" + requestMap.uri + "' references invalid security auth-check-event request URI: " + requestMap.getSecurityAuthCheckEvent(), module);
+            }
+        } else {
+            checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
+        }
+        return checkLoginRequest;
     }
 }

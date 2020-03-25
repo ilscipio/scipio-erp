@@ -28,27 +28,38 @@ $(function(){
     };
 
     webSocket.onmessage = function(event) {
-         var jsonObject, message,type;
-         var atBottom = isScrolledToBottom($('#log pre'));
-         jsonObject = JSON.parse(event.data);
-         try {
-              message = jsonObject.message;
-              type = jsonObject.type;
-              if (message.length > 0) {
-                  if ($('#log code').children().length >= maxLogLines) {
-                    <#-- 2020-03-24: wrong?
-                    $('#log code').first().remove();-->
-                    $('#log code').children().first().remove();
-                  }
-                  $('<div/>', {
-                        class: type.standardLevel
-                  }).html(message).appendTo('#log code');
-                  if (atBottom) {
-                    $('#log pre').scrollTop($('#log pre').prop('scrollHeight'));
-                  }
-              }
-          } catch (error) {
-          }
+        var jsonObject, message,type;
+        var atBottom = isScrolledToBottom($('#log pre'));
+        jsonObject = JSON.parse(event.data);
+        try {
+            messageList = jsonObject.messageList;
+            if (messageList) {
+                var children = $('#log code').children();
+                <#-- Math.max means: for now, never remove more than we're adding - TODO: REVIEW: may change later -->
+                var numRemove = Math.max(messageList.length, (messageList.length + children.length) - maxLogLines);
+                if (numRemove > messageList.length) {
+                    numRemove = messageList.length;
+                }
+                var i;
+                for(i = 0; i < numRemove; i++) {
+                    children.get(i).remove();
+                }
+                $.each(messageList, function(i, e) {
+                    var message = e.message;
+                    var level = e.level;
+                    if (message.length > 0) {
+                        $('<div/>', {
+                            class: level.standardLevel
+                        }).html(message).appendTo('#log code');
+                        if (atBottom) {
+                            $('#log pre').scrollTop($('#log pre').prop('scrollHeight'));
+                        }
+                    }
+                });
+            }
+         } catch (error) {
+             console.log("error: " + error);
+         }
     };
 });
 </@script>

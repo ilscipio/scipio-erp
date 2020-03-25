@@ -26,12 +26,16 @@ import org.ofbiz.base.util.UtilProperties;
 @Plugin(name="ScipioSocketAppender", category="Core", elementType="appender", printObject=true)
 public final class ScipioSocketAppender extends AbstractAppender {
 
-    private String channel = "log";
-    private final List<MessageEntry> bufferMessages = new ArrayList<>();
+    private final String channel; // = "log"
+    private final int bufferMaxBytes = UtilProperties.getPropertyAsInteger("catalina", "webSocket.log.appender.buffer.maxBytes", 16384);
+    private final int bufferMaxWait = UtilProperties.getPropertyAsInteger("catalina", "webSocket.log.appender.buffer.maxWait", 500); // milliseconds
+    private final int bufferMinMsgCount = UtilProperties.getPropertyAsInteger("catalina", "webSocket.log.appender.buffer.minMsgCount", 2048); // initial buffer size
+
+    private List<MessageEntry> bufferMessages = new ArrayList<>(bufferMinMsgCount);
     private int bufferBytes = 0;
     private long bufferLastFlushTime = System.currentTimeMillis();
-    private int bufferMaxBytes = UtilProperties.getPropertyAsInteger("catalina", "webSocket.log.appender.buffer.maxBytes", 16384);
-    private int bufferMaxWait = UtilProperties.getPropertyAsInteger("catalina", "webSocket.log.appender.buffer.maxWait", 500); // milliseconds
+    private final Object bufferLock = new Object();
+
     // Likely not helping
     //private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     //private final Lock readLock = rwLock.readLock();
@@ -44,31 +48,33 @@ public final class ScipioSocketAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent event) {
-        List<Map<String, Object>> messageList;
-        synchronized(bufferMessages) { // TODO: REVIEW: maybe faster structure than synchronized to accumulate messages is possible...
-            byte[] messageBytes = getLayout().toByteArray(event);
-            bufferMessages.add(new MessageEntry(messageBytes, event.getLevel()));
+        byte[] messageBytes = getLayout().toByteArray(event);
+        MessageEntry messageEntry = new MessageEntry(messageBytes, event.getLevel());
+        long nowTime = System.currentTimeMillis();
+        List<MessageEntry> flushMessages;
+        synchronized(bufferLock) { // TODO: REVIEW: maybe faster structure than synchronized to accumulate messages is possible...
+            bufferMessages.add(messageEntry);
             bufferBytes += messageBytes.length;
-            long nowTime = System.currentTimeMillis();
             if ((bufferBytes < bufferMaxBytes) && ((nowTime - bufferLastFlushTime) < bufferMaxWait)) {
                 return;
             }
-            messageList = new ArrayList<>(bufferMessages.size());
-            for (MessageEntry entry : bufferMessages) {
-                messageList.add(entry.toMap());
-            }
-            bufferMessages.clear();
             bufferBytes = 0;
             bufferLastFlushTime = nowTime;
+            flushMessages = bufferMessages;
+            bufferMessages = new ArrayList<>(bufferMinMsgCount);
         }
-        // NOTE: technically the below should be within synchronized, but highly unlikely to result in ordering changes
+        // NOTE: Technically the below should be within synchronized, but it will slow down appends, and this alone is unlikely to result in too many ordering changes.
         try {
-            Map<String, Object> json = new HashMap<>();
-            json.put("messageList", messageList);
-            JSON obj = JSON.from(json);
+            List<Map<String, Object>> messageList = new ArrayList<>(flushMessages.size());
+            for (MessageEntry entry : flushMessages) {
+                messageList.add(entry.toMap());
+            }
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("messageList", messageList);
+            JSON dataMapJson = JSON.from(dataMap);
             try {
                 SocketSessionManager.allowLogging.set(false); // SPECIAL: Don't let this log anything or else endless logging
-                SocketSessionManager.broadcastToChannel(obj.toString(), channel);
+                SocketSessionManager.broadcastToChannel(dataMapJson.toString(), channel);
             } finally {
                 SocketSessionManager.allowLogging.remove();
             }
@@ -96,8 +102,8 @@ public final class ScipioSocketAppender extends AbstractAppender {
     }
 
     private static class MessageEntry {
-        byte[] bytes;
-        Level level;
+        final byte[] bytes;
+        final Level level;
 
         public MessageEntry(byte[] bytes, Level level) {
             this.bytes = bytes;

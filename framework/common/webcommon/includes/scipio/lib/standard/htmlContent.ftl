@@ -1694,7 +1694,6 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 }>
 <#macro img args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.img_defaultArgs)>
-  <#local attribs = makeAttribMapFromArgMap(args)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#local stylePrefix = "img_">

@@ -23,9 +23,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
@@ -40,6 +43,7 @@ public final class FlexibleLocation {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, LocationResolver> locationResolvers;
+    private static final Set<String> protocolNames; // SCIPIO
 
     static {
         Map<String, LocationResolver> resolverMap = new HashMap<String, LocationResolver>(8);
@@ -71,6 +75,17 @@ public final class FlexibleLocation {
             Debug.logError(e, "Exception thrown while loading locationresolvers.properties", module);
         }
         locationResolvers = Collections.unmodifiableMap(resolverMap);
+        protocolNames = Collections.unmodifiableSet(new LinkedHashSet<>(new TreeSet<>(resolverMap.keySet())));
+    }
+
+    /** Returns the read-only internal map of protocol names to location resolvers, keys unordered (SCIPIO: no reason to keep private). */
+    public static Map<String, LocationResolver> getLocationResolvers() {
+        return locationResolvers;
+    }
+
+    /** Returns the read-only internal map of protocol names, alphabetical order (SCIPIO: no reason to keep private). */
+    public static Set<String> getProtocolNames() {
+        return protocolNames;
     }
 
     /**

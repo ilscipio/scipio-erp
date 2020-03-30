@@ -340,7 +340,7 @@ public class FedexServices {
 
             StringWriter outWriter = new StringWriter();
             try {
-                FreeMarkerWorker.renderTemplateAtLocation(templateLocation, subscriptionRequestContext, outWriter);
+                FreeMarkerWorker.renderTemplate(templateLocation, subscriptionRequestContext, outWriter);
             } catch (Exception e) {
                 String errorMessage = "Cannot send Fedex subscription request: Failed to render Fedex XML Subscription Request Template [" + templateLocation + "].";
                 Debug.logError(e, errorMessage, module);
@@ -931,7 +931,7 @@ public class FedexServices {
 
             StringWriter outWriter = new StringWriter();
             try {
-                FreeMarkerWorker.renderTemplateAtLocation(templateLocation, shipRequestContext, outWriter);
+                FreeMarkerWorker.renderTemplate(templateLocation, shipRequestContext, outWriter);
             } catch (Exception e) {
                 String errorMessage = "Cannot confirm Fedex shipment: Failed to render Fedex XML Ship Request Template [" + templateLocation + "].";
                 Debug.logError(e, errorMessage, module);

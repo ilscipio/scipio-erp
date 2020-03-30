@@ -142,14 +142,14 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                     Debug.logWarning("Scipio: #interpretStd: could not determine"
                             + " a location template cache to use; not using cache", module);
                 }
-                templateSource = TemplateSource.getForLocation(location, cache, config);
+                templateSource = TemplateSource.getForLocation(location, cache, config, true);
             } else if (body != null) {
                 cache = TemplateSource.getTemplateInlineSelfCacheForConfig(config, env);
                 if (cache == null) {
                     Debug.logWarning("Scipio: #interpretStd: could not determine"
                             + " an inline template cache to use; not using cache", module);
                 }
-                templateSource = TemplateSource.getForInlineSelfCache(body, cache, config);
+                templateSource = TemplateSource.getForInline(null, body, cache, config, true);
             } else {
                 throw new TemplateModelException("Expected a 'location' or inline 'str' in interpretStd args map, but none passed");
             }

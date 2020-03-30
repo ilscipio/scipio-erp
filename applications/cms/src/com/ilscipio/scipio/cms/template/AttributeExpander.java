@@ -720,7 +720,7 @@ public abstract class AttributeExpander {
                 Debug.logWarning("Cms: could not determine"
                         + " an inline template cache to use; not using cache", module);
             }
-            TemplateSource templateSource = TemplateSource.getForInlineSelfCache(tmplStr, cache, config);
+            TemplateSource templateSource = TemplateSource.getForInline(null, tmplStr, cache, config, true);
 
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
             // NOTE: context parameters could be passed to the template using InvokeOptions.ctxVars...

@@ -136,7 +136,7 @@ public class HtmlWidget extends ModelScreenWidget {
                 if (location.endsWith(".fo.ftl")) { // FOP can't render correctly escaped characters
                     template = FreeMarkerWorker.getTemplate(location);
                 } else {
-                    template = FreeMarkerWorker.getTemplate(location, specialTemplateCache, specialConfig);
+                    template = FreeMarkerWorker.getTemplate(location, specialTemplateCache, specialConfig, true);
                 }
                 FreeMarkerWorker.renderTemplate(template, context, writer);
 
@@ -168,9 +168,9 @@ public class HtmlWidget extends ModelScreenWidget {
 
             Template template = null;
             if ("fo-ftl".equals(lang)) { // FOP can't render correctly escaped characters
-                template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineBasicTemplateCache, FreeMarkerWorker.getDefaultOfbizConfig());
+                template = FreeMarkerWorker.getTemplateFromString(templateId, body, inlineBasicTemplateCache, FreeMarkerWorker.getDefaultOfbizConfig(), true);
             } else {
-                template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineSpecialTemplateCache, specialConfig);
+                template = FreeMarkerWorker.getTemplateFromString(templateId, body, inlineSpecialTemplateCache, specialConfig, true);
             }
             FreeMarkerWorker.renderTemplate(template, context, writer);
 
@@ -289,7 +289,7 @@ public class HtmlWidget extends ModelScreenWidget {
         public InlineHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
             String lang = htmlTemplateElement.getAttribute("lang");
-            this.templateId = modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "@" + this.getStartColumn() + "," + this.getStartLine();
+            this.templateId = "widget:" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "@" + this.getStartColumn() + "," + this.getStartLine();
             String templateBody = UtilXml.elementValue(htmlTemplateElement); // htmlTemplateElement.getTextContent();
             for(String tmplType : HtmlTemplate.getSupportedTypes()) {
                 if (templateBody.startsWith(tmplType + ":")) {

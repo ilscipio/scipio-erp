@@ -29,6 +29,12 @@ code package.
         <attribute name="sendFailureNotification" mode="IN" type="Boolean" optional="true"/>
         <attribute name="sendPartial" mode="IN" type="Boolean" optional="true"/>
         <attribute name="startTLSEnabled" mode="IN" type="Boolean" optional="true"/>
+        <!-- SCIPIO: 03-31-2020: Added support for the standard header ReplyTo:
+            and custom headers which will be processed only when allowCustomHeaders is true -->
+        <attribute name="replyTo" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="allowCustomHeaders" type="Boolean" mode="IN" optional="true" default-value="false" />
+        <attribute name="customHeaders" type="java.util.Map" mode="IN" optional="true" />
+
         <attribute name="subject" type="String" mode="INOUT" optional="true" allow-html="any"/>
         <attribute name="contentType" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>

@@ -1530,6 +1530,8 @@ code package.
         </if-empty>
         <set-service-fields service-name="sendContactUsEmailToCompany" map="parameters" to-map="newComm"/>
         <set field="newComm.emailType" value="CONT_NOTI_EMAIL"/>
+        <!-- SCIPIO: 03-31-2020: Sending ReplyTo header with the customer email address set -->
+        <field-to-list field="parameters.emailAddress" list="newComm.replyTo" />
         <!-- SCIPIO: 2019-02-05: Modified so that it returns a generic message in case of error -->
         <call-service service-name="sendContactUsEmailToCompany" in-map-name="newComm" break-on-error="false" >
             <default-message property="EcommerceThankYouForContactingUsResponseSoon" resource="EcommerceUiLabels"></default-message>

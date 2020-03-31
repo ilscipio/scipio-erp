@@ -681,6 +681,19 @@ code package.
             <set field="emailParams.webSiteId" from-field="parameters.webSiteId"/>
             <set field="emailParams.bodyParameters.webSiteId" from-field="parameters.webSiteId"/>
             <set field="emailParams.bodyParameters.productStoreId" from-field="parameters.productStoreId"/>
+            <!-- SCIPIO: 03-31-2020: Sending ReplyTo header -->
+            <set field="emailParams.replyTo" from-field="parameters.replyTo" type="List" />
+
+            <!-- SCIPIO: 03-31-2020: Sending custom headers. Uncommnent to test them or add the desired ones -->
+<!--            <script lang="groovy"><![CDATA[-->
+<!--                import org.ofbiz.base.util.UtilMisc;-->
+<!--                customHeaders = UtilMisc.newMap();-->
+<!--                customHeaders.put("X-SCIPIO-Tags", "tag1,tag2,tag3");-->
+<!--                context.customHeaders = customHeaders;-->
+<!--            ]]></script>-->
+<!--            <set field="emailParams.allowCustomHeaders" value="true" type="Boolean" />-->
+<!--            <set field="emailParams.customHeaders" from-field="customHeaders" type="Map" />-->
+
             <!-- SCIPIO: 2019-02-04: Make sure the email locale is in the locale of the store, not the user -->            
             <if-not-empty field="parameters.productStoreId">
                 <!-- TODO: REVIEW: Is there a better locale to use as communication preference? -->

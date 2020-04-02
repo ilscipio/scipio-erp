@@ -37,7 +37,12 @@
                             <std-String value="requestdatalive"/>
                         </map-Value>
                     </map-Entry>
-                    <map-Entry>
+                </map-HashMap>
+            </ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <!-- no longer really used:
+                        <map-Entry>
                         <map-Key>
                             <std-String value="interval" />
                         </map-Key>
@@ -45,13 +50,10 @@
                             <std-String value="hour"/>
                         </map-Value>
                     </map-Entry>
-                </map-HashMap>
-            </ofbiz-ser>
-        ]]></runtimeInfo>
-    </RuntimeData>
-    <TemporalExpression tempExprId="SECOND_EVERY_10" tempExprTypeId="FREQUENCY" description="Every 10 seconds" integer1="13" integer2="10" />
+    -->
+    <!-- NOTE: No matter if MINUTE_EVERY or SECOND_EVERY, bucketMinutes is respected so other than logging the frequency doesn't really matter anymore -->
     <JobSandbox jobId="WSREQUESTS" jobName="Update websockets on recent requests"
                 runTime="2008-05-14 00:00:00.000" serviceName="sendHitBinLiveData" runtimeDataId="WSREQUESTS"
-                tempExprId="SECOND_EVERY_10" maxRecurrenceCount="-1"
+                tempExprId="MINUTE_EVERY" maxRecurrenceCount="-1"
                 poolId="pool" runAsUser="system" />
 </entity-engine-xml>

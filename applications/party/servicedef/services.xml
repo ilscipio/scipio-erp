@@ -1668,9 +1668,72 @@ code package.
 
     <!-- Websocket services -->
     <service name="sendHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0"
-             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="sendHitBinLiveData">
-        <description>Sends request data to listening websockets on channel. Requires interval to be set (HOURLY, DAILY, MONTHLY, YEARHLY) prevents miscalculated columns)</description>
+             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="sendHitBinLiveData" transaction-timeout="7260" semaphore="fail"><!-- transaction-timeout is for expiry -->
+        <description>Sends request data to listening websockets on channel. Automatically calls removeHitBinLiveData. Config, defaults in webtools.properties.</description>
+        <attribute name="serverName" type="String" mode="IN" optional="true">
+            <description>Defaults to general.properties#unique.instanceId</description>
+        </attribute>
+        <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, when clears happens, clears from all servers, not just serverName. Default in webtools.properties.</description>
+        </attribute>
+        <attribute name="expireMinutes" type="Integer" mode="IN" optional="true">
+            <description>Default in webtools.properties</description>
+        </attribute>
         <attribute name="channel" type="String" mode="IN" optional="false"/>
-        <attribute name="interval" type="String" mode="IN" optional="false"/>
+        <attribute name="bucketMinutes" type="Integer" mode="IN" optional="true">
+            <description>Causes final results to be bucketed every 5, 10, 15, etc. minutes as specified (0-based). Default in webtools.properties.
+                FIXME: Does not support values above 60, and multiple of 60 is recommended</description>
+        </attribute>
+        <attribute name="interval" type="String" mode="IN" optional="true">
+            <description>TODO: REVIEW: unused in current form</description>
+        </attribute>
+        <attribute name="sendEmpty" type="Boolean" mode="IN" optional="true">
+            <description>Default in webtools.properties</description>
+        </attribute>
+    </service>
+    <service name="removeHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0"
+             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveData" transaction-timeout="7200">
+        <description>Expires old ServerHitBucketStats whose thruDate are older than given days (thus containing no records for that date). Config, defaults in webtools.properties.
+            Currently only expires whole buckets (usually not an issue).</description>
+        <attribute name="serverName" type="String" mode="IN" optional="true">
+            <description>Defaults to general.properties#unique.instanceId</description>
+        </attribute>
+        <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, clears from all servers, not just serverName. Default in webtools.properties.</description>
+        </attribute>
+        <attribute name="expireMinutes" type="Integer" mode="IN" optional="true">
+            <description>Default configured in webtools.properties</description>
+        </attribute>
+        <attribute name="nowTimestamp" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeHitBinLiveDataAll" engine="java" require-new-transaction="true" max-retry="0"
+             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveData" transaction-timeout="7200">
+        <description>Removes all ServerHitBucketStats records for a server or all. Currently only expires whole buckets (usually not an issue).</description>
+        <attribute name="serverName" type="String" mode="IN" optional="true">
+            <description>Defaults to general.properties#unique.instanceId</description>
+        </attribute>
+        <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, clears from all servers, not just serverName. Default in webtools.properties.</description>
+        </attribute>
+    </service>
+    <service name="getSavedHitBinLiveData" engine="java" location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="getSavedHitBinLiveData">
+        <description>Returns the requests saved in ServerHitBucketStats as if they'd been returned by getServerRequests</description>
+        <attribute name="serverName" type="String" mode="IN" optional="true">
+            <description>Defaults to general.properties#unique.instanceId</description>
+        </attribute>
+        <attribute name="allServers" type="String" mode="IN" optional="true" default-value="false">
+            <description>If true, the serverRequests map is populated with all servers, otherwise </description>
+        </attribute>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <!-- currently always true
+        <attribute name="splitBuckets" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>If set to false, recorded buckets aren't split but all their entries returned even if fromDate falls in the middle</description>
+        </attribute>-->
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
+        <attribute name="requests" type="Map" mode="OUT" optional="true"/>
+        <attribute name="serverRequests" type="Map" mode="OUT" optional="true">
+            <description>Maps serverName to requests maps - only set if allServers true</description>
+        </attribute>
     </service>
 </services>

@@ -3165,5 +3165,39 @@ code package.
             <key-map field-name="partyClassificationTypeId"/>
         </view-link>
     </view-entity>
-    
+
+    <!-- SCIPIO: TODO: REVIEW: This was the original implementation, simply stored JSON from getServerRequests to pass it back later -
+                  this allowed fast storage/caching, but was complicating code that reads, so for now instead expanded the JSON fields...
+                  traditional entity below makes it easier to query/reuse the data (but harder to reuse the entity and more writes, so bucketMinutes must be sensible)
+    <entity entity-name="ServerHitPeriodStats"
+        package-name="org.ofbiz.party.party"
+        default-resource-name="PartyEntityLabels"
+        title="Role Type">
+      <field name="statsId" type="id-ne"></field>
+      <field name="serverName" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="bucketMinutes" type="numeric"></field>
+      <field name="requests" type="very-long"><description>JSON map</description></field>
+      <prim-key field="statsId"/>
+    </entity>-->
+    <entity entity-name="ServerHitBucketStats"
+        package-name="org.ofbiz.party.party"
+        default-resource-name="PartyEntityLabels"
+        title="Role Type">
+      <field name="statsId" type="id-ne"></field>
+      <field name="serverName" type="id-ne"></field>
+      <field name="date" type="date-time"><description>NOTE: This date is truncated to minutes based on bucketMinutes</description></field>
+      <field name="bucketMinutes" type="numeric"></field>
+      <field name="count" type="numeric"></field>
+      <field name="contentIds" type="very-long"><description>Comma-separated list</description></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="entityJson" type="very-long"><description>JSON fields for extra data</description></field>
+      <!-- logical PK
+      <prim-key field="serverName"/>
+      <prim-key field="date"/>-->
+      <prim-key field="statsId"/>
+    </entity>
+
 </entitymodel>

@@ -77,6 +77,10 @@ public final class UtilDateTime {
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
 
+    public static final String ZERO_DATE_FORMAT = "0000-00-00"; // SCIPIO
+    public static final String ZERO_DATE_TIME_FORMAT = "0000-00-00 00:00:00.000"; // SCIPIO
+    public static final String ZERO_TIME_FORMAT = "00:00:00"; // SCIPIO
+
     private static final UtilDateTime INSTANCE = new UtilDateTime(); // SCIPIO: This is for FreeMarkerWorker (only!)
 
     private UtilDateTime() {}
@@ -99,6 +103,22 @@ public final class UtilDateTime {
 
     public static Timestamp addDaysToTimestamp(Timestamp start, Double days) {
         return new Timestamp(start.getTime() + ((int) (24L*60L*60L*1000L*days)));
+    }
+
+    public static Timestamp addHoursToTimestamp(Timestamp start, int hours) { // SCIPIO
+        return new Timestamp(start.getTime() + (60L*60L*1000L*hours));
+    }
+
+    public static Timestamp addMinutesToTimestamp(Timestamp start, int minutes) { // SCIPIO
+        return new Timestamp(start.getTime() + (60L*1000L*minutes));
+    }
+
+    public static Timestamp addSecondsToTimestamp(Timestamp start, int seconds) { // SCIPIO
+        return new Timestamp(start.getTime() + (1000L*seconds));
+    }
+
+    public static Timestamp addMillisecondsToTimestamp(Timestamp start, int milliseconds) { // SCIPIO
+        return new Timestamp(start.getTime() + milliseconds);
     }
 
     public static double getInterval(Timestamp from, Timestamp thru) {
@@ -1096,6 +1116,14 @@ public final class UtilDateTime {
     }
 
     /**
+     * Localized String to Timestamp conversion (SCIPIO).
+     */
+    public static Timestamp stringToTimeStamp(String dateTimeString, DateFormat dateFormat) throws ParseException {
+        Date parsedDate = dateFormat.parse(dateTimeString);
+        return new Timestamp(parsedDate.getTime());
+    }
+
+    /**
      * Localized Timestamp to String conversion. To be used in tandem with stringToTimeStamp().
      */
     public static String timeStampToString(Timestamp stamp, TimeZone tz, Locale locale) {
@@ -1311,6 +1339,18 @@ public final class UtilDateTime {
     public static String getTimeFormat() {
         return TIME_FORMAT;
     }
+
+    public static String getZeroDateFormat() {
+        return ZERO_DATE_FORMAT;
+    } // SCIPIO
+
+    public static String getZeroDateTimeFormat() {
+        return ZERO_DATE_TIME_FORMAT;
+    } // SCIPIO
+
+    public static String getZeroTimeFormat() {
+        return ZERO_TIME_FORMAT;
+    } // SCIPIO
 
     /**
      * SCIPIO: Returns a map with begin/end timestamp for a given period. Defaults to month.
@@ -1594,5 +1634,12 @@ public final class UtilDateTime {
      */
     public static UtilDateTime getStaticInstance() {
         return INSTANCE;
+    }
+
+    public static String padDateTimeZero(String dateTimeString) { // SCIPIO
+        if (dateTimeString == null || dateTimeString.length() > ZERO_DATE_TIME_FORMAT.length()) {
+            return dateTimeString;
+        }
+        return dateTimeString + UtilDateTime.ZERO_DATE_TIME_FORMAT.substring(UtilDateTime.ZERO_DATE_TIME_FORMAT.length() - dateTimeString.length());
     }
 }

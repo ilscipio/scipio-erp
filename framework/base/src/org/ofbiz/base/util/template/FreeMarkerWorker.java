@@ -18,9 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.base.util.template;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
@@ -29,7 +28,6 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +38,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +58,9 @@ import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
+import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import freemarker.cache.URLTemplateLoader;
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -129,6 +130,10 @@ public final class FreeMarkerWorker {
 
     private static final Boolean AUTO_FLUSH_DEFAULT = UtilProperties.getPropertyAsBoolean("freemarkerConfig", "render.io.autoFlush", null); // SCIPIO
 
+    static final boolean USE_WRAPPER_UTIL_CACHES = UtilProperties.getPropertyAsBoolean("cache", "template.ftl.useWrapperUtilCaches", true); // SCIPIO
+    static final boolean USE_FTL_CACHES = UtilProperties.getPropertyAsBoolean("cache", "template.ftl.useFtlCaches", true); // SCIPIO
+    static final boolean DEBUG = UtilMisc.booleanValueVersatile(System.getProperty("scipio.ftl.debug"), false); // SCIPIO
+
     /**
      * SCIPIO: A copy of the current thread Environment.
      * @see #getCurrentEnvironment
@@ -188,7 +193,13 @@ public final class FreeMarkerWorker {
         newConfig.setSharedVariable("UtilMisc", new BeanModel(UtilMisc.getStaticInstance(), wrapper));
         newConfig.setSharedVariable("UtilNumber", new BeanModel(UtilNumber.getStaticInstance(), wrapper));
 
-        newConfig.setTemplateLoader(new FlexibleTemplateLoader());
+        // SCIPIO: New standard TemplateLoader
+        //newConfig.setTemplateLoader(new FlexibleTemplateLoader());
+        newConfig.setTemplateLoader(ScipioFtlTemplateLoader.getInstanceForNewConfig(newConfig));
+        Map<Object, Object> freemarkerImports = UtilProperties.getProperties("freemarkerImports");
+        if (freemarkerImports != null) {
+            newConfig.setAutoImports(freemarkerImports);
+        }
         // SCIPIO: Load it from ALL components, like freemarkerTransforms:
         //newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
         newConfig.setAutoImports(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerImports"));
@@ -289,101 +300,97 @@ public final class FreeMarkerWorker {
     }
 
     /**
-     * Renders a template at the specified location.
-     * @param templateLocation Location of the template - file path or URL
-     * @param context The context Map
-     * @param outWriter The Writer to render to
+     * Gets a Template instance from the template cache. If the Template instance isn't
+     * found in the cache, then one will be created.
+     * @param templateKey Location of the template - file path or URL or other template key
      */
-    public static void renderTemplateAtLocation(String templateLocation, Map<String, Object> context, Appendable outWriter) throws MalformedURLException, TemplateException, IOException {
-        renderTemplate(templateLocation, context, outWriter);
+    public static Template getTemplate(String templateKey) throws TemplateException, IOException {
+        return getTemplate(templateKey, cachedTemplates, defaultOfbizConfig, true);
     }
 
     /**
-     * Renders a template contained in a String.
-     * @param templateLocation A unique ID for this template - used for caching
-     * @param templateString The String containing the template
-     * @param context The context Map
-     * @param outWriter The Writer to render to
+     * Gets a Template instance from the template cache using the given key. If the Template instance isn't
+     * found in the cache, then one will be created.
+     * <p>
+     * SCIPIO: 2017-02-21: May now pass cache null to bypass caching. useCache must be passed to bypass Freemarker cache, but
+     * note that useCache==false only currently works for location templates.
      */
-    public static void renderTemplate(String templateLocation, String templateString, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
-        renderTemplate(templateLocation, templateString, context, outWriter, true);
-    }
-
-    /**
-     * Renders a template contained in a String.
-     * @param templateLocation A unique ID for this template - used for caching
-     * @param templateString The String containing the template
-     * @param context The context Map
-     * @param outWriter The Writer to render to
-     * @param useCache try to get template from cache
-     */
-    public static void renderTemplate(String templateLocation, String templateString, Map<String, Object> context, Appendable outWriter, boolean useCache) throws TemplateException, IOException {
-        if (templateString == null) {
-            renderTemplate(templateLocation, context, outWriter);
-        } else {
-            renderTemplateFromString(templateString, templateLocation, context, outWriter, useCache);
+    public static Template getTemplate(String templateKey, UtilCache<String, Template> cache, Configuration config, boolean useCache) throws TemplateException, IOException {
+        Template template = (useCache && USE_WRAPPER_UTIL_CACHES && cache != null) ? cache.get(templateKey) : null;
+        if (DEBUG) {
+            Debug.logInfo("Loading template: " + templateKey + (template != null ? " (from UtilCache)" : " (from FreeMarker)"), module);
         }
-    }
-
-    /**
-     * Renders a template from a Reader.
-     * @param templateLocation A unique ID for this template - used for caching
-     * @param context The context Map
-     * @param outWriter The Writer to render to
-     */
-    public static void renderTemplate(String templateLocation, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
-        Template template = getTemplate(templateLocation);
-        renderTemplate(template, context, outWriter);
-    }
-
-    /**
-     * @deprecated Renamed to {@link #renderTemplateFromString(String, String, Map, Appendable, boolean)}
-     */
-    @Deprecated
-    public static Environment renderTemplateFromString(String templateString, String templateLocation, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
-        Template template = cachedTemplates.get(templateLocation);
         if (template == null) {
-            Reader templateReader = new StringReader(templateString);
-            try {
-                template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-            } finally { // SCIPIO: added finally
-                templateReader.close();
-            }
-            template = cachedTemplates.putIfAbsentAndGet(templateLocation, template);
-        }
-        return renderTemplate(template, context, outWriter);
-    }
-
-    public static Environment renderTemplateFromString(String templateString, String templateLocation, Map<String, Object> context, Appendable outWriter, boolean useCache) throws TemplateException, IOException {
-        Template template = null;
-        if (useCache) {
-            template = cachedTemplates.get(templateLocation);
-            if (template == null) {
-                Reader templateReader = new StringReader(templateString);
-                try {
-                    template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-                } finally { // SCIPIO: added finally
-                    templateReader.close();
+            if (useCache && USE_FTL_CACHES) {
+                template = config.getTemplate(templateKey);
+            } else {
+                try (Reader reader = ScipioFtlTemplateLoader.makeTemplateReader(templateKey)) { // NOTE: must assume location template, for now
+                    template = new Template(templateKey, reader, config);
                 }
-                template = cachedTemplates.putIfAbsentAndGet(templateLocation, template);
             }
-        } else {
-            Reader templateReader = new StringReader(templateString);
-            try {
-                template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-            } finally { // SCIPIO: added finally
-                templateReader.close();
+            if (useCache && USE_WRAPPER_UTIL_CACHES && cache != null) {
+                template = cache.putIfAbsentAndGet(templateKey, template);
             }
         }
-        return renderTemplate(template, context, outWriter);
+        return template;
     }
 
-    public static void clearTemplateFromCache(String templateLocation) {
-        cachedTemplates.remove(templateLocation);
+    public static Template getTemplate(String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return getTemplate(templateKey, cache, config, true);
+    }
+
+    /**
+     * SCIPIO: Gets string template out of default configuration and cache.
+     */
+    public static Template getTemplateFromString(String templateName, String templateString) throws TemplateException, IOException {
+        return getTemplateFromString(templateName, templateString, cachedTemplates, defaultOfbizConfig, true);
+    }
+
+    /**
+     * SCIPIO: Gets template from string out of custom cache (new).
+     */
+    public static Template getTemplateFromString(String templateName, String templateString, UtilCache<String, Template> cache, Configuration config, boolean useCache) throws TemplateException, IOException {
+        String templateKey = (templateName != null) ? templateName : "inline:" + templateString;
+        Template template = (useCache && cache != null) ? cache.get(templateKey) : null; // NOTE: Don't check USE_WRAPPER_UTIL_CACHES here since it's the only cache we can use
+        if (template == null) {
+            // TODO: REVIEW: future: Aborted for now: this basically adds 2 extra unnecessary levels of caching
+            //ScipioFtlTemplateLoader templateLoader = ScipioFtlTemplateLoader.getInstance(config);
+            //if (templateLoader.isMemoryTemplate(templateName)) {
+            //    long lastModificationTime = System.currentTimeMillis(); // FIXME: turn into parameter
+            //    templateLoader.putTemplate(templateName, templateString, lastModificationTime);
+            //    template = config.getTemplate(templateName);
+            //}
+            try (Reader reader = new StringReader(templateString)) {
+                // NOTE: The templateName for the constructor is usually the same as the config.getTemplate call's name for Freemarker,
+                // but we relax that in order to better use the cache
+                template = new Template(templateName != null ? templateName : makeInlineTemplateName(templateName), reader, config);
+            }
+            if (useCache && cache != null) {
+                template = cache.putIfAbsentAndGet(templateKey, template);
+            }
+        }
+        return template;
+    }
+
+    /**
+     * SCIPIO: Gets template from string out of custom cache (new).
+     */
+    public static Template getTemplateFromString(String templateName, String templateString, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return getTemplateFromString(templateName, templateString, cache, config, true);
+    }
+
+    private static final Pattern SIMPLE_CHARS_ONLY = Pattern.compile("[^a-zA-Z0-9]");
+
+    /** SCIPIO: Attempts to generate a unique, reproducible template name using hash function.
+     * FIXME: not reproducible: currently relies on a timestamp, shouldn't. Maybe CRC/SHA could be appropriate, but performance? */
+    protected static String makeInlineTemplateName(String templateString) {
+        String sample = SIMPLE_CHARS_ONLY.matcher(templateString.length() > 150 ? templateString.substring(0, 150) : templateString).replaceAll("");
+        return "inline:" + templateString.hashCode() + ":" + System.currentTimeMillis() + ":" + sample;
     }
 
     /**
      * Renders a Template instance.
+     * SCIPIO: NOTE: It's important that template renders go through this method in order to record the Environment for contexts where it's not otherwise accessible.
      * @param template A Template instance
      * @param context The context Map
      * @param outWriter The Writer to render to
@@ -426,6 +433,126 @@ public final class FreeMarkerWorker {
      */
     public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
         return renderTemplate(template, context, outWriter, null);
+    }
+
+    /**
+     * Renders a template from a Reader.
+     * @param templateLocation A unique ID for this template - used for caching
+     * @param context The context Map
+     * @param outWriter The Writer to render to
+     */
+    public static void renderTemplate(String templateLocation, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
+        Template template = getTemplate(templateLocation);
+        renderTemplate(template, context, outWriter);
+    }
+
+    public static Environment renderTemplateFromString(String templateName, String templateString, Map<String, Object> context, Appendable outWriter, boolean useCache) throws TemplateException, IOException {
+        return renderTemplateFromString(templateName, templateString, context, outWriter, cachedTemplates, defaultOfbizConfig, useCache);
+    }
+
+    public static Environment renderTemplateFromString(String templateName, String templateString, Map<String, Object> context, Appendable outWriter, UtilCache<String, Template> cache, Configuration config, boolean useCache) throws TemplateException, IOException {
+        Template template = getTemplateFromString(templateName, templateString, cache, config, useCache);
+        return renderTemplate(template, context, outWriter);
+    }
+
+    /**
+     * @deprecated Renamed to {@link #renderTemplateFromString(String, String, Map, Appendable, boolean)}
+     */
+    @Deprecated
+    public static Environment renderTemplateFromString(String templateName, String templateString, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
+        return renderTemplateFromString(templateName, templateString, context, outWriter, cachedTemplates, defaultOfbizConfig, true);
+    }
+
+    /**
+     * Renders a template at the specified location.
+     * @param templateLocation Location of the template - file path or URL
+     * @param context The context Map
+     * @param outWriter The Writer to render to
+     */
+    @Deprecated
+    public static void renderTemplateAtLocation(String templateLocation, Map<String, Object> context, Appendable outWriter) throws MalformedURLException, TemplateException, IOException {
+        renderTemplate(templateLocation, context, outWriter);
+    }
+
+    /**
+     * Renders a template contained in a String.
+     * @param templateLocation A unique ID for this template - used for caching
+     * @param templateString The String containing the template
+     * @param context The context Map
+     * @param outWriter The Writer to render to
+     */
+    @Deprecated
+    public static void renderTemplate(String templateLocation, String templateString, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
+        renderTemplate(templateLocation, templateString, context, outWriter, true);
+    }
+
+    /**
+     * Renders a template contained in a String.
+     * @param templateLocation A unique ID for this template - used for caching
+     * @param templateString The String containing the template
+     * @param context The context Map
+     * @param outWriter The Writer to render to
+     * @param useCache try to get template from cache
+     */
+    @Deprecated
+    public static void renderTemplate(String templateLocation, String templateString, Map<String, Object> context, Appendable outWriter, boolean useCache) throws TemplateException, IOException {
+        if (templateString == null) {
+            renderTemplate(templateLocation, context, outWriter);
+        } else {
+            renderTemplateFromString(templateLocation, templateString, context, outWriter, useCache);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends TemplateLoader> T getTemplateLoader(Configuration config, Class<T> templateLoaderClass) {
+        TemplateLoader loader = config.getTemplateLoader();
+        if (templateLoaderClass.isAssignableFrom(loader.getClass())) {
+            return (T) loader;
+        } else if (loader instanceof MultiTemplateLoader) {
+            return getTemplateLoader((MultiTemplateLoader) loader, templateLoaderClass);
+        }
+        Debug.logWarning("No " + templateLoaderClass.getName() + " template loader class found for Freemarker Configuration " + config, module);
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends TemplateLoader> T getTemplateLoader(MultiTemplateLoader multiLoader, Class<T> templateLoaderClass) {
+        List<MultiTemplateLoader> multiLoaderList = null; // NOTE: optimized for simple setups
+        for(int i = 0; i < multiLoader.getTemplateLoaderCount(); i++) {
+            TemplateLoader loader = multiLoader.getTemplateLoader(i);
+            if (templateLoaderClass.isAssignableFrom(loader.getClass())) {
+                return (T) loader;
+            } else if (loader instanceof MultiTemplateLoader) {
+                if (multiLoaderList == null) {
+                    multiLoaderList = new ArrayList<>();
+                }
+                multiLoaderList.add((MultiTemplateLoader) loader);
+            }
+        }
+        if (multiLoaderList != null) {
+            for(MultiTemplateLoader nextMultiLoader : multiLoaderList) {
+                T nextLoader = getTemplateLoader(nextMultiLoader, templateLoaderClass);
+                if (nextLoader != null) {
+                    return nextLoader;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void clearTemplateFromCache(String templateKey, Configuration config) { // SCIPIO: overload having Configuration
+        cachedTemplates.remove(templateKey);
+        try {
+            config.removeTemplateFromCache(templateKey);
+        } catch (Exception e) {
+            if (Debug.verboseOn()) { // SCIPIO: don't log normally
+                Debug.logInfo("Template not found in Fremarker cache with name: " + templateKey, module);
+            }
+        }
+    }
+
+    public static void clearTemplateFromCache(String templateLocation) {
+        clearTemplateFromCache(templateLocation, defaultOfbizConfig);
     }
 
     /**
@@ -473,96 +600,6 @@ public final class FreeMarkerWorker {
      */
     public static Configuration getDefaultOfbizConfig() {
         return defaultOfbizConfig;
-    }
-
-    /** Make sure to close the reader when you're done! That's why this method is private, BTW. */
-    private static Reader makeReader(String templateLocation) throws IOException {
-        if (UtilValidate.isEmpty(templateLocation)) {
-            throw new IllegalArgumentException("FreeMarker template location null or empty");
-        }
-
-        URL locationUrl = null;
-        try {
-            locationUrl = FlexibleLocation.resolveLocation(templateLocation);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-        if (locationUrl == null) {
-            throw new IllegalArgumentException("FreeMarker file not found at location: " + templateLocation);
-        }
-
-        InputStream locationIs = locationUrl.openStream();
-        Reader templateReader = new InputStreamReader(locationIs);
-
-        String locationProtocol = locationUrl.getProtocol();
-        if ("file".equals(locationProtocol) && Debug.verboseOn()) {
-            String locationFile = locationUrl.getFile();
-            int lastSlash = locationFile.lastIndexOf('/');
-            String locationDir = locationFile.substring(0, lastSlash);
-            String filename = locationFile.substring(lastSlash + 1);
-            Debug.logVerbose("FreeMarker render: filename=" + filename + ", locationDir=" + locationDir, module);
-        }
-
-        return templateReader;
-    }
-
-    /**
-     * Gets a Template instance from the template cache. If the Template instance isn't
-     * found in the cache, then one will be created.
-     * @param templateLocation Location of the template - file path or URL
-     */
-    public static Template getTemplate(String templateLocation) throws TemplateException, IOException {
-        return getTemplate(templateLocation, cachedTemplates, defaultOfbizConfig);
-    }
-
-    /**
-     * Gets a Template instance from the template cache. If the Template instance isn't
-     * found in the cache, then one will be created.
-     * <p>
-     * SCIPIO: 2017-02-21: May now pass cache null to bypass caching.
-     */
-    public static Template getTemplate(String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = (cache != null) ? cache.get(templateLocation) : null;
-        if (template == null) {
-            // only make the reader if we need it, and then close it right after!
-            Reader templateReader = makeReader(templateLocation);
-            try {
-                template = new Template(templateLocation, templateReader, config);
-            } finally { // SCIPIO: added finally
-                templateReader.close();
-            }
-            if (cache != null) {
-                template = cache.putIfAbsentAndGet(templateLocation, template);
-            }
-        }
-        return template;
-    }
-
-    /**
-     * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
-     */
-    public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
-    }
-
-    /**
-     * SCIPIO: Gets template from string out of custom cache (new).
-     * 2017-02-21: May now pass cache null to bypass caching.
-     */
-    public static Template getTemplateFromString(String templateString, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = (cache != null) ? cache.get(templateKey) : null;
-        if (template == null) {
-            Reader templateReader = new StringReader(templateString);
-            try {
-                template = new Template(templateName, templateReader, config);
-            } finally {
-                templateReader.close();
-            }
-            if (cache != null) {
-                template = cache.putIfAbsentAndGet(templateKey, template);
-            }
-        }
-        return template;
     }
 
     public static String getArg(Map<String, ? extends Object> args, String key, Environment env) {
@@ -839,57 +876,22 @@ public final class FreeMarkerWorker {
     }
 
     /**
-     * OFBiz Template Source. This class is used by FlexibleTemplateLoader.
-     */
-    static class FlexibleTemplateSource {
-        protected String templateLocation = null;
-        protected Date createdDate = new Date();
-
-        protected FlexibleTemplateSource() {}
-        public FlexibleTemplateSource(String templateLocation) {
-            this.templateLocation = templateLocation;
-        }
-
-        @Override
-        public int hashCode() {
-            return templateLocation.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof FlexibleTemplateSource && obj.hashCode() == this.hashCode();
-        }
-
-        public String getTemplateLocation() {
-            return templateLocation;
-        }
-
-        public long getLastModified() {
-            return createdDate.getTime();
-        }
-    }
-
-    /**
      * OFBiz Template Loader. This template loader uses the FlexibleLocation
      * class to locate and load Freemarker templates.
      */
-    static class FlexibleTemplateLoader implements TemplateLoader {
-        public Object findTemplateSource(String name) throws IOException {
-            return new FlexibleTemplateSource(name);
-        }
-
-        public long getLastModified(Object templateSource) {
-            FlexibleTemplateSource fts = (FlexibleTemplateSource) templateSource;
-            return fts.getLastModified();
-        }
-
-        public Reader getReader(Object templateSource, String encoding) throws IOException {
-            FlexibleTemplateSource fts = (FlexibleTemplateSource) templateSource;
-            return makeReader(fts.getTemplateLocation());
-        }
-
-        public void closeTemplateSource(Object templateSource) throws IOException {
-            // do nothing
+    static class FlexibleTemplateLoader extends URLTemplateLoader {
+        @Override
+        protected URL getURL(String name) {
+            if (name != null && (name.startsWith("delegator:") || name.startsWith("script:"))) {
+                return null; // this is a template stored in the database - or in memory for script: (SCIPIO)
+            }
+            URL locationUrl = null;
+            try {
+                locationUrl = FlexibleLocation.resolveLocation(name);
+            } catch (Exception e) {
+                Debug.logWarning("Unable to locate the template: " + name, module);
+            }
+            return locationUrl != null && new File(locationUrl.getFile()).exists() ? locationUrl : null;
         }
     }
 
@@ -1040,4 +1042,5 @@ public final class FreeMarkerWorker {
         if (res != null) return res;
         return getRenderExceptionMode(env);
     }
+
 }

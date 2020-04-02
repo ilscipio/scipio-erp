@@ -20,7 +20,7 @@ if (tmplGlobalVars == null) {
     ftlContext = context
     useCache = true
     StringWriter sw = new StringWriter();
-    env = FreeMarkerWorker.renderTemplateFromString("getContextScipioTmplGlobalVarsDummyTemplate", "", ftlContext, sw, useCache)
+    env = FreeMarkerWorker.renderTemplateFromString("getContextScipioTmplGlobalVarsDummyTemplate", "<#-- getContextScipioTmplGlobalVarsDummyTemplate -->", ftlContext, sw, useCache)
     
     if (env != null) {
         tmplGlobalVars = LangFtlUtil.unwrapOrNull(ContextFtlUtil.getRequestVar("scipioTmplGlobalVarsAdapted", context.request, context));

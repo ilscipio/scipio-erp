@@ -37,62 +37,17 @@ public abstract class TemplateSource {
     private static Map<Configuration, UtilCache<String, Template>> configTmplLocCaches = Collections.emptyMap();
     private static Map<Configuration, UtilCache<String, Template>> configTmplInlineSelfCaches = Collections.emptyMap();
 
-
     public abstract Template getTemplate() throws TemplateException, IOException;
 
-    public static TemplateSource getForLocation(String templateLoc, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc, cache, config));
-    }
-
-    public static TemplateSource getForLocationNoCache(String templateLoc, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc, null, config)); // NOTE: null support is new in Scipio
-    }
-
-    /**
-     * @deprecated use overloads with explicit cache and configuration
-     */
-    @Deprecated
-    public static TemplateSource getForLocation(String templateLoc) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc));
+    public static TemplateSource getForLocation(String templateLoc, UtilCache<String, Template> cache, Configuration config, boolean useCache) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplate(templateLoc, cache, config, useCache));
     }
 
     /**
      * Gets source for inline template, where the cache key is different from the template itself.
      */
-    public static TemplateSource getForInline(String templateBody, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateKey, templateName, cache, config));
-    }
-
-    /**
-     * Gets source for inline template, where the cache key is the template string itself.
-     * NOTE: this is probably not appropriate for large templates.
-     */
-    public static TemplateSource getForInlineSelfCache(String templateBody, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, templateName, cache, config));
-    }
-
-    /**
-     * Gets source for inline template, where the cache key is the template string itself.
-     * The template name is auto-decided.
-     * NOTE: this is probably not appropriate for large templates.
-     */
-    public static TemplateSource getForInlineSelfCache(String templateBody, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, makeTemplateNameForInline(templateBody), cache, config));
-    }
-
-    /**
-     * Gets source for inline template, but with NO caching.
-     */
-    public static TemplateSource getForInlineNoCache(String templateBody, String templateName, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, templateName, null, config));
-    }
-
-    /**
-     * Gets source for inline template, but with NO caching.
-     * The template name is auto-decided.
-     */
-    public static TemplateSource getForInlineNoCache(String templateBody, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, makeTemplateNameForInline(templateBody), null, config));
+    public static TemplateSource getForInline(String templateName, String templateBody, UtilCache<String, Template> cache, Configuration config, boolean useCache) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateName, templateBody, cache, config, useCache));
     }
 
     public static String makeTemplateNameForInline(String templateBody) {

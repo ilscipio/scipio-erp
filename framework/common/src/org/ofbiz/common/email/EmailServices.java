@@ -129,6 +129,11 @@ public class EmailServices {
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
+        // SCIPIO: 03-31-2020: Checking if replyTo is present.
+        List<String> replyTo = null;
+        if (context.containsKey("replyTo")) {
+            replyTo = (List<String>) context.get("replyTo");
+        }
 
         // check to see if we should redirect all mail for testing
         String redirectAddress = EntityUtilProperties.getPropertyValue("general", "mail.notifications.redirectTo", delegator);
@@ -164,6 +169,8 @@ public class EmailServices {
         String contentType = (String) context.get("contentType");
         Boolean sendPartial = (Boolean) context.get("sendPartial");
         Boolean isStartTLSEnabled = (Boolean) context.get("startTLSEnabled");
+        // SCIPIO: 03-31-2020: Flag used to check if custom headers are allowed
+        Boolean isCustomHeadersAllowed = (Boolean) context.get("allowCustomHeaders");
 
         boolean useSmtpAuth = false;
 
@@ -250,11 +257,33 @@ public class EmailServices {
                 mail.setHeader("In-Reply-To", messageId);
                 mail.setHeader("References", messageId);
             }
+
+            // SCIPIO: 03-31-2020: Added replyTo header.
+            if (replyTo != null) {
+                InternetAddress[] internetAddresses = new InternetAddress[replyTo.size()];
+                for (int i = 0; i < replyTo.size() ; i++) {
+                    internetAddresses[i] = new InternetAddress(replyTo.get(i));
+                }
+                mail.setReplyTo(internetAddresses);
+            }
+
             mail.setFrom(new InternetAddress(sendFrom));
             mail.setSubject(subject, "UTF-8");
             mail.setHeader("X-Mailer", "SCIPIO ERP");
             mail.setSentDate(new Date());
             mail.addRecipients(Message.RecipientType.TO, sendTo);
+
+            // SCIPIO: 03-31-2020: Added custom headers support.
+            // TODO: Implement a proper validation mechanism
+            if (isCustomHeadersAllowed && context.containsKey("customHeaders")) {
+                Map<String, Object> customHeaders = (Map<String, Object>) context.get("customHeaders");
+                for (String customHeaderName : customHeaders.keySet()) {
+                    Object customHeaderValue = customHeaders.get(customHeaderName);
+                    if (customHeaderValue instanceof String) {
+                        mail.setHeader(customHeaderName, (String) customHeaderValue);
+                    }
+                }
+            }
 
             if (UtilValidate.isNotEmpty(sendCc)) {
                 mail.addRecipients(Message.RecipientType.CC, sendCc);

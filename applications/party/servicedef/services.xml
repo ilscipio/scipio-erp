@@ -1525,6 +1525,8 @@ code package.
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO: 03-31-2020: Added support for the standard header ReplyTo: -->
+        <attribute name="replyTo" type="java.util.List" mode="IN" optional="true"/>
         <override name="partyIdTo" optional="false">
             <type-validate>
                 <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingPartyIdTo"/>

@@ -122,7 +122,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      */
     protected static Template getTemplate(String rendererName, String macroLibraryPath) throws TemplateException, IOException {
         if ("html".equals(rendererName)) {
-            return FreeMarkerWorker.getTemplate(macroLibraryPath, ftlHtmlTemplateCache, ftlHtmlConfig);
+            return FreeMarkerWorker.getTemplate(macroLibraryPath, ftlHtmlTemplateCache, ftlHtmlConfig, true);
         } else {
             return FreeMarkerWorker.getTemplate(macroLibraryPath);
         }

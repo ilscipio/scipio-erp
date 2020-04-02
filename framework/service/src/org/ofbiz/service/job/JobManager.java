@@ -28,14 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 
 import org.apache.tomcat.util.buf.StringUtils;
+import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -70,9 +69,7 @@ import com.ibm.icu.util.Calendar;
 public final class JobManager {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String instanceId = FlexibleStringExpander.expandString( // SCIPIO: Added simple expansion support
-            UtilProperties.getPropertyValue("general", "unique.instanceId", "scipio0"),
-            UtilMisc.toMap());
+    public static final String instanceId = GeneralConfig.getInstanceId(); // SCIPIO: Moved
     private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<>();
     private static boolean isShutDown = false;
 

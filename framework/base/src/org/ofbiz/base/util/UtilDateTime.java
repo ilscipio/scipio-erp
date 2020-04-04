@@ -523,6 +523,15 @@ public final class UtilDateTime {
     }
 
     /**
+     * String to Timestamp conversion with DateFormat (SCIPIO).
+     * @see #stringToTimeStamp(String, String, TimeZone, Locale)
+     */
+    public static Timestamp toTimestamp(String dateTimeString, DateFormat dateFormat) throws ParseException {
+        Date parsedDate = dateFormat.parse(dateTimeString);
+        return new Timestamp(parsedDate.getTime());
+    }
+
+    /**
      * SCIPIO: Converts a timestamp  into a Date
      *
      * @param timestamp a Timestamp
@@ -1116,14 +1125,6 @@ public final class UtilDateTime {
     }
 
     /**
-     * Localized String to Timestamp conversion (SCIPIO).
-     */
-    public static Timestamp stringToTimeStamp(String dateTimeString, DateFormat dateFormat) throws ParseException {
-        Date parsedDate = dateFormat.parse(dateTimeString);
-        return new Timestamp(parsedDate.getTime());
-    }
-
-    /**
      * Localized Timestamp to String conversion. To be used in tandem with stringToTimeStamp().
      */
     public static String timeStampToString(Timestamp stamp, TimeZone tz, Locale locale) {
@@ -1351,6 +1352,30 @@ public final class UtilDateTime {
     public static String getZeroTimeFormat() {
         return ZERO_TIME_FORMAT;
     } // SCIPIO
+
+    public static DateFormat getDateFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(DATE_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getDateTimeFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(DATE_TIME_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getTimeFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(TIME_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getDateFormatInstance() { return toSimpleDateFormat(DATE_FORMAT); } // SCIPIO
+
+    public static DateFormat getDateTimeFormatInstance() { return toSimpleDateFormat(DATE_TIME_FORMAT); } // SCIPIO
+
+    public static DateFormat getTimeFormatInstance() { return toSimpleDateFormat(TIME_FORMAT); } // SCIPIO
+
+    public static SimpleDateFormat toSimpleDateFormat(String dateTimeFormat, Locale locale, TimeZone timezone) { // SCIPIO
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dateTimeFormat, locale != null ? locale : Locale.getDefault());
+        if (timezone != null) {
+            dateFormat.setTimeZone(timezone);
+        }
+        return dateFormat;
+    }
+
+    public static SimpleDateFormat toSimpleDateFormat(String dateTimeFormat) { // SCIPIO
+        return new SimpleDateFormat(dateTimeFormat, Locale.getDefault());
+    }
 
     /**
      * SCIPIO: Returns a map with begin/end timestamp for a given period. Defaults to month.
@@ -1641,5 +1666,17 @@ public final class UtilDateTime {
             return dateTimeString;
         }
         return dateTimeString + UtilDateTime.ZERO_DATE_TIME_FORMAT.substring(UtilDateTime.ZERO_DATE_TIME_FORMAT.length() - dateTimeString.length());
+    }
+
+    /** Returns timestamp without seconds and milliseconds (SCIPIO). */
+    public static Timestamp getMinuteBasedTimestamp(Timestamp stamp) {
+        if (stamp == null) {
+            return null;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(stamp.getTime());
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return new Timestamp(cal.getTimeInMillis());
     }
 }

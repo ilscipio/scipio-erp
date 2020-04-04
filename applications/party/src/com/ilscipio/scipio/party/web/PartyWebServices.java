@@ -22,7 +22,6 @@ import org.ofbiz.service.ServiceUtil;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -120,7 +119,11 @@ public class PartyWebServices {
             }*/
             GenericValue recentStats = delegator.select("thruDate").from("ServerHitBucketStats").where("serverName", serverName).orderBy("-thruDate").maxRows(1).queryFirst();
             if (recentStats != null) {
-                fromDate = recentStats.getTimestamp("thruDate");
+                fromDate = UtilDateTime.getMinuteBasedTimestamp(recentStats.getTimestamp("thruDate"));
+                if (fromDate.getTime() != recentStats.getTimestamp("thruDate").getTime()) {
+                    Debug.logWarning("sendHitBinLiveData: last ServerHitBucketStats.thruDate had non-zero seconds or milliseconds, automatically stripped: "
+                            + recentStats.getTimestamp("thruDate"), module);
+                }
                 // don't run if bucket not elapsed
                 if ((thruDate.getTime() - fromDate.getTime() < bucketMs)) {
                     if (DEBUG || Debug.verboseOn()) {
@@ -129,8 +132,7 @@ public class PartyWebServices {
                     return ServiceUtil.returnSuccess("Skipping stat generation - not enough time elapsed");
                 }
             } else {
-                fromDate = UtilDateTime.adjustTimestamp(nowTimestamp, Calendar.MINUTE, -bucketMinutes);
-                fromDate = UtilDateTime.stringToTimeStamp(requestsDateFormat.format(fromDate), requestsDateFormat); // Remove seconds
+                fromDate = UtilDateTime.getMinuteBasedTimestamp(UtilDateTime.adjustTimestamp(nowTimestamp, Calendar.MINUTE, -bucketMinutes));
             }
             // To keep date simple, set thruDate to match bucket (next bucket start), in other words "closest" bucket to nowTimestamp
             thruDate = UtilDateTime.getTimestamp(fromDate.getTime() + (((thruDate.getTime() - fromDate.getTime()) / bucketMs) * bucketMs)); // NOTE: integer division
@@ -179,7 +181,7 @@ public class PartyWebServices {
             if (requests != null) {
                 for(Map.Entry<String, Map<String, Object>> entry : requests.entrySet()) {
                     Map<String, Object> values = entry.getValue();
-                    Timestamp date = UtilDateTime.stringToTimeStamp(entry.getKey(), requestsDateFormat);
+                    Timestamp date = UtilDateTime.toTimestamp(entry.getKey(), requestsDateFormat);
                     if (DEBUG || Debug.verboseOn()) {
                         Debug.logInfo("sendHitBinLiveData: Creating ServerHitBucketStats with date: " + date + " from key '" + entry.getKey() + "'", module);
                     }
@@ -372,7 +374,7 @@ public class PartyWebServices {
             for(Map.Entry<String, Object> entry : entityRequests.entrySet()) {
                 Timestamp statsEntryTime;
                 try {
-                    statsEntryTime = toTimestamp(entry.getKey());
+                    statsEntryTime = toTimestamp(entry.getKey()); // NOTE: this was wrong!!
                 } catch (Exception e) {
                     Debug.logError("getSavedHitBinLiveData: error parsing requests json date in ServerHitBucketStats '" + stats.get("statsId") + "': "
                             + e.getMessage(), module);

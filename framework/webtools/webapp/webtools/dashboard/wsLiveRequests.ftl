@@ -8,9 +8,11 @@
             webSocket.onopen = function(event){
                 var msg = {};
               webSocket.send(JSON.stringify(msg));
+              <#-- disabled: this now seems counterproductive because all it does is add empty space and the 10 seconds no longer matches anything server-side
               setTimeout(function() {
-                    setInterval(timedUpdater, 10000); <#-- Run every 10 seconds -->
-              }, ((60 - new Date().getSeconds()) * 1000)); <#-- Start after 10s -->
+                    setInterval(timedUpdater, 10000); <#- - Run every 10 seconds - ->
+              }, ((60 - new Date().getSeconds()) * 1000)); <#- - Start after 10s - ->
+              -->
             };
 
             webSocket.onmessage = function(event) {
@@ -20,7 +22,7 @@
                   try {
                       jsonObject =  JSON.parse(text);
                       var chart = requestchart;
-
+                      var hasData = false;
                       $.each(jsonObject, function (key, value) {
                           var curIndex = requestchart.data.labels.indexOf(key)
                           if (curIndex > -1) {
@@ -33,14 +35,16 @@
                              chart.data.labels.push(key);
                              chart.data.datasets[0].data.push(jsonObject[key].count);
                           }
+                          hasData = true;
                       });
-
-                      chart.update();
+                      if (hasData) {
+                        chart.update();
+                      }
                     } catch (error) {
                         console.log(error);
                     }
             };
-
+            <#--
             function timedUpdater() {
                 var date = new Date();
                 var time = moment("YYYY-MM-DD'T'HH:mm");
@@ -52,6 +56,7 @@
                 }
                 return false;
             }
+            -->
       });
 </@script>
 

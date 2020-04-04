@@ -114,8 +114,15 @@ public Map getServerRequests() {
     Map result = ServiceUtil.returnSuccess();
     String dateInterval = context.dateInterval != null ? context.dateInterval : "day";
     Integer bucketMinutes = context.bucketMinutes;
-    Timestamp fromDate = context.fromDate;
-    Timestamp thruDate = context.thruDate;
+    // SPECIAL: we must remove seconds otherwise the returned values might be outside since they remove seconds
+    Timestamp fromDate = UtilDateTime.getMinuteBasedTimestamp(context.fromDate);
+    if (fromDate.getTime() != context.fromDate.getTime()) {
+        Debug.logWarning("getServerRequests: Invalid fromDate, should not have seconds or milliseconds, stripped: " + context.fromDate, module);
+    }
+    Timestamp thruDate = UtilDateTime.getMinuteBasedTimestamp(context.thruDate);
+    if (thruDate != null && thruDate.getTime() != context.thruDate.getTime()) {
+        Debug.logWarning("getServerRequests: Invalid thruDate, should not have seconds or milliseconds, stripped: " + context.thruDate, module);
+    }
     if (thruDate == null) {
         thruDate = UtilDateTime.nowTimestamp();
     }
@@ -170,6 +177,11 @@ public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, 
 }
 
 public Map processResult(EntityListIterator resultList, Timestamp fromDate, Timestamp thruDate, String dateInterval, Integer bucketMinutes) {
+    long fromDateMs = fromDate.getTime();
+    Long bucketMs = (bucketMinutes != null) ? bucketMinutes * 60 * 1000 : null;
+    if (bucketMs == null) {
+        Debug.logError("MISSING bucketMs", module)
+    }
     Map dateMap = new TreeMap<Date, Object>();
     //Calendar startD = UtilDateTime.toCalendar(fromDate);
     //Calendar endD = UtilDateTime.toCalendar(thruDate);
@@ -216,21 +228,11 @@ public Map processResult(EntityListIterator resultList, Timestamp fromDate, Time
         String hour = p.get("hour");
         String minute = p.get("minute");
 
-        int minuteInt = minute ? Integer.parseInt(minute) : 0;
-        if (bucketMinutes != null) {
-            // FIXME: Does not support values above 60, and multiple of 60 is recommended
-            // NOTE: no rounding, just bucketing
-            int roundedMinuteInt = (minuteInt.intdiv(bucketMinutes)) * bucketMinutes; // NOTE: groovy doesn't support integer division native
-            minute = roundedMinuteInt.toString();
+        Date pDate = UtilDateTime.toDate(month, day, year, hour, minute, "0");
+        if (bucketMs != null) {
+            // readjust the date to nearest bucket (NOTE: the seconds removal does not matter, have to do this anyway)
+            pDate = UtilDateTime.getTimestamp(fromDateMs + ((pDate.getTime() - fromDateMs).intdiv(bucketMs) * bucketMs));
         }
-        
-        Date pDate = UtilDateTime.toDate(month,day,year,hour,minute,"0");
-
-        // make sure date is still within limits after changing mins/secs/nanos (if excluded, should later fall into another call if fromDate/thruDate are passed correctly)
-        if (pDate.before(fromDate) || (thruDate != null && !pDate.before(thruDate))) {
-            continue;
-        }
-        
         String dateString = sdf.format(pDate);
         
         if(dateMap.get(dateString) != null){

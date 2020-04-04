@@ -1681,8 +1681,7 @@ code package.
         </attribute>
         <attribute name="channel" type="String" mode="IN" optional="false"/>
         <attribute name="bucketMinutes" type="Integer" mode="IN" optional="true">
-            <description>Causes final results to be bucketed every 5, 10, 15, etc. minutes as specified (0-based). Default in webtools.properties.
-                FIXME: Does not support values above 60, and multiple of 60 is recommended</description>
+            <description>Causes final results to be bucketed every 5, 10, 15, etc. minutes as specified (0-based). Default in webtools.properties.</description>
         </attribute>
         <attribute name="interval" type="String" mode="IN" optional="true">
             <description>TODO: REVIEW: unused in current form</description>
@@ -1707,7 +1706,7 @@ code package.
         <attribute name="nowTimestamp" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="removeHitBinLiveDataAll" engine="java" require-new-transaction="true" max-retry="0"
-             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveData" transaction-timeout="7200">
+             location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveDataAll" transaction-timeout="7200">
         <description>Removes all ServerHitBucketStats records for a server or all. Currently only expires whole buckets (usually not an issue).</description>
         <attribute name="serverName" type="String" mode="IN" optional="true">
             <description>Defaults to general.properties#unique.instanceId</description>

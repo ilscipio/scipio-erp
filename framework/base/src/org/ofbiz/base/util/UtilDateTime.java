@@ -77,6 +77,10 @@ public final class UtilDateTime {
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
 
+    public static final String ZERO_DATE_FORMAT = "0000-00-00"; // SCIPIO
+    public static final String ZERO_DATE_TIME_FORMAT = "0000-00-00 00:00:00.000"; // SCIPIO
+    public static final String ZERO_TIME_FORMAT = "00:00:00"; // SCIPIO
+
     private static final UtilDateTime INSTANCE = new UtilDateTime(); // SCIPIO: This is for FreeMarkerWorker (only!)
 
     private UtilDateTime() {}
@@ -99,6 +103,22 @@ public final class UtilDateTime {
 
     public static Timestamp addDaysToTimestamp(Timestamp start, Double days) {
         return new Timestamp(start.getTime() + ((int) (24L*60L*60L*1000L*days)));
+    }
+
+    public static Timestamp addHoursToTimestamp(Timestamp start, int hours) { // SCIPIO
+        return new Timestamp(start.getTime() + (60L*60L*1000L*hours));
+    }
+
+    public static Timestamp addMinutesToTimestamp(Timestamp start, int minutes) { // SCIPIO
+        return new Timestamp(start.getTime() + (60L*1000L*minutes));
+    }
+
+    public static Timestamp addSecondsToTimestamp(Timestamp start, int seconds) { // SCIPIO
+        return new Timestamp(start.getTime() + (1000L*seconds));
+    }
+
+    public static Timestamp addMillisecondsToTimestamp(Timestamp start, int milliseconds) { // SCIPIO
+        return new Timestamp(start.getTime() + milliseconds);
     }
 
     public static double getInterval(Timestamp from, Timestamp thru) {
@@ -500,6 +520,15 @@ public final class UtilDateTime {
             return null;
         }
         return new Timestamp(date.getTime());
+    }
+
+    /**
+     * String to Timestamp conversion with DateFormat (SCIPIO).
+     * @see #stringToTimeStamp(String, String, TimeZone, Locale)
+     */
+    public static Timestamp toTimestamp(String dateTimeString, DateFormat dateFormat) throws ParseException {
+        Date parsedDate = dateFormat.parse(dateTimeString);
+        return new Timestamp(parsedDate.getTime());
     }
 
     /**
@@ -1312,6 +1341,42 @@ public final class UtilDateTime {
         return TIME_FORMAT;
     }
 
+    public static String getZeroDateFormat() {
+        return ZERO_DATE_FORMAT;
+    } // SCIPIO
+
+    public static String getZeroDateTimeFormat() {
+        return ZERO_DATE_TIME_FORMAT;
+    } // SCIPIO
+
+    public static String getZeroTimeFormat() {
+        return ZERO_TIME_FORMAT;
+    } // SCIPIO
+
+    public static DateFormat getDateFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(DATE_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getDateTimeFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(DATE_TIME_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getTimeFormatInstance(Locale locale, TimeZone timezone) { return toSimpleDateFormat(TIME_FORMAT, locale, timezone); } // SCIPIO
+
+    public static DateFormat getDateFormatInstance() { return toSimpleDateFormat(DATE_FORMAT); } // SCIPIO
+
+    public static DateFormat getDateTimeFormatInstance() { return toSimpleDateFormat(DATE_TIME_FORMAT); } // SCIPIO
+
+    public static DateFormat getTimeFormatInstance() { return toSimpleDateFormat(TIME_FORMAT); } // SCIPIO
+
+    public static SimpleDateFormat toSimpleDateFormat(String dateTimeFormat, Locale locale, TimeZone timezone) { // SCIPIO
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dateTimeFormat, locale != null ? locale : Locale.getDefault());
+        if (timezone != null) {
+            dateFormat.setTimeZone(timezone);
+        }
+        return dateFormat;
+    }
+
+    public static SimpleDateFormat toSimpleDateFormat(String dateTimeFormat) { // SCIPIO
+        return new SimpleDateFormat(dateTimeFormat, Locale.getDefault());
+    }
+
     /**
      * SCIPIO: Returns a map with begin/end timestamp for a given period. Defaults to month.
      * @param period
@@ -1594,5 +1659,24 @@ public final class UtilDateTime {
      */
     public static UtilDateTime getStaticInstance() {
         return INSTANCE;
+    }
+
+    public static String padDateTimeZero(String dateTimeString) { // SCIPIO
+        if (dateTimeString == null || dateTimeString.length() > ZERO_DATE_TIME_FORMAT.length()) {
+            return dateTimeString;
+        }
+        return dateTimeString + UtilDateTime.ZERO_DATE_TIME_FORMAT.substring(UtilDateTime.ZERO_DATE_TIME_FORMAT.length() - dateTimeString.length());
+    }
+
+    /** Returns timestamp without seconds and milliseconds (SCIPIO). */
+    public static Timestamp getMinuteBasedTimestamp(Timestamp stamp) {
+        if (stamp == null) {
+            return null;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(stamp.getTime());
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return new Timestamp(cal.getTimeInMillis());
     }
 }

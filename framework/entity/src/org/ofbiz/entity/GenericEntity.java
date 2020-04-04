@@ -832,11 +832,63 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or unmodifiable empty map if the field is null/empty.
+     * Added 2020-04-01/2.1.0.
+     */
+    public <K, V> Map<K, V> getJsonAsMapOrEmpty(String name) {
+        Map<K, V> result = (Map<K, V>) getJson(name, Map.class);
+        return (result != null) ? result : Collections.emptyMap();
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or new map if the field is null/empty.
+     * Added 2020-04-01/2.1.0.
+     */
+    public <K, V> Map<K, V> getJsonAsMapOrNew(String name) {
+        Map<K, V> result = (Map<K, V>) getJson(name, Map.class);
+        return (result != null) ? result : createJsonMap();
+    }
+
+    /**
      * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.
      */
     public <E> List<E> getJsonAsList(String name) {
         return (List<E>) getJson(name, List.class);
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or unmodifiable empty list if the field is null/empty.
+     * Added 2019-09-24/2.1.0.
+     */
+    public <E> List<E> getJsonAsListOrEmpty(String name) {
+        List<E> result = (List<E>) getJson(name, List.class);
+        return (result != null) ? result : Collections.<E>emptyList();
+    }
+
+    /**
+     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or new list if the field is null/empty.
+     * Added 2020-04-01/2.1.0.
+     */
+    public <E> List<E> getJsonAsListOrNew(String name) {
+        List<E> result = (List<E>) getJson(name, List.class);
+        return (result != null) ? result : createJsonList();
+    }
+
+    /**
+     * SCIPIO: Returns a new json Map.
+     * Added 2020-04-01/2.1.0.
+     */
+    public <K, V> Map<K, V> createJsonMap() {
+        return new LinkedHashMap<>();
+    }
+
+    /**
+     * SCIPIO: Returns a new json Map.
+     * Added 2020-04-01/2.1.0.
+     */
+    public <E> List<E> createJsonList() {
+        return new ArrayList<>();
     }
 
     private static final ObjectMapper jsonMapper = new ObjectMapper(); // SCIPIO: TODO?: Share instance with JSON class?
@@ -906,8 +958,8 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * SCIPIO: Returns a new entityJson Map.
      * Added 2019-09-24/2.1.0.
      */
-    public static Map<String, Object> createEntityJsonMap() {
-        return new LinkedHashMap<>();
+    public Map<String, Object> createEntityJsonMap() {
+        return createJsonMap();
     }
 
     /**
@@ -924,6 +976,14 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      */
     public void setEntityJson(String jsonString) {
         set(ModelEntity.ENTITY_JSON_FIELD, jsonString);
+    }
+
+    /**
+     * SCIPIO: Sets the standard entityJson field using the given JSON string.
+     * Added 2020-03-31/2.1.0.
+     */
+    public void setEntityJson(JSON json) {
+        set(ModelEntity.ENTITY_JSON_FIELD, (json != null) ? json.toString() : null);
     }
 
     @SuppressWarnings("deprecation")

@@ -1,15 +1,13 @@
-import org.ofbiz.security.Security;
-import java.util.*;
+/**
+ * Implements websocket services under framework/webtools/servicedef/services.xml
+ */
+
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.model.DynamicViewEntity;
-import org.ofbiz.entity.model.ModelViewEntity.ComplexAlias;
-import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.webapp.stats.*;
-import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.base.util.Debug;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 import com.ibm.icu.util.Calendar;
@@ -115,25 +113,44 @@ public Map getServerRequestsThisYear() {
 public Map getServerRequests() {
     Map result = ServiceUtil.returnSuccess();
     String dateInterval = context.dateInterval != null ? context.dateInterval : "day";
+    Integer bucketMinutes = context.bucketMinutes;
+    // SPECIAL: we must remove seconds otherwise the returned values might be outside since they remove seconds
+    Timestamp fromDate = UtilDateTime.getMinuteBasedTimestamp(context.fromDate);
+    if (fromDate.getTime() != context.fromDate.getTime()) {
+        Debug.logWarning("getServerRequests: Invalid fromDate, should not have seconds or milliseconds, stripped: " + context.fromDate, module);
+    }
+    Timestamp thruDate = UtilDateTime.getMinuteBasedTimestamp(context.thruDate);
+    if (thruDate != null && thruDate.getTime() != context.thruDate.getTime()) {
+        Debug.logWarning("getServerRequests: Invalid thruDate, should not have seconds or milliseconds, stripped: " + context.thruDate, module);
+    }
+    if (thruDate == null) {
+        thruDate = UtilDateTime.nowTimestamp();
+    }
     try {
-        List dataList = new ArrayList();
-        try{
-            // For most SQL Databases use this
-            Map sqlFunctionMap = UtilMisc.toMap("year","extract-year","month","extract-month","day","extract-day","hour","extract-hour","minute","extract-minute");
-            dataList = getDataFromDB(sqlFunctionMap,context.fromDate, context.thruDate);
-        }catch(Exception e){
-            //Fallback for derby
-            Map sqlFunctionMap = UtilMisc.toMap("year","year","month","month","day","day","hour","hour","minute","minute");
-            dataList = getDataFromDB(sqlFunctionMap,context.fromDate, context.thruDate);
+        EntityListIterator dataList = null;
+        try {
+            try {
+                // For most SQL Databases use this
+                Map sqlFunctionMap = UtilMisc.toMap("year", "extract-year", "month", "extract-month", "day", "extract-day", "hour", "extract-hour", "minute", "extract-minute");
+                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate);
+            } catch (Exception e) { // FIXME: swallows obscure errors
+                //Fallback for derby
+                Map sqlFunctionMap = UtilMisc.toMap("year", "year", "month", "month", "day", "day", "hour", "hour", "minute", "minute");
+                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate);
+            }
+            result.put("requests", processResult(dataList, fromDate, thruDate, dateInterval, bucketMinutes));
+        } finally {
+            if (dataList != null) {
+                dataList.close();
+            }
         }
-        result.put("requests",processResult(dataList,context.fromDate,context.thruDate,dateInterval));
-    }catch(Exception e){
+    } catch(Exception e) {
         result = ServiceUtil.returnError("Cannot fetch request data");
     }
     return result;
 }
 
-public List getDataFromDB(Map sqlFunctionMap, Timestamp fromdate, Timestamp thrudate){
+public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, Timestamp thruDate) {
     //SQL magic
     DynamicViewEntity dve = new DynamicViewEntity();
     dve.addMemberEntity("SH", "ServerHit");
@@ -149,22 +166,25 @@ public List getDataFromDB(Map sqlFunctionMap, Timestamp fromdate, Timestamp thru
     dve.addAlias("SH", "hour", "hitStartDateTime",  null, null, Boolean.TRUE, sqlFunctionMap.hour);
     dve.addAlias("SH", "minute", "hitStartDateTime",  null, null, Boolean.TRUE, sqlFunctionMap.minute);
     dve.addAlias("SH", "contentIdCount", "contentId", null, null, null, "count");
-    
-    EntityCondition ecl = EntityCondition.makeCondition([
-        EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"),
-        EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
-        EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)
-    ],
-    EntityOperator.AND);
-    return select("contentIdCount","contentId","year","month","day","hour","minute").from(dve).where(ecl).queryList();
-    
+
+    def ecl = [
+            EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"),
+            EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)];
+    if (thruDate != null) {
+        ecl.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, thruDate))
+    }
+    return select("contentIdCount","contentId","year","month","day","hour","minute").from(dve).where(ecl).queryIterator();
 }
 
-
-public Map processResult(List resultList,Timestamp startDate,Timestamp endDate,String dateInterval) {
+public Map processResult(EntityListIterator resultList, Timestamp fromDate, Timestamp thruDate, String dateInterval, Integer bucketMinutes) {
+    long fromDateMs = fromDate.getTime();
+    Long bucketMs = (bucketMinutes != null) ? bucketMinutes * 60 * 1000 : null;
+    if (bucketMs == null) {
+        Debug.logError("MISSING bucketMs", module)
+    }
     Map dateMap = new TreeMap<Date, Object>();
-    Calendar startD = UtilDateTime.toCalendar(startDate);
-    Calendar endD = UtilDateTime.toCalendar(endDate);
+    //Calendar startD = UtilDateTime.toCalendar(fromDate);
+    //Calendar endD = UtilDateTime.toCalendar(thruDate);
     SimpleDateFormat sdf;
 
     // create new ordered Map of all upcoming dates
@@ -176,7 +196,7 @@ public Map processResult(List resultList,Timestamp startDate,Timestamp endDate,S
     if(dateInterval.equals("month")){sdf = new SimpleDateFormat("yy-MM")}
     if(dateInterval.equals("year")){sdf = new SimpleDateFormat("yy")}
     */
-    sdf = new SimpleDateFormat("YYYY-MM-DD'T'HH:mm")
+    sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
 
     /*
     while(!startD.after(endD))
@@ -200,23 +220,25 @@ public Map processResult(List resultList,Timestamp startDate,Timestamp endDate,S
         if(dateInterval.equals("month")){startD.add(Calendar.MONTH, 1);}
         if(dateInterval.equals("year")){startD.add(Calendar.YEAR, 1);}
     }*/
-
-    resultList.each {
-        Map p = it;
+    GenericValue p;
+    while((p = resultList.next()) != null) {
         String year = p.get("year");
         String month = p.get("month");
         String day = p.get("day");
         String hour = p.get("hour");
         String minute = p.get("minute");
-        
-        Date pDate = UtilDateTime.toDate(month,day,year,hour,minute,"0");
-        
+
+        Date pDate = UtilDateTime.toDate(month, day, year, hour, minute, "0");
+        if (bucketMs != null) {
+            // readjust the date to nearest bucket (NOTE: the seconds removal does not matter, have to do this anyway)
+            pDate = UtilDateTime.getTimestamp(fromDateMs + ((pDate.getTime() - fromDateMs).intdiv(bucketMs) * bucketMs));
+        }
         String dateString = sdf.format(pDate);
         
         if(dateMap.get(dateString) != null){
             Map currentMap = dateMap.get(dateString);
-            int currCount = currentMap.get("count");
-            int addCount = p.get("contentIdCount");
+            long currCount = currentMap.get("count"); // fixed, not ints
+            long addCount = p.get("contentIdCount");
             if(addCount!=null){
                 currentMap.put("count",(currCount+addCount));
             }

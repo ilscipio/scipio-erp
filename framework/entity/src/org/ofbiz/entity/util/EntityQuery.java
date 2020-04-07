@@ -268,21 +268,23 @@ public class EntityQuery {
     }
 
     /** Specifies the fetch size for this query. -1 will fall back to datasource settings.
+     * SCIPIO: now accepts null, which clears it (default).
      *
      * @param fetchSize - The fetch size for this query
      * @return this EntityQuery object, to enable chaining
      */
-    public EntityQuery fetchSize(int fetchSize) {
+    public EntityQuery fetchSize(Integer fetchSize) {
         this.fetchSize = fetchSize;
         return this;
     }
 
     /** Specifies the max number of rows to return, 0 means all rows.
+     * SCIPIO: now accepts null, which clears it (default).
      *
      * @param maxRows - the max number of rows to return
      * @return this EntityQuery object, to enable chaining
      */
-    public EntityQuery maxRows(int maxRows) {
+    public EntityQuery maxRows(Integer maxRows) {
         this.maxRows = maxRows;
         return this;
     }
@@ -297,11 +299,12 @@ public class EntityQuery {
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values.
+     * SCIPIO: now accepts null, which clears it (default).
      *
      * @param distinct - boolean indicating whether the values returned should be filtered to remove duplicate values
      * @return this EntityQuery object, to enable chaining
      */
-    public EntityQuery distinct(boolean distinct) {
+    public EntityQuery distinct(Boolean distinct) {
         this.distinct = distinct;
         return this;
     }
@@ -316,12 +319,13 @@ public class EntityQuery {
     }
 
     /** Specifies whether results should be read from the cache (or written to the cache if the results have not yet been cached)
+     * SCIPIO: Now supports null which is same as false.
      *
      * @param useCache - boolean to indicate if the cache should be used or not
      * @return this EntityQuery object, to enable chaining
      */
-    public EntityQuery cache(boolean useCache) {
-        this.useCache = useCache;
+    public EntityQuery cache(Boolean useCache) {
+        this.useCache = (useCache != null) ? useCache : false;
         return this;
     }
 

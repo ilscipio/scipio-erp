@@ -117,12 +117,12 @@ public class EntityQuerySafe extends EntityQuery {
     }
 
     @Override
-    public EntityQuerySafe fetchSize(int fetchSize) {
+    public EntityQuerySafe fetchSize(Integer fetchSize) {
         return (EntityQuerySafe) super.fetchSize(fetchSize);
     }
 
     @Override
-    public EntityQuerySafe maxRows(int maxRows) {
+    public EntityQuerySafe maxRows(Integer maxRows) {
         return (EntityQuerySafe) super.maxRows(maxRows);
     }
 
@@ -132,7 +132,7 @@ public class EntityQuerySafe extends EntityQuery {
     }
 
     @Override
-    public EntityQuerySafe distinct(boolean distinct) {
+    public EntityQuerySafe distinct(Boolean distinct) {
         return (EntityQuerySafe) super.distinct(distinct);
     }
 
@@ -142,7 +142,7 @@ public class EntityQuerySafe extends EntityQuery {
     }
 
     @Override
-    public EntityQuerySafe cache(boolean useCache) {
+    public EntityQuerySafe cache(Boolean useCache) {
         return (EntityQuerySafe) super.cache(useCache);
     }
 

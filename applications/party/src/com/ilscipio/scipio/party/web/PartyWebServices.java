@@ -281,6 +281,7 @@ public class PartyWebServices {
         String serverName = getServerName(context);
         boolean allServers = Boolean.TRUE.equals(context.get("allServers"));
         boolean splitBuckets = !Boolean.FALSE.equals(context.get("splitBuckets"));
+        Integer maxRequests = (Integer) context.get("maxRequests");
         try {
             /* previous JSON-based code, too complicated to manage the dates
             // Reconstitute the JSON requests
@@ -330,13 +331,13 @@ public class PartyWebServices {
             DateFormat requestsDateFormat = getRequestsDateFormat();
             if (allServers) {
                 Map<String, Map<String, Map<String, Object>>> serverRequests = new HashMap<>();
-                List<GenericValue> statsList = delegator.from("ServerHitBucketStats").where(cond).cache(useCache).queryList();
+                List<GenericValue> statsList = delegator.from("ServerHitBucketStats").where(cond).orderBy("-date").cache(useCache).maxRows(maxRequests).queryList();
                 if (statsList != null) {
                     for(GenericValue stats : statsList) {
                         String statsServerName = stats.getString("serverName");
                         Map<String, Map<String, Object>> requests = serverRequests.get(statsServerName);
                         if (requests == null) {
-                            requests = new LinkedHashMap<>();
+                            requests = new TreeMap<>();
                             serverRequests.put(statsServerName, requests);
                         }
                         collectSavedRequests(requests, stats, fromDate, thruDate, splitBuckets, requestsDateFormat);
@@ -347,10 +348,10 @@ public class PartyWebServices {
                 result.put("requests", serverRequests);
                 return result;
             } else {
-                Map<String, Map<String, Object>> requests = new LinkedHashMap<>();
+                Map<String, Map<String, Object>> requests = new TreeMap<>();
                 List<GenericValue> statsList = delegator.from("ServerHitBucketStats")
                         .where(EntityCondition.makeCondition(EntityCondition.makeCondition("serverName", serverName), EntityOperator.AND, cond))
-                        .cache(useCache).queryList();
+                        .orderBy("-date").cache(useCache).maxRows(maxRequests).queryList();
                 if (statsList != null) {
                     for(GenericValue stats : statsList) {
                         collectSavedRequests(requests, stats, fromDate, thruDate, splitBuckets, requestsDateFormat);

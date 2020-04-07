@@ -1725,6 +1725,7 @@ code package.
         </attribute>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxRequests" type="Integer" mode="IN" optional="true"/>
         <!-- currently always true
         <attribute name="splitBuckets" type="Boolean" mode="IN" optional="true" default-value="true">
             <description>If set to false, recorded buckets aren't split but all their entries returned even if fromDate falls in the middle</description>

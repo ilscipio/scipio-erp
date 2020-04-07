@@ -7080,6 +7080,10 @@
         <value xml:lang="zh">最多250个字符（125个汉字）</value>
         <value xml:lang="zh-TW">最多250個字元(125個漢字)</value>
     </property>
+    <property key="CommonMaxEntries">
+        <value xml:lang="de">Max. Einträge</value>
+        <value xml:lang="en">Max Entries</value>
+    </property>
     <property key="CommonMaxLines">
         <value xml:lang="de">Maximale Anzahl an Zeilen</value>
         <value xml:lang="en">Max Lines</value>

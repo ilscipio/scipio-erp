@@ -38,6 +38,7 @@ code package.
                 <set field="chartValue" value="count"/>
                 <set field="chartIntervalScope" value="minute"/> <!-- hour|day|week|month|year -->
                 <set field="chartIntervalCount" value="0"/>     <!-- Look back x hours/days/weeks/months/years -->
+                <set field="maxRequestsEntries" type="Integer" from-field="parameters.maxRequestsEntries" default-value="60"/>
                 <script location="component://webtools/script/com/ilscipio/data/StatsServerTraffic.groovy"/>
                 <set field="title" value="${uiLabelMap.CommonRequests} (${uiLabelMap.CommonPerHour})"/>
             </actions>

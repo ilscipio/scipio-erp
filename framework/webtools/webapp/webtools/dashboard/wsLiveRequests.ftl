@@ -1,8 +1,11 @@
-<#assign library=chartLibrary!"foundation"/>
-<#assign currData=rewrapMap(chartData, "raw-simple")/>
-<#assign fieldIdNum=fieldIdNum!0/>
+<#assign library = chartLibrary!"foundation"/>
+<#assign currData = rewrapMap(chartData, "raw-simple")/>
+<#assign fieldIdNum = fieldIdNum!0/>
 
 <@script>
+    var maxRequestsEntries = ${maxRequestsEntries};
+    function setMaxRequestsEntries(val) { val = parseInt(val); if (!isNaN(val)) { maxRequestsEntries = val; console.log("setting maxRequestsEntries: " + maxRequestsEntries); } }
+
       $(function(){
             var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/requestdatalive/subscribe</@appUrl>');
             webSocket.onopen = function(event){
@@ -28,9 +31,12 @@
                           if (curIndex > -1) {
                              chart.data.datasets[0].data[curIndex] = jsonObject[key].count;
                           } else {
-                             <#-- Remove old data and add new -->
-                             chart.data.labels.shift();
-                             chart.data.datasets[0].data.shift();
+                             console.log("chart.data.labels.length: " + chart.data.labels.length);
+                             if (chart.data.labels.length >= maxRequestsEntries) {
+                                 <#-- Remove old data and add new -->
+                                 chart.data.labels.shift();
+                                 chart.data.datasets[0].data.shift();
+                             }
                              <#-- Add new element -->
                              chart.data.labels.push(key);
                              chart.data.datasets[0].data.push(jsonObject[key].count);
@@ -84,3 +90,6 @@
 <#--<#else>
     <@commonMsg type="result-norecord"/>
 </#if>-->
+
+<@field type="text" name="maxRequestsEntries" value=maxRequestsEntries label=uiLabelMap.CommonMaxEntries
+events={"change":"setMaxRequestsEntries($(this).val());", "keyup":"setMaxRequestsEntries($(this).val());"}/>

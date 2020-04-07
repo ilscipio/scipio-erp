@@ -33,10 +33,10 @@ switch (context.chartIntervalScope ?: "day") {
 
 try {
     //findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",begin,"thruDate",nowTimestamp,"dateInterval",context.chartIntervalScope?context.chartIntervalScope:"day","userLogin",userLogin));
-    findDataMap = dispatcher.runSync("getSavedHitBinLiveData", UtilMisc.toMap("fromDate", begin, "useCache", true, "userLogin", userLogin));
-    result = findDataMap;
-}catch(Exception e){
-    result = ServiceUtil.returnError("Cannot fetch request data");
+    findDataMap = dispatcher.runSync("getSavedHitBinLiveData", ["fromDate": begin, "useCache": true, "maxRequests": context.maxRequestsEntries, "userLogin": userLogin]);
+    chartData = findDataMap.requests;
+    context.chartData = chartData;
+} catch(Exception e) {
+    Debug.logError(e, "Cannot fetch request data", module); // NOTE: Because call is switched this shouldn't happen anymore...
 }
 
-context.chartData = findDataMap.requests;

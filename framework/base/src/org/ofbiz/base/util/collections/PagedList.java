@@ -28,12 +28,13 @@ import java.util.List;
  */
 public class PagedList<E> implements Iterable<E> {
 
-    protected int startIndex;
-    protected int endIndex;
-    protected int size;
-    protected int viewIndex;
-    protected int viewSize;
-    protected List<E> data;
+    // SCIPIO: fields now final
+    protected final int startIndex;
+    protected final int endIndex;
+    protected final int size;
+    protected final int viewIndex;
+    protected final int viewSize;
+    protected final List<E> data;
 
     /**
      * Default constructor - populates all fields in this class
@@ -50,6 +51,18 @@ public class PagedList<E> implements Iterable<E> {
         this.size = size;
         this.viewIndex = viewIndex;
         this.viewSize = viewSize;
+        this.data = data;
+    }
+
+    /**
+     * Copy constructor with ability to override data (SCIPIO).
+     */
+    public PagedList(PagedList<?> other, List<E> data) {
+        this.startIndex = other.startIndex;
+        this.endIndex = other.endIndex;
+        this.size = other.size;
+        this.viewIndex = other.viewIndex;
+        this.viewSize = other.viewSize;
         this.data = data;
     }
 
@@ -81,8 +94,18 @@ public class PagedList<E> implements Iterable<E> {
      * @return the size of the full list, this can be the
      * result of <code>EntityListIterator.getResultsSizeAfterPartialList()</code>
      */
-    public int getSize() {
+    public int getListSize() {
         return size;
+    }
+
+    /**
+     * @deprecated SCIPIO: Use {@link #getListSize()} instead.
+     * @return the size of the full list, this can be the
+     * result of <code>EntityListIterator.getResultsSizeAfterPartialList()</code>
+     */
+    @Deprecated
+    public int getSize() {
+        return getListSize();
     }
 
     /**

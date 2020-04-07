@@ -4,18 +4,18 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-
+<#assign maxLogLines = UtilMisc.toIntegerObject(parameters.maxLogLines!1000)!1000>
 <div id="log">
     <@code type="log" class="scrollable" style="word-break: break-all;"><#list logLines as logLine><div class="${logLine.type!}">${logLine.line}</div></#list><#t>
     </@code>
-    <@field type="text" name="maxLogLines" value=(parameters.maxLogLines!1000) label=uiLabelMap.CommonMaxLines
+    <@field type="text" name="maxLogLines" value=maxLogLines label=uiLabelMap.CommonMaxLines
         events={"change":"setMaxLogLines($(this).val());", "keyup":"setMaxLogLines($(this).val());"}/>
 </div>
 <@script>
 function isScrolledToBottom(el) {
     return ($(el).scrollTop() + $(el).innerHeight() >= $(el)[0].scrollHeight);
 }
-var maxLogLines = 1000;
+var maxLogLines = ${maxLogLines};
 function setMaxLogLines(val) { val = parseInt(val); if (!isNaN(val)) { maxLogLines = val; console.log("setting maxLogLines: " + maxLogLines); } }
 
 $(function(){

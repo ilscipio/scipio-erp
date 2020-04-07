@@ -11,9 +11,9 @@ code package.
             <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                  <form method="post" action="<@pageUrl>createProductPromoRule</@pageUrl>">
-                    <@fields type="default-compact">
+                    <@fields >
                       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
-                      <@field type="text" label=uiLabelMap.ProductName size="30" name="ruleName" required=true/>
+                      <@field type="text" labelColumns=4 label=uiLabelMap.ProductName size="30" name="ruleName" required=true/>
                       <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
                     </@fields>
                     </form>
@@ -24,23 +24,23 @@ code package.
             <@modal id="modal_new_category_${productPromoId}" label=uiLabelMap.ProductAddPromoCategory linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoCategory}</@heading>
                 <form method="post" action="<@pageUrl>createProductPromoCategory</@pageUrl>" name="createProductPromoCategoryPromotions">
-                    <@fields type="default-compact">
+                    <@fields >
                         <input type="hidden" name="productPromoId" value="${productPromoId}" />
                         <input type="hidden" name="productPromoRuleId" value="_NA_" />
                         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
-                        <@field type="lookup" formName="createProductPromoCategoryPromotions" name="productCategoryId" id="productCategoryId_03" 
+                        <@field type="lookup" labelColumns=4 formName="createProductPromoCategoryPromotions" name="productCategoryId" id="productCategoryId_03"
                             fieldFormName="LookupProductCategory" label=uiLabelMap.ProductCategoryId required=true/>
-                        <@field type="select" name="productPromoApplEnumId" label="Product Promo Appl Enum Id"><#--FIXME: label-->
+                        <@field type="select" labelColumns=4 name="productPromoApplEnumId" label="Product Promo Appl Enum Id"><#--FIXME: label-->
                           <#list productPromoApplEnums as productPromoApplEnum>
                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                           </#list>
                         </@field>
-                        <@field type="select" name="includeSubCategories" label=uiLabelMap.ProductIncludeAllSubCategories>
+                        <@field type="select" labelColumns=4 name="includeSubCategories" label=uiLabelMap.ProductIncludeAllSubCategories>
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>
-                        <@field type="text" label="${rawLabel('CommonAnd')} ${rawLabel('CommonGroup')}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
+                        <@field type="text" labelColumns=4 label="${rawLabel('CommonAnd')} ${rawLabel('CommonGroup')}" required=true size="10" maxlength="20" name="andGroupId" value="_NA_"/>
                         <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </@fields>
                </form>
@@ -51,13 +51,13 @@ code package.
             <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoProduct}</@heading>
                  <form method="post" name="createpromoproductform" action="<@pageUrl>createProductPromoProduct</@pageUrl>">
-                      <@fields type="default-compact">
+                      <@fields >
                         <input type="hidden" name="productPromoId" value="${productPromoId}" />
                         <input type="hidden" name="productPromoRuleId" value="_NA_" />
                         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
-                        <@field type="lookup" required=true label=uiLabelMap.ProductProductId formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                        <@field type="select" name="productPromoApplEnumId" label="Product Promo Appl Enum Id">
+                        <@field type="lookup" labelColumns=4 required=true label=uiLabelMap.ProductProductId formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
+                        <@field type="select" labelColumns=4 name="productPromoApplEnumId" label="Product Promo Appl Enum Id">
                           <#list productPromoApplEnums as productPromoApplEnum>
                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                           </#list>
@@ -97,10 +97,10 @@ code package.
               <form method="post" action="<@pageUrl>updateProductPromoRule</@pageUrl>">
                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                <@field type="input" size="30" name="ruleName" value=(productPromoRule.ruleName)! required=true />
+                <@field type="input" labelColumns=4 size="30" name="ruleName" value=(productPromoRule.ruleName)! required=true />
                 <@field type="submit" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}" />
               </form>
-          </@modal></strong>
+          </@modal>
         </@td>
 
 
@@ -183,7 +183,7 @@ code package.
                           <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}"/>
                           <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)!}"/>
                           <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)!}"/>
-                          <@field type="select" name="inputParamEnumId" size="1" label=uiLabelMap.ProductCondition>
+                          <@field type="select" labelColumns=4 name="inputParamEnumId" size="1" label=uiLabelMap.ProductCondition>
                             <#if (productPromoCond.inputParamEnumId)??>
                               <#assign inputParamEnum = productPromoCond.getRelatedOne("InputParamEnumeration", true)>
                               <option value="${productPromoCond.inputParamEnumId}"><#if inputParamEnum??>${(inputParamEnum.get("description",locale))!}<#else>[${(productPromoCond.inputParamEnumId)!}]</#if></option>
@@ -195,7 +195,7 @@ code package.
                               <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
                             </#list>
                           </@field>
-                          <@field type="select" name="operatorEnumId" size="1">
+                          <@field type="select" labelColumns=4 name="operatorEnumId" size="1">
                             <#if (productPromoCond.operatorEnumId)??>
                               <#assign operatorEnum = productPromoCond.getRelatedOne("OperatorEnumeration", true)>
                               <option value="${(productPromoCond.operatorEnumId)!}"><#if operatorEnum??>${(operatorEnum.get("description",locale))!}<#else>[${(productPromoCond.operatorEnumId)!}]</#if></option>
@@ -208,8 +208,8 @@ code package.
                             </#list>
                           </@field>
                           
-                          <@field type="text" size="25" name="condValue" value=(productPromoCond.condValue)! label=uiLabelMap.ProductConditionValue />
-                          <@field type="text" size="10" name="otherValue" label=uiLabelMap.CommonOther value=(productPromoCond.otherValue!) />
+                          <@field type="text" labelColumns=4 size="25" name="condValue" value=(productPromoCond.condValue)! label=uiLabelMap.ProductConditionValue />
+                          <@field type="text" labelColumns=4 size="10" name="otherValue" label=uiLabelMap.CommonOther value=(productPromoCond.otherValue!) />
                           <#-- Reseting the values of carrierParty and carrierShippingMethod assigned in previous iteration of productPromoConds -->
                           <#assign carrierShippingMethod = ""/>
                           <#assign carrierParty = ""/>
@@ -223,7 +223,7 @@ code package.
                           <#else>
                             <#assign description = "">
                           </#if>
-                          <@field type="select" name="carrierShipmentMethod" label=uiLabelMap.OrderSelectShippingMethod>
+                          <@field type="select" labelColumns=4 name="carrierShipmentMethod" label=uiLabelMap.OrderSelectShippingMethod>
                             <option value="${carrierShippingMethod!}">${carrierParty!}&nbsp;${description}</option>
                             <option value="">&nbsp;</option>
                             <#list carrierShipmentMethods as carrierShipmentMethod>
@@ -231,11 +231,9 @@ code package.
                               <option value="${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
                             </#list>
                           </@field>
-                          <@field type="submitarea">
                               <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
-                              <@field type="submit" submitType="button" href="javascript:document.deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}.submit()" 
-                                  class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />                                  
-                          </@field>
+                              <a href="javascript:document.deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}.submit()"
+                                  class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                         </form>
                         <form name="deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}" method="post" action="<@pageUrl>deleteProductPromoCond</@pageUrl>">
                           <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}" />
@@ -267,7 +265,7 @@ code package.
                                     <@td>${(condApplEnumeration.get("description",locale))?default(condProductPromoCategory.productPromoApplEnumId)}</@td>
                                       <@td>${uiLabelMap.ProductSubCats}? ${condProductPromoCategory.includeSubCategories!"N"}</@td>
                                       <@td>${condProductPromoCategory.andGroupId}</@td>
-                                      <@td><a href="javascript:document.deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>                                
+                                      <@td><a href="javascript:document.deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                                 </@tr>
                                  <form name="deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}" method="post" action="<@pageUrl>deleteProductPromoCategory</@pageUrl>">
                                     <input type="hidden" name="productPromoId" value="${(condProductPromoCategory.productPromoId)!}" />
@@ -289,18 +287,18 @@ code package.
                             <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                             <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}" />
-                            <@field type="lookup" formName="createProductPromoCategoryConditions" name="productCategoryId" id="productCategoryId_cond" fieldFormName="LookupProductCategory" label=uiLabelMap.ProductProductCategoryId/>
-                            <@field type="select" name="productPromoApplEnumId">
+                            <@field type="lookup" labelColumns=4 formName="createProductPromoCategoryConditions" name="productCategoryId" id="productCategoryId_cond" fieldFormName="LookupProductCategory" label=uiLabelMap.ProductProductCategoryId/>
+                            <@field type="select" labelColumns=4 name="productPromoApplEnumId">
                               <#list productPromoApplEnums as productPromoApplEnum>
                                 <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                               </#list>
                             </@field>
-                            <@field type="select" name="includeSubCategories" label=uiLabelMap.ProductIncludeSubCategories>
+                            <@field type="select" labelColumns=4 name="includeSubCategories" label=uiLabelMap.ProductIncludeSubCategories>
                               <option value="N">${uiLabelMap.CommonN}</option>
                               <option value="Y">${uiLabelMap.CommonY}</option>
                             </@field>
-                            <@field type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" label=(uiLabelMap.CommonAnd + ' ' + uiLabelMap.CommonGroup) required=true/>
-                            <@field type="submit" text=uiLabelMap.ProductAddConditionCategory class="${styles.link_run_sys!} ${styles.action_add!}" />
+                            <@field type="text" labelColumns=4 size="10" maxlength="20" name="andGroupId" value="_NA_" label=(uiLabelMap.CommonAnd + ' ' + uiLabelMap.CommonGroup) required=true/>
+                            <@field type="submit" labelColumns=4 text=uiLabelMap.ProductAddConditionCategory class="${styles.link_run_sys!} ${styles.action_add!}" />
                           </form>
                       </div>
                     </@section>
@@ -322,7 +320,7 @@ code package.
                                   <@tr>
                                     <@td>${(condProduct.internalName)!} [${condProductPromoProduct.productId}]</@td>
                                     <@td>${(condApplEnumeration.get("description",locale))?default(condProductPromoProduct.productPromoApplEnumId)}</@td>                                      
-                                      <@td><a href="javascript:document.deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>                                                                  
+                                      <@td><a href="javascript:document.deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                                 </@tr>
                                 <form name="deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}" method="post" action="<@pageUrl>deleteProductPromoProduct</@pageUrl>">
                                     <input type="hidden" name="productPromoId" value="${(condProductPromoProduct.productPromoId)!}" />
@@ -343,8 +341,8 @@ code package.
                             <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                             <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}" />
-                            <@field type="lookup" formName="createProductPromoProductConditions" name="productId" id="productId_cond" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
-                            <@field type="select" name="productPromoApplEnumId">
+                            <@field type="lookup" labelColumns=4 formName="createProductPromoProductConditions" name="productId" id="productId_cond" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
+                            <@field type="select" labelColumns=4 name="productPromoApplEnumId">
                               <#list productPromoApplEnums as productPromoApplEnum>
                                 <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                               </#list>
@@ -418,7 +416,7 @@ code package.
                         <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)!}" />
                         <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)!}" />
                         <input type="hidden" name="orderAdjustmentTypeId" value="${(productPromoAction.orderAdjustmentTypeId)!}" />
-                        <@field type="select" name="productPromoActionEnumId" size="1">
+                        <@field type="select" labelColumns=4 name="productPromoActionEnumId" size="1">
                           <#if (productPromoAction.productPromoActionEnumId)??>
                             <#assign productPromoActionCurEnum = productPromoAction.getRelatedOne("ActionEnumeration", true)>
                             <option value="${(productPromoAction.productPromoActionEnumId)!}"><#if productPromoActionCurEnum??>${(productPromoActionCurEnum.get("description",locale))!}<#else>[${(productPromoAction.productPromoActionEnumId)!}]</#if></option>
@@ -430,12 +428,12 @@ code package.
                             <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
                           </#list>
                         </@field>
-                        <@field type="text" size="5" name="quantity" value=(productPromoAction.quantity)! label=uiLabelMap.ProductQuantity />
-                        <@field type="text" size="5" name="amount" value=(productPromoAction.amount)! label=uiLabelMap.ProductAmount />
-                        <@field type="text" size="15" name="productId" value=(productPromoAction.productId)! label=uiLabelMap.ProductItemId />
-                        <@field type="text" size="10" name="partyId" value=(productPromoAction.partyId)! label=uiLabelMap.PartyParty />
-                        <@field type="text" size="20" name="serviceName" value=(productPromoAction.serviceName)! label=uiLabelMap.ProductServiceName />
-                        <@field type="select" name="useCartQuantity" label=uiLabelMap.UseCartQuantity>
+                        <@field type="text" labelColumns=4 size="5" name="quantity" value=(productPromoAction.quantity)! label=uiLabelMap.ProductQuantity />
+                        <@field type="text" labelColumns=4 size="5" name="amount" value=(productPromoAction.amount)! label=uiLabelMap.ProductAmount />
+                        <@field type="text" labelColumns=4 size="15" name="productId" value=(productPromoAction.productId)! label=uiLabelMap.ProductItemId />
+                        <@field type="text" labelColumns=4 size="10" name="partyId" value=(productPromoAction.partyId)! label=uiLabelMap.PartyParty />
+                        <@field type="text" labelColumns=4 size="20" name="serviceName" value=(productPromoAction.serviceName)! label=uiLabelMap.ProductServiceName />
+                        <@field type="select" labelColumns=4 name="useCartQuantity" label=uiLabelMap.UseCartQuantity>
                           <#if (productPromoAction.useCartQuantity)??>
                             <#assign productPromoActionCurEnum = productPromoAction.getRelatedOne("ActionEnumeration", true)>
                             <option value="${(productPromoAction.useCartQuantity)!}"><#if (productPromoAction.useCartQuantity.equals("Y"))>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if></option>
@@ -446,10 +444,8 @@ code package.
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>
-                        <@field type="submitarea">
-                            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-                            <@field type="submit" submitType="button" href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
-                           </@field>
+                        <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                        <a href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                       </form>
                       <form name="deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}" method="post" action="<@pageUrl>deleteProductPromoAction</@pageUrl>">
                         <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
@@ -480,7 +476,7 @@ code package.
                                     <@td>${(actionApplEnumeration.get("description",locale))?default(actionProductPromoCategory.productPromoApplEnumId)}</@td>
                                       <@td>${uiLabelMap.ProductSubCats}? ${actionProductPromoCategory.includeSubCategories!"N"}</@td>
                                       <@td>${actionProductPromoCategory.andGroupId}</@td>
-                                      <@td><a href="javascript:document.deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>                                                                           
+                                      <@td><a href="javascript:document.deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                                 </@tr>
                                  <form name="deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}" action="<@pageUrl>deleteProductPromoCategory</@pageUrl>" method="post">
                                     <input type="hidden" name="productPromoId" value="${(actionProductPromoCategory.productPromoId)!}" />
@@ -502,17 +498,17 @@ code package.
                             <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
                             <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
-                            <@field type="lookup" formName="createProductPromoCategoryActions" name="productCategoryId" id="productCategoryId_act" fieldFormName="LookupProductCategory" label=uiLabelMap.ProductProductCategoryId />
-                            <@field type="select" name="productPromoApplEnumId">
+                            <@field type="lookup" labelColumns=4 formName="createProductPromoCategoryActions" name="productCategoryId" id="productCategoryId_act" fieldFormName="LookupProductCategory" label=uiLabelMap.ProductProductCategoryId />
+                            <@field type="select" labelColumns=4 name="productPromoApplEnumId">
                               <#list productPromoApplEnums as productPromoApplEnum>
                                 <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                               </#list>
                             </@field>
-                            <@field type="select" name="includeSubCategories" label=uiLabelMap.ProductIncludeSubCategories>
+                            <@field type="select" labelColumns=4 name="includeSubCategories" label=uiLabelMap.ProductIncludeSubCategories>
                               <option value="N">${uiLabelMap.CommonN}</option>
                               <option value="Y">${uiLabelMap.CommonY}</option>
                             </@field>
-                            <@field type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" label=(uiLabelMap.CommonAnd + ' ' + uiLabelMap.CommonGroup) required=true />
+                            <@field type="text" labelColumns=4 size="10" maxlength="20" name="andGroupId" value="_NA_" label=(uiLabelMap.CommonAnd + ' ' + uiLabelMap.CommonGroup) required=true />
                             <@field type="submit" text=uiLabelMap.ProductAddActionCategory class="${styles.link_run_sys!} ${styles.action_add!}" />
                           </form>
                         </div>
@@ -536,7 +532,7 @@ code package.
                                   <@tr>
                                     <@td>${(actionProduct.internalName)!} [${actionProductPromoProduct.productId}]</@td>
                                     <@td>${(actionApplEnumeration.get("description",locale))?default(actionProductPromoProduct.productPromoApplEnumId)}</@td>                                      
-                                      <@td><a href="javascript:document.deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>                                                                                                             
+                                      <@td><a href="javascript:document.deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                                 </@tr>
                                 <form name="deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}" method="post" action="<@pageUrl>deleteProductPromoProduct</@pageUrl>"> 
                                     <input type="hidden" name="productPromoId" value="${(actionProductPromoProduct.productPromoId)!}" />
@@ -557,13 +553,13 @@ code package.
                             <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
                             <input type="hidden" name="productPromoCondSeqId" value="_NA_" />                            
-                            <@field type="lookup" formName="createProductPromoProductActions" name="productId" id="productId_action" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
-                            <@field type="select" name="productPromoApplEnumId">
+                            <@field type="lookup" labelColumns=4 formName="createProductPromoProductActions" name="productId" id="productId_action" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
+                            <@field type="select" labelColumns=4 name="productPromoApplEnumId">
                               <#list productPromoApplEnums as productPromoApplEnum>
                                 <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                               </#list>
                             </@field>
-                            <@field type="submit" text=uiLabelMap.ProductAddActionProducts class="${styles.link_run_sys!} ${styles.action_add!}" />
+                            <@field type="submit" labelColumns=4 text=uiLabelMap.ProductAddActionProducts class="${styles.link_run_sys!} ${styles.action_add!}" />
                           </form>
                       </div>
                     </@section>      
@@ -577,63 +573,66 @@ code package.
                 <@menu type="button">
                     <@menuitem type="generic">
                         <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
-                            <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
-                                <#-- SCIPIO: TODO: Convert to @field -->
-                                <form method="post" action="<@pageUrl>createProductPromoCond</@pageUrl>">
-                                  <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
-                                  <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                                  <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                                  <select name="inputParamEnumId" size="1">
-                                    <#list inputParamEnums as inputParamEnum>
-                                      <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
-                                    </#list>
-                                  </select>
-                                  <select name="operatorEnumId" size="1">
-                                    <#list condOperEnums as condOperEnum>
-                                      <option value="${(condOperEnum.enumId)!}">${(condOperEnum.get("description",locale))!}</option>
-                                    </#list>
-                                  </select>
-                                  <label>${uiLabelMap.ProductConditionValue}</label>
-                                  <input type="text" size="25" name="condValue" />
-                                  ${uiLabelMap.CommonOther}<input type="text" size="10" name="otherValue" />
-                                  <label>${uiLabelMap.OrderSelectShippingMethod}</label>
-                                  <select name="carrierShipmentMethod">
-                                    <option value="">--${uiLabelMap.OrderSelectShippingMethod}--</option>
-                                    <#list carrierShipmentMethods as carrierShipmentMethod>
-                                      <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
-                                      <option value="${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
-                                    </#list>
-                                  </select>
-                                  <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-                                </form>
-                            </@modal>
+                            <@row>
+                                <@cell>
+                                    <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
+                                    <#-- SCIPIO: TODO: Convert to @field -->
+                                    <form method="post" action="<@pageUrl>createProductPromoCond</@pageUrl>">
+                                      <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
+                                      <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
+                                      <@input type="select" name="inputParamEnumId" size="1" labelColumns=4>
+                                        <#list inputParamEnums as inputParamEnum>
+                                          <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
+                                        </#list>
+                                      </@input>
+                                      <@input type="select" name="operatorEnumId" size="1" labelColumns=4>
+                                        <#list condOperEnums as condOperEnum>
+                                          <option value="${(condOperEnum.enumId)!}">${(condOperEnum.get("description",locale))!}</option>
+                                        </#list>
+                                      </@input>
+                                      <@input type="text" size="25" name="condValue" label=uiLabelMap.ProductConditionValue labelColumns=4/>
+                                      <@input type="text" size="10" name="otherValue" label=uiLabelMap.CommonOther labelColumns=4/>
+                                      <@input type="select" name="carrierShipmentMethod" label=uiLabelMap.OrderSelectShippingMethod labelColumns=4>
+                                        <option value="">--${uiLabelMap.OrderSelectShippingMethod}--</option>
+                                        <#list carrierShipmentMethods as carrierShipmentMethod>
+                                          <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
+                                          <option value="${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
+                                        </#list>
+                                      </@input>
+                                      <@input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+                                    </form>
+                                </@cell>
+                            </@row>
+                        </@modal>
                     </@menuitem>
                     <@menuitem type="generic">
                         <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductCreateAction}</@heading>
                                 <#-- SCIPIO: TODO: Convert to @field -->
-                                <form method="post" action="<@pageUrl>createProductPromoAction</@pageUrl>">
-                                    <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
-                                    <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                                    <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                                    <select name="productPromoActionEnumId" size="1">
-                                      <#list productPromoActionEnums as productPromoActionEnum>
-                                        <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
-                                      </#list>
-                                    </select>
-                                    <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT" />
-                                    ${uiLabelMap.ProductQuantity}&nbsp;<input type="text" size="5" name="quantity" />
-                                    ${uiLabelMap.ProductAmount}&nbsp;<input type="text" size="5" name="amount" />
-                                    ${uiLabelMap.ProductItemId}&nbsp;<input type="text" size="15" name="productId" />
-                                    ${uiLabelMap.PartyParty}&nbsp;<input type="text" size="10" name="partyId" /><br />
-                                    ${uiLabelMap.ProductServiceName}&nbsp;<input type="text" size="20" name="serviceName" />
-                                    ${uiLabelMap.UseCartQuantity}&nbsp;
-                                    <select name="useCartQuantity">
-                                      <option value="N">${uiLabelMap.CommonN}</option>
-                                      <option value="Y">${uiLabelMap.CommonY}</option>
-                                    </select>
-                                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-                                  </form>
+                                <@row>
+                                    <@cell>
+                                    <form method="post" action="<@pageUrl>createProductPromoAction</@pageUrl>" style="width:100%;">
+                                        <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
+                                        <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
+                                        <@input type="select" name="productPromoActionEnumId" size="1" labelColumns=4>
+                                          <#list productPromoActionEnums as productPromoActionEnum>
+                                            <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
+                                          </#list>
+                                        </@input>
+                                        <@input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT" labelColumns=4/>
+                                        <@input type="text" size="5" name="quantity" label=uiLabelMap.ProductQuantity labelColumns=4/>
+                                        <@input type="text" size="5" name="amount" label=uiLabelMap.ProductAmount labelColumns=4/>
+                                        <@input type="text" size="15" name="productId" label=uiLabelMap.ProductItemId labelColumns=4/>
+                                        <@input type="text" size="10" name="partyId" label=uiLabelMap.PartyParty labelColumns=4/>
+                                        <@input type="text" size="20" name="serviceName" label=uiLabelMap.ProductServiceName labelColumns=4/>
+                                        <@input type="select" name="useCartQuantity" label=uiLabelMap.UseCartQuantity labelColumns=4>
+                                          <option value="N">${uiLabelMap.CommonN}</option>
+                                          <option value="Y">${uiLabelMap.CommonY}</option>
+                                        </@input>
+                                        <@input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+                                      </form>
+                                    </@cell>
+                                </@row>
                             </@modal>
                     </@menuitem>
 
@@ -642,7 +641,7 @@ code package.
                               <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@pageUrl>deleteProductPromoRule</@pageUrl>">
                                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
-                                <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                                <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                               </form>
                           </@menuitem>
                     </#if>
@@ -678,7 +677,7 @@ code package.
             <input type="hidden" name="productPromoCondSeqId" value="${(promoProductPromoCategory.productPromoCondSeqId)!}" />
             <input type="hidden" name="productCategoryId" value="${(promoProductPromoCategory.productCategoryId)!}" />
             <input type="hidden" name="andGroupId" value="${(promoProductPromoCategory.andGroupId)!}" />
-            <a href="javascript:document.deleteProductPromoCategoryAction_${promoProductPromoCategory_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+            <a href="javascript:document.deleteProductPromoCategoryAction_${promoProductPromoCategory_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
           </form>
         </div>
       </#list>
@@ -700,7 +699,7 @@ code package.
             <input type="hidden" name="productPromoActionSeqId" value="${(promoProductPromoProduct.productPromoActionSeqId)!}" />
             <input type="hidden" name="productPromoCondSeqId" value="${(promoProductPromoProduct.productPromoCondSeqId)!}" />
             <input type="hidden" name="productId" value="${(promoProductPromoProduct.productId)!}" />
-            <a href="javascript:document.deleteProductPromoProductAction_${promoProductPromoProduct_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+            <a href="javascript:document.deleteProductPromoProductAction_${promoProductPromoProduct_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
           </form>
         </div>
       </#list>

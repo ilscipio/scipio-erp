@@ -363,7 +363,7 @@ public final class FreeMarkerWorker {
             try (Reader reader = new StringReader(templateString)) {
                 // NOTE: The templateName for the constructor is usually the same as the config.getTemplate call's name for Freemarker,
                 // but we relax that in order to better use the cache
-                template = new Template(templateName != null ? templateName : makeInlineTemplateName(templateName), reader, config);
+                template = new Template(templateName != null ? templateName : makeInlineTemplateName(templateString), reader, config);
             }
             if (useCache && cache != null) {
                 template = cache.putIfAbsentAndGet(templateKey, template);

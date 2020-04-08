@@ -121,15 +121,18 @@ public final class ProductStoreWorker {
     public static String getProductStoreId(ServletRequest request) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession(false);
-        if (session != null && session.getAttribute("productStoreId") != null) {
-            return (String) session.getAttribute("productStoreId");
-        } else {
-            GenericValue webSite = WebSiteWorker.getWebSite(httpRequest);
-            if (webSite != null) {
-                String productStoreId = webSite.getString("productStoreId");
-                // might be nice to do this, but not needed and has a problem with dependencies: setSessionProductStore(productStoreId, httpRequest);
+        // SCIPIO: refactored to prevent multiple accesss
+        if (session != null) {
+            String productStoreId = (String) session.getAttribute("productStoreId");
+            if (productStoreId != null) {
                 return productStoreId;
             }
+        }
+        GenericValue webSite = WebSiteWorker.getWebSite(httpRequest);
+        if (webSite != null) {
+            String productStoreId = webSite.getString("productStoreId");
+            // might be nice to do this, but not needed and has a problem with dependencies: setSessionProductStore(productStoreId, httpRequest);
+            return productStoreId;
         }
         return null;
     }

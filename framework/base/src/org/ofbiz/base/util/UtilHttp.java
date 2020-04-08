@@ -2282,7 +2282,7 @@ public final class UtilHttp {
         synchronized(context) {
             syncObj = context.getAttribute(SERVLETCONTEXT_SYNCOBJ);
             if (syncObj != null) {
-                return null;
+                return syncObj;
             }
             syncObj = createServletContextSyncObject();
             context.setAttribute(SERVLETCONTEXT_SYNCOBJ, syncObj);

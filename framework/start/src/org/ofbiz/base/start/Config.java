@@ -69,6 +69,7 @@ public class Config {
                 || "start-debug".equalsIgnoreCase(firstArg)
                 || "stop".equalsIgnoreCase(firstArg)
                 || "-shutdown".equalsIgnoreCase(firstArg) // shutdown & status hack (was pre-existing to portoffset introduction, also useful with it)
+                || "-shutdown-wait".equalsIgnoreCase(firstArg) // shutdown & status hack (SCIPIO)
                 || "-status".equalsIgnoreCase(firstArg)) {
             firstArg = "start";
         }

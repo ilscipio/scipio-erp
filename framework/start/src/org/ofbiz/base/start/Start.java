@@ -56,6 +56,7 @@ public final class Start {
      */
 
     private static final Start instance = new Start();
+    private static final String DOWN_RESPONSE = "Scipio is Down"; // SCIPIO: refactored
 
     private static Command checkCommand(Command command, Command wanted) {
         if (wanted == Command.HELP || wanted.equals(command)) {
@@ -95,6 +96,7 @@ public final class Start {
     public static void main(String[] args) throws StartupException {
         Command command = null;
         List<String> loaderArgs = new ArrayList<String>(args.length);
+        boolean shutdownWait = false; // SCIPIO
         for (String arg : args) {
             if (arg.equals("-help") || arg.equals("-?")) {
                 command = checkCommand(command, Command.HELP);
@@ -102,6 +104,9 @@ public final class Start {
                 command = checkCommand(command, Command.STATUS);
             } else if (arg.equals("-shutdown")) {
                 command = checkCommand(command, Command.SHUTDOWN);
+            } else if (arg.equals("-shutdown-wait")) { // SCIPIO
+                command = checkCommand(command, Command.SHUTDOWN);
+                shutdownWait = true;
             } else if (arg.startsWith("-")) {
                 if (!arg.contains("portoffset")) {
                     command = checkCommand(command, Command.COMMAND);
@@ -132,7 +137,23 @@ public final class Start {
             if (command == Command.STATUS) {
                 System.out.println("Current Status : " + instance.status());
             } else if (command == Command.SHUTDOWN) {
-                System.out.println("Shutting down server : " + instance.shutdown());
+                if (shutdownWait) { // SCIPIO
+                    String shutdownStatus = instance.shutdown();
+                    if (DOWN_RESPONSE.equals(shutdownStatus)) {
+                        System.out.println("Server no longer reachable, continuing : " + shutdownStatus);
+                    } else {
+                        System.out.println("Shutting down server and waiting : " + shutdownStatus);
+                        while (!DOWN_RESPONSE.equals(shutdownStatus)) {
+                            Thread.sleep(1000);
+                            shutdownStatus = instance.shutdownSafe();
+                        }
+                        System.out.println("Server no longer reachable, continuing : " + shutdownStatus);
+                        Thread.sleep(1000);
+                    }
+                } else {
+                    String shutdownStatus = instance.shutdown();
+                    System.out.println("Shutting down server : " + shutdownStatus);
+                }
             } else {
                 // general start
                 instance.start();
@@ -278,7 +299,7 @@ public final class Start {
     }
 
     private String sendSocketCommand(Control control) throws IOException, ConnectException {
-        String response = "Scipio is Down";
+        String response = DOWN_RESPONSE;
         try {
             Socket socket = new Socket(config.adminAddress, config.adminPort);
             // send the command
@@ -301,6 +322,15 @@ public final class Start {
 
     private String shutdown() throws IOException {
         return sendSocketCommand(Control.SHUTDOWN);
+    }
+
+    private String shutdownSafe() { // SCIPIO
+        try {
+            return sendSocketCommand(Control.SHUTDOWN);
+        } catch (IOException e) {
+            System.out.println("Exception while shutting down, server is probably down: " + e.toString());
+            return DOWN_RESPONSE;
+        }
     }
 
     void shutdownServer() {

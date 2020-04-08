@@ -1261,6 +1261,13 @@ code package.
             <arg value="-portoffset=${portoffset}"/>
         </exec-scipio-jar>
     </target>
+    <target name="stop-wait"
+            description="Stop Scipio ERP and return once it's down. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
+        <exec-scipio-jar>
+            <arg value="-shutdown-wait"/>
+            <arg value="-portoffset=${portoffset}"/>
+        </exec-scipio-jar>
+    </target>
     <target name="status"
             description="Display status of Scipio ERP. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <exec-scipio-jar>

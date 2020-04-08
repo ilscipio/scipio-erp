@@ -68,13 +68,13 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
 
         if (modelService == null) {
-            Debug.logError("ERROR: Null Model Service.", module);
+            Debug.logError("ERROR: Null Model Service (localName: " + localName + ")", module);
         }
         if (dctx == null) {
-            Debug.logError("ERROR: Null DispatchContext.", module);
+            Debug.logError("ERROR: Null DispatchContext (localName: " + localName + ", service: " + (modelService != null ? modelService.name : null) + ")", module);
         }
         if (context == null) {
-            Debug.logError("ERROR: Null Service Context.", module);
+            Debug.logError("ERROR: Null Service Context (localName: " + localName + ", service: " + (modelService != null ? modelService.name : null) + ")", module);
         }
 
         Object result = null;

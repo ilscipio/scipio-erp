@@ -2203,6 +2203,7 @@ public final class UtilHttp {
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpSession here, but it is likely to do nothing.
+        Debug.logInfo("getSessionSyncObject: " + SESSION_SYNCOBJ + " not found in HttpSession; creating", module);
         synchronized(session) {
             syncObj = session.getAttribute(SESSION_SYNCOBJ);
             if (syncObj != null) {
@@ -2279,6 +2280,7 @@ public final class UtilHttp {
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpServletContext here, but it is likely to do nothing.
+        Debug.logInfo("getServletContextSyncObject: " + SERVLETCONTEXT_SYNCOBJ + " not found in ServletContext; creating", module);
         synchronized(context) {
             syncObj = context.getAttribute(SERVLETCONTEXT_SYNCOBJ);
             if (syncObj != null) {

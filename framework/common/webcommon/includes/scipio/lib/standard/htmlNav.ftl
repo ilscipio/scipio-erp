@@ -1102,7 +1102,7 @@ functionality.
   "viewSizeSelection":"", "position":"", 
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
-  "previousViewSize":"", "paginateOffViewSize":"", "infoWidget":{}, "ctrlWidget":{},
+  "previousViewSize":"", "paginateOffViewSize":"", "infoWidget":{}, "ctrlWidget":{}, "ajaxEnabled":false, "areaId":"",
   "pagLabels":{}, "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
@@ -1207,54 +1207,67 @@ functionality.
   
     <#local origUrl = raw(url)>
     <#local origParamStr = raw(paramStr)>
-  
-    <#-- SPECIAL CASE: if paramDelim=="/" and url contains ";" or "?" we must strip the non-dir params and reappend them later 
-         WARN: we can ignore paramStr to simplify; assume caller followed his own conventions... -->
-    <#local urlSuffix = "">
-    <#if paramDelim?contains("/")>
-      <#local url = stripParamStrFromUrl(url)>
-      <#if (url?length < origUrl?length)>
-        <#local urlSuffix = origUrl[url?length..]>
+
+    <#if ajaxEnabled && areaId?has_content>
+      <#local areaId = raw(areaId)>
+      <#local ajaxUrl = raw(url)>
+      <#local ajaxParamStr = trimParamStrDelims(raw(paramStr), paramDelim)>
+      <#if ajaxParamStr?has_content>
+        <#local ajaxParamStr = paramDelim + ajaxParamStr>
       </#if>
-    </#if>
+      <#local viewSizeParam = (viewSizeString != "_")?then(viewSizeString + "=" + viewSize + paramDelim, "")>
 
-    <#local commonUrl = addParamDelimToUrl(raw(url), paramDelim)>
-    <#if paramStr?has_content>
-      <#local commonUrl = commonUrl + trimParamStrDelims(raw(paramStr), paramDelim) + paramDelim>
-    </#if>
+      <#assign ajaxFirstUrl = areaId + "," + ajaxUrl + "," + viewSizeParam + viewIndexString + "=" + viewIndexFirst + ajaxParamStr>
+      <#assign ajaxPreviousUrl = areaId + "," + ajaxUrl + "," + viewSizeParam + viewIndexString + "=" + viewIndexPrevious + ajaxParamStr>
+      <#assign ajaxNextUrl = areaId + "," + ajaxUrl + "," + viewSizeParam + viewIndexString + "=" + viewIndexNext + ajaxParamStr>
+      <#assign ajaxLastUrl = areaId + "," + ajaxUrl + "," + viewSizeParam + viewIndexString + "=" + viewIndexLast + ajaxParamStr>
+      <#assign ajaxSelectUrl = areaId + "," + ajaxUrl + "," + viewSizeParam + viewIndexString + "=_VIEWINDEXVALUE_" + ajaxParamStr>
+      <#assign ajaxSelectSizeUrl = areaId + "," + ajaxUrl + "," + (viewSizeString != "_")?then(viewSizeString + "='+this.value+'" + paramDelim, "") + viewIndexString + "=" + viewIndexFirst + ajaxParamStr>
+      <#assign ajaxPaginateOnUrl = areaId + "," + ajaxUrl + "," + (viewSizeString != "_")?then(viewSizeString + "=" + previousViewSize + paramDelim, "") + viewIndexString + "=" + viewIndexFirst + paramDelim + paginateToggleString + "=" + paginateToggleOnValue + ajaxParamStr>
+      <#assign ajaxPaginateOffUrl = areaId + "," + ajaxUrl + "," + (viewSizeString != "_")?then(viewSizeString + "=" + paginateOffViewSize + paramDelim, "") + viewIndexString + "=" + viewIndexFirst + paramDelim + paginateToggleString + "=" + paginateToggleOffValue + ajaxParamStr>
 
-    <#local viewSizeParam = (viewSizeString != "_")?then(viewSizeString + "=" + viewSize + paramDelim, "")>
-    <#local firstUrl = "">
-    <#if (!firstUrl?has_content)>
-      <#local firstUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
-    </#if>
-    <#local previousUrl = "">
-    <#if (!previousUrl?has_content)>
-      <#local previousUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexPrevious}"+urlSuffix/>
-    </#if>
-    <#local nextUrl="">
-    <#if (!nextUrl?has_content)>
-      <#local nextUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexNext}"+urlSuffix/>
-    </#if>
-    <#local lastUrl="">
-    <#if (!lastUrl?has_content)>
-      <#local lastUrl=commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexLast}"+urlSuffix/>
-    </#if>
-    <#local selectUrl="">
-    <#if (!selectUrl?has_content)>
-      <#local selectUrl=commonUrl+"${viewSizeParam}${viewIndexString}=_VIEWINDEXVALUE_"+urlSuffix/>
-    </#if>
-    <#local selectSizeUrl="">
-    <#if (!selectSizeUrl?has_content)>
-      <#local selectSizeUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}='+this.value+'${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
-    </#if>
-    <#local paginateOnUrl="">
-    <#if (!paginateOnUrl?has_content)>
-      <#local paginateOnUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}=${previousViewSize}${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
-    </#if>
-    <#local paginateOffUrl="">
-    <#if (!paginateOffUrl?has_content)>
-      <#local paginateOffUrl=commonUrl+((viewSizeString != "_")?then("${viewSizeString}=${paginateOffViewSize}${paramDelim}", ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
+      <#assign firstUrl = "">
+      <#assign previousUrl = "">
+      <#assign nextUrl = "">
+      <#assign lastUrl = "">
+      <#assign selectUrl = "">
+      <#assign selectSizeUrl = "">
+      <#assign paginateOnUrl = "">
+      <#assign paginateOffUrl = "">
+    <#else>
+      <#-- SPECIAL CASE: if paramDelim=="/" and url contains ";" or "?" we must strip the non-dir params and reappend them later
+           WARN: we can ignore paramStr to simplify; assume caller followed his own conventions... -->
+      <#local urlSuffix = "">
+      <#if paramDelim?contains("/")>
+        <#local url = stripParamStrFromUrl(url)>
+        <#if (url?length < origUrl?length)>
+          <#local urlSuffix = origUrl[url?length..]>
+        </#if>
+      </#if>
+
+      <#local commonUrl = addParamDelimToUrl(raw(url), paramDelim)>
+      <#if paramStr?has_content && !ajaxEnabled>
+        <#local commonUrl = commonUrl + trimParamStrDelims(raw(paramStr), paramDelim) + paramDelim>
+      </#if>
+      <#local viewSizeParam = (viewSizeString != "_")?then(viewSizeString + "=" + viewSize + paramDelim, "")>
+
+      <#local firstUrl = commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
+      <#local previousUrl = commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexPrevious}"+urlSuffix/>
+      <#local nextUrl = commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexNext}"+urlSuffix/>
+      <#local lastUrl = commonUrl+"${viewSizeParam}${viewIndexString}=${viewIndexLast}"+urlSuffix/>
+      <#local selectUrl = commonUrl+"${viewSizeParam}${viewIndexString}=_VIEWINDEXVALUE_"+urlSuffix/>
+      <#local selectSizeUrl = commonUrl+((viewSizeString != "_")?then(viewSizeString + "='+this.value+'" + paramDelim, ""))+"${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
+      <#local paginateOnUrl = commonUrl+((viewSizeString != "_")?then(viewSizeString + "=" + previousViewSize + paramDelim, ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
+      <#local paginateOffUrl = commonUrl+((viewSizeString != "_")?then(viewSizeString + "=" + paginateOffViewSize + paramDelim, ""))+"${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
+
+      <#assign ajaxFirstUrl = "">
+      <#assign ajaxPreviousUrl = "">
+      <#assign ajaxNextUrl = "">
+      <#assign ajaxLastUrl = "">
+      <#assign ajaxSelectUrl = "">
+      <#assign ajaxSelectSizeUrl = "">
+      <#assign ajaxPaginateOnUrl = "">
+      <#assign ajaxPaginateOffUrl = "">
     </#if>
     
     <#-- optimization to avoid too much overhead during request -->
@@ -1277,11 +1290,11 @@ functionality.
     <#-- NOTE: javaScriptEnabled is a context var -->
     <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
     <#if mode == "single">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget position=position passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=ajaxEnabled javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget ajaxFirstUrl=ajaxFirstUrl ajaxPreviousUrl=ajaxPreviousUrl ajaxSelectUrl=ajaxSelectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl ajaxNextUrl=ajaxNextUrl ajaxLastUrl=ajaxLastUrl ajaxPaginateOnUrl=ajaxPaginateOnUrl ajaxPaginateOffUrl=ajaxPaginateOffUrl position=position passArgs=passArgs/>
     <#else>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget position="top" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=ajaxEnabled javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget ajaxFirstUrl=ajaxFirstUrl ajaxPreviousUrl=ajaxPreviousUrl ajaxSelectUrl=ajaxSelectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl ajaxNextUrl=ajaxNextUrl ajaxLastUrl=ajaxLastUrl ajaxPaginateOnUrl=ajaxPaginateOnUrl ajaxPaginateOffUrl=ajaxPaginateOffUrl position="top" passArgs=passArgs/>
         <#nested>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget position="bottom" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=ajaxEnabled javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout infoWidget=infoWidget ctrlWidget=ctrlWidget ajaxFirstUrl=ajaxFirstUrl ajaxPreviousUrl=ajaxPreviousUrl ajaxSelectUrl=ajaxSelectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl ajaxNextUrl=ajaxNextUrl ajaxLastUrl=ajaxLastUrl ajaxPaginateOnUrl=ajaxPaginateOnUrl ajaxPaginateOffUrl=ajaxPaginateOffUrl position="bottom" passArgs=passArgs/>
     </#if>
   </#if>
 </#macro>
@@ -1424,8 +1437,11 @@ functionality.
 
     <#-- SPECIAL CASE: markup expects selectUrl to contain the value _VIEWINDEXVALUE_, but legacy ofbiz code
         may not set it. in that case, simply append, since it used to appen at the end. -->
-    <#if !selectUrl?contains("_VIEWINDEXVALUE_")>
-      <#local selectUrl = selectUrl + "_VIEWINDEXVALUE_">
+    <#if selectUrl?has_content && !selectUrl?contains("_VIEWINDEXVALUE_")>
+      <#local selectUrl = raw(selectUrl) + "_VIEWINDEXVALUE_">
+    </#if>
+    <#if ajaxSelectUrl?has_content && !ajaxSelectUrl?contains("_VIEWINDEXVALUE_")>
+      <#local ajaxSelectUrl = raw(ajaxSelectUrl) + "_VIEWINDEXVALUE_">
     </#if>
     <#if alwaysShowCount?is_boolean && alwaysShowCount == true>
       <#local showCount = true>
@@ -1556,8 +1572,7 @@ functionality.
                     <#if vi == viewIndex>
                       <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)" class="${styles.pagination_link!}">${i}</a></li>
                     <#else>
-                      <#local finalSelectUrl = selectUrl?replace("_VIEWINDEXVALUE_", vi)>
-                      <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxSelectUrl + vi?string, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(finalSelectUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(finalSelectUrl, 'html')}"</#if></#local>
+                      <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(raw(ajaxSelectUrl)?replace("_VIEWINDEXVALUE_", vi), 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(raw(selectUrl)?replace("_VIEWINDEXVALUE_", vi), 'js-html')}')"</#if><#else>href="${escapeFullUrl(raw(selectUrl)?replace("_VIEWINDEXVALUE_", vi), 'html')}"</#if></#local>
                       <li class="${styles.pagination_item!}"><a ${actionStr} class="${styles.pagination_link!}">${i}</a></li>
                     </#if>
                   <#else>

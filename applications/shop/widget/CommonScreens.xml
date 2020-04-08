@@ -95,7 +95,7 @@ code package.
             <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
             -->
 
-            <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
+            <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs" use-cache="true">
                 <field-map field-name="webSiteId"/>
             </entity-and>
            

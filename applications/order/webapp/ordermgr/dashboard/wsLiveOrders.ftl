@@ -1,4 +1,6 @@
+<#assign maxLiveOrderEntries = maxLiveOrderEntries!UtilMisc.toIntegerObject(parameters.maxLiveOrderEntries!60)!60>
 <@script>
+      var maxLiveOrderEntries = ${maxLiveOrderEntries};
       $(function(){
             var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/orderdatalive/subscribe</@appUrl>');
             webSocket.onopen = function(event){
@@ -17,16 +19,18 @@
                  message = text;
                   try {
                       jsonObject =  JSON.parse(text);
-                      var chart = orderchart;
-                      var curIndex = orderchart.data.labels.indexOf(jsonObject.global.dateTimeStr)
+                      var chart = $('#orderchart').data('chart');
+                      var curIndex = chart.data.labels.indexOf(jsonObject.global.dateTimeStr)
                       if(curIndex > -1){
                          chart.data.datasets[0].data[curIndex] = jsonObject.global.totalAmount;
                          chart.data.datasets[1].data[curIndex] = jsonObject.global.totalOrders;
                       }else{
-                         <#-- Remove old data and add new -->
-                         chart.data.labels.shift();
-                         chart.data.datasets[0].data.shift();
-                         chart.data.datasets[1].data.shift();
+                         if (chart.data.labels.length >= maxLiveOrderEntries) {
+                             <#-- Remove old data and add new -->
+                             chart.data.labels.shift();
+                             chart.data.datasets[0].data.shift();
+                             chart.data.datasets[1].data.shift();
+                         }
                          <#-- Add new element -->
                          chart.data.labels.push(jsonObject.global.dateTimeStr);
                          chart.data.datasets[0].data.push(jsonObject.global.totalAmount);
@@ -40,9 +44,10 @@
 
             function timedUpdater(){
                 var time = moment("YYYY-MM-DD'T'HH:mm");
-                var curIndex = orderchart.data.labels.indexOf(time)
+                var chart = $('#orderchart').data('chart');
+                var curIndex = chart.data.labels.indexOf(time)
                 if(curIndex == -1){
-                     var chart = orderchart;
+                     var chart = chart;
                      chart.data.labels.push(time);
                      chart.data.datasets[0].data.push(0);
                      chart.data.datasets[1].data.push(0);
@@ -56,12 +61,10 @@
 <@section title=title!"">
     <@chart id="orderchart" label1=label1 label2=label2 xlabel=xlabel ylabel=ylabel type="bar">
         <#-- Additional chart options -->
-        try{
+        try {
             chart.config.options.scales.xAxes[0].ticks.display=false;
-        }catch(e){
-
+        } catch(e) {
         }
-
         <#-- Chart data -->
         <#if currData?has_content>
             <#list mapKeys(currData) as key>

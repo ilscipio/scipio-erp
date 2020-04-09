@@ -1094,9 +1094,10 @@ Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (cust
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
 In scripts outside chart creation, the Chart object can be accessed using:
-  {{{$('#id').data("chart")}}}
-and in the nested content init can be referred to using the variable name "chart":
-  {{{chart.config.options.scales.xAxes[0].ticks.display=false;}}})
+    $('#id').data("chart")
+
+It can be used in the nested content initialization, but there the variable "chart" is also already available:
+    chart.config.options.scales.xAxes[0].ticks.display = false;
 
   * Usage Examples *  
     <@chart type="bar" >

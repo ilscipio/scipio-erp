@@ -1093,6 +1093,11 @@ Libraries used:
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss) - deprecated
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
+In scripts outside chart creation, the Chart object can be accessed using:
+  {{{$('#id').data("chart")}}}
+and in the nested content init can be referred to using the variable name "chart":
+  {{{chart.config.options.scales.xAxes[0].ticks.display=false;}}})
+
   * Usage Examples *  
     <@chart type="bar" >
         <@chartdata value="36" title="Peperoni"/> 
@@ -1175,11 +1180,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <span class="chart-data">&nbsp;</span>
     <canvas id="${escapeVal(id, 'html')}" height="300" width="500"></canvas>
     <@script>
-        var ${escapeVal(id, 'html')};
         $(function(){
             var chartDataEl = $('.chart-data').first();
             var chartData = chartDataEl.sassToJs({pseudoEl:"::before", cssProperty: "content"});
-            var options =  {
+            var options = {
                     responsive: true, 
                     responsiveAnimationDuration: 0, 
                     animation: {
@@ -1286,7 +1290,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }            
                     </#if>
                 };
-            var ctx = $('#${escapeVal(id, 'js')}').get(0).getContext("2d");
+            var canvasElem = $('#${escapeVal(id, 'js')}');
+            var ctx = canvasElem.get(0).getContext("2d");
             var data = {
                 labels :[],
                 datasets: [
@@ -1355,9 +1360,15 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 data: data,
                 options: options
             };
-            ${escapeVal(id, 'html')} = new Chart(ctx, config);
+
+            var chart = new Chart(ctx, config);
+            canvasElem.data("chart", chart);
+            var newChart = chart; <#-- backward-compat -->
+            var ${escapeVal(id, 'js')} = chart; <#-- backward-compat: TODO: REMOVE: escapeVal is not valid for use outside quotes (see freemarker docs for ?js) -->
+            <#-- escapeVal unsafe outside quotes and other issues
+            ${escapeVal(id, 'js')} = chart; -->
             ${nestedContent}
-            ${escapeVal(id, 'html')}.update();
+            chart.update();
         });
     </@script>
   </#if>

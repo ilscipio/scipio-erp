@@ -57,7 +57,7 @@
     <@chart id="orderchart" label1=label1 label2=label2 xlabel=xlabel ylabel=ylabel type="bar">
         <#-- Additional chart options -->
         try{
-            orderchart.config.options.scales.xAxes[0].ticks.display=false;
+            chart.config.options.scales.xAxes[0].ticks.display=false;
         }catch(e){
 
         }

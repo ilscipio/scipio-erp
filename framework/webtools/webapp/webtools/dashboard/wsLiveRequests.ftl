@@ -22,16 +22,15 @@
                  var jsonObject, message;
                  var text = event.data;
                  message = text;
-                  try {
+                try {
                       jsonObject =  JSON.parse(text);
-                      var chart = requestchart;
-                      var hasData = false;
+                      var chart = $('#requestchart').data("chart");
+                      //var hasData = false;
                       $.each(jsonObject, function (key, value) {
-                          var curIndex = requestchart.data.labels.indexOf(key)
+                          var curIndex = chart.data.labels.indexOf(key)
                           if (curIndex > -1) {
                              chart.data.datasets[0].data[curIndex] = jsonObject[key].count;
                           } else {
-                             console.log("chart.data.labels.length: " + chart.data.labels.length);
                              if (chart.data.labels.length >= maxRequestsEntries) {
                                  <#-- Remove old data and add new -->
                                  chart.data.labels.shift();
@@ -41,11 +40,11 @@
                              chart.data.labels.push(key);
                              chart.data.datasets[0].data.push(jsonObject[key].count);
                           }
-                          hasData = true;
+                          //hasData = true;
                       });
-                      if (hasData) {
-                        chart.update();
-                      }
+                      //if (hasData) {
+                      chart.update();
+                      //}
                     } catch (error) {
                         console.log(error);
                     }
@@ -54,9 +53,9 @@
             function timedUpdater() {
                 var date = new Date();
                 var time = moment("YYYY-MM-DD'T'HH:mm");
-                var curIndex = requestchart.data.labels.indexOf(time)
+                var chart = $('#requestchart').data("chart");
+                var curIndex = chart.data.labels.indexOf(time)
                 if (curIndex == -1) {
-                     var chart = requestchart;
                      chart.data.labels.push(time);
                      chart.data.datasets[0].data.push(0);
                 }
@@ -71,9 +70,9 @@
     <#if chartType == "line" || chartType == "bar">
         <@chart id="requestchart" type=chartType xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
             <#-- Additional chart options -->
-            try{
-                requestchart.config.options.scales.xAxes[0].ticks.display=false;
-            }catch(e){
+            try {
+                chart.config.options.scales.xAxes[0].ticks.display=false;
+            } catch(e) {
 
             }
             <#-- Chart data -->

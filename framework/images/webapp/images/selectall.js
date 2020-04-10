@@ -276,8 +276,35 @@ function ajaxUpdateArea(areaId, target, targetParams) {
         type: "POST",
         data: targetParams,
         success: function(data) {
-            jQuery("#" + areaId).html(data);
+            // SCIPIO: check @ for callback
+            var areaIdCbList = areaId.split('@');
+            // SCIPIO: support complex areaId
+            var areaIdExprList = areaIdCbList[0].split(';');
+            var i; var getSel = function(expr) { return expr.match('^[#.]') ? expr : '#'+expr; };
+            for (i = 0; i < areaIdExprList.length; i++) {
+                var areaIdParts = areaIdExprList[i].split(':');
+                if (areaIdParts.length >= 2) {
+                    var srcData = $(getSel(areaIdParts[0]), data);
+                    if (srcData.length) {
+                        $(getSel(areaIdParts[1])).html(srcData.html());
+                    }
+                } else {
+                    // if multiple areas, source the areas using the id; if only one, do backward-compat and put the full data (target-only id)
+                    if (areaIdExprList.length >= 2) {
+                        var areaSel = getSel(areaIdParts[0]);
+                        var srcData = $(areaSel, data);
+                        if (srcData.length) {
+                            $(areaSel).html(srcData.html());
+                        }
+                    } else {
+                        $(getSel(areaIdParts[0])).html(data); // stock case
+                    }
+                }
+            }
             waitSpinnerHide();
+            if (areaIdCbList.length >= 2) {
+                window[areaIdCbList[1]]();
+            }
         },
         error: function(data) {waitSpinnerHide()}
     });

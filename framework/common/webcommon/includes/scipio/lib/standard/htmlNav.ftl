@@ -1089,7 +1089,22 @@ functionality.
                                 {"content":[directive to render], "args":[hash of args to pass to directive],
                                  "always":[boolean; if true, show even if results not paged], "size":[grid size, default markup default: 2],
                                  "layout":[both|top|bottom, default: both]}
-   ctrlWidget                  = Definition for dialog to use in place of the "toggle" right-hand dialog
+   ctrlWidget               = Definition for dialog to use in place of the "toggle" right-hand dialog
+   ajaxEnabled              = ((boolean), default: false) Treat url as ajax html content request instead of target link
+   areaId                   = ((string|list)) For ajaxEnabled=true, the target html element ID to put the ajax html content when
+                              returned by the ajax url; can be a list for multiple, but if multiple, behaves differently.
+                              If many/list provided, it may consist of pairs of source element IDs (from the ajax html content) to target element IDs
+                              on the page, separated by {{{:}}}; if no colon is set, it's assumed the source and target should use the same expression.
+                              However, if only a single (non-list) areaId is provided with no colon separator, the entire html returned by the ajax is put as content of the target
+                              element ID (full-html case, target-only ID, also ensures backward-compatibility). e.g. (the first two are equivalent, last case uses full html / backward compat):
+                                areaId=["source-div-1:target-div-1", "source-div-2:target-page-div-2"]
+                                areaId=["souce-and-target-div-1", "source-div-2:target-page-div-2"]
+                                areaId="source-div-1:target-div-1"
+                                areaId=["source-and-target-div-1"]
+                                areaId="full-html-target-div"
+                              In addition, any ID expression that starts with {{{#}}} (id) or {{{.}}} (class) is treated as a jQuery selector instead of simple ID.
+                              FIXME?: currently only {{{#}}} and {{{.}}} are recognized (see selectall.js).
+   areaCallback             = ((string)) Name of a javascript function to call after update of all areas.
 
   * History *
     Enhanced for 1.14.4 (added pagLabels).
@@ -1102,7 +1117,7 @@ functionality.
   "viewSizeSelection":"", "position":"", 
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
-  "previousViewSize":"", "paginateOffViewSize":"", "infoWidget":{}, "ctrlWidget":{}, "ajaxEnabled":false, "areaId":"",
+  "previousViewSize":"", "paginateOffViewSize":"", "infoWidget":{}, "ctrlWidget":{}, "ajaxEnabled":false, "areaId":"", "areaCallback":"",
   "pagLabels":{}, "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
@@ -1209,7 +1224,14 @@ functionality.
     <#local origParamStr = raw(paramStr)>
 
     <#if ajaxEnabled && areaId?has_content>
-      <#local areaId = raw(areaId)>
+      <#if areaId?is_sequence>
+        <#local areaId = rewrapObject(areaId, "raw-simple")?join(";")>
+      <#else>
+        <#local areaId = raw(areaId)>
+      </#if>
+      <#if areaCallback?has_content>
+        <#local areaId = areaId + "@" + raw(areaCallback)>
+      </#if>
       <#local ajaxUrl = raw(url)>
       <#local ajaxParamStr = trimParamStrDelims(raw(paramStr), paramDelim)>
       <#if ajaxParamStr?has_content>
@@ -1541,7 +1563,7 @@ functionality.
       <#local placeHolder ="..."/>
 
       <#if !listItemsOnly>
-        <div class="${styles.grid_row!}">
+        <div class="${styles.grid_row!} pagination-area">
         <#if infoWidget.content??>
           <div class="${styles.grid_large!}${infoWidgetSize} ${styles.grid_cell!}"><@contentArgRender content=infoWidget.content args=infoWidgetArgs/></div>
         <#else>
@@ -1646,7 +1668,7 @@ functionality.
       </#if>
   <#elseif ctrlWidget.content?? && (ctrlWidget.always)!false>
     <#if !listItemsOnly>
-      <div class="${styles.grid_row!}">
+      <div class="${styles.grid_row!} pagination-area">
       <#if infoWidget.content??>
         <#if (ctrlWidget.always)!false>
           <div class="${styles.grid_large!}${infoWidgetSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=infoWidget.content args=infoWidgetArgs/></div>
@@ -1666,7 +1688,7 @@ functionality.
     </#if>
   <#elseif paginateToggle>
     <#if !listItemsOnly>
-      <div class="${styles.grid_row!}">
+      <div class="${styles.grid_row!} pagination-area">
       <#if infoWidget.content??>
         <#if (ctrlWidget.always)!false>
           <div class="${styles.grid_large!}${infoWidgetSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=infoWidget.content args=infoWidgetArgs/></div>
@@ -1701,13 +1723,13 @@ functionality.
     </#if>
   <#elseif infoWidget.content??>
       <#if (infoWidget.always)!false && !listItemsOnly>
-        <div class="${styles.grid_row!}">
+        <div class="${styles.grid_row!} pagination-area">
           <div class="${styles.grid_large!}${infoWidgetSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=infoWidget.content args=infoWidgetArgs/></div>
         </div>
       </#if>
   <#elseif alwaysShowCount>
       <#if !listItemsOnly>
-        <div class="${styles.grid_row!}">
+        <div class="${styles.grid_row!} pagination-area">
           <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
         </div>
       </#if>

@@ -35,7 +35,7 @@ import java.sql.Date;
 import org.ofbiz.accounting.util.UtilAccounting;
 
 
-contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 0, true);
+contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 60000, true);
 
 def begin, end,dailyStats,weeklyStats,monthlyStats;
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");

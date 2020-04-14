@@ -11,7 +11,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import org.ofbiz.base.util.cache.UtilCache;
 
 
-contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true);
+contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 60000, true);
 Map processResult() {
     int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");

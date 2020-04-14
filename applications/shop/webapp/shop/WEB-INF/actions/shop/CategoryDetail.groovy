@@ -41,7 +41,7 @@ final module = "CategoryDetail.groovy";
 def DEBUG = false;
 
 UtilCache<String, Map> categoryCache = UtilCache.getOrCreateUtilCache("category.categorydetail.rendered", 0,0,
-        UtilProperties.getPropertyAsLong("cache", "category.categorydetail.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsLong("cache", "category.categorydetail.rendered.expireTime", 86400000),
         UtilProperties.getPropertyAsBoolean("cache", "category.categorydetail.rendered.softReference", true));
 Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "category.categorydetail.rendered.enable", false);
 Boolean lookupCategory = true;

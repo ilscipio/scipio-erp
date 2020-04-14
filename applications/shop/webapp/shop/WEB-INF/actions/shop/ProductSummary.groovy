@@ -38,7 +38,7 @@ import com.ilscipio.scipio.solr.*;
 final module = "ProductSummary.groovy";
 
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productsummary.rendered", 0,0,
-        UtilProperties.getPropertyAsLong("cache", "product.productsummary.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsLong("cache", "product.productsummary.rendered.expireTime", 86400000),
         UtilProperties.getPropertyAsBoolean("cache", "product.productsummary.rendered.softReference",true));
 Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.productsummary.rendered.enable", false);
 kwsArgs = context.kwsArgs ?: [:];

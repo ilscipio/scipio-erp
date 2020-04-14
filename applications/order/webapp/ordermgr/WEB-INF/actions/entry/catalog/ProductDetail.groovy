@@ -46,7 +46,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 final module = "ProductDetail.groovy"
 
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productdetail.rendered", 0,0,
-        UtilProperties.getPropertyAsLong("cache", "product.productdetail.rendered.expireTime",0L),
+        UtilProperties.getPropertyAsLong("cache", "product.productdetail.rendered.expireTime",86400000),
         UtilProperties.getPropertyAsBoolean("cache", "product.productdetail.rendered.softReference",true));
 Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.productdetail.rendered.enable", false);
 cart = ShoppingCartEvents.getCartObject(request);

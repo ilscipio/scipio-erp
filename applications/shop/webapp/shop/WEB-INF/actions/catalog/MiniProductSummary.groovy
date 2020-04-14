@@ -36,7 +36,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 final module = "MiniProductSummary.groovy";
 
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.miniproductsummary.rendered", 0,0,
-        UtilProperties.getPropertyAsLong("cache", "product.miniproductsummary.rendered.expireTime", 0L),
+        UtilProperties.getPropertyAsLong("cache", "product.miniproductsummary.rendered.expireTime", 86400000),
         UtilProperties.getPropertyAsBoolean("cache", "product.miniproductsummary.rendered.softReference", true));
 Boolean useCache = UtilProperties.getPropertyAsBoolean("cache", "product.miniproductsummary.rendered.enable", false);
 miniProduct = context.miniProduct ? context.miniProduct : request.getAttribute("miniProduct");

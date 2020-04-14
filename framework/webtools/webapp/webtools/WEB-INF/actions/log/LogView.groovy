@@ -18,7 +18,7 @@
  */
 
 import java.util.regex.Pattern
-
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.ofbiz.base.util.FileUtil;
 
 final levelMap = [
@@ -35,8 +35,14 @@ final levelPat = Pattern.compile(' |([A-Z])| ');
 
 List logLines = [];
 try {
+    // SCIPIO: 2020-04-10 Added a reversed file reader and limitted the result so that only the last lines will be read. Improves page performance
+    int n_lines = 200;
     File logFile = FileUtil.getFile(logFileName);
-    logFile.eachLine { line ->
+    ReversedLinesFileReader fr = new ReversedLinesFileReader(logFile);
+    for(int i=0;i<n_lines;i++){
+        String line=fr.readLine();
+        if(line==null)
+            break;
         // SCIPIO: All of these checks modified to be more strict and precise
         // UPDATED 2018-15-18 for better parsing
         type = '';
@@ -48,4 +54,4 @@ try {
     }
 } catch (Exception exc) {}
 
-context.logLines = logLines;
+context.logLines = logLines.reverse();

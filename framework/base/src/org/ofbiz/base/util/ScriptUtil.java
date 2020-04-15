@@ -48,7 +48,7 @@ import javax.script.SimpleScriptContext;
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
-import org.ofbiz.base.util.GroovyUtil.GroovyLangVariant;
+import org.ofbiz.base.util.GroovyUtil.GroovyLangVariants;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /**
@@ -68,7 +68,7 @@ public final class ScriptUtil {
     public static final String PARAMETERS_KEY = "parameters";
     /** The result map bindings key. */
     public static final String RESULT_KEY = "result";
-    /** The <code>ScriptHelper</code> key. */
+    /** The <code>ScriptHelper</code> key. SCIPIO: NOTE: now duplicated in GroovyUtil. */
     public static final String SCRIPT_HELPER_KEY = "ofbiz";
     private static final UtilCache<String, CompiledScript> parsedScripts = UtilCache.createUtilCache("script.ParsedScripts", 0, 0, false);
     private static final Object[] EMPTY_ARGS = {};
@@ -303,7 +303,7 @@ public final class ScriptUtil {
         if (scriptClass != null) {
             if ("bsh".equals(language)) { // SCIPIO: 2018-09-19: Beanshell backward-compatibility mode (runs as Groovy)
                 return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context, 
-                        GroovyLangVariant.BSH)).run();
+                        GroovyLangVariants.BSH)).run();
             }
             return InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context)).run();
         }
@@ -311,7 +311,7 @@ public final class ScriptUtil {
             // SPECIAL: we need our special Binding for Bsh compat, so reroute through GroovyUtil instead
             // NOTE: For this we'll use cache false to be safe; callers who want speed should switch to Groovy,
             // which gets cached by the GroovyScriptEngine through the code below this.
-            return GroovyUtil.eval(script, context, GroovyLangVariant.BSH, false, false, false);
+            return GroovyUtil.eval(script, context, GroovyLangVariants.BSH, false, false, false);
         }
         try {
             CompiledScript compiledScript = compileScriptString(language, script);
@@ -481,7 +481,7 @@ public final class ScriptUtil {
                 // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
                 //scriptClass = GroovyUtil.parseClass(script);
                 scriptClass = GroovyUtil.parseClass(script,
-                        GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
+                        GroovyLangVariants.STANDARD.getCommonGroovyClassLoader());
             } catch (IOException e) {
                 Debug.logError(e, module);
                 return null;
@@ -490,7 +490,7 @@ public final class ScriptUtil {
             // SCIPIO 2018-09-19: backward-compat mode
             try {
                 scriptClass = GroovyUtil.parseClass(script,
-                        GroovyLangVariant.BSH.getCommonGroovyClassLoader());
+                        GroovyLangVariants.BSH.getCommonGroovyClassLoader());
             } catch (IOException e) {
                 Debug.logError(e, module);
                 return null;
@@ -628,7 +628,7 @@ public final class ScriptUtil {
         if (scriptEngine instanceof GroovyScriptEngineImpl) {
             GroovyScriptEngineImpl groovyScriptEngine = (GroovyScriptEngineImpl) scriptEngine;
             // SCIPIO: TODO: in future this method should support the other GroovyLangVariants
-            groovyScriptEngine.setClassLoader(GroovyLangVariant.STANDARD.getCommonGroovyClassLoader());
+            groovyScriptEngine.setClassLoader(GroovyLangVariants.STANDARD.getCommonGroovyClassLoader());
         }
         return scriptEngine;
     }

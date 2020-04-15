@@ -31,7 +31,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.GroovyUtil.GroovyLangVariant;
+import org.ofbiz.base.util.GroovyUtil.GroovyLangVariants;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.MiniLangValidate;
@@ -112,7 +112,7 @@ public final class CallBsh extends MethodOperation {
                         // SCIPIO: 2018-09-19: evaluate as a BSH-emulated groovy block
                         //Object resourceResult = bsh.eval(outSb.toString());
                         Object resourceResult = GroovyUtil.evalBlock(outSb.toString(), methodContext.getEnvMap(), 
-                                GroovyLangVariant.BSH, true);
+                                GroovyLangVariants.BSH, true);
                         // if map is returned, copy values into env
                         if ((resourceResult != null) && (resourceResult instanceof Map<?, ?>)) {
                             methodContext.putAllEnv(UtilGenerics.<String, Object> checkMap(resourceResult));
@@ -136,7 +136,7 @@ public final class CallBsh extends MethodOperation {
             // SCIPIO: 2018-09-19: evaluate as a BSH-emulated groovy block
             //Object inlineResult = bsh.eval(inline);
             Object inlineResult = GroovyUtil.evalBlock(inline, methodContext.getEnvMap(), 
-                    GroovyLangVariant.BSH, true);
+                    GroovyLangVariants.BSH, true);
             if (Debug.verboseOn())
                 Debug.logVerbose("Result of inline BSH script: " + inlineResult, module);
             // if map is returned, copy values into env

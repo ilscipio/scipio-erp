@@ -98,6 +98,9 @@ public class GroovyUtil {
         }
     }
 
+    /** The <code>ScriptHelper</code> key. SCIPIO: Copied from ScriptUtil. */
+    private static final String SCRIPT_HELPER_KEY = "ofbiz";
+
     private GroovyUtil() {}
 
     /**
@@ -107,7 +110,7 @@ public class GroovyUtil {
      * far too rigid (in fact, the original overload should probably not be used in Scipio).
      * <p>
      * 2018-09-19: Original overload modified to accept a specific Groovy language
-     * variant; the default is {@link GroovyLangVariant#STANDARD}.
+     * variant; the default is {@link GroovyLangVariants#STANDARD}.
      * Also modified for: convertOperators, bindingToContext and useCache options.
      *
      * @param expression The expression to evaluate
@@ -134,7 +137,7 @@ public class GroovyUtil {
         }
         try {
             if (langVariant == null) {
-                langVariant = GroovyLangVariant.STANDARD;
+                langVariant = GroovyLangVariants.STANDARD;
             }
             Binding binding = getBinding(context, langVariant);
             if (useCache) {
@@ -214,7 +217,7 @@ public class GroovyUtil {
      * and unwanted behavior for *.groovy scripts in Scipio, so the method has been deprecated for Scipio
      * to avoid unexpected side effects (context corruption).
      * <p>
-     * SCIPIO: 2018-09-19: Uses {@link GroovyLangVariant#STANDARD},
+     * SCIPIO: 2018-09-19: Uses {@link GroovyLangVariants#STANDARD},
      * converts operator substitutions,
      * dumps binding variables into context after call, NON-caching.
      *
@@ -226,7 +229,7 @@ public class GroovyUtil {
      */
     @Deprecated
     public static Object eval(String expression, Map<String, Object> context) throws CompilationFailedException {
-        return eval(expression, context, GroovyLangVariant.STANDARD, true, true, false);
+        return eval(expression, context, GroovyLangVariants.STANDARD, true, true, false);
     }
 
     /**
@@ -239,11 +242,11 @@ public class GroovyUtil {
 
     /**
      * SCIPIO: Evaluates a groovy script block using standard *.groovy file and minilang script block
-     * behavior: uses {@link GroovyLangVariant#STANDARD}, does NOT convert operation substitutions
+     * behavior: uses {@link GroovyLangVariants#STANDARD}, does NOT convert operation substitutions
      * and does NOT dump the binding's variables into context after run.
      */
     public static Object evalBlock(String expression, Map<String, Object> context, boolean useCache) throws CompilationFailedException {
-        return eval(expression, context, GroovyLangVariant.STANDARD, false, false, useCache);
+        return eval(expression, context, GroovyLangVariants.STANDARD, false, false, useCache);
     }
 
     /**
@@ -264,7 +267,7 @@ public class GroovyUtil {
         } else if ("false".equals(expression)) {
             return false;
         }
-        return eval(expression, context, GroovyLangVariant.SIMPLE, true, false, useCache);
+        return eval(expression, context, GroovyLangVariants.SIMPLE, true, false, useCache);
     }
 
     /** Returns a <code>Binding</code> instance initialized with the
@@ -277,7 +280,7 @@ public class GroovyUtil {
      * "context" <code>Map</code>.</p>
      * <p>
      * SCIPIO: 2018-09-19: Modified to accept a specific Groovy language
-     * variant; the logical default is {@link GroovyLangVariant#STANDARD}.
+     * variant; the logical default is {@link GroovyLangVariants#STANDARD}.
      *
      * @param context A <code>Map</code> containing initial variables
      * @return A <code>Binding</code> instance
@@ -296,14 +299,14 @@ public class GroovyUtil {
      * are lost when the script ends unless they are copied to the
      * "context" <code>Map</code>.</p>
      * <p>
-     * SCIPIO: NOTE: 2018-09-19: This uses {@link GroovyLangVariant#STANDARD}'s binding;
+     * SCIPIO: NOTE: 2018-09-19: This uses {@link GroovyLangVariants#STANDARD}'s binding;
      * use {@link #getBinding(Map, GroovyLangVariant)} to specify another.
      *
      * @param context A <code>Map</code> containing initial variables
      * @return A <code>Binding</code> instance
      */
     public static Binding getBinding(Map<String, Object> context) {
-        return getBinding(context, GroovyLangVariant.STANDARD);
+        return getBinding(context, GroovyLangVariants.STANDARD);
     }
 
     /**
@@ -317,11 +320,11 @@ public class GroovyUtil {
         if (context != null) {
             vars.putAll(context);
             vars.put("context", context);
-            if (vars.get(ScriptUtil.SCRIPT_HELPER_KEY) == null) {
+            if (vars.get(SCRIPT_HELPER_KEY) == null) {
                 ScriptContext scriptContext = ScriptUtil.createScriptContext(context);
                 ScriptHelper scriptHelper = (ScriptHelper)scriptContext.getAttribute(ScriptUtil.SCRIPT_HELPER_KEY);
                 if (scriptHelper != null) {
-                    vars.put(ScriptUtil.SCRIPT_HELPER_KEY, scriptHelper);
+                    vars.put(SCRIPT_HELPER_KEY, scriptHelper);
                 }
             }
         }
@@ -506,7 +509,8 @@ public class GroovyUtil {
      * <p>
      * Added 2018-09-19.
      */
-    public static abstract class GroovyLangVariant {
+    public static abstract class GroovyLangVariants {
+        private GroovyLangVariants() {}
 
         /**
          * Standard groovy language most often used in Scipio, i.e. normally used in *.groovy files
@@ -516,7 +520,7 @@ public class GroovyUtil {
          * <p>
          * Missing variables throw <code>MissingPropertyException</code>.
          */
-        public static final GroovyLangVariant STANDARD = new StandardVariantConfig();
+        public static final GroovyLangVariant STANDARD = new GroovyLangVariant.StandardVariantConfig();
 
         /**
          * Simplified groovy variant, for short simple expressions
@@ -527,7 +531,7 @@ public class GroovyUtil {
          * Missing variables are treated as null instead of
          * throwing <code>MissingPropertyException</code>.
          */
-        public static final GroovyLangVariant SIMPLE = new SimpleVariantConfig();
+        public static final GroovyLangVariant SIMPLE = new GroovyLangVariant.SimpleVariantConfig();
 
         /**
          * Groovy variant that explicitly tries to emulate old Beanshell scripts for compatibility.
@@ -543,7 +547,7 @@ public class GroovyUtil {
          * inline "${bsh:...}" expressions and some minilang elements (script, call-bsh).
          * *.bsh files are simply evaluated as *.groovy files instead.
          */
-        public static final GroovyLangVariant BSH = new BshVariantConfig();
+        public static final GroovyLangVariant BSH = new GroovyLangVariant.BshVariantConfig();
 
         /**
          * Stock Groovy configuration.
@@ -554,7 +558,7 @@ public class GroovyUtil {
          * <p>
          * This is mainly for tests.
          */
-        public static final GroovyLangVariant STOCK = new StockVariantConfig();
+        public static final GroovyLangVariant STOCK = new GroovyLangVariant.StockVariantConfig();
 
         /**
          * Event groovy language, for use with controller inlined groovy events.
@@ -563,7 +567,7 @@ public class GroovyUtil {
          * <p>
          * Missing variables throw <code>MissingPropertyException</code>.
          */
-        public static final GroovyLangVariant EVENT = new SimpleEventVariantConfig();
+        public static final GroovyLangVariant EVENT = new GroovyLangVariant.SimpleEventVariantConfig();
 
         private static final Map<String, GroovyLangVariant> nameMap;
         static {
@@ -574,7 +578,6 @@ public class GroovyUtil {
             m.put(STOCK.getName(), STOCK);
             nameMap = m;
         }
-
         public static GroovyLangVariant fromName(String variantName) throws IllegalArgumentException {
             GroovyLangVariant variant = fromNameOrNull(variantName);
             if (variant == null) {
@@ -611,7 +614,12 @@ public class GroovyUtil {
             if (variantObj instanceof String) return fromNameOrDefault((String) variantObj, defaultValue);
             return defaultValue;
         }
+    }
 
+    /**
+     * GroovyLangVariant implementations - see also common variants in {@link GroovyLangVariants}.
+     */
+    public static abstract class GroovyLangVariant {
         // Subclasses may/should override these
 
         public abstract String getName();

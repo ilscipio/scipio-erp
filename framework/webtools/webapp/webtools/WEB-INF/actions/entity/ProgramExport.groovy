@@ -49,7 +49,7 @@ recordValues.addAll(products);
 }
 
 // SCIPIO: 
-langVariant = GroovyUtil.GroovyLangVariant.STANDARD;
+langVariant = GroovyUtil.GroovyLangVariants.STANDARD;
 
 // Add imports for script.
 def importCustomizer = new ImportCustomizer()

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.webapp.stats;
 
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +27,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
@@ -224,9 +226,11 @@ public class ServerHitBin {
                     serverHitBin.set("minTimeMillis", bin.getMinTime());
                     serverHitBin.set("maxTimeMillis", bin.getMaxTime());
                     // get localhost ip address and hostname to store
-                    if (VisitHandler.address != null) {
-                        serverHitBin.set("serverIpAddress", VisitHandler.address.getHostAddress());
-                        serverHitBin.set("serverHostName", VisitHandler.address.getHostName());
+                    //if (VisitHandler.address != null) { // SCIPIO
+                    InetAddress address = GeneralConfig.getLocalhostAddress();
+                    if (address != null) {
+                        serverHitBin.set("serverIpAddress", address.getHostAddress());
+                        serverHitBin.set("serverHostName", address.getHostName());
                     }
                     try {
                         delegator.createSetNextSeqId(serverHitBin);
@@ -522,9 +526,11 @@ public class ServerHitBin {
             serverHit.set("referrerUrl", referrerUrl);
 
             // get localhost ip address and hostname to store
-            if (VisitHandler.address != null) {
-                serverHit.set("serverIpAddress", VisitHandler.address.getHostAddress());
-                serverHit.set("serverHostName", VisitHandler.address.getHostName());
+            //if (VisitHandler.address != null) { // SCIPIO
+            InetAddress address = GeneralConfig.getLocalhostAddress();
+            if (address != null) {
+                serverHit.set("serverIpAddress", address.getHostAddress());
+                serverHit.set("serverHostName", address.getHostName());
             }
 
             // The problem with

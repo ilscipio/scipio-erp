@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
@@ -49,6 +50,7 @@ public class VisitHandler {
 
     public static final String visitorCookieName = "Scipio.Visitor";
 
+    /* SCIPIO: moved to GeneralConfig
     protected static final InetAddress address;
     static {
         InetAddress tmpAddress = null;
@@ -58,7 +60,7 @@ public class VisitHandler {
             Debug.logError("Unable to get server's internet address: " + e.toString(), module);
         }
         address = tmpAddress;
-    }
+    }*/
 
     public static void setUserLogin(HttpSession session, GenericValue userLogin, boolean userCreated) {
         if (userLogin == null) return;
@@ -182,6 +184,7 @@ public class VisitHandler {
                             }
 
                             // get localhost ip address and hostname to store
+                            InetAddress address = GeneralConfig.getLocalhostAddress(); // SCIPIO: delegated
                             if (address != null) {
                                 visit.set("serverIpAddress", address.getHostAddress());
                                 visit.set("serverHostName", address.getHostName());

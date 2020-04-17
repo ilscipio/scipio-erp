@@ -54,6 +54,7 @@ public class ServiceEcaAction implements java.io.Serializable {
     protected boolean ignoreFailure = false;
     protected boolean ignoreError = false;
     protected boolean persist = false;
+    protected String jobPool; // SCIPIO
 
     protected ServiceEcaAction() {}
 
@@ -74,6 +75,8 @@ public class ServiceEcaAction implements java.io.Serializable {
         this.ignoreFailure = !"false".equals(action.getAttribute("ignore-failure"));
         this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
         this.persist = "true".equals(action.getAttribute("persist"));
+        String jobPool = action.getAttribute("job-pool");
+        this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
     }
 
     public String getServiceName() {
@@ -128,7 +131,7 @@ public class ServiceEcaAction implements java.io.Serializable {
                     actionResult = dispatcher.runSync(this.serviceName, actionContext);
                 }
             } else if ("async".equals(this.serviceMode)) {
-                dispatcher.runAsync(serviceName, actionContext, persist);
+                dispatcher.runAsync(serviceName, actionContext, persist, jobPool); // SCIPIO: jobPool
             }
         }
 

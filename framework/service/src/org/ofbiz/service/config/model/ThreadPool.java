@@ -20,7 +20,9 @@ package org.ofbiz.service.config.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
@@ -52,6 +54,7 @@ public final class ThreadPool {
     private final boolean pollEnabled;
     private final int purgeJobDays;
     private final List<RunFromPool> runFromPools;
+    private final List<String> runFromPoolNames; // SCIPIO
     private final String sendToPool;
     private final int ttl;
 
@@ -162,12 +165,17 @@ public final class ThreadPool {
         List<? extends Element> runFromPoolElementList = UtilXml.childElementList(poolElement, "run-from-pool");
         if (runFromPoolElementList.isEmpty()) {
             this.runFromPools = Collections.emptyList();
+            this.runFromPoolNames = Collections.emptyList(); // SCIPIO
         } else {
             List<RunFromPool> runFromPools = new ArrayList<RunFromPool>(runFromPoolElementList.size());
+            List<String> runFromPoolNames = new ArrayList<>(runFromPoolElementList.size()); // SCIPIO
             for (Element runFromPoolElement : runFromPoolElementList) {
-                runFromPools.add(new RunFromPool(runFromPoolElement));
+                RunFromPool runFromPool = new RunFromPool(runFromPoolElement);
+                runFromPools.add(runFromPool);
+                runFromPoolNames.add(runFromPool.getName());
             }
             this.runFromPools = Collections.unmodifiableList(runFromPools);
+            this.runFromPoolNames = Collections.unmodifiableList(runFromPoolNames);
         }
     }
 
@@ -201,6 +209,10 @@ public final class ThreadPool {
 
     public List<RunFromPool> getRunFromPools() {
         return this.runFromPools;
+    }
+
+    public List<String> getRunFromPoolNames() { // SCIPIO
+        return this.runFromPoolNames;
     }
 
     public String getSendToPool() {

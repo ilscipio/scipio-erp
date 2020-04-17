@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -51,10 +53,12 @@ public class ServiceEcaCondition implements java.io.Serializable {
     protected String format = null;
     protected boolean isConstant = false;
     protected boolean isService = false;
+    protected boolean property = false; // SCIPIO
+    protected String propertyResource = null;
 
     protected ServiceEcaCondition() {}
 
-    public ServiceEcaCondition(Element condition, boolean isConstant, boolean isService) {
+    public ServiceEcaCondition(Element condition, boolean isConstant, boolean isService, boolean property) { // SCIPIO: added property
         if (isService) {
             this.isService = isService;
             this.conditionService = condition.getAttribute("service-name");
@@ -74,8 +78,24 @@ public class ServiceEcaCondition implements java.io.Serializable {
             this.operator = condition.getAttribute("operator");
             this.compareType = condition.getAttribute("type");
             this.format = condition.getAttribute("format");
-
+            this.property = property; // SCIPIO
+            this.propertyResource = condition.getAttribute("resource");
+            if (property) {
+                this.lhsValueName = condition.getAttribute("property-name");
+                int splitIndex = this.lhsValueName.indexOf('#');
+                if (this.propertyResource.isEmpty() && splitIndex >= 1) {
+                    this.propertyResource = this.lhsValueName.substring(0, splitIndex);
+                    this.lhsValueName = this.lhsValueName.substring(splitIndex + 1);
+                }
+                if (this.propertyResource.isEmpty()) {
+                    this.propertyResource = null;
+                }
+            }
         }
+    }
+
+    public ServiceEcaCondition(Element condition, boolean isConstant, boolean isService) { // SCIPIO: added property
+        this(condition, isConstant, isService, false);
     }
 
     public String getShortDisplayDescription(boolean moreDetail) {
@@ -132,22 +152,36 @@ public class ServiceEcaCondition implements java.io.Serializable {
 
         Object lhsValue = null;
         Object rhsValue = null;
-        if (UtilValidate.isNotEmpty(lhsMapName)) {
-            try {
-                if (context.containsKey(lhsMapName)) {
-                    Map<String, ? extends Object> envMap = UtilGenerics.checkMap(context.get(lhsMapName));
-                    lhsValue = envMap.get(lhsValueName);
-                } else {
-                    Debug.logInfo("From Map (" + lhsMapName + ") not found in context, defaulting to null.", module);
+
+        if (property) {
+            if (propertyResource != null) {
+                lhsValue = EntityUtilProperties.getPropertyValue(propertyResource, lhsValueName, dctx.getDelegator());
+            } else {
+                lhsValue = GeneralConfig.getCommonPropertiesMap().get(lhsValueName);
+                if (lhsValue == null) {
+                    Debug.logWarning("Could not find property named '" + lhsValueName
+                            + "' in GeneralConfig.getCommonPropertiesMap for eca (invalid common name or missing resource); returning false", module);
+                    return false;
                 }
-            } catch (ClassCastException e) {
-                throw new GenericServiceException("From Map field [" + lhsMapName + "] is not a Map.", e);
             }
         } else {
-            if (context.containsKey(lhsValueName)) {
-                lhsValue = context.get(lhsValueName);
+            if (UtilValidate.isNotEmpty(lhsMapName)) {
+                try {
+                    if (context.containsKey(lhsMapName)) {
+                        Map<String, ? extends Object> envMap = UtilGenerics.checkMap(context.get(lhsMapName));
+                        lhsValue = envMap.get(lhsValueName);
+                    } else {
+                        Debug.logInfo("From Map (" + lhsMapName + ") not found in context, defaulting to null.", module);
+                    }
+                } catch (ClassCastException e) {
+                    throw new GenericServiceException("From Map field [" + lhsMapName + "] is not a Map.", e);
+                }
             } else {
-                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
+                if (context.containsKey(lhsValueName)) {
+                    lhsValue = context.get(lhsValueName);
+                } else {
+                    Debug.logInfo("From Field (" + lhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
+                }
             }
         }
 

@@ -663,6 +663,22 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        runAsync(localName, service, params, requester, persist, null);
+    }
+
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param params Map of name, value pairs composing the parameters.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param persist True for store/run; False for run.
+     * @param jobPool Optional specific job pool (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         if (Debug.timingOn()) {
             UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
         }
@@ -759,9 +775,9 @@ public class ServiceDispatcher {
                 // run the service
                 if (!isError && !isFailure) {
                     if (requester != null) {
-                        engine.runAsync(localName, service, context, requester, persist);
+                        engine.runAsync(localName, service, context, requester, persist, jobPool); // SCIPIO: jobPool
                     } else {
-                        engine.runAsync(localName, service, context, persist);
+                        engine.runAsync(localName, service, context, persist, jobPool); // SCIPIO: jobPool
                     }
                     engine.sendCallbacks(service, context, GenericEngine.ASYNC_MODE);
                 }
@@ -826,7 +842,22 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        this.runAsync(localName, service, context, null, persist);
+        this.runAsync(localName, service, context, null, persist, null);
+    }
+
+    /**
+     * Run the service asynchronously and IGNORE the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param persist True for store/run; False for run.
+     * @param jobPool Optional specific job pool (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        this.runAsync(localName, service, context, null, persist, jobPool);
     }
 
     /**

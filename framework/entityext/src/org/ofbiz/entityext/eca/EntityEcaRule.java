@@ -73,6 +73,12 @@ public final class EntityEcaRule implements java.io.Serializable {
             } else if ("condition-service".equals(element.getNodeName())) {
                 EntityEcaCondition ecaCond = new EntityEcaCondition(element, false, true);
                 conditions.add(ecaCond);
+            } else if ("condition-property".equals(element.getNodeName())) { // SCIPIO
+                EntityEcaCondition ecaCond = new EntityEcaCondition(element, true, false, true);
+                conditions.add(ecaCond);
+            } else if ("condition-property-field".equals(element.getNodeName())) { // SCIPIO
+                EntityEcaCondition ecaCond = new EntityEcaCondition(element, false, false, true);
+                conditions.add(ecaCond);
             } else if ("action".equals(element.getNodeName())) {
                 actionsAndSets.add(new EntityEcaAction(element));
             } else if ("set".equals(element.getNodeName())) {

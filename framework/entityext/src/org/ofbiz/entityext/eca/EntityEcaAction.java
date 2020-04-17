@@ -20,6 +20,7 @@ package org.ofbiz.entityext.eca;
 
 import java.util.Map;
 
+import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -32,6 +33,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.config.ServiceConfigUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -49,6 +51,7 @@ public final class EntityEcaAction implements java.io.Serializable {
     private final boolean abortOnError;
     private final boolean rollbackOnError;
     private final boolean persist;
+    private final String jobPool; // SCIPIO
     private transient Boolean quiet = null; // SCIPIO: if true, don't log when this gets triggered
 
     public EntityEcaAction(Element action) {
@@ -62,6 +65,8 @@ public final class EntityEcaAction implements java.io.Serializable {
         this.persist = "true".equals(action.getAttribute("persist"));
         this.runAsUser = action.getAttribute("run-as-user");
         this.valueAttr = action.getAttribute("value-attr");
+        String jobPool = action.getAttribute("job-pool");
+        this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
     }
 
     public String getServiceName() {
@@ -117,7 +122,7 @@ public final class EntityEcaAction implements java.io.Serializable {
                     newValue.setNonPKFields(actionResult);
                 }
             } else if ("async".equals(this.serviceMode)) {
-                dispatcher.runAsync(serviceName, actionContext, persist);
+                dispatcher.runAsync(serviceName, actionContext, persist, jobPool); // SCIPIO: jobPool
             }
         } catch (GenericServiceException e) {
             // check abortOnError and rollbackOnError
@@ -145,6 +150,7 @@ public final class EntityEcaAction implements java.io.Serializable {
         if (UtilValidate.isNotEmpty(abortOnError)) buf.append("[").append(abortOnError).append("]");
         if (UtilValidate.isNotEmpty(rollbackOnError)) buf.append("[").append(rollbackOnError).append("]");
         if (UtilValidate.isNotEmpty(persist)) buf.append("[").append(persist).append("]");
+        if (UtilValidate.isNotEmpty(jobPool)) buf.append("[").append(jobPool).append("]");
         return buf.toString();
     }
 
@@ -160,6 +166,7 @@ public final class EntityEcaAction implements java.io.Serializable {
         result = prime * result + (abortOnError ? 1231 : 1237);
         result = prime * result + (rollbackOnError ? 1231 : 1237);
         result = prime * result + (persist ? 1231 : 1237);
+        result = prime * result + ((jobPool == null) ? 0 : jobPool.hashCode()); // SCIPIO
         return result;
     }
 
@@ -175,6 +182,7 @@ public final class EntityEcaAction implements java.io.Serializable {
             if (this.abortOnError != other.abortOnError) return false;
             if (this.rollbackOnError != other.rollbackOnError) return false;
             if (this.persist != other.persist) return false;
+            if (!UtilValidate.areEqual(this.jobPool, other.jobPool)) return false; // SCIPIO
             return true;
         } else {
             return false;

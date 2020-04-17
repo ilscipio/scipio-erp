@@ -6,6 +6,8 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * General/base system config - some configurations in general.properties - facade class to help prevent dependency issues (SCIPIO).
@@ -29,6 +31,8 @@ public abstract class GeneralConfig {
         inetAddress = tmpAddress;
     }
 
+    private static final Map<String, Object> commonPropertiesMap = makeCommonPropertiesMap(new HashMap<>());
+
     /**
      * Returns the instanceId configured in general.properties.
      */
@@ -40,4 +44,14 @@ public abstract class GeneralConfig {
      * Returns the current server's localhost address and hostname.
      */
     public static InetAddress getLocalhostAddress() { return inetAddress; }
+
+    /** TODO: REVIEW: WARN: Currently this can return a static map, but this might forcefully change in future */
+    public static Map<String, Object> getCommonPropertiesMap() { return commonPropertiesMap; }
+
+    public static <T extends Map<String, Object>> T makeCommonPropertiesMap(T out) {
+        out.put("instanceId", getInstanceId());
+        out.put("localHostName", getLocalhostAddress().getHostName());
+        out.put("localIpAddr", getLocalhostAddress().getHostName());
+        return out;
+    }
 }

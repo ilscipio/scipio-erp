@@ -68,6 +68,14 @@ public final class ServiceEcaRule implements java.io.Serializable {
             conditions.add(new ServiceEcaCondition(element, false, true));
         }
 
+        for (Element element: UtilXml.childElementList(eca, "condition-property")) { // SCIPIO
+            conditions.add(new ServiceEcaCondition(element, true, false, true));
+        }
+
+        for (Element element: UtilXml.childElementList(eca, "condition-property-field")) { // SCIPIO
+            conditions.add(new ServiceEcaCondition(element, false, false, true));
+        }
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("Conditions: " + conditions, module);
         }

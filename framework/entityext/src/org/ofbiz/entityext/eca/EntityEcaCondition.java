@@ -23,12 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -51,23 +53,42 @@ public final class EntityEcaCondition implements java.io.Serializable {
     protected boolean constant = false;
     protected boolean isService = false;
     protected String conditionService = null;
+    protected boolean property = false; // SCIPIO
+    protected String propertyResource = null;
 
-    public EntityEcaCondition(Element condition, boolean constant, boolean isService) {
+    public EntityEcaCondition(Element condition, boolean constant, boolean isService, boolean property) { // SCIPIO: added property
         if (isService) {
             this.isService = isService;
             this.conditionService = condition.getAttribute("service-name");
         } else {
-        this.lhsValueName = condition.getAttribute("field-name");
-        this.constant = constant;
-        if (constant) {
-            this.rhsValueName = condition.getAttribute("value");
-        } else {
-            this.rhsValueName = condition.getAttribute("to-field-name");
+            this.lhsValueName = condition.getAttribute("field-name");
+            this.constant = constant;
+            if (constant) {
+                this.rhsValueName = condition.getAttribute("value");
+            } else {
+                this.rhsValueName = condition.getAttribute("to-field-name");
+            }
+            this.operator = condition.getAttribute("operator");
+            this.compareType = condition.getAttribute("type");
+            this.format = condition.getAttribute("format");
+            this.property = property; // SCIPIO
+            this.propertyResource = condition.getAttribute("resource");
+            if (property) {
+                this.lhsValueName = condition.getAttribute("property-name");
+                int splitIndex = this.lhsValueName.indexOf('#');
+                if (this.propertyResource.isEmpty() && splitIndex >= 1) {
+                    this.propertyResource = this.lhsValueName.substring(0, splitIndex);
+                    this.lhsValueName = this.lhsValueName.substring(splitIndex + 1);
+                }
+                if (this.propertyResource.isEmpty()) {
+                    this.propertyResource = null;
+                }
+            }
         }
-        this.operator = condition.getAttribute("operator");
-        this.compareType = condition.getAttribute("type");
-        this.format = condition.getAttribute("format");
-        }
+    }
+
+    public EntityEcaCondition(Element condition, boolean constant, boolean isService) {
+        this(condition, constant, isService, false);
     }
 
     public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
@@ -97,7 +118,23 @@ public final class EntityEcaCondition implements java.io.Serializable {
             }
         }
 
-        Object lhsValue = value.get(lhsValueName);
+        // SCIPIO
+        //Object lhsValue = value.get(lhsValueName);
+        Object lhsValue;
+        if (property) {
+            if (propertyResource != null) {
+                lhsValue = EntityUtilProperties.getPropertyValue(propertyResource, lhsValueName, dctx.getDelegator());
+            } else {
+                lhsValue = GeneralConfig.getCommonPropertiesMap().get(lhsValueName);
+                if (lhsValue == null) {
+                    Debug.logWarning("Could not find property named '" + lhsValueName
+                            + "' in GeneralConfig.getCommonPropertiesMap for eca (invalid common name or missing resource); returning false", module);
+                    return false;
+                }
+            }
+        } else {
+            lhsValue = value.get(lhsValueName);
+        }
 
         Object rhsValue;
         if (constant) {
@@ -150,6 +187,7 @@ public final class EntityEcaCondition implements java.io.Serializable {
         if (UtilValidate.isNotEmpty(constant)) buf.append("[").append(constant).append("]");
         if (UtilValidate.isNotEmpty(compareType)) buf.append("[").append(compareType).append("]");
         if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]");
+        if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]"); // SCIPIO
         return buf.toString();
     }
     @Override
@@ -162,6 +200,7 @@ public final class EntityEcaCondition implements java.io.Serializable {
         result = prime * result + (constant ? 1231 : 1237);
         result = prime * result + ((compareType == null) ? 0 : compareType.hashCode());
         result = prime * result + ((format == null) ? 0 : format.hashCode());
+        // SCIPIO: FIXME: should more fields be here, or is this hashcode intended to differ from equals?? (unusual)
         return result;
     }
 
@@ -178,6 +217,8 @@ public final class EntityEcaCondition implements java.io.Serializable {
             if (!UtilValidate.areEqual(this.format, other.format)) return false;
             if (this.constant != other.constant) return false;
             if (this.isService != other.isService) return false;
+            if (this.property != other.property) return false; // SCIPIO
+            if (!UtilValidate.areEqual(this.propertyResource, other.propertyResource)) return false; // SCIPIO
 
             return true;
         } else {

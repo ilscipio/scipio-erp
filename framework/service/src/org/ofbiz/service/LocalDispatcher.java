@@ -181,6 +181,18 @@ public interface LocalDispatcher {
     void runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
+     * Run the service asynchronously and IGNORE the result.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param persist True for store/run; False for run.
+     * @param jobPool Optional specific job pool (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
      * Run the service asynchronously and IGNORE the result. This method WILL persist the job.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.

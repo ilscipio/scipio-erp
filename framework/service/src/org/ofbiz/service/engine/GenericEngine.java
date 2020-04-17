@@ -64,7 +64,7 @@ public interface GenericEngine {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist)
-        throws GenericServiceException;
+            throws GenericServiceException;
 
     /**
      * Run the service asynchronously and IGNORE the result.
@@ -76,6 +76,36 @@ public interface GenericEngine {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException;
+
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     *
+     * @param localName Name of the LocalDispatcher.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param persist True for store/run; False for run.
+     * @param jobPool Optional specific job pool (SCIPIO)
+     * @throws GenericServiceException
+     */
+    default public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist, String jobPool)
+            throws GenericServiceException {
+        runAsync(localName, modelService, context, requester, persist);
+    }
+
+    /**
+     * Run the service asynchronously and IGNORE the result.
+     *
+     * @param localName Name of the LocalDispatcher.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param persist True for store/run; False for run.
+     * @param jobPool Optional specific job pool (SCIPIO)
+     * @throws GenericServiceException
+     */
+    default public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist, String jobPool) throws GenericServiceException {
+        runAsync(localName, modelService, context, persist);
+    }
 
     /**
      * Send the service callbacks

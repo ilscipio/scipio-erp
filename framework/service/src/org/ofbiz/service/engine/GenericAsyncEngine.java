@@ -67,13 +67,27 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean)
      */
     public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
-        runAsync(localName, modelService, context, null, persist);
+        runAsync(localName, modelService, context, null, persist, null);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+    final public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        runAsync(localName, modelService, context, requester, persist, null);
+    }
+
+    /**
+     * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean, String)
+     */
+    final public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist, String jobPool) throws GenericServiceException {
+        runAsync(localName, modelService, context, null, persist, jobPool);
+    }
+
+    /**
+     * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean, String)
+     */
+    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist, String jobPool) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         Job job = null;
 
@@ -114,7 +128,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 }
 
                 Map<String, Object> jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", UtilDateTime.nowTimestamp());
-                jFields.put("poolId", ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool());
+                jFields.put("poolId", (jobPool != null) ? jobPool : ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool()); // SCIPIO: added jobPool
                 jFields.put("statusId", "SERVICE_PENDING");
                 jFields.put("serviceName", modelService.name);
                 jFields.put("loaderName", localName);
@@ -143,13 +157,19 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
         } else {
             JobManager jMgr = dispatcher.getJobManager();
             if (jMgr != null) {
-                String name = Long.toString(System.currentTimeMillis());
-                String jobId = modelService.name + "." + name;
-                job = new GenericServiceJob(dctx, jobId, name, modelService.name, context, requester);
-                try {
-                    dispatcher.getJobManager().runJob(job);
-                } catch (JobManagerException jse) {
-                    throw new GenericServiceException("Cannot run job.", jse);
+                if (jobPool == null || isJobPoolApplicable(jobPool)) { // SCIPIO: jobPool
+                    String name = Long.toString(System.currentTimeMillis());
+                    String jobId = modelService.name + "." + name;
+                    job = new GenericServiceJob(dctx, jobId, name, modelService.name, context, requester);
+                    try {
+                        dispatcher.getJobManager().runJob(job);
+                    } catch (JobManagerException jse) {
+                        throw new GenericServiceException("Cannot run job.", jse);
+                    }
+                } else {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Not running async service '" + modelService.name + "' because job pool '" + jobPool + "' does not match instance run-from-pool (serviceengine.xml)", module);
+                    }
                 }
             } else {
                 throw new GenericServiceException("Cannot get JobManager instance to invoke the job");
@@ -160,5 +180,13 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
     @Override
     protected boolean allowCallbacks(ModelService model, Map<String, Object> context, int mode) throws GenericServiceException {
         return mode == GenericEngine.SYNC_MODE;
+    }
+
+    protected static boolean isJobPoolApplicable(String jobPool) throws GenericServiceException {
+        try {
+            return ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPoolNames().contains(jobPool);
+        } catch (GenericConfigException e) {
+            throw new GenericServiceException(e);
+        }
     }
 }

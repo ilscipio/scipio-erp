@@ -166,12 +166,14 @@ public final class JobManager {
     }
 
     private static List<String> getRunPools() throws GenericConfigException {
-        List<RunFromPool> runFromPools = ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPools();
-        List<String> readPools = new ArrayList<>(runFromPools.size());
-        for (RunFromPool runFromPool : runFromPools) {
-            readPools.add(runFromPool.getName());
-        }
-        return readPools;
+        // SCIPIO: improved
+        //List<RunFromPool> runFromPools = ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPools();
+        //List<String> readPools = new ArrayList<>(runFromPools.size());
+        //for (RunFromPool runFromPool : runFromPools) {
+        //    readPools.add(runFromPool.getName());
+        //}
+        //return readPools;
+        return ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPoolNames();
     }
 
     /**

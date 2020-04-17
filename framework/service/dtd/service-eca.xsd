@@ -32,6 +32,8 @@ under the License.
                     <xs:element ref="condition"/>
                     <xs:element ref="condition-field"/>
                     <xs:element ref="condition-service"/>
+                    <xs:element ref="condition-property"/><!-- SCIPIO -->
+                    <xs:element ref="condition-property-field"/><!-- SCIPIO -->
                 </xs:choice>
                 <xs:choice minOccurs="1" maxOccurs="unbounded">
                     <xs:element ref="set"/>
@@ -183,6 +185,96 @@ under the License.
     <xs:attributeGroup name="attlist.condition-service">
         <xs:attribute type="xs:string" name="service-name"/>
     </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.condition-property"><!-- SCIPIO -->
+        <xs:attribute type="xs:string" name="resource"/>
+        <xs:attribute type="xs:string" name="property-name" use="required">
+            <xs:annotation><xs:documentation>Property name from *.properties file, or if resource omitted, name of one of the
+                properties in the map org.ofbiz.base.GeneralConfig.getCommonPropertiesMap(), such as "instanceId".</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="operator" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="less"/>
+                    <xs:enumeration value="greater"/>
+                    <xs:enumeration value="less-equals"/>
+                    <xs:enumeration value="greater-equals"/>
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="not-equals"/>
+                    <xs:enumeration value="contains"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="value"/>
+        <xs:attribute name="type" default="String">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="PlainString"/>
+                    <xs:enumeration value="String"/>
+                    <xs:enumeration value="BigDecimal"/>
+                    <xs:enumeration value="Double"/>
+                    <xs:enumeration value="Float"/>
+                    <xs:enumeration value="Long"/>
+                    <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="Date"/>
+                    <xs:enumeration value="Time"/>
+                    <xs:enumeration value="Timestamp"/>
+                    <xs:enumeration value="Boolean"/>
+                    <xs:enumeration value="Object"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="format"/>
+    </xs:attributeGroup>
+    <xs:element name="condition-property">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-property"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-property-field"><!-- SCIPIO -->
+        <xs:attribute type="xs:string" name="resource"/>
+        <xs:attribute type="xs:string" name="property-name" use="required">
+            <xs:annotation><xs:documentation>Property name from *.properties file, or if resource omitted, name of one of the
+                properties in the map org.ofbiz.base.GeneralConfig.getCommonPropertiesMap(), such as "instanceId".</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="operator" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="less"/>
+                    <xs:enumeration value="greater"/>
+                    <xs:enumeration value="less-equals"/>
+                    <xs:enumeration value="greater-equals"/>
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="not-equals"/>
+                    <xs:enumeration value="contains"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="to-field-name"/>
+        <xs:attribute name="type" default="String">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="PlainString"/>
+                    <xs:enumeration value="String"/>
+                    <xs:enumeration value="BigDecimal"/>
+                    <xs:enumeration value="Double"/>
+                    <xs:enumeration value="Float"/>
+                    <xs:enumeration value="Long"/>
+                    <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="Date"/>
+                    <xs:enumeration value="Time"/>
+                    <xs:enumeration value="Timestamp"/>
+                    <xs:enumeration value="Boolean"/>
+                    <xs:enumeration value="Object"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="format"/>
+    </xs:attributeGroup>
+    <xs:element name="condition-property-field">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-property-field"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="action">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.action"/>
@@ -208,5 +300,9 @@ under the License.
         <xs:attribute name="ignore-failure" type="xs:boolean" default="true"/>
         <xs:attribute name="ignore-error" type="xs:boolean" default="true"/>
         <xs:attribute name="persist" type="xs:boolean" default="false"/>
+        <xs:attribute name="job-pool" type="xs:string">
+            <xs:annotation><xs:documentation>If set and service is persist="false" (default), only runs the eca if the named
+                pool is named as run-from-pool="[name]" in serviceengine.xml; if persist="true", creates the job using the named pool. (SCIPIO)</xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
 </xs:schema>

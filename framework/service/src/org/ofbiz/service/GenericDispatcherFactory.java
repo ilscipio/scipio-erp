@@ -189,6 +189,12 @@ public class GenericDispatcherFactory implements LocalDispatcherFactory {
         }
 
         @Override
+        public void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            ModelService service = ctx.getModelService(serviceName);
+            dispatcher.runAsync(this.name, service, context, persist, jobPool); // SCIPIO: jobPool
+        }
+
+        @Override
         public void runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             runAsync(serviceName, context, true);
         }

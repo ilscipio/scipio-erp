@@ -292,6 +292,7 @@ code package.
                         <or>
                             <if-empty field="inventoryItem.statusId"/>
                             <if-compare field="inventoryItem.statusId" operator="equals" value="INV_AVAILABLE"/>
+                            <if-compare operator="equals" field="inventoryItem.statusId" value="INV_NS_RETURNED"/>
                         </or>
                         <if-compare field="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM"/>
                     </and>

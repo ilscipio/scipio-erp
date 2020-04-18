@@ -32,12 +32,12 @@ public class PartyWebServices {
     /** TODO: REVIEW: lastExpireTime should really be stored in the DB, maybe could use JobSandbox, but seems like overkill, and every server needs one anyway. */
     private static volatile Timestamp lastExpireTime = UtilDateTime.nowTimestamp();
 
-    private static String getServerName(Map<String, ? extends Object> context) {
-        String serverName = (String) context.get("serverName");
-        if (UtilValidate.isEmpty(serverName)) {
-            serverName = GeneralConfig.getInstanceId();
+    private static String getServerHostName(Map<String, ? extends Object> context) {
+        String serverHostName = (String) context.get("serverHostName");
+        if (UtilValidate.isEmpty(serverHostName)) {
+            serverHostName = GeneralConfig.getLocalhostAddress().getHostName();
         }
-        return serverName;
+        return serverHostName;
     }
 
     public static Map<String, Object> sendHitBinLiveData(DispatchContext dctx, Map<String, ?> context) {
@@ -50,18 +50,62 @@ public class PartyWebServices {
         if (interval != null) {
             interval = interval.toLowerCase();
         }
-        String serverName = getServerName(context);
+        String serverHostName = getServerHostName(context);
+
+        List<String> processOnHosts = Arrays.asList(EntityUtilProperties.getPropertyValue("webtools", "sendHitBinLiveData.processOnHosts", "", delegator).split(","));
+        if (!processOnHosts.isEmpty() && !processOnHosts.get(0).isEmpty() && !processOnHosts.contains(serverHostName)) {
+            return ServiceUtil.returnSuccess();
+        }
+
         DateFormat requestsDateFormat = getRequestsDateFormat();
         Boolean sendEmpty = (Boolean) context.get("sendEmpty");
 
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         int expireInterval = EntityUtilProperties.getPropertyAsInteger("webtools", "removeHitBinLiveData.expireInterval", 120, delegator);
 
+        // If processAllServers is specified, everything defaults to the parameters; if not specified then things check webtools.properties
+        Boolean processAllServers = (Boolean) context.get("processAllServers");
+        Boolean processAllServersDefault = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.processAllServers", false, delegator);
+        Boolean expireAllServers = (Boolean) context.get("expireAllServers");
+        if (expireAllServers == null) {
+            if (processAllServers != null) {
+                expireAllServers = processAllServers;
+            } else {
+                expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "removeHitBinLiveData.expireAllServers", null, delegator);
+                if (expireAllServers == null) {
+                    expireAllServers = processAllServersDefault;
+                }
+            }
+        }
+        Boolean reportAllServers = (Boolean) context.get("reportAllServers");
+        if (reportAllServers == null) {
+            if (processAllServers != null) {
+                reportAllServers = processAllServers;
+            } else {
+                reportAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.reportAllServers", null, delegator);
+                if (reportAllServers == null) {
+                    reportAllServers = processAllServersDefault;
+                }
+            }
+        }
+        if (processAllServers == null) {
+            processAllServers = processAllServersDefault;
+        }
+        String execMode = (String) context.get("execMode");
+        if (execMode == null) {
+            execMode = EntityUtilProperties.getPropertyValue("webtools", "sendHitBinLiveData.execMode", "full", delegator);
+        }
+        if (!"full".equals(execMode)) {
+            // TODO: NOT IMPLEMENTED: we don't have timing information to implement "report" without updates
+            return ServiceUtil.returnSuccess();
+        }
+
         // clean old records
         if ((nowTimestamp.getTime() - lastExpireTime.getTime()) > (expireInterval * 60 * 1000)) {
             try {
                 Map<String, Object> invokeCtx = dctx.getModelService("removeHitBinLiveData").makeValid(context, ModelService.IN_PARAM);
                 invokeCtx.put("nowTimestamp", nowTimestamp);
+                invokeCtx.put("expireAllServers", expireAllServers);
                 Map<String, Object> findDataMap = dispatcher.runSync("removeHitBinLiveData", invokeCtx, -1, true);
                 if (!ServiceUtil.isSuccess(findDataMap)) {
                     Debug.logError("sendHitBinLiveData: Failed to expire old records: " + ServiceUtil.getErrorMessage(findDataMap), module);
@@ -78,46 +122,10 @@ public class PartyWebServices {
             }
             long bucketMs = bucketMinutes * 60 * 1000;
 
-            /* TODO: REVIEW: bucketMinutes is a lot easier for now, interval would need a different format and doesn't fit anymore
-            Timestamp begin = nowTimestamp;
-            switch (interval) {
-                case "hour":
-                    begin = UtilDateTime.getHourStart(nowTimestamp, 0, timeZone, locale);
-                    break;
-
-                case "day":
-                    begin = UtilDateTime.getDayStart(nowTimestamp, 0, timeZone, locale);
-                    break;
-
-                case "week":
-                    begin = UtilDateTime.getWeekStart(nowTimestamp, 0, timeZone, locale);
-                    break;
-
-                case "month":
-                    begin = UtilDateTime.getMonthStart(nowTimestamp, 0, timeZone, locale);
-                    break;
-
-                case "year":
-                    begin = UtilDateTime.getYearStart(nowTimestamp, 0, timeZone, locale);
-                    break;
-
-                default:
-                    begin = UtilDateTime.getDayStart(nowTimestamp, 0, timeZone, locale);
-            }
-             */
-
             Timestamp fromDate;
             Timestamp thruDate = nowTimestamp;
 
-            // find last data date
-            /* previous json-based code
-            GenericValue recentStats = delegator.select("thruDate").from("ServerHitBucketStats").where("serverName", serverName).orderBy("-thruDate").maxRows(1).queryFirst();
-            if (recentStats != null) {
-                fromDate = recentStats.getTimestamp("thruDate");
-            } else {
-                fromDate = UtilDateTime.adjustTimestamp(nowTimestamp, Calendar.MINUTE, -bucketMinutes);
-            }*/
-            GenericValue recentStats = delegator.select("thruDate").from("ServerHitBucketStats").where("serverName", serverName).orderBy("-thruDate").maxRows(1).queryFirst();
+            GenericValue recentStats = delegator.select("thruDate").from("ServerHitBucketStats").where("serverHostName", serverHostName).orderBy("-thruDate").maxRows(1).queryFirst();
             if (recentStats != null) {
                 fromDate = UtilDateTime.getMinuteBasedTimestamp(recentStats.getTimestamp("thruDate"));
                 if (fromDate.getTime() != recentStats.getTimestamp("thruDate").getTime()) {
@@ -143,6 +151,11 @@ public class PartyWebServices {
             invokeCtx.put("thruDate", thruDate);
             invokeCtx.put("dateInterval", interval);
             invokeCtx.put("bucketMinutes", bucketMinutes);
+            if (processAllServers) {
+                invokeCtx.remove("serverHostName");
+            } else {
+                invokeCtx.put("serverHostName", serverHostName);
+            }
             if (DEBUG || Debug.verboseOn()) {
                 Debug.logInfo("sendHitBinLiveData: Running getServerRequests with: " + invokeCtx, module);
             }
@@ -150,11 +163,12 @@ public class PartyWebServices {
             if (!ServiceUtil.isSuccess(findDataMap)) {
                 return ServiceUtil.returnFailure("getServerRequests failed: " + ServiceUtil.getErrorMessage(findDataMap));
             }
-            Map<String, Map<String, Object>> requests = UtilGenerics.cast(findDataMap.get("requests"));
+            Map<String, Map<String, Object>> combinedRequests = UtilGenerics.castNonNull(findDataMap.get("requests"), Collections.emptyMap());
+            Map<String, Map<String, Map<String, Object>>> serverRequests = UtilGenerics.cast(findDataMap.get("serverRequests"));
             if (DEBUG || Debug.verboseOn()) {
-                Debug.logInfo("sendHitBinLiveData: Got " + requests.size() + " request date entries from getServerRequests", module);
+                Debug.logInfo("sendHitBinLiveData: Got " + combinedRequests.size() + " request date entries from getServerRequests", module);
             }
-            if (UtilValidate.isEmpty(requests)) {
+            if (UtilValidate.isEmpty(combinedRequests)) {
                 if (sendEmpty == null) {
                     sendEmpty = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.sendEmpty", false, delegator);
                 }
@@ -163,43 +177,48 @@ public class PartyWebServices {
                 }
             }
 
-            // TODO: REVIEW: I don't see great reason
-
-            // save data
-            /* old JSON storage code
-            JSON jsonData = JSON.from(requests);
-            String jsonDataString = jsonData.toString();
-            GenericValue stats = delegator.makeValue("ServerHitBucketStats");
-            stats.put("serverName", serverName);
-            stats.put("fromDate", fromDate);
-            stats.put("thruDate", thruDate);
-            stats.put("bucketMinutes", bucketMinutes.longValue());
-            stats.put("requests", jsonDataString);
-            delegator.createSetNextSeqId(stats);
-             */
             // NOTE: This version of the entity causes more storage, but if bucketMinutes is reasonable shouldn't be problem
-            if (requests != null) {
-                for(Map.Entry<String, Map<String, Object>> entry : requests.entrySet()) {
-                    Map<String, Object> values = entry.getValue();
-                    Timestamp date = UtilDateTime.toTimestamp(entry.getKey(), requestsDateFormat);
-                    if (DEBUG || Debug.verboseOn()) {
-                        Debug.logInfo("sendHitBinLiveData: Creating ServerHitBucketStats with date: " + date + " from key '" + entry.getKey() + "'", module);
+            if (serverRequests != null) {
+                for(Map.Entry<String, Map<String, Map<String, Object>>> serverEntry : serverRequests.entrySet()) {
+                    for (Map.Entry<String, Map<String, Object>> entry : serverEntry.getValue().entrySet()) {
+                        Map<String, Object> values = entry.getValue();
+                        Timestamp date = UtilDateTime.toTimestamp(entry.getKey(), requestsDateFormat);
+                        if (DEBUG || Debug.verboseOn()) {
+                            Debug.logInfo("sendHitBinLiveData: Creating ServerHitBucketStats with date: " + date + " from key '" + entry.getKey() + "'", module);
+                        }
+                        List<String> contentIds = UtilGenerics.cast(values.get("contentIds"));
+                        GenericValue stats = delegator.makeValue("ServerHitBucketStats");
+                        stats.put("serverHostName", serverEntry.getKey());
+                        stats.put("date", date); // already adjusted to minutes
+                        stats.put("bucketMinutes", bucketMinutes.longValue());
+                        stats.put("count", values.get("count"));
+                        stats.put("contentIds", (contentIds != null) ? String.join(",", contentIds) : null);
+                        stats.put("fromDate", fromDate);
+                        stats.put("thruDate", thruDate);
+                        delegator.createSetNextSeqId(stats);
                     }
-                    List<String> contentIds = UtilGenerics.cast(values.get("contentIds"));
-                    GenericValue stats = delegator.makeValue("ServerHitBucketStats");
-                    stats.put("serverName", serverName);
-                    stats.put("date", date); // already adjusted to minutes
-                    stats.put("bucketMinutes", bucketMinutes.longValue());
-                    stats.put("count", values.get("count"));
-                    stats.put("contentIds", (contentIds != null) ? String.join(",", contentIds) : null);
-                    stats.put("fromDate", fromDate);
-                    stats.put("thruDate", thruDate);
-                    delegator.createSetNextSeqId(stats);
                 }
             }
 
+            /* TODO: read-only mode
+            boolean reportAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.reportAllServers", false, delegator);
+            if (reportAllServers) {
+                // get the data for all the other servers, pre-generated (if available) - but possible some servers are late...
+                List<GenericValue> statsList = delegator.from("ServerHitBucketStats")
+                        .where(EntityCondition.makeCondition("serverHostName", EntityOperator.NOT_EQUAL, serverHostName),
+                                EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate),
+                                EntityCondition.makeCondition("date", EntityOperator.LESS_THAN, thruDate))
+                        .orderBy("-date").cache(false).queryList(); // do not entity cache here, always may have reporting delays without
+                if (statsList != null) {
+                    for(GenericValue stats : statsList) {
+                        collectSavedRequests(requests, stats, fromDate, thruDate, true, requestsDateFormat);
+                    }
+                }
+            }
+             */
+
             // send data
-            JSON jsonData = JSON.from(requests);
+            JSON jsonData = JSON.from(combinedRequests);
             String jsonDataString = jsonData.toString();
             SocketSessionManager.broadcastToChannel(jsonDataString, channel);
 
@@ -221,10 +240,13 @@ public class PartyWebServices {
         if (nowTimestamp == null) {
             nowTimestamp = UtilDateTime.nowTimestamp();
         }
-        String serverName = getServerName(context);
+        String serverHostName = getServerHostName(context);
         Boolean expireAllServers = (Boolean) context.get("expireAllServers");
         if (expireAllServers == null) {
-            expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "removeHitBinLiveData.expireAllServers", false, delegator);
+            expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "removeHitBinLiveData.expireAllServers", null, delegator);
+            if (expireAllServers == null) {
+                expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.processAllServers", false, delegator);
+            }
         }
 
         int expiredCount = 0;
@@ -232,7 +254,7 @@ public class PartyWebServices {
         //EntityCondition cond = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, filterDate); // for json storage
         EntityCondition cond = EntityCondition.makeCondition("date", EntityOperator.LESS_THAN, filterDate);
         if (!expireAllServers) {
-            cond = EntityCondition.makeCondition(EntityCondition.makeCondition("serverName", serverName), EntityOperator.AND, cond);
+            cond = EntityCondition.makeCondition(EntityCondition.makeCondition("serverHostName", serverHostName), EntityOperator.AND, cond);
         }
         // NOTE: For now this doesn't use Delegator.removeByCondition (would be faster) because its clears whole entity from entity cache for no reason
         try(EntityListIterator it = delegator.from("ServerHitBucketStats").where(cond).queryIterator()) {
@@ -244,7 +266,7 @@ public class PartyWebServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.toString());
         }
-        String msg = "Expired " + expiredCount + " old ServerHitBucketStats records for " + (expireAllServers ? "all servers" : "server '" + serverName  + "'")
+        String msg = "Expired " + expiredCount + " old ServerHitBucketStats records for " + (expireAllServers ? "all servers" : "server '" + serverHostName  + "'")
                 + " older than " + filterDate;
         Debug.logInfo("removeHitBinLiveData: " + msg, module);
         return ServiceUtil.returnSuccess(msg);
@@ -252,23 +274,26 @@ public class PartyWebServices {
 
     public static Map<String, Object> removeHitBinLiveDataAll(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
-        String serverName = getServerName(context);
+        String serverHostName = getServerHostName(context);
         Boolean expireAllServers = (Boolean) context.get("expireAllServers");
         if (expireAllServers == null) {
-            expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "removeHitBinLiveData.expireAllServers", false, delegator);
+            expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "removeHitBinLiveData.expireAllServers", null, delegator);
+            if (expireAllServers == null) {
+                expireAllServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.processAllServers", false, delegator);
+            }
         }
         int expiredCount;
         try {
             if (expireAllServers) {
                 expiredCount = delegator.removeAll("ServerHitBucketStats");
             } else {
-                expiredCount = delegator.removeByCondition("ServerHitBucketStats", EntityCondition.makeCondition("serverName", serverName));
+                expiredCount = delegator.removeByCondition("ServerHitBucketStats", EntityCondition.makeCondition("serverHostName", serverHostName));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.toString());
         }
-        String msg = "Expired " + expiredCount + " old ServerHitBucketStats records for " + (expireAllServers ? "all servers" : "server '" + serverName  + "'");
+        String msg = "Expired " + expiredCount + " old ServerHitBucketStats records for " + (expireAllServers ? "all servers" : "server '" + serverHostName  + "'");
         Debug.logInfo("removeHitBinLiveDataAll: " + msg, module);
         return ServiceUtil.returnSuccess(msg);
     }
@@ -278,52 +303,17 @@ public class PartyWebServices {
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate"); // may be null
-        String serverName = getServerName(context);
-        boolean allServers = Boolean.TRUE.equals(context.get("allServers"));
-        boolean splitBuckets = !Boolean.FALSE.equals(context.get("splitBuckets"));
+        String serverHostName = getServerHostName(context);
+        Boolean allServers = (Boolean) context.get("allServers");
+        if (allServers == null) {
+            allServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.reportAllServers", null, delegator);
+            if (allServers == null) {
+                allServers = EntityUtilProperties.getPropertyAsBoolean("webtools", "sendHitBinLiveData.processAllServers", false, delegator);
+            }
+        }
+        boolean splitBuckets = !Boolean.FALSE.equals(context.get("splitBuckets")); // NOTE: currently always true (pre-refactor)
         Integer maxRequests = (Integer) context.get("maxRequests");
         try {
-            /* previous JSON-based code, too complicated to manage the dates
-            // Reconstitute the JSON requests
-            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate), EntityOperator.OR,
-                    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, fromDate));
-            if (thruDate != null) {
-                cond = EntityCondition.makeCondition(cond, EntityOperator.AND,
-                        EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, thruDate)));
-            }
-            if (allServers) {
-                Map<String, Map<String, Object>> serverRequests = new HashMap<>();
-                List<GenericValue> statsList = delegator.from("ServerHitBucketStats").where(cond).cache(useCache).queryList();
-                if (statsList != null) {
-                    for(GenericValue stats : statsList) {
-                        String statsServerName = stats.getString("serverName");
-                        Map<String, Object> requests = serverRequests.get(statsServerName);
-                        if (requests == null) {
-                            requests = new LinkedHashMap<>();
-                            serverRequests.put(statsServerName, requests);
-                        }
-                        collectSavedRequests(requests, stats, fromDate, thruDate, splitBuckets);
-                    }
-                }
-                Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("serverRequests", serverRequests);
-                result.put("requests", serverRequests);
-                return result;
-            } else {
-                Map<String, Object> requests = new LinkedHashMap<>();
-                List<GenericValue> statsList = delegator.from("ServerHitBucketStats")
-                        .where(EntityCondition.makeCondition(EntityCondition.makeCondition("serverName", serverName), EntityOperator.AND, cond))
-                        .cache(useCache).queryList();
-                if (statsList != null) {
-                    for(GenericValue stats : statsList) {
-                        collectSavedRequests(requests, stats, fromDate, thruDate, splitBuckets);
-                    }
-                }
-                Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("requests", requests);
-                return result;
-            }
-             */
             EntityCondition cond = EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate);
             if (thruDate != null) {
                 cond = EntityCondition.makeCondition(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN, thruDate));
@@ -332,25 +322,27 @@ public class PartyWebServices {
             if (allServers) {
                 Map<String, Map<String, Map<String, Object>>> serverRequests = new HashMap<>();
                 List<GenericValue> statsList = delegator.from("ServerHitBucketStats").where(cond).orderBy("-date").cache(useCache).maxRows(maxRequests).queryList();
+                Map<String, Map<String, Object>> allRequests = new TreeMap<>();
                 if (statsList != null) {
                     for(GenericValue stats : statsList) {
-                        String statsServerName = stats.getString("serverName");
+                        String statsServerName = stats.getString("serverHostName");
                         Map<String, Map<String, Object>> requests = serverRequests.get(statsServerName);
                         if (requests == null) {
                             requests = new TreeMap<>();
                             serverRequests.put(statsServerName, requests);
                         }
                         collectSavedRequests(requests, stats, fromDate, thruDate, splitBuckets, requestsDateFormat);
+                        collectSavedRequests(allRequests, stats, fromDate, thruDate, splitBuckets, requestsDateFormat);
                     }
                 }
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("serverRequests", serverRequests);
-                result.put("requests", serverRequests);
+                result.put("requests", allRequests);
                 return result;
             } else {
                 Map<String, Map<String, Object>> requests = new TreeMap<>();
                 List<GenericValue> statsList = delegator.from("ServerHitBucketStats")
-                        .where(EntityCondition.makeCondition(EntityCondition.makeCondition("serverName", serverName), EntityOperator.AND, cond))
+                        .where(EntityCondition.makeCondition(EntityCondition.makeCondition("serverHostName", serverHostName), EntityOperator.AND, cond))
                         .orderBy("-date").cache(useCache).maxRows(maxRequests).queryList();
                 if (statsList != null) {
                     for(GenericValue stats : statsList) {
@@ -368,37 +360,39 @@ public class PartyWebServices {
     }
 
     private static void collectSavedRequests(Map<String, Map<String, Object>> requests, GenericValue stats, Timestamp fromDate, Timestamp thruDate, boolean splitBuckets, DateFormat requestsDateFormat) {
-        /* previous JSON storage code
-        // NOTE: The ServerHitBucketStats entries for a server should always have exclusive dates, so there's no need to deep-merge entries, only filter the dates
-        Map<String, Object> entityRequests = stats.getJsonAsMap("requests");
-        if (splitBuckets) {
-            for(Map.Entry<String, Object> entry : entityRequests.entrySet()) {
-                Timestamp statsEntryTime;
-                try {
-                    statsEntryTime = toTimestamp(entry.getKey()); // NOTE: this was wrong!!
-                } catch (Exception e) {
-                    Debug.logError("getSavedHitBinLiveData: error parsing requests json date in ServerHitBucketStats '" + stats.get("statsId") + "': "
-                            + e.getMessage(), module);
-                    continue;
-                }
-                if (!statsEntryTime.before(fromDate) && (thruDate == null || statsEntryTime.before(thruDate))) {
-                    requests.put(entry.getKey(), entry.getValue());
-                }
-            }
-        } else {
-            requests.putAll(entityRequests);
-        }
-         */
-        String serverName = stats.getString("serverName");
+        String serverHostName = stats.getString("serverHostName");
         String requestsDateString = requestsDateFormat.format(stats.getTimestamp("date"));
         String contentIdsString = stats.getString("contentIds");
 
-        Map<String, Object> statsInfo = new HashMap<>();
-        statsInfo.put(requestsDateString, statsInfo);
-        statsInfo.put("count", stats.getLong("count").intValue());
-        statsInfo.put("contentIds", contentIdsString != null ? new ArrayList<>(Arrays.asList(contentIdsString.split(","))) : null);
-        if (requests.containsKey(requestsDateString)) {
-            Debug.logWarning("getSavedHitBinLiveData: Duplicate date in ServerHitBucketStats stats, ignoring previous: " + requestsDateString, module); // shouldn't really happen
+        Map<String, Object> statsInfo = requests.get(requestsDateString);
+        if (statsInfo == null) {
+            statsInfo = new HashMap<>();
+            long count = stats.getLong("count");
+            statsInfo.put("count", count);
+            statsInfo.put("contentIds", (contentIdsString != null) ? new ArrayList<>(Arrays.asList(contentIdsString.split(","))) : null);
+            requests.put(requestsDateString, statsInfo);
+        } else {
+            long count = ((Long) statsInfo.get("count"));
+            long newCount = stats.getLong("count");
+            statsInfo.put("count", count + newCount);
+            List<String> contentIds = UtilGenerics.cast(statsInfo.get("contentIds"));
+            if (contentIds == null) {
+                contentIds = (contentIdsString != null) ? new ArrayList<>(Arrays.asList(contentIdsString.split(","))) : null;
+                statsInfo.put("contentIds", contentIds);
+            } else {
+                List<String> newContentIds = (contentIdsString != null) ? Arrays.asList(contentIdsString.split(",")) : null;
+                if (newContentIds != null && newContentIds.size() > 0) {
+                    Set<String> mergedContentIds = new LinkedHashSet<>(contentIds);
+                    mergedContentIds.addAll(newContentIds);
+                    if (mergedContentIds.size() > contentIds.size()) { // keep same if unchanged
+                        contentIds = new ArrayList<>(mergedContentIds);
+                        statsInfo.put("contentIds", contentIds);
+                    }
+                }
+            }
+            if (DEBUG) {
+                Debug.logInfo("collectSavedRequests: merged for date '" + requestsDateString + "', count was: " + count + ", added: " + newCount, module);
+            }
         }
         requests.put(requestsDateString, statsInfo);
     }

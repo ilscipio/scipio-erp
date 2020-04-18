@@ -126,31 +126,39 @@ public Map getServerRequests() {
     if (thruDate == null) {
         thruDate = UtilDateTime.nowTimestamp();
     }
+    String serverHostName = context.serverHostName;
     try {
         EntityListIterator dataList = null;
         try {
             try {
                 // For most SQL Databases use this
                 Map sqlFunctionMap = UtilMisc.toMap("year", "extract-year", "month", "extract-month", "day", "extract-day", "hour", "extract-hour", "minute", "extract-minute");
-                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate);
-            } catch (Exception e) { // FIXME: swallows obscure errors
+                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate, serverHostName);
+            } catch (GenericEntityException e) { // FIXME: swallows obscure errors
                 //Fallback for derby
                 Map sqlFunctionMap = UtilMisc.toMap("year", "year", "month", "month", "day", "day", "hour", "hour", "minute", "minute");
-                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate);
+                dataList = getDataFromDB(sqlFunctionMap, fromDate, thruDate, serverHostName);
             }
-            result.put("requests", processResult(dataList, fromDate, thruDate, dateInterval, bucketMinutes));
+            Map serverRequests = processResult(dataList, fromDate, thruDate, dateInterval, bucketMinutes);
+            result.put("serverRequests", serverRequests);
+            if (serverRequests.size() == 1) {
+                result.put("requests", serverRequests.values().iterator().next());
+            } else {
+                result.put("requests", sumServerRequests(serverRequests));
+            }
         } finally {
             if (dataList != null) {
                 dataList.close();
             }
         }
     } catch(Exception e) {
-        result = ServiceUtil.returnError("Cannot fetch request data");
+        Debug.logError(e, "Cannot fetch request data", module);
+        result = ServiceUtil.returnError("Cannot fetch request data: " + e.toString());
     }
     return result;
 }
 
-public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, Timestamp thruDate) {
+public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, Timestamp thruDate, String serverHostName) {
     //SQL magic
     DynamicViewEntity dve = new DynamicViewEntity();
     dve.addMemberEntity("SH", "ServerHit");
@@ -158,6 +166,7 @@ public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, 
     dve.addAlias("SH", "hitStartDateTime", null, null, null, Boolean.TRUE, null);
     dve.addAlias("SH", "hitTypeId", null, null, null, Boolean.TRUE, null);
     dve.addAlias("SH", "referrerUrl", null, null, null, Boolean.FALSE, null);
+    dve.addAlias("SH", "serverHostName", null, null, null, Boolean.TRUE, null);
 
     // Split date in order to group at a later stage
     dve.addAlias("SH", "year", "hitStartDateTime",  null, null, Boolean.TRUE, sqlFunctionMap.year);
@@ -171,55 +180,21 @@ public EntityListIterator getDataFromDB(Map sqlFunctionMap, Timestamp fromDate, 
             EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"),
             EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)];
     if (thruDate != null) {
-        ecl.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, thruDate))
+        ecl.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, thruDate));
     }
-    return select("contentIdCount","contentId","year","month","day","hour","minute").from(dve).where(ecl).queryIterator();
+    if (serverHostName) {
+        ecl.add(EntityCondition.makeCondition("serverHostName", serverHostName));
+    }
+    return select("contentIdCount","contentId","year","month","day","hour","minute","serverHostName").from(dve).where(ecl).queryIterator();
 }
 
 public Map processResult(EntityListIterator resultList, Timestamp fromDate, Timestamp thruDate, String dateInterval, Integer bucketMinutes) {
     long fromDateMs = fromDate.getTime();
     Long bucketMs = (bucketMinutes != null) ? bucketMinutes * 60 * 1000 : null;
-    if (bucketMs == null) {
-        Debug.logError("MISSING bucketMs", module)
-    }
-    Map dateMap = new TreeMap<Date, Object>();
-    //Calendar startD = UtilDateTime.toCalendar(fromDate);
-    //Calendar endD = UtilDateTime.toCalendar(thruDate);
-    SimpleDateFormat sdf;
+    Map serverRequests = new HashMap<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
     // create new ordered Map of all upcoming dates
-    /*
-    if(dateInterval.equals("minute")){sdf = new SimpleDateFormat("hh:mm");}
-    if(dateInterval.equals("hour")){sdf = new SimpleDateFormat("MM-dd hh");}
-    if(dateInterval.equals("day")){sdf = new SimpleDateFormat("MM-dd");}
-    if(dateInterval.equals("week")){sdf = new SimpleDateFormat("yy-w")}
-    if(dateInterval.equals("month")){sdf = new SimpleDateFormat("yy-MM")}
-    if(dateInterval.equals("year")){sdf = new SimpleDateFormat("yy")}
-    */
-    sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
-
-    /*
-    while(!startD.after(endD))
-    {
-        int year = startD.get(Calendar.YEAR);
-        int month = startD.get(Calendar.MONTH) + 1;
-        int day = startD.get(Calendar.DAY_OF_MONTH);
-        int hour = startD.get(Calendar.HOUR_OF_DAY);
-        int minute = startD.get(Calendar.MINUTE);
-        
-        // Create new Map
-        Map newMap = [:];
-        newMap.put("count", 0);
-        newMap.put("contentIds",new ArrayList());
-        dateMap.put(sdf.format(startD.getTime()),newMap);
-        
-        if(dateInterval.equals("minute")){startD.add(Calendar.MINUTE, 1);}
-        if(dateInterval.equals("hour")){startD.add(Calendar.HOUR, 1);}
-        if(dateInterval.equals("day")){startD.add(Calendar.DATE, 1);}
-        if(dateInterval.equals("week")){startD.add(Calendar.WEEK_OF_MONTH, 1);}
-        if(dateInterval.equals("month")){startD.add(Calendar.MONTH, 1);}
-        if(dateInterval.equals("year")){startD.add(Calendar.YEAR, 1);}
-    }*/
     GenericValue p;
     while((p = resultList.next()) != null) {
         String year = p.get("year");
@@ -234,9 +209,15 @@ public Map processResult(EntityListIterator resultList, Timestamp fromDate, Time
             pDate = UtilDateTime.getTimestamp(fromDateMs + ((pDate.getTime() - fromDateMs).intdiv(bucketMs) * bucketMs));
         }
         String dateString = sdf.format(pDate);
-        
-        if(dateMap.get(dateString) != null){
-            Map currentMap = dateMap.get(dateString);
+
+        Map dateMap = serverRequests.get(p.serverHostName);
+        if (dateMap == null) {
+            dateMap = new TreeMap<>();
+            serverRequests.put(p.serverHostName, dateMap);
+        }
+
+        Map currentMap = dateMap.get(dateString);
+        if (currentMap != null) {
             long currCount = currentMap.get("count"); // fixed, not ints
             long addCount = p.get("contentIdCount");
             if(addCount!=null){
@@ -248,7 +229,7 @@ public Map processResult(EntityListIterator resultList, Timestamp fromDate, Time
                 if(!currentContentIdList.contains(addContentId))currentContentIdList.add(addContentId);
                 currentMap.put("contentIds",currentContentIdList);
             }
-        }else{
+        } else {
             Map newMap = [:];
             newMap.put("count", p.get("contentIdCount"));
             List contentIds = new ArrayList();
@@ -257,6 +238,38 @@ public Map processResult(EntityListIterator resultList, Timestamp fromDate, Time
             dateMap.put(dateString,newMap);
         }
     }
+    return serverRequests;
+}
 
+public Map sumServerRequests(Map serverRequests) {
+    Map dateMap = new TreeMap<>();
+    for(Map.Entry entry : serverRequests.entrySet()) {
+        String serverHostName = entry.getKey();
+        Map serverDateMap = entry.getValue();
+        for(Map.Entry serverEntry : serverDateMap.entrySet()) {
+            String serverDate = serverEntry.getKey();
+            Map serverData = serverEntry.getValue();
+            Map dateMapInfo = dateMap.get(serverDate);
+            if (dateMapInfo == null) {
+                dateMapInfo = new HashMap<>();
+                dateMapInfo.count = serverData.count;
+                dateMapInfo.contentIds = serverData.contentIds;
+                dateMap.put(serverDate, dateMapInfo);
+            } else {
+                dateMapInfo.count = dateMapInfo.count + serverData.count;
+                if (serverData.contentIds) {
+                    if (!dateMapInfo.contentIds) {
+                        dateMapInfo.contentIds = serverData.contentIds;
+                    } else {
+                        Set mergedContentIds = new LinkedHashSet<>(dateMapInfo.contentIds);
+                        mergedContentIds.addAll(serverData.contentIds);
+                        if (mergedContentIds.size() > dateMapInfo.contentIds.size()) { // ignore duplicates
+                            dateMapInfo.contentIds = new ArrayList<>(mergedContentIds);
+                        }
+                    }
+                }
+            }
+        }
+    }
     return dateMap;
 }

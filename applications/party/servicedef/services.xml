@@ -1670,11 +1670,20 @@ code package.
     <service name="sendHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0"
              location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="sendHitBinLiveData" transaction-timeout="7260" semaphore="fail"><!-- transaction-timeout is for expiry -->
         <description>Sends request data to listening websockets on channel. Automatically calls removeHitBinLiveData. Config, defaults in webtools.properties.</description>
-        <attribute name="serverName" type="String" mode="IN" optional="true">
-            <description>Defaults to general.properties#unique.instanceId</description>
+        <attribute name="serverHostName" type="String" mode="IN" optional="true">
+            <description>By default, gotten from GeneralConfig.getLocalhostAddress().getHostName()</description>
+        </attribute>
+        <attribute name="execMode" type="String" mode="IN" optional="true">
+            <description>Supports: "full", "report" (FIXME: same as "off" for now), "off". Default in webtools.properties.</description>
+        </attribute>
+        <attribute name="processAllServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, handle the data for all servers. Default in webtools.properties.</description>
+        </attribute>
+        <attribute name="reportAllServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, data sent via websocket includes counts for all servers, not just this host. Defaults to processAllServers if set, otherwise webtools.properties.</description>
         </attribute>
         <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
-            <description>If true, when clears happens, clears from all servers, not just serverName. Default in webtools.properties.</description>
+            <description>If true, when clears happens, clears from all servers, not just serverHostName. Defaults to processAllServers if set, otherwise webtools.properties.</description>
         </attribute>
         <attribute name="expireMinutes" type="Integer" mode="IN" optional="true">
             <description>Default in webtools.properties</description>
@@ -1694,11 +1703,11 @@ code package.
              location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveData" transaction-timeout="7200">
         <description>Expires old ServerHitBucketStats whose thruDate are older than given days (thus containing no records for that date). Config, defaults in webtools.properties.
             Currently only expires whole buckets (usually not an issue).</description>
-        <attribute name="serverName" type="String" mode="IN" optional="true">
-            <description>Defaults to general.properties#unique.instanceId</description>
+        <attribute name="serverHostName" type="String" mode="IN" optional="true">
+            <description>By default, gotten from GeneralConfig.getLocalhostAddress().getHostName()</description>
         </attribute>
         <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
-            <description>If true, clears from all servers, not just serverName. Default in webtools.properties.</description>
+            <description>If true, clears from all servers, not just serverHostName. Default in webtools.properties.</description>
         </attribute>
         <attribute name="expireMinutes" type="Integer" mode="IN" optional="true">
             <description>Default configured in webtools.properties</description>
@@ -1708,20 +1717,20 @@ code package.
     <service name="removeHitBinLiveDataAll" engine="java" require-new-transaction="true" max-retry="0"
              location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="removeHitBinLiveDataAll" transaction-timeout="7200">
         <description>Removes all ServerHitBucketStats records for a server or all. Currently only expires whole buckets (usually not an issue).</description>
-        <attribute name="serverName" type="String" mode="IN" optional="true">
-            <description>Defaults to general.properties#unique.instanceId</description>
+        <attribute name="serverHostName" type="String" mode="IN" optional="true">
+            <description>By default, gotten from GeneralConfig.getLocalhostAddress().getHostName()</description>
         </attribute>
         <attribute name="expireAllServers" type="Boolean" mode="IN" optional="true">
-            <description>If true, clears from all servers, not just serverName. Default in webtools.properties.</description>
+            <description>If true, clears from all servers, not just serverHostName. Default in webtools.properties.</description>
         </attribute>
     </service>
     <service name="getSavedHitBinLiveData" engine="java" location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="getSavedHitBinLiveData">
         <description>Returns the requests saved in ServerHitBucketStats as if they'd been returned by getServerRequests</description>
-        <attribute name="serverName" type="String" mode="IN" optional="true">
-            <description>Defaults to general.properties#unique.instanceId</description>
+        <attribute name="serverHostName" type="String" mode="IN" optional="true">
+            <description>By default, gotten from GeneralConfig.getLocalhostAddress().getHostName()</description>
         </attribute>
-        <attribute name="allServers" type="String" mode="IN" optional="true" default-value="false">
-            <description>If true, the serverRequests map is populated with all servers, otherwise </description>
+        <attribute name="allServers" type="Boolean" mode="IN" optional="true">
+            <description>If true, the serverRequests map is populated with all servers, otherwise only requests map is returned. Defaults in webtools.properties.</description>
         </attribute>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
@@ -1733,7 +1742,7 @@ code package.
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
         <attribute name="requests" type="Map" mode="OUT" optional="true"/>
         <attribute name="serverRequests" type="Map" mode="OUT" optional="true">
-            <description>Maps serverName to requests maps - only set if allServers true</description>
+            <description>Maps serverHostName to requests maps - only set if allServers true</description>
         </attribute>
     </service>
 </services>

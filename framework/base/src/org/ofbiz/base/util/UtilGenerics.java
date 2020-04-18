@@ -36,6 +36,11 @@ public final class UtilGenerics {
         return (V) object;
     }
 
+    /** Cast object to given type or return given default value if null (SCIPIO). */
+    public static <V> V castNonNull(Object object, V defaultValue) {
+        return (object != null) ? (V) object : defaultValue;
+    }
+
     private static <C extends Collection<?>> C checkCollectionCast(Object object, Class<C> clz) {
         return clz.cast(object);
     }

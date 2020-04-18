@@ -175,7 +175,13 @@ code package.
         <attribute name="bucketMinutes" type="Integer" mode="IN" optional="true">
             <description>Causes final results to be bucketed every 5, 10, 15, etc. minutes as specified (0-based)</description>
         </attribute>
-        <attribute name="requests" type="Map" mode="OUT" optional="true"/>
+        <attribute name="serverHostName" type="String" mode="IN" optional="true"/>
+        <attribute name="requests" type="Map" mode="OUT" optional="true">
+            <description>NOTE: If serverHostName is false (consult all servers), this contains the sum of all serverRequests for each summer</description>
+        </attribute>
+        <attribute name="serverRequests" type="Map" mode="OUT" optional="true">
+            <description>Maps serverHostName to requests maps - only meaningfull if serverHostName is left empty (all servers)</description>
+        </attribute>
     </service>
     <service name="getServerRequestsThisHour" engine="groovy" location="component://webtools/script/com/ilscipio/data/ServerData.groovy" 
              invoke="getServerRequestsThisHour" auth="true">

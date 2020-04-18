@@ -3186,7 +3186,7 @@ code package.
         default-resource-name="PartyEntityLabels"
         title="Role Type">
       <field name="statsId" type="id-ne"></field>
-      <field name="serverName" type="id-ne"></field>
+      <field name="serverHostName" type="id-ne"></field>
       <field name="date" type="date-time"><description>NOTE: This date is truncated to minutes based on bucketMinutes</description></field>
       <field name="bucketMinutes" type="numeric"></field>
       <field name="count" type="numeric"></field>
@@ -3195,7 +3195,7 @@ code package.
       <field name="thruDate" type="date-time"></field>
       <field name="entityJson" type="very-long"><description>JSON fields for extra data</description></field>
       <!-- logical PK
-      <prim-key field="serverName"/>
+      <prim-key field="serverHostName"/>
       <prim-key field="date"/>-->
       <prim-key field="statsId"/>
     </entity>

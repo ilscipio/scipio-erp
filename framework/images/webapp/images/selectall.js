@@ -282,7 +282,7 @@ function ajaxUpdateArea(areaId, target, targetParams) {
             var areaIdExprList = areaIdCbList[0].split(';');
             var i; var getSel = function(expr) { return expr.match('^[#.]') ? expr : '#'+expr; };
             for (i = 0; i < areaIdExprList.length; i++) {
-                var areaIdParts = areaIdExprList[i].split(':');
+                var areaIdParts = areaIdExprList[i].split('::');
                 if (areaIdParts.length >= 2) {
                     var srcData = $(getSel(areaIdParts[0]), data);
                     if (srcData.length) {

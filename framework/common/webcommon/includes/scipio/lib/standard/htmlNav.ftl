@@ -1094,12 +1094,12 @@ functionality.
    areaId                   = ((string|list)) For ajaxEnabled=true, the target html element ID to put the ajax html content when
                               returned by the ajax url; can be a list for multiple, but if multiple, behaves differently.
                               If many/list provided, it may consist of pairs of source element IDs (from the ajax html content) to target element IDs
-                              on the page, separated by {{{:}}}; if no colon is set, it's assumed the source and target should use the same expression.
+                              on the page, separated by {{{::}}} (two colons); if no two-colons is set, it's assumed the source and target should use the same expression.
                               However, if only a single (non-list) areaId is provided with no colon separator, the entire html returned by the ajax is put as content of the target
                               element ID (full-html case, target-only ID, also ensures backward-compatibility). e.g. (the first two are equivalent, last case uses full html / backward compat):
-                                areaId=["source-div-1:target-div-1", "source-div-2:target-page-div-2"]
-                                areaId=["souce-and-target-div-1", "source-div-2:target-page-div-2"]
-                                areaId="source-div-1:target-div-1"
+                                areaId=["source-div-1::target-div-1", "source-div-2::target-page-div-2"]
+                                areaId=["souce-and-target-div-1", "source-div-2::target-page-div-2"]
+                                areaId="source-div-1::target-div-1"
                                 areaId=["source-and-target-div-1"]
                                 areaId="full-html-target-div"
                               In addition, any ID expression that starts with {{{#}}} (id) or {{{.}}} (class) is treated as a jQuery selector instead of simple ID.

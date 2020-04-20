@@ -28,6 +28,11 @@ code package.
         </section>
     </screen>
 
+    <!-- Requires the sendHitBinLiveData scheduled service to be running:
+            applications/party/data/ScheduledJobs.xml
+        Configuration including distributed server/nginx may be needed in:
+            framework/webtools/config/webtools.properties
+        By default stock scipio shows stats for each machine only. -->
     <screen name="DashboardWSLiveRequests">
         <section>
             <actions>

@@ -96,6 +96,11 @@ code package.
       <relation type="one" fk-name="SERVER_HBIN_TYPE" rel-entity-name="ServerHitType">
         <key-map field-name="hitTypeId"/>
       </relation>
+        <index name="HITBIN_DATE_HITS">
+            <index-field name="numberHits" />
+            <index-field name="binStartDateTime" />
+            <index-field name="binEndDateTime"/>
+        </index>
     </entity>
     <entity entity-name="ServerHitType"
             package-name="org.ofbiz.webapp.visit"

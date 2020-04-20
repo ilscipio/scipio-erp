@@ -3,7 +3,6 @@ package com.ilscipio.scipio.cms.content;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,8 +22,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
@@ -605,6 +604,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         }
         descriptor.put("products", productList);
 
+        /* Now paginated and don't really need to use descriptors
         List<Map<String, ?>> versionList = new ArrayList<>();
         //ToDo: Check if yyyy-MM-dd'T'HH:mm:ss.SSSZ is more suitable
         SimpleDateFormat isoDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -617,6 +617,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     new Boolean(version.getId().equals(getActiveVersionId()))));
         }
         descriptor.put("versions", versionList);
+         */
 
         descriptor.put("candidateWebSiteIds", new ArrayList<>(getCandidateWebSiteIds()));
 
@@ -842,6 +843,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         preventIfImmutable();
 
         return CmsPageVersion.getWorker().findAll(getDelegator(), this.getId(), false);
+    }
+
+    public PagedList<CmsPageVersion> getVersionsPaginated(int viewIndex, int viewSize) {
+        preventIfImmutable();
+
+        return CmsPageVersion.getWorker().findAllPaginated(getDelegator(), this.getId(), viewIndex, viewSize, false);
     }
 
     /**

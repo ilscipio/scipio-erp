@@ -11,6 +11,7 @@ import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -351,15 +352,12 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
 
         /**
          * Returns all versions of a page starting with the most recent.
-         *
-         * @param pageId
-         * @return
          */
         public List<CmsPageVersion> findAll(Delegator delegator, String pageId, boolean useCache) {
             List<CmsPageVersion> versions = new ArrayList<>();
             try {
                 EntityFindOptions efo = new EntityFindOptions();
-                efo.setFetchSize(1);
+                //efo.setFetchSize(1);
                 EntityCondition ec = EntityCondition.makeCondition("pageId",
                         EntityOperator.EQUALS, pageId);
                 List<GenericValue> values = (List<GenericValue>) delegator
@@ -375,6 +373,26 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
             }
 
             return versions;
+        }
+
+        /**
+         * Returns all versions of a page, starting with the most recent, paginated.
+         */
+        public PagedList<CmsPageVersion> findAllPaginated(Delegator delegator, String pageId, int viewIndex, int viewSize, boolean useCache) {
+            try {
+                EntityCondition ec = EntityCondition.makeCondition("pageId",
+                        EntityOperator.EQUALS, pageId);
+                PagedList<GenericValue> genericVersions = delegator.from("CmsPageVersion").where("pageId", pageId).cache(useCache)
+                        .cursorScrollInsensitive().queryPagedList(viewIndex, viewSize);
+                List<CmsPageVersion> pageVersions = new ArrayList<>(genericVersions.getData().size());
+                for (GenericValue v : genericVersions.getData()) {
+                    pageVersions.add(new CmsPageVersion(v));
+                }
+                return new PagedList<>(genericVersions, pageVersions);
+            } catch (GenericEntityException e) {
+                throw new CmsException(
+                        "Could not retrieve page version. Page Id: " + pageId, e);
+            }
         }
 
         /**

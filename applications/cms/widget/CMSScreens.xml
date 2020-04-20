@@ -118,6 +118,25 @@
         </section>
     </screen>
 
+    <screen name="pageVersionList">
+        <section>
+            <actions>
+                <property-map resource="CMSUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetPage.groovy"/>
+            </actions>
+            <widgets>
+                <container><!-- Do not remove container - jQuery kludge -->
+                    <platform-specific>
+                        <html><html-template location="component://cms/webapp/cms/pages/pageVersionList.ftl"/></html>
+                    </platform-specific>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- Template Screens -->
     
     <screen name="CommonEditRenderTemplateActions"><!-- for editTemplate & editAsset -->

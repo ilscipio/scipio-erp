@@ -67,6 +67,11 @@ if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId
     if (ServiceUtil.isSuccess(pageResult)) {
         meta = pageResult.meta;
         pageModel = pageResult.pageModel;
+        pageVer_viewIndex = UtilMisc.toIntegerObject(parameters.pageVer_viewIndex);
+        pageVer_viewSize = UtilMisc.toIntegerObject(parameters.pageVer_viewSize);
+        pageVersions = pageModel.getVersionsPaginated((pageVer_viewIndex != null && pageVer_viewIndex >= 0) ? pageVer_viewIndex : 0,
+                (pageVer_viewSize != null && pageVer_viewSize >= 1) ? pageVer_viewSize : 10);
+        context.pageVersions = pageVersions;
         context.meta = meta;
         context.variables = pageResult.variables;
         context.content = pageResult.content;
@@ -80,6 +85,7 @@ if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId
         context.webSiteId = webSiteId;
         versionId = pageResult.versionId;
         context.versionId = versionId;
+        context.activeVersionId = pageModel.getActiveVersionId(false);
         if (!context.pagePrimaryPath) {
             context.pagePrimaryPath = pageResult.meta?.primaryPath;
         }

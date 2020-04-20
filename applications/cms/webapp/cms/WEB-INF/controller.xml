@@ -49,6 +49,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editPage" /><!-- save-current-view="true" -->
     </request-map>
+    <request-map uri="pageVersionList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pageVersionList"/>
+    </request-map>
     
     <request-map uri="createPage">
         <security https="true" auth="true"/>
@@ -592,6 +596,7 @@
     <!-- CMS Elements -->
     <view-map name="pages" type="screen" page="component://cms/widget/CMSScreens.xml#pages"/>
     <view-map name="editPage" type="screen" page="component://cms/widget/CMSScreens.xml#editPage"/>
+    <view-map name="pageVersionList" type="screen" page="component://cms/widget/CMSScreens.xml#pageVersionList"/>
     <view-map name="templates" type="screen" page="component://cms/widget/CMSScreens.xml#templates"/>
     <view-map name="editTemplate" type="screen" page="component://cms/widget/CMSScreens.xml#editTemplate"/>
     <view-map name="assets" type="screen" page="component://cms/widget/CMSScreens.xml#assets"/>

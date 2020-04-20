@@ -511,33 +511,7 @@
                     
                     <#-- Active Version -->
                     <@section title=uiLabelMap.CommonRevisions>
-                            <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
-                                <@thead>
-                                    <@tr>
-                                        <@th width="32px"></@th>
-                                        <@th width="200px"></@th>
-                                        <@th width="200px"></@th>
-                                        <@th></@th>
-                                        <@th width="32px"></@th>
-                                        <@th width="32px"></@th>
-                                    </@tr>
-                                </@thead>
-                                <@tbody>
-                                    <#list meta.versions as version>
-                                        <#assign rowSelected = (versionId == (version.id!""))>
-                                        <#-- FIXME?: remove the alt and style using selected only? -->
-                                        <@tr alt=rowSelected selected=rowSelected>
-                                           <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
-                                           <@td> ${version.createdBy!"Anonymous"}</@td>
-                                           <#assign verLinkMkrp><@pageUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@pageUrl></#assign>
-                                           <@td><#if version.date?has_content><a href="${verLinkMkrp}">${raw(version.date)?datetime}</a></#if></@td>
-                                           <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
-                                           <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
-                                           <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
-                                        </@tr>
-                                    </#list>
-                                </@tbody>
-                            </@table>
+                        <#include 'pageVersionList.ftl'>
                     </@section>
                     
                     <#-- Page Information -->
@@ -634,15 +608,7 @@
                             
                             <@section title=uiLabelMap.CommonStatus>
                                  <@field label=uiLabelMap.CommonStatus type="display" value=((meta.status!false)?string(uiLabelMap.CmsStatusPublished,uiLabelMap.CmsStatusUnpublished))/>
-
-                                 <#assign pageRevisions><@compress_single_line>
-                                     <#if meta?has_content && meta.versions?has_content>
-                                        ${meta.versions?size}
-                                        <#else>
-                                        0
-                                    </#if></@compress_single_line>    
-                                 </#assign>
-                                 <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
+                                 <@field label=uiLabelMap.CmsRevisions type="display" value=((pageVersions.listSize)!0)/>
                             </@section>
                             
                           <#if template.attributes?has_content>

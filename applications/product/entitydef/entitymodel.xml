@@ -2107,6 +2107,13 @@ code package.
       <index name="INV_ITEM_SN">
         <index-field name="serialNumber"/>
       </index>
+        <!-- SCIPIO: Untested indices
+        <index name="INV_DATE">
+            <index-field name="datetimeReceived"/>
+            <index-field name="inventoryItemId"/>
+            <index-field name="productId"/>
+            <index-field name="facilityId"/>
+        </index>-->
     </entity>
     <view-entity entity-name="InventoryItemAndLocation"
             package-name="org.ofbiz.product.inventory"
@@ -2260,6 +2267,10 @@ code package.
         <key-map field-name="inventoryItemId"/>
         <key-map field-name="physicalInventoryId"/>
       </relation>
+        <index name="INVITEM_DETAIL_DATE">
+            <index-field name="inventoryItemId"/>
+            <index-field name="createdStamp"/>
+        </index>
     </entity>
     <view-entity entity-name="InventoryItemDetailSummary"
             package-name="org.ofbiz.product.inventory"

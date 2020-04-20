@@ -462,6 +462,16 @@ code package.
       <index name="ORDEREXT_ID_IDX">
         <index-field name="externalId"/>
       </index>
+      <!-- SCIPIO: Untested indices
+      <index name="ORDERHD_DATE">
+        <index-field name="orderDate"/>
+        <index-field name="grandTotal"/>
+      </index>
+      <index name="ORDERHD_SLSCHN">
+        <index-field name="salesChannelEnumId" />
+        <index-field name="orderTypeId" />
+        <index-field name="statusId" />
+      </index>-->
     </entity>
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.order.order"

@@ -57,7 +57,9 @@
                       </#if>-->
                       <#assign editPageUri = "editPage?pageId=${escapeVal(item.id, 'url')}"><#-- &webSiteId=${escapeVal(item.webSiteId!item.defaultWebSiteId!, 'url')} -->
                       <#if item.path?has_content>
-                        <a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
+                        <#-- Too confusing, already one below that matches template lists, this was holdover from when editPage was by path instead of page ID
+                        <a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>-->
+                          ${escapeFullUrl(item.path, 'html')}
                       </#if>
                     </@td>
                     <#-- FIXME: the name should always get the pageId link, but right now the javascript has issues -->

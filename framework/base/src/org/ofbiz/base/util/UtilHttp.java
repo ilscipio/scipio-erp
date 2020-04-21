@@ -2203,7 +2203,6 @@ public final class UtilHttp {
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpSession here, but it is likely to do nothing.
-        Debug.logInfo("getSessionSyncObject: " + SESSION_SYNCOBJ + " not found in HttpSession; creating", module);
         synchronized(session) {
             syncObj = session.getAttribute(SESSION_SYNCOBJ);
             if (syncObj != null) {
@@ -2211,8 +2210,8 @@ public final class UtilHttp {
             }
             syncObj = createSessionSyncObject();
             session.setAttribute(SESSION_SYNCOBJ, syncObj);
-            Debug.logWarning("Session synchronization object (" + SESSION_SYNCOBJ
-                    + ") not found in session attributes; creating", module); // log after to minimize exposure
+            Debug.logWarning("getSessionSyncObject: Session synchronization object (" + SESSION_SYNCOBJ
+                    + ") not found in session attributes for context "  + session.getServletContext().getContextPath() + "; creating", module); // log after to minimize exposure
         }
         return syncObj;
     }
@@ -2251,7 +2250,7 @@ public final class UtilHttp {
         @Override
         public void sessionCreated(HttpSessionEvent se) {
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Initialized session sync object", module);
+                Debug.logVerbose("Initialized session sync object for context: " + se.getSession().getServletContext().getContextPath(), module);
             }
             se.getSession().setAttribute(SESSION_SYNCOBJ, createSessionSyncObject());
         }
@@ -2280,7 +2279,6 @@ public final class UtilHttp {
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpServletContext here, but it is likely to do nothing.
-        Debug.logInfo("getServletContextSyncObject: " + SERVLETCONTEXT_SYNCOBJ + " not found in ServletContext; creating", module);
         synchronized(context) {
             syncObj = context.getAttribute(SERVLETCONTEXT_SYNCOBJ);
             if (syncObj != null) {
@@ -2288,8 +2286,8 @@ public final class UtilHttp {
             }
             syncObj = createServletContextSyncObject();
             context.setAttribute(SERVLETCONTEXT_SYNCOBJ, syncObj);
-            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNCOBJ
-                    + ") not found in servlet context attributes; creating", module); // log after to minimize exposure
+            Debug.logWarning("getServletContextSyncObject: ServletContext synchronization object (" + SERVLETCONTEXT_SYNCOBJ
+                    + ") not found in servlet context attributes for context " + context.getContextPath() + "; creating", module); // log after to minimize exposure
         }
         return syncObj;
     }
@@ -2327,10 +2325,10 @@ public final class UtilHttp {
         public static javax.servlet.ServletContextListener getInstance() { return INSTANCE; }
         @Override
         public void contextInitialized(ServletContextEvent sce) {
-            if (Debug.infoOn()) { // Log this one as info, because important to know Tomcat in fact picked up this listener
-                Debug.logInfo("Initialized servlet context sync object", module);
-            }
             sce.getServletContext().setAttribute(SERVLETCONTEXT_SYNCOBJ, createServletContextSyncObject());
+            if (Debug.infoOn()) { // Log this one as info, because important to know Tomcat in fact picked up this listener
+                Debug.logInfo("Initialized servlet context sync object for context: " + sce.getServletContext().getContextPath(), module);
+            }
         }
         @Override
         public void contextDestroyed(ServletContextEvent sce) {

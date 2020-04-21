@@ -269,7 +269,7 @@ public final class JobManager {
                 return poll;
             }
 
-            try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator()) {
+            try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").maxRows(limit).queryIterator()) { // SCIPIO: maxRows
                 // SCIPIO: factored out into method
                 ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
             }
@@ -310,7 +310,7 @@ public final class JobManager {
                     Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
                     return Collections.emptyList();
                 }
-                try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("jobId").queryIterator()) {
+                try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("jobId").maxRows(limit).queryIterator()) { // SCIPIO: maxRows
                     GenericValue jobValue = jobsIterator.next();
                     while (jobValue != null) {
                         poll.add(new PurgeJob(jobValue));

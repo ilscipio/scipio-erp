@@ -347,7 +347,7 @@ public class SocketSessionManager {
         GenericValue userLogin = UtilHttp.getUserLogin(httpSession);
         if (!security.hasEntityPermission(permission, "_VIEW", userLogin)) {
             if (isLog()) {
-                Debug.logError("Client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)") + "' not authorized for " + permission + "_VIEW permission for websockets session '"
+                Debug.logWarning("Client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)") + "' not authorized for " + permission + "_VIEW permission for websockets session '"
                         + session.getId() + "'" + errorSuffix, module);
             }
             return false;

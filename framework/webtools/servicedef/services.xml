@@ -164,7 +164,7 @@ code package.
     
     <!-- SCIPIO Services -->
     <service name="getServerRequests" engine="groovy" location="component://webtools/script/com/ilscipio/data/ServerData.groovy" 
-             invoke="getServerRequests" auth="true">
+             invoke="getServerRequests" auth="true" log="quiet">
         <description>Returns a list of Maps, containing the contentIds (List of requested paths) and hitcount (number of requests) grouped by DateInterval</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false">
             <description>NOTE: fromDate is used as the base date from which to determine the buckets using bucketMinutes, so the value should usually

@@ -1667,7 +1667,7 @@ code package.
     </service>
 
     <!-- Websocket services -->
-    <service name="sendHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0"
+    <service name="sendHitBinLiveData" engine="java" require-new-transaction="true" max-retry="0" log="quiet" log-eca="quiet"
              location="com.ilscipio.scipio.party.web.PartyWebServices" invoke="sendHitBinLiveData" transaction-timeout="7260" semaphore="fail"><!-- transaction-timeout is for expiry -->
         <description>Sends request data to listening websockets on channel. Automatically calls removeHitBinLiveData. Config, defaults in webtools.properties.</description>
         <attribute name="serverHostName" type="String" mode="IN" optional="true">

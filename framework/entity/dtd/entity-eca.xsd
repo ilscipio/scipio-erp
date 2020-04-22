@@ -32,6 +32,8 @@ under the License.
                     <xs:element ref="condition"/>
                     <xs:element ref="condition-field"/>
                     <xs:element ref="condition-service"/>
+                    <xs:element ref="condition-property"/><!-- SCIPIO -->
+                    <xs:element ref="condition-property-field"/><!-- SCIPIO -->
                 </xs:choice>
                 <xs:choice minOccurs="1" maxOccurs="unbounded">
                     <xs:element ref="set"/>

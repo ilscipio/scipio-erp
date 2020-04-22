@@ -53,6 +53,9 @@ public class GroovyUtil {
      */
     private static final UtilCache<String, Class<?>> parsedInlineScripts = UtilCache.createUtilCache("script.GroovyInlineParsedCache", 0, 0, false); // SCIPIO
 
+    private static boolean baseScriptInitialized = false; // SCIPIO
+    private static final Object baseScriptInitSyncObj = new Object(); // SCIPIO
+
     /**
      * Static Groovy script class loader.
      * <p>
@@ -64,37 +67,58 @@ public class GroovyUtil {
      * WARN: Due to its design, the GroovyClassLoader can produce a thread lock even when loading
      * non-caching scripts. Therefore, it should only be shared if there is a script cache in front
      * of it.
+     * <p>
+     * 2020-04-22: Static variables moved to nested class to implement delayed initialization to prevent circular
+     * dependencies caused by the GroovyInit.groovy instantiation.
      */
-    private static final GroovyClassLoader groovyScriptClassLoader;
-    private static final CompilerConfiguration groovyScriptCompilerConfig; // SCIPIO
-    static {
-        GroovyClassLoader groovyClassLoader = null;
-        String scriptBaseClass = UtilProperties.getPropertyValue("groovy", "scriptBaseClass");
-        CompilerConfiguration conf;
-        if (!scriptBaseClass.isEmpty()) {
-            conf = new CompilerConfiguration();
-            conf.setScriptBaseClass(scriptBaseClass);
-            groovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
-        } else {
-            // SCIPIO: 2019-04-15: Make a copy so we can modify safely
-            //conf = CompilerConfiguration.DEFAULT;
-            conf = new CompilerConfiguration(CompilerConfiguration.DEFAULT);
+    private static final class GroovyLoader {
+        private static final GroovyClassLoader classLoader;
+        private static final CompilerConfiguration compilerConfig; // SCIPIO
+        static {
+            Debug.logInfo("Initializing Groovy class loader and config", module); // SCIPIO
+            GroovyClassLoader groovyClassLoader = null;
+            String scriptBaseClass = UtilProperties.getPropertyValue("groovy", "scriptBaseClass");
+            CompilerConfiguration conf;
+            if (!scriptBaseClass.isEmpty()) {
+                conf = new CompilerConfiguration();
+                conf.setScriptBaseClass(scriptBaseClass);
+                groovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
+            } else {
+                // SCIPIO: 2019-04-15: Make a copy so we can modify safely
+                //conf = CompilerConfiguration.DEFAULT;
+                conf = new CompilerConfiguration(CompilerConfiguration.DEFAULT);
+            }
+            // SCIPIO: 2019-04-15: Automatically include Debug in all Groovy scripts to simplify usage and debugging.
+            conf.addCompilationCustomizers(new ImportCustomizer()
+                    .addImports("org.ofbiz.base.util.Debug")
+            );
+            classLoader = groovyClassLoader;
+            compilerConfig = conf; // SCIPIO
+            //initBaseScript(); // SCIPIO: DO NOT do this here anymore due to class initialization
         }
-        // SCIPIO: 2019-04-15: Automatically include Debug in all Groovy scripts to simplify usage and debugging.
-        conf.addCompilationCustomizers(new ImportCustomizer()
-            .addImports("org.ofbiz.base.util.Debug")
-        );
-        groovyScriptClassLoader = groovyClassLoader;
-        groovyScriptCompilerConfig = conf; // SCIPIO
-        /*
-         *  With the implementation of @BaseScript annotations (introduced with Groovy 2.3.0) something was broken
-         *  in the CompilerConfiguration.setScriptBaseClass method and an error is thrown when our scripts are executed;
-         *  the workaround is to execute at startup a script containing the @BaseScript annotation.
-         */
-        try {
-            GroovyUtil.runScriptAtLocation("component://base/config/GroovyInit.groovy", null, null);
-        } catch (Exception e) {
-            Debug.logError("Error during Groovy initialization [component://base/config/GroovyInit.groovy]: " + e.getMessage(), module); // SCIPIO: Changed to error, better message
+    }
+
+    /** Workaround for @BaseScript to avoid cyclic initializations (SCIPIO). */
+    public static void initBaseScript() {
+        if (baseScriptInitialized) {
+            return;
+        }
+        synchronized(baseScriptInitSyncObj) {
+            if (baseScriptInitialized) {
+                return;
+            }
+            baseScriptInitialized = true; // set immediately because the call below may call initBaseScript again
+            /*
+             *  With the implementation of @BaseScript annotations (introduced with Groovy 2.3.0) something was broken
+             *  in the CompilerConfiguration.setScriptBaseClass method and an error is thrown when our scripts are executed;
+             *  the workaround is to execute at startup a script containing the @BaseScript annotation.
+             */
+            try {
+                Debug.logInfo("Initializing @BaseScript via component://base/config/GroovyInit.groovy", module); // SCIPIO
+                GroovyUtil.runScriptAtLocation("component://base/config/GroovyInit.groovy", null, null);
+            } catch (Exception e) {
+                Debug.logError("Error during Groovy initialization [component://base/config/GroovyInit.groovy]: " + e.getMessage(), module); // SCIPIO: Changed to error, better message
+            }
         }
     }
 
@@ -126,6 +150,7 @@ public class GroovyUtil {
     @SuppressWarnings("unchecked")
     public static Object eval(String expression, Map<String, Object> context,
             GroovyLangVariant langVariant, boolean convertOperators, boolean bindingToContext, boolean useCache) throws CompilationFailedException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         Object o;
         if (expression == null || expression.equals("")) {
             Debug.logError("Groovy Evaluation error. Empty expression", module);
@@ -286,6 +311,7 @@ public class GroovyUtil {
      * @return A <code>Binding</code> instance
      */
     public static Binding getBinding(Map<String, Object> context, GroovyLangVariant langVariant) {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         // SCIPIO: 2018-09-19: Impl. MOVED to GroovyLangVariant#createBinding to allow specialization
         return langVariant.createBinding(context);
     }
@@ -332,6 +358,7 @@ public class GroovyUtil {
     }
 
     public static Class<?> getScriptClassFromLocation(String location) throws GeneralException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         try {
             Class<?> scriptClass = parsedScripts.get(location);
             if (scriptClass == null) {
@@ -339,8 +366,8 @@ public class GroovyUtil {
                 if (scriptUrl == null) {
                     throw new GeneralException("Script not found at location [" + location + "]");
                 }
-                if (groovyScriptClassLoader != null) {
-                    scriptClass = parseClass(scriptUrl.openStream(), location, groovyScriptClassLoader);
+                if (GroovyLoader.classLoader != null) {
+                    scriptClass = parseClass(scriptUrl.openStream(), location, GroovyLoader.classLoader);
                 } else {
                     scriptClass = parseClass(scriptUrl.openStream(), location);
                 }
@@ -368,6 +395,7 @@ public class GroovyUtil {
      */
     @Deprecated
     public static Class<?> loadClass(String path) throws ClassNotFoundException, IOException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
         Class<?> classLoader = groovyClassLoader.loadClass(path);
         groovyClassLoader.close();
@@ -375,6 +403,7 @@ public class GroovyUtil {
     }
 
     public static Class<?> loadClass(String path, GroovyClassLoader groovyClassLoader) throws ClassNotFoundException, IOException { // SCIPIO
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         return groovyClassLoader.loadClass(path);
     }
 
@@ -383,6 +412,7 @@ public class GroovyUtil {
      */
     @Deprecated
     public static Class<?> parseClass(InputStream in, String location) throws IOException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
         Class<?> classLoader = groovyClassLoader.parseClass(UtilIO.readString(in), location);
         groovyClassLoader.close();
@@ -390,6 +420,7 @@ public class GroovyUtil {
     }
 
     public static Class<?> parseClass(InputStream in, String location, GroovyClassLoader groovyClassLoader) throws IOException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         return groovyClassLoader.parseClass(UtilIO.readString(in), location);
     }
 
@@ -399,6 +430,7 @@ public class GroovyUtil {
      */
     @Deprecated
     public static Class<?> parseClass(String text) throws IOException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
         Class<?> classLoader = groovyClassLoader.parseClass(text);
         groovyClassLoader.close();
@@ -406,10 +438,12 @@ public class GroovyUtil {
     }
 
     public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) throws IOException { // SCIPIO: added 2017-01-27
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         return groovyClassLoader.parseClass(text);
     }
 
     public static Object runScriptAtLocation(String location, String methodName, Map<String, Object> context) throws GeneralException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         Script script = InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
         Object result = null;
         if (UtilValidate.isEmpty(methodName)) {
@@ -457,6 +491,7 @@ public class GroovyUtil {
      * @see #getScriptClassFromLocation
      */
     public static Script getScriptFromLocation(String location, Binding binding) throws GeneralException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         return InvokerHelper.createScript(getScriptClassFromLocation(location), binding);
     }
 
@@ -468,6 +503,7 @@ public class GroovyUtil {
      * @see #getScriptFromLocation(String, Binding)
      */
     public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
+        if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
         return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
     }
 
@@ -479,7 +515,7 @@ public class GroovyUtil {
      */
     @Deprecated
     public static GroovyClassLoader getGroovyScriptClassLoader() {
-        return groovyScriptClassLoader;
+        return GroovyLoader.classLoader;
     }
 
     /**
@@ -625,7 +661,7 @@ public class GroovyUtil {
         public abstract String getName();
 
         public CompilerConfiguration getGroovyCompilerConfiguration() {
-            return GroovyUtil.groovyScriptCompilerConfig;
+            return GroovyLoader.compilerConfig;
         }
 
         /**
@@ -633,7 +669,7 @@ public class GroovyUtil {
          * a new one.
          */
         public GroovyClassLoader getCommonGroovyClassLoader() {
-            return GroovyUtil.groovyScriptClassLoader;
+            return GroovyLoader.classLoader;
         }
 
         /**
@@ -700,17 +736,19 @@ public class GroovyUtil {
         }
 
         public static class SimpleEventVariantConfig extends GroovyLangVariant {
-            private static final CompilerConfiguration eventGroovyCompilerConfiguration;
-            private static final GroovyClassLoader eventGroovyClassLoader;
-            static {
-                CompilerConfiguration conf = new CompilerConfiguration(GroovyUtil.groovyScriptCompilerConfig);
-                conf.addCompilationCustomizers(new ImportCustomizer()
-                        // TODO?: Make imports customizable in *.properties?
-                        .addStarImports("org.ofbiz.base.util", "org.ofbiz.entity", "org.ofbiz.service")
-                        .addImports("org.ofbiz.webapp.event.EventUtil")
-                );
-                eventGroovyCompilerConfiguration = conf;
-                eventGroovyClassLoader = new GroovyClassLoader(GroovyUtil.groovyScriptClassLoader, conf);
+            private static final class SimpleEventVariantLoader {
+                private static final CompilerConfiguration compilerConfig;
+                private static final GroovyClassLoader classLoader;
+                static {
+                    CompilerConfiguration conf = new CompilerConfiguration(GroovyLoader.compilerConfig);
+                    conf.addCompilationCustomizers(new ImportCustomizer()
+                            // TODO?: Make imports customizable in *.properties?
+                            .addStarImports("org.ofbiz.base.util", "org.ofbiz.entity", "org.ofbiz.service")
+                            .addImports("org.ofbiz.webapp.event.EventUtil")
+                    );
+                    compilerConfig = conf;
+                    classLoader = new GroovyClassLoader(GroovyLoader.classLoader, conf);
+                }
             }
 
             protected SimpleEventVariantConfig() {}
@@ -722,26 +760,28 @@ public class GroovyUtil {
 
             @Override
             public CompilerConfiguration getGroovyCompilerConfiguration() {
-                return eventGroovyCompilerConfiguration;
+                return SimpleEventVariantLoader.compilerConfig;
             }
 
             @Override
             public GroovyClassLoader getCommonGroovyClassLoader() {
-                return eventGroovyClassLoader;
+                return SimpleEventVariantLoader.classLoader;
             }
 
             @Override
             public GroovyClassLoader createGroovyClassLoader() {
-                return new GroovyClassLoader(GroovyUtil.groovyScriptClassLoader, getGroovyCompilerConfiguration());
+                return new GroovyClassLoader(GroovyLoader.classLoader, getGroovyCompilerConfiguration());
             }
         }
 
         public static class StockVariantConfig extends GroovyLangVariant {
-            private static final CompilerConfiguration stockGroovyCompilerConfiguration;
-            private static final GroovyClassLoader stockGroovyClassLoader;
-            static {
-                stockGroovyCompilerConfiguration = CompilerConfiguration.DEFAULT;
-                stockGroovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), stockGroovyCompilerConfiguration);
+            private static final class StockVariantConfigLoader {
+                private static final CompilerConfiguration compilerConfig;
+                private static final GroovyClassLoader classLoader;
+                static {
+                    compilerConfig = CompilerConfiguration.DEFAULT;
+                    classLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), compilerConfig);
+                }
             }
 
             protected StockVariantConfig() {}
@@ -758,17 +798,17 @@ public class GroovyUtil {
 
             @Override
             public CompilerConfiguration getGroovyCompilerConfiguration() {
-                return stockGroovyCompilerConfiguration;
+                return StockVariantConfigLoader.compilerConfig;
             }
 
             @Override
             public GroovyClassLoader getCommonGroovyClassLoader() {
-                return stockGroovyClassLoader;
+                return StockVariantConfigLoader.classLoader;
             }
 
             @Override
             public GroovyClassLoader createGroovyClassLoader() {
-                return new GroovyClassLoader(GroovyUtil.class.getClassLoader(), stockGroovyCompilerConfiguration);
+                return new GroovyClassLoader(GroovyUtil.class.getClassLoader(), StockVariantConfigLoader.compilerConfig);
             }
         }
     }

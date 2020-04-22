@@ -141,6 +141,7 @@ public final class ScriptUtil {
         } else {
             Debug.logWarning("ScriptHelper factory not found", module);
         }
+        GroovyUtil.initBaseScript(); // SCIPIO
     }
 
     /**

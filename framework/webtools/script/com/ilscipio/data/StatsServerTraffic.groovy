@@ -33,7 +33,7 @@ switch (context.chartIntervalScope ?: "day") {
 
 try {
     //findDataMap = dispatcher.runSync("getServerRequests", UtilMisc.toMap("fromDate",begin,"thruDate",nowTimestamp,"dateInterval",context.chartIntervalScope?context.chartIntervalScope:"day","userLogin",userLogin));
-    findDataMap = dispatcher.runSync("getSavedHitBinLiveData", ["fromDate": begin, "useCache": true, "maxRequests": context.maxRequestsEntries, "userLogin": userLogin]);
+    findDataMap = dispatcher.runSync("getSavedHitBinLiveData", ["fromDate": begin, "useCache": false, "maxRequests": context.maxRequestsEntries, "userLogin": userLogin]);
     chartData = findDataMap.requests;
     context.chartData = chartData;
 } catch(Exception e) {

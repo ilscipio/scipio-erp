@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -72,6 +73,10 @@ public final class JobManager {
     public static final String instanceId = GeneralConfig.getInstanceId(); // SCIPIO: Moved
     private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<>();
     private static boolean isShutDown = false;
+    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug", false); // SCIPIO
+    private static final boolean DEBUG_DETAILED = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.detailed", false); // SCIPIO
+    private static final long debugPollMinInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.minInterval", 0); // SCIPIO
+    private static volatile long debugPollLastTimestamp = 0;
 
     private static void assertIsRunning() {
         if (isShutDown) {
@@ -141,6 +146,15 @@ public final class JobManager {
      */
     public Map<String, Object> getPoolState() {
         return JobPoller.getInstance().getPoolState();
+    }
+
+    /**
+     * Get a List of each threads current state, without taskList (SCIPIO).
+     *
+     * @return List containing a Map of general thread pool stats.
+     */
+    public Map<String, Object> getGeneralPoolState() {
+        return JobPoller.getInstance().getGeneralPoolState();
     }
 
     /**
@@ -288,7 +302,8 @@ public final class JobManager {
             Debug.logWarning(t, errMsg, module);
             return Collections.emptyList();
         }
-        if (poll.isEmpty()) {
+        boolean noJobs = poll.isEmpty(); // SCIPIO
+        if (noJobs) {
             // No jobs to run, see if there are any jobs to purge
             Calendar cal = Calendar.getInstance();
             try {
@@ -333,6 +348,16 @@ public final class JobManager {
                 }
                 Debug.logWarning(t, errMsg, module);
                 return Collections.emptyList();
+            }
+        }
+        // SCIPIO
+        if (DEBUG) {
+            long currentTimestamp = System.currentTimeMillis();
+            if ((currentTimestamp - debugPollLastTimestamp) >= debugPollMinInterval) {
+                debugPollLastTimestamp = currentTimestamp;
+                String msg = noJobs ? "No jobs to run; purging " + poll.size() + " jobs; " : "Polled " + poll.size() + " jobs ";
+                msg += "[run-from-pool: " + pools + ", thread pool: " + (DEBUG_DETAILED ? getPoolState() : getGeneralPoolState()) + "]";
+                Debug.logInfo(msg, module);
             }
         }
         return poll;

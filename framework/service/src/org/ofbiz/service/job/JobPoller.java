@@ -112,14 +112,7 @@ public final class JobPoller implements ServiceConfigListener {
      * Returns a <code>Map</code> containing <code>JobPoller</code> statistics.
      */
     public Map<String, Object> getPoolState() {
-        Map<String, Object> poolState = new HashMap<>();
-        poolState.put("keepAliveTimeInSeconds", executor.getKeepAliveTime(TimeUnit.SECONDS));
-        poolState.put("numberOfCoreInvokerThreads", executor.getCorePoolSize());
-        poolState.put("currentNumberOfInvokerThreads", executor.getPoolSize());
-        poolState.put("numberOfActiveInvokerThreads", executor.getActiveCount());
-        poolState.put("maxNumberOfInvokerThreads", executor.getMaximumPoolSize());
-        poolState.put("greatestNumberOfInvokerThreads", executor.getLargestPoolSize());
-        poolState.put("numberOfCompletedTasks", executor.getCompletedTaskCount());
+        Map<String, Object> poolState = getGeneralPoolState(); // SCIPIO: refactored
         BlockingQueue<Runnable> queue = executor.getQueue();
         List<Map<String, Object>> taskList = new ArrayList<>();
         Map<String, Object> taskInfo = null;
@@ -138,6 +131,21 @@ public final class JobPoller implements ServiceConfigListener {
             taskList.add(taskInfo);
         }
         poolState.put("taskList", taskList);
+        return poolState;
+    }
+
+    /**
+     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics, but without individual taskList (SCIPIO).
+     */
+    public Map<String, Object> getGeneralPoolState() {
+        Map<String, Object> poolState = new HashMap<>();
+        poolState.put("keepAliveTimeInSeconds", executor.getKeepAliveTime(TimeUnit.SECONDS));
+        poolState.put("numberOfCoreInvokerThreads", executor.getCorePoolSize());
+        poolState.put("currentNumberOfInvokerThreads", executor.getPoolSize());
+        poolState.put("numberOfActiveInvokerThreads", executor.getActiveCount());
+        poolState.put("maxNumberOfInvokerThreads", executor.getMaximumPoolSize());
+        poolState.put("greatestNumberOfInvokerThreads", executor.getLargestPoolSize());
+        poolState.put("numberOfCompletedTasks", executor.getCompletedTaskCount());
         return poolState;
     }
 

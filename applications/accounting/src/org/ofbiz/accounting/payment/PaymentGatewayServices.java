@@ -967,9 +967,12 @@ public class PaymentGatewayServices {
         Map<String, Object> releaseContext = new HashMap<>();
         // SCIPIO (2019-06-25: Using the right params to invoke the service
         releaseContext.put("userLogin", userLogin);
-        releaseContext.put("orderId", orh.getOrderId());
-        releaseContext.put("orderItems", orh.getOrderItems());
-        releaseContext.put("shippingAddress", EntityUtil.getFirst(orh.getShippingLocations())); // TODO refactor the payment API to handle support all addresses
+        // SCIPIO 2020-04-24: Commenting out these context params as they are not needed for payment releases.
+        // All payment release services implement paymentReleaseInterface only with no additional attributes, so safe to comment out.
+//      releaseContext.put("orderId", orh.getOrderId());
+//      releaseContext.put("orderItems", orh.getOrderItems());
+//      releaseContext.put("shippingAddress", EntityUtil.getFirst(orh.getShippingLocations())); // TODO refactor the payment API to handle support all addresses
+
         releaseContext.put("paymentConfig", paymentConfig);
         releaseContext.put("paymentGatewayConfigId", paymentGatewayConfigId);
         releaseContext.put("currency", orh.getCurrency());
@@ -977,10 +980,14 @@ public class PaymentGatewayServices {
         if (paymentPref.get("securityCode") != null) {
             releaseContext.put("cardSecurityCode", paymentPref.get("securityCode"));
         }
-        releaseContext.put("processAmount", authTransaction.getBigDecimal("amount"));
+        // SCIPIO 2020-04-24: Replaced processAmount by releaseAmount, which is the correct one.
+        releaseContext.put("releaseAmount", authTransaction.getBigDecimal("amount"));
 
         // get the billing information
-        getBillingInformation(orh, paymentPref, releaseContext);
+        // SCIPIO 2020-04-24: Commenting out the billingInfo context params as they are not needed for payment releases.
+        // All payment release services implement paymentReleaseInterface only with no additional attributes, so safe to comment out.
+//        getBillingInformation(orh, paymentPref, releaseContext);
+
 
         // run the defined service
         Map<String, Object> releaseResult = null;
@@ -997,16 +1004,18 @@ public class PaymentGatewayServices {
             try {
                 // SCIPIO (2019-06-25: Using the right params to invoke the service.
                 // This can't be done automatically by infering the params gotten from service model because they don't match!
+                // SCIPIO 2020-04-24: Fixed wrong release attributes as the service was taking form auth* attributes gotten from releaseResult.
+                // Probably caused by a bad copy&paste without adjusting
                 Map<String, Object> resCtx = UtilMisc.toMap();
                 resCtx.put("orderPaymentPreference", paymentPref);
                 resCtx.put("userLogin", userLogin);
-                resCtx.put("releaseResult", releaseResult.get("authResult"));
-                resCtx.put("releaseAmount", releaseResult.get("processAmount"));
+                resCtx.put("releaseResult", releaseResult.get("releaseResult"));
+                resCtx.put("releaseAmount", releaseResult.get("releaseAmount"));
                 resCtx.put("currencyUomId", orh.getCurrency());
-                resCtx.put("releaseAltRefNum", releaseResult.get("authAltRefNum"));
-                resCtx.put("releaseRefNum", releaseResult.get("authRefNum"));
-                resCtx.put("releaseFlag", releaseResult.get("authFlag"));
-                resCtx.put("releaseMessage", releaseResult.get("authMessage"));
+                resCtx.put("releaseAltRefNum", releaseResult.get("releaseAltRefNum"));
+                resCtx.put("releaseRefNum", releaseResult.get("releaseRefNum"));
+                resCtx.put("releaseFlag", releaseResult.get("releaseFlag"));
+                resCtx.put("releaseMessage", releaseResult.get("releaseMessage"));
                 releaseResRes = dispatcher.runSync("processReleaseResult",  resCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble processing the release results", module);

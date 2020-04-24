@@ -396,7 +396,27 @@ public final class TransactionUtil implements Status {
         }
     }
 
+    /**
+     * Suspends current transaction or returns null if no transaction.
+     * <p>
+     * SCIPIO: Modified so this does not print a warning anymore if no transaction existed,
+     * because it results in less versatile and more complicated client code to avoid the warning, for weak reasons.
+     * Callers can check for null or use {@link #suspendOrWarn()} if they absolutely need.
+     */
     public static Transaction suspend() throws GenericTransactionException {
+        return suspend(Debug.VERBOSE);
+    }
+
+    /**
+     * Suspends current transaction or returns null if no transaction, logs warning.
+     * <p>
+     * SCIPIO: This implements the original {@link #suspend()} method with warning, in case still relevant somewhere.
+     */
+    public static Transaction suspendOrWarn() throws GenericTransactionException {
+        return suspend(Debug.WARNING);
+    }
+
+    private static Transaction suspend(int missingTransLogLevel) throws GenericTransactionException { // SCIPIO: refactored for log level
         try {
             if (TransactionUtil.getStatus() != STATUS_NO_TRANSACTION) {
                 TransactionManager txMgr = TransactionFactoryLoader.getInstance().getTransactionManager();
@@ -409,8 +429,8 @@ public final class TransactionUtil implements Status {
                 }
                 return null;
             }
-            if (Debug.warningOn()) {
-                Debug.logWarning("No transaction in place, so not suspending.", module);
+            if (Debug.isOn(missingTransLogLevel)) {
+                Debug.log(missingTransLogLevel, null, "No transaction in place, so not suspending.", module);
             }
             return null;
         } catch (SystemException e) {

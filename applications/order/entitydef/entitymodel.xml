@@ -2600,6 +2600,15 @@ code package.
             <index-field name="orderId"/>
             <index-field name="orderItemSeqId"/>
         </index>
+        <index name="RTN_ITM_LSTUPDATED">
+          <index-field name="-lastUpdatedStamp"/>
+          <index-field name="statusId"/>
+          <index-field name="returnTypeId"/>
+          <index-field name="returnReasonId"/>
+          <index-field name="returnItemTypeId"/>
+          <index-field name="returnPrice"/>
+          <index-field name="returnQuantity"/>
+        </index>
     </entity>
     <entity entity-name="ReturnItemResponse"
             package-name="org.ofbiz.order.return"

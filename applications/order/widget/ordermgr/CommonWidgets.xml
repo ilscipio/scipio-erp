@@ -11,9 +11,9 @@ code package.
     <screen name="DashboardStatsOrderTotal">
         <section>
             <widgets>
-                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalDay"/></container>
                 <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalWeek"/></container>
                 <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsOrderTotalMonth"/></container>
+                <container style="${styles.grid_large}4 ${styles.grid_cell}"><include-screen name="DashboardStatsReturnReasonWeek"/></container>
             </widgets>
         </section>
     </screen>
@@ -100,6 +100,27 @@ code package.
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrders.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="DashboardStatsReturnReasonWeek">
+        <section>
+            <actions>
+                <set field="chartType" value="pie"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="chartIntervalScope" value="month"/>
+                <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>
+                <set field="ylabel" value="${uiLabelMap.CommonReason}"/>
+                <set field="label1" value="${uiLabelMap.OrderTotal}"/>
+                <set field="label2" value="${uiLabelMap.OrderOrders}"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsReturnReason.groovy"/>
+                <set field="title" value="${uiLabelMap.ReasonForReturns}"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsReturnReason.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

@@ -1754,4 +1754,22 @@ code package.
       </having-condition-list>
     </entity-condition>-->
   </view-entity>
+
+  <!-- SCIPIO: Added 2020-04-27-->
+  <view-entity entity-name="ReturnItemStats"
+               package-name="com.ilscipio.scipio.ce.stats"
+               title="Return item and reason stats" auto-clear-cache="true" >
+    <member-entity entity-alias="RI" entity-name="ReturnItem" />
+    <alias entity-alias="RI" name="statusId" group-by="true"/>
+    <alias entity-alias="RI" name="returnTypeId" group-by="true"/>
+    <alias entity-alias="RI" name="returnReasonId" group-by="true"/>
+    <alias entity-alias="RI" name="returnItemTypeId" group-by="true"/>
+    <alias entity-alias="RI" name="totalReturnValue" field="returnPrice" function="sum"/>
+    <alias entity-alias="RI" name="totalQuantity" field="returnQuantity" function="sum"/>
+    <alias entity-alias="RI" name="lastUpdatedStamp" group-by="true" />
+    <alias entity-alias="RI" name="lastUpdatedStamp" group-by="true" />
+    <alias entity-alias="RI" name="day" field="lastUpdatedStamp" group-by="true" function="extract-day"/>
+    <alias entity-alias="RI" name="month" field="lastUpdatedStamp" group-by="true" function="extract-month"/>
+    <alias entity-alias="RI" name="year" field="lastUpdatedStamp" group-by="true" function="extract-year"/>
+  </view-entity>
 </entitymodel>

@@ -16441,4 +16441,8 @@
         <value xml:lang="de">Retouren-Header nachschlagen</value>
         <value xml:lang="en">Lookup Return Header</value>
     </property>
+    <property key="ReasonForReturns">
+        <value xml:lang="de">Gründe für eine Retoure</value>
+        <value xml:lang="en">The reasons for your returns</value>
+    </property>
 </resource>

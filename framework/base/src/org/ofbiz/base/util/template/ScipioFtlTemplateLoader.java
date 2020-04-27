@@ -27,6 +27,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -117,11 +118,9 @@ public class ScipioFtlTemplateLoader extends URLTemplateLoader {
         } catch (Exception e) {
             Debug.logWarning("Unable to locate the template: " + name, module);
         }
-        // TODO: REVIEW: It's unclear if it's 100% required to satisfy API to do this I/O lookup, but something else can be left to throw an IOException...
-        //  for example the URLTemplateLoader.findTemplateSource calls url.openConnection() right after this, and this method is specific to URLTemplateLoader, so
-        //  I see no reason to worry.
-        //return (locationUrl != null) && new File(locationUrl.getFile()).exists() ? locationUrl : null;
-        return locationUrl;
+
+        // TODO: REVIEW: this file exists check may need to be done better way in future
+        return (locationUrl != null) && new File(locationUrl.getFile()).exists() ? locationUrl : null;
     }
 
     @Override

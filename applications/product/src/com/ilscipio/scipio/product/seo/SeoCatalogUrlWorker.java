@@ -1782,7 +1782,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Heavily modified logic from CatalogUrlFilter.
      */
     public PathPartMatches matchPathPartProductCached(Delegator delegator, String pathPart, PathPartMatchOptions matchOptions, Timestamp moment) throws GenericEntityException {
-        String key = pathPart + "::" + matchOptions.getCacheKey();
+        String key = delegator.getDelegatorName() + "::" + pathPart + "::" + matchOptions.getCacheKey();
         PathPartMatches results = productAltUrlPartInfoCache.get(key);
         if (results == null) {
             results = matchPathPartProduct(delegator, pathPart, matchOptions, moment);
@@ -1890,7 +1890,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Heavily modified logic from CatalogUrlFilter.
      */
     public PathPartMatches matchPathPartCategoryCached(Delegator delegator, String pathPart, PathPartMatchOptions matchOptions, Timestamp moment) throws GenericEntityException {
-        String key = pathPart + "::" + matchOptions.getCacheKey();
+        String key = delegator.getDelegatorName() + "::" + pathPart + "::" + matchOptions.getCacheKey();
         PathPartMatches results = categoryAltUrlPartInfoCache.get(key);
         if (results == null) {
             results = matchPathPartCategory(delegator, pathPart, matchOptions, moment);

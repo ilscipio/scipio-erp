@@ -13,7 +13,16 @@
                 });
                 dt.rows.add([cells]);
             });
-            dt.draw(false);
+            dt.draw(false); <#-- draw first to ensure the new tr elements are created -->
+            var i = 0;
+            $('#cms-pgver-list-body-tgt tr').each(function() {
+                <#-- Can't do this, the even/row get mixed up:
+                $(dt.row(i).node()).addClass($(this).attr('class'));-->
+                if ($(this).hasClass("${escapeVal(styles.row_selected!, 'js')}")) {
+                    $(dt.row(i).node()).addClass("${escapeVal(styles.row_selected!, 'js')}");
+                }
+                i++;
+            });
         } else {
             console.log('missing datatables .api().draw() for #cms-pgver-list-table');
         }

@@ -5,7 +5,7 @@ code package.
 -->
 <#if parameters.maxElements?has_content><#assign maxElements = parameters.maxElements?number/><#else><#assign maxElements = 10/></#if>
 
-    <p>${uiLabelMap.WebtoolsThisThread}<b> ${Static["java.lang.Thread"].currentThread().getName()} (${Static["java.lang.Thread"].currentThread().getId()})</b></p>
+    <p>${uiLabelMap.WebtoolsThisThread}<b> ${currentThread.getName()} (${currentThread.getId()})</b></p>
    
     <@table type="data-list" autoAltRows=true>
      <@thead>
@@ -18,9 +18,11 @@ code package.
         <@th>${uiLabelMap.WebtoolsDaemon}</@th>
       </@tr>
       </@thead>
-      <#list allThreadList as javaThread>
-      <#if javaThread??>
-        <#assign stackTraceArray = javaThread.getStackTrace()/>
+      <#list allThreadInfos as threadInfo><#-- SCIPIO: changed iteration to avoid getStackTrace -->
+      <#--<#if threadInfo.thread??>-->
+        <#assign javaThread = threadInfo.thread><#-- SCIPIO -->
+        <#--<#assign stackTraceArray = javaThread.getStackTrace()!/>-->
+        <#assign stackTraceArray = threadInfo.stackTrace!/>
         <@tr valign="middle">
           <@td valign="top">${(javaThread.getThreadGroup().getName())!}</@td>
           <@td valign="top">${javaThread.getId()?string}</@td>
@@ -35,6 +37,6 @@ code package.
           <@td valign="top">${javaThread.getPriority()}</@td>
           <@td valign="top">${javaThread.isDaemon()?string}<#-- /${javaThread.isAlive()?string}/${javaThread.isInterrupted()?string} --></@td>
         </@tr>
-      </#if>
+      <#--</#if>-->
       </#list>
     </@table>

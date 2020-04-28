@@ -48,6 +48,15 @@ while (topThreadGroup.getParent()) {
 
 Thread[] allThreadArray = new Thread[1000];
 topThreadGroup.enumerate(allThreadArray);
-allThreadList = Arrays.asList(allThreadArray);
+// SCIPIO
+//allThreadList = Arrays.asList(allThreadArray);
+//context.allThreadList = allThreadList;
+allThreadInfos = []; // SCIPIO
+for(thread in allThreadArray) {
+    if (thread != null) {
+        allThreadInfos.add(thread: thread, stackTrace: thread.getStackTrace());
+    }
+}
+context.allThreadInfos = allThreadInfos;
 
-context.allThreadList = allThreadList;
+context.currentThread = Thread.currentThread(); // SCIPIO

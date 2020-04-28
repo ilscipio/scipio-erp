@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.content;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -378,11 +379,9 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
         /**
          * Returns all versions of a page, starting with the most recent, paginated.
          */
-        public PagedList<CmsPageVersion> findAllPaginated(Delegator delegator, String pageId, int viewIndex, int viewSize, boolean useCache) {
+        public PagedList<CmsPageVersion> findAllPaginated(Delegator delegator, String pageId, int viewIndex, int viewSize, List<String> orderBy, boolean useCache) {
             try {
-                EntityCondition ec = EntityCondition.makeCondition("pageId",
-                        EntityOperator.EQUALS, pageId);
-                PagedList<GenericValue> genericVersions = delegator.from("CmsPageVersion").where("pageId", pageId).cache(useCache)
+                PagedList<GenericValue> genericVersions = delegator.from("CmsPageVersion").where("pageId", pageId).orderBy(orderBy).cache(useCache)
                         .cursorScrollInsensitive().queryPagedList(viewIndex, viewSize);
                 List<CmsPageVersion> pageVersions = new ArrayList<>(genericVersions.getData().size());
                 for (GenericValue v : genericVersions.getData()) {
@@ -390,8 +389,40 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
                 }
                 return new PagedList<>(genericVersions, pageVersions);
             } catch (GenericEntityException e) {
-                throw new CmsException(
-                        "Could not retrieve page version. Page Id: " + pageId, e);
+                throw new CmsException( "Could not retrieve paginated page versions. Page Id: " + pageId, e);
+            }
+        }
+
+        /**
+         * TODO: REVIEW: inefficient and uses a heuristic that assumes CmsPageVersion.createdStamp is different for every version (usually true),
+         *  and currently it assumes orderBy contains createdStamp. */
+        public Integer findPaginatedVersionPage(Delegator delegator, String pageId, String versionId, int viewSize, List<String> orderBy, boolean useCache) {
+            try {
+                GenericValue pageVersion = delegator.from("CmsPageVersion").where("versionId", versionId, "pageId", pageId).cache(useCache).queryFirst();
+                if (pageVersion == null) {
+                    return null;
+                }
+                Boolean desc = null;
+                for(String ob : orderBy) {
+                    if ("-createdStamp".equals(ob) || "createdStamp DESC".equalsIgnoreCase(ob)) {
+                        desc = true;
+                        break;
+                    } else if ("createdStamp".equals(ob) || "createdStamp ASC".equalsIgnoreCase(ob)) {
+                        desc = false;
+                        break;
+                    }
+                }
+                if (desc == null) {
+                    throw new IllegalArgumentException("orderBy missing createdStamp");
+                }
+                Timestamp createdStamp = pageVersion.getTimestamp("createdStamp");
+                EntityCondition stampCond = desc ? EntityCondition.makeCondition("createdStamp", EntityOperator.GREATER_THAN, createdStamp) :
+                        EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN, createdStamp);
+                long resultsBeforeVersion = delegator.from("CmsPageVersion").where(
+                        EntityCondition.makeCondition("pageId", pageId), stampCond).orderBy(orderBy).cache(useCache).queryCount();
+                return (int) resultsBeforeVersion / viewSize;
+            } catch (GenericEntityException e) {
+                throw new CmsException("Could not retrieve paginated page versions. Page Id: " + pageId, e);
             }
         }
 

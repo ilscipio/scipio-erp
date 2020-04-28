@@ -841,15 +841,22 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
     public List<CmsPageVersion> getVersions() {
         preventIfImmutable();
-
         return CmsPageVersion.getWorker().findAll(getDelegator(), this.getId(), false);
     }
 
-    public PagedList<CmsPageVersion> getVersionsPaginated(int viewIndex, int viewSize) {
-        preventIfImmutable();
-
-        return CmsPageVersion.getWorker().findAllPaginated(getDelegator(), this.getId(), viewIndex, viewSize, false);
+    /** NOTE: If viewIndex is null and versionId is set, it will try to return the page containing the given versionId */
+    public PagedList<CmsPageVersion> getVersionsPaginated(List<String> orderBy, Integer viewIndex, int viewSize, String targetVersionId, boolean useCache) {
+        if (viewIndex != null || targetVersionId == null) {
+            return CmsPageVersion.getWorker().findAllPaginated(getDelegator(), this.getId(), (viewIndex != null ) ? viewIndex : 0, viewSize, orderBy, useCache);
+        } else {
+            viewIndex = CmsPageVersion.getWorker().findPaginatedVersionPage(getDelegator(), this.getId(), targetVersionId, viewSize, orderBy, useCache);
+            if (viewIndex == null) {
+                Debug.logInfo("getVersionsPaginated: Could not detect viewIndex for version '" + targetVersionId + "' for page '" + getId() + "'", module);
+            }
+            return CmsPageVersion.getWorker().findAllPaginated(getDelegator(), this.getId(), (viewIndex != null ) ? viewIndex : 0, viewSize, orderBy, useCache);
+        }
     }
+
 
     /**
      * Returns the highest-priority primary process mapping webSiteId associated to this

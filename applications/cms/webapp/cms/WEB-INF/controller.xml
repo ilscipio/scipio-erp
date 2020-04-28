@@ -51,7 +51,7 @@
     </request-map>
     <request-map uri="pageVersionList">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="pageVersionList"/>
+        <response name="success" type="view" value="pageVersionList" allow-view-save="false"/>
     </request-map>
     
     <request-map uri="createPage">

@@ -108,7 +108,7 @@ code package.
     <screen name="DashboardStatsReturnReasonWeek">
         <section>
             <actions>
-                <set field="chartType" value="pie"/>
+                <set field="chartType" value="doughnut"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="month"/>
                 <set field="xlabel" value="${uiLabelMap.OrderNetSales}"/>

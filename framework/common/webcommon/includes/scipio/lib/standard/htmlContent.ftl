@@ -1204,6 +1204,9 @@ It can be used in the nested content initialization, but there the variable "cha
                                         <#elseif type="pie">
                                              datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                                              return datasetLabel + ' ${escapeVal(labelUom1, 'js')}';
+                                        <#elseif type="doughnut">
+                                             datasetLabel = data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                             return datasetLabel + ' ${escapeVal(labelUom1, 'js')}';
                                         <#else>
                                             return datasetLabel;
                                         </#if>
@@ -1288,7 +1291,12 @@ It can be used in the nested content initialization, but there the variable "cha
                         scale: {
                            type: chartData.scaleType,
                            display: false
-                        }            
+                        }
+                    <#elseif type=="doughnut">,
+                        scale: {
+                           type: chartData.scaleType,
+                           display: false
+                        }
                     </#if>
                 };
             var canvasElem = $('#${escapeVal(id, 'js')}');
@@ -1356,7 +1364,7 @@ It can be used in the nested content initialization, but there the variable "cha
                 <#switch type>
                     <#case "bar">type: 'bar'<#break>
                     <#case "pie">type: 'pie'<#break>
-                    <#default>type: 'line'
+                    <#default>type: '${type!"line"}'
                 </#switch>,
                 data: data,
                 options: options

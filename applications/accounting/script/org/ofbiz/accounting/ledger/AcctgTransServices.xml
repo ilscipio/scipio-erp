@@ -323,6 +323,9 @@ code package.
 
         <if-compare field="parameters.verifyOnly" operator="equals" value="Y">
             <if-not-empty field="error_list">
+                <iterate list="error_list" entry="trans_entry_error">
+                    <log level="info" message="postAcctgTrans error: ${trans_entry_error}"/>
+                </iterate>
                 <field-to-result field="error_list" result-name="successMessageList"/>
             </if-not-empty>
             <return/>

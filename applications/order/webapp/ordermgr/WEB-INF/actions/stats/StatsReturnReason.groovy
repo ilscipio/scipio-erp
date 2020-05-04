@@ -31,7 +31,7 @@ ArrayList processResult() {
 
 
     EntityCondition ecl = EntityCondition.makeCondition(curConditions, EntityOperator.AND);
-    List<GenericValue> returns = from("ReturnItemStats").select("returnReasonId","totalReturnValue","totalQuantity",iScope).where(ecl).queryList();
+    List<GenericValue> returns = from("ReturnItemStats").select("returnReasonId","totalReturnValue","totalQuantity").where(ecl).queryList();
 
     return returns;
 }

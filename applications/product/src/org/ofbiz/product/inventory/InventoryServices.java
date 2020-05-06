@@ -692,6 +692,9 @@ public class InventoryServices {
         BigDecimal availableToPromiseTotal = BigDecimal.ZERO;
         BigDecimal quantityOnHandTotal = BigDecimal.ZERO;
 
+        Boolean useEntityCache = (Boolean) context.get("useEntityCache"); // SCIPIO
+        Boolean useInventoryCache = (Boolean) context.get("useInventoryCache"); // SCIPIO
+
         if (UtilValidate.isNotEmpty(productAssocList)) {
             // minimum QOH and ATP encountered
             BigDecimal minQuantityOnHandTotal = null;
@@ -711,7 +714,8 @@ public class InventoryServices {
                 // figure out the inventory available for this associated product
                 Map<String, Object> resultOutput = null;
                 try {
-                    Map<String, String> inputMap = UtilMisc.toMap("productId", productIdTo, "statusId", statusId);
+                    Map<String, String> inputMap = UtilMisc.toMap("productId", productIdTo, "statusId", statusId,
+                            "useEntityCache", useEntityCache, "useInventoryCache", useInventoryCache); // SCIPIO: useInventoryCache
                     if (facilityId != null) {
                         inputMap.put("facilityId", facilityId);
                         resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", inputMap);

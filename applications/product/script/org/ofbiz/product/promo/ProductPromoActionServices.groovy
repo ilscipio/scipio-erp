@@ -103,7 +103,7 @@ def productGWP() {
                     for (ShoppingCartItem item : matchingItems) {
                         quantityAlreadyInCart = quantityAlreadyInCart.add(item.getQuantity())
                     }
-                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object> toMap("productStoreId", productStoreId, "productId", productId, "product", product, "quantity", quantity.add(quantityAlreadyInCart)))
+                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object> toMap("productStoreId", productStoreId, "productId", productId, "product", product, "quantity", quantity.add(quantityAlreadyInCart), "useInventoryCache", true)); // SCIPIO: useInventoryCache
                     if (ServiceUtil.isError(invReqResult)) {
                         Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, "ProductPromoActionServices.groovy")
                         throw new CartItemModifyException(ServiceUtil.getErrorMessage(invReqResult))
@@ -137,7 +137,7 @@ def productGWP() {
                     quantityAlreadyInCart = quantityAlreadyInCart.add(item.getQuantity())
                 }
 
-                Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object> toMap("productStoreId", productStoreId, "productId", optionProductId, "product", product, "quantity", quantity.add(quantityAlreadyInCart)))
+                Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object> toMap("productStoreId", productStoreId, "productId", optionProductId, "product", product, "quantity", quantity.add(quantityAlreadyInCart), "useInventoryCache", true)); // SCIPIO: useInventoryCache
                 if (ServiceUtil.isError(invReqResult)) {
                     Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, "ProductPromoActionServices.groovy")
                     throw new CartItemModifyException(ServiceUtil.getErrorMessage(invReqResult))

@@ -313,6 +313,8 @@ code package.
 
             <set from-field="parameters.productId" field="callServiceMap.productId"/>
             <set from-field="productStore.inventoryFacilityId" field="callServiceMap.facilityId"/>
+            <set from-field="parameters.useEntityCache" type="Boolean" field="callServiceMap.useEntityCache"/>
+            <set from-field="parameters.useInventoryCache" type="Boolean" field="callServiceMap.useInventoryCache"/>
             <set field="isMarketingPkg" value="${groovy: org.ofbiz.entity.util.EntityTypeUtil.hasParentType(delegator, 'ProductType', 'productTypeId', product.productTypeId, 'parentTypeId', 'MARKETING_PKG')}" type="Boolean"/>
             <if-compare field="isMarketingPkg" operator="equals" value="true" type="Boolean">
                 <call-service service-name="getMktgPackagesAvailable" in-map-name="callServiceMap">
@@ -346,6 +348,8 @@ code package.
                     <!-- Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order. -->
                     <set from-field="parameters.productId" field="callServiceMap.productId"/>
                     <set from-field="productStoreFacility.facilityId" field="callServiceMap.facilityId"/>
+                    <set from-field="parameters.useEntityCache" type="Boolean" field="callServiceMap.useEntityCache"/>
+                    <set from-field="parameters.useInventoryCache" type="Boolean" field="callServiceMap.useInventoryCache"/>
                     <set field="isMarketingPkg" value="${groovy: org.ofbiz.entity.util.EntityTypeUtil.hasParentType(delegator, 'ProductType', 'productTypeId', product.productTypeId, 'parentTypeId', 'MARKETING_PKG')}" type="Boolean"/>
                     <if-compare field="isMarketingPkg" operator="equals" value="true" type="Boolean">
                         <call-service service-name="getMktgPackagesAvailable" in-map-name="callServiceMap">

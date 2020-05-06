@@ -683,7 +683,7 @@ if(product){
 
     // if the product is a MARKETING_PKG_AUTO/PICK, then also get the quantity which can be produced from components
     if (isMarketingPackage) {
-        resultOutput = runService('getMktgPackagesAvailable', [productId : productId]);
+        resultOutput = runService('getMktgPackagesAvailable', [productId : productId, useInventoryCache:true]); // SCIPIO: cache
         availableInventory = resultOutput.availableToPromiseTotal;
     } else {
         //get last inventory count from product facility for the product

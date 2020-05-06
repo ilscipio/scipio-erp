@@ -287,7 +287,7 @@ public class ProductServices {
             Boolean checkInventory = (Boolean) context.get("checkInventory");
             try {
                 if (checkInventory) {
-                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productIdTo, "quantity", BigDecimal.ONE));
+                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productIdTo, "quantity", BigDecimal.ONE, "useInventoryCache", true)); // SCIPIO: useInventoryCache
                     if (ServiceUtil.isError(invReqResult)) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                                 "ProductFeatureTreeCannotCallIsStoreInventoryRequired", locale), null, null, invReqResult);

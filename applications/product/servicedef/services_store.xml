@@ -57,6 +57,12 @@ code package.
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"></attribute>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"></attribute>
         <attribute name="available" type="String" mode="OUT" optional="false"><!-- Y/N --></attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)</description>
+        </attribute>
     </service>
     <service name="isStoreInventoryAvailableOrNotRequired" engine="simple" hideResultInLog="true" log="debug" log-eca="quiet"
             location="component://product/script/org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryAvailableOrNotRequired" auth="false">
@@ -67,6 +73,12 @@ code package.
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"></attribute>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"></attribute>
         <attribute name="availableOrNotRequired" type="String" mode="OUT" optional="false"><!-- Y/N --></attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)</description>
+        </attribute>
     </service>
 
     <!-- Product Store Role Services -->

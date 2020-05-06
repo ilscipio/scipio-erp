@@ -631,6 +631,30 @@ code package.
     <!-- ================================================================ -->
 
     <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false" use-transaction="true">
+        <if-compare field="parameters.useInventoryCache" operator="equals" value="true" type="Boolean"><!-- SCIPIO -->
+            <if>
+                <condition>
+                    <and>
+                        <if-empty field="parameters.inventoryItemId"/>
+                        <if-empty field="parameters.partyId"/>
+                        <if-empty field="parameters.locationSeqId"/>
+                        <if-empty field="parameters.containerId"/>
+                        <if-empty field="parameters.lotId"/>
+                    </and>
+                </condition>
+                <then>
+                    <call-simple-method method-name="getProductInventoryAvailableCached"/>
+                    <return/>
+                </then>
+                <else>
+                    <log level="warning" message="Ignoring useInventoryCache true because unsupported parameters passed (inventoryItemId/partyId/locationSeqId/containerId/lotId)"/>
+                </else>
+            </if>
+        </if-compare>
+        <if-empty field="parameters.useCache"><!-- SCIPIO -->
+            <set field="parameters.useCache" from-field="parameters.useEntityCache"/>
+        </if-empty>
+
         <!--
             this method can be called with some optional parameters:
                 -facilityId
@@ -701,6 +725,34 @@ code package.
         <field-to-result field="parameters.quantityOnHandTotal" result-name="quantityOnHandTotal"/>
     </simple-method>
 
+    <simple-method method-name="getProductInventoryAvailableCached" short-description="Get Inventory Available for a Product from inventory Cache (SCIPIO)" login-required="false">
+        <if-empty field="parameters.useCache"><!-- SCIPIO -->
+            <set field="parameters.useCache" from-field="parameters.useEntityCache"/>
+        </if-empty>
+        <set from-field="parameters.productId" field="pfLookupMap.productId"/>
+        <set from-field="parameters.facilityId" field="pfLookupMap.facilityId"/>
+        <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
+        <if-compare field="parameters.useCache" operator="equals" value="true" type="Boolean">
+            <!-- if caching was requested, don't use an iterator -->
+            <find-by-and entity-name="ProductFacility" map="pfLookupMap" list="productFacilities" use-cache="true"/>
+            <else>
+                <find-by-and entity-name="ProductFacility" map="pfLookupMap" list="productFacilities" use-iterator="true" use-cache="false"/>
+            </else>
+        </if-compare>
+
+        <set field="parameters.availableToPromiseTotal" value="0" type="BigDecimal"/>
+        <set field="parameters.quantityOnHandTotal" value="0" type="BigDecimal"/>
+        <iterate list="productFacilities" entry="productFacility">
+            <if-not-empty field="productFacility.lastInventoryCountQoh">
+                <set field="parameters.quantityOnHandTotal" value="${parameters.quantityOnHandTotal + productFacility.lastInventoryCountQoh}" type="BigDecimal"/>
+            </if-not-empty>
+            <set field="parameters.availableToPromiseTotal" value="${parameters.availableToPromiseTotal + productFacility.lastInventoryCount}" type="BigDecimal"/>
+        </iterate>
+
+        <field-to-result field="parameters.availableToPromiseTotal" result-name="availableToPromiseTotal"/>
+        <field-to-result field="parameters.quantityOnHandTotal" result-name="quantityOnHandTotal"/>
+    </simple-method>
+
     <simple-method method-name="countProductInventoryOnHand" short-description="Count Inventory On Hand for a Product constrained by a facilityId at a given date." use-transaction="false">
         <entity-condition entity-name="InventoryItemDetailForSum" list="inventoryItemDetailTotals">
             <condition-list combine="and">
@@ -743,29 +795,33 @@ code package.
         <set field="isMarketingPkgAuto" value="${groovy: org.ofbiz.entity.util.EntityTypeUtil.hasParentType(delegator, 'ProductType', 'productTypeId', product.productTypeId, 'parentTypeId', 'MARKETING_PKG_AUTO')}" type="Boolean"/>
         <if-compare field="isMarketingPkgAuto" operator="equals" value="true" type="Boolean">
             <set field="productIdMap.productId" from-field="product.productId"/>
+            <set field="productIdMap.useInventoryCache" from-field="parameters.useInventoryCache"/><!-- SCIPIO -->
+            <set field="productIdMap.useEntityCache" from-field="parameters.useEntityCache"/><!-- SCIPIO -->
             <call-service service-name="getProductInventoryAvailable" in-map-name="productIdMap">
-                    <result-to-field result-name="availableToPromiseTotal"/>
-                    <result-to-field result-name="quantityOnHandTotal"/>
+                <result-to-field result-name="availableToPromiseTotal"/>
+                <result-to-field result-name="quantityOnHandTotal"/>
             </call-service>
         <else>
             <set value="PRODUCT_COMPONENT" field="lookupMktgPkgParams.type"/>
             <call-service service-name="getAssociatedProducts" in-map-name="lookupMktgPkgParams">
                 <result-to-field result-name="assocProducts"/>
             </call-service>
+
+            <!-- if there are any components, then the ATP and QOH are based on the quantities of those component
+                products and found with another service -->
+            <if-not-empty field="assocProducts">
+                <set from-field="assocProducts" field="inventoryByAssocProductsParams.assocProducts"/>
+                <set from-field="parameters.facilityId" field="inventoryByAssocProductsParams.facilityId"/>
+                <set from-field="parameters.statusId" field="inventoryByAssocProductsParams.statusId"/>
+                <set field="inventoryByAssocProductsParams.useInventoryCache" from-field="parameters.useInventoryCache"/><!-- SCIPIO -->
+                <set field="inventoryByAssocProductsParams.useEntityCache" from-field="parameters.useEntityCache"/><!-- SCIPIO -->
+                <call-service service-name="getProductInventoryAvailableFromAssocProducts" in-map-name="inventoryByAssocProductsParams">
+                    <result-to-field result-name="quantityOnHandTotal"/>
+                    <result-to-field result-name="availableToPromiseTotal"/>
+                </call-service>
+            </if-not-empty>
         </else>
         </if-compare>
-
-        <!-- if there are any components, then the ATP and QOH are based on the quantities of those component
-            products and found with another service -->
-        <if-not-empty field="assocProducts">
-            <set from-field="assocProducts" field="inventoryByAssocProductsParams.assocProducts"/>
-            <set from-field="parameters.facilityId" field="inventoryByAssocProductsParams.facilityId"/>
-            <set from-field="parameters.statusId" field="inventoryByAssocProductsParams.statusId"/>
-            <call-service service-name="getProductInventoryAvailableFromAssocProducts" in-map-name="inventoryByAssocProductsParams">
-                <result-to-field result-name="quantityOnHandTotal"/>
-                <result-to-field result-name="availableToPromiseTotal"/>
-            </call-service>
-        </if-not-empty>
 
         <field-to-result field="availableToPromiseTotal"/>
         <field-to-result field="quantityOnHandTotal"/>

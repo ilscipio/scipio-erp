@@ -165,6 +165,13 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId cannot be used to calculate cache and if set no caching will occur</description>
+        </attribute>
     </service>
     <service name="getProductInventoryAvailable" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
@@ -177,9 +184,18 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache (SCIPIO)</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId cannot be used to calculate cache and if set no caching will occur</description>
+        </attribute>
     </service>
-    <service name="getInventoryAvailableByFacility" engine="simple" hideResultInLog="true" log="debug" log-eca="quiet"
+    <service name="getInventoryAvailableByFacility" engine="simple" hideResultInLog="true" log="quiet" log-eca="quiet"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
         <description>Get Inventory Availability for a Product constrained by a facilityId</description>
         <attribute name="productId" type="String" mode="IN" optional="false">
@@ -196,7 +212,16 @@ code package.
         <attribute name="lotId" mode="IN" type="String" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId/lotId cannot be used to calculate cache and if set no caching will occur</description>
+        </attribute>
     </service>
     <service name="getInventoryAvailableByLocation" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
@@ -219,7 +244,17 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <!-- not supported due to locationSeqId
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId and lotId are ignored if true</description>
+        </attribute>-->
     </service>
     <service name="getInventoryAvailableByContainer" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
@@ -237,6 +272,17 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <!-- not supported due to containerId
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId and lotId are ignored if true</description>
+        </attribute>-->
     </service>
     <service name="getInventoryAvailableByItem" engine="simple"
              location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
@@ -248,7 +294,17 @@ code package.
         </attribute>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <!-- not supported due to containerId
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId and lotId are ignored if true</description>
+        </attribute>-->
     </service>
     <service name="getProductInventoryAvailableFromAssocProducts" engine="java"
              location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryAvailableFromAssocProducts" auth="false" use-transaction="false">
@@ -265,6 +321,13 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId/lotId cannot be used to calculate cache and if set no caching will occur</description>
+        </attribute>
     </service>
     <service name="getProductInventoryAvailableBySupplier" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false" use-transaction="false">
@@ -282,7 +345,17 @@ code package.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHandTotal" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="useCache" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>Same as useEntityCache</description>
+        </attribute>
+        <attribute name="useEntityCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, entity cache when looking up records, where possible (SCIPIO)</description>
+        </attribute>
+        <!-- not supported due to partyId
+        <attribute name="useInventoryCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, use ProductFacility.lastInventoryCount or other inventory cache. Current default: false; legacy default: false (SCIPIO)
+                WARNING: statusId and lotId are ignored if true</description>
+        </attribute>-->
     </service>
     <service name="countProductInventoryOnHand" engine="simple"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="countProductInventoryOnHand" auth="true" use-transaction="false">

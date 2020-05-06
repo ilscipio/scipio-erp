@@ -657,7 +657,7 @@ public final class ProductStoreWorker {
 
             Boolean availableOkay = null;
             if (wantAvailable != null) {
-                Map<String, Object> invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", quantity));
+                Map<String, Object> invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", quantity, "useInventoryCache", true)); // SCIPIO: useInventoryCache
                 if (ServiceUtil.isError(invAvailResult)) {
                     Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
                     return false;

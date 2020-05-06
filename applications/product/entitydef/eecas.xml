@@ -54,8 +54,11 @@ code package.
         <action service="updateInventoryItemFromDetail" mode="sync"/>
     </eca>
     <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
-        <condition field-name="availableToPromiseDiff" operator="not-equals" value="0" type="BigDecimal"/>
-        <action service="setLastInventoryCount" mode="sync"/>
+        <or>
+            <condition field-name="availableToPromiseDiff" operator="not-equals" value="0" type="BigDecimal"/>
+            <condition field-name="quantityOnHandDiff" operator="not-equals" value="0" type="BigDecimal"/>
+        </or>
+        <action service="setLastInventoryCount" mode="sync" value-attr="inventoryItemDetail"/><!-- SCIPIO: inventoryItemDetail -->
     </eca>
     <!-- If the Picklist status is Cancelled then cancel all the PicklistItems -->
     <eca entity="Picklist" operation="create-store" event="return">

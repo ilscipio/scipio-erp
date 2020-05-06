@@ -340,7 +340,7 @@ public final class ProductWorker {
 
         try {
             Map<String, Object> result = dispatcher.runSync("getInventoryAvailableByFacility",
-                                            UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+                                            UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId, "useInventoryCache", true)); // SCIPIO: useInventoryCache
 
             availableToPromise = (BigDecimal) result.get("availableToPromiseTotal");
 
@@ -1768,7 +1768,7 @@ nextProd:
 
                 if ( UtilValidate.isNotEmpty(isMarketingPackage) && isMarketingPackage) {
                     Map<String, Object> resultOutput = new HashMap<>();
-                    resultOutput = dispatcher.runSync("getMktgPackagesAvailable", UtilMisc.toMap("productId" ,productId));
+                    resultOutput = dispatcher.runSync("getMktgPackagesAvailable", UtilMisc.toMap("productId" ,productId, "useInventoryCache", true, "useEntityCache", true)); // SCIPIO: caching
                     Debug.logWarning("Error getting available marketing package.", module);
 
                     BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
@@ -1830,7 +1830,7 @@ nextProd:
                 if (productFacility != null) {
                     if (Boolean.TRUE.equals(isMarketingPackage)) {
                         Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable",
-                                UtilMisc.toMap("productId", productId, "facilityId", facilityId));
+                                UtilMisc.toMap("productId", productId, "facilityId", facilityId, "useEntityCache", useCache, "useInventoryCache", true));
                         if (!ServiceUtil.isSuccess(resultOutput)) {
                             Debug.logWarning("Error getting available marketing package.", module);
                         }
@@ -1882,7 +1882,7 @@ nextProd:
         BigDecimal totalInventory = BigDecimal.ZERO;
         if (Boolean.TRUE.equals(isMarketingPackage)) {
             Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable",
-                    UtilMisc.toMap("productId", productId));
+                    UtilMisc.toMap("productId", productId, "useEntityCache", useCache, "useInventoryCache", true));
             if (!ServiceUtil.isSuccess(resultOutput)) {
                 Debug.logWarning("Error getting available marketing package.", module);
             }

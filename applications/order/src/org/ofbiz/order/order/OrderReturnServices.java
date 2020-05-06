@@ -1848,7 +1848,7 @@ public class OrderReturnServices {
                                         try {
                                             Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
                                                                                                                                            "productId", refurbItem.getString("productId"),
-                                                                                                                                           "product", refurbItem, "quantity", quantity));
+                                                                                                                                           "product", refurbItem, "quantity", quantity, "useInventoryCache", false)); // SCIPIO: useInventoryCache: false for exact returns
                                             if (ServiceUtil.isError(invReqResult)) {
                                                 Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
                                             } else {

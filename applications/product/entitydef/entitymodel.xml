@@ -1552,7 +1552,9 @@ code package.
         <field name="minimumStock" type="fixed-point"></field>
         <field name="reorderQuantity" type="fixed-point"></field>
         <field name="daysToShip" type="numeric"></field>
-        <field name="lastInventoryCount" type="fixed-point"><description>This field represents availableToPromiseTotal of a product at a certain point of time and is being updated regularly by a schedule service every hour</description></field>
+        <field name="lastInventoryCount" type="fixed-point"><description>This field represents availableToPromiseTotal of a product at a certain point of time and is being updated regularly by a schedule service every hour (or ECA)</description></field>
+        <field name="lastInventoryCountQoh" type="fixed-point"><description>This field represents quantityOnHandTotal of a product at a certain point of time and is being updated regularly by a schedule service every hour (or ECA) (SCIPIO)</description></field>
+        <field name="updatesSinceLastCount" type="numeric"><description>Number of setLastInventoryCount calls below recount threshold left to trigger another recalc - see inventory.properties#inventory.cache.recountThreshold (SCIPIO)</description></field>
         <prim-key field="productId"/>
         <prim-key field="facilityId"/>
         <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">

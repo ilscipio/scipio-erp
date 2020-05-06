@@ -2757,7 +2757,7 @@ public class ProductionRunServices {
             BigDecimal existingAtp = BigDecimal.ZERO;
             Map<String, Object> tmpResults = dispatcher.runSync("getInventoryAvailableByFacility",
                     UtilMisc.<String, Object>toMap("productId", orderItem.getString("productId"),
-                            "facilityId", facilityId, "userLogin", userLogin));
+                            "facilityId", facilityId, "userLogin", userLogin)); //, "useInventoryCache", true)); // SCIPIO: TODO: REVIEW
             if (ServiceUtil.isError(tmpResults)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResults));
             }
@@ -2779,6 +2779,8 @@ public class ProductionRunServices {
                 serviceContext.put("productId", orderItem.getString("productId"));
                 serviceContext.put("facilityId", facilityId);
                 serviceContext.put("userLogin", userLogin);
+                //serviceContext.put("useInventoryCache", true); // SCIPIO: TODO: REVIEW
+
                 Map<String, Object> serviceResult = dispatcher.runSync("getMktgPackagesAvailable", serviceContext);
                 if (ServiceUtil.isError(serviceResult)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));

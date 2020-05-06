@@ -363,7 +363,7 @@ public class OrderServices {
             if ("SALES_ORDER".equals(orderTypeId)) {
                 // check to see if we have inventory available
                 try {
-                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "quantity", currentQuantity));
+                    Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "quantity", currentQuantity, "useInventoryCache", false)); // SCIPIO: useInventoryCache: false for final order creation
                     if (ServiceUtil.isError(invReqResult)) {
                         errorMessages.add(ServiceUtil.getErrorMessage(invReqResult));
                         List<String> errMsgList = UtilGenerics.checkList(invReqResult.get(ModelService.ERROR_MESSAGE_LIST));

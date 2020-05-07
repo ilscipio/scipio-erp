@@ -1,6 +1,7 @@
 package org.ofbiz.entity.util;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -250,6 +251,26 @@ public class EntityQuerySafe extends EntityQuery {
     public <T> List<T> getFieldList(String fieldName) {
         try {
             return super.getFieldList(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    @Override
+    public <T> Set<T> getFieldSet(String fieldName) {
+        try {
+            return super.getFieldSet(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    @Override
+    public <T, C extends Collection<T>> C getFieldCollection(String fieldName, C collection) { // SCIPIO
+        try {
+            return super.getFieldCollection(fieldName, collection);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
             return null;

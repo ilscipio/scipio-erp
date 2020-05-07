@@ -21,8 +21,10 @@ package org.ofbiz.entity.util;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -714,7 +716,7 @@ public class EntityQuery {
         select(fieldName);
         try (EntityListIterator genericValueEli = queryIterator()) {
             if (Boolean.TRUE.equals(this.distinct)) {
-                Set<T> distinctSet = new HashSet<T>();
+                Set<T> distinctSet = new LinkedHashSet<T>(); // SCIPIO: fixed to LinkedHashSet from HashSet to preserve result order
                 GenericValue value = null;
                 while ((value = genericValueEli.next()) != null) {
                     T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
@@ -725,7 +727,7 @@ public class EntityQuery {
                 return new ArrayList<T>(distinctSet);
             }
             else {
-                List<T> fieldList = new LinkedList<T>();
+                List<T> fieldList = new ArrayList<T>(); // SCIPIO: switched to ArrayList
                 GenericValue value = null;
                 while ((value = genericValueEli.next()) != null) {
                     T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
@@ -736,6 +738,59 @@ public class EntityQuery {
                 return fieldList;
             }
         }
+    }
+
+    public <T> Set<T> getFieldSet(final String fieldName) throws GenericEntityException { // SCIPIO
+        select(fieldName);
+        try (EntityListIterator genericValueEli = queryIterator()) {
+            if (Boolean.TRUE.equals(this.distinct)) {
+                Set<T> distinctSet = new LinkedHashSet<T>(); // SCIPIO: fixed to LinkedHashSet from HashSet to preserve result order
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        distinctSet.add(fieldValue);
+                    }
+                }
+                return distinctSet;
+            } else {
+                Set<T> fieldList = new LinkedHashSet<T>();
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        fieldList.add(fieldValue);
+                    }
+                }
+                return fieldList;
+            }
+        }
+    }
+
+    public <T, C extends Collection<T>> C getFieldCollection(final String fieldName, final C collection) throws GenericEntityException { // SCIPIO
+        select(fieldName);
+        try (EntityListIterator genericValueEli = queryIterator()) {
+            if (Boolean.TRUE.equals(this.distinct)) {
+                Set<T> distinctSet = new LinkedHashSet<T>();
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        distinctSet.add(fieldValue);
+                    }
+                }
+                collection.addAll(distinctSet);
+            } else {
+                GenericValue value = null;
+                while ((value = genericValueEli.next()) != null) {
+                    T fieldValue = UtilGenerics.<T>cast(value.get(fieldName));
+                    if (fieldValue != null) {
+                        collection.add(fieldValue);
+                    }
+                }
+            }
+        }
+        return collection;
     }
 
     /**
@@ -831,6 +886,24 @@ public class EntityQuery {
     public <T> List<T> getFieldListSafe(String fieldName) { // SCIPIO
         try {
             return getFieldList(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    public <T> Set<T> getFieldSetSafe(String fieldName) { // SCIPIO
+        try {
+            return getFieldSet(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    public <T, C extends Collection<T>> C getFieldCollectionSafe(String fieldName, C collection) { // SCIPIO
+        try {
+            return getFieldCollection(fieldName, collection);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
             return null;

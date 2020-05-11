@@ -28,13 +28,7 @@ under the License.
     <xs:element name="eca">
         <xs:complexType>
             <xs:sequence>
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element ref="condition"/>
-                    <xs:element ref="condition-field"/>
-                    <xs:element ref="condition-service"/>
-                    <xs:element ref="condition-property"/><!-- SCIPIO -->
-                    <xs:element ref="condition-property-field"/><!-- SCIPIO -->
-                </xs:choice>
+                <xs:element ref="AllConditionals" minOccurs="0" maxOccurs="unbounded"/><!-- SCIPIO -->
                 <xs:choice minOccurs="1" maxOccurs="unbounded">
                     <xs:element ref="set"/>
                     <xs:element ref="action"/>
@@ -75,7 +69,36 @@ under the License.
         <xs:attribute name="run-on-error" type="xs:boolean" default="false"/>
         <xs:attribute name="enabled" type="xs:boolean" default="true"/>
     </xs:attributeGroup>
-    <xs:element name="condition">
+    <xs:element name="AllConditionals" abstract="true" /><!-- SCIPIO: imported from screen widgets conditions -->
+    <xs:element name="and" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="AllConditionals" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xor" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="AllConditionals" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="or" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="AllConditionals" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="not" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="AllConditionals" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="condition" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition"/>
         </xs:complexType>
@@ -118,7 +141,7 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
-    <xs:element name="condition-field">
+    <xs:element name="condition-field" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition-field"/>
         </xs:complexType>
@@ -199,7 +222,7 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
-    <xs:element name="condition-property">
+    <xs:element name="condition-property" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition-property"/>
         </xs:complexType>
@@ -244,7 +267,7 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
-    <xs:element name="condition-property-field">
+    <xs:element name="condition-property-field" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition-property-field"/>
         </xs:complexType>
@@ -275,7 +298,7 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="condition-service">
+    <xs:element name="condition-service" substitutionGroup="AllConditionals">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.condition-service"/>
         </xs:complexType>

@@ -56,6 +56,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
         this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
         this.enabled = !"false".equals(eca.getAttribute("enabled"));
 
+        /* SCIPIO: refactored, this was not great
         for (Element element: UtilXml.childElementList(eca, "condition")) {
             conditions.add(new ServiceEcaCondition(element, true, false));
         }
@@ -74,6 +75,13 @@ public final class ServiceEcaRule implements java.io.Serializable {
 
         for (Element element: UtilXml.childElementList(eca, "condition-property-field")) { // SCIPIO
             conditions.add(new ServiceEcaCondition(element, false, false, true));
+        }
+         */
+        for (Element element: UtilXml.childElementList(eca)) {
+            ServiceEcaCondition condition = ServiceEcaCondition.getCondition(element);
+            if (condition != null) {
+                conditions.add(condition);
+            }
         }
 
         if (Debug.verboseOn()) {

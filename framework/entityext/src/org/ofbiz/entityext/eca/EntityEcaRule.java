@@ -62,23 +62,11 @@ public final class EntityEcaRule implements java.io.Serializable {
         ArrayList<EntityEcaCondition> conditions = new ArrayList<EntityEcaCondition>();
         ArrayList<Object> actionsAndSets = new ArrayList<Object>();
         for (Element element: UtilXml.childElementList(eca)) {
-            if ("condition".equals(element.getNodeName())) {
-                EntityEcaCondition ecaCond = new EntityEcaCondition(element, true, false);
-                conditions.add(ecaCond);
-                conditionFieldNames.addAll(ecaCond.getFieldNames());
-            } else if ("condition-field".equals(element.getNodeName())) {
-                EntityEcaCondition ecaCond = new EntityEcaCondition(element, false, false);
-                conditions.add(ecaCond);
-                conditionFieldNames.addAll(ecaCond.getFieldNames());
-            } else if ("condition-service".equals(element.getNodeName())) {
-                EntityEcaCondition ecaCond = new EntityEcaCondition(element, false, true);
-                conditions.add(ecaCond);
-            } else if ("condition-property".equals(element.getNodeName())) { // SCIPIO
-                EntityEcaCondition ecaCond = new EntityEcaCondition(element, true, false, true);
-                conditions.add(ecaCond);
-            } else if ("condition-property-field".equals(element.getNodeName())) { // SCIPIO
-                EntityEcaCondition ecaCond = new EntityEcaCondition(element, false, false, true);
-                conditions.add(ecaCond);
+            // SCIPIO: refactored to EntityEcaCondition
+            EntityEcaCondition condition = EntityEcaCondition.getCondition(element);
+            if (condition != null) {
+                conditions.add(condition);
+                conditionFieldNames.addAll(condition.getFieldNames());
             } else if ("action".equals(element.getNodeName())) {
                 actionsAndSets.add(new EntityEcaAction(element));
             } else if ("set".equals(element.getNodeName())) {

@@ -209,13 +209,13 @@ code package.
     </service>
     <service name="addToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="addToSolr"
         transaction-timeout="72000">
-        <description>DEPRECATED (use updateToSolr instead): Immediately adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <description>Immediately adds product to solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolrSingleInterface"/>
         <implements service="updateToSolrControlInterface"/>
     </service>
     <service name="removeFromSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="removeFromSolr" 
         transaction-timeout="72000">
-        <description>DEPRECATED (use updateToSolr instead): Immediately removes product from solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <description>Immediately removes product from solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolrSingleInterface"/>
         <implements service="updateToSolrControlInterface"/>
     </service>

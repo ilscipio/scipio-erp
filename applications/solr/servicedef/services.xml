@@ -211,13 +211,15 @@ code package.
         transaction-timeout="72000">
         <description>Immediately adds product to solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolrSingleInterface"/>
-        <implements service="updateToSolrControlInterface"/>
+        <!--<implements service="updateToSolrControlInterface"/>-->
+        <override name="action" default-value="add"/>
     </service>
     <service name="removeFromSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="removeFromSolr" 
         transaction-timeout="72000">
         <description>Immediately removes product from solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolrSingleInterface"/>
-        <implements service="updateToSolrControlInterface"/>
+        <!--<implements service="updateToSolrControlInterface"/>-->
+        <override name="action" default-value="remove"/>
     </service>
 
     <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="registerUpdateToSolr"

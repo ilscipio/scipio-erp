@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -251,6 +252,24 @@ public final class ServiceUtil {
         for(String key : ModelService.SYS_RESPONSE_FIELDS) {
             Object value = otherResult.get(key);
             if (value != null) { // never really need to preserve nulls for these: || otherResult.containsKey(key)
+                result.put(key, value);
+            }
+        }
+        return result;
+    }
+
+    /** Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO), with deep copies of collections.
+     * In other words copies only the fields (system service attributes) common to all services. NOTE: Currently null values are not preserved because not significant. */
+    public static Map<String, Object> returnResultSysFieldsDeep(Map<String, Object> otherResult) {
+        Map<String, Object> result = new HashMap<>();
+        for(String key : ModelService.SYS_RESPONSE_FIELDS) {
+            Object value = otherResult.get(key);
+            if (value != null) { // never really need to preserve nulls for these: || otherResult.containsKey(key)
+                if (value instanceof Collection) {
+                    value = new ArrayList<>((Collection<?>) value);
+                } else if (value instanceof Map) {
+                    value = new LinkedHashMap<>((Map<?, ?>) value);
+                }
                 result.put(key, value);
             }
         }

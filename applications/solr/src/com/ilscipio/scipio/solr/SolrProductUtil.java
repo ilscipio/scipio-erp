@@ -907,6 +907,33 @@ public abstract class SolrProductUtil {
         return attrList;
     }
 
+    public static String getSolrProductContentId(Map<String, Object> context) {
+        // NOTE: all these should be the same if set
+        String id;
+        Map<String, Object> fields = UtilGenerics.cast(context.get("fields"));
+        if (fields != null) {
+            id = (String) fields.get("id");
+            if (UtilValidate.isNotEmpty(id)) {
+                return id;
+            }
+        }
+        id = (String) context.get("id");
+        if (UtilValidate.isNotEmpty(id)) {
+            return id;
+        }
+        id = (String) context.get("productId");
+        if (UtilValidate.isNotEmpty(id)) {
+            return id;
+        }
+        if (fields != null) {
+            id = (String) fields.get("productId");
+            if (UtilValidate.isNotEmpty(id)) {
+                return id;
+            }
+        }
+        return null;
+    }
+
     /**
      * Generates a Solr schema product from the fields of the solrProductAttributes service interface.
      * DEV NOTE: TODO: REVIEW: the solrProductAttributes interface may be an undesirable intermediate...

@@ -162,7 +162,7 @@ code package.
     </service>
 
     <service name="updateToSolrSingleInterface" engine="interface">
-        <description>Represents the updateToSolr options for a single product</description>
+        <description>Represents the updateToSolr options for a single product, represented by com.ilscipio.scipio.solr.SolrProductSearch.UpdateProductInfo</description>
         <!-- NOTE: 2017-12-20: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent Map (previously GenericEntity) -->
         <attribute mode="IN" name="instance" optional="true" type="Map"/><!-- type="org.ofbiz.entity.GenericEntity" -->
         <attribute mode="IN" name="productId" optional="true" type="String"/>
@@ -191,7 +191,7 @@ code package.
         <description>Attributes for multiple product update in a single invocation 
             NOTE: As of 2018-07-25, this is the standard way the registerUpdateToSolr service uses to pass products to updateToSolr</description>
         <attribute mode="IN" name="productIdMap" optional="true" type="Map">
-            <description>Map of productIds to maps of updateToSolrSingleInterface values (added 2018-07-19)</description>
+            <description>Map of productIds to com.ilscipio.scipio.solr.SolrProductSearch.UpdateProductInfo instances</description>
         </attribute>
     </service>
     <service name="updateToSolrControlInterface" engine="interface">
@@ -306,6 +306,7 @@ code package.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="addToSolrIndex">
         <description>Add a Product to Solr Index</description>
+        <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
         <implements service="solrProductAttributes"/>
         <attribute mode="IN" name="fields" optional="true" type="Map">
             <description>A map of pre-formatted fields to add as-is to the solr document for indexing,
@@ -332,6 +333,7 @@ code package.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="addListToSolrIndex">
         <description>Add a List of Products to Solr Index and flush after all have been added</description>
+        <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
         <attribute mode="IN" name="fieldList" optional="false" type="List" />
         <attribute mode="IN" name="useCache" optional="true" type="Boolean" /><!-- default false; used for extra entity lookups -->

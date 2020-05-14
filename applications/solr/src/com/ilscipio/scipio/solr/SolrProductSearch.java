@@ -192,8 +192,9 @@ public abstract class SolrProductSearch {
                             // because default ECA flags are: rollback-on-error="false" abort-on-error="false"
                             return ServiceUtil.returnError("Missing product instance or productId");
                         }
-                        Debug.logInfo("Solr: registerUpdateToSolr: Scheduling indexing for " + productInfoStr, module);
-                        result = registerUpdateToSolrForTxCore(dctx, context, action, productId, productInst);
+                        // Do inside to get more details
+                        //Debug.logInfo("Solr: registerUpdateToSolr: Scheduling indexing for " + productInfoStr, module);
+                        result = registerUpdateToSolrForTxCore(dctx, context, action, productId, productInst, productInfoStr);
                         if (ServiceUtil.isSuccess(result)) indexed = true; // NOTE: not really indexed; this is just to skip the mark-dirty below
                     } else {
                         if ("update".equals(context.get("noTransMode"))) {
@@ -688,7 +689,7 @@ public abstract class SolrProductSearch {
      * DEV NOTE: This *should* be okay to return error, without interfering with running transaction,
      * because default ECA flags are: rollback-on-error="false" abort-on-error="false"
      */
-    private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean action, String productId, Map<String, Object> productInst) {
+    private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean action, String productId, Map<String, Object> productInst, String productInfoStr) {
         String updateSrv = (String) context.get("updateSrv");
         if (updateSrv == null) updateSrv = defaultRegisterUpdateToSolrUpdateSrv;
         try {
@@ -713,7 +714,8 @@ public abstract class SolrProductSearch {
                 productIdMap.remove(productId); // this is a LinkedHashMap, so remove existing first so we keep the "real" order
                 productIdMap.put(productId, props);
 
-                return ServiceUtil.returnSuccess("Updated transaction global-commit registration for " + updateSrv + " to include productId '" + productId + ")");
+                Debug.logInfo("Solr: registerUpdateToSolr: Scheduling indexing for " + productInfoStr + " (" + productIdMap.size() + " products in transaction)", module);
+                return ServiceUtil.returnSuccess("Updated transaction global-commit registration for " + updateSrv + " to include productId '" + productId + ")" + " (" + productIdMap.size() + " products in transaction)");
             } else {
                 // register the service
                 Map<String, Object> servCtx = new HashMap<>();
@@ -727,8 +729,9 @@ public abstract class SolrProductSearch {
                 productIdMap.put(productId, props);
                 servCtx.put("productIdMap", productIdMap);
 
+                Debug.logInfo("Solr: registerUpdateToSolr: Scheduling indexing for " + productInfoStr + " (" + productIdMap.size() + " products in transaction)", module);
                 regs.addCommitService(dctx, updateSrv, null, servCtx, ecaAsync, false);
-                return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");
+                return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")" + " (" + productIdMap.size() + " products in transaction)");
             }
         } catch (Exception e) {
             final String errMsg = "Could not register " + updateSrv + " to run at transaction global-commit for product '" + productId + "'";

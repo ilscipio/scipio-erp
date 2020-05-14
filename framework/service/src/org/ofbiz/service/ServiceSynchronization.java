@@ -129,11 +129,18 @@ public class ServiceSynchronization implements Synchronization, ServiceSyncRegis
                         boolean beganTx;
                         try {
                             // begin the new tx
-                            beganTx = TransactionUtil.begin();
+                            // SCIPIO: If sync service, we MUST use the transaction-timeout on the service instead, which defaults to 0
+                            //beganTx = TransactionUtil.begin();
+                            ModelService model = dctx.getModelService(serviceName);
+                            if (async) {
+                                beganTx = TransactionUtil.begin();
+                            } else {
+                                beganTx = TransactionUtil.begin(model.transactionTimeout);
+                            }
                             // configure and run the service
                             try {
                                 // obtain the model and get the valid context
-                                ModelService model = dctx.getModelService(serviceName);
+                                //ModelService model = dctx.getModelService(serviceName); // SCIPIO: moved above
                                 Map<String, Object> thisContext;
                                 if (model.validate) {
                                     thisContext = model.makeValid(context, ModelService.IN_PARAM);
@@ -167,7 +174,7 @@ public class ServiceSynchronization implements Synchronization, ServiceSyncRegis
                                     Debug.logError(e, MODULE);
                                 }
                             }
-                        } catch (GenericTransactionException e) {
+                        } catch (GenericTransactionException | GenericServiceException e) {
                             Debug.logError(e, MODULE);
                         }
 

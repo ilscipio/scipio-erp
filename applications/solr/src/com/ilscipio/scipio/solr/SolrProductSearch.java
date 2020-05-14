@@ -570,7 +570,7 @@ public abstract class SolrProductSearch {
             copyStdServiceFieldsNotSet(context, servCtx);
             // Needless overhead for solr
             //Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
-            Map<String, Object> runResult = addListToSolrIndex(dctx, servCtx);
+            Map<String, Object> runResult = addListToSolrIndex(dctx, servCtx, startIndex + "-" + endIndex + " / " + numDocs);
             if (ServiceUtil.isError(runResult) || ServiceUtil.isFailure(runResult)) {
                 return ServiceUtil.returnResultSysFields(runResult);
             }
@@ -813,7 +813,17 @@ public abstract class SolrProductSearch {
      * <p>
      * This is faster than reflushing the index each time.
      */
+    @Deprecated
     public static Map<String, Object> addListToSolrIndex(DispatchContext dctx, Map<String, Object> context) {
+        return addListToSolrIndex(dctx, context, null);
+    }
+
+    /**
+     * Adds a List of products to the solr index. NOTE: 2020: This is generally now only needed internally.
+     * <p>
+     * This is faster than reflushing the index each time.
+     */
+    public static Map<String, Object> addListToSolrIndex(DispatchContext dctx, Map<String, Object> context, String progressMsg) {
         HttpSolrClient client = null;
         Map<String, Object> result;
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
@@ -822,6 +832,9 @@ public abstract class SolrProductSearch {
             Collection<SolrInputDocument> docs = new ArrayList<>();
             List<Map<String, Object>> productContentList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
 
+            if (progressMsg == null) {
+                progressMsg = productContentList.size() + "";
+            }
             if (productContentList.size() > 0) {
                 if (Debug.infoOn()) {
                     List<String> idList = new ArrayList<>(maxLogIds);
@@ -831,7 +844,7 @@ public abstract class SolrProductSearch {
                         }
                         idList.add(SolrProductUtil.getSolrProductContentId(productContent));
                     }
-                    Debug.logInfo("Solr: addListToSolrIndex: Generating and adding " + productContentList.size() + " documents to solr index: " + makeLogIdList(idList, productContentList.size()), module);
+                    Debug.logInfo("Solr: addListToSolrIndex: Generating and adding " + progressMsg + " documents to solr index: " + makeLogIdList(idList, productContentList.size()), module);
                 }
                 // Construct Documents
                 for (Map<String, Object> productContent : productContentList) {
@@ -845,7 +858,7 @@ public abstract class SolrProductSearch {
                 client.commit();
             }
 
-            final String statusStr = "Added " + productContentList.size() + " documents to solr index";
+            String statusStr = "Added " + progressMsg + " documents to solr index";
             if (SolrUtil.verboseOn()) {
                 Debug.logInfo("Solr: addListToSolrIndex: " + statusStr, module);
             }
@@ -1873,7 +1886,7 @@ public abstract class SolrProductSearch {
                 copyStdServiceFieldsNotSet(context, servCtx);
                 // Needless overhead for solr
                 //Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
-                Map<String, Object> runResult = addListToSolrIndex(dctx, servCtx);
+                Map<String, Object> runResult = addListToSolrIndex(dctx, servCtx, startIndex + "-" + endIndex + " / " + numDocs);
                 if (!ServiceUtil.isSuccess(runResult)) {
                     result = ServiceUtil.returnResultSysFields(runResult);
                     break;

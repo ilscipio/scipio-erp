@@ -75,6 +75,8 @@ public abstract class SolrProductSearch {
     private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
     private static final int maxLogIds = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName,
             "solr.log.max.id", 10);
+    private static final boolean ecaAsync = "async".equals(UtilProperties.getPropertyValue(SolrUtil.solrConfigName,
+            "solr.eca.service.mode", "sync"));
 
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, Boolean.TRUE, true);
@@ -725,7 +727,7 @@ public abstract class SolrProductSearch {
                 productIdMap.put(productId, props);
                 servCtx.put("productIdMap", productIdMap);
 
-                regs.addCommitService(dctx, updateSrv, null, servCtx, false, false);
+                regs.addCommitService(dctx, updateSrv, null, servCtx, ecaAsync, false);
                 return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");
             }
         } catch (Exception e) {

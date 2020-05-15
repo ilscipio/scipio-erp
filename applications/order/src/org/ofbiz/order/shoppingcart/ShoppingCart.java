@@ -6027,7 +6027,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         opp.set("securityCode", securityCode);
                     }
                     if (track2 != null) {
-                        opp.set("track2", securityCode);
+                        opp.set("track2", track2);
                     }
                     if (paymentMethodId != null || "FIN_ACCOUNT".equals(paymentMethodTypeId)) {
                         opp.set("statusId", "PAYMENT_NOT_AUTH");

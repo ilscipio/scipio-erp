@@ -1142,9 +1142,8 @@ public final class ProductWorker {
     /**
      * SCIPIO: Gets the product's parent (virtual or other association) ProductAssoc to itself.
      * Factored out from {@link #getParentProduct}.
-     * Added 2017-09-12.
      */
-    public static GenericValue getParentProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+    public static GenericValue getParentProductAssoc(String productId, Delegator delegator, Timestamp moment, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         if (productId == null) {
             Debug.logWarning("Bad product id", module);
         }
@@ -1154,7 +1153,7 @@ public final class ProductWorker {
                     .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")
                     .orderBy("-fromDate")
                     .cache(useCache)
-                    .filterByDate()
+                    .filterByDate(moment)
                     .queryList();
             if (UtilValidate.isEmpty(virtualProductAssocs)) {
                 //okay, not a variant, try a UNIQUE_ITEM
@@ -1162,7 +1161,7 @@ public final class ProductWorker {
                         .where("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM")
                         .orderBy("-fromDate")
                         .cache(useCache)
-                        .filterByDate()
+                        .filterByDate(moment)
                         .queryList();
             }
             if (UtilValidate.isNotEmpty(virtualProductAssocs)) {
@@ -1173,6 +1172,37 @@ public final class ProductWorker {
             throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
         }
         return null;
+    }
+
+    /**
+     * SCIPIO: Gets the product's parent (virtual or other association) ProductAssoc to itself.
+     * Factored out from {@link #getParentProduct}.
+     */
+    public static GenericValue getParentProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        return getParentProductAssoc(productId, delegator, UtilDateTime.nowTimestamp(), useCache);
+    }
+
+    /**
+     * SCIPIO: Gets the parent product assoc among ProductAssoc where productIdTo is assumed to be the child product.
+     * Assumes already date-filtered but pass false to ordered to ensure ordering.
+     */
+    public static GenericValue getParentProductAssoc(List<GenericValue> productAssocTo, boolean ordered) {
+        if (UtilValidate.isEmpty(productAssocTo)) {
+            return null;
+        }
+        if (!ordered) {
+            productAssocTo = EntityUtil.orderBy(productAssocTo, UtilMisc.toList("-fromDate"));
+        }
+        GenericValue bestAssoc = null;
+        for(GenericValue assoc : productAssocTo) {
+            String productAssocTypeId = assoc.getString("productAssocTypeId");
+            if ("PRODUCT_VARIANT".equals(productAssocTypeId)) {
+                return assoc;
+            } else if ("UNIQUE_ITEM".equals(productAssocTypeId)) {
+                bestAssoc = assoc;
+            }
+        }
+        return bestAssoc;
     }
 
     //get parent product

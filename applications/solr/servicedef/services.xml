@@ -309,21 +309,12 @@ code package.
         <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
         <implements service="solrProductAttributes"/>
         <attribute mode="IN" name="fields" optional="true" type="Map">
-            <description>A map of pre-formatted fields to add as-is to the solr document for indexing,
-                with no field renaming or Solr type abstraction (added 2018-02-05)
-                NOTE: 2019: This map is preferable to use over the solrProductAttributes* service context attributes
-                    as it simplifies custom implementations; solrProductAttributes* may be deprecated.</description>
+            <description>A map of pre-formatted fields to add as-is to the solr document for indexing, with no field renaming or Solr type abstraction (added 2018-02-05)</description>
         </attribute>
-        <attribute mode="IN" name="fieldsOnly" optional="true" type="Boolean">
-            <description>If true, only the entries in the "fields" map are considered; otherwise the legacy solrProductAttributes are also read; default: false</description>
-        </attribute>
-        <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
-        <attribute mode="IN" name="sku" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
-        <attribute mode="IN" name="cat" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
-        <attribute mode="IN" name="image" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
-        <!-- SERVICE FIELDS -->
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
-        <attribute mode="IN" name="useCache" optional="true" type="Boolean" /><!-- default false; used for extra entity lookups -->
+        <attribute mode="IN" name="useCache" optional="true" type="Boolean" default-value="false">
+            <description>Use entity cache for extra lookups</description>
+        </attribute>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>
@@ -334,9 +325,11 @@ code package.
         invoke="addListToSolrIndex">
         <description>Add a List of Products to Solr Index and flush after all have been added</description>
         <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
+        <attribute mode="IN" name="docList" optional="false" type="List" />
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
-        <attribute mode="IN" name="fieldList" optional="false" type="List" />
-        <attribute mode="IN" name="useCache" optional="true" type="Boolean" /><!-- default false; used for extra entity lookups -->
+        <attribute mode="IN" name="useCache" optional="true" type="Boolean" default-value="false">
+            <description>Use entity cache for extra lookups</description>
+        </attribute>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>

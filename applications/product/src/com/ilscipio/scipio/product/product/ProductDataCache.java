@@ -2,136 +2,144 @@ package com.ilscipio.scipio.product.product;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.product.config.ProductConfigWrapper;
-import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
 
-import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Caches supplied product-related data from db, mainly used by <code>SolrProductIndexer</code> (SCIPIO).
  * Primarily optimized for solr indexing.
- * WARN: This class intentionally ignores differences in "moment" parameters!
+ * <p>
+ * WARN: This class intentionally ignores differences in "moment" parameters! Currently it assumes moments passed are never non-null
+ * and will always be the "now" timestamp when passed.
+ * </p>
+ * NOT thread-safe (meant for local worker caching).
+ * TODO: REVIEW: delegator/inheritance complications for extension; may be fixed up in future. For now *Src methods are provided for overriding underlying logic.
+ *  It is recommended that overriding classes create both * and *Src methods as shown below.
  */
 public class ProductDataCache extends ProductDataReader {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected final ProductDataReader reader;
-    protected Map<String, StoreData> storeCache = new LinkedHashMap<>();
+    // TODO: REVIEW: delegation caused complications due to method reuse, to be improved in future; problematic design for extensions
+    //protected final ProductDataReader reader;
+    protected Map<String, StoreData> storeCache = new LinkedHashMap<>(); // LinkedHashMap so oldest entries will get removed first
     protected Map<String, CatalogData> catalogCache = new LinkedHashMap<>();
     protected Map<String, CategoryData> categoryCache = new LinkedHashMap<>();
     protected Map<String, ProductData> productCache = new LinkedHashMap<>();
-    protected Integer maxProducts;
+    protected Integer maxCacheStores;
+    protected Integer maxCacheCatalogs;
+    protected Integer maxCacheCategories;
+    protected Integer maxCacheProducts;
 
-    public ProductDataCache(ProductDataReader reader) {
-        this.reader = reader;
-    }
+    //public ProductDataCache(ProductDataReader reader) {
+    //    this.reader = reader;
+    //}
 
     public ProductDataCache() {
-        this.reader = new ProductDataReader();
+        //this.reader = new ProductDataReader();
     }
 
-    public Integer getMaxProducts() {
-        return maxProducts;
+    public Integer getMaxCacheStores() {
+        return maxCacheStores;
     }
 
-    public ProductDataCache setMaxProducts(Integer maxProducts) {
-        this.maxProducts = maxProducts;
+    public ProductDataCache setMaxCacheStores(Integer maxCacheStores) {
+        this.maxCacheStores = sanitizeMaxCacheSize(maxCacheStores);
         return this;
     }
 
-    protected StoreData getStoreData(String productStoreId) {
-        StoreData data = storeCache.get(productStoreId);
-        if (data == null) {
-            data = new StoreData(productStoreId);
-            // TODO: REVIEW: written assuming bad productCategoryId don't really happen so misses are recorded
-            storeCache.put(productStoreId, data);
-        }
-        return data;
+    public Integer getMaxCacheCatalogs() {
+        return maxCacheCatalogs;
     }
 
-    public static class StoreData {
-        protected final String productStoreId;
-        protected GenericValue productStore;
+    public ProductDataCache setMaxCacheCatalogs(Integer maxCacheCatalogs) {
+        this.maxCacheCatalogs = sanitizeMaxCacheSize(maxCacheCatalogs);
+        return this;
+    }
 
-        public StoreData(String productStoreId) {
-            this.productStoreId = productStoreId;
+    public Integer getMaxCacheCategories() {
+        return maxCacheCategories;
+    }
+
+    public ProductDataCache setMaxCacheCategories(Integer maxCacheCategories) {
+        this.maxCacheCategories = sanitizeMaxCacheSize(maxCacheCategories);
+        return this;
+    }
+
+    public Integer getMaxCacheProducts() {
+        return maxCacheProducts;
+    }
+
+    public ProductDataCache setMaxCacheProducts(Integer maxCacheProducts) {
+        this.maxCacheProducts = sanitizeMaxCacheSize(maxCacheProducts);
+        return this;
+    }
+
+    protected Integer sanitizeMaxCacheSize(Integer maxCacheSize) {
+        return (maxCacheSize != null && maxCacheSize > 0) ? maxCacheSize : null;
+    }
+
+    public String getLogCacheStats() {
+        return "[stores: " + getMaxCacheSizeString(storeCache, maxCacheStores) +
+                ", catalogs: " + getMaxCacheSizeString(catalogCache, maxCacheCatalogs) +
+                ", categories: " + getMaxCacheSizeString(categoryCache, maxCacheCategories) +
+                ", products: " + getMaxCacheSizeString(productCache, maxCacheProducts) + "]";
+    }
+
+    private String getMaxCacheSizeString(Map<String, ? extends DataCache> storeCache, Integer maxSize) {
+        if (maxSize != null) {
+            return storeCache.size() + "/" + maxSize;
+        } else {
+            return storeCache.size() + "";
         }
     }
 
-    protected CatalogData getCatalogData(String prodCatalogId) {
-        CatalogData data = catalogCache.get(prodCatalogId);
-        if (data == null) {
-            // NOTE: written assuming bad productCategoryId don't really happen
-            data = new CatalogData(prodCatalogId);
-            catalogCache.put(prodCatalogId, data);
+    protected <C extends DataCache> void updateCache(Map<String, C> cache, String key, C value, Integer maxEntries) {
+        if (cache.containsKey(key)) { // once added, never removed and never need to re-create (fine if assume thread-unsafe)
+            return;
         }
-        return data;
+        if (maxEntries != null && cache.size() >= maxEntries) {
+            Iterator<Map.Entry<String, C>> it = cache.entrySet().iterator();
+            int numToRemove = (cache.size() - maxEntries + 1);
+            for (int i = 0; i < numToRemove && it.hasNext(); i++) {
+                Map.Entry<String, C> entry = it.next();
+                it.remove();
+                if (Debug.infoOn()) {
+                    Debug.logInfo("updateCache: Removing product '" + entry.getKey() + "' from cache (" + (i + 1) + "/" + numToRemove + ")", module);
+                }
+            }
+        }
+        cache.put(key, value);
     }
 
-    public static class CatalogData {
-        protected final String prodCatalogId;
-        protected GenericValue prodCatalog;
-        protected List<GenericValue> productStoreCatalogs;
-
-        public CatalogData(String prodCatalogId) {
-            this.prodCatalogId = prodCatalogId;
-        }
-    }
-
-    protected CategoryData getCategoryData(String productCategoryId) {
-        CategoryData data = categoryCache.get(productCategoryId);
-        if (data == null) {
-            // NOTE: written assuming bad productCategoryId don't really happen
-            data = new CategoryData(productCategoryId);
-            categoryCache.put(productCategoryId, data);
-        }
-        return data;
-    }
-
-    public static class CategoryData {
-        protected final String productCategoryId;
-        protected GenericValue productCategory;
-        protected List<List<String>> rollupTrails;
-        protected List<String> catalogIds;
-
-        public CategoryData(String productCategoryId) {
-            this.productCategoryId = productCategoryId;
-        }
+    public static class DataCache {
     }
 
     protected ProductData getProductData(String productId) {
-        if (maxProducts == null) {
+        if (maxCacheProducts == null) {
             return new ProductData(productId);
         }
         ProductData data = productCache.get(productId);
         if (data == null) {
             // NOTE: written assuming bad productId don't really happen
             data = new ProductData(productId);
-            if (productCache.size() >= maxProducts) {
-                Iterator<Map.Entry<String, ProductData>> it = productCache.entrySet().iterator();
-                for (int i = 0; i < (productCache.size() - maxProducts + 1); i++) {
-                    it.remove();
-                }
-            }
-            productCache.put(productId, data);
         }
         return data;
     }
 
-    public static class ProductData {
+    public static class ProductData extends DataCache {
         protected final String productId;
         protected GenericValue product;
         protected List<GenericValue> productAssocFrom;
@@ -142,22 +150,38 @@ public class ProductDataCache extends ProductDataReader {
         }
     }
 
-    /*
-     * *****************************************************************
-     * ProductDataReader Overrides
-     * *****************************************************************
-     */
+    @Override
+    public GenericValue getProduct(DispatchContext dctx, String productId, boolean useCache) throws GenericEntityException {
+        ProductData data = getProductData(productId);
+        if (data.product != null) {
+            return data.product;
+        }
+        GenericValue product = getProductSrc(dctx, productId, useCache);
+        product.setImmutable();
+        data.product = product;
+        updateCache(productCache, productId, data, maxCacheProducts);
+        return product;
+    }
+
+    protected GenericValue getProductSrc(DispatchContext dctx, String productId, boolean useCache) throws GenericEntityException {
+        return super.getProduct(dctx, productId, useCache);
+    }
 
     @Override
     public List<GenericValue> getProductAssocFrom(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        // NOTE: For now here we ignore differences in moment post-caching
         ProductData data = getProductData(productId);
         if (data.productAssocFrom != null) {
             return data.productAssocFrom;
         }
-        List<GenericValue> productAssocFrom = reader.getProductAssocFrom(dctx, productId, moment, useCache);
-        data.productAssocFrom = productAssocFrom;
-        // NOTE: Here we ignore differences in moment!
+        List<GenericValue> productAssocFrom = getProductAssocFromSrc(dctx, productId, moment, useCache);
+        data.productAssocFrom = Collections.unmodifiableList(productAssocFrom);
+        updateCache(productCache, productId, data, maxCacheProducts);
         return productAssocFrom;
+    }
+
+    protected List<GenericValue> getProductAssocFromSrc(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        return super.getProductAssocFrom(dctx, productId, moment, useCache);
     }
 
     @Override
@@ -166,33 +190,166 @@ public class ProductDataCache extends ProductDataReader {
         if (data.productAssocTo != null) {
             return data.productAssocTo;
         }
-        List<GenericValue> productAssocTo = reader.getProductAssocTo(dctx, productId, moment, useCache);
-        data.productAssocTo = productAssocTo;
+        List<GenericValue> productAssocTo = getProductAssocToSrc(dctx, productId, moment, useCache);
+        data.productAssocTo = Collections.unmodifiableList(productAssocTo);
+        updateCache(productCache, productId, data, maxCacheProducts);
         return productAssocTo;
     }
 
+    protected List<GenericValue> getProductAssocToSrc(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        return super.getProductAssocTo(dctx, productId, moment, useCache);
+    }
+
+    protected CategoryData getCategoryData(String productCategoryId) {
+        CategoryData data = categoryCache.get(productCategoryId);
+        if (data == null) {
+            // NOTE: written assuming bad productCategoryId don't really happen
+            data = new CategoryData(productCategoryId);
+        }
+        return data;
+    }
+
+    public static class CategoryData extends DataCache {
+        protected final String productCategoryId;
+        protected GenericValue productCategory;
+        /* TODO: REVIEW: not yet necessary (for solr performance) - getCategoryRollupTrails only needs to call this once per category
+        protected List<GenericValue> productCategoryRollups;
+         */
+        protected List<List<String>> rollupTrails;
+        protected List<String> catalogIds;
+
+        public CategoryData(String productCategoryId) {
+            this.productCategoryId = productCategoryId;
+        }
+    }
+
     @Override
-    public List<List<String>> getCategoryRollupTrails(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) {
+    public List<String> getCatalogIdsByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) throws GeneralException {
+        CategoryData data = getCategoryData(productCategoryId);
+        if (data.catalogIds != null) {
+            return data.catalogIds;
+        }
+        List<String> catalogIds = getCatalogIdsByCategoryIdSrc(dctx, productCategoryId, moment, useCache);
+        data.catalogIds = Collections.unmodifiableList(catalogIds);
+        updateCache(categoryCache, productCategoryId, data, maxCacheCategories);
+        return catalogIds;
+    }
+
+    protected List<String> getCatalogIdsByCategoryIdSrc(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) throws GeneralException {
+        return super.getCatalogIdsByCategoryId(dctx, productCategoryId, moment, useCache);
+    }
+
+    @Override
+    public List<GenericValue> getCategoryRollups(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        /* TODO: REVIEW: not yet necessary (for solr performance) - getCategoryRollupTrails only needs to call this once per category
+        CategoryData data = getCategoryData(productCategoryId);
+        if (data.productCategoryRollups != null) {
+            return data.productCategoryRollups;
+        }
+        List<GenericValue> productCategoryRollups = getCategoryRollupsSrc(dctx, productCategoryId, moment, ordered, useCache);
+        data.productCategoryRollups = Collections.unmodifiableList(productCategoryRollups);
+        updateCache(categoryCache, productCategoryId, data, maxCacheCategories);
+        return productCategoryRollups;
+         */
+        return getCategoryRollupsSrc(dctx, productCategoryId, moment, ordered, useCache);
+    }
+
+    protected List<GenericValue> getCategoryRollupsSrc(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return super.getCategoryRollups(dctx, productCategoryId, moment, ordered, useCache);
+    }
+
+    @Override
+    public List<List<String>> getCategoryRollupTrails(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache)  throws GeneralException {
         CategoryData data = getCategoryData(productCategoryId);
         if (data.rollupTrails != null) {
             return data.rollupTrails;
         }
         ordered = true; // force for caching correctness purposes
-        List<List<String>> rollupTrails = reader.getCategoryRollupTrails(dctx, productCategoryId, moment, ordered, useCache);
-        data.rollupTrails = rollupTrails;
-        return rollupTrails;
+        // Based on CategoryWorker#getCategoryRollupTrails
+        List<List<String>> trails = new ArrayList<>();
+        List<GenericValue> productCategoryRollups = getCategoryRollups(dctx, productCategoryId, moment, ordered, useCache);
+        if (productCategoryRollups != null) {
+            for(GenericValue productCategoryRollup : productCategoryRollups) {
+                String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                List<List<String>> parentTrails = getCategoryRollupTrails(dctx, parentProductCategoryId, moment, ordered, useCache);
+                for (List<String> trail : parentTrails) {
+                    // WARN: here MUST NOT modify the parent trail in-place for speed because it may be cached
+                    trails.add(UtilMisc.copyExtendList(trail, productCategoryId));
+                }
+            }
+        }
+        if (trails.isEmpty()) {
+            List<String> trail = new ArrayList<>(1);
+            trail.add(productCategoryId);
+            trails.add(trail);
+        }
+        data.rollupTrails = Collections.unmodifiableList(trails);
+        updateCache(categoryCache, productCategoryId, data, maxCacheCategories);
+        return trails;
+    }
+
+    protected CatalogData getCatalogData(String prodCatalogId) {
+        CatalogData data = catalogCache.get(prodCatalogId);
+        if (data == null) {
+            // NOTE: written assuming bad productCategoryId don't really happen
+            data = new CatalogData(prodCatalogId);
+        }
+        return data;
+    }
+
+    public static class CatalogData extends DataCache {
+        protected final String prodCatalogId;
+        protected GenericValue prodCatalog;
+        protected List<GenericValue> productStoreCatalogs;
+
+        public CatalogData(String prodCatalogId) {
+            this.prodCatalogId = prodCatalogId;
+        }
     }
 
     @Override
-    public List<GenericValue> getProductStoreCatalogsForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) {
+    public List<GenericValue> getProductStoreCatalogsForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         CatalogData data = getCatalogData(catalogId);
         if (data.productStoreCatalogs != null) {
             return data.productStoreCatalogs;
         }
         ordered = true; // force for caching correctness purposes
-        List<GenericValue> productStoreCatalogs = reader.getProductStoreCatalogsForCatalogId(dctx, catalogId, moment, ordered, useCache);
-        data.productStoreCatalogs = productStoreCatalogs;
+        List<GenericValue> productStoreCatalogs = getProductStoreCatalogsForCatalogIdSrc(dctx, catalogId, moment, ordered, useCache);
+        data.productStoreCatalogs = Collections.unmodifiableList(productStoreCatalogs);
+        updateCache(catalogCache, catalogId, data, maxCacheCatalogs);
         return productStoreCatalogs;
+    }
+
+    protected List<GenericValue> getProductStoreCatalogsForCatalogIdSrc(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return super.getProductStoreCatalogsForCatalogId(dctx, catalogId, moment, ordered, useCache);
+    }
+
+    @Override
+    public List<GenericValue> getProductStoresForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return getProductStoresForCatalogIdsSrc(dctx, catalogIds, moment, ordered, useCache);
+    }
+
+    protected List<GenericValue> getProductStoresForCatalogIdsSrc(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        // SPECIAL: use super so invokes the cache above
+        //return reader.getProductStoresForCatalogIds(dctx, catalogIds, moment, ordered, useCache);
+        return super.getProductStoresForCatalogIds(dctx, catalogIds, moment, ordered, useCache);
+    }
+
+    protected StoreData getStoreData(String productStoreId) {
+        StoreData data = storeCache.get(productStoreId);
+        if (data == null) {
+            data = new StoreData(productStoreId);
+        }
+        return data;
+    }
+
+    public static class StoreData extends DataCache {
+        protected final String productStoreId;
+        protected GenericValue productStore;
+
+        public StoreData(String productStoreId) {
+            this.productStoreId = productStoreId;
+        }
     }
 
     @Override
@@ -201,79 +358,15 @@ public class ProductDataCache extends ProductDataReader {
         if (data.productStore != null) {
             return data.productStore;
         }
-        GenericValue productStore = reader.getProductStore(dctx, productStoreId, useCache);
+        GenericValue productStore = getProductStoreSrc(dctx, productStoreId, useCache);
+        productStore.setImmutable();
         data.productStore = productStore;
+        updateCache(storeCache, productStoreId, data, maxCacheStores);
         return productStore;
     }
 
-    @Override
-    public List<String> getCatalogIdsByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) {
-        CategoryData data = getCategoryData(productCategoryId);
-        if (data.catalogIds != null) {
-            return data.catalogIds;
-        }
-        List<String> catalogIds = reader.getCatalogIdsByCategoryId(dctx, productCategoryId, moment, useCache);
-        data.catalogIds = catalogIds;
-        return catalogIds;
+    protected GenericValue getProductStoreSrc(DispatchContext dctx, String productStoreId, boolean useCache) throws GenericEntityException {
+        return super.getProductStore(dctx, productStoreId, useCache);
     }
 
-    @Override
-    public Set<String> getOwnCategoryIdsForProduct(DispatchContext dctx, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
-        return reader.getOwnCategoryIdsForProduct(dctx, productId, moment, ordered, useCache);
-    }
-
-    @Override
-    public Set<String> getAssocCategoryIdsForProduct(DispatchContext dctx, String productId, List<GenericValue> assocToVariant, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
-        return reader.getAssocCategoryIdsForProduct(dctx, productId, assocToVariant, moment, ordered, useCache);
-    }
-
-    @Override
-    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
-        return reader.getProductStandardPrices(dctx, context, userLogin, product, productStore, currencyUomId, priceLocale, useCache);
-    }
-
-    @Override
-    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
-        return reader.getConfigurableProductStartingPrices(dctx, context, userLogin, product, productStore, currencyUomId, priceLocale, useCache);
-    }
-
-    @Override
-    public <C extends Collection<String>> C getProductKeywords(C outKeywords, Delegator delegator, boolean useCache, String... productIds) throws GeneralException {
-        return reader.getProductKeywords(outKeywords, delegator, useCache, productIds);
-    }
-
-    @Override
-    public String getContentText(DispatchContext dctx, GenericValue targetContent, GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
-        return reader.getContentText(dctx, targetContent, product, productContent, locale, useCache);
-    }
-
-    @Override
-    public Map<String, String> getLocalizedContentStringMap(DispatchContext dctx, GenericValue product, String productContentTypeId, Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey, List<ProductContentWrapper> pcwList, Timestamp moment, boolean useCache) throws GeneralException, IOException {
-        return reader.getLocalizedContentStringMap(dctx, product, productContentTypeId, locales, defaultLocale, langCodeFn, generalKey, pcwList, moment, useCache);
-    }
-
-    @Override
-    public void refineLocalizedContentValues(Map<String, String> contentMap, Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey) {
-        reader.refineLocalizedContentValues(contentMap, locales, defaultLocale, langCodeFn, generalKey);
-    }
-
-    @Override
-    public void getProductContentForLocales(Map<String, String> contentMap, DispatchContext dctx, GenericValue product, String productContentTypeId, Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey, Timestamp moment, boolean useCache) throws GeneralException, IOException {
-        reader.getProductContentForLocales(contentMap, dctx, product, productContentTypeId, locales, defaultLocale, langCodeFn, generalKey, moment, useCache);
-    }
-
-    @Override
-    public Map<String, ProductContentWrapper> getProductContentWrappersForLocales(DispatchContext dctx, GenericValue product, Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, boolean useCache) throws GeneralException {
-        return reader.getProductContentWrappersForLocales(dctx, product, locales, defaultLocale, langCodeFn, useCache);
-    }
-
-    @Override
-    public List<GenericValue> getProductStoresForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) {
-        return reader.getProductStoresForCatalogIds(dctx, catalogIds, moment, ordered, useCache);
-    }
-
-    @Override
-    public List<GenericValue> getProdCatalogCategoryByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) {
-        return reader.getProdCatalogCategoryByCategoryId(dctx, productCategoryId, moment, useCache);
-    }
 }

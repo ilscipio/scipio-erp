@@ -292,6 +292,10 @@ public abstract class SolrProductSearch {
             return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update: " + e.toString());
         }
 
+        Map<String, Object> productContext = new HashMap<>(context);
+        productContext.put("useCache", false); // NOTE: never use entity cache for solr ECAs
+        SolrProductIndexer indexer = SolrProductIndexer.getInstance(dctx, context);
+
         // pre-process for variants
         // NOTE: products should be a LinkedHashMap;
         // expandedProducts doesn't need to be LinkedHashMap, but do it anyway
@@ -327,7 +331,8 @@ public abstract class SolrProductSearch {
                         product = (GenericValue) productInst;
                     } else {
                         try {
-                            product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
+                            product = indexer.getProductData().getProduct(dctx, productId, false);
+                            //product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
                         } catch (Exception e) {
                             Debug.logError(e, "Solr: updateToSolr: Could not lookup product '" + productId + "': " + e.getMessage(), module);
                             return ServiceUtil.returnError("Could not lookup product '" + productId + "': " + e.toString());
@@ -354,11 +359,9 @@ public abstract class SolrProductSearch {
                             List<String> variantProductIds;
                             try {
                                 if (updateVariantsDeep) {
-                                    variantProductIds = ProductWorker.getVariantProductIdsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(),
-                                            productId, null, moment, false);
+                                    variantProductIds = indexer.getProductData().getVariantProductIdsDeepDfs(dctx, productId, moment, false);
                                 } else {
-                                    variantProductIds = ProductWorker.getVariantProductIds(dctx.getDelegator(), dctx.getDispatcher(),
-                                            productId, null, moment, false);
+                                    variantProductIds = indexer.getProductData().getVariantProductIds(dctx, productId, moment, false);
                                 }
                             } catch (GeneralException e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup product variants for '"
@@ -387,11 +390,12 @@ public abstract class SolrProductSearch {
                                 final List<String> orderBy = null;
                                 final Integer maxPerLevel = null;
                                 if (updateVirtualDeep) {
-                                    virtualProductIds = ProductWorker.getVirtualProductIdsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(),
-                                            productId, orderBy, maxPerLevel, moment, false);
+                                    virtualProductIds = indexer.getProductData().getVirtualProductIdsDeepDfs(dctx,
+                                            productId, maxPerLevel, moment, false);
                                 } else {
-                                    virtualProductIds = ProductWorker.getVirtualProductIds(dctx.getDelegator(), dctx.getDispatcher(),
-                                            productId, orderBy, maxPerLevel, moment, false);
+                                    //virtualProductIds = ProductWorker.getVirtualProductIds(dctx.getDelegator(), dctx.getDispatcher(),
+                                    //        productId, orderBy, maxPerLevel, moment, false);
+                                    virtualProductIds = indexer.getProductData().getVirtualProductIds(dctx, productId, maxPerLevel, moment, false);
                                 }
                             } catch(Exception e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup virtual product for variant product '"
@@ -420,7 +424,7 @@ public abstract class SolrProductSearch {
         Set<String> productIdsToRemove = new LinkedHashSet<>();
         HttpSolrClient client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
         // Run adds and also collect additional products for removal (to avoid duplicate product lookups - complicated)
-        Map<String, Object> addResult = updateToSolrCoreMultiAdd(dctx, context, expandedProducts, client, productIdsToRemove);
+        Map<String, Object> addResult = updateToSolrCoreMultiAdd(dctx, context, indexer, expandedProducts, client, productIdsToRemove);
         if (ServiceUtil.isError(addResult)) {
             return ServiceUtil.returnResultSysFields(addResult);
         }
@@ -437,6 +441,8 @@ public abstract class SolrProductSearch {
         }
         Map<String, Object> result;
         String msg;
+        String cacheStats = indexer.getLogStatsShort();
+        cacheStats = (cacheStats != null) ? " (caches: " + cacheStats + ")" : "";
         if (numFailures > 0) {
             msg = "Problems occurred: failures: " + numFailures + "; indexed: " + numIndexed + "; removed: " + numRemoved;
             result = ServiceUtil.returnFailure(msg);
@@ -506,8 +512,7 @@ public abstract class SolrProductSearch {
     }
 
     /** DEV NOTE: this is also responsible to collect the products intended for removals (to avoid multiple lookups) */
-    private static Map<String, Object> updateToSolrCoreMultiAdd(DispatchContext dctx, Map<String, Object> context, Map<String, ExpandedUpdateProductInfo> expandedProducts, HttpSolrClient client, Collection<String> productIdsToRemove) {
-        final boolean clearAndUseCache = false; // NOTE: never use entity cache for solr ECAs
+    private static Map<String, Object> updateToSolrCoreMultiAdd(DispatchContext dctx, Map<String, Object> context, SolrProductIndexer indexer, Map<String, ExpandedUpdateProductInfo> expandedProducts, HttpSolrClient client, Collection<String> productIdsToRemove) {
         final boolean treatConnectErrorNonFatal = SolrUtil.isEcaTreatConnectErrorNonFatal();
         int bufSize = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000);
         int numDocs = expandedProducts.size();
@@ -517,10 +522,6 @@ public abstract class SolrProductSearch {
         int startIndex = 1;
         int bufNumDocs = 0;
         List<Map<String, Object>> solrDocs = (bufSize > 0) ? new ArrayList<>(Math.min(bufSize, numDocs)) : new ArrayList<>(numDocs);
-
-        Map<String, Object> productContext = new HashMap<>(context);
-        productContext.put("useCache", clearAndUseCache);
-        SolrProductIndexer indexer = SolrProductIndexer.getInstance(dctx, context);
 
         Iterator<Map.Entry<String, ExpandedUpdateProductInfo>> prodIt = expandedProducts.entrySet().iterator();
         while (prodIt.hasNext()) {
@@ -547,7 +548,8 @@ public abstract class SolrProductSearch {
                     //Map<String, Object> product = UtilGenerics.cast(props.get("instance"));
                     GenericValue product = null;
                     try {
-                        product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
+                        //product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
+                        product = indexer.getProductData().getProduct(dctx, productId, false);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Solr: updateToSolr: error reading product '" + productId + "'", module);
                         return ServiceUtil.returnError("error reading product '" + productId + "': " + e.getMessage());
@@ -642,45 +644,6 @@ public abstract class SolrProductSearch {
             sb.append("...");
         }
         return sb.toString();
-    }
-
-    @Deprecated
-    private static Map<String, Object> updateToSolrCoreSingleImpl(DispatchContext dctx, Map<String, Object> context, Boolean action,
-            String productId, Map<String, Object> productInst) {
-        Map<String, Object> result;
-        if (Boolean.FALSE.equals(action)) {
-            result = removeFromSolrCore(dctx, context, productId);
-        } else {
-            GenericValue product;
-            if (productInst instanceof GenericValue) {
-                product = (GenericValue) productInst;
-            } else if (productInst != null && productInst.isEmpty()) {  // SPECIAL MARKER to prevent double-lookup when null
-                product = null;
-            } else { // SPECIAL MARKER to prevent re-lookup
-                try {
-                    product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
-                } catch (Exception e) {
-                    Debug.logError(e, "Solr: updateToSolr: Could not lookup product '" + productId + "': " + e.getMessage(), module);
-                    return ServiceUtil.returnError("Could not lookup product '" + productId + "': " + e.toString());
-                }
-            }
-            if (Boolean.TRUE.equals(action)) {
-                if (product == null) {
-                    //Debug.logError("Solr: updateToSolr: Explicit add action requested, but product not found for productId: " + productId, module); // SCIPIO: Redundant logging
-                    return ServiceUtil.returnError("Explicit add action requested, but product not found for productId: " + productId);
-                }
-                result = addToSolrCore(dctx, context, product, productId);
-            } else {
-                if (product != null) {
-                    if (SolrUtil.verboseOn()) Debug.logInfo("Solr: updateToSolr: productId '" + productId + "' found in system; running solr add", module);
-                    result = addToSolrCore(dctx, context, product, productId);
-                } else {
-                    if (SolrUtil.verboseOn()) Debug.logInfo("Solr: updateToSolr: productId '" + productId + "' not found in system; running solr remove", module);
-                    result = removeFromSolrCore(dctx, context, productId);
-                }
-            }
-        }
-        return result;
     }
 
     /**
@@ -1912,8 +1875,10 @@ public abstract class SolrProductSearch {
             }
 
             if (result == null) {
-                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + numDocsIndexed + " documents indexed; failures: " + numFailures, module);
-                final String statusMsg = "Cleared solr index and reindexed " + numDocsIndexed + " documents; failures: " + numFailures;
+                String cacheStats = indexer.getLogStatsShort();
+                cacheStats = (cacheStats != null) ? " (caches: " + cacheStats + ")" : "";
+                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + numDocsIndexed + " documents indexed; failures: " + numFailures + cacheStats, module);
+                final String statusMsg = "Cleared solr index and reindexed " + numDocsIndexed + " documents; failures: " + numFailures + cacheStats;
                 result = (numFailures > 0) ? ServiceUtil.returnFailure(statusMsg) : ServiceUtil.returnSuccess(statusMsg);
             }
         } catch (SolrServerException e) {

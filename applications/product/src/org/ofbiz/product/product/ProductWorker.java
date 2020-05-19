@@ -2165,12 +2165,12 @@ nextProd:
      * The returned instances are specifically Product instances.
      */
     public static List<String> getVariantProductIdsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
-                                                                 String productId, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
+                                                           String productId, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
         return getVariantProductIdsDeepDfs(delegator, dispatcher, productId, orderBy, moment, useCache, new ArrayList<>());
     }
 
     private static List<String> getVariantProductIdsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
-                                                    String productId, List<String> orderBy, Timestamp moment, boolean useCache, List<String> variantProductIds) throws GeneralException {
+                                                            String productId, List<String> orderBy, Timestamp moment, boolean useCache, List<String> variantProductIds) throws GeneralException {
         List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
                 .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
                 .cache(useCache).filterByDate(moment).queryList();

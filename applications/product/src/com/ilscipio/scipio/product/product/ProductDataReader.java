@@ -40,12 +40,25 @@ import java.util.function.Function;
 /**
  * Supplies general product-related data (including category/catalog data) from db, mainly used by <code>SolrProductIndexer</code> (SCIPIO).
  * Use {@link ProductDataCache} for caching version. These were previously a bunch of helpers in SolrProductUtil.
+ * <p>
  * NOTE: This is generally a work-in-progress interface and mainly for use by solr.
+ * DEV NOTE: (For Scipio) If you add a method, make sure to add proper {@link ProductDataCache#reader} delegate override to.
+ * </p>
  */
 public class ProductDataReader {
     static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final ProductDataReader DEFAULT = new ProductDataReader();
+
+    /** Returns the effective delegator that methods should use internally. May be overridden by subclasses and may be different that than supplied if needed. */
+    protected Delegator getDelegator(DispatchContext dctx) {
+        return dctx.getDelegator();
+    }
+
+    /** Returns the effective dispatcher that methods should use internally. May be overridden by subclasses and may be different that than supplied if needed. */
+    protected LocalDispatcher getDispatcher(DispatchContext dctx) {
+        return dctx.getDispatcher();
+    }
 
     /*
      * *************************************************************
@@ -53,20 +66,122 @@ public class ProductDataReader {
      * *************************************************************
      */
 
+    public GenericValue getProduct(DispatchContext dctx, String productId, boolean useCache) throws GenericEntityException {
+        return getDelegator(dctx).findOne("Product", UtilMisc.toMap("productId", productId), useCache);
+    }
+
     public List<GenericValue> getProductAssocFrom(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
-        return dctx.getDelegator().from("ProductAssoc").where("productId", productId).filterByDate(moment).cache(useCache).queryList();
+        return getDelegator(dctx).from("ProductAssoc").where("productId", productId).filterByDate(moment).cache(useCache).queryList();
     }
 
     public List<GenericValue> getProductAssocTo(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
-        return dctx.getDelegator().from("ProductAssoc").where("productIdTo", productId).filterByDate(moment).cache(useCache).queryList();
+        return getDelegator(dctx).from("ProductAssoc").where("productIdTo", productId).filterByDate(moment).cache(useCache).queryList();
     }
 
+    public List<GenericValue> getProductAssocFromVariant(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        return EntityUtil.filterByAnd(getProductAssocFrom(dctx, productId, moment, useCache), UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+    }
+
+    public List<GenericValue> getProductAssocToVariant(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        return EntityUtil.filterByAnd(getProductAssocTo(dctx, productId, moment, useCache), UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+    }
+
+    public GenericValue getParentProductAssoc(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
+        return ProductWorker.getParentProductAssoc(getProductAssocTo(dctx, productId, moment, useCache), false);
+    }
+
+    /**
+     * Returns the variant products of a virtual product, first-level only.
+     * The returned instances are specifically Product instances.
+     * Based on {@link ProductWorker#getVariantProductIds(org.ofbiz.entity.Delegator, org.ofbiz.service.LocalDispatcher, java.lang.String, java.util.List, java.sql.Timestamp, boolean)}.
+     */
+    public List<String> getVariantProductIds(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = getProductAssocFromVariant(dctx, productId, moment, useCache);
+        List<String> variantProductIds = new ArrayList<>(variantProductAssocs.size());
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProductIds.add(assoc.getString("productIdTo"));
+        }
+        return variantProductIds;
+    }
+
+    /**
+     * SCIPIO: Returns the variant products of a virtual product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
+     * Based on {@link ProductWorker#getVariantProductIdsDeepDfs(org.ofbiz.entity.Delegator, org.ofbiz.service.LocalDispatcher, java.lang.String, java.util.List, java.sql.Timestamp, boolean)}.
+     */
+    public List<String> getVariantProductIdsDeepDfs(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GeneralException {
+        return getVariantProductIdsDeepDfs(dctx, productId, moment, useCache, new ArrayList<>());
+    }
+
+    protected List<String> getVariantProductIdsDeepDfs(DispatchContext dctx, String productId, Timestamp moment, boolean useCache, List<String> variantProductIds) throws GeneralException {
+        List<GenericValue> variantProductAssocs = getProductAssocFromVariant(dctx, productId, moment, useCache);
+        for (GenericValue assoc : variantProductAssocs) {
+            String variantProductId = assoc.getString("productIdTo");
+            variantProductIds.add(variantProductId);
+            GenericValue variantProduct = getProduct(dctx, variantProductId, useCache);
+            if (Boolean.TRUE.equals(variantProduct.getBoolean("isVirtual"))) {
+                getVariantProductIdsDeepDfs(dctx, variantProductId, moment, useCache, variantProductIds);
+            }
+        }
+        return variantProductIds;
+    }
+
+    /**
+     * SCIPIO: Returns the virtual products of a variant product, first-level only.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is consulted;
+     * this method is a generalization.
+     * Based on
+     */
+    public List<String> getVirtualProductIds(DispatchContext dctx, String productId, Integer maxResults, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = getProductAssocToVariant(dctx, productId, moment, useCache);
+        List<String> variantProductIds = new ArrayList<>(variantProductAssocs.size());
+        int i = 0;
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProductIds.add(assoc.getString("productId"));
+            i++;
+            if (maxResults != null && i >= maxResults) break;
+        }
+        return variantProductIds;
+    }
+
+    /**
+     * SCIPIO: Returns the virtual products of a variant product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is returned
+     * on each level; this method is a generalization.
+     * This method accepts a maxPerLevel to implement this.
+     * Based on {@link ProductWorker#getVirtualProductIdsDeepDfs(org.ofbiz.entity.Delegator, org.ofbiz.service.LocalDispatcher, java.lang.String, java.util.List, java.lang.Integer, java.sql.Timestamp, boolean)}.
+     */
+    public List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Integer maxPerLevel, Timestamp moment, boolean useCache) throws GeneralException {
+        return getVirtualProductIdsDeepDfs(dctx, productId, maxPerLevel, moment, useCache, new ArrayList<>());
+    }
+
+    protected List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Integer maxPerLevel, Timestamp moment, boolean useCache, List<String> virtualProductIds) throws GeneralException {
+        List<GenericValue> virtualProductAssocs = getProductAssocToVariant(dctx, productId, moment, useCache);
+        int i = 0;
+        for (GenericValue assoc : virtualProductAssocs) {
+            String virtualProductId = assoc.getString("productId");
+            virtualProductIds.add(virtualProductId);
+            GenericValue virtualProduct = getProduct(dctx, virtualProductId, useCache);
+            if (Boolean.TRUE.equals(virtualProduct.getBoolean("isVariant"))) {
+                getVirtualProductIdsDeepDfs(dctx, virtualProductId, maxPerLevel, moment, useCache, virtualProductIds);
+            }
+            i++;
+            if (maxPerLevel != null && i >= maxPerLevel) break;
+        }
+        return virtualProductIds;
+    }
+
+
     public Set<String> getOwnCategoryIdsForProduct(DispatchContext dctx, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
-        return ProductWorker.getOwnCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), dctx.getDelegator(), productId, null, moment, ordered, useCache);
+        return ProductWorker.getOwnCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, moment, ordered, useCache);
     }
 
     public Set<String> getAssocCategoryIdsForProduct(DispatchContext dctx, String productId, List<GenericValue> assocToVariant, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
-        return ProductWorker.getAssocCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), dctx.getDelegator(), productId, null, assocToVariant, moment, ordered, useCache);
+        return ProductWorker.getAssocCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, assocToVariant, moment, ordered, useCache);
     }
 
     public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
@@ -74,7 +189,7 @@ public class ProductDataReader {
         priceContext.put("currencyUomId", currencyUomId);
         priceContext.put("useCache", useCache);
         copyStdServiceFieldsNotSet(context, priceContext);
-        Map<String, Object> priceMap = dctx.getDispatcher().runSync("calculateProductPrice", priceContext);
+        Map<String, Object> priceMap = getDispatcher(dctx).runSync("calculateProductPrice", priceContext);
         return priceMap;
     }
 
@@ -82,7 +197,7 @@ public class ProductDataReader {
         // TODO: REVIEW: do we need to pass a specific catalog or webSiteId here?
         ProductConfigWrapper pcw = null;
         try {
-            pcw = ProductConfigFactory.createProductConfigWrapper(dctx.getDelegator(), dctx.getDispatcher(), product.getString("productId"),
+            pcw = ProductConfigFactory.createProductConfigWrapper(getDelegator(dctx), getDispatcher(dctx), product.getString("productId"),
                     (productStore != null) ? productStore.getString("productStoreId") : null, null, null, currencyUomId, priceLocale, userLogin);
         } catch (Exception e) {
             throw new GeneralException(e);
@@ -121,23 +236,23 @@ public class ProductDataReader {
         return outKeywords;
     }
 
-    public String getContentText(DispatchContext dctx, GenericValue targetContent,
-                                 GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
+    public String getProductContentText(DispatchContext dctx, GenericValue targetContent,
+                                        GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
         Writer out = new StringWriter();
         Map<String, Object> inContext = new HashMap<>();
         inContext.put("product", product);
         inContext.put("productContent", productContent);
         boolean deepCache = useCache; // SPECIAL: only way to prevent all caching
-        ContentWorker.renderContentAsText(dctx.getDispatcher(), dctx.getDelegator(), targetContent, out, inContext, locale, "text/plain",
+        ContentWorker.renderContentAsText(getDispatcher(dctx), getDelegator(dctx), targetContent, out, inContext, locale, "text/plain",
                 null, useCache, deepCache, null);
         return out.toString();
     }
 
-    public Map<String, String> getLocalizedContentStringMap(DispatchContext dctx, GenericValue product, String productContentTypeId,
-                                                            Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey,
-                                                            List<ProductContentWrapper> pcwList, Timestamp moment, boolean useCache) throws GeneralException, IOException {
+    public Map<String, String> getLocalizedProductContentStringMap(DispatchContext dctx, GenericValue product, String productContentTypeId,
+                                                                   Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey,
+                                                                   List<ProductContentWrapper> pcwList, Timestamp moment, boolean useCache) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
-        contentMap.put(generalKey, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, dctx.getDelegator(), dctx.getDispatcher(), useCache));
+        contentMap.put(generalKey, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, getDelegator(dctx), getDispatcher(dctx), useCache));
         getProductContentForLocales(contentMap, dctx, product, productContentTypeId, locales, defaultLocale, langCodeFn, generalKey, moment, useCache);
         refineLocalizedContentValues(contentMap, locales, defaultLocale, langCodeFn, generalKey);
         return contentMap;
@@ -180,7 +295,7 @@ public class ProductDataReader {
     public void getProductContentForLocales(Map<String, String> contentMap, DispatchContext dctx, GenericValue product, String productContentTypeId,
                                             Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey,
                                             Timestamp moment, boolean useCache) throws GeneralException, IOException {
-        Delegator delegator = dctx.getDelegator();
+        Delegator delegator = getDelegator(dctx);
         String productId = product.getString("productId");
         List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate(moment).queryList();
         if (UtilValidate.isEmpty(productContentList) && ("Y".equals(product.getString("isVariant")))) {
@@ -208,7 +323,7 @@ public class ProductDataReader {
             // the value of I18N_GENERAL
             GenericValue targetContent = content;
             Locale locale = defaultLocale;
-            String res = getContentText(dctx, targetContent, product, productContent, locale, useCache);
+            String res = getProductContentText(dctx, targetContent, product, productContent, locale, useCache);
             if (res.length() > 0) {
                 contentMap.put(generalKey, res);
                 // not needed anymore, because of ContentWrapper prio change and because
@@ -230,7 +345,7 @@ public class ProductDataReader {
                 }
             }
             if (targetContent != null) {
-                String res = getContentText(dctx, targetContent, product, productContent, locale, useCache);
+                String res = getProductContentText(dctx, targetContent, product, productContent, locale, useCache);
                 if (res.length() > 0) {
                     contentMap.put(langCodeFn.apply(locale), res);
                 }
@@ -243,17 +358,22 @@ public class ProductDataReader {
                                                                                   boolean useCache) throws GeneralException {
         Map<String, ProductContentWrapper> pcwMap = new LinkedHashMap<>();
         for(Locale locale : locales) {
-            ProductContentWrapper pcw = new ProductContentWrapper(dctx.getDispatcher(), product, locale, null, useCache);
+            ProductContentWrapper pcw = new ProductContentWrapper(getDispatcher(dctx), product, locale, null, useCache);
             pcwMap.put(langCodeFn.apply(locale), pcw);
         }
         return pcwMap;
     }
 
-    public List<List<String>> getCategoryRollupTrails(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) {
-        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, moment, ordered, useCache);
+    public List<GenericValue> getCategoryRollups(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return getDelegator(dctx).from("ProductCategoryRollup").where("productCategoryId", productCategoryId)
+                .orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).filterByDate(moment).cache(useCache).queryList();
     }
 
-    public List<GenericValue> getProductStoresForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) {
+    public List<List<String>> getCategoryRollupTrails(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return CategoryWorker.getCategoryRollupTrails(getDelegator(dctx), productCategoryId, moment, ordered, useCache);
+    }
+
+    public List<GenericValue> getProductStoresForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         // FIXME: duplication
         //return CatalogWorker.getProductStoresForCatalogIds(delegator, catalogIds, moment, ordered, useCache);
         List<GenericValue> stores = new ArrayList<>();
@@ -275,28 +395,21 @@ public class ProductDataReader {
         return stores;
     }
 
-    public List<GenericValue> getProductStoreCatalogsForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) {
-        return CatalogWorker.getProductStoreCatalogsForCatalogId(dctx.getDelegator(), catalogId, moment, ordered, useCache);
+    public List<GenericValue> getProductStoreCatalogsForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return CatalogWorker.getProductStoreCatalogsForCatalogId(getDelegator(dctx), catalogId, moment, ordered, useCache);
     }
 
     public GenericValue getProductStore(DispatchContext dctx, String productStoreId, boolean useCache) throws GenericEntityException {
-        return dctx.getDelegator().findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
+        return getDelegator(dctx).findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
     }
 
-    public List<String> getCatalogIdsByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) {
+    public List<String> getCatalogIdsByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) throws GeneralException {
         return UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(dctx, productCategoryId, moment, useCache), "prodCatalogId");
     }
 
-    public List<GenericValue> getProdCatalogCategoryByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) {
-        List<GenericValue> catalogs;
-        try {
-            catalogs = dctx.getDelegator().from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
-                    .filterByDate(moment).orderBy("sequenceNum").cache(useCache).queryList();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Solr: Error looking up catalogs for productCategoryId: " + productCategoryId, module);
-            catalogs = new ArrayList<>();
-        }
-        return catalogs;
+    public List<GenericValue> getProdCatalogCategoryByCategoryId(DispatchContext dctx, String productCategoryId, Timestamp moment, boolean useCache) throws GeneralException {
+        return getDelegator(dctx).from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
+                .filterByDate(moment).orderBy("sequenceNum").cache(useCache).queryList();
     }
 
     /*

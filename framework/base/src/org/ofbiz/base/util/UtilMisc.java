@@ -1865,4 +1865,26 @@ public final class UtilMisc {
         }
         return dstMap;
     }
+
+    /**
+     * SCIPIO: Copy the collection to an ArrayList of same capacity plus the given members.
+     */
+    public static <T> List<T> copyExtendList(Collection<? extends T> collection, Collection<? extends T> membersToAppend) {
+        List<T> list = new ArrayList<>(collection.size() + membersToAppend.size());
+        list.addAll(collection);
+        list.addAll(membersToAppend);
+        return list;
+    }
+
+    /**
+     * SCIPIO: Copy the collection to an ArrayList of same capacity plus the given members.
+     */
+    public static <T, A extends T> List<T> copyExtendList(Collection<? extends T> collection, A... membersToAppend) {
+        List<T> list = new ArrayList<>(collection.size() + membersToAppend.length);
+        list.addAll(collection);
+        for(T member : membersToAppend) {
+            list.add(member);
+        }
+        return list;
+    }
 }

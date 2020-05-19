@@ -100,7 +100,7 @@ public class SolrProductIndexer {
 
         // helpers methods
         protected ProductDataReader getProductDataReader(DispatchContext dctx, Map<String, Object> serviceContext) {
-            return USE_INDEXER_CACHE ? new ProductDataCache().setMaxProducts(INDEXER_CACHE_MAX_PRODUCTS) : new ProductDataReader();
+            return USE_INDEXER_CACHE ? new ProductDataCache().setMaxCacheProducts(INDEXER_CACHE_MAX_PRODUCTS) : new ProductDataReader();
         }
     }
 
@@ -232,6 +232,14 @@ public class SolrProductIndexer {
             }
             doc.put(alphaKeyPrefix + locStr, value);
         }
+    }
+
+    public String getLogStatsShort() {
+        ProductDataReader data = getProductData();
+        if (data instanceof ProductDataCache) {
+            return ((ProductDataCache) data).getLogCacheStats();
+        }
+        return null;
     }
 
     /*
@@ -570,7 +578,13 @@ public class SolrProductIndexer {
         }
 
         public void populateDocContentKeywords(Map<String, Object> doc) throws Exception {
-            doc.put("keywords", String.join(" ", getKeywords()));
+            Collection<String> keywords = getKeywords();
+            if (UtilValidate.isNotEmpty(keywords)) {
+                String keywordsString = String.join(" ", keywords);
+                if (UtilValidate.isNotEmpty(keywordsString)) {
+                    doc.put("keywords", keywordsString);
+                }
+            }
         }
 
         public void populateDocSort(Map<String, Object> doc) throws Exception {
@@ -606,7 +620,7 @@ public class SolrProductIndexer {
             if (parentProductId == null) {
                 if (isVariant()) {
                     // IMPORTANT: same parent lookup logic as used by ProductContentWrapper
-                    GenericValue assoc = ProductWorker.getParentProductAssoc(getProductAssocTo(), false);
+                    GenericValue assoc = getProductData().getParentProductAssoc(getDctx(), getProductId(), getMoment(), isUseEntityCache());
                     if (assoc != null) {
                         parentProductId = assoc.getString("productId");
                     } else {
@@ -638,7 +652,7 @@ public class SolrProductIndexer {
         public List<GenericValue> getProductAssocToVariant() throws Exception {
             if (productAssocToVariant == null) {
                 if (isVariant()) {
-                    productAssocToVariant = EntityUtil.filterByAnd(getProductAssocTo(), UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+                    productAssocToVariant = getProductData().getProductAssocToVariant(getDctx(), getProductId(), getMoment(), isUseEntityCache());
                 }
                 if (productAssocToVariant == null) {
                     productAssocToVariant = Collections.emptyList();
@@ -930,21 +944,21 @@ public class SolrProductIndexer {
 
         public Map<String, String> getTitleLocaleMap() throws Exception {
             if (titleLocaleMap == null) {
-                titleLocaleMap = getProductData().getLocalizedContentStringMap(getDctx(), getProduct(), "PRODUCT_NAME", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
+                titleLocaleMap = getProductData().getLocalizedProductContentStringMap(getDctx(), getProduct(), "PRODUCT_NAME", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
             }
             return titleLocaleMap;
         }
 
         public Map<String, String> getDescriptionLocaleMap() throws Exception {
             if (descriptionLocaleMap == null) {
-                descriptionLocaleMap = getProductData().getLocalizedContentStringMap(getDctx(), getProduct(), "DESCRIPTION", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
+                descriptionLocaleMap = getProductData().getLocalizedProductContentStringMap(getDctx(), getProduct(), "DESCRIPTION", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
             }
             return descriptionLocaleMap;
         }
 
         public Map<String, String> getLongDescriptionLocaleMap() throws Exception {
             if (longDescriptionLocaleMap == null) {
-                longDescriptionLocaleMap = getProductData().getLocalizedContentStringMap(getDctx(), getProduct(), "LONG_DESCRIPTION", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
+                longDescriptionLocaleMap = getProductData().getLocalizedProductContentStringMap(getDctx(), getProduct(), "LONG_DESCRIPTION", getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL, getPcwList(), getMoment(), isUseEntityCache());
             }
             return longDescriptionLocaleMap;
         }

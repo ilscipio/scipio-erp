@@ -11,6 +11,7 @@ import java.util.Map;
 import com.ilscipio.scipio.product.product.ProductDataReader;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -313,14 +314,14 @@ public abstract class SolrCategoryUtil {
         }
     }
 
-    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, ProductDataReader reader, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) {
+    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, ProductDataReader reader, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         for (String productCategoryId : productCategoryIds) {
             formatCategoryTrails(trails, dctx, reader.getCategoryRollupTrails(dctx, productCategoryId, moment, ordered, useCache));
         }
         return trails;
     }
 
-    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) {
+    public static <C extends Collection<String>> C getCategoryTrails(C trails, DispatchContext dctx, Collection<String> productCategoryIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         return getCategoryTrails(trails, dctx, ProductDataReader.DEFAULT, productCategoryIds, moment, ordered, useCache);
     }
 
@@ -346,7 +347,7 @@ public abstract class SolrCategoryUtil {
         return trails;
     }
 
-    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, ProductDataReader productDataReader, Collection<String> trails, Timestamp moment, boolean useCache) {
+    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, ProductDataReader productDataReader, Collection<String> trails, Timestamp moment, boolean useCache) throws GeneralException {
         Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
         for (String trail : trails) {
             String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
@@ -362,7 +363,7 @@ public abstract class SolrCategoryUtil {
         return catalogIds;
     }
 
-    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, Collection<String> trails, Timestamp moment, boolean useCache) {
+    public static <C extends Collection<String>> C getCatalogIdsFromCategoryTrails(C catalogIds, DispatchContext dctx, Collection<String> trails, Timestamp moment, boolean useCache) throws GeneralException {
         return getCatalogIdsFromCategoryTrails(catalogIds, dctx, ProductDataReader.DEFAULT, trails, moment, useCache);
     }
 

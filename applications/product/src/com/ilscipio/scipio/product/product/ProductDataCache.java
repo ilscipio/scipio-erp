@@ -116,9 +116,9 @@ public class ProductDataCache extends ProductDataReader {
             for (int i = 0; i < numToRemove && it.hasNext(); i++) {
                 Map.Entry<String, C> entry = it.next();
                 it.remove();
-                if (Debug.infoOn()) {
-                    Debug.logInfo("updateCache: Removing product '" + entry.getKey() + "' from cache (" + (i + 1) + "/" + numToRemove + ")", module);
-                }
+                //if (Debug.infoOn()) {
+                //    Debug.logInfo("updateCache: Removing product '" + entry.getKey() + "' from cache (" + (i + 1) + "/" + numToRemove + ")", module);
+                //}
             }
         }
         cache.put(key, value);

@@ -236,6 +236,10 @@ public class ProductDataReader {
         return outKeywords;
     }
 
+    public List<GenericValue> getProductContent(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GeneralException {
+        return getDelegator(dctx).from("ProductContent").where("productId", productId).filterByDate(moment).cache(useCache).queryList();
+    }
+
     public String getProductContentText(DispatchContext dctx, GenericValue targetContent,
                                         GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
         Writer out = new StringWriter();

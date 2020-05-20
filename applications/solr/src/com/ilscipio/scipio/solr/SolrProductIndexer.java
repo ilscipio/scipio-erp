@@ -380,6 +380,7 @@ public class SolrProductIndexer {
         protected Locale defaultLocale;
         protected Map<String, ProductContentWrapper> pcwMap;
         protected List<ProductContentWrapper> pcwList;
+        protected List<GenericValue> productContent;
         protected Map<String, String> titleLocaleMap;
         protected Map<String, String> descriptionLocaleMap;
         protected Map<String, String> longDescriptionLocaleMap;
@@ -703,6 +704,11 @@ public class SolrProductIndexer {
             return catalogIds;
         }
 
+        public String getCatalogId() throws Exception {
+            Collection<String> catalogIds = getCatalogIds();
+            return UtilValidate.isNotEmpty(catalogIds) ? catalogIds.iterator().next() : null;
+        }
+
         protected void determineRelatedCatalogIds(Collection<String> catalogIds) throws Exception {
             if (catalogIds.isEmpty()) { // 2019-12: REMOVED: || productStores.isEmpty() -> if there's a catalog but not associated to a store, something is misconfigured
                 // TODO: REVIEW: If we could not determine catalog directly, usually due to config, alternative package
@@ -776,6 +782,11 @@ public class SolrProductIndexer {
             return productStore;
         }
 
+        public String getProductStoreId() throws Exception {
+            GenericValue productStore = getProductStore();
+            return (productStore != null) ? productStore.getString("productStoreId") : null;
+        }
+
         public GenericValue getProductStore(List<GenericValue> productStores) {
             return ProductStoreWorker.getContentReferenceStoreOrFirst(productStores,
                     (SolrLocaleUtil.getConfiguredForceDefaultLocale(getDelegator()) == null || SolrProductUtil.getConfiguredForceDefaultCurrency(getDelegator()) == null)
@@ -847,7 +858,7 @@ public class SolrProductIndexer {
         }
 
         public Map<String, Object> getStdPriceMap() throws Exception {
-            if (stdPriceMap == null) {
+            if (stdPriceMap == null && !isConfigurableProduct()) {
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getServiceContext(), getUserLogin(), getProduct(),
                         getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
@@ -859,7 +870,7 @@ public class SolrProductIndexer {
         }
 
         public ProductConfigWrapper getCfgPriceWrapper() throws Exception {
-            if (cfgPriceWrapper == null) {
+            if (cfgPriceWrapper == null && isConfigurableProduct()) {
                 cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getServiceContext(), getUserLogin(), getProduct(),
                         getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
             }
@@ -940,6 +951,13 @@ public class SolrProductIndexer {
                 pcwMap = getProductData().getProductContentWrappersForLocales(getDctx(), getProduct(), getLocales(), getDefaultLocale(), getLangCodeFn(), isUseEntityCache());
             }
             return pcwMap;
+        }
+
+        public List<GenericValue> getProductContent() throws Exception {
+            if (productContent == null) {
+                productContent = getProductData().getProductContent(getDctx(), getProductId(), getMoment(), isUseEntityCache());
+            }
+            return productContent;
         }
 
         public Map<String, String> getTitleLocaleMap() throws Exception {

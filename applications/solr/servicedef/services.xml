@@ -305,8 +305,7 @@ code package.
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="addToSolrIndex">
-        <description>Add a Product to Solr Index</description>
-        <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
+        <description>Add a Product to Solr Index (Note: mainly used internally)</description>
         <implements service="solrProductAttributes"/>
         <attribute mode="IN" name="fields" optional="true" type="Map">
             <description>A map of pre-formatted fields to add as-is to the solr document for indexing, with no field renaming or Solr type abstraction (added 2018-02-05)</description>
@@ -323,8 +322,7 @@ code package.
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="addListToSolrIndex">
-        <description>Add a List of Products to Solr Index and flush after all have been added</description>
-        <deprecated use-instead="none">This is called internally and never needed by client code anymore</deprecated>
+        <description>Add a List of Products to Solr Index and flush after all have been added (Note: mainly used internally)</description>
         <attribute mode="IN" name="docList" optional="false" type="List" />
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
         <attribute mode="IN" name="useCache" optional="true" type="Boolean" default-value="false">

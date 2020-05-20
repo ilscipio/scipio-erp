@@ -83,12 +83,12 @@ public class SolrProductIndexer {
     }
 
     protected static Factory readConfiguredFactory() {
-        String factoryClassName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.index.rebuild.useIndexerCache", Factory.class.getName());
+        String factoryClassName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.index.indexer.factoryClass", Factory.class.getName());
         try {
             Class<Factory> factoryClass = UtilGenerics.cast(SolrProductIndexer.class.getClassLoader().loadClass(factoryClassName));
             return factoryClass.newInstance();
         } catch (Exception e) {
-            Debug.logError(e, "Error loading indexer cache from " + SolrUtil.solrConfigName + "#solr.index.rebuild.useIndexerCache", module);
+            Debug.logError(e, "Error loading indexer cache from " + SolrUtil.solrConfigName + "#solr.index.indexer.factoryClass", module);
             return DEFAULT_FACTORY;
         }
     }

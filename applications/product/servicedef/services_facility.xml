@@ -1364,12 +1364,15 @@ code package.
        <attribute name="LocationList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="setLastInventoryCount" engine="simple"
-                location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setLastInventoryCount">
+             location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setLastInventoryCount">
         <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity</description>
         <attribute name="inventoryItemId" mode="IN" type="String" optional="false"/>
+        <attribute name="inventoryItemDetail" mode="IN" type="GenericValue" optional="true">
+            <description>Optional InventoryItemDetail record to help implement entity cache configured in inventory.properties (SCIPIO)</description>
+        </attribute>
     </service>
     <service name="setProductLastInventoryCount" engine="simple"
-             location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setLastInventoryCount">
+             location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setProductLastInventoryCount">
         <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity
             - runs for specified productId</description>
         <attribute name="productId" mode="IN" type="String" optional="false"/>

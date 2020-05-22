@@ -1264,35 +1264,193 @@ code package.
         </if-empty>
     </simple-method>
     <simple-method method-name="setLastInventoryCount" short-description="Service that updates stock availability of products">
-        <if-not-empty field="parameters.inventoryItemId">
-            <entity-one value-field="inventoryItem" entity-name="InventoryItem"  auto-field-map="false">
-                <field-map field-name="inventoryItemId" from-field="parameters.inventoryItemId"/>
-            </entity-one>
-            <entity-and entity-name="ProductFacility" list="productFacilities">
-                <field-map field-name="productId" from-field="inventoryItem.productId" />
-            </entity-and>
-        <else>
-            <!-- SCIPIO: Alternative service impl that supports productId -->
-            <entity-and entity-name="ProductFacility" list="productFacilities">
-                <field-map field-name="productId" from-field="parameters.productId" />
-            </entity-and>
-        </else>
-        </if-not-empty>
-        <if-not-empty field="productFacilities">
-            <iterate list="productFacilities" entry="productFacility">
-                <set field="serviceInMap.productId" from-field="productFacility.productId"/>
-                <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>
-                <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceInMap">
-                    <result-to-field result-name="availableToPromiseTotal"/>
-                </call-service>
+        <!-- SCIPIO: NOTE: see also setProductLastInventoryCount below (minilang copy-paste syndrome) -->
+        <entity-one value-field="inventoryItem" entity-name="InventoryItem" auto-field-map="false">
+            <field-map field-name="inventoryItemId" from-field="parameters.inventoryItemId"/>
+        </entity-one>
+        <if-empty field="inventoryItem">
+            <add-error><fail-message message="Could not lookup InventoryItem '${parameters.inventoryItemId}'"/></add-error>
+            <check-errors/>
+        </if-empty>
+        <set field="productId" from-field="inventoryItem.productId"/>
+        <set field="inventoryItemDetail" from-field="parameters.inventoryItemDetail"/>
+        <property-to-field resource="inventory" property="inventory.cache.updateSingleFacility" field="updateSingleFacility" default="false"/><!-- SCIPIO: for testing -->
+        <if>
+            <condition>
+                <and>
+                    <if-compare field="updateSingleFacility" operator="equals" type="Boolean" value="true"/>
+                    <not><if-empty field="inventoryItem.facilityId"/></not>
+                </and>
+            </condition>
+            <then>
+                <entity-and entity-name="ProductFacility" list="productFacilities">
+                    <field-map field-name="productId" from-field="inventoryItem.productId"/>
+                    <field-map field-name="facilityId" from-field="inventoryItem.facilityId"/>
+                </entity-and>
+            </then>
+            <else><!-- stock default case -->
+                <entity-and entity-name="ProductFacility" list="productFacilities">
+                    <field-map field-name="productId" from-field="inventoryItem.productId"/>
+                </entity-and>
+            </else>
+        </if>
+        <if-empty field="productFacilities">
+            <property-to-field resource="inventory" property="inventory.cache.autoProductFacility.item" field="autoItemFacility" default="false"/>
+            <if-compare field="autoItemFacility" operator="equals" type="Boolean" value="true">
+                <set field="facilityId" from-field="inventoryItem.facilityId"/>
+                <log level="warning" message="ProductFacility not found for product '${productId}' facility '${facilityId}' to update lastInventoryCount for inventory item '${inventoryItem.inventoryItemId}'; auto-creating"/>
                 <clear-field field="serviceInMap"/>
-                <set field="productFacility.lastInventoryCount" from-field="availableToPromiseTotal"/>
-                <set-service-fields service-name="updateProductFacility" map="productFacility" to-map="serviceInMap"/>
-                <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
-                <clear-field field="productFacility"/>
+                <set field="serviceInMap.userLogin" from-field="userLogin"/>
+                <set field="serviceInMap.productId" from-field="productId"/>
+                <set field="serviceInMap.facilityId" from-field="facilityId"/>
+                <set field="serviceInMap.lastInventoryCount" type="BigDecimal" value="0"/>
+                <set field="serviceInMap.lastInventoryCountQoh" type="BigDecimal" value="0"/>
+                <call-service service-name="createProductFacility" in-map-name="serviceInMap"/>
+                <entity-one entity-name="ProductFacility" value-field="productFacility">
+                    <field-map field-name="productId" from-field="productId"/>
+                    <field-map field-name="facilityId" from-field="facilityId"/>
+                </entity-one>
+                <if-not-empty field="productFacility">
+                    <field-to-list field="productFacility" list="productFacilities"/>
+                <else>
+                    <add-error><fail-message message="Could not lookup ProductFacility for: ${serviceInMap}"/></add-error>
+                    <check-errors/>
+                </else>
+                </if-not-empty>
+            </if-compare>
+        </if-empty>
+        <!-- SCIPIO: cache recount control -->
+        <property-to-field resource="inventory" property="inventory.cache.recountThresholdAtp" field="recountThresholdAtp" default="0"/>
+        <set field="recountThresholdAtp" from-field="recountThresholdAtp" type="BigDecimal"/>
+        <property-to-field resource="inventory" property="inventory.cache.recountThresholdQoh" field="recountThresholdQoh" default="0"/>
+        <set field="recountThresholdQoh" from-field="recountThresholdQoh" type="BigDecimal"/>
+        <property-to-field resource="inventory" property="inventory.cache.recountEvery" field="recountEvery" default="0"/>
+        <set field="recountEvery" from-field="recountEvery" type="Long"/>
+        <iterate list="productFacilities" entry="productFacility">
+            <set field="useEntityCache" type="Boolean" value="true"/>
+            <log level="verbose" message="productId: ${productFacility.productId}, facilityId: ${productFacility.facilityId}, lastInventoryCount: ${productFacility.lastInventoryCount},
+ lastInventoryCountQoh: ${productFacility.lastInventoryCountQoh}, recountThresholdAtp: ${recountThresholdAtp}, recountThresholdQoh: ${recountThresholdQoh}, recountEvery: ${recountEvery},
+ inventoryItemDetail: ${inventoryItemDetail.inventoryItemId}, updatesSinceLastCount: ${productFacility.updatesSinceLastCount}, availableToPromiseDiff: ${inventoryItemDetail.availableToPromiseDiff},
+ quantityOnHandDiff: ${inventoryItemDetail.quantityOnHandDiff}"/>
+            <if>
+                <condition>
+                    <or>
+                        <if-empty field="productFacility.lastInventoryCount"/>
+                        <if-empty field="productFacility.lastInventoryCountQoh"/>
+                        <if-empty field="inventoryItemDetail"/>
+                        <not>
+                            <or>
+                                <if-compare field="recountEvery" operator="greater" type="Long" value="0"/>
+                                <if-compare field="recountThresholdAtp" operator="greater" type="BigDecimal" value="0"/>
+                                <if-compare field="recountThresholdQoh" operator="greater" type="BigDecimal" value="0"/>
+                            </or>
+                        </not>
+                        <and>
+                            <if-compare field="recountEvery" operator="greater" type="Long" value="0"/>
+                            <not><if-empty field="productFacility.updatesSinceLastCount"/></not>
+                            <if-compare-field field="productFacility.updatesSinceLastCount" operator="greater-equals" type="Long" to-field="recountEvery"/>
+                        </and>
+                        <and>
+                            <if-compare field="recountThresholdAtp" operator="greater" type="BigDecimal" value="0"/>
+                            <if-compare-field field="productFacility.lastInventoryCount" operator="less-equals" type="BigDecimal" to-field="recountThresholdAtp"/>
+                        </and>
+                        <and>
+                            <if-compare field="recountThresholdQoh" operator="greater" type="BigDecimal" value="0"/>
+                            <if-compare-field field="productFacility.lastInventoryCountQoh" operator="less-equals" type="BigDecimal" to-field="recountThresholdQoh"/>
+                        </and>
+                    </or>
+                </condition>
+                <then>
+                    <set field="useEntityCache" type="Boolean" value="false"/>
+                </then>
+            </if>
+            <clear-field field="serviceInMap"/>
+            <set field="serviceInMap.productId" from-field="productFacility.productId"/>
+            <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>
+            <set field="serviceInMap.useEntityCache" from-field="useEntityCache"/>
+            <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceInMap">
+                <result-to-field result-name="availableToPromiseTotal"/>
+                <result-to-field result-name="quantityOnHandTotal"/><!-- SCIPIO -->
+            </call-service>
+            <clear-field field="serviceInMap"/>
+            <set-service-fields service-name="updateProductFacility" map="productFacility" to-map="serviceInMap"/>
+            <set field="serviceInMap.lastInventoryCount" from-field="availableToPromiseTotal"/>
+            <set field="serviceInMap.lastInventoryCountQoh" from-field="quantityOnHandTotal"/><!-- SCIPIO -->
+            <if>
+                <condition>
+                    <and>
+                        <if-compare field="useEntityCache" operator="equals" type="Boolean" value="true"/>
+                        <if-compare field="recountEvery" operator="greater" type="Long" value="0"/>
+                    </and>
+                </condition>
+                <then>
+                    <if-not-empty field="productFacility.updatesSinceLastCount">
+                        <set field="serviceInMap.updatesSinceLastCount" type="Long" value="${productFacility.updatesSinceLastCount + 1}"/>
+                        <else>
+                            <set field="serviceInMap.updatesSinceLastCount" type="Long" value="1"/>
+                        </else>
+                    </if-not-empty>
+                </then>
+                <else>
+                    <set field="serviceInMap.updatesSinceLastCount" type="Long" value="0"/><!-- SCIPIO: reset -->
+                </else>
+            </if>
+            <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
+            <log level="info" message="Updated product facility from InventoryItem (useEntityCache: ${useEntityCache}): ${serviceInMap}"/>
+        </iterate>
+    </simple-method>
+    <simple-method method-name="setProductLastInventoryCount" short-description="Service that updates stock availability of products (SCIPIO)">
+        <set field="productId" from-field="parameters.productId"/>
+        <!-- SCIPIO: Alternative service impl that supports productId -->
+        <entity-and entity-name="ProductFacility" list="productFacilities">
+            <field-map field-name="productId" from-field="parameters.productId" />
+        </entity-and>
+        <property-to-field resource="inventory" property="inventory.cache.autoProductFacility.product" field="autoProdFacility"/>
+        <if-compare field="autoProdFacility" operator="equals" type="Boolean" value="true">
+            <script lang="groovy">
+                itemFacilityIds = from("InventoryItem").where("productId", parameters.productId).distinct().getFieldSet("facilityId");
+                productFacilities = context.productFacilities;
+                productFacilityIds = (productFacilities != null) ? productFacilities.collect{fac->fac.facilityId} : [] as Set;
+                itemFacilityIds.removeAll(productFacilityIds);
+                context.missingFacilityIds = itemFacilityIds;
+            </script>
+            <iterate list="missingFacilityIds" entry="facilityId">
+                <log level="warning" message="ProductFacility not found for product '${productId}' facility '${facilityId}' to update lastInventoryCount for inventory items; auto-creating"/>
                 <clear-field field="serviceInMap"/>
+                <set field="serviceInMap.userLogin" from-field="userLogin"/>
+                <set field="serviceInMap.productId" from-field="productId"/>
+                <set field="serviceInMap.facilityId" from-field="facilityId"/>
+                <set field="serviceInMap.lastInventoryCount" type="BigDecimal" value="0"/>
+                <set field="serviceInMap.lastInventoryCountQoh" type="BigDecimal" value="0"/>
+                <call-service service-name="createProductFacility" in-map-name="serviceInMap"/>
+                <entity-one entity-name="ProductFacility" value-field="productFacility">
+                    <field-map field-name="productId" from-field="productId"/>
+                    <field-map field-name="facilityId" from-field="facilityId"/>
+                </entity-one>
+                <if-not-empty field="productFacility">
+                    <field-to-list field="productFacility" list="productFacilities"/>
+                <else>
+                    <add-error><fail-message message="Could not lookup ProductFacility for: ${serviceInMap}"/></add-error>
+                    <check-errors/>
+                </else>
+                </if-not-empty>
             </iterate>
-        </if-not-empty>
+        </if-compare>
+        <iterate list="productFacilities" entry="productFacility">
+            <clear-field field="serviceInMap"/>
+            <set field="serviceInMap.productId" from-field="productFacility.productId"/>
+            <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>
+            <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceInMap">
+                <result-to-field result-name="availableToPromiseTotal"/>
+                <result-to-field result-name="quantityOnHandTotal"/><!-- SCIPIO -->
+            </call-service>
+            <clear-field field="serviceInMap"/>
+            <set-service-fields service-name="updateProductFacility" map="productFacility" to-map="serviceInMap"/>
+            <set field="serviceInMap.lastInventoryCount" from-field="availableToPromiseTotal"/>
+            <set field="serviceInMap.lastInventoryCountQoh" from-field="quantityOnHandTotal"/><!-- SCIPIO -->
+            <set field="serviceInMap.updatesSinceLastCount" type="Long" value="0"/><!-- SCIPIO: reset -->
+            <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
+        </iterate>
     </simple-method>
     <simple-method method-name="createUpdateFacilityGeoPoint" short-description="Create or update GeoPoint assigned to facility">
         <if-empty field="parameters.geoPointId">

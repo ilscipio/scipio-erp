@@ -4,6 +4,7 @@ import com.ilscipio.scipio.product.product.ProductDataCache;
 import com.ilscipio.scipio.product.product.ProductDataReader;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -240,6 +241,261 @@ public class SolrProductIndexer {
             return ((ProductDataCache) data).getLogCacheStats();
         }
         return null;
+    }
+
+    /*
+     * *************************************************************
+     * Pre-indexing callbacks
+     * *************************************************************
+     */
+
+    public ExpandProductResult makeExpandProductResult() {
+        return new ExpandProductResult();
+    }
+
+    public static class ExpandProductResult {
+        protected int numFailures = 0;
+        protected Map<String, Object> errorResult;
+
+        public ExpandProductResult() {
+            this.numFailures = numFailures;
+        }
+
+        public int getNumFailures() {
+            return numFailures;
+        }
+
+        public ExpandProductResult setNumFailures(int numFailures) {
+            this.numFailures = numFailures;
+            return this;
+        }
+
+        public ExpandProductResult addFailure(String msg) {
+            this.numFailures++;
+            return this;
+        }
+
+        public Map<String, Object> getErrorResult() {
+            return errorResult;
+        }
+
+        public ExpandProductResult setErrorResult(Map<String, Object> errorResult) {
+            this.errorResult = errorResult;
+            return this;
+        }
+
+        public boolean isError() {
+            return ServiceUtil.isError(errorResult);
+        }
+    }
+
+    public ExpandProductResult expandProductsForIndexing(Map<String, ProductUpdateRequest> products, Map<String, ExpandedProductUpdateRequest> expandedProducts) {
+        ExpandProductResult expandResult = makeExpandProductResult();
+        for(Map.Entry<String, ProductUpdateRequest> entry : products.entrySet()) {
+            try {
+                expandProductForIndexing(entry.getKey(), entry.getValue(), products, expandedProducts, expandResult);
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: expandProductsForIndexing: " + e.getMessage(), module);
+                return makeExpandProductResult().setErrorResult(ServiceUtil.returnError(e.getMessage()));
+            }
+        }
+        return expandResult;
+    }
+
+    /** Returns true if there's any chance the product should expand for indexing. */
+    public boolean isExpandProductForIndexing(String productId, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                              Map<String, ExpandedProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) {
+        if (pur.isExplicitRemove()) {
+            // Here the Product will already have been removed so we can't determine its
+            // variants; but that's ok because it makes no sense for virtual to have been
+            // removed without its variants removed, which should have come through an ECA
+            // either in the same transaction or another before it.
+            return false;
+        }
+        return pur.isUpdateRelatedProducts();
+    }
+
+    public int expandProductForIndexing(String productId, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                        Map<String, ExpandedProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) throws GeneralException {
+        int numProducts = 1;
+        expandedProducts.put(productId, makeExpandedProductUpdateRequest(productId, pur));
+        if (isExpandProductForIndexing(productId, pur, products, expandedProducts, expandResult)) {
+            GenericValue product = lookupProductForIndexing(productId, pur);
+            if (product != null) {
+                Timestamp moment = UtilDateTime.nowTimestamp();
+                Collection<String> relatedProductIds = getRelatedProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult);
+                for(String relatedProductId : relatedProductIds) {
+                    // NOTE: we crush any prior entry for same product; chronological last update request in transaction has priority
+                    // re-add the key to LinkedHashMap keep a readable order in log
+                    expandedProducts.remove(relatedProductId);
+                    expandedProducts.put(relatedProductId, makeExpandedProductUpdateRequest(relatedProductId, pur));
+                    numProducts++;
+                }
+            } else {
+                if (Boolean.TRUE.equals(pur.getAction())) {
+                    Debug.logError("Solr: expandProductForIndexing: Product not found for productId: " + productId, module);
+                    expandedProducts.remove(productId);
+                    expandResult.addFailure("Product not found for productId: " + productId);
+                } else {
+                    // Treated as removal
+                }
+            }
+        }
+        return numProducts;
+    }
+
+    /** NOTE: this gets the instance passed by the callers if possible - we don't do this during the main indexing run to prevent bad caching e.g. from entities. */
+    public GenericValue lookupProductForIndexing(String productId, ProductUpdateRequest pur) throws GeneralException {
+        if (pur.getInstance() instanceof GenericValue) {
+            // NOTE: this is only used for the isVirtual/isVariant flag: it is re-looked up by productId in updateToSolrCoreMultiAddImp
+            return (GenericValue) pur.getInstance();
+        } else {
+            return getProductData().getProduct(getDctx(), productId, false);
+            //return dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
+        }
+    }
+
+    public Collection<String> getRelatedProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                                              Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+        Collection<String> relatedProductIds = null;
+        if (hasChildProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult)) {
+            Collection<String> variantProductIds = getChildProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult);
+            if (relatedProductIds == null) {
+                relatedProductIds = variantProductIds;
+            } else {
+                relatedProductIds.addAll(variantProductIds);
+            }
+        }
+        if (hasParentProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult)) {
+            Collection<String> virtualProductIds = getParentProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult);
+            if (relatedProductIds == null) {
+                relatedProductIds = virtualProductIds;
+            } else {
+                relatedProductIds.addAll(virtualProductIds);
+            }
+        }
+        return relatedProductIds;
+    }
+
+    public boolean hasChildProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                                 Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+        return pur.isUpdateVariants() && Boolean.TRUE.equals(product.getBoolean("isVirtual"));
+    }
+
+    public Collection<String> getChildProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                                            Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+        if (pur.isUpdateVariantsDeep()) {
+            return getProductData().getVariantProductIdsDeepDfs(getDctx(), productId, moment, false);
+        } else {
+            return getProductData().getVariantProductIds(getDctx(), productId, moment, false);
+        }
+    }
+
+    public boolean hasParentProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                                  Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+        return pur.isUpdateVirtual() && Boolean.TRUE.equals(product.getBoolean("isVariant"));
+    }
+
+    public Collection<String> getParentProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
+                                                             Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+        if (pur.isUpdateVirtualDeep()) {
+            return getProductData().getVirtualProductIdsDeepDfs(getDctx(), productId, moment, false);
+        } else {
+            //return ProductWorker.getVirtualProductIds(dctx.getDelegator(), dctx.getDispatcher(),
+            //        productId, orderBy, maxPerLevel, moment, false);
+            return getProductData().getVirtualProductIds(getDctx(), productId, moment, false);
+        }
+    }
+
+    public ProductUpdateRequest makeProductUpdateRequest(Map<String, Object> fromMap) {
+        return new ProductUpdateRequest(fromMap);
+    }
+
+    public ProductUpdateRequest makeProductUpdateRequest(Map<String, Object> fromMap, Boolean action, Map<String, Object> instance) {
+        return new ProductUpdateRequest(fromMap, action, instance);
+    }
+
+    /** Class representing the attributes of the updateToSolrSingleInterface service interface */
+    public static class ProductUpdateRequest {
+        //protected final String productId;
+        protected final Boolean action; // true = add, false = remove
+        protected final Map<String, Object> instance;
+        protected final Boolean updateVariants;
+        protected final Boolean updateVariantsDeep;
+        protected final Boolean updateVirtual;
+        protected final Boolean updateVirtualDeep;
+
+        protected ProductUpdateRequest(String productId, Boolean action, Map<String, Object> instance, Boolean updateVariants, Boolean updateVariantsDeep, Boolean updateVirtual, Boolean updateVirtualDeep) {
+            this.action = action;
+            this.instance = instance;
+            this.updateVariants = updateVariants;
+            this.updateVariantsDeep = updateVariantsDeep;
+            this.updateVirtual = updateVirtual;
+            this.updateVirtualDeep = updateVirtualDeep;
+        }
+
+        public ProductUpdateRequest(Map<String, Object> fromMap) {
+            this.action = SolrProductSearch.getUpdateToSolrActionBool(fromMap.get("action"));
+            this.instance = UtilGenerics.cast(fromMap.get("instance"));
+            this.updateVariants = (Boolean) fromMap.get("updateVariants");
+            this.updateVariantsDeep = (Boolean) fromMap.get("updateVariantsDeep");
+            this.updateVirtual = (Boolean) fromMap.get("updateVirtual");
+            this.updateVirtualDeep = (Boolean) fromMap.get("updateVirtualDeep");
+        }
+
+        protected ProductUpdateRequest(Map<String, Object> fromMap, Boolean action, Map<String, Object> instance) {
+            this.action = action;
+            this.instance = instance;
+            this.updateVariants = (Boolean) fromMap.get("updateVariants");
+            this.updateVariantsDeep = (Boolean) fromMap.get("updateVariantsDeep");
+            this.updateVirtual = (Boolean) fromMap.get("updateVirtual");
+            this.updateVirtualDeep = (Boolean) fromMap.get("updateVirtualDeep");
+        }
+
+        public Boolean getAction() { return action; }
+        public boolean isExplicitAdd() { return Boolean.TRUE.equals(getAction()); }
+        public boolean isExplicitRemove() { return Boolean.FALSE.equals(getAction()); }
+
+        /** NOTE: do not rely on this value for anything - may be a bad cached value - only in pre-index or to get productId this is safe to use. */
+        public Map<String, Object> getInstance() { return instance; }
+        public Boolean getUpdateVariants() { return updateVariants; }
+        public Boolean getUpdateVariantsDeep() { return updateVariantsDeep; }
+        public Boolean getUpdateVirtual() { return updateVirtual; }
+        public Boolean getUpdateVirtualDeep() { return updateVirtualDeep; }
+
+        public boolean isUpdateRelatedProducts() {
+            return isUpdateVariants() || isUpdateVirtual();
+        }
+        public boolean isUpdateVariants() {
+            return Boolean.TRUE.equals(getUpdateVariants()) || isUpdateVariantsDeep();
+        }
+        public boolean isUpdateVariantsDeep() {
+            return Boolean.TRUE.equals(getUpdateVariantsDeep());
+        }
+        public boolean isUpdateVirtual() {
+            return Boolean.TRUE.equals(getUpdateVirtual()) || isUpdateVirtualDeep();
+        }
+        public boolean isUpdateVirtualDeep() {
+            return Boolean.TRUE.equals(getUpdateVirtualDeep());
+        }
+    }
+
+    public ExpandedProductUpdateRequest makeExpandedProductUpdateRequest(String productId, ProductUpdateRequest pur) {
+        return new ExpandedProductUpdateRequest(productId, pur.getAction());
+    }
+
+    protected static class ExpandedProductUpdateRequest {
+        //protected final String productId;
+        protected final Boolean action;
+        protected ExpandedProductUpdateRequest(String productId, Boolean action) {
+            //this.productId = productId;
+            this.action = action;
+        }
+        protected ExpandedProductUpdateRequest(String productId, ProductUpdateRequest pur) {
+            //this.productId = productId;
+            this.action = pur.getAction();
+        }
+        public Boolean getAction() { return action; }
     }
 
     /*

@@ -42,7 +42,7 @@ import java.util.function.Function;
  * Use {@link ProductDataCache} for caching version. These were previously a bunch of helpers in SolrProductUtil.
  * <p>
  * NOTE: This is generally a work-in-progress interface and mainly for use by solr.
- * DEV NOTE: (For Scipio) If you add a method, make sure to add proper {@link ProductDataCache#reader} delegate override to.
+ * DEV NOTE: (For Scipio) If you add a method, make sure to add proper {@link ProductDataCache} override.
  * </p>
  */
 public class ProductDataReader {
@@ -134,14 +134,14 @@ public class ProductDataReader {
      * this method is a generalization.
      * Based on
      */
-    public List<String> getVirtualProductIds(DispatchContext dctx, String productId, Integer maxResults, Timestamp moment, boolean useCache) throws GeneralException {
+    public List<String> getVirtualProductIds(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GeneralException {
         List<GenericValue> variantProductAssocs = getProductAssocToVariant(dctx, productId, moment, useCache);
         List<String> variantProductIds = new ArrayList<>(variantProductAssocs.size());
         int i = 0;
         for (GenericValue assoc : variantProductAssocs) {
             variantProductIds.add(assoc.getString("productId"));
             i++;
-            if (maxResults != null && i >= maxResults) break;
+            //if (maxResults != null && i >= maxResults) break;
         }
         return variantProductIds;
     }
@@ -152,14 +152,13 @@ public class ProductDataReader {
      * <p>
      * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is returned
      * on each level; this method is a generalization.
-     * This method accepts a maxPerLevel to implement this.
      * Based on {@link ProductWorker#getVirtualProductIdsDeepDfs(org.ofbiz.entity.Delegator, org.ofbiz.service.LocalDispatcher, java.lang.String, java.util.List, java.lang.Integer, java.sql.Timestamp, boolean)}.
      */
-    public List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Integer maxPerLevel, Timestamp moment, boolean useCache) throws GeneralException {
-        return getVirtualProductIdsDeepDfs(dctx, productId, maxPerLevel, moment, useCache, new ArrayList<>());
+    public List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GeneralException {
+        return getVirtualProductIdsDeepDfs(dctx, productId, moment, useCache, new ArrayList<>());
     }
 
-    protected List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Integer maxPerLevel, Timestamp moment, boolean useCache, List<String> virtualProductIds) throws GeneralException {
+    protected List<String> getVirtualProductIdsDeepDfs(DispatchContext dctx, String productId, Timestamp moment, boolean useCache, List<String> virtualProductIds) throws GeneralException {
         List<GenericValue> virtualProductAssocs = getProductAssocToVariant(dctx, productId, moment, useCache);
         int i = 0;
         for (GenericValue assoc : virtualProductAssocs) {
@@ -167,14 +166,13 @@ public class ProductDataReader {
             virtualProductIds.add(virtualProductId);
             GenericValue virtualProduct = getProduct(dctx, virtualProductId, useCache);
             if (Boolean.TRUE.equals(virtualProduct.getBoolean("isVariant"))) {
-                getVirtualProductIdsDeepDfs(dctx, virtualProductId, maxPerLevel, moment, useCache, virtualProductIds);
+                getVirtualProductIdsDeepDfs(dctx, virtualProductId, moment, useCache, virtualProductIds);
             }
             i++;
-            if (maxPerLevel != null && i >= maxPerLevel) break;
+            //if (maxPerLevel != null && i >= maxPerLevel) break;
         }
         return virtualProductIds;
     }
-
 
     public Set<String> getOwnCategoryIdsForProduct(DispatchContext dctx, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
         return ProductWorker.getOwnCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, moment, ordered, useCache);

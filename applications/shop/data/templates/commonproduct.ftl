@@ -6,11 +6,11 @@ TODO: Should group entities together so faster data load, but can't without glob
 NOTE: This template does not support globals as-is (#global)
 -->
 <entity-engine-xml>
-<#recurse doc>
+    <#recurse doc>
 </entity-engine-xml>
 
 <#macro products>
-<#recurse .node>
+    <#recurse .node>
 </#macro>
 
 <#macro product>
@@ -24,15 +24,15 @@ NOTE: This template does not support globals as-is (#global)
 
     <#local extraCategoryId1 = (.node.@extraCategoryId1[0])!"">
     <#local extraCategoryId2 = (.node.@extraCategoryId2[0])!"">
-    
+
     <#local productTypeId = (.node.@productTypeId[0])!"">
     <#if !productTypeId?has_content>
-      <#local productTypeId = "FINISHED_GOOD">
+        <#local productTypeId = "FINISHED_GOOD">
     </#if>
 
     <#local urlName = (.node.@urlName[0])!"">
     <#if !urlName?has_content>
-      <#local urlName = productName?lower_case?replace(r"\s+", "-", "r")?replace(r"[^a-z0-9-]", "", "r")>
+        <#local urlName = productName?lower_case?replace(r"\s+", "-", "r")?replace(r"[^a-z0-9-]", "", "r")>
     </#if>
 
     <#local description = (.node.@description[0])!"">
@@ -67,15 +67,15 @@ NOTE: This template does not support globals as-is (#global)
     <#local weight = (.node.@weight[0])!"">
 
     <Product productId="${productId}" productTypeId="${productTypeId}" primaryProductCategoryId="${productCategoryId}" productName="${productName?xml}"
-        internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}"
-        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="${isVirtual!"N"}" isVariant="${isVariant!"N"}" <#if virtualVariantMethodEnum?has_content>virtualVariantMethodEnum="${virtualVariantMethodEnum}"</#if>
-        createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0"
-        lastModifiedByUserLogin="admin"
+    internalName="${productName?xml}" description="${description?xml}" longDescription="${longDescription?xml}"
+    taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="${isVirtual!"N"}" isVariant="${isVariant!"N"}" <#if virtualVariantMethodEnum?has_content>virtualVariantMethodEnum="${virtualVariantMethodEnum}"</#if>
+    createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0"
+    lastModifiedByUserLogin="admin"
         <#if quantityIncluded?has_content> quantityIncluded="${quantityIncluded}"</#if>
         <#if quantityUomId?has_content> quantityUomId="${quantityUomId}"</#if>
         <#if piecesIncluded?has_content> piecesIncluded="${piecesIncluded}"</#if>
         <#if weight?has_content> weight="${weight}"</#if>
-        />
+    />
 
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${productId}-ALT" localeString="en"/>
     <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DR${productId}-ALTEN" localeString="en_US"/>
@@ -90,34 +90,34 @@ NOTE: This template does not support globals as-is (#global)
 
     <ProductContent productId="${productId}" contentId="${productId}-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0"/>
 
-  <#if defaultPrice?has_content>
+    <#if defaultPrice?has_content>
     <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${defaultPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  </#if>
-  <#if listPrice?has_content>
+    </#if>
+    <#if listPrice?has_content>
     <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${listPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  </#if>
-  <#if minimumOrderPrice?has_content>
+    </#if>
+    <#if minimumOrderPrice?has_content>
     <ProductPrice productId="${productId}" productPricePurposeId="PURCHASE" productPriceTypeId="MINIMUM_ORDER_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="${minimumOrderPrice}" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-  </#if>
+    </#if>
 
     <ProductCategoryMember productCategoryId="${productCategoryId}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
-  <#if extraCategoryId1?has_content>
+    <#if extraCategoryId1?has_content>
     <ProductCategoryMember productCategoryId="${extraCategoryId1}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
-  </#if>
-  <#if extraCategoryId2?has_content>
+    </#if>
+    <#if extraCategoryId2?has_content>
     <ProductCategoryMember productCategoryId="${extraCategoryId2}" productId="${productId}" fromDate="2001-05-13 12:00:00.0"/>
-  </#if>
+    </#if>
 
     <ProductFacility productId="${productId}" facilityId="ScipioShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
     <ProductFacilityLocation productId="${productId}" facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" minimumStock="2" moveQuantity="20"/>
     <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2008-08-01 08:00:00.000"
-        inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
+    inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="${inventoryItemId}" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="${inventoryQuantity}" quantityOnHandDiff="${inventoryQuantity}" accountingQuantityDiff="${inventoryQuantity}"/>
 
     <#-- Product alt urls. Added 2018-11-07 -->
     <DataResource dataResourceId="${productId}-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:26.907" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.337" createdTxStamp="2017-12-12 22:25:07.512"/>
     <ElectronicText dataResourceId="${productId}-ALT" lastUpdatedStamp="2017-12-12 22:27:26.891" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.37" createdTxStamp="2017-12-12 22:25:07.512">
-        <textData><![CDATA[${productName}-${productId}]]></textData>
+    <textData><![CDATA[${productName}-${productId}]]></textData>
     </ElectronicText>
     <Content contentId="${productId}-ALT" contentTypeId="DOCUMENT" dataResourceId="${productId}-ALT" lastUpdatedStamp="2017-12-12 22:27:26.894" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.389" createdTxStamp="2017-12-12 22:25:07.512"/>
     <ProductContent productId="${productId}" contentId="${productId}-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:08.816" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:08.816" createdTxStamp="2017-12-12 22:25:07.512"/>
@@ -133,6 +133,7 @@ NOTE: This template does not support globals as-is (#global)
     <#-- Scale images -->
     <#local productId = .node?parent.@productId[0]?string/>
     <#local imageUrl = (.node.@imageUrl[0])?string/>
+    <#local imageServerPath = (.node.@imageServerPath[0]!)?string/>
     <#local imageNr = ((.node.@imageNr[0])!"0")?string?number?int/>
     <#local copyOrig = ((.node.@copyOrig[0])!"false")?string?boolean/><#-- TODO: REVIEW: not clear if want this true or false by default, lots of implications, could affect macro usage (if false) -->
     <#-- not really needed
@@ -141,11 +142,12 @@ NOTE: This template does not support globals as-is (#global)
     <#local locale = Static["org.apache.commons.lang3.LocaleUtils"].toLocale("en_US")>
     <#local localeStr = locale>
     <#assign paramMap={
-            "locale" : locale,
-            "productId": productId,
-            "imageOrigUrl":imageUrl,
-            "copyOrig":copyOrig
-        }/>
+    "locale" : locale,
+    "productId": productId,
+    "imageOrigUrl":imageUrl,
+    "imageServerPath":imageServerPath,
+    "copyOrig":copyOrig
+    }/>
 
     <#-- printed by service
     <#local dummy = Debug.logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
@@ -178,15 +180,15 @@ NOTE: This template does not support globals as-is (#global)
         <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="ADDITIONAL_IMAGE_${imageNr}" fromDate="2001-05-13 12:00:00.0"/>
         <#-- Additional Images -->
         <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content>
-          <#assign imageMap = scaledImage.imageUrlMap>
-          <#list scaledImage.productSizeTypeList as sizeType>
-            <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign><#-- WARN: > 20 chars -->
-            <#assign imgDataResDesc>${productId} Additional Image ${imageNr} ${sizeType}</#assign>
-            <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
-            <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap[sizeType]!}"/>
-            <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
-            <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="XTRA_IMG_${imageNr}_${sizeType?upper_case}" fromDate="2001-05-13 12:00:00.0"/>
-          </#list>
+            <#assign imageMap = scaledImage.imageUrlMap>
+            <#list scaledImage.productSizeTypeList as sizeType>
+                <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign><#-- WARN: > 20 chars -->
+                <#assign imgDataResDesc>${productId} Additional Image ${imageNr} ${sizeType}</#assign>
+                <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
+                <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap[sizeType]!}"/>
+                <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
+                <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="XTRA_IMG_${imageNr}_${sizeType?upper_case}" fromDate="2001-05-13 12:00:00.0"/>
+            </#list>
         </#if>
     </#if>
 </#macro>
@@ -198,7 +200,7 @@ NOTE: This template does not support globals as-is (#global)
     <#local productFeatureApplTypeId = (.node.@productFeatureApplTypeId[0])?string/>
     <#local sequenceNum = (.node.@sequenceNum[0])?string/>
     <ProductFeatureAppl productId="${productId}" productFeatureId="${productFeatureId}"
-        productFeatureApplTypeId="${productFeatureApplTypeId}" fromDate="2001-05-13 12:00:00.0" sequenceNum="${sequenceNum}"/>
+    productFeatureApplTypeId="${productFeatureApplTypeId}" fromDate="2001-05-13 12:00:00.0" sequenceNum="${sequenceNum}"/>
 </#macro>
 
 <#macro @element>

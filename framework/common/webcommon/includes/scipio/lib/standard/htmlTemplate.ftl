@@ -243,12 +243,23 @@
 *   May not be avoidable without complicating further. 
 -->
 
+<#-- NOTE: Add custom fallback logic for missing templates when required. Be advise that this may have a huge performance impact-->
+<#macro templateMissingFallback templateName="">
+    <#--  ${Debug.logVerbose("Template: " + templateName + " not found", "htmlTemplate.ftl")}-->
+</#macro>
+
 <#include "htmlScript.ftl">
 <#include "htmlStructure.ftl">
 <#include "htmlInfo.ftl">
 <#include "htmlNav.ftl">
 <#include "htmlContent.ftl">
 <#include "htmlForm.ftl">
+
+<#-- Checks if Stripe component is present, if so, (optionally) loads Stripe macros template -->
+<#assign isStripeComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("stripe")!false>
+<#if isStripeComponentPresent>
+    <@(.get_optional_template("component://stripe/webapp/stripe/includes/scipio/lib/standard/htmlStripe.ftl").include!templateMissingFallback("htmlStripe.html")) />
+</#if>
 
 <#-- After everything included, create a copy of the namespace so that macros can access 
      their global variables without possibility of override (sometimes needed)

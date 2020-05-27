@@ -1089,7 +1089,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
     
     /**
-     * SCIPIO: Performs auto type conversions for fields marked type-convert="auto", in-place in the context.
+     * SCIPIO: Performs auto type conversions for fields marked type-convert="true", in-place in the context.
      */
     public void applyTypeConvert(Map<String, Object> context, String mode, Locale locale, TimeZone timeZone, List<? super String> errorMessages) {
         for(ModelParam param : getTypeConvertParamList()) {

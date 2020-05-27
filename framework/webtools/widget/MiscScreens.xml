@@ -987,7 +987,9 @@ code package.
                     </and>
                 </condition-to-field>
                 <script lang="groovy"><![CDATA[
+                    import javax.transaction.Transaction;
                     import org.ofbiz.base.util.*;
+                    import org.ofbiz.entity.transaction.*;
                     final module = "TemplateTest.groovy";
 
                     scriptBody = parameters.scriptBody as String;
@@ -1015,13 +1017,35 @@ code package.
 
                     execTemplate = (execDefault || request.getMethod().toLowerCase() == "post") && context.hasTmplTestPerm == true; // security
                     if (execTemplate && scriptBody) {
+                        Transaction suspendedTransaction = null;
                         try {
-                            GroovyUtil.evalBlock(scriptBody, context, false);
-                        } catch(Exception e) {
-                            Debug.logError(e, "Error evaluating Groovy script", module);
-                            errorMessageList = context.errorMessageList ?: [];
-                            errorMessageList.add("Error evaluating Groovy script: " + e.toString());
-                            context.errorMessageList = errorMessageList;
+                            if (TransactionUtil.isTransactionInPlace()) { // SCIPIO: 2018-09-04: added check to eliminate useless warnings
+                                suspendedTransaction = TransactionUtil.suspend();
+                            }
+                            beganTransaction = false;
+                            try {
+                                beganTransaction = TransactionUtil.begin(72000);
+                                GroovyUtil.evalBlock(scriptBody, context, false);
+                                TransactionUtil.commit(beganTransaction);
+                            } catch (Exception e) {
+                                Debug.logError(e, "Error evaluating Groovy script", module);
+                                errorMessageList = context.errorMessageList ?: [];
+                                errorMessageList.add("Error evaluating Groovy script: " + e.toString());
+                                context.errorMessageList = errorMessageList;
+                                try {
+                                    TransactionUtil.rollback(beganTransaction, "Error evaluating Groovy script", e);
+                                } catch (GenericTransactionException e2) {
+                                    Debug.logError(e2, "Unable to rollback transaction", module);
+                                }
+                            }
+                        } finally {
+                            if (suspendedTransaction != null) {
+                                try {
+                                    TransactionUtil.resume(suspendedTransaction);
+                                } catch (GenericTransactionException e) {
+                                    Debug.logError(e, "Error resuming suspended transaction", module);
+                                }
+                            }
                         }
                     }
 

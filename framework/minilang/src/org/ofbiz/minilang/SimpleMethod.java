@@ -403,7 +403,7 @@ public final class SimpleMethod extends MiniLangElement {
         GenericValue userLogin = methodContext.getUserLogin();
         if (loginRequired) {
             if (userLogin == null) {
-                Map<String, Object> messageMap = UtilMisc.<String, Object> toMap("shortDescription", shortDescription);
+                Map<String, Object> messageMap = UtilMisc.<String, Object> toMap("shortDescription", UtilValidate.isNotEmpty(shortDescription) ? shortDescription : methodName); // SCIPIO: fallback if no short description
                 String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.must_logged_process", messageMap, locale) + ".";
                 if (methodContext.isTraceOn()) {
                     outputTraceMessage(methodContext, "login-required attribute set to \"true\" but UserLogin GenericValue was not found, returning error message:", errMsg);

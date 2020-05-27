@@ -812,7 +812,7 @@ public class ServiceDispatcher {
                     TransactionUtil.commit(beganTrans);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Could not commit transaction", module);
-                    throw new GenericServiceException("Commit transaction failed");
+                    throw new GenericServiceException("Commit transaction failed", e); // SCIPIO: Added parent exception
                 }
             }
         } catch (GenericTransactionException se) {

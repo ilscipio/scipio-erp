@@ -267,15 +267,22 @@
           </#if>
           <#if showDetails>
             <@section containerId="content_STRIPE" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithStripe-->
-              <@payMethInfoPanel title=uiLabelMap.AccountingPayWithStripe>
-                <#-- <p>${uiLabelMap.OrderPaymentDescStripe}</p> -->   
-                <#-- <iframe src="<@serverUrl fullPath=true>/stripe/control/getStripeJs</@serverUrl>" frameborder="0" width="100%" scrolling="no" style="overflow:hidden;"></iframe> -->
-                
-                <@render resource="component://stripe/widget/CommonScreens.xml#stripeJsAndElements" 
-                  ctxVars={
-                    "stripePaymentMethodSetting" : productStorePaymentMethodSettingByTypeMap.EXT_STRIPE,
-                    "paymentFormId" : "checkoutInfoForm"
-                  }/>
+              <@payMethInfoPanel title="">
+                <#assign pk = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getPublishableKey(request)!>
+                <#assign stripeIntegrationMode = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getIntegrationMode(request)!>
+
+                <#assign hooks = {
+                  "stripe.preinit" : wrapRawScript("function() { console.debug('stripe.preinit hook'); return true; }"),
+                  "stripe.postinit" : wrapRawScript("function() { console.debug('stripe.postinit hook'); return true; }"),
+                  "validation" : wrapRawScript("function() { console.debug('stripe.validation hook'); return true; }"),
+                  "payment.preprocess" : wrapRawScript("function() { console.debug('payment.preprocess hook'); return true; }"),
+                  "payment.postprocess" : wrapRawScript("function() { console.debug('payment.postprocess hook'); return true; }"),
+                  "order.preprocess" : wrapRawScript("function() { console.debug('order.preprocess hook'); return true; }"),
+                  "order.postprocess" : wrapRawScript("function() { console.debug('order.postprocess hook'); return true; }")
+                }/>
+
+                <@renderStripe mode=stripeIntegrationMode pk=pk! orderFormId="orderSubmitForm" processOrderButtonId="processButton"
+                  checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks debug=true/>
               </@payMethInfoPanel>
             </@section>
           </#if>

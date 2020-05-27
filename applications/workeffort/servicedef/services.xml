@@ -749,6 +749,7 @@ code package.
                 <fail-property resource="WorkEffortUiLabels" property="WorkEffortRequiredFieldMissingWorkEffortId"/>
             </type-validate>
         </override>
+        <override name="quantity" type-convert="true"/><!-- SCIPIO: improper ofbiz interface usage compatibility workaround -->
     </service>
     <service name="createCommunicationEventWorkEff" engine="simple" location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true">
         <description>Creates a CommunicationEvent entity and CommunicationEventWorkEff</description>

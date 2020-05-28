@@ -19,6 +19,7 @@
 package org.ofbiz.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -243,7 +244,7 @@ public class DispatchContext implements Serializable {
         if (serviceMap == null) {
             serviceMap = new HashMap<>();
 
-            List<Future<Map<String, ModelService>>> futures = new LinkedList<>();
+            List<Future<Map<String, ModelService>>> futures = new ArrayList<>(); // SCIPIO: switched to ArrayList: new LinkedList<>()
             List<GlobalServices> globalServicesList = null;
             try {
                 globalServicesList = ServiceConfigUtil.getServiceEngine().getGlobalServices();

@@ -112,7 +112,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
-        Map<String, ModelService> modelServices = new HashMap<>();
+        Map<String, ModelService> modelServices = new LinkedHashMap<>(); // SCIPIO: switched to LinkedHashMap: new HashMap<>()
 
         Element docElement = document.getDocumentElement();
         if (docElement == null) {

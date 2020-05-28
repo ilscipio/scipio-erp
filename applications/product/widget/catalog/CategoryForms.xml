@@ -28,6 +28,7 @@ code package.
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
+                <field-map field-name="noConditionFind" value="Y"/><!-- SCIPIO: added here, same as ListCatalog -->
             </service>
         </actions>
         <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id}">

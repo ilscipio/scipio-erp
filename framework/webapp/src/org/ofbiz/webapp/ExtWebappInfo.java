@@ -62,9 +62,13 @@ public class ExtWebappInfo implements Serializable {
 
     public static final String DEFAULT_WEBAPP_URLREWRITE_FILE = "WEB-INF/urlrewrite.xml";
 
-    private static final Object cacheLock = new Object(); // NOTE: both caches lock together
+    private static final Object cacheLock = new Object(); // NOTE: some caches lock together (intentional)
+    // NOTE: volatile not required because this is only optimization
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
     private static Map<String, ExtWebappInfo> serverContextPathCache = Collections.emptyMap();
+    /** NOTE: effectiveNameCache is populated using entries from above cache, so can use its own lock. */
+    private static Map<String, ExtWebappInfo> effectiveNameCache = Collections.emptyMap();
+    private static final Object effectiveNameCacheLock = new Object();
 
     // REQUIRED FIELDS (for this instance to exist)
     private final WebappInfo webappInfo;
@@ -306,21 +310,26 @@ public class ExtWebappInfo implements Serializable {
      * WARN: Uses/may-use caching, do not call during system loading.
      */
     public static ExtWebappInfo fromEffectiveComponentWebappName(String componentName, String webappName) throws IllegalArgumentException {
-        // TODO?: delegate and cache this somewhere, very inefficient, will see if/when this gets more usage...
-        WebappInfo webappInfo = null;
-        // get the last entry (should override previous ones)
-        for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
-            for (WebappInfo wInfo : cc.getWebappInfos()) {
-                if (cc.getGlobalName().equals(componentName) && wInfo.getName().equals(webappName)) {
-                    webappInfo = wInfo; 
-                }
+        String cacheKey = componentName + "::" + webappName;
+        ExtWebappInfo info = effectiveNameCache.get(cacheKey);
+        if (info != null) return info;
+        synchronized(effectiveNameCacheLock) {
+            info = effectiveNameCache.get(cacheKey);
+            if (info != null) return info;
+
+            WebappInfo webappInfo = ComponentConfig.getEffectiveWebappInfoByName(componentName, webappName);
+            if (webappInfo == null) {
+                throw new IllegalArgumentException("Could not find webapp info for component '"
+                        + componentName + "' and webapp name '" + webappName + "'");
             }
+            info = fromEffectiveComponentWebapp(webappInfo);
+
+            // copy cache for synch semantics
+            Map<String, ExtWebappInfo> newCache = new HashMap<>(effectiveNameCache);
+            newCache.put(cacheKey, info);
+            effectiveNameCache = Collections.unmodifiableMap(newCache);
+            return info;
         }
-        if (webappInfo == null) {
-            throw new IllegalArgumentException("Could not find webapp info for component '" 
-                    + componentName + "' and webapp name '" + webappName + "'");
-        }
-        return fromEffectiveComponentWebapp(webappInfo);
     }
 
     /**

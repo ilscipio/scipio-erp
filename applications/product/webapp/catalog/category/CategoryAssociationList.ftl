@@ -1,14 +1,14 @@
 <@section>
     <#if productCategoryRollupList?has_content>  
          <#list productCategoryRollupList as productCategoryRollup>
-            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@pageUrl>removeProductCategoryFromCategory</@pageUrl>">                  
+            <form name="removeproductCategoryRollup_${productCategoryRollup_index}" method="post" action="<@pageUrl>removeProductCategoryFromCategory</@pageUrl>">
                   <input name="productCategoryId" type="hidden" value="${productCategoryRollup.productCategoryId}"/>
                   <input name="originalProductCategoryId" type="hidden" value="${originalProductCategoryId}"/>
                   <input name="parentProductCategoryId" type="hidden" value="${productCategoryRollup.parentProductCategoryId}"/>
                   <input name="fromDate" type="hidden" value="${productCategoryRollup.fromDate}"/>
             </form>
         </#list>
-        <form id="UpdateCategoryAssociation" name="UpdateCategoryAssociation" method="post" action="<@pageUrl>updateProductCategoryToCategory</@pageUrl>">            
+        <form id="UpdateCategoryAssociation_${productCategoryAssociationMode}" name="UpdateCategoryAssociation_${productCategoryAssociationMode}" method="post" action="<@pageUrl>updateProductCategoryToCategory</@pageUrl>">
             <input name="originalProductCategoryId" type="hidden" value="${originalProductCategoryId!}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
           
@@ -51,7 +51,7 @@
                                 <@field type="input" name="sequenceNum_o_${productCategoryRollup_index}" value=((productCategoryRollup.sequenceNum)!) size=20 maxlength=40 />
                             </@td>
                             <@td>                    
-                               <@field type="submit" submitType="link" href="javascript:document.forms['UpdateCategoryAssociation'].elements['_rowSubmit_o_${productCategoryRollup_index}'].value = 'Y';document.forms.UpdateCategoryAssociation.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>                               
+                               <@field type="submit" submitType="link" href="javascript:document.forms['UpdateCategoryAssociation_${productCategoryAssociationMode}'].elements['_rowSubmit_o_${productCategoryRollup_index}'].value = 'Y';document.forms.UpdateCategoryAssociation_${productCategoryAssociationMode}.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>
                             </@td>
                             <@td>
                                 <a href="javascript:document.forms.removeproductCategoryRollup_${productCategoryRollup_index}.submit();" class="${styles.link_run_sys} ${styles.action_remove}">${uiLabelMap.CommonDelete}</a>

@@ -145,8 +145,8 @@ public class ModelServiceReader implements Serializable {
 
                     // check to see if service with same name has already been read
                     if (modelServices.containsKey(serviceName)) {
-                        Debug.logWarning("Service " + serviceName + " is defined more than once, " +
-                            "most recent will over-write previous definition(s)", module);
+                        Debug.logInfo("Service " + serviceName + " is defined more than once, " +
+                            "most recent will over-write previous definition(s)", module); // SCIPIO: switched from warning to info
                     }
                     ModelService service = createModelService(curServiceElement, resourceLocation);
 

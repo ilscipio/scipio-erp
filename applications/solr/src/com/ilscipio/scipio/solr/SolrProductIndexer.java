@@ -324,15 +324,17 @@ public class SolrProductIndexer {
             if (product != null) {
                 Timestamp moment = UtilDateTime.nowTimestamp();
                 Collection<String> relatedProductIds = getRelatedProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult);
-                for(String relatedProductId : relatedProductIds) {
-                    // NOTE: we crush any prior entry for same product; chronological last update request in transaction has priority
-                    // re-add the key to LinkedHashMap keep a readable order in log
-                    expandedProducts.remove(relatedProductId);
-                    expandedProducts.put(relatedProductId, makeExpandedProductUpdateRequest(relatedProductId, pur));
-                    numProducts++;
+                if (relatedProductIds != null) {
+                    for (String relatedProductId : relatedProductIds) {
+                        // NOTE: we crush any prior entry for same product; chronological last update request in transaction has priority
+                        // re-add the key to LinkedHashMap keep a readable order in log
+                        expandedProducts.remove(relatedProductId);
+                        expandedProducts.put(relatedProductId, makeExpandedProductUpdateRequest(relatedProductId, pur));
+                        numProducts++;
+                    }
                 }
             } else {
-                if (Boolean.TRUE.equals(pur.getAction())) {
+                if (pur.isExplicitAdd()) {
                     Debug.logError("Solr: expandProductForIndexing: Product not found for productId: " + productId, module);
                     expandedProducts.remove(productId);
                     expandResult.addFailure("Product not found for productId: " + productId);

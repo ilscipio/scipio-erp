@@ -290,6 +290,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     
     private transient List<ModelParam> typeConvertParamList; // SCIPIO
 
+    /**
+     * SCIPIO: The last service this one overrides (which may override one before it).
+     * This is now used for both debugging and to implement self interfaces.
+     */
+    ModelService overriddenService; // SCIPIO: This is always null unless
+
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -1291,6 +1297,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {
         if (!inheritedParameters) {
+            // SCIPIO: Also update overriddenService
+            if (overriddenService != null && !overriddenService.inheritedParameters) {
+                overriddenService.interfaceUpdate(dctx);
+            }
+
             // services w/ engine 'group' auto-implement the grouped services
             if ("group".equals(this.engineName) && implServices.size() == 0) {
                 GroupModel group = internalGroup;
@@ -1307,11 +1318,22 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
             // handle interfaces
             if (UtilValidate.isNotEmpty(implServices) && dctx != null) {
+                // SCIPIO: newImplServices strips the overriddenService from the definition (makeshift solution for now)
+                // so that other code that needs to process service defs don't get stuck in endless loop (compatilibyt)
+                Set<ModelServiceIface> newImplServices = new LinkedHashSet<>();
                 for (ModelServiceIface iface: implServices) {
                     String serviceName = iface.getService();
                     boolean optional = iface.isOptional();
 
-                    ModelService model = dctx.getModelService(serviceName);
+                    // SCIPIO
+                    //ModelService model = dctx.getModelService(serviceName);
+                    ModelService model;
+                    if (overriddenService != null && serviceName.equals(overriddenService.name)) {
+                        model = overriddenService;
+                    } else {
+                        model = dctx.getModelService(serviceName);
+                        newImplServices.add(iface);
+                    }
                     if (model != null) {
                         for (ModelParam newParam: model.contextParamList) {
                             ModelParam existingParam = this.contextInfo.get(newParam.name);
@@ -1347,6 +1369,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
+                }
+                if (newImplServices.size() != implServices.size()) {
+                    implServices = newImplServices;
                 }
             }
 
@@ -2355,6 +2380,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             this.typeConvertParamList = Collections.unmodifiableList(paramList);
         }
         return paramList;
+    }
+
+    /**
+     * SCIPIO: Returns the service this one overrode, or null.
+     */
+    public ModelService getOverriddenService() {
+        return overriddenService;
     }
 
     /**

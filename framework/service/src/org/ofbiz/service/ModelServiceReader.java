@@ -144,11 +144,14 @@ public class ModelServiceReader implements Serializable {
                     String serviceName = UtilXml.checkEmpty(curServiceElement.getAttribute("name"));
 
                     // check to see if service with same name has already been read
-                    if (modelServices.containsKey(serviceName)) {
+                    // SCIPIO: Preserve the previous service temporarily using an alias that will be removed later
+                    //if (modelServices.containsKey(serviceName)) {
+                    ModelService overriddenService = modelServices.get(serviceName);
+                    if (overriddenService != null) {
                         Debug.logInfo("Service " + serviceName + " is defined more than once, " +
                             "most recent will over-write previous definition(s)", module); // SCIPIO: switched from warning to info
                     }
-                    ModelService service = createModelService(curServiceElement, resourceLocation);
+                    ModelService service = createModelService(curServiceElement, resourceLocation, overriddenService); // SCIPIO: Added overriddenService
 
                     // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
                     if (loadValidateHigh) {
@@ -171,7 +174,7 @@ public class ModelServiceReader implements Serializable {
         return modelServices;
     }
 
-    private ModelService createModelService(Element serviceElement, String resourceLocation) {
+    private ModelService createModelService(Element serviceElement, String resourceLocation, ModelService overriddenService) { // SCIPIO: added overriddenService
         ModelService service = new ModelService();
 
         service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name")).intern();
@@ -307,6 +310,8 @@ public class ModelServiceReader implements Serializable {
         if (service.permissionGroups instanceof ArrayList) { // SCIPIO
             ((ArrayList<ModelPermGroup>) service.permissionGroups).trimToSize();
         }
+
+        service.overriddenService = overriddenService; // SCIPIO
 
         return service;
     }

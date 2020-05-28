@@ -489,6 +489,12 @@ if (selectedService) {
         }
         context.showWsdl = true;
     }
+
+    if (curServiceModel.getOverriddenService() != null) { // SCIPIO
+        curServiceMap.overriddenServiceName = curServiceModel.getOverriddenService().name;
+        curServiceMap.overriddenServiceLocation = curServiceModel.getOverriddenService().definitionLocation;
+    }
+
     context.selectedServiceMap = curServiceMap;
 }
 

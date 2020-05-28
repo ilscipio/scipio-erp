@@ -131,9 +131,13 @@ code package.
 <@row>
    <@cell>
         <@heading>${uiLabelMap.WebtoolsImplementedServices}</@heading>
-
+        <#if selectedServiceMap.overriddenServiceName?has_content><#-- SCIPIO -->
+          ${selectedServiceMap.overriddenServiceName} (override - ${selectedServiceMap.definitionLocation})<br />
+        </#if>
         <#if selectedServiceMap.implServices == 'NA'>
-          ${selectedServiceMap.implServices}
+          <#if !selectedServiceMap.overriddenServiceName?has_content><#-- SCIPIO -->
+            ${selectedServiceMap.implServices}
+          </#if>
         <#elseif selectedServiceMap.implServices?has_content>
           <#list selectedServiceMap.implServices as implSrv>
             <a href="<@pageUrl>${url}?sel_service_name=${implSrv.getService()}</@pageUrl>">${implSrv.getService()}</a><br />

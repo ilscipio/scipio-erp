@@ -70,6 +70,9 @@ public final class ComponentConfig {
     //private static final Map<String, List<WebappInfo>> serverWebApps = new LinkedHashMap<>();
     private static volatile Map<String, List<WebappInfo>> serverWebApps = Collections.unmodifiableMap(new LinkedHashMap<>());
     private static final Object serverWebAppsSyncObj = new Object();
+    /** SCIPIO: Maps component::webapp name of the old webapp to the new webapp. */
+    private static volatile Map<String, WebappInfo> overriddenWebappNameMap = Collections.emptyMap();
+    private static final Object overriddenWebappsSyncObj = new Object();
 
     public static Boolean componentExists(String componentName) {
         Assert.notEmpty("componentName", componentName);
@@ -583,6 +586,40 @@ public final class ComponentConfig {
         }
         return info;
         */
+    }
+
+    /**
+     * SCIPIO: Returns the exact WebappInfo by name (no overrides).
+     * NOTE: not for use during initialization (TODO: later may use caching).
+     */
+    public static WebappInfo getWebappInfoByName(String componentName, String webappName) throws IllegalArgumentException {
+        WebappInfo webappInfo = null;
+        // get the last entry (should override previous ones)
+        for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
+            for (WebappInfo wInfo : cc.getWebappInfos()) {
+                if (cc.getGlobalName().equals(componentName) && wInfo.getName().equals(webappName)) {
+                    webappInfo = wInfo;
+                }
+            }
+        }
+        return webappInfo;
+    }
+
+    /**
+     * SCIPIO: Maps the component::webapp name of an overridden webapp to the new webapp.
+     * This ONLY returns non-null if the webapp was actually overridden.
+     */
+    public static WebappInfo getOverriddenWebappInfoByName(String componentName, String webappName) {
+        return overriddenWebappNameMap.get(componentName+"::"+webappName);
+    }
+
+    /**
+     * SCIPIO: Maps the component::webapp name of an overridden webapp to the new webapp, otherwise
+     * the webapp itself, or null.
+     */
+    public static WebappInfo getEffectiveWebappInfoByName(String componentName, String webappName) {
+        WebappInfo webappInfo = getOverriddenWebappInfoByName(componentName, webappName);
+        return (webappInfo != null) ? webappInfo : getWebappInfoByName(componentName, webappName);
     }
 
     public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
@@ -1169,14 +1206,24 @@ public final class ComponentConfig {
                             }
                             List<WebappInfo> prevWebappInfoList = prevCc.getWebappInfos();
                             List<WebappInfo> newWebappInfoList = new ArrayList<>(prevWebappInfoList.size());
+                            WebappInfo overriddenWebappInfo = null; // SCIPIO
                             // removed this webapp from the list
                             for(WebappInfo prevWebappInfo : prevWebappInfoList) {
                                 if (prevWebappInfo != webappInfo && !prevWebappInfo.getName().equals(webappInfo.getName())) {
                                     newWebappInfoList.add(prevWebappInfo);
+                                } else {
+                                    overriddenWebappInfo = prevWebappInfo;
                                 }
                             }
                             ComponentConfig newCc = new ComponentConfig(prevCc, newWebappInfoList);
                             modifiedComponentsByName.put(newCc.getComponentName(), newCc);
+                            if (overriddenWebappInfo != null) {
+                                synchronized(overriddenWebappsSyncObj) {
+                                    Map<String, WebappInfo> overriddenWebapps = new HashMap<>(overriddenWebappNameMap);
+                                    overriddenWebapps.put(prevCc.getComponentName()+"::"+overriddenWebappInfo.getName(), webappInfo);
+                                    overriddenWebappNameMap = Collections.unmodifiableMap(overriddenWebapps);
+                                }
+                            }
                         }
                     }
                 }

@@ -172,7 +172,9 @@ public class ServiceSemaphore {
                     lock = value.create();
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                // SCIPIO: In 99% of cases this is not an error and this is extremely verbose, so warn with message only for now
+                //Debug.logError(e, module);
+                Debug.logWarning("Cannot obtain unique transaction for semaphore logging: " + e.getMessage(), module);
                 isError = true;
                 throw new SemaphoreFailException("Cannot obtain unique transaction for semaphore logging");
             } finally {

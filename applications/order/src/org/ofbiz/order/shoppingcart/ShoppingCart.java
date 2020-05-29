@@ -5932,21 +5932,24 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             List<GenericValue> values = new ArrayList<>();
             if (valueObj != null) {
                 // first create a BILLING_LOCATION for the payment method address if there is one
-                if ("PaymentMethod".equals(valueObj.getEntityName())) {
-                    String billingAddressId = null;
+                // SCIPIO: 05-29-20: Commented out the condition below because it doesn't make any sense to constrain OrderContactMech BILLING_LOCATION purpose when the
+                // entity is PaymentMethod. BillingAddress can be present no matter the orderPaymentInfos are being created from PaymentMethod or PaymentMethodType. As
+                // a matter of fact this can be problematic specially when SHIPPING_LOCATION and BILLING_LOCATION differ
+//                if ("PaymentMethod".equals(valueObj.getEntityName())) {
+                String billingAddressId = null;
 
-                    GenericValue billingAddress = this.getBillingAddress(delegator);
-                    if (billingAddress != null) {
-                        billingAddressId = billingAddress.getString("contactMechId");
-                    }
-
-                    if (UtilValidate.isNotEmpty(billingAddressId)) {
-                        GenericValue orderCm = delegator.makeValue("OrderContactMech");
-                        orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
-                        orderCm.set("contactMechId", billingAddressId);
-                        values.add(orderCm);
-                    }
+                GenericValue billingAddress = this.getBillingAddress(delegator);
+                if (billingAddress != null) {
+                    billingAddressId = billingAddress.getString("contactMechId");
                 }
+
+                if (UtilValidate.isNotEmpty(billingAddressId)) {
+                    GenericValue orderCm = delegator.makeValue("OrderContactMech");
+                    orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
+                    orderCm.set("contactMechId", billingAddressId);
+                    values.add(orderCm);
+                    }
+//                }
 
                 GenericValue productStore = null;
                 String splitPayPrefPerShpGrp = null;

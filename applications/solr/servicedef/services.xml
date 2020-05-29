@@ -105,7 +105,7 @@ code package.
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndex"
-        semaphore="wait">
+        semaphore="fail">
         <description>rebuild SOLR Index</description>
         <implements service="scipioJobCtxInterface"/>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />

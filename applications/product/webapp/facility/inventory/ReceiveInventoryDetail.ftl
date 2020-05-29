@@ -23,11 +23,11 @@
                     </@tr>
                 </@thead>
                 <#list receivedItems as item>
-                    <form name="cancelReceivedItemsForm_${item_index}" method="post" action="<@pageUrl>cancelReceivedItems</@pageUrl>">
-                        <input type="hidden" name="receiptId" value="${(item.receiptId)!}"/>
-                        <input type="hidden" name="purchaseOrderId" value="${(item.orderId)!}"/>
-                        <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                        <@tr>
+                    <@tr>
+                        <@form name="cancelReceivedItemsForm_${item_index}" method="post" action=makePageUrl("cancelReceivedItems")>
+                            <@field type="hidden" name="receiptId" value="${(item.receiptId)!}"/>
+                            <@field type="hidden" name="purchaseOrderId" value="${(item.orderId)!}"/>
+                            <@field type="hidden" name="facilityId" value="${facilityId!}"/>
                             <@td><a href="<@pageUrl>EditShipment?shipmentId=${item.shipmentId!}</@pageUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                             <@td>${item.receiptId}</@td>
                             <@td>${item.getString("datetimeReceived").toString()}</@td>
@@ -43,8 +43,8 @@
                                   <a href="javascript:document.cancelReceivedItemsForm_${item_index}.submit();" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                 </#if>
                             </@td>
-                        </@tr>
-                    </form>
+                        </@form>
+                    </@tr>
                 </#list>
             </@table>
         </@section>

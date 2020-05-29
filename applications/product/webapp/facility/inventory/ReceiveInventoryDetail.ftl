@@ -124,7 +124,7 @@
                     <@field type="input" name="datetimeReceived" size="24" value=nowTimestamp />
                     <#-- <a href="#" onclick="setNow('datetimeReceived')" class="${styles.link_run_local!} ${styles.action_update!}">[Now]</a> -->
                 </@field>
-          
+
                 <@field type="input" label=uiLabelMap.lotId name="lotId" size="10"/>
 
                 <#-- facility location(s) -->
@@ -173,7 +173,7 @@
                 <form method="post" action="<@pageUrl>ReceiveInventory</@pageUrl>" name="shipmentForm">
                     <#-- general request fields -->
                     <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
-                    <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>                
+                    <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
                     <input type="hidden" name="partialReceive" value="${partialReceive!}"/>
                     <input type="hidden" name="shipmentId"/>
                     <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
@@ -182,9 +182,9 @@
                             <@th>${uiLabelMap.ProductShipmentTypeId}</@th>
                             <@th>${uiLabelMap.ProductStatusId}</@th>
                             <@th>${uiLabelMap.ProductOriginFacility}</@th>
-                            <@th>${uiLabelMap.ProductDestinationFacility}</@th>                        
+                            <@th>${uiLabelMap.ProductDestinationFacility}</@th>
                             <@th>${uiLabelMap.ProductEstimatedArrivalDate}</@th>
-                            <@th>${uiLabelMap.CommonReceive}</@th>                        
+                            <@th>${uiLabelMap.CommonReceive}</@th>
                         </@thead>
                         <#list shipments! as shipment>
                             <#assign originFacility = shipment.getRelatedOne("OriginFacility", true)!/>
@@ -193,7 +193,7 @@
                             <#assign shipmentType = shipment.getRelatedOne("ShipmentType", true)/>
                             <#assign shipmentDate = shipment.estimatedArrivalDate!/>
                             <@tr>
-                                <@td>${shipment.shipmentId}</@td>                            
+                                <@td>${shipment.shipmentId}</@td>
                                 <@td>${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</@td>
                                 <@td>${statusItem.get("description",locale)?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
                                 <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
@@ -204,7 +204,7 @@
                         </#list>
                         <@tr>
                             <@td>--</@td>
-                            <@td colspan="5">${uiLabelMap.ProductNoSpecificShipment}</@td>                        
+                            <@td colspan="5">${uiLabelMap.ProductNoSpecificShipment}</@td>
                             <@td><a href="javascript:document.shipmentForm.submit();">${uiLabelMap.CommonReceive}</a></@td>
                         </@tr>
                     </@table>
@@ -222,7 +222,7 @@
             <input type="hidden" id="getConvertedPrice" value="<@pageUrl>getConvertedPrice</@pageUrl>" />
             <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
             <form method="post" action="<@pageUrl>receiveInventoryProduct</@pageUrl>" name="receiveMultiPO">
-                <#if shipment?has_content>                                                                                
+                <#if shipment?has_content>
                     <@field type="checkbox" name="forceShipmentReceived" value="Y" label="Set Shipment As Received"/>
                 </#if>
                 <#-- general request fields -->
@@ -252,7 +252,7 @@
                                 <@td>${uiLabelMap.CommonReceive}</@td>
                                 <#-- ${uiLabelMap.ProductPerUnitPriceOrder} / ${uiLabelMap.ProductPerUnitPriceFacility} /  -->
                             </@tr>
-                        </@thead>   
+                        </@thead>
                         <#list purchaseOrderItems as orderItem>
                             <@tr>
                                 <#assign defaultQuantity = orderItem.quantity - receivedQuantities[orderItem.orderItemSeqId]?double/>
@@ -279,19 +279,19 @@
                                         <input type="hidden" name="priorityOrderId_o_${orderItem_index}" value="${salesOrderItem.orderId}"/>
                                         <input type="hidden" name="priorityOrderItemSeqId_o_${orderItem_index}" value="${salesOrderItem.orderItemSeqId}"/>
                                     </#if>
-                                    <@td>             
+                                    <@td>
                                         <#if orderItem.productId??>
                                             <#assign product = orderItem.getRelatedOne("Product", true)/>
-                                            <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>                                                            
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
+                                            <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>
                                         <#else>
                                             <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${raw(orderItemType.get('description',locale))} ${raw(orderItem.itemDescription!)}">
                                                 <a href="<@serverUrl>/catalog/control/ViewProduct?${raw(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                             </@field>
                                         </#if>
                                     </@td>
-                                    <@td>         
-                                        <#-- location(s) -->                                                        
+                                    <@td>
+                                        <#-- location(s) -->
                                         <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
                                         <#if facilityLocations?has_content>
                                             <@field type="select" name="locationSeqId_o_${orderItem_index}">
@@ -310,14 +310,14 @@
                                                 <#assign LookupFacilityLocationView="LookupFacilityLocation">
                                             </#if>
                                             <@field type="lookup" formName="receiveMultiPO" name="locationSeqId_o_${orderItem_index}" id="locationSeqId_o_${orderItem_index}" fieldFormName=LookupFacilityLocationView/>
-                                        </#if>        
-                                    </@td>                                                
-                                    <@td>          
+                                        </#if>
+                                    </@td>
+                                    <@td>
                                         <#assign fieldValue><#if partialReceive??>0<#else>${defaultQuantity?string.number}</#if></#assign>
                                         <@field type="input" name="quantityAccepted_o_${orderItem_index}" size="6" value=fieldValue/>
                                     </@td>
-                                    <@td>      
-                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH 
+                                    <@td>
+                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH
                                     <#if product.inventoryItemTypeId?has_content>
                                       <input name="inventoryItemTypeId_o_${rowCount}" type="hidden" value="${product.inventoryItemTypeId}" />
                                       <#assign inventoryItemType = product.getRelatedOne("InventoryItemType", true)! />
@@ -335,7 +335,7 @@
                                     </#if>
                                     -->
                                     </@td>
-                                    <@td>         
+                                    <@td>
                                         <@field type="select" name="rejectionId_o_${orderItem_index}" size="1">
                                             <option></option>
                                             <#list rejectReasons as nextRejection>
@@ -343,10 +343,10 @@
                                             </#list>
                                         </@field>
                                     </@td>
-                                    <@td>        
+                                    <@td>
                                         <@field type="input" name="quantityRejected_o_${orderItem_index}" value="0" size="6"/>
                                     </@td>
-                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH 
+                                    <#-- SCIPIO: TODO (2016-06-13): INCORPORATE PATCH
                                     <td width="45%">
                                       <#assign isSeriazed = Static["org.ofbiz.product.product.ProductWorker"].isSerialized(delegator, product.productId)!/>
                                       <#if isSeriazed?has_content>
@@ -355,7 +355,7 @@
                                       </#if>
                                     </td>
                                     -->
-                                    <@td>               
+                                    <@td>
                                         <#if !product.lotIdFilledIn?has_content || product.lotIdFilledIn != "Forbidden">
                                             <@field type="input" name="lotId_o_${orderItem_index}" size="20" />
                                         </#if>
@@ -372,20 +372,20 @@
                                             <input type="hidden" name="orderCurrencyUomId_o_${orderItem_index}" value="${orderCurrencyUomId!}" />
                                             <@field type="input" id="orderCurrencyUnitPrice_${orderItem_index}" name="orderCurrencyUnitPrice_o_${orderItem_index}" value=orderCurrencyUnitPriceMap[orderItem.orderItemSeqId] onChange="javascript:getConvertedPrice(orderCurrencyUnitPrice_${orderItem_index}, '${orderCurrencyUomId}', '${currencyUomId}', '${orderItem_index}', '${orderCurrencyUnitPriceMap[orderItem.orderItemSeqId]}', '${itemCost}');" size="6" maxlength="20" />
                                             ${orderCurrencyUomId!}
-                                      
+
                                             <input type="hidden" name="currencyUomId_o_${orderItem_index}" value="${currencyUomId!}" />
                                             <@field type="input" id="unitCost_${orderItem_index}" name="unitCost_o_${orderItem_index}" value=itemCost readonly="readonly" size="6" maxlength="20"/>
-                                            ${currencyUomId!}                                                            
+                                            ${currencyUomId!}
                                         <#else> -->
                                             <input type="hidden" name="currencyUomId_o_${orderItem_index}" value="${currencyUomId!}" />
                                             <@field type="input" name="unitCost_o_${orderItem_index}" value=itemCost size="6" maxlength="20"/>
-                                            <#-- ${currencyUomId!} -->                                                            
+                                            <#-- ${currencyUomId!} -->
                                         <#-- </#if> -->
                                     </@td>
                                     <@td>
                                         <@field type="submit" submitType="link" href="javascript:$('input[name=_rowSubmit_o_${orderItem_index}]').val('Y');document.receiveMultiPO.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text=uiLabelMap.ProductReceiveProduct/>
-                                    </@td>        
-                                </#if>                                
+                                    </@td>
+                                </#if>
                             </@tr>
                         </#list>
                     </@table>

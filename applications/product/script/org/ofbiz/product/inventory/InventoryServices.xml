@@ -1492,14 +1492,26 @@ code package.
                 </if-not-empty>
             </iterate>
         </if-compare>
+        <entity-one entity-name="Product" value-field="product">
+            <field-map field-name="productId" from-field="productId"/>
+        </entity-one>
+        <set field="isMarketingPkgAuto" value="${groovy:org.ofbiz.entity.util.EntityTypeUtil.hasParentType(delegator, 'ProductType', 'productTypeId', product.productTypeId, 'parentTypeId', 'MARKETING_PKG_AUTO')}" type="Boolean"/>
         <iterate list="productFacilities" entry="productFacility">
             <clear-field field="serviceInMap"/>
             <set field="serviceInMap.productId" from-field="productFacility.productId"/>
             <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>
-            <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceInMap">
-                <result-to-field result-name="availableToPromiseTotal"/>
-                <result-to-field result-name="quantityOnHandTotal"/><!-- SCIPIO -->
-            </call-service>
+            <if-compare field="isMarketingPkgAuto" operator="equals" value="true" type="Boolean">
+                <call-service service-name="getMktgPackagesAvailable" in-map-name="serviceInMap">
+                    <result-to-field result-name="availableToPromiseTotal"/>
+                    <result-to-field result-name="quantityOnHandTotal"/><!-- SCIPIO -->
+                </call-service>
+            <else>
+                <call-service service-name="getInventoryAvailableByFacility" in-map-name="serviceInMap">
+                    <result-to-field result-name="availableToPromiseTotal"/>
+                    <result-to-field result-name="quantityOnHandTotal"/><!-- SCIPIO -->
+                </call-service>
+            </else>
+            </if-compare>
             <clear-field field="serviceInMap"/>
             <set-service-fields service-name="updateProductFacility" map="productFacility" to-map="serviceInMap"/>
             <set field="serviceInMap.lastInventoryCount" from-field="availableToPromiseTotal"/>

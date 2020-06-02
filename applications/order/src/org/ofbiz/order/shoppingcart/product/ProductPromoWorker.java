@@ -1508,7 +1508,8 @@ public final class ProductPromoWorker {
                                     quantityAlreadyInCart = quantityAlreadyInCart.add(item.getQuantity());
                                 }
                             }
-                            Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productId, "product", product, "quantity", quantity.add(quantityAlreadyInCart), "useInventoryCache", true)); // SCIPIO: useInventoryCache
+                            Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productId, "product", product, "quantity", quantity.add(quantityAlreadyInCart),
+                                    "useInventoryCache", UtilProperties.getPropertyAsBoolean("order", "shoppingcart.useInventoryCacheOnAddToCart", false))); // SCIPIO: useInventoryCache
                             if (ServiceUtil.isError(invReqResult)) {
                                 Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
                                 throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
@@ -1545,7 +1546,8 @@ public final class ProductPromoWorker {
                                 quantityAlreadyInCart = quantityAlreadyInCart.add(item.getQuantity());
                             }
                         }
-                        Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", optionProductId, "product", product, "quantity", quantity.add(quantityAlreadyInCart), "useInventoryCache", true)); // SCIPIO: useInventoryCache
+                        Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", optionProductId, "product", product, "quantity", quantity.add(quantityAlreadyInCart),
+                                "useInventoryCache", UtilProperties.getPropertyAsBoolean("order", "shoppingcart.useInventoryCacheOnAddToCart", false))); // SCIPIO: useInventoryCache
                         if (ServiceUtil.isError(invReqResult)) {
                             Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
                             throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));

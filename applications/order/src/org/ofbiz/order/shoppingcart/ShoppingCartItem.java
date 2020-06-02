@@ -1292,7 +1292,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected boolean isInventoryAvailableOrNotRequired(BigDecimal quantity, String productStoreId, LocalDispatcher dispatcher) throws CartItemModifyException {
         boolean inventoryAvailable = true;
         try {
-            Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productId, "product", this.getProduct(), "quantity", quantity, "useInventoryCache", true)); // SCIPIO: useInventoryCache
+            Map<String, Object> invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "productId", productId, "product", this.getProduct(), "quantity", quantity,
+                    "useInventoryCache", UtilProperties.getPropertyAsBoolean("order", "shoppingcart.useInventoryCacheOnAddToCart", false))); // SCIPIO: useInventoryCache
             if (ServiceUtil.isError(invReqResult)) {
                 String errorMessage = ServiceUtil.getErrorMessage(invReqResult);
                 Debug.logError("Error calling isStoreInventoryAvailableOrNotRequired service, result is: " + invReqResult, module);

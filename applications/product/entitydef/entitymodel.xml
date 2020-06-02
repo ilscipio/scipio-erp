@@ -3076,6 +3076,31 @@ code package.
         <key-map field-name="productId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="ProductAndAssocAll"
+                 package-name="org.ofbiz.product.product"
+                 title="Product and ProductAssoc To Full View"><!-- SCIPIO -->
+      <member-entity entity-alias="PD" entity-name="Product"/>
+      <member-entity entity-alias="PDA" entity-name="ProductAssoc"/>
+      <alias-all entity-alias="PD" />
+      <alias-all entity-alias="PDA"/>
+      <view-link entity-alias="PD" rel-entity-alias="PDA">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ProductAndAssocToAll"
+                 package-name="org.ofbiz.product.product"
+                 title="Product and ProductAssoc To Full View"><!-- SCIPIO -->
+      <member-entity entity-alias="PD" entity-name="Product"/>
+      <member-entity entity-alias="PDA" entity-name="ProductAssoc"/>
+      <alias-all entity-alias="PD" />
+      <alias-all entity-alias="PDA">
+          <exclude field="productId"/>
+      </alias-all>
+      <alias name="productIdFrom" entity-alias="PDA" field="productId"/>
+      <view-link entity-alias="PD" rel-entity-alias="PDA">
+        <key-map field-name="productId" rel-field-name="productIdTo"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductAssocType"
             package-name="org.ofbiz.product.product"
             default-resource-name="ProductEntityLabels"

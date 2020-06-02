@@ -1454,6 +1454,29 @@ code package.
             <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
             <log level="info" message="Updated product facility from InventoryItem (useEntityCache: ${useEntityCache}): ${serviceInMap}"/>
         </iterate>
+        <!-- SCIPIO: TODO: REVIEW: this worked in some tests but strange effect on frontend
+        <if-compare field="useEntityCache" operator="equals" type="Boolean" value="false">
+            <call-simple-method method-name="setRelatedProductLastInventoryCount"/>
+        </if-compare>-->
+    </simple-method>
+    <simple-method method-name="setRelatedProductLastInventoryCount"><!-- SCIPIO -->
+        <entity-condition entity-name="ProductAndAssocAll" list="productAndAssocList">
+            <condition-list>
+                <condition-expr field-name="productIdTo" from-field="productId"/>
+                <condition-expr field-name="productTypeId" value="MARKETING_PKG_AUTO"/>
+                <condition-expr field-name="productAssocTypeId" value="MANUF_COMPONENT"/>
+            </condition-list>
+        </entity-condition>
+        <if-not-empty field="productAndAssocList">
+            <iterate list="productAndAssocList" entry="productAndAssoc">
+                <log level="info" message="Updating MARKETING_PKG_AUTO product '${productAndAssoc.productId}' lastInventoryCount after inventory change to component '${productId}'"/>
+                <clear-field field="serviceInMap"/>
+                <set field="serviceInMap.productId" from-field="productAndAssoc.productId"/>
+                <!-- FIXME?: not supported
+                <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>-->
+                <call-service service-name="setProductLastInventoryCount" in-map-name="serviceInMap"/>
+            </iterate>
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="setProductLastInventoryCount" short-description="Service that updates stock availability of products (SCIPIO)">
         <set field="productId" from-field="parameters.productId"/>

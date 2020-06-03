@@ -35,6 +35,26 @@ public class ShoppingCartChangeVerifier implements RequestHandlerHooks.HookHandl
         getInstance().verifyCarts(request, eventName);
     }
 
+    /** Call this any place a CartUpdate section should always exist to log error/warning in case missing (like an assert statement). */
+    public static boolean verifySectionInPlace(HttpServletRequest request) {
+        boolean inPlace = CartUpdate.isSectionInPlace();
+        if (!inPlace) {
+            String msg = "CartUpdate section was expected at this point" + (request != null ? " during request [" + request.getPathInfo() + "]" : "");
+            Debug.log(LOG_LEVEL, new CartUpdate.CartUpdateSectionNotInPlaceException(msg), msg, module);
+        }
+        return inPlace;
+    }
+
+    /** Call this any place a CartUpdate section should always exist to log error/warning in case missing (like an assert statement). */
+    public static boolean verifySectionInPlace() {
+        boolean inPlace = CartUpdate.isSectionInPlace();
+        if (!inPlace) {
+            String msg = "CartUpdate section was expected at this point";
+            Debug.log(LOG_LEVEL, new CartUpdate.CartUpdateSectionNotInPlaceException(msg), msg, module);
+        }
+        return inPlace;
+    }
+
     static ShoppingCartChangeVerifier getInstance() {
         return INSTANCE;
     }

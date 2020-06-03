@@ -449,4 +449,20 @@ public class CartUpdate implements AutoCloseable {
     public static boolean isCartCopiesEnabled() {
         return CART_COPIES_ENABLED;
     }
+
+    public static boolean isSectionInPlace() { return (currentStatus.get() != null); }
+
+    public static class CartUpdateException extends IllegalStateException {
+        public CartUpdateException() {}
+        public CartUpdateException(String s) { super(s); }
+        public CartUpdateException(String message, Throwable cause) { super(message, cause); }
+        public CartUpdateException(Throwable cause) { super(cause); }
+    }
+
+    public static class CartUpdateSectionNotInPlaceException extends CartUpdateException {
+        public CartUpdateSectionNotInPlaceException() {}
+        public CartUpdateSectionNotInPlaceException(String s) { super(s); }
+        public CartUpdateSectionNotInPlaceException(String message, Throwable cause) { super(message, cause); }
+        public CartUpdateSectionNotInPlaceException(Throwable cause) { super(cause); }
+    }
 }

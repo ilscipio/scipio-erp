@@ -1471,7 +1471,7 @@ code package.
             <call-simple-method method-name="setRelatedProductLastInventoryCount"/>
         </if-compare>-->
     </simple-method>
-    <simple-method method-name="setRelatedProductLastInventoryCount"><!-- SCIPIO -->
+    <simple-method method-name="setRelatedProductLastInventoryCount"><!-- SCIPIO: TODO: REVIEW: This may be wrong logic for productTypeId, to be reviewed -->
         <entity-condition entity-name="ProductAndAssocAll" list="productAndAssocList">
             <condition-list>
                 <condition-expr field-name="productIdTo" from-field="productId"/>

@@ -19,9 +19,11 @@
         <field name="productName" position="2">
             <lookup target-form-name="LookupProduct"></lookup>
         </field>
+        <field name="productName_op"><hidden value="contains"/></field>
          <field name="productId" title="${uiLabelMap.CommonId}" position="1">
             <lookup target-form-name="LookupProduct"></lookup>
         </field>
+        <field name="internalName_op"><hidden value="contains"/></field>
         <field name="productTypeId" title="${uiLabelMap.CommonType}"  position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">

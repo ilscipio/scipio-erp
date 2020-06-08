@@ -376,7 +376,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return valuesList;
     }
 
-    private long findSizeInBytes(Object o) {
+    private long findSizeInBytes(Object o, Object key) { // SCIPIO: Added key and improved logging
         if (o == null) {
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Found null object in cache: " + getName(), module);
@@ -388,26 +388,33 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
                 return UtilObject.getByteCount(o);
             }
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Unable to compute memory size for non serializable object; returning 0 byte size for object of " + o.getClass(), module);
+                Debug.logVerbose("Unable to compute memory size for non serializable object; returning 0 byte size for object of " + o.getClass()
+                        + " for key '" + key + "' in cache: " + getName(), module);
             }
             return 0;
         } catch (NotSerializableException e) {
             // this happens when we try to get the byte count for an object which itself is
             // serializable, but fails to be serialized, such as a map holding unserializable objects
             if (Debug.warningOn()) {
-                Debug.logWarning("NotSerializableException while computing memory size; returning 0 byte size for object of " + e.getMessage(), module);
+                Debug.logWarning("NotSerializableException while computing memory size; returning 0 byte size for object of " + e.getMessage()
+                        + " for key '" + key + "' in cache: " + getName(), module);
             }
             return 0;
         } catch (Exception e) {
-            Debug.logWarning(e, "Unable to compute memory size for object of " + o.getClass(), module);
+            Debug.logWarning(e, "Unable to compute memory size for object of " + o.getClass()
+                    + " for key '" + key + "' in cache: " + getName(), module);
             return 0;
         }
     }
 
     public long getSizeInBytes() {
         long totalSize = 0;
-        for (CacheLine<V> line: memoryTable.values()) {
-            totalSize += findSizeInBytes(line.getValue());
+        // SCIPIO: Include key for debugging
+        //for (CacheLine<V> line: memoryTable.values()) {
+        //    totalSize += findSizeInBytes(line.getValue());
+        //}
+        for (Map.Entry<Object, CacheLine<V>> lineEntry : memoryTable.entrySet()) {
+            totalSize += findSizeInBytes(lineEntry.getValue().getValue(), lineEntry.getKey());
         }
         return totalSize;
     }
@@ -720,7 +727,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         if (line.getLoadTimeNanos() > 0) {
             lineInfo.put("expireTimeMillis", TimeUnit.MILLISECONDS.convert(line.getExpireTimeNanos() - System.nanoTime(), TimeUnit.NANOSECONDS));
         }
-        lineInfo.put("lineSize", findSizeInBytes(line.getValue()));
+        lineInfo.put("lineSize", findSizeInBytes(line.getValue(), key)); // SCIPIO: pass key
         lineInfo.put("keyNum", keyNum);
         return lineInfo;
     }

@@ -19,8 +19,10 @@
 package org.ofbiz.entity;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1570,6 +1572,11 @@ public class GenericDelegator implements Delegator {
             ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
             dummyValue = GenericValue.create(modelEntity);
             ecaRunner.evalRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, false);
+
+            // SCIPIO: Freemarker non-serializable class and storage in cache workaround
+            if (orderBy != null && !(orderBy instanceof Serializable)) {
+                orderBy = new ArrayList<>(orderBy);
+            }
 
             List<GenericValue> cacheList = this.cache.get(entityName, entityCondition, orderBy);
             if (cacheList != null) {

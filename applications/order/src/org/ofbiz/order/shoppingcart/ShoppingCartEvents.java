@@ -2051,8 +2051,15 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
+        // SCIPIO: 06-08-20: Getting these two fields from request attributes when the come as null from request parameters.
         String orderId = request.getParameter("orderId");
+        if (UtilValidate.isEmpty(orderId) && UtilValidate.isNotEmpty(request.getAttribute("orderId"))) {
+            orderId = (String) request.getAttribute("orderId");
+        }
         String createAsNewOrder = request.getParameter("createAsNewOrder");
+        if (UtilValidate.isEmpty(createAsNewOrder) && UtilValidate.isNotEmpty(request.getAttribute("createAsNewOrder"))) {
+            createAsNewOrder = (String) request.getAttribute("createAsNewOrder");
+        }
 
         ShoppingCart cart = null;
         try {

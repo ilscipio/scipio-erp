@@ -24,6 +24,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1598,6 +1599,10 @@ public class GenericDelegator implements Delegator {
             if (useCache) {
                 ecaRunner.evalRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, false);
                 this.cache.put(entityName, entityCondition, orderBy, list);
+                // SCIPIO: Do not allow callers to modify the entity cache lists in place. This should have been here from the start.
+                // NOTE: This is also done in EntityListCache but for consistency and correct error detection we have to do it here too
+                // (EntityListCache is responsible for ensuring for now).
+                list = Collections.unmodifiableList(list);
             }
             TransactionUtil.commit(beganTransaction);
             return list;

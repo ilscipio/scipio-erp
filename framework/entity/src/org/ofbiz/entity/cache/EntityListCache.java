@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.entity.cache;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,8 @@ public class EntityListCache extends AbstractEntityConditionCache<Object, List<G
                 // the result will be exactly the same, and won't actually cause any
                 // incorrect results.
                 valueList = EntityUtil.orderBy(valueList, orderBy);
+                // SCIPIO: Do not allow callers to modify the entity cache lists in place. This should have been here from the start.
+                valueList = Collections.unmodifiableList(valueList);
                 conditionCache.put(orderByKey, valueList);
             }
         }
@@ -80,6 +84,16 @@ public class EntityListCache extends AbstractEntityConditionCache<Object, List<G
         }
         for (GenericValue memberValue : entities) {
             memberValue.setImmutable();
+        }
+        // SCIPIO: Do not allow callers to modify the entity cache lists in place. This should have been here from the start.
+        // TODO: REVIEW: unmodifiableList is also done in duplicate in GenericDelegator#findList because this class will be responsible anyway
+        //  if we decide to make an array copy/trim to minimize memory usage and correctness (cpu vs memory), but we'll omit copy in the common case for now
+        //  since we know GenericDelegator#findList is nice and these can be large copies (even if arraycopy).
+        //entities = Collections.unmodifiableList(new ArrayList<>(entities));
+        if (entities instanceof ArrayList) {
+            entities = Collections.unmodifiableList(entities);
+        } else {
+            entities = Collections.unmodifiableList(new ArrayList<>(entities));
         }
         Map<Object, List<GenericValue>> conditionCache = getOrCreateConditionCache(entityName, getFrozenConditionKey(condition));
         return conditionCache.put(getOrderByKey(orderBy), entities);

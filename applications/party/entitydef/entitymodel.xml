@@ -3198,17 +3198,17 @@ code package.
       <prim-key field="serverHostName"/>
       <prim-key field="date"/>-->
       <prim-key field="statsId"/>
-      <index name="HITBCKT_FROM">
-        <index-field name="serverName" />
+      <index name="HITBCKT_DATE">
+        <index-field name="serverHostName"/>
+        <index-field name="date"/>
+      </index>
+      <index name="HITBCKT_FROMDATE">
+        <index-field name="serverHostName"/>
         <index-field name="fromDate"/>
       </index>
-      <index name="HITBCKT_FROM">
-        <index-field name="serverName" />
+      <index name="HITBCKT_THRUDATE">
+        <index-field name="serverHostName"/>
         <index-field name="thruDate"/>
-      </index>
-      <index name="HITBCKT_DATE">
-        <index-field name="serverName" />
-        <index-field name="date"/>
       </index>
     </entity>
 

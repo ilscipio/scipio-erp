@@ -47,6 +47,7 @@ import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericEntityConfException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.config.model.EntityConfig;
@@ -2369,7 +2370,14 @@ public class DatabaseUtil {
     }
 
     public String createDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
-        String createIndexSql = makeIndexClause(entity, modelIndex);
+        String createIndexSql = null;
+        try {
+            createIndexSql = makeIndexClause(entity, modelIndex);
+        } catch (Exception e) { // SCIPIO: Do this here so a single error doesn't ruin all indexes
+            String errMsg = "Error while making index clause for index [" + modelIndex.getName() + "]: " + e.getMessage();
+            Debug.logError(e, errMsg, module);
+            return errMsg;
+        }
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql, module);
 
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
@@ -2386,7 +2394,7 @@ public class DatabaseUtil {
         return null;
     }
 
-    public String makeIndexClause(ModelEntity entity, ModelIndex modelIndex) {
+    public String makeIndexClause(ModelEntity entity, ModelIndex modelIndex) throws GenericEntityConfException { // SCIPIO: May throw
         StringBuilder mainCols = new StringBuilder();
 
         for (ModelIndex.Field field : modelIndex.getFields()) {
@@ -2398,7 +2406,11 @@ public class DatabaseUtil {
                 mainCols.append(function.toString()).append('(');
             }
             ModelField mainField = entity.getField(field.getFieldName());
-            mainCols.append(mainField.getColName());
+            if (mainField != null) { // SCIPIO: Missing check causing unexplainable NPE
+                mainCols.append(mainField.getColName());
+            } else {
+                throw new GenericEntityConfException("Field name [" + field.getFieldName() + "] not found in entity [" + entity.getEntityName() + "]");
+            }
             if (function != null) {
                 mainCols.append(')');
             }

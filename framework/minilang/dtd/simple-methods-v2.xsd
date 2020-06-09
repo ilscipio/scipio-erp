@@ -888,6 +888,18 @@ under the License.
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="clone-list" substitutionGroup="EnvOperations">
+        <xs:annotation>
+            <xs:documentation>
+                Creates a copy of the given list, similar to list-to-list, but if to-list is not specified it creates a copy in-place (SCIPIO).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="list" type="xs:string" use="required" />
+            <xs:attribute name="to-list" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="map-to-map" substitutionGroup="EnvOperations">
         <xs:annotation>
             <xs:documentation>

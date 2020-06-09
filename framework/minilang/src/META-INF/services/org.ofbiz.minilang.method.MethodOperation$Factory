@@ -70,6 +70,7 @@ org.ofbiz.minilang.method.envops.Break$BreakFactory
 org.ofbiz.minilang.method.envops.CheckErrors$CheckErrorsFactory
 org.ofbiz.minilang.method.envops.CheckId$CheckIdFactory
 org.ofbiz.minilang.method.envops.ClearField$ClearFieldFactory
+org.ofbiz.minilang.method.envops.CloneList$CloneListFactory
 org.ofbiz.minilang.method.envops.Continue$ContinueFactory
 org.ofbiz.minilang.method.envops.CreateObject$CreateObjectFactory
 org.ofbiz.minilang.method.envops.FieldToList$FieldToListFactory

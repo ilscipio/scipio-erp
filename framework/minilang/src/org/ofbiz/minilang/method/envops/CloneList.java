@@ -18,9 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.minilang.method.envops;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.MiniLangValidate;
@@ -29,62 +26,66 @@ import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Implements the &lt;list-to-list&gt; element.
- *
- * @see <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Mini+Language+-+minilang+-+simple-method+-+Reference">Mini-language Referenc</a>
+ * Implements the &lt;clone-list&gt; element (SCIPIO).
  */
-public final class ListToList extends MethodOperation {
+public final class CloneList extends MethodOperation {
 
     private final FlexibleMapAccessor<List<Object>> listFma;
     private final FlexibleMapAccessor<List<Object>> toListFma;
 
-    public ListToList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
+    public CloneList(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
             MiniLangValidate.attributeNames(simpleMethod, element, "to-list", "list");
-            MiniLangValidate.requiredAttributes(simpleMethod, element, "to-list", "list");
+            MiniLangValidate.requiredAttributes(simpleMethod, element, "list");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "to-list", "list");
             MiniLangValidate.noChildElements(simpleMethod, element);
         }
-        toListFma = FlexibleMapAccessor.getInstance(element.getAttribute("to-list"));
-        listFma = FlexibleMapAccessor.getInstance(element.getAttribute("list"));
+        FlexibleMapAccessor<List<Object>> toListFma = FlexibleMapAccessor.getInstance(element.getAttribute("to-list"));
+        this.toListFma = toListFma.isEmpty() ? null : toListFma;
+        this.listFma = FlexibleMapAccessor.getInstance(element.getAttribute("list"));
     }
 
     @Override
     public boolean exec(MethodContext methodContext) throws MiniLangException {
         List<Object> fromList = listFma.get(methodContext.getEnvMap());
         if (fromList != null) {
-            List<Object> toList = toListFma.get(methodContext.getEnvMap());
-            if (toList == null) {
-                toList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
+            List<Object> toList = new ArrayList<>(fromList);
+            if (toListFma != null) {
                 toListFma.put(methodContext.getEnvMap(), toList);
+            } else {
+                listFma.put(methodContext.getEnvMap(), toList);
             }
-            toList.addAll(fromList);
         }
         return true;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("<list-to-list ");
-        sb.append("to-list=\"").append(this.toListFma).append("\" ");
+        StringBuilder sb = new StringBuilder("<clone-list ");
+        if (toListFma!= null) {
+            sb.append("to-list=\"").append(this.toListFma).append("\" ");
+        }
         sb.append("list=\"").append(this.listFma).append("\" />");
         return sb.toString();
     }
 
     /**
-     * A factory for the &lt;list-to-list&gt; element.
+     * A factory for the &lt;clone-list&gt; element.
      */
-    public static final class ListToListFactory implements Factory<ListToList> {
+    public static final class CloneListFactory implements Factory<CloneList> {
         @Override
-        public ListToList createMethodOperation(Element element, SimpleMethod simpleMethod) throws MiniLangException {
-            return new ListToList(element, simpleMethod);
+        public CloneList createMethodOperation(Element element, SimpleMethod simpleMethod) throws MiniLangException {
+            return new CloneList(element, simpleMethod);
         }
 
         @Override
         public String getName() {
-            return "list-to-list";
+            return "clone-list";
         }
     }
 }

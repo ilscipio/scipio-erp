@@ -2564,10 +2564,10 @@ public class OrderReadHelper {
             try {
                 productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", orderHeader.getString("productStoreId")).cache().queryOne();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot locate ProductStore from OrderHeader", module);
+                Debug.logError(e, "Cannot locate ProductStore from OrderHeader for orderId [" + orderHeader.get("orderId") + "]", module);
             }
         } else {
-            Debug.logError("Null header or productStoreId", module);
+            Debug.logError("Null header or productStoreId for orderId [" + orderHeader.get("orderId") + "]", module);
         }
         return productStore;
     }

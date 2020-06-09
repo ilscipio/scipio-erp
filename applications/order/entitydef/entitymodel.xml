@@ -2601,7 +2601,8 @@ code package.
             <index-field name="orderItemSeqId"/>
         </index>
         <index name="RTN_ITM_LSTUPDATED">
-          <index-field name="-lastUpdatedStamp"/>
+          <!-- SCIPIO: TODO: REVIEW: expression not recognized by system
+          <index-field name="-lastUpdatedStamp"/>-->
           <index-field name="statusId"/>
           <index-field name="returnTypeId"/>
           <index-field name="returnReasonId"/>

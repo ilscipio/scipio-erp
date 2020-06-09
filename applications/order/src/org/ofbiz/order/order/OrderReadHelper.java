@@ -2511,7 +2511,7 @@ public class OrderReadHelper {
             try {
                 orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get order header", module);
+                Debug.logError(e, "Cannot get order header for orderId [" + orderId + "]", module); // SCIPIO: Improved logging
             }
         }
         return orderHeader;
@@ -2549,7 +2549,7 @@ public class OrderReadHelper {
     public static GenericValue getProductStoreFromOrder(Delegator delegator, String orderId) {
         GenericValue orderHeader = getOrderHeader(delegator, orderId);
         if (orderHeader == null) {
-            Debug.logWarning("Could not find OrderHeader for orderId [" + orderId + "] in getProductStoreFromOrder, returning null", module);
+            Debug.logError("Could not find OrderHeader for orderId [" + orderId + "] in getProductStoreFromOrder, returning null", module); // SCIPIO: Changed to error, why ever?
         }
         return getProductStoreFromOrder(orderHeader);
     }

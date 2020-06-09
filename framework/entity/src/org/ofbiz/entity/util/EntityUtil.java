@@ -444,13 +444,17 @@ public final class EntityUtil {
         if (values == null) return null;
         if (values.isEmpty()) return new ArrayList<T>();
         if (UtilValidate.isEmpty(orderBy)) {
-            List<T> newList = new ArrayList<T>();
-            newList.addAll(values);
-            return newList;
+            // SCIPIO: Optimized
+            //List<T> newList = new ArrayList<T>();
+            //newList.addAll(values);
+            //return newList;
+            return new ArrayList<T>(values);
         }
 
-        List<T> result = new ArrayList<T>();
-        result.addAll(values);
+        // SCIPIO: Optimized
+        //List<T> result = new ArrayList<T>();
+        //result.addAll(values);
+        List<T> result = new ArrayList<T>(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByList(orderBy));
         return result;

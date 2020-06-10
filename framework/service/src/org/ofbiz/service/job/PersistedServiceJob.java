@@ -107,16 +107,16 @@ public class PersistedServiceJob extends GenericServiceJob {
         Timestamp startTime = jobValue.getTimestamp("startDateTime");
         if (cancelTime != null || startTime != null) {
             // job not available
-            throw new InvalidJobException("Job [" + getJobId() + "] is not available");
+            throw new InvalidJobException("Job [" + toLogId() + "] is not available"); // SCIPIO: improved logging
         }
         jobValue.set("statusId", "SERVICE_QUEUED");
         try {
             jobValue.store();
         } catch (GenericEntityException e) {
-            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
+            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + toLogId() + "]; not running!", e); // SCIPIO: improved logging
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Placing job [" + getJobId() + "] in queue", module);
+            Debug.logVerbose("Placing job [" + toLogId() + "] in queue", module); // SCIPIO: improved logging
         }
     }
 
@@ -133,17 +133,17 @@ public class PersistedServiceJob extends GenericServiceJob {
         }
         if (jobValue.getTimestamp("cancelDateTime") != null) {
             // Job cancelled
-            throw new InvalidJobException("Job [" + getJobId() + "] was cancelled");
+            throw new InvalidJobException("Job [" + toLogId() + "] was cancelled"); // SCIPIO: improved logging
         }
         jobValue.set("startDateTime", UtilDateTime.nowTimestamp());
         jobValue.set("statusId", "SERVICE_RUNNING");
         try {
             jobValue.store();
         } catch (GenericEntityException e) {
-            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + getJobId() + "]; not running!", e);
+            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + toLogId() + "]; not running!", e); // SCIPIO: improved logging
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Job [" + getJobId() + "] running", module);
+            Debug.logVerbose("Job [" + toLogId() + "] running", module); // SCIPIO: improved logging
         }
         // configure any additional recurrences
         long maxRecurrenceCount = -1;
@@ -153,8 +153,8 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (recurrence != null) {
             // SCIPIO: In all likelihood we will never deprecate the old RecurrenceInfo code, and we have stock seed/demo
             // data using it, so this should not be a warning for us.
-            //Debug.logWarning("Persisted Job [" + getJobId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
-            Debug.logInfo("Persisted Job [" + getJobId() + "] references a RecurrenceInfo (recommend using TemporalExpression instead)", module);
+            //Debug.logWarning("Persisted Job [" + toLogId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            Debug.logInfo("Persisted Job [" + toLogId() + "] references a RecurrenceInfo (recommend using TemporalExpression instead)", module); // SCIPIO: improved logging
             currentRecurrenceCount = recurrence.getCurrentCount();
             expr = RecurrenceInfo.toTemporalExpression(recurrence);
         }
@@ -191,9 +191,9 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (Debug.infoOn()) {
             // SCIPIO: 2018-10-17: detect -1 case and try to make this less confusing
             // NOTE: this is only called in GenericServiceJob.exec, so we can say "Running Job" here, should be always true...
-            //Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
-            Debug.logInfo("Running Job [" + getJobName() + "] Id ["  + getJobId() + "] Service [" + getServiceName() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
-                    + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module);
+            //Debug.logInfo("Job  [" + toLogId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+            Debug.logInfo("Running Job [" + toLogId() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: "
+                    + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module); // SCIPIO: improved logging
         }
     }
 
@@ -261,7 +261,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         try {
             jobValue.store();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot update the job [" + getJobId() + "] sandbox", module);
+            Debug.logError(e, "Cannot update the job [" + toLogId() + "] sandbox", module); // SCIPIO: improved logging
         }
     }
 
@@ -286,18 +286,18 @@ public class PersistedServiceJob extends GenericServiceJob {
                 try {
                     cal.add(Calendar.MINUTE, ServiceConfigUtil.getServiceEngine().getThreadPool().getFailedRetryMin());
                 } catch (GenericConfigException e) {
-                    Debug.logWarning(e, "Unable to get retry minutes for job [" + getJobId() + "], defaulting to now: ", module);
+                    Debug.logWarning(e, "Unable to get retry minutes for job [" + toLogId() + "], defaulting to now: ", module); // SCIPIO: improved logging
                 }
                 long next = cal.getTimeInMillis();
                 try {
                     createRecurrence(next, true);
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to re-schedule job [" + getJobId() + "]: ", module);
+                    Debug.logError(e, "Unable to re-schedule job [" + toLogId() + "]: ", module); // SCIPIO: improved logging
                 }
                 // SCIPIO: 2018-10-17: display friendly Date format (not just the long value)
-                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + new Date(next) + " (" + next + ")", module);
+                Debug.logInfo("Persisted Job [" + toLogId() + "] Failed. Re-Scheduling : " + new Date(next) + " (" + next + ")", module); // SCIPIO: improved logging
             } else {
-                Debug.logWarning("Persisted Job [" + getJobId() + "] Failed. Max Retry Hit, not re-scheduling", module);
+                Debug.logWarning("Persisted Job [" + toLogId() + "] Failed. Max Retry Hit, not re-scheduling", module); // SCIPIO: improved logging
             }
         }
         // set the failed status
@@ -312,7 +312,7 @@ public class PersistedServiceJob extends GenericServiceJob {
     }
 
     @Override
-    protected String getServiceName() {
+    public String getServiceName() { // SCIPIO: Now public
         if (jobValue == null || jobValue.get("serviceName") == null) {
             return null;
         }
@@ -418,15 +418,20 @@ public class PersistedServiceJob extends GenericServiceJob {
             jobValue.set("statusId", "SERVICE_PENDING");
             jobValue.store();
         } catch (GenericEntityException e) {
-            throw new InvalidJobException("Unable to dequeue job [" + getJobId() + "]", e);
+            throw new InvalidJobException("Unable to dequeue job [" + toLogId() + "]", e); // SCIPIO: improved logging
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Job [" + getJobId() + "] not queued, rescheduling", module);
+            Debug.logVerbose("Job [" + toLogId() + "] not queued, rescheduling", module); // SCIPIO: improved logging
         }
     }
 
     @Override
     public Date getStartTime() {
         return new Date(startTime);
+    }
+
+    @Override
+    public String getJobType() { // SCIPIO
+        return "persisted";
     }
 }

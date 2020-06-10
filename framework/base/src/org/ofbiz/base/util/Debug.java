@@ -126,12 +126,18 @@ public final class Debug {
         }
     }
 
-    /** Gets an Integer representing the level number from a String representing the level name; will return null if not found */
+    /** Gets an Integer representing the level number from a String representing the level name; will return null if not found. */
     public static Integer getLevelFromString(String levelName) {
         if (levelName == null) {
             return null;
         }
         return levelStringMap.get(levelName.toLowerCase(Locale.getDefault()));
+    }
+
+    /** Gets an Integer representing the level number from a String representing the level name; will return default value if not found (SCIPIO). */
+    public static Integer getLevelFromString(String levelName, Integer defaultLevel) {
+        Integer level = getLevelFromString(levelName);
+        return (level != null) ? level : defaultLevel;
     }
 
     public static void log(int level, Throwable t, String msg, String module) {
@@ -481,6 +487,10 @@ public final class Debug {
             return log4jLogger.getName().hashCode();
         }
 
+        public void log(int level, String msg) {
+            log(level, null, msg, "org.ofbiz.base.util.Debug$OfbizLogger", emptyParams);
+        }
+
         public void log(int level, Throwable t, String msg) {
             log(level, t, msg, "org.ofbiz.base.util.Debug$OfbizLogger", emptyParams);
         }
@@ -751,6 +761,10 @@ public final class Debug {
      * NOTE: 2018-05-24: For the foreseeable future, it is recommended to use these
      * instead of the OfbizLogger methods, for consistency reason. These do not add any overhead.
      */
+
+    public static void log(int level, String msg, OfbizLogger logger) {
+        log(level, null, msg, logger, "org.ofbiz.base.util.Debug", emptyParams);
+    }
 
     public static void log(int level, Throwable t, String msg, OfbizLogger logger) {
         log(level, t, msg, logger, "org.ofbiz.base.util.Debug", emptyParams);

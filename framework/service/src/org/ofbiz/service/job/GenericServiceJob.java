@@ -136,14 +136,16 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
 
     /**
      * Gets the name of the service as defined in the definition file.
+     * SCIPIO: Now public.
      * @return The name of the service to be invoked.
      */
-    protected String getServiceName() {
+    @Override
+    public String getServiceName() {
         return service;
     }
 
     /**
-     * SCIPIO: Returns the service model
+     * Returns the service model (SCIPIO).
      */
     protected ModelService getModelService() throws GenericServiceException {
         String serviceName = getServiceName();
@@ -158,6 +160,11 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     @Override
     public void deQueue() throws InvalidJobException {
         super.deQueue();
-        throw new InvalidJobException("Unable to queue job [" + getJobId() + "]");
+        throw new InvalidJobException("Unable to queue job [" + toLogId() + "]"); // SCIPIO: improved logging
+    }
+
+    @Override
+    public String getJobType() { // SCIPIO
+        return "generic";
     }
 }

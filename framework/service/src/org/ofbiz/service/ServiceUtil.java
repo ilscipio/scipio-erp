@@ -56,6 +56,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
 
 import com.ibm.icu.util.Calendar;
+import org.ofbiz.service.job.Job;
 
 /**
  * Generic Service Utility Class
@@ -777,7 +778,7 @@ public final class ServiceUtil {
                             beganTx2 = TransactionUtil.begin();
                             job.remove();
                         } catch (GenericEntityException e) {
-                            Debug.logInfo("Cannot remove job data for ID: " + jobId, module);
+                            Debug.logInfo("Cannot remove job data for job [" + Job.toLogId(job) + "]", module); // SCIPIO: improved logging
                             try {
                                 TransactionUtil.rollback(beganTx2, e.getMessage(), e);
                             } catch (GenericTransactionException e1) {

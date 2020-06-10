@@ -65,7 +65,7 @@ public class PurgeJob extends AbstractJob implements Serializable {
                     relatedValue.remove();
                 }
             }
-            Debug.logInfo("Purged job " + getJobId(), module);
+            Debug.logInfo("Purged job " + toLogId(), module); // SCIPIO: improved logging
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Exception thrown while purging job: ", module);
         }
@@ -81,5 +81,18 @@ public class PurgeJob extends AbstractJob implements Serializable {
         if (currentState != State.QUEUED) {
             throw new InvalidJobException("Illegal state change");
         }
+    }
+
+    @Override
+    public String getServiceName() { // SCIPIO
+        if (jobValue == null || jobValue.get("serviceName") == null) {
+            return null;
+        }
+        return jobValue.getString("serviceName");
+    }
+
+    @Override
+    public String getJobType() { // SCIPIO
+        return "purge";
     }
 }

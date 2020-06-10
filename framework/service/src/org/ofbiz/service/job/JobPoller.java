@@ -20,6 +20,7 @@ package org.ofbiz.service.job;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.service.config.ServiceConfigListener;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceConfig;
@@ -48,36 +50,47 @@ import org.ofbiz.service.config.model.ThreadPool;
 public final class JobPoller implements ServiceConfigListener {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final AtomicInteger created = new AtomicInteger();
-    private static final ConcurrentHashMap<String, JobManager> jobManagers = new ConcurrentHashMap<>();
-    private static final ThreadPoolExecutor executor = createThreadPoolExecutor();
-    private static final JobPoller instance = new JobPoller();
+
+    private static final JobPoller INSTANCE = new JobPoller();
+
+    // SCIPIO: Changed these and methods to instance members (bad statics)
+    private final AtomicInteger created = new AtomicInteger();
+    private final ConcurrentHashMap<String, JobManager> jobManagers = new ConcurrentHashMap<>();
+    private final ThreadPoolExecutor executor = createThreadPoolExecutor();
+    private final Thread jobManagerPollerThread;
+
+    // SCIPIO: Debug logging controls
+    private final long noCapacityWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.noCapacityWarnInterval", -1);
+    private final boolean noCapacityWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.noCapacityWarnInterval.verbose", false);
+    private final long pollSleepWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.pollSleepWarnInterval", -1);
+    private final boolean pollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.pollSleepWarnInterval.verbose", false);
+    private final long startupPollSleepWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.startupPollSleepWarnInterval", -1);
+    private final boolean startupPollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.startupPollSleepWarnInterval.verbose", false);
 
     /**
      * Returns the <code>JobPoller</code> instance.
      */
     public static JobPoller getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
-    private static ThreadPoolExecutor createThreadPoolExecutor() {
+    private ThreadPoolExecutor createThreadPoolExecutor() {
         try {
-            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.getEngine()).getThreadPool();
+            ThreadPool threadPool = getThreadPoolConfig();
             return new ThreadPoolExecutor(threadPool.getMinThreads(), threadPool.getMaxThreads(), threadPool.getTtl(),
-                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(threadPool.getJobs()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(threadPool.getJobs()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         } catch (GenericConfigException e) {
             Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> values: ", module);
             return new ThreadPoolExecutor(ThreadPool.MIN_THREADS, ThreadPool.MAX_THREADS, ThreadPool.THREAD_TTL,
-                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(ThreadPool.QUEUE_SIZE), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.QUEUE_SIZE), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         }
     }
 
-    private static int pollWaitTime() {
+    private int pollWaitTime() { // SCIPIO: Simplified
         try {
-            ThreadPool threadPool = ServiceConfigUtil.getServiceEngine(ServiceConfigUtil.getEngine()).getThreadPool();
-            return threadPool.getPollDbMillis();
+            return getThreadPoolConfig().getPollDbMillis();
         } catch (GenericConfigException e) {
-            Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> values: ", module);
+            Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> value for poll wait time (" + ThreadPool.POLL_WAIT + ")", module);
             return ThreadPool.POLL_WAIT;
         }
     }
@@ -88,14 +101,10 @@ public final class JobPoller implements ServiceConfigListener {
      * @param jm The <code>JobManager</code> to register.
      * @throws IllegalArgumentException if <code>jm</code> is null
      */
-    public static void registerJobManager(JobManager jm) {
+    public void registerJobManager(JobManager jm) {
         Assert.notNull("jm", jm);
         jobManagers.putIfAbsent(jm.getDelegator().getDelegatorName(), jm);
     }
-
-    // -------------------------------------- //
-
-    private final Thread jobManagerPollerThread;
 
     private JobPoller() {
         if (pollEnabled()) {
@@ -118,17 +127,7 @@ public final class JobPoller implements ServiceConfigListener {
         Map<String, Object> taskInfo = null;
         for (Runnable task : queue) {
             Job job = (Job) task;
-            taskInfo = new HashMap<>();
-            taskInfo.put("id", job.getJobId());
-            taskInfo.put("name", job.getJobName());
-            String serviceName = "";
-            if (job instanceof GenericServiceJob) {
-                serviceName = ((GenericServiceJob) job).getServiceName();
-            }
-            taskInfo.put("serviceName", serviceName);
-            taskInfo.put("time", job.getStartTime());
-            taskInfo.put("runtime", job.getRuntime());
-            taskList.add(taskInfo);
+            taskList.add(job.toTaskInfoMap()); // SCIPIO: Refactored
         }
         poolState.put("taskList", taskList);
         return poolState;
@@ -146,7 +145,27 @@ public final class JobPoller implements ServiceConfigListener {
         poolState.put("maxNumberOfInvokerThreads", executor.getMaximumPoolSize());
         poolState.put("greatestNumberOfInvokerThreads", executor.getLargestPoolSize());
         poolState.put("numberOfCompletedTasks", executor.getCompletedTaskCount());
+        // SCIPIO
+        poolState.put("remainingCapacity", executor.getQueue().remainingCapacity());
+        poolState.put("queueSize", executor.getQueue().size());
         return poolState;
+    }
+
+    public ThreadPool getThreadPoolConfig() throws GenericConfigException { // SCIPIO
+        return ServiceConfigUtil.getServiceEngine().getThreadPool();
+    }
+
+    public Map<String, Object> getThreadPoolConfigMap() { // SCIPIO
+        try {
+            return getThreadPoolConfig().toMap();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, module);
+            return Collections.emptyMap();
+        }
+    }
+
+    protected String toLogPoolConfigStr(boolean verbose) { // SCIPIO: Debug logging
+        return "; config: " + getThreadPoolConfigMap() + "; state: " + (verbose ? getPoolState() : getGeneralPoolState());
     }
 
     @Override
@@ -161,9 +180,9 @@ public final class JobPoller implements ServiceConfigListener {
 
     private boolean pollEnabled() {
         try {
-            return ServiceConfigUtil.getServiceEngine().getThreadPool().getPollEnabled();
+            return getThreadPoolConfig().getPollEnabled();
         } catch (GenericConfigException e) {
-            Debug.logWarning(e, "Exception thrown while getting configuration: ", module);
+            Debug.logError(e, "Exception thrown while getting thread pool configuration for poll enabled", module); // SCIPIO: switched to error
             return false;
         }
     }
@@ -177,8 +196,16 @@ public final class JobPoller implements ServiceConfigListener {
         job.queue();
         try {
             executor.execute(job);
-        } catch (Exception e) {
-            Debug.logError("Could not execute job [id: " + job.getJobId() + ", name: " + job.getJobName() + "]: " + e.toString(), module); // SCIPIO: Added missing error log
+        } catch (RejectedExecutionException e) { // SCIPIO: NOTE: This happens normally, as other comments indicate
+            if (JobManager.isDebug()) {
+                Debug.log(JobManager.getDebugProblemLevel(), "Job [" + job.toLogId() + "] execution rejected by thread pool, will be dequeued and rescheduled: " + e.toString()
+                        + toLogPoolConfigStr(false), module);
+            } else {
+                Debug.logInfo("Job [" + job.toLogId() + "] execution rejected by thread pool, will be dequeued and rescheduled: " + e.toString() + toLogPoolConfigStr(false), module);
+            }
+            job.deQueue();
+        } catch (Exception e) { // SCIPIO: Treat anything else as error
+            Debug.logError("Job [" + job.toLogId() + "] execution failed, will be dequeued and rescheduled: " + e.toString() + toLogPoolConfigStr(false), module);
             job.deQueue();
         }
     }
@@ -194,18 +221,21 @@ public final class JobPoller implements ServiceConfigListener {
         }
         List<Runnable> queuedJobs = executor.shutdownNow();
         for (Runnable task : queuedJobs) {
+            Job queuedJob = (Job) task;
             try {
-                Job queuedJob = (Job) task;
                 queuedJob.deQueue();
             } catch (Exception e) {
-                Debug.logWarning(e, module);
+                if (JobManager.isDebug()) { // SCIPIO: improved logging
+                    Debug.log(JobManager.getDebugProblemLevel(), "Problem while dequeueing job [" + queuedJob.toLogId() + "]: " + e.toString(), module);
+                } else {
+                    Debug.logWarning("Problem while dequeueing job [" + queuedJob.toLogId() + "]: " + e.toString(), module);
+                }
             }
         }
         Debug.logInfo("JobPoller shutdown completed.", module);
     }
 
-    private static class JobInvokerThreadFactory implements ThreadFactory {
-
+    private class JobInvokerThreadFactory implements ThreadFactory {
         public Thread newThread(Runnable runnable) {
             return new Thread(runnable, "Scipio-JobQueue-" + created.getAndIncrement());
         }
@@ -213,17 +243,43 @@ public final class JobPoller implements ServiceConfigListener {
 
     // Polls all registered JobManagers for jobs to queue.
     private class JobManagerPoller implements Runnable {
+        private volatile long lastCapacityFoundTime = 0; // SCIPIO
 
         // Do not check for interrupts in this method. The design requires the
         // thread to complete the job manager poll uninterrupted.
         public void run() {
-            Debug.logInfo("JobPoller thread started.", module);
+            Debug.logInfo("JobPoller thread started; pool config: " + getThreadPoolConfigMap(), module);
             try {
-                while (Start.getInstance().getCurrentState() != Start.ServerState.RUNNING) {
-                    Thread.sleep(1000);
+                if (JobManager.isDebug() && startupPollSleepWarnInterval > 0) { // SCIPIO
+                    long sleepStart = System.currentTimeMillis();
+                    while (Start.getInstance().getCurrentState() != Start.ServerState.RUNNING) {
+                        Thread.sleep(1000);
+                    }
+                    long realSleepTime = System.currentTimeMillis() - sleepStart;
+                    if (realSleepTime > startupPollSleepWarnInterval) {
+                        Debug.log(JobManager.getDebugProblemLevel(), "Polling thread sleep exceeded expected time at startup, took "
+                                + realSleepTime + "ms, limit " + startupPollSleepWarnInterval + "ms" + toLogPoolConfigStr(startupPollSleepWarnIntervalVerbose), module);
+                    }
+                } else {
+                    while (Start.getInstance().getCurrentState() != Start.ServerState.RUNNING) {
+                        Thread.sleep(1000);
+                    }
                 }
                 while (!executor.isShutdown()) {
                     int remainingCapacity = executor.getQueue().remainingCapacity();
+                    if (JobManager.isDebug() && noCapacityWarnInterval > 0) { // SCIPIO
+                        if (remainingCapacity > 0 || lastCapacityFoundTime <= 0) {
+                            lastCapacityFoundTime = System.currentTimeMillis();
+                        } else {
+                            long capacityFoundTimeElapsed = System.currentTimeMillis() - lastCapacityFoundTime;
+                            if (capacityFoundTimeElapsed >= noCapacityWarnInterval) {
+                                Debug.log(JobManager.getDebugProblemLevel(), "No available thread queue capacity for "
+                                        + capacityFoundTimeElapsed + "ms, limit " + noCapacityWarnInterval  + "ms"
+                                        + "; " + jobManagers.size() + " JobManagers" + toLogPoolConfigStr(noCapacityWarnIntervalVerbose), module);
+                                lastCapacityFoundTime = System.currentTimeMillis();
+                            }
+                        }
+                    }
                     if (remainingCapacity > 0) {
                         // Build "list of lists"
                         Collection<JobManager> jmCollection = jobManagers.values();
@@ -260,7 +316,17 @@ public final class JobPoller implements ServiceConfigListener {
                             }
                         }
                     }
-                    Thread.sleep(pollWaitTime());
+                    if (JobManager.isDebug() && pollSleepWarnInterval > 0) { // SCIPIO
+                        long sleepStart = System.currentTimeMillis();
+                        Thread.sleep(pollWaitTime());
+                        long realSleepTime = System.currentTimeMillis() - sleepStart;
+                        if (realSleepTime > pollSleepWarnInterval) {
+                            Debug.log(JobManager.getDebugProblemLevel(), "Polling thread sleep exceeded expected time, took "
+                                    + realSleepTime + "ms, limit " + pollSleepWarnInterval + "ms" + toLogPoolConfigStr(pollSleepWarnIntervalVerbose), module);
+                        }
+                    } else {
+                        Thread.sleep(pollWaitTime());
+                    }
                 }
             } catch (InterruptedException e) {
                 // Happens when JobPoller shuts down - nothing to do.

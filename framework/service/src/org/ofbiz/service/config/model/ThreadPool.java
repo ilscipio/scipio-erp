@@ -20,8 +20,10 @@ package org.ofbiz.service.config.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.lang.ThreadSafe;
@@ -221,5 +223,24 @@ public final class ThreadPool {
 
     public int getTtl() {
         return ttl;
+    }
+
+    public Map<String, Object> toMap(Map<String, Object> map) { // SCIPIO
+        map.put("failedRetryMin", failedRetryMin);
+        map.put("jobs", jobs);
+        map.put("maxThreads", maxThreads);
+        map.put("minThreads", minThreads);
+        map.put("pollDbMillis", pollDbMillis);
+        map.put("pollEnabled", pollEnabled);
+        map.put("purgeJobDays", purgeJobDays);
+        //map.put("runFromPools", runFromPools);
+        map.put("runFromPoolNames", runFromPoolNames);
+        map.put("sendToPool", sendToPool);
+        map.put("ttl", ttl);
+        return map;
+    }
+
+    public Map<String, Object> toMap() { // SCIPIO
+        return toMap(new HashMap<>());
     }
 }

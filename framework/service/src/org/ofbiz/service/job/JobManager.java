@@ -52,10 +52,9 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
-import org.ofbiz.service.config.ServiceConfigUtil;
-import org.ofbiz.service.config.model.RunFromPool;
 
 import com.ibm.icu.util.Calendar;
+import org.ofbiz.service.config.model.ThreadPool;
 
 /**
  * Job manager. The job manager queues and manages jobs. Client code can queue a job to be run immediately
@@ -73,10 +72,12 @@ public final class JobManager {
     public static final String instanceId = GeneralConfig.getInstanceId(); // SCIPIO: Moved
     private static final ConcurrentHashMap<String, JobManager> registeredManagers = new ConcurrentHashMap<>();
     private static boolean isShutDown = false;
-    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug", false); // SCIPIO
-    private static final boolean DEBUG_DETAILED = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.detailed", false); // SCIPIO
-    private static final long debugPollMinInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.minInterval", 0); // SCIPIO
-    private static volatile long debugPollLastTimestamp = 0;
+    // SCIPIO
+    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug", false);
+    private static final int DEBUG_PROBLEM_LEVEL = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "jobManager.debug.problemLogLevel"), Debug.WARNING);
+    private static final long debugPollLogInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.logInterval", -1);
+    private static final boolean debugPollLogIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.logInterval.verbose", false);
+    private static volatile long debugPollLogLastTimestamp = 0;
 
     private static void assertIsRunning() {
         if (isShutDown) {
@@ -99,7 +100,7 @@ public final class JobManager {
             registeredManagers.putIfAbsent(delegator.getDelegatorName(), jm);
             jm = registeredManagers.get(delegator.getDelegatorName());
             if (enablePoller) {
-                JobPoller.registerJobManager(jm);
+                jm.getJobPoller().registerJobManager(jm); // SCIPIO: Refactored to defeat static
             }
         }
         return jm;
@@ -139,13 +140,17 @@ public final class JobManager {
         return thisDispatcher;
     }
 
+    protected JobPoller getJobPoller() { // SCIPIO
+        return JobPoller.getInstance();
+    }
+
     /**
      * Get a List of each threads current state.
      *
      * @return List containing a Map of each thread's state.
      */
     public Map<String, Object> getPoolState() {
-        return JobPoller.getInstance().getPoolState();
+        return getJobPoller().getPoolState();
     }
 
     /**
@@ -154,7 +159,15 @@ public final class JobManager {
      * @return List containing a Map of general thread pool stats.
      */
     public Map<String, Object> getGeneralPoolState() {
-        return JobPoller.getInstance().getGeneralPoolState();
+        return getJobPoller().getGeneralPoolState();
+    }
+
+    public ThreadPool getThreadPoolConfig() throws GenericConfigException { // SCIPIO
+        return getJobPoller().getThreadPoolConfig();
+    }
+
+    public Map<String, Object> getThreadPoolConfigMap() { // SCIPIO
+        return getJobPoller().getThreadPoolConfigMap();
     }
 
     /**
@@ -174,20 +187,20 @@ public final class JobManager {
                     ), EntityJoinOperator.AND);
             return delegator.findCountByCondition("JobManagerLock", condition, null, null) == 0;
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Exception thrown while check lock on JobManager : " + instanceId, module);
+            Debug.logError(e, "Exception thrown while check lock on JobManager : " + instanceId, module); // SCIPIO: switched to error
             return false;
         }
     }
 
-    private static List<String> getRunPools() throws GenericConfigException {
+    private List<String> getRunPools() throws GenericConfigException {
         // SCIPIO: improved
-        //List<RunFromPool> runFromPools = ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPools();
+        //List<RunFromPool> runFromPools = getThreadPoolConfig().getRunFromPools();
         //List<String> readPools = new ArrayList<>(runFromPools.size());
         //for (RunFromPool runFromPool : runFromPools) {
         //    readPools.add(runFromPool.getName());
         //}
         //return readPools;
-        return ServiceConfigUtil.getServiceEngine().getThreadPool().getRunFromPoolNames();
+        return getThreadPoolConfig().getRunFromPoolNames();
     }
 
     /**
@@ -202,7 +215,7 @@ public final class JobManager {
         // connection is not available (possible on a saturated server).
         DispatchContext dctx = getDispatcher().getDispatchContext();
         if (dctx == null) {
-            Debug.logWarning("Unable to locate DispatchContext object; not running job!", module);
+            Debug.logError("Unable to locate DispatchContext object; not running job!", module); // SCIPIO: switched to error
             return Collections.emptyList();
         }
         // basic query
@@ -215,7 +228,7 @@ public final class JobManager {
         try {
             pools = getRunPools();
         } catch (GenericConfigException e) {
-            Debug.logWarning(e, "Unable to get run pools - not running job: ", module);
+            Debug.logError(e, "Unable to get run pools - not running job: ", module); // SCIPIO: switched to error
             return Collections.emptyList();
         }
         List<EntityExpr> poolsExpr = UtilMisc.toList(EntityCondition.makeCondition("poolId", EntityOperator.EQUALS, null));
@@ -241,7 +254,7 @@ public final class JobManager {
             try {
                 beganTransaction = TransactionUtil.begin();
                 if (!beganTransaction) {
-                    Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
+                    Debug.logError("Unable to poll JobSandbox for jobs; unable to begin transaction.", module); // SCIPIO: switched to error
                     return poll;
                 }
 
@@ -253,7 +266,7 @@ public final class JobManager {
                         ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
 
                         if (Debug.infoOn()) {
-                            Debug.logInfo("Scipio: Collected " + poll.size() +
+                            Debug.logInfo("Collected " + poll.size() +
                                     " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
                         }
                     }
@@ -270,7 +283,7 @@ public final class JobManager {
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, "Exception thrown while rolling back transaction: ", module);
                 }
-                Debug.logWarning(t, errMsg, module);
+                Debug.logError(t, errMsg, module); // SCIPIO: switched to error
                 return Collections.emptyList();
             }
         }
@@ -279,7 +292,7 @@ public final class JobManager {
         try {
             beganTransaction = TransactionUtil.begin();
             if (!beganTransaction) {
-                Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
+                Debug.logError("Unable to poll JobSandbox for jobs; unable to begin transaction.", module); // SCIPIO: switched to error
                 return poll;
             }
 
@@ -299,7 +312,7 @@ public final class JobManager {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Exception thrown while rolling back transaction: ", module);
             }
-            Debug.logWarning(t, errMsg, module);
+            Debug.logError(t, errMsg, module); // SCIPIO: switched to error
             return Collections.emptyList();
         }
         boolean noJobs = poll.isEmpty(); // SCIPIO
@@ -307,10 +320,10 @@ public final class JobManager {
             // No jobs to run, see if there are any jobs to purge
             Calendar cal = Calendar.getInstance();
             try {
-                int daysToKeep = ServiceConfigUtil.getServiceEngine().getThreadPool().getPurgeJobDays();
+                int daysToKeep = getThreadPoolConfig().getPurgeJobDays();
                 cal.add(Calendar.DAY_OF_YEAR, -daysToKeep);
             } catch (GenericConfigException e) {
-                Debug.logWarning(e, "Unable to get purge job days: ", module);
+                Debug.logError(e, "Unable to get purge job days: ", module); // SCIPIO: switched to error
                 return Collections.emptyList();
             }
             Timestamp purgeTime = new Timestamp(cal.getTimeInMillis());
@@ -322,7 +335,7 @@ public final class JobManager {
             try {
                 beganTransaction = TransactionUtil.begin();
                 if (!beganTransaction) {
-                    Debug.logWarning("Unable to poll JobSandbox for jobs; unable to begin transaction.", module);
+                    Debug.logError("Unable to poll JobSandbox for jobs; unable to begin transaction.", module); // SCIPIO: switched to error
                     return Collections.emptyList();
                 }
                 try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("jobId").maxRows(limit).queryIterator()) { // SCIPIO: maxRows
@@ -346,17 +359,17 @@ public final class JobManager {
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, "Exception thrown while rolling back transaction: ", module);
                 }
-                Debug.logWarning(t, errMsg, module);
+                Debug.logError(t, errMsg, module); // SCIPIO: switched to error
                 return Collections.emptyList();
             }
         }
         // SCIPIO
-        if (DEBUG) {
+        if (isDebug() && debugPollLogInterval >= 0) {
             long currentTimestamp = System.currentTimeMillis();
-            if ((currentTimestamp - debugPollLastTimestamp) >= debugPollMinInterval) {
-                debugPollLastTimestamp = currentTimestamp;
-                String msg = noJobs ? "No jobs to run; purging " + poll.size() + " jobs; " : "Polled " + poll.size() + " jobs ";
-                msg += "[run-from-pool: " + pools + ", thread pool: " + (DEBUG_DETAILED ? getPoolState() : getGeneralPoolState()) + "]";
+            if ((currentTimestamp - debugPollLogLastTimestamp) > debugPollLogInterval) {
+                debugPollLogLastTimestamp = currentTimestamp;
+                String msg = (noJobs ? "No jobs to run; purging " + poll.size() + " jobs" : "Polled " + poll.size() + " jobs")
+                    + getJobPoller().toLogPoolConfigStr(debugPollLogIntervalVerbose);
                 Debug.logInfo(msg, module);
             }
         }
@@ -425,7 +438,7 @@ public final class JobManager {
         try {
             crashed = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("startDateTime").queryList();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Unable to load crashed jobs", module);
+            Debug.logError(e, "Unable to load crashed jobs", module); // SCIPIO: switched to error
         }
         if (UtilValidate.isNotEmpty(crashed)) {
             int rescheduled = 0;
@@ -463,8 +476,9 @@ public final class JobManager {
                         }
                         delegator.createSetNextSeqId(newJob);
                     } else {
-                        if (Debug.infoOn()) Debug.logInfo("Scipio: Not rescheduling crashed job '" + job.getString("jobId") +
-                                "' with event ID '" + job.getString("eventId") + "'", module);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Scipio: Not rescheduling crashed job [" + Job.toLogId(job) + "] for event [" + job.getString("eventId") + "]", module);
+                        }
                     }
 
                     // set the cancel time on the old job to the same as the re-schedule time
@@ -473,7 +487,7 @@ public final class JobManager {
                     delegator.store(job);
                     rescheduled++;
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
+                    Debug.logError(e, module); // SCIPIO: switched to error
                 }
             }
             if (Debug.infoOn()) {
@@ -494,7 +508,7 @@ public final class JobManager {
     public void runJob(Job job) throws JobManagerException {
         assertIsRunning();
         if (job.isValid()) {
-            JobPoller.getInstance().queueNow(job);
+            getJobPoller().queueNow(job);
         }
     }
 
@@ -642,7 +656,7 @@ public final class JobManager {
             runtimeData = delegator.createSetNextSeqId(runtimeData);
             dataId = runtimeData.getString("runtimeDataId");
             if (errorMessageList.size() > 0) {
-                Debug.logError("Persisted job [jobName=" + jobName + ", service=" + serviceName + "] error: " + errorMessageList.size()
+                Debug.logError("Persisted job [" + Job.toLogId(null, jobName, serviceName, "persisted") + "] error: " + errorMessageList.size()
                 + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
             }
         } catch (GenericEntityException e) { //  | SerializeException | IOException e
@@ -738,7 +752,7 @@ public final class JobManager {
             jFields.put("poolId", poolName);
         } else {
             try {
-                jFields.put("poolId", ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool());
+                jFields.put("poolId", getThreadPoolConfig().getSendToPool());
             } catch (GenericConfigException e) {
                 throw new JobManagerException(e.getMessage(), e);
             }
@@ -788,5 +802,15 @@ public final class JobManager {
     public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
             int count, long endTime, int maxRetry) throws JobManagerException {
         schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+    }
+
+    /** Returns true if service.properties#jobManager.debug=true or verbose logging enabled (SCIPIO). */
+    public static boolean isDebug() {
+        return DEBUG || Debug.verboseOn();
+    }
+
+    /** Returns service.properties#jobManager.debug.problemLogLevel as Debug class level (SCIPIO). */
+    public static int getDebugProblemLevel() {
+        return DEBUG_PROBLEM_LEVEL;
     }
 }

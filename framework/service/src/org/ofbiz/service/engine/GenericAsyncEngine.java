@@ -123,7 +123,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 String jobName = Long.toString(System.currentTimeMillis());
 
                 if (errorMessageList.size() > 0) { // SCIPIO
-                    Debug.logError("Persisted job [jobName=" + jobName + ", service=" + modelService.name + "] error: " + errorMessageList.size()
+                    Debug.logError("Persisted job [name=" + jobName + ", service=" + modelService.name + "] error: " + errorMessageList.size()
                         + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
                 }
 

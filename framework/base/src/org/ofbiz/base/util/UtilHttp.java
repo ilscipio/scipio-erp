@@ -31,10 +31,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -2181,6 +2183,27 @@ public final class UtilHttp {
         for(Map.Entry<String, ?> entry : attrMap.entrySet()) {
             request.setAttribute(entry.getKey(), entry.getValue());
         }
+    }
+
+    /**
+     * SCIPIO: Returns all headers in the request.
+     */
+    public static Map<String, List<String>> getHeaderMap(HttpServletRequest request) {
+        Map<String, List<String>> headerMap = new LinkedHashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) { // NOTE: null never happens with tomcat but API allows null
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement();
+                Enumeration<String> headers = request.getHeaders(headerName);
+                if (headers != null) {
+                    List<String> headerList = Collections.list(headers);
+                    if (!headerList.isEmpty()) { // NOTE: This shouldn't happen either, just in case
+                        headerMap.put(headerName, headerList);
+                    }
+                }
+            }
+        }
+        return headerMap;
     }
 
     /**

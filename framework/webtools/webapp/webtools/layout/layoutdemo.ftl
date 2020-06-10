@@ -238,6 +238,10 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 
 <#if debugMode>
 
+<@section title="HTTP Headers (HttpServletRequest)">
+    ${escapeVal(UtilHttp.getHeaderMap(request), 'htmlmarkup')}
+</@section>
+
 <@section title="runExampleCtrlInlineGroovy">
     <a href="<@pageUrl uri='runExampleCtrlInlineGroovy'/>">Click to run (reloads page)</a>
 </@section>

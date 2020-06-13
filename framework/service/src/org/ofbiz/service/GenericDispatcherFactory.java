@@ -23,6 +23,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.job.JobInfo;
 
 /**
  * A default {@link LocalDispatcherFactory} implementation.
@@ -137,7 +138,7 @@ public class GenericDispatcherFactory implements LocalDispatcherFactory {
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
             // clone the model service for updates
             ModelService cloned = new ModelService(service);
@@ -148,55 +149,55 @@ public class GenericDispatcherFactory implements LocalDispatcherFactory {
             if (transactionTimeout != -1) {
                 cloned.transactionTimeout = transactionTimeout;
             }
-            dispatcher.runAsync(this.name, cloned, context, requester, persist);
+            return dispatcher.runAsync(this.name, cloned, context, requester, persist);
         }
 
         @Override
-        public void runAsync(String serviceName, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, ServiceUtil.makeContext(context), requester, persist, transactionTimeout, requireNewTransaction);
+        public JobInfo runAsync(String serviceName, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, ServiceUtil.makeContext(context), requester, persist, transactionTimeout, requireNewTransaction);
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
-            dispatcher.runAsync(this.name, service, context, requester, persist);
+            return dispatcher.runAsync(this.name, service, context, requester, persist);
         }
 
         @Override
-        public void runAsync(String serviceName, GenericRequester requester, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, ServiceUtil.makeContext(context), requester, persist);
+        public JobInfo runAsync(String serviceName, GenericRequester requester, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, ServiceUtil.makeContext(context), requester, persist);
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, context, requester, true);
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, context, requester, true);
         }
 
         @Override
-        public void runAsync(String serviceName, GenericRequester requester, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, ServiceUtil.makeContext(context), requester);
+        public JobInfo runAsync(String serviceName, GenericRequester requester, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, ServiceUtil.makeContext(context), requester);
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
-            dispatcher.runAsync(this.name, service, context, persist);
+            return dispatcher.runAsync(this.name, service, context, persist);
         }
 
         @Override
-        public void runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, ServiceUtil.makeContext(context), persist);
+        public JobInfo runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, ServiceUtil.makeContext(context), persist);
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
-            dispatcher.runAsync(this.name, service, context, persist, jobPool); // SCIPIO: jobPool
+            return dispatcher.runAsync(this.name, service, context, persist, jobPool); // SCIPIO: jobPool
         }
 
         @Override
-        public void runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-            runAsync(serviceName, context, true);
+        public JobInfo runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+            return runAsync(serviceName, context, true);
         }
 
         @Override

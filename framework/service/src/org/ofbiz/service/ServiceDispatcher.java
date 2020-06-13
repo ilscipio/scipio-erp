@@ -54,6 +54,7 @@ import org.ofbiz.service.engine.GenericEngine;
 import org.ofbiz.service.engine.GenericEngineFactory;
 import org.ofbiz.service.group.ServiceGroupReader;
 import org.ofbiz.service.jms.JmsListenerFactory;
+import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 import org.ofbiz.service.semaphore.ServiceSemaphore;
@@ -662,8 +663,8 @@ public class ServiceDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        runAsync(localName, service, params, requester, persist, null);
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return runAsync(localName, service, params, requester, persist, null);
     }
 
     /**
@@ -674,11 +675,13 @@ public class ServiceDispatcher {
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @param persist True for store/run; False for run.
      * @param jobPool Optional specific job pool (SCIPIO)
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        JobInfo job; // SCIPIO
         if (Debug.timingOn()) {
             UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
         }
@@ -775,11 +778,14 @@ public class ServiceDispatcher {
                 // run the service
                 if (!isError && !isFailure) {
                     if (requester != null) {
-                        engine.runAsync(localName, service, context, requester, persist, jobPool); // SCIPIO: jobPool
+                        job = engine.runAsync(localName, service, context, requester, persist, jobPool); // SCIPIO: jobPool
                     } else {
-                        engine.runAsync(localName, service, context, persist, jobPool); // SCIPIO: jobPool
+                        job = engine.runAsync(localName, service, context, persist, jobPool); // SCIPIO: jobPool
                     }
                     engine.sendCallbacks(service, context, GenericEngine.ASYNC_MODE);
+                } else {
+                    // SCIPIO: TODO: REVIEW: No exception here? How did caller previously know his invocation failed?
+                    job = new JobInfo.UnscheduledJobInfo(service.name, "in-validate service ECA failed: " + ServiceUtil.getErrorMessage(result));
                 }
 
                 if (Debug.timingOn()) {
@@ -829,6 +835,7 @@ public class ServiceDispatcher {
                 }
             }
         }
+        return job;
     }
 
     /**
@@ -837,12 +844,13 @@ public class ServiceDispatcher {
      * @param service Service model object.
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        this.runAsync(localName, service, context, null, persist, null);
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return this.runAsync(localName, service, context, null, persist, null);
     }
 
     /**
@@ -852,12 +860,13 @@ public class ServiceDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
      * @param jobPool Optional specific job pool (SCIPIO)
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        this.runAsync(localName, service, context, null, persist, jobPool);
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return this.runAsync(localName, service, context, null, persist, jobPool);
     }
 
     /**

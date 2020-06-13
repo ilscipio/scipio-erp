@@ -24,6 +24,7 @@ import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.job.JobInfo;
 
 /**
  * InterfaceEngine.java
@@ -49,14 +50,14 @@ public class InterfaceEngine implements GenericEngine {
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
        throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
         throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
     }
 

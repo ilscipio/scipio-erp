@@ -63,6 +63,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.JmsService;
 import org.ofbiz.service.config.model.Server;
 import org.ofbiz.service.engine.AbstractEngine;
+import org.ofbiz.service.job.JobInfo;
 import org.w3c.dom.Element;
 
 /**
@@ -344,17 +345,20 @@ public class JmsServiceEngine extends AbstractEngine {
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        long startTime = System.currentTimeMillis();
         Map<String, Object> result = run(modelService, context);
-
         requester.receiveResult(result);
+        return new JmsJob(modelService, startTime); // SCIPIO
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
+        long startTime = System.currentTimeMillis();
         run(modelService, context);
+        return new JmsJob(modelService, startTime); // SCIPIO
     }
 
 }

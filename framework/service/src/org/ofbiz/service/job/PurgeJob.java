@@ -95,4 +95,14 @@ public class PurgeJob extends AbstractJob implements Serializable {
     public String getJobType() { // SCIPIO
         return "purge";
     }
+
+    @Override
+    public boolean isPersisted() { // SCIPIO
+        return true;
+    }
+
+    @Override
+    public GenericValue getJobValue() { // SCIPIO
+        return jobValue;
+    }
 }

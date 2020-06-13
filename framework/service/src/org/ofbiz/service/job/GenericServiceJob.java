@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
@@ -167,4 +168,15 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     public String getJobType() { // SCIPIO
         return "generic";
     }
+
+    @Override
+    public boolean isPersisted() { // SCIPIO
+        return false;
+    }
+
+    @Override
+    public GenericValue getJobValue() { // SCIPIO
+        return null;
+    }
+
 }

@@ -30,6 +30,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.service.jms.JmsListenerFactory;
+import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 
@@ -49,12 +50,12 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
-    public void schedule(String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
-        schedule(null, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry);
+    public JobInfo schedule(String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
+        return schedule(null, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry);
     }
 
-    public void schedule(String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException {
-        schedule(poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry);
+    public JobInfo schedule(String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException {
+        return schedule(poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry);
     }
 
     /**
@@ -63,7 +64,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
     @Override
-    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException {
+    public JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException {
+        JobInfo job; // SCIPIO
         Transaction suspendedTransaction = null;
         try {
             boolean beganTransaction = false;
@@ -71,7 +73,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             try {
                 beganTransaction = TransactionUtil.begin();
                 try {
-                    getJobManager().schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+                    job = getJobManager().schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, eventId);
 
                     if (Debug.verboseOn()) {
                         Debug.logVerbose("[LocalDispatcher.schedule] : Current time : " + (new Date()).getTime(), module);
@@ -87,8 +89,9 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
                 } catch (JobManagerException jme) {
                     throw new GenericServiceException(jme.getMessage(), jme);
                 }
-            } catch (RuntimeException e) {
-                throw e;
+            // SCIPIO: If you do this the transaction doesn't get rolled back!
+            //} catch (RuntimeException e) {
+            //    throw e;
             } catch (Exception e) {
                 String errMsg = "General error while scheduling job";
                 Debug.logError(e, errMsg, module);
@@ -97,6 +100,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
                 } catch (GenericTransactionException gte1) {
                     Debug.logError(gte1, "Unable to rollback transaction", module);
                 }
+                // SCIPIO: Throw exception: must throw here otherwise caller will never know his scheduling failed
+                throw new GenericServiceException(errMsg, e);
             } finally {
                 try {
                     TransactionUtil.commit(beganTransaction);
@@ -106,6 +111,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             }
         } catch (GenericTransactionException gte) {
             Debug.logError(gte, "Error suspending transaction while scheduling job", module);
+            // SCIPIO: Throw exception: must throw here otherwise caller will never know his scheduling failed
+            throw new GenericServiceException("Error suspending transaction while scheduling job", gte);
         } finally {
             if (suspendedTransaction != null) {
                 try {
@@ -115,18 +122,19 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
                 }
             }
         }
+        return job;
     }
 
     /**
      * SCIPIO: This is now a delegating method
      */
     @Override
-    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
-        schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+    public JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
+        return schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
     }
 
-    public void schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException {
-        schedule(jobName, poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+    public JobInfo schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException {
+        return schedule(jobName, poolName, serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime, maxRetry, (String) null);
     }
 
     public void addRollbackService(String serviceName, Map<String, ? extends Object> context, boolean persist) throws GenericServiceException {
@@ -153,46 +161,46 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int, long)
      */
-    public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
+    public JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
         ModelService model = ctx.getModelService(serviceName);
-        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime, model.maxRetry);
+        return schedule(null, serviceName, context, startTime, frequency, interval, count, endTime, model.maxRetry);
     }
 
-    public void schedule(String serviceName, long startTime, int frequency, int interval, int count, long endTime, Object... context) throws GenericServiceException {
-        schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime);
+    public JobInfo schedule(String serviceName, long startTime, int frequency, int interval, int count, long endTime, Object... context) throws GenericServiceException {
+        return schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count, endTime);
     }
 
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int)
      */
-    public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count) throws GenericServiceException {
-        schedule(serviceName, context, startTime, frequency, interval, count, 0);
+    public JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count) throws GenericServiceException {
+        return schedule(serviceName, context, startTime, frequency, interval, count, 0);
     }
 
-    public void schedule(String serviceName, long startTime, int frequency, int interval, int count, Object... context) throws GenericServiceException {
-        schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count);
+    public JobInfo schedule(String serviceName, long startTime, int frequency, int interval, int count, Object... context) throws GenericServiceException {
+        return schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, count);
     }
 
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, long)
      */
-    public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException {
-        schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
+    public JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException {
+        return schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
     }
 
-    public void schedule(String serviceName, long startTime, int frequency, int interval, long endTime, Object... context) throws GenericServiceException {
-        schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, endTime);
+    public JobInfo schedule(String serviceName, long startTime, int frequency, int interval, long endTime, Object... context) throws GenericServiceException {
+        return schedule(serviceName, ServiceUtil.makeContext(context), startTime, frequency, interval, endTime);
     }
 
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long)
      */
-    public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime) throws GenericServiceException {
-        schedule(serviceName, context, startTime, RecurrenceRule.DAILY, 1, 1);
+    public JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime) throws GenericServiceException {
+        return schedule(serviceName, context, startTime, RecurrenceRule.DAILY, 1, 1);
     }
 
-    public void schedule(String serviceName, long startTime, Object... context) throws GenericServiceException {
-        schedule(serviceName, ServiceUtil.makeContext(context), startTime);
+    public JobInfo schedule(String serviceName, long startTime, Object... context) throws GenericServiceException {
+        return schedule(serviceName, ServiceUtil.makeContext(context), startTime);
     }
 
     /**

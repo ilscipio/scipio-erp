@@ -23,6 +23,7 @@ import java.util.Map;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.jms.JmsListenerFactory;
+import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 
 /**
@@ -135,12 +136,13 @@ public interface LocalDispatcher {
      * @param persist True for store/run; False for run.
      * @param transactionTimeout the overriding timeout for the transaction (if we started it).
      * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-    void runAsync(String serviceName, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -148,12 +150,13 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @param persist True for store/run; False for run.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-    void runAsync(String serviceName, GenericRequester requester, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, GenericRequester requester, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -161,24 +164,26 @@ public interface LocalDispatcher {
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-    void runAsync(String serviceName, GenericRequester requester, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, GenericRequester requester, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously and IGNORE the result.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-    void runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously and IGNORE the result.
@@ -186,21 +191,23 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
      * @param jobPool Optional specific job pool (SCIPIO)
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously and IGNORE the result. This method WILL persist the job.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously.
@@ -244,12 +251,13 @@ public interface LocalDispatcher {
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
      * @param maxRetry The number of times we should retry on failure
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void schedule(String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException;
-    void schedule(String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
+    JobInfo schedule(String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException;
+    JobInfo schedule(String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -263,12 +271,13 @@ public interface LocalDispatcher {
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
      * @param maxRetry The number of times we should retry on failure
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException;
-    void schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
+    JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException;
+    JobInfo schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
 
     /**
      * SCIPIO: Schedule a service to run asynchronously at specified event
@@ -283,11 +292,12 @@ public interface LocalDispatcher {
      * @param endTime The time in milliseconds the service should expire
      * @param maxRetry The number of times we should retry on failure
      * @param eventId The ID of the triggering event
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException;
+    JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -298,10 +308,11 @@ public interface LocalDispatcher {
      * @param interval The interval of the frequency recurrence.
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws GenericServiceException
      */
-    void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException;
-    void schedule(String serviceName, long startTime, int frequency, int interval, int count, long endTime, Object... context) throws GenericServiceException;
+    JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException;
+    JobInfo schedule(String serviceName, long startTime, int frequency, int interval, int count, long endTime, Object... context) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -311,10 +322,11 @@ public interface LocalDispatcher {
      * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
      * @param interval The interval of the frequency recurrence.
      * @param count The number of times to repeat.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws GenericServiceException
      */
-    void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count) throws GenericServiceException;
-    void schedule(String serviceName, long startTime, int frequency, int interval, int count, Object... context) throws GenericServiceException;
+    JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count) throws GenericServiceException;
+    JobInfo schedule(String serviceName, long startTime, int frequency, int interval, int count, Object... context) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -324,21 +336,22 @@ public interface LocalDispatcher {
      * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
      * @param interval The interval of the frequency recurrence.
      * @param endTime The time in milliseconds the service should expire
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws GenericServiceException
      */
-    void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException;
-    void schedule(String serviceName, long startTime, int frequency, int interval, long endTime, Object... context) throws GenericServiceException;
+    JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException;
+    JobInfo schedule(String serviceName, long startTime, int frequency, int interval, long endTime, Object... context) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
      * @param serviceName Name of the service to invoke.
      * @param context The name/value pairs composing the context.
      * @param startTime The time to run this service.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws GenericServiceException
      */
-    void schedule(String serviceName, Map<String, ? extends Object> context, long startTime) throws GenericServiceException;
-    void schedule(String serviceName, long startTime, Object... context) throws GenericServiceException;
-
+    JobInfo schedule(String serviceName, Map<String, ? extends Object> context, long startTime) throws GenericServiceException;
+    JobInfo schedule(String serviceName, long startTime, Object... context) throws GenericServiceException;
 
     /**
      * Adds a rollback service to the current TX using ServiceSynchronization

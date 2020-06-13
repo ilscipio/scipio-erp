@@ -71,12 +71,10 @@ public class PersistedServiceJob extends GenericServiceJob {
     private final long startTime;
 
     /**
-     * Creates a new PersistedServiceJob
-     * @param dctx
-     * @param jobValue
-     * @param req
+     * Creates a new PersistedServiceJob.
+     * SCIPIO: minimalJob boolean indicates to avoid unnecessary lookups unnecessary for the basic Job interface (slight ofbiz kludge).
      */
-    public PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req) {
+    protected PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req, boolean minimalJob) {
         super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"), null, null, req);
         this.delegator = dctx.getDelegator();
         this.jobValue = jobValue;
@@ -87,9 +85,30 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (retryCount != null) {
             this.currentRetryCount = retryCount;
         } else {
-            // backward compatibility
-            this.currentRetryCount = getRetries(this.delegator);
+            if (minimalJob) {
+                this.currentRetryCount = 0;
+            } else {
+                // backward compatibility
+                this.currentRetryCount = getRetries(this.delegator);
+            }
         }
+    }
+
+    /**
+     * Creates a new PersistedServiceJob
+     * @param dctx
+     * @param jobValue
+     * @param req
+     */
+    public PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req) {
+        this(dctx, jobValue, req, false);
+    }
+
+    /**
+     * Makes a lightweight result job for the improved {@link org.ofbiz.service.LocalDispatcher} interface (SCIPIO).
+     */
+    public static PersistedServiceJob makeResultJob(DispatchContext dctx, GenericValue jobValue) {
+        return new PersistedServiceJob(dctx, jobValue, null, true);
     }
 
     @Override
@@ -433,5 +452,15 @@ public class PersistedServiceJob extends GenericServiceJob {
     @Override
     public String getJobType() { // SCIPIO
         return "persisted";
+    }
+
+    @Override
+    public boolean isPersisted() { // SCIPIO
+        return true;
+    }
+
+    @Override
+    public GenericValue getJobValue() { // SCIPIO
+        return jobValue;
     }
 }

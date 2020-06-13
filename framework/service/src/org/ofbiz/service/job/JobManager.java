@@ -642,8 +642,9 @@ public final class JobManager {
      *            The max number of retries on failure (-1 for no max)
      *@param eventId
      *            The triggering event
+     *@return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      */
-    public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
+    public JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
             int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
         // persist the context
         String dataId = null;
@@ -663,7 +664,7 @@ public final class JobManager {
             throw new JobManagerException(e.getMessage(), e);
         }
         // schedule the job
-        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+        return schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
     }
 
     /**
@@ -724,9 +725,10 @@ public final class JobManager {
      *            The max number of retries on failure (-1 for no max)
      *@param eventId
      *            The triggering event
+     *@return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws IllegalStateException if the Job Manager is shut down.
      */
-    public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
+    public JobInfo schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
             int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
         assertIsRunning();
         // create the recurrence
@@ -770,6 +772,7 @@ public final class JobManager {
         } catch (GenericEntityException e) {
             throw new JobManagerException(e.getMessage(), e);
         }
+        return PersistedServiceJob.makeResultJob(getDispatcher().getDispatchContext(), jobV); // SCIPIO
     }
 
     /**

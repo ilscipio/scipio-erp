@@ -39,8 +39,10 @@ import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.job.GenericServiceJob;
 import org.ofbiz.service.job.Job;
+import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
+import org.ofbiz.service.job.PersistedServiceJob;
 
 /**
  * Generic Asynchronous Engine
@@ -66,30 +68,30 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
-        runAsync(localName, modelService, context, null, persist, null);
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
+        return runAsync(localName, modelService, context, null, persist, null);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    final public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
-        runAsync(localName, modelService, context, requester, persist, null);
+    final public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        return runAsync(localName, modelService, context, requester, persist, null);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, boolean, String)
      */
-    final public void runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist, String jobPool) throws GenericServiceException {
-        runAsync(localName, modelService, context, null, persist, jobPool);
+    final public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist, String jobPool) throws GenericServiceException {
+        return runAsync(localName, modelService, context, null, persist, jobPool);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean, String)
      */
-    public void runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist, String jobPool) throws GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist, String jobPool) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
-        Job job = null;
+        JobInfo job;
 
         if (persist) {
             // check for a delegator
@@ -140,6 +142,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 jobV.create();
+                job = PersistedServiceJob.makeResultJob(dctx, jobV); // SCIPIO
             } catch (GenericEntityException e) {
                 throw new GenericServiceException("Unable to create persisted job", e);
             // SCIPIO: 2019-03-08: Try to absorb and log these errors as much as possible, but without crashing
@@ -162,19 +165,23 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                     String jobId = modelService.name + "." + name;
                     job = new GenericServiceJob(dctx, jobId, name, modelService.name, context, requester);
                     try {
-                        dispatcher.getJobManager().runJob(job);
+                        dispatcher.getJobManager().runJob((Job) job);
                     } catch (JobManagerException jse) {
                         throw new GenericServiceException("Cannot run job.", jse);
                     }
                 } else {
+                    // SCIPIO: TODO: REVIEW: Maybe this case should be handled by callers instead?
+                    String msg = "Not running async service '" + modelService.name + "' because job pool '" + jobPool + "' does not match instance run-from-pool configuration (serviceengine.xml)";
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Not running async service '" + modelService.name + "' because job pool '" + jobPool + "' does not match instance run-from-pool (serviceengine.xml)", module);
+                        Debug.logVerbose(msg, module);
                     }
+                    job = new JobInfo.UnscheduledJobInfo(modelService.name, msg);
                 }
             } else {
                 throw new GenericServiceException("Cannot get JobManager instance to invoke the job");
             }
         }
+        return job;
     }
 
     @Override

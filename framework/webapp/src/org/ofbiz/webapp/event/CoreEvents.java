@@ -51,6 +51,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceRule;
+import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.RequestHandler;
 
@@ -319,6 +320,7 @@ public class CoreEvents {
             return "error";
         }
 
+        JobInfo job = null; // SCIPIO
         Map<String, Object> syncServiceResult = null;
         // schedule service
         try {
@@ -329,18 +331,24 @@ public class CoreEvents {
                 // NOTE: Default for persist is False, because Job Manager is more intuitive in those cases
                 // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N"
                 // because in legacy code it would imply to use job scheduler.
-                dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
+                job = dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
                 String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo",
                         UtilMisc.toMap("serviceName", serviceName), locale);
                 syncServiceResult = ServiceUtil.returnSuccess(asyncMsg);
             } else {
                 // SCIPIO: now pass eventId
-                dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+                job = dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);
             }
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.service_dispatcher_exception", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg + e.getMessage());
             return "error";
+        }
+
+        if (job != null && job.isScheduled() && job.isPersisted()) { // SCIPIO: Set scheduled job ID
+            request.setAttribute("jobId", job.getJobId());
+            request.setAttribute("jobId_op", "equals");
+            request.setAttribute("noConditionFind", "Y");
         }
 
         String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.service_scheduled", locale);

@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
@@ -796,6 +797,22 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
                 cache.clear();
             }
         }
+    }
+
+    public static void clearKeysThatStartWithFromCache(String cacheName, String startsWithKey) {
+        try{
+            UtilCache cacheObj = utilCacheTable.get(cacheName);
+            cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
+                @Override
+                public boolean filter(String key, Object value) {
+                    return key.startsWith(startsWithKey);
+                }
+            });
+            Debug.logVerbose("HitCount",module);
+        }catch(Exception e){
+            Debug.logVerbose("Could not find or clear caches from cache "+cacheName,module);
+        }
+
     }
 
     public static void clearCache(String cacheName) {

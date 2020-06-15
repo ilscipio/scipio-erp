@@ -802,15 +802,17 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     public static void clearKeysThatStartWithFromCache(String cacheName, String startsWithKey) {
         try{
             UtilCache cacheObj = utilCacheTable.get(cacheName);
-            cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
-                @Override
-                public boolean filter(String key, Object value) {
-                    return key.startsWith(startsWithKey);
-                }
-            });
-            Debug.logVerbose("HitCount",module);
+            if(cacheObj!=null){
+                cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
+                    @Override
+                    public boolean filter(String key, Object value) {
+                        return key.startsWith(startsWithKey);
+                    }
+                });
+
+            }
         }catch(Exception e){
-            Debug.logVerbose("Could not find or clear caches from cache "+cacheName,module);
+            Debug.logWarning("Could not find or clear caches from cache "+cacheName,module);
         }
 
     }

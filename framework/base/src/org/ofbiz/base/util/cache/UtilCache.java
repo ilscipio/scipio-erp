@@ -817,6 +817,24 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     }
 
+    public static void clearKeysThatContainFromCache(String cacheName, String containsKey) {
+        try{
+            UtilCache cacheObj = utilCacheTable.get(cacheName);
+            if(cacheObj!=null){
+                cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
+                    @Override
+                    public boolean filter(String key, Object value) {
+                        return key.contains(containsKey);
+                    }
+                });
+
+            }
+        }catch(Exception e){
+            Debug.logWarning("Could not find or clear caches from cache "+cacheName,module);
+        }
+
+    }
+
     public static void clearCache(String cacheName) {
         UtilCache<?, ?> cache = findCache(cacheName);
         if (cache == null) {

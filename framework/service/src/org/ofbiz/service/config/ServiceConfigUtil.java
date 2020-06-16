@@ -23,10 +23,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ofbiz.base.config.GenericConfigException;
-import org.ofbiz.base.util.Assert;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.service.config.model.Engine;
 import org.ofbiz.service.config.model.ServiceConfig;
@@ -51,6 +48,7 @@ public final class ServiceConfigUtil {
     // Keep the ServiceConfig instance in a cache - so the configuration can be reloaded at run-time. There will be only one ServiceConfig instance in the cache.
     private static final UtilCache<String, ServiceConfig> serviceConfigCache = UtilCache.createUtilCache("service.ServiceConfig", 0, 0, false);
     private static final List<ServiceConfigListener> configListeners = new CopyOnWriteArrayList<ServiceConfigListener>();
+    private static boolean enableJMS = UtilProperties.getPropertyAsBoolean("service", "enableJMS", true);
 
     private ServiceConfigUtil() {}
 
@@ -140,5 +138,18 @@ public final class ServiceConfigUtil {
 
     public static String getServiceEngineXmlFileName() {
         return SERVICE_ENGINE_XML_FILENAME;
+    }
+
+    /*
+    * Check for jms availability
+    * */
+    public static boolean isJmsAvailable() {
+        try{
+            return (enableJMS && UtilValidate.isNotEmpty(ServiceConfigUtil.getServiceEngine().getJmsServices()));
+        }catch(Exception e){
+            Debug.logWarning("Error while trying to determine jms availability",module);
+        }
+
+        return false;
     }
 }

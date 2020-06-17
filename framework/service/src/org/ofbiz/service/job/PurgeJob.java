@@ -65,7 +65,7 @@ public class PurgeJob extends AbstractJob implements Serializable {
                     relatedValue.remove();
                 }
             }
-            Debug.logInfo("Purged job " + toLogId(), module); // SCIPIO: improved logging
+            Debug.logInfo("Purged job [" + toLogId() + "]", module); // SCIPIO: improved logging
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Exception thrown while purging job: ", module);
         }

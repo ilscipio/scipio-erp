@@ -223,8 +223,13 @@ public final class JobManager {
             Debug.logError("Unable to locate DispatchContext object; not running job!", module); // SCIPIO: switched to error
             return Collections.emptyList();
         }
+
+        // SCIPIO: helpers
+        CollectJobsResult jobsResult = new CollectJobsResult();
+        Timestamp now = UtilDateTime.nowTimestamp();
+
         // basic query
-        List<EntityExpr> expressions = UtilMisc.toList(EntityCondition.makeCondition("runTime", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()),
+        List<EntityExpr> expressions = UtilMisc.toList(EntityCondition.makeCondition("runTime", EntityOperator.LESS_THAN_EQUAL_TO, now),
                 EntityCondition.makeCondition("startDateTime", EntityOperator.EQUALS, null),
                 EntityCondition.makeCondition("cancelDateTime", EntityOperator.EQUALS, null),
                 EntityCondition.makeCondition("runByInstanceId", EntityOperator.EQUALS, null));
@@ -262,17 +267,25 @@ public final class JobManager {
                     Debug.logError("Unable to poll JobSandbox for jobs; unable to begin transaction.", module); // SCIPIO: switched to error
                     return poll;
                 }
-
-                try (EntityListIterator jobsIterator = queryStartupJobs(commonCondition)) {
+                EntityCondition startupCondition = EntityCondition.makeCondition(commonCondition, EntityOperator.AND, EntityCondition.makeCondition("eventId", "SCH_EVENT_STARTUP"));
+                // SCIPIO: ignore filter
+                String startupIgnoreFilterExpr = System.getProperty("scipio.job.startup.ignore.filter");
+                if (UtilValidate.isEmpty(startupIgnoreFilterExpr)) {
+                    startupIgnoreFilterExpr = EntityUtilProperties.getPropertyValue("service", "job.startup.ignore.filter", delegator);
+                }
+                EntityFilter startupIgnoreFilter = FlexibleEntityFilter.fromExpr(startupIgnoreFilterExpr,
+                        UtilMisc.toMap("delegator", delegator, "dispatcher", getDispatcher(), "nowTimestamp", now),
+                        "job");
+                try (EntityListIterator jobsIterator = queryStartupJobs(startupCondition)) {
                     // NOTE: due to synchronization, we could have null here
                     if (jobsIterator != null) {
                         // SCIPIO: FIXME?: We currently ignore the limit for the startup jobs;
                         // might want to find way to delay them to next poll, because we violate the limit request from caller...
-                        ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll);
-
+                        CollectJobsResult cjr = ownAndCollectJobs(dctx, delegator, -1, jobsIterator, poll, startupIgnoreFilter);
+                        jobsResult.add(cjr);
                         if (Debug.infoOn()) {
-                            Debug.logInfo("Collected " + poll.size() +
-                                    " SCH_EVENT_STARTUP run-at-startup jobs for queuing", module);
+                            Debug.logInfo("Polled startup jobs using condition [" + startupCondition + "] and job.startup.ignore.filter [" + startupIgnoreFilter
+                                    + "]: " + poll.size() + " jobs found, " + cjr.getIgnored() + " ignored", module);
                         }
                     }
                 }
@@ -303,7 +316,7 @@ public final class JobManager {
 
             try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").maxRows(limit).queryIterator()) { // SCIPIO: maxRows
                 // SCIPIO: factored out into method
-                ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll);
+                jobsResult.add(ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll, null));
             }
             //} catch (GenericEntityException e) { // SCIPIO: 2018-08-29: this catch is counter-productive
             //    Debug.logWarning(e, module);
@@ -386,11 +399,17 @@ public final class JobManager {
      * <p>
      * Factored out from {@link #poll}.
      */
-    protected void ownAndCollectJobs(DispatchContext dctx, Delegator delegator, int limit,
-            EntityListIterator jobsIterator, List<Job> poll) throws GenericEntityException {
+    protected CollectJobsResult ownAndCollectJobs(DispatchContext dctx, Delegator delegator, int limit,
+            EntityListIterator jobsIterator, List<Job> poll, EntityFilter ignoreFilter) throws GenericEntityException {
+        CollectJobsResult result = new CollectJobsResult();
         if (limit < 0 || poll.size() < limit) {
             GenericValue jobValue = jobsIterator.next();
             while (jobValue != null) {
+                // SCIPIO: filter
+                if (ignoreFilter != null && ignoreFilter.matches(jobValue)) {
+                    result.ignored++;
+                    continue;
+                }
                 // Claim ownership of this value. Using storeByCondition to avoid a race condition.
                 List<EntityExpr> updateExpression = UtilMisc.toList(EntityCondition.makeCondition("jobId", EntityOperator.EQUALS, jobValue.get("jobId")), EntityCondition.makeCondition("runByInstanceId", EntityOperator.EQUALS, null));
                 int rowsUpdated = delegator.storeByCondition("JobSandbox", UtilMisc.toMap("runByInstanceId", instanceId), EntityCondition.makeCondition(updateExpression));
@@ -402,6 +421,15 @@ public final class JobManager {
                 }
                 jobValue = jobsIterator.next();
             }
+        }
+        return result;
+    }
+
+    private static class CollectJobsResult {
+        int ignored = 0;
+        public int getIgnored() { return ignored; }
+        void add(CollectJobsResult other) {
+            ignored += other.ignored;
         }
     }
 
@@ -452,22 +480,26 @@ public final class JobManager {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to load crashed jobs", module); // SCIPIO: switched to error
         }
+
+        Timestamp now = UtilDateTime.nowTimestamp();
+        // SCIPIO: ignore filter
+        String ignoreFilterExpr = System.getProperty("scipio.job.crashed.ignore.filter");
+        if (UtilValidate.isEmpty(ignoreFilterExpr)) {
+            ignoreFilterExpr = EntityUtilProperties.getPropertyValue("service", "job.crashed.ignore.filter", delegator);
+        }
+        EntityFilter ignoreFilter = FlexibleEntityFilter.fromExpr(ignoreFilterExpr,
+                UtilMisc.toMap("delegator", delegator, "dispatcher", getDispatcher(), "nowTimestamp", now),
+                "job");
+        if (Debug.infoOn()) {
+            Debug.logInfo("Checking for crashed jobs using condition [" + mainCondition + "] and job.crashed.ignore.filter expression [" + ignoreFilter + "]: "
+                    + (crashed != null ? crashed.size() : 0) + " jobs found", module);
+        }
+
         if (UtilValidate.isNotEmpty(crashed)) {
             int rescheduled = 0;
             int ignored = 0; // SCIPIO
             int rescheduledRecurrenceQueued = 0; // SCIPIO
             int reschedulingErrors = 0;
-            Timestamp now = UtilDateTime.nowTimestamp();
-
-            // SCIPIO: ignore filter
-            String ignoreFilterExpr = System.getProperty("scipio.job.crashed.ignore.filter");
-            if (UtilValidate.isEmpty(ignoreFilterExpr)) {
-                ignoreFilterExpr = EntityUtilProperties.getPropertyValue("service", "job.crashed.ignore.filter", delegator);
-            }
-            EntityFilter ignoreFilter = FlexibleEntityFilter.fromExpr(ignoreFilterExpr,
-                    UtilMisc.toMap("delegator", delegator, "dispatcher", getDispatcher(), "nowTimestamp", now),
-                    "job");
-
             for (GenericValue job : crashed) {
                 try {
                     // SCIPIO: better below
@@ -569,9 +601,10 @@ public final class JobManager {
                         + reschedulingErrors + " re-scheduling errors", module);
             }
         } else {
-            if (Debug.infoOn()) {
-                Debug.logInfo("No crashed jobs to re-schedule", module);
-            }
+            // SCIPIO: Now redundant
+            //if (Debug.infoOn()) {
+            //    Debug.logInfo("No crashed jobs to re-schedule", module);
+            //}
         }
         crashedJobsReloaded = true;
     }

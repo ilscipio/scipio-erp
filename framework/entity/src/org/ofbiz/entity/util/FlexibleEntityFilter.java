@@ -1,6 +1,5 @@
 package org.ofbiz.entity.util;
 
-import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -26,18 +25,26 @@ public class FlexibleEntityFilter implements EntityFilter, Serializable {
     }
 
     public static EntityFilter fromExpr(FlexibleStringExpander matchesExpr, Map<String, Object> commonContext, String entityKey) {
-        return (matchesExpr != null && !matchesExpr.isEmpty()) ? new FlexibleEntityFilter(matchesExpr, commonContext, entityKey)
-                : EntityFilter.NONE;
+        EntityFilter filter = EntityFilter.checkAnyNoneFromExprOrNull(matchesExpr != null && !matchesExpr.isEmpty() ? matchesExpr.getOriginal() : null);
+        if (filter != null) {
+            return filter;
+        }
+        return new FlexibleEntityFilter(matchesExpr, commonContext, entityKey);
     }
 
     public static EntityFilter fromExpr(String matchesExpr, Map<String, Object> commonContext, String entityKey) {
-        return UtilValidate.isNotEmpty(matchesExpr) ? new FlexibleEntityFilter(FlexibleStringExpander.getInstance(matchesExpr), commonContext, entityKey)
-                : EntityFilter.NONE;
+        EntityFilter filter = EntityFilter.checkAnyNoneFromExprOrNull(matchesExpr);
+        if (filter != null) {
+            return filter;
+        }
+        return new FlexibleEntityFilter(FlexibleStringExpander.getInstance(matchesExpr), commonContext, entityKey);
     }
 
     public FlexibleStringExpander getMatchesExpr() {
         return matchesExpr;
     }
+
+    public String getOriginalExpr() { return getMatchesExpr().getOriginal(); }
 
     public Map<String, Object> getCommonContext() {
         return commonContext;
@@ -95,5 +102,10 @@ public class FlexibleEntityFilter implements EntityFilter, Serializable {
         Debug.logError("Matches expression evaluated to non-boolean value [" + result + "] for expression ["
                 + getMatchesExpr() + "] with context " + context + "; returning false", module);
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return getOriginalExpr();
     }
 }

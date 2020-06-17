@@ -1,5 +1,6 @@
 package org.ofbiz.entity.util;
 
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntity;
 
 import java.util.Collection;
@@ -9,14 +10,19 @@ import java.util.Map;
 /** SCIPIO: Interface for entity matching. */
 public interface EntityFilter {
 
-    public static final EntityFilter ANY = new EntityFilter() {
+    EntityFilter ANY = new EntityFilter() {
         @Override
         public boolean matches(GenericEntity entity, Map<String, Object> context) {
             return true;
         }
+
+        @Override
+        public String toString() {
+            return "any";
+        }
     };
 
-    public static final EntityFilter NONE = new EntityFilter() {
+    EntityFilter NONE = new EntityFilter() {
         @Override
         public boolean matches(GenericEntity entity, Map<String, Object> context) {
             return false;
@@ -25,6 +31,11 @@ public interface EntityFilter {
         @Override
         public boolean matchesNone() {
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return "none";
         }
     };
 
@@ -62,5 +73,16 @@ public interface EntityFilter {
 
     default boolean matchesNone() {
         return false;
+    }
+
+    /** Returns {@link EntityFilter#NONE} or {@link EntityFilter#ANY} if the expression is unset or corresponds to none or any; if other, returns null. */
+    static EntityFilter checkAnyNoneFromExprOrNull(String expr) {
+        if (UtilValidate.isEmpty(expr) || "none".equals(expr)) {
+            return NONE;
+        } else if ("any".equals(expr)) {
+            return ANY;
+        } else {
+            return null;
+        }
     }
 }

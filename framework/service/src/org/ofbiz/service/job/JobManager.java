@@ -536,7 +536,7 @@ public final class JobManager {
                             delegator.createSetNextSeqId(newJob);
                             rescheduled++;
                             if (Debug.infoOn()) { // SCIPIO
-                                Debug.logInfo("Rescheduled crashed job '" + job.getString("jobId") + "' for immediate execution - " + job, module);
+                                Debug.logInfo("Rescheduled crashed job '" + job.getString("jobId") + "' to new pending job '" + newJob.get("jobId") + "' for immediate execution - " + job, module);
                             }
                         } else {
                             // SCIPIO: If crashed job was ignored, do not run immediately, but if it had recurrence info, it must be honored

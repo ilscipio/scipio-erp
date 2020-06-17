@@ -194,7 +194,11 @@ code package.
     <target name="set-no-reindex-solr">
         <property name="scipio.solr.reindex.startup.force" value="false"/>
     </target>
-    
+    <target name="set-bypass-crashed-reindex-solr">
+        <!-- NOTE: Escape dollar sign because interpreted by ant -->
+        <property name="scipio.job.crashed.ignore.filter" value="&#36;{job.serviceName=='rebuildSolrIndex'}"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -1280,13 +1284,13 @@ code package.
     <target name="start-reindex-solr" depends="set-reindex-solr,start"
                 description="Start Scipio and force Solr to reindex on startup">
     </target>
-    <target name="start-no-reindex-solr" depends="set-no-reindex-solr,start"
+    <target name="start-no-reindex-solr" depends="set-no-reindex-solr,set-bypass-crashed-reindex-solr,start"
             description="Start Scipio and prevent Solr reindex on startup">
     </target>
     <target name="start-debug-reindex-solr" depends="set-reindex-solr,start-debug"
                 description="Start Scipio in debug mode and force Solr to reindex on startup">
     </target>
-    <target name="start-debug-no-reindex-solr" depends="set-no-reindex-solr,start-debug"
+    <target name="start-debug-no-reindex-solr" depends="set-no-reindex-solr,set-bypass-crashed-reindex-solr,start-debug"
             description="Start Scipio in debug mode and prevent Solr reindex on startup">
     </target>
 

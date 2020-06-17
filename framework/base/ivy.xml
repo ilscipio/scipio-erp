@@ -353,7 +353,7 @@
         <!-- solr component (applications/solr/ivy.xml)
             Based on solr-provided JAR libraries found in solr-7.x.x.tgz package (solr-7.x.x/server/lib/)
             and enhanced with Scipio security patches. -->
-        <dependency org="org.apache.solr" name="solr-solrj" rev="7.7.2" conf="base,sources"><!-- NOTE: at least 10 deps -->
+        <dependency org="org.apache.solr" name="solr-solrj" rev="7.7.3" conf="base,sources"><!-- NOTE: at least 10 deps -->
             <!-- TODO: REVIEW: we cannot allow jcl-over-slf4j on the classpath just like that;
                 it intentionally tries to replace (has same class names as) apache commons-logging classes -->
             <exclude org="org.slf4j" module="jcl-over-slf4j"/>

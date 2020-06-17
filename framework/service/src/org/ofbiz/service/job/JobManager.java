@@ -45,13 +45,19 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFilter;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.entity.util.FlexibleEntityFilter;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
+import org.ofbiz.service.calendar.TemporalExpression;
+import org.ofbiz.service.calendar.TemporalExpressionWorker;
+import org.ofbiz.service.config.ServiceConfigUtil;
 
 import com.ibm.icu.util.Calendar;
 import org.ofbiz.service.config.model.ThreadPool;
@@ -136,8 +142,7 @@ public final class JobManager {
 
     /** Returns the LocalDispatcher. */
     public LocalDispatcher getDispatcher() {
-        LocalDispatcher thisDispatcher = ServiceContainer.getLocalDispatcher(delegator.getDelegatorName(), delegator);
-        return thisDispatcher;
+        return ServiceContainer.getLocalDispatcher(delegator.getDelegatorName(), delegator);
     }
 
     protected JobPoller getJobPoller() { // SCIPIO
@@ -424,6 +429,13 @@ public final class JobManager {
         return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
     }
 
+    /**
+     * Reloads crashed jobs.
+     * <p>
+     * SCIPIO: It's now possible to bypass a specific or all crashed jobs using command line filter or properties as described in
+     * <code>service.properties#job.crashed.ignore.filter</code>.
+     * </p>
+     */
     public synchronized void reloadCrashedJobs() {
         assertIsRunning();
         if (crashedJobsReloaded) {
@@ -442,56 +454,119 @@ public final class JobManager {
         }
         if (UtilValidate.isNotEmpty(crashed)) {
             int rescheduled = 0;
+            int ignored = 0; // SCIPIO
+            int rescheduledRecurrenceQueued = 0; // SCIPIO
+            int reschedulingErrors = 0;
             Timestamp now = UtilDateTime.nowTimestamp();
+
+            // SCIPIO: ignore filter
+            String ignoreFilterExpr = System.getProperty("scipio.job.crashed.ignore.filter");
+            if (UtilValidate.isEmpty(ignoreFilterExpr)) {
+                ignoreFilterExpr = EntityUtilProperties.getPropertyValue("service", "job.crashed.ignore.filter", delegator);
+            }
+            EntityFilter ignoreFilter = FlexibleEntityFilter.fromExpr(ignoreFilterExpr,
+                    UtilMisc.toMap("delegator", delegator, "dispatcher", getDispatcher(), "nowTimestamp", now),
+                    "job");
+
             for (GenericValue job : crashed) {
                 try {
-                    if (Debug.infoOn()) {
-                        Debug.logInfo("Scheduling Job : " + job, module);
-                    }
+                    // SCIPIO: better below
+                    //if (Debug.infoOn()) {
+                    //    Debug.logInfo("Scheduling Job : " + job, module);
+                    //}
 
                     // SCIPIO: IMPORTANT: If the job was supposed to trigger on specific event, DO NOT
                     // reschedule anything. Otherwise, we may be running services during times at
                     // which they were never meant to run and cause unexpected problems.
                     if (job.getString("eventId") == null) {
-                        String pJobId = job.getString("parentJobId");
-                        if (pJobId == null) {
-                            pJobId = job.getString("jobId");
-                        }
-                        GenericValue newJob = GenericValue.create(job);
-                        newJob.set("statusId", "SERVICE_PENDING");
-                        newJob.set("runTime", now);
-                        newJob.set("previousJobId", job.getString("jobId"));
-                        newJob.set("parentJobId", pJobId);
-                        newJob.set("startDateTime", null);
-                        newJob.set("runByInstanceId", null);
+                        if (!ignoreFilter.matches(job)) { // SCIPIO: Check ignore filter
+                            String pJobId = job.getString("parentJobId");
+                            if (pJobId == null) {
+                                pJobId = job.getString("jobId");
+                            }
+                            GenericValue newJob = GenericValue.create(job);
+                            newJob.set("statusId", "SERVICE_PENDING");
+                            newJob.set("runTime", now);
+                            newJob.set("previousJobId", job.getString("jobId"));
+                            newJob.set("parentJobId", pJobId);
+                            newJob.set("startDateTime", null);
+                            newJob.set("runByInstanceId", null);
 
-                        // if Queued Job is crashed then its corresponding new Job should have TempExprId and recurrenceInfoId to continue further scheduling.
-                        if ("SERVICE_QUEUED".equals(job.getString("statusId"))) {
-                            newJob.set("tempExprId", job.getString("tempExprId"));
-                            newJob.set("recurrenceInfoId", job.getString("recurrenceInfoId"));
+                            // if Queued Job is crashed then its corresponding new Job should have TempExprId and recurrenceInfoId to continue further scheduling.
+                            if ("SERVICE_QUEUED".equals(job.getString("statusId"))) {
+                                newJob.set("tempExprId", job.getString("tempExprId"));
+                                newJob.set("recurrenceInfoId", job.getString("recurrenceInfoId"));
+                            } else {
+                                //don't set a recurrent schedule on the new job, run it just one time
+                                newJob.set("tempExprId", null);
+                                newJob.set("recurrenceInfoId", null);
+                            }
+                            delegator.createSetNextSeqId(newJob);
+                            rescheduled++;
+                            if (Debug.infoOn()) { // SCIPIO
+                                Debug.logInfo("Rescheduled crashed job '" + job.getString("jobId") + "' for immediate execution - " + job, module);
+                            }
                         } else {
-                            //don't set a recurrent schedule on the new job, run it just one time
-                            newJob.set("tempExprId", null);
-                            newJob.set("recurrenceInfoId", null);
+                            // SCIPIO: If crashed job was ignored, do not run immediately, but if it had recurrence info, it must be honored
+                            // and as above the QUEUED state will have been missing the recurrence.
+                            if ("SERVICE_QUEUED".equals(job.getString("statusId"))) {
+                                // NOTE: here we explicitly treat the recurrence as a normal recurrence instead of isRetryOnFailure
+                                // because the ignore filter basically means "don't do the normal retry-on-crash" which is almost like isRetryOnFailure.
+                                // This is only here for the special case where QUEUED jobs did not yet get their regular normal recurrence in the DB.
+                                try {
+                                    PersistedServiceJob newJob = new PersistedServiceJob(getDispatcher().getDispatchContext(), job, null);
+                                    // The original service execution time will be used instead of
+                                    // the current time because it emulates the former case to make behavior more consistent (even though the scheduled time may be in the past).
+                                    // If state moved to SERVICE_QUEUED but not RUNNING yet, it indicates the runTime (PersistedServiceJob.startTime)
+                                    // had already been reached, so the only reason RUNNING wasn't entered (which creates the recurrence) is lack of free threads,
+                                    // and there are no major differences made to the job in between them.
+                                    //newJob.determineCreateRecurrenceRegular(null);
+                                    newJob.determineCreateRecurrenceRegular(job.getTimestamp("runTime"));
+                                    if (Debug.infoOn()) {
+                                        Debug.logInfo("Rescheduled only normal recurrence of crashed job '" + job.getString("jobId")
+                                                + "' ignored by job.crashed.ignore.filter expression [" + ignoreFilterExpr + "], next runtime: " + new Timestamp(newJob.getNextRecurrence())
+                                                + " - " + job, module);
+                                    }
+                                    rescheduledRecurrenceQueued++;
+                                } catch (Exception e) {
+                                    Debug.logError(e, "Could not reschedule normal recurrence of crashed job '" + job.getString("jobId")
+                                            + "' ignored by job.crashed.ignore.filter expression [" + ignoreFilterExpr + "]"
+                                            + " - " + job, module);
+                                    reschedulingErrors++;
+                                }
+                            } else {
+                                if (Debug.infoOn()) {
+                                    Debug.logInfo("Not rescheduling crashed job '" + job.getString("jobId")
+                                            + "' ignored by job.crashed.ignore.filter expression [" + ignoreFilterExpr + "]; no recurrence"
+                                            + " - " + job, module);
+                                }
+                                ignored++;
+                            }
                         }
-                        delegator.createSetNextSeqId(newJob);
                     } else {
                         if (Debug.infoOn()) {
-                            Debug.logInfo("Scipio: Not rescheduling crashed job [" + Job.toLogId(job) + "] for event [" + job.getString("eventId") + "]", module);
+                            Debug.logInfo("Not rescheduling crashed job '" + job.getString("jobId")
+                                    + "' with event ID '" + job.getString("eventId") + "'"
+                                    + " - " + job, module);
                         }
+                        ignored++;
                     }
 
                     // set the cancel time on the old job to the same as the re-schedule time
                     job.set("statusId", "SERVICE_CRASHED");
                     job.set("cancelDateTime", now);
                     delegator.store(job);
-                    rescheduled++;
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module); // SCIPIO: switched to error
                 }
             }
             if (Debug.infoOn()) {
-                Debug.logInfo("-- " + rescheduled + " jobs re-scheduled", module);
+                Debug.logInfo("-- " // SCIPIO: detailed
+                        + crashed.size() + " total crashed jobs, "
+                        + rescheduled + " crashed jobs re-scheduled for immediate execution, "
+                        + ignored + " crashed jobs ignored, "
+                        + rescheduledRecurrenceQueued + " queued crashed jobs ignored with re-scheduled recurrences, "
+                        + reschedulingErrors + " re-scheduling errors", module);
             }
         } else {
             if (Debug.infoOn()) {

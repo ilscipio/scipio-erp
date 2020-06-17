@@ -164,6 +164,26 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Job [" + toLogId() + "] running", module); // SCIPIO: improved logging
         }
+        determineCreateRecurrenceRegular(null); // SCIPIO: Refactored
+        if (Debug.infoOn()) {
+            // SCIPIO: 2018-10-17: detect -1 case and try to make this less confusing
+            // NOTE: this is only called in GenericServiceJob.exec, so we can say "Running Job" here, should be always true...
+            //Debug.logInfo("Job  [" + getJobName() + "] Id ["  + getJobId() + "] -- Next runtime: " + new Date(nextRecurrence), module);
+            Debug.logInfo("Running Job [" + getJobName() + "] Id ["  + getJobId() + "] Service [" + getServiceName() + "] Retries [" + currentRetryCount + "/" + maxRetry + "] -- Next recurrence: " 
+                    + ((nextRecurrence != -1) ? new Date(nextRecurrence) : "(none)"), module);
+        }
+    }
+
+    public long getNextRecurrence() { // SCIPIO
+        return nextRecurrence;
+    }
+
+    public long getMaxRetry() { // SCIPIO
+        return maxRetry;
+    }
+
+    /** Refactored from {@link #init()} (SCIPIO). NOTE: This must not modify+store the current value because used from {@link JobManager#reloadCrashedJobs()}. */
+    public void determineCreateRecurrenceRegular(Timestamp fromDate) throws InvalidJobException {
         // configure any additional recurrences
         long maxRecurrenceCount = -1;
         long currentRecurrenceCount = 0;
@@ -199,7 +219,9 @@ public class PersistedServiceJob extends GenericServiceJob {
                 if (recurrence != null) {
                     recurrence.incrementCurrentCount();
                 }
-                Calendar next = expr.next(Calendar.getInstance());
+                // SCIPIO
+                //Calendar next = expr.next(Calendar.getInstance());
+                Calendar next = expr.next(fromDate != null ? UtilDateTime.toCalendar(fromDate) : Calendar.getInstance());
                 if (next != null) {
                     createRecurrence(next.getTimeInMillis(), false);
                 }

@@ -47,6 +47,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFunction;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
@@ -1023,8 +1024,19 @@ public class CheckOutHelper {
         allPaymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, canExpr);
 
         // check for online payment methods or in-hand payment types with verbal or external refs
-        List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("manualRefNum", EntityOperator.NOT_EQUAL, null));
-        List<GenericValue> manualRefPaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences, exprs);
+        EntityCondition exprs = EntityCondition.makeCondition("manualRefNum", EntityOperator.NOT_EQUAL, null);
+        // SCIPIO (05-28-20): This doesn't make much sense as an orderPaymentPref may contain a manualRefNum but NOT a manualAuthCode,
+        // so marking it as AUTHORIZED without it is plain wrong (if not, what's the point of manualAuthCode?).
+        // Not sure what the implications would be by adding manualAuthCode != null in the condition below
+        // (may affect in a bad way for existing paymentMethodTypes), so for now it will be added in conjunction with paymentMethodTypeId = EXT_STRIPE
+        EntityCondition stripeExprs = EntityCondition.makeCondition(
+                EntityCondition.makeCondition("manualRefNum", EntityOperator.NOT_EQUAL, null),
+                EntityCondition.makeCondition("manualAuthCode", EntityOperator.EQUALS, null),
+                EntityCondition.makeCondition("track2", EntityOperator.NOT_EQUAL, null),
+                EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "EXT_STRIPE")
+        );
+        List<GenericValue> manualRefPaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences,
+                UtilMisc.toList(EntityCondition.makeCondition(exprs, EntityJoinOperator.AND, stripeExprs)));
         if (UtilValidate.isNotEmpty(manualRefPaymentPrefs)) {
             for (GenericValue opp : manualRefPaymentPrefs) {
                 Map<String, Object> authCtx = new HashMap<>();

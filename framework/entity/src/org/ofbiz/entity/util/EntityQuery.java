@@ -167,7 +167,9 @@ public class EntityQuery {
      * @return this EntityQuery object, to enable chaining
      */
     public EntityQuery where(Object...fields) {
-        this.whereEntityCondition = EntityCondition.makeCondition(UtilMisc.toMap(fields));
+        // SCIPIO: This needlessly complicates internals and is done later
+        //this.whereEntityCondition = EntityCondition.makeCondition(UtilMisc.toMap(fields));
+        this.fieldMap = UtilMisc.toMap(fields);
         return this;
     }
 
@@ -564,12 +566,47 @@ public class EntityQuery {
     }
 
     /** Executes the EntityQuery and a single result record
+     * <p>SCIPIO: NOTE: This method has been modified to primarily use {@link Delegator#findOne(String, Map, boolean)}
+     * for the majority of lookups which lookup using {@link #where(Object...)} and {@link #where(Map)}
+     * (but currently not {@link #where(EntityCondition)}). For non-dynamic entities: orderBy, filterByDate and most of the
+     * find options are almost meaningless and should usually not be set, but if set may trigger legacy use of
+     * {@link #queryList()}. If you need the original behavior, {@link #queryOneFromList()} is now available.</p>
+     * TODO: Apply findOne to more cases
      *
      * @return GenericValue representing the only result record from the query
      */
     public GenericValue queryOne() throws GenericEntityException {
         this.searchPkOnly = true;
-        GenericValue result =  EntityUtil.getOnly(queryList());
+        // SCIPIO: This behavior caused the PK entity cache to be unused, which is unfortunate because
+        // it's simpler and more efficient for PK queries, so instead, use the Delegator PK lookup method wherever possible
+        //GenericValue result =  EntityUtil.getOnly(queryList());
+        GenericValue result;
+        if (dynamicViewEntity == null && !filterByDate && orderBy == null && !hasEntityFindOptions() &&
+                whereEntityCondition == null && havingEntityCondition == null && fieldMap != null) {
+            //if (Debug.verboseOn()) {
+            //    Debug.logVerbose("queryOne: using findOne() implementation" + toLogAppend(), module);
+            //}
+            result = delegator.findOne(entityName, fieldMap, useCache);
+            if (result != null && fieldsToSelect != null) {
+                result = result.select(fieldsToSelect);
+            }
+        } else {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("queryOne: using queryList() implementation" + toLogAppend(), module);
+            }
+            result = EntityUtil.getOnly(queryList());
+        }
+        return result;
+    }
+
+    /** Executes the EntityQuery and a single result record, using {@link #queryList()} (SCIPIO).
+     * <p>SCIPIO: NOTE: This is simply the old implementation of {@link #queryOne()} in case needed in specific cases.</p>
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public GenericValue queryOneFromList() throws GenericEntityException {
+        this.searchPkOnly = true;
+        GenericValue result = EntityUtil.getOnly(queryList());
         return result;
     }
 
@@ -628,6 +665,10 @@ public class EntityQuery {
             findOptions.setDistinct(distinct);
         }
         return findOptions;
+    }
+
+    private boolean hasEntityFindOptions() { // SCIPIO
+        return (resultSetType != EntityFindOptions.TYPE_FORWARD_ONLY) || (fetchSize != null) || (maxRows != null) || (distinct != null);
     }
 
     private EntityCondition makeWhereCondition(boolean usingCache) {
@@ -872,6 +913,20 @@ public class EntityQuery {
         }
     }
 
+    /** SCIPIO: Executes the EntityQuery and a single result record; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public GenericValue queryOneFromListSafe() {
+        try {
+            return queryOneFromList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryOneFromList: " + e.getMessage() + toLogAppend(), module);
+            return null;
+        }
+    }
+
     /** SCIPIO: Executes the EntityQuery and returns the result count; returns null if GenericEntityException.
      * NOTE: Unchecked exceptions representing programming errors may still be thrown.
      *
@@ -935,8 +990,7 @@ public class EntityQuery {
 
     @Override
     public String toString() { // SCIPIO: Debugging help
-        return "{" +
-                ", entityName='" + entityName + '\'' +
+        return "{entityName='" + entityName + '\'' +
                 ", dynamicViewEntity=" + dynamicViewEntity +
                 ", useCache=" + useCache +
                 ", whereEntityCondition=" + whereEntityCondition +
@@ -950,7 +1004,7 @@ public class EntityQuery {
                 ", filterByDate=" + filterByDate +
                 ", filterByDateMoment=" + filterByDateMoment +
                 ", filterByFieldNames=" + filterByFieldNames +
-                ", searchPkOnly=" + searchPkOnly +
+                //", searchPkOnly=" + searchPkOnly +
                 ", fieldMap=" + fieldMap +
                 '}';
     }

@@ -238,6 +238,16 @@ public class EntityQuerySafe extends EntityQuery {
     }
 
     @Override
+    public GenericValue queryOneFromList() {
+        try {
+            return super.queryOneFromList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryOneFromList: " + e.getMessage() + toLogAppend(), module);
+            return null;
+        }
+    }
+
+    @Override
     public long queryCount() {
         try {
             return super.queryCount();

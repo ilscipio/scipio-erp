@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -230,8 +231,8 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         }
     }
 
-    /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
-    protected void init(GenericEntity value) {
+    /** Copy Constructor: Creates new GenericEntity from existing GenericEntity. SCIPIO: Now supports fieldNames subset, newValue to prevent observable. */
+    protected void init(GenericEntity value, Collection<String> fieldNames, boolean newValue) {
         assertIsMutable();
         // check some things
         if (value.entityName == null) {
@@ -241,11 +242,22 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         // NOTE: could call getModelEntity to insure we have a value, just in case the value passed in has been serialized, but might as well leave it null to keep the object light if it isn't there
         this.modelEntity = value.modelEntity;
         if (value.fields != null) {
-            this.fields.putAll(value.fields);
+            if (fieldNames != null) {
+                for(String fieldName : fieldNames) {
+                    this.fields.put(fieldName, value.fields.get(fieldName));
+                }
+            } else {
+                this.fields.putAll(value.fields);
+            }
         }
         this.delegatorName = value.delegatorName;
         this.internalDelegator = value.internalDelegator;
-        this.observable = new Observable(value.observable);
+        this.observable = newValue ? new Observable() : new Observable(value.observable);
+    }
+
+    /** Copy Constructor: Creates new GenericEntity from existing GenericEntity. */
+    protected void init(GenericEntity value) {
+        init(value, null, false); // SCIPIO: Refactored
     }
 
     /** SCIPIO: Creates new GenericEntity partially from fields from existing GenericEntity with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
@@ -267,6 +279,34 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                 if (entry.getValue() != null) {
                     this.fields.put(entry.getKey(), sourceFieldsValue.fields.get(entry.getValue()));
                 }
+            }
+        } else {
+            this.fields.putAll(sourceFieldsValue.fields);
+        }
+
+        // check some things
+        if (this.entityName == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null entityName in the modelEntity parameter");
+        }
+    }
+
+    /** SCIPIO: Creates new GenericEntity partially from fields from existing GenericEntity with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
+     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22. */
+    protected void initAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericEntity sourceFieldsValue, Collection<String> fieldNames) {
+        assertIsMutable();
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
+        }
+        this.modelEntity = modelEntity;
+        this.entityName = modelEntity.getEntityName();
+        this.delegatorName = delegator.getDelegatorName();
+        this.internalDelegator = delegator;
+        this.observable = new Observable();
+        if (fieldNames != null) {
+            for(String fieldName : fieldNames) {
+                this.fields.put(fieldName, sourceFieldsValue.fields.get(fieldName));
             }
         } else {
             this.fields.putAll(sourceFieldsValue.fields);
@@ -1746,11 +1786,18 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      */
     @Override
     public Object clone() {
-        GenericEntity newEntity = new GenericEntity();
+        // SCIPIO: use newGeneric to make this correct in the base implementation
+        //GenericEntity newEntity = new GenericEntity();
+        GenericEntity newEntity = newValue();
         newEntity.init(this);
 
         newEntity.setDelegator(internalDelegator);
         return newEntity;
+    }
+
+    /** Returns a new instance of GenericEntity or subclass for clone() and other purposes. */
+    protected GenericEntity newValue() {
+        return new GenericEntity();
     }
 
     // ---- Methods added to implement the Map interface: ----
@@ -1853,6 +1900,18 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             return null;
         }
         return originalDbValues.get(name);
+    }
+
+    /** Returns a GenericEntity copy containing only the selected fields (SCIPIO). NOTE: Currently Observable is not preserved. */
+    public GenericEntity select(Collection<String> fields) {
+        GenericEntity entity = newValue();
+        entity.init(this, fields, true); // TODO: REVIEW: using newValue==true for now to prevent unexpected Observer issues
+        return entity;
+    }
+
+    /** Returns a GenericEntity copy containing only the selected fields (SCIPIO). NOTE: Currently Observable is not preserved. */
+    public GenericEntity select(String... fields) {
+        return select(Arrays.asList(fields));
     }
 
     /**

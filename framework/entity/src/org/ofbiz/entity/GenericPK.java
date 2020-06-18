@@ -80,4 +80,9 @@ public class GenericPK extends GenericEntity {
     public GenericPK clone() {
         return GenericPK.create(this);
     }
+
+    @Override
+    protected GenericPK newValue() { // SCIPIO
+        return new GenericPK();
+    }
 }

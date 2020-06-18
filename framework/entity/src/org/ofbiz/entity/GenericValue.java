@@ -20,6 +20,7 @@
 package org.ofbiz.entity;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,9 +80,19 @@ public class GenericValue extends GenericEntity {
      * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
      * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
      * copy constructor and construction from map. Added 2018-10-22. */
-    protected static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Map<String, String> newToExistingFieldMap) {
+    public static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Map<String, String> newToExistingFieldMap) {
         GenericValue newValue = new GenericValue();
         newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, newToExistingFieldMap);
+        return newValue;
+    }
+
+    /** SCIPIO: Creates new GenericValue partially from fields from existing GenericValue with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
+     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22. */
+    public static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Collection<String> fieldNames) {
+        GenericValue newValue = new GenericValue();
+        newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, fieldNames);
         return newValue;
     }
 
@@ -298,6 +309,16 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().extractViewMember(this, entityAliasOrName, allowPartial, nullForAbsentOptViewLink);
     }
 
+    /** Returns a GenericValue copy containing only the selected fields (SCIPIO). NOTE: Currently Observable is not preserved. */
+    public GenericValue select(Collection<String> fields) {
+        return (GenericValue) super.select(fields);
+    }
+
+    /** Returns a GenericValue copy containing only the selected fields (SCIPIO). NOTE: Currently Observable is not preserved. */
+    public GenericValue select(String... fields) {
+        return (GenericValue) super.select(fields);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(super.hashCode());
@@ -317,6 +338,11 @@ public class GenericValue extends GenericEntity {
     @Override
     public Object clone() {
         return GenericValue.create(this);
+    }
+
+    @Override
+    protected GenericValue newValue() { // SCIPIO
+        return new GenericValue();
     }
 
     protected static class NullGenericValue extends GenericValue implements NULL {

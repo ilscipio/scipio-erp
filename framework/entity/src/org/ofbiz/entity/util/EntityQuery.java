@@ -636,6 +636,12 @@ public class EntityQuery {
                 //Resolve if the map contains a sub map parameters, use a containsKeys to avoid error when a GenericValue is given as map
                 @SuppressWarnings("unchecked")
                 Map<String, Object> parameters = fieldMap.containsKey("parameters") ? (Map<String, Object>) fieldMap.get("parameters") : null;
+                // SCIPIO: The parameters map behavior may need to be deprecated due to security concerns, so for now warn:
+                if (parameters != null) {
+                    Debug.logWarning("EntityQuery.makeWhereCondition for queryOne(): "
+                            + "using implicit parameters map for search PK (did you pass context to where()?); deprecated for security"
+                            + "(entity: " + entityName + ")", module);
+                }
                 GenericPK pk = GenericPK.create(delegator.getModelEntity(entityName));
                 pk.setPKFields(parameters);
                 pk.setPKFields(fieldMap);

@@ -387,8 +387,9 @@ public class EmailServices {
             }
         } catch (MessagingException e) {
             // message code prefix may be used by calling services to determine the cause of the failure
-            Debug.logError(e, "[CON] Connection error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
-            Debug.logError("Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
+            // SCIPIO: Merged second error (why?)
+            Debug.logError(e, "[CON] Connection error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "] context " + context, module);
+            //Debug.logError("Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendConnectionError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
         }
         return results;

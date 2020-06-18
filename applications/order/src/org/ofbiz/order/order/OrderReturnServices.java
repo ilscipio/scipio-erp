@@ -1350,7 +1350,7 @@ public class OrderReturnServices {
                 BigDecimal amountLeftToRefund = orderTotal.setScale(decimals, rounding);
 
                 // This can be extended to support additional electronic types
-                List<String> electronicTypes = UtilMisc.<String>toList("CREDIT_CARD", "EFT_ACCOUNT", "FIN_ACCOUNT", "GIFT_CARD");
+                List<String> electronicTypes = UtilMisc.<String>toList("CREDIT_CARD", "EFT_ACCOUNT", "FIN_ACCOUNT", "GIFT_CARD", "EXT_STRIPE");
 
                 // Figure out if EXT_PAYPAL should be considered as an electronic type
                 if (productStore != null) {
@@ -1382,6 +1382,12 @@ public class OrderReturnServices {
                 List<String> fieldList = EntityUtil.getFieldListFromEntityList(otherPaymentMethodTypes, "paymentMethodTypeId", true);
                 orderedRefundPaymentMethodTypes.addAll(fieldList);
 
+                // SCIPIO: (06-18-20): Looks absurd to create a new orderPaymentPreference before refunding because PaymentGatewayResponses aren't carried along
+                // and OrderPaymentPreference logically represents something that becomes a payment eventually. Obviously for returns don't look like the case. However, it's unknown
+                // what would be the consequences of current implementations if this gets removed. That's why this list comes in, as a way to bypass that for paymentMethodTypes that
+                // for sure don't need a new OrderPaymentPreference to be created
+                List<String> newOrderPaymentPreferenceExceptions = UtilMisc.toList("EXT_STRIPE");
+
                 // Iterate through the specified sequence of paymentMethodTypes, refunding to the correct OrderPaymentPreferences
                 //    as long as there's a positive amount remaining to refund
                 Iterator<String> orpmtit = orderedRefundPaymentMethodTypes.iterator();
@@ -1408,21 +1414,25 @@ public class OrderReturnServices {
                             // Call the refund service to refund the payment
                             if (electronicTypes.contains(paymentMethodTypeId)) {
                                 try {
-                                    Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"userLogin", context.get("userLogin"));
-                                    serviceContext.put("paymentMethodId", orderPaymentPreference.getString("paymentMethodId"));
-                                    serviceContext.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
-                                    serviceContext.put("statusId", orderPaymentPreference.getString("statusId"));
-                                    serviceContext.put("maxAmount", amountToRefund.setScale(decimals, rounding));
-                                    String orderPaymentPreferenceNewId = null;
-                                    Map<String, Object> result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
-                                    if (ServiceUtil.isError(result)) {
-                                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                                    }
-                                    orderPaymentPreferenceNewId = (String) result.get("orderPaymentPreferenceId");
-                                    try {
-                                        refundOrderPaymentPreference = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceNewId).queryOne();
-                                    } catch (GenericEntityException e) {
-                                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsWithTheRefundSeeLogs", locale));
+                                    if (!newOrderPaymentPreferenceExceptions.contains(paymentMethodTypeId)) {
+                                        Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId, "userLogin", context.get("userLogin"));
+                                        serviceContext.put("paymentMethodId", orderPaymentPreference.getString("paymentMethodId"));
+                                        serviceContext.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
+                                        serviceContext.put("statusId", orderPaymentPreference.getString("statusId"));
+                                        serviceContext.put("maxAmount", amountToRefund.setScale(decimals, rounding));
+                                        String orderPaymentPreferenceNewId = null;
+                                        Map<String, Object> result = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+                                        if (ServiceUtil.isError(result)) {
+                                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                                        }
+                                        orderPaymentPreferenceNewId = (String) result.get("orderPaymentPreferenceId");
+                                        try {
+                                            refundOrderPaymentPreference = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceNewId).queryOne();
+                                        } catch (GenericEntityException e) {
+                                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemsWithTheRefundSeeLogs", locale));
+                                        }
+                                    } else {
+                                        refundOrderPaymentPreference = orderPaymentPreference;
                                     }
                                     serviceResult = dispatcher.runSync("refundPayment", UtilMisc.<String, Object>toMap("orderPaymentPreference", refundOrderPaymentPreference, "refundAmount", amountToRefund.setScale(decimals, rounding), "userLogin", userLogin));
                                     if (ServiceUtil.isError(serviceResult) || ServiceUtil.isFailure(serviceResult)) {

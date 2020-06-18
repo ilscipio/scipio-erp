@@ -270,7 +270,9 @@
               <@payMethInfoPanel title="">
                 <#assign pk = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getPublishableKey(request)!>
                 <#assign stripeIntegrationMode = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getIntegrationMode(request)!>
-
+                <#assign options = {
+                  "locale": Static["org.ofbiz.base.util.UtilHttp"].getLocale(request).getLanguage()
+                }>
                 <#assign hooks = {
                   "stripe.preinit" : wrapRawScript("function() { console.debug('stripe.preinit hook'); return true; }"),
                   "stripe.postinit" : wrapRawScript("function() { console.debug('stripe.postinit hook'); return true; }"),
@@ -281,7 +283,7 @@
                   "order.postprocess" : wrapRawScript("function() { console.debug('order.postprocess hook'); return true; }")
                 }/>
 
-                <@renderStripe mode=stripeIntegrationMode pk=pk! orderFormId="orderSubmitForm" processOrderButtonId="processButton"
+                <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! orderFormId="orderSubmitForm" processOrderButtonId="processButton"
                   checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks debug=true/>
               </@payMethInfoPanel>
             </@section>

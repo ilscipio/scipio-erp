@@ -317,7 +317,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
                     return;
                 }
             } else {
-                Debug.logInfo("Cms: No existing or active CMS page mapping found for view '" + name + "'; continuing with Ofbiz screen (" + page + ")"
+                Debug.logInfo("Cms: No existing/active CMS page mapping found for view '" + name + "'; continuing with screen '" + page + "'"
                         + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 renderScreen(name, page, info, contentType, encoding, request, response, writer);
             }

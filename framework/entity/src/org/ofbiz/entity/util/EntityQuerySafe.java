@@ -202,7 +202,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryList: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryList: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -212,7 +212,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryIterator();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryIterator: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryIterator: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -222,7 +222,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryFirst();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryFirst: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryFirst: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -232,7 +232,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryOne();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryOne: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryOne: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -242,7 +242,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryCount();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryCount: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryCount: " + e.getMessage() + toLogAppend(), module);
             return 0;
         }
     }
@@ -252,7 +252,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.getFieldList(fieldName);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -262,7 +262,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.getFieldSet(fieldName);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -272,7 +272,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.getFieldCollection(fieldName, collection);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -282,7 +282,7 @@ public class EntityQuerySafe extends EntityQuery {
         try {
             return super.queryPagedList(viewIndex, viewSize);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }

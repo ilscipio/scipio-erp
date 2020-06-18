@@ -540,7 +540,7 @@ public class EntityQuery {
      */
     public EntityListIterator queryIterator() throws GenericEntityException {
         if (useCache) {
-            Debug.logWarning("Call to iterator() with cache, ignoring cache", module);
+            Debug.logWarning("Call to iterator() with cache, ignoring cache" + toLogAppend(), module); // SCIPIO: Improved logging
         }
         if (dynamicViewEntity == null) {
             return delegator.find(entityName, makeWhereCondition(false), havingEntityCondition, fieldsToSelect, orderBy, makeEntityFindOptions());
@@ -607,7 +607,7 @@ public class EntityQuery {
             try {
                 return EntityUtil.filterByCondition(result, this.makeDateCondition());
             } catch(EntityFieldNotFoundException e) { // SCIPIO
-                //Debug.logError(e, "Query error: " + e.getMessage(), module); // already logged
+                //Debug.logError(e, "Query error: " + e.getMessage() + toLogAppend(), module); // already logged
             }
         }
         return result;
@@ -638,9 +638,8 @@ public class EntityQuery {
                 Map<String, Object> parameters = fieldMap.containsKey("parameters") ? (Map<String, Object>) fieldMap.get("parameters") : null;
                 // SCIPIO: The parameters map behavior may need to be deprecated due to security concerns, so for now warn:
                 if (parameters != null) {
-                    Debug.logWarning("EntityQuery.makeWhereCondition for queryOne(): "
-                            + "using implicit parameters map for search PK (did you pass context to where()?); deprecated for security"
-                            + "(entity: " + entityName + ")", module);
+                    Debug.logWarning("EntityQuery.makeWhereCondition for queryOne(): using implicit parameters map for search PK" +
+                            " (did you pass context to where()?); deprecated for security" + toLogAppend(), module);
                 }
                 GenericPK pk = GenericPK.create(delegator.getModelEntity(entityName));
                 pk.setPKFields(parameters);
@@ -659,7 +658,7 @@ public class EntityQuery {
                     return this.makeDateCondition();
                 }
             } catch(EntityFieldNotFoundException e) { // SCIPIO
-                //Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module); // already logged
+                //Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter" + toLogAppend(), module); // already logged
             }
         }
         return whereEntityCondition;
@@ -678,7 +677,7 @@ public class EntityQuery {
             try { // SCIPIO
                 checkEntityDateFields(delegator, entityName, fromDateFieldName, thruDateFieldName);
             } catch(EntityFieldNotFoundException e) {
-                Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter", module);
+                Debug.logError(e, "Query error: " + e.getMessage() + "; skipping date filter" + toLogAppend(), module); // SCIPIO: Improved logging
                 continue;
             }
 
@@ -822,7 +821,7 @@ public class EntityQuery {
         try {
             return queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryList: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryList: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -840,7 +839,7 @@ public class EntityQuery {
         try {
             return queryIterator();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryIterator: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryIterator: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -854,7 +853,7 @@ public class EntityQuery {
         try {
             return queryFirst();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryFirst: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryFirst: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -868,7 +867,7 @@ public class EntityQuery {
         try {
             return queryOne();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryOne: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryOne: " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -884,7 +883,7 @@ public class EntityQuery {
         try {
             return queryCount();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryCount: " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryCount: " + e.getMessage() + toLogAppend(), module);
             return 0;
         }
     }
@@ -893,7 +892,7 @@ public class EntityQuery {
         try {
             return getFieldList(fieldName);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -902,7 +901,7 @@ public class EntityQuery {
         try {
             return getFieldSet(fieldName);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -911,7 +910,7 @@ public class EntityQuery {
         try {
             return getFieldCollection(fieldName, collection);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
     }
@@ -929,8 +928,34 @@ public class EntityQuery {
         try {
             return queryPagedList(viewIndex, viewSize);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
+            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage() + toLogAppend(), module);
             return null;
         }
+    }
+
+    @Override
+    public String toString() { // SCIPIO: Debugging help
+        return "{" +
+                ", entityName='" + entityName + '\'' +
+                ", dynamicViewEntity=" + dynamicViewEntity +
+                ", useCache=" + useCache +
+                ", whereEntityCondition=" + whereEntityCondition +
+                ", fieldsToSelect=" + fieldsToSelect +
+                ", orderBy=" + orderBy +
+                ", resultSetType=" + resultSetType +
+                ", fetchSize=" + fetchSize +
+                ", maxRows=" + maxRows +
+                ", distinct=" + distinct +
+                ", havingEntityCondition=" + havingEntityCondition +
+                ", filterByDate=" + filterByDate +
+                ", filterByDateMoment=" + filterByDateMoment +
+                ", filterByFieldNames=" + filterByFieldNames +
+                ", searchPkOnly=" + searchPkOnly +
+                ", fieldMap=" + fieldMap +
+                '}';
+    }
+
+    protected String toLogAppend() { // SCIPIO: Debugging help
+        return " - " + this;
     }
 }

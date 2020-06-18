@@ -32,6 +32,11 @@ final module = "OrderStatus.groovy"; // SCIPIO
 userLogin = context.userLogin; // SCIPIO: Make sure variable exists
 
 orderId = parameters.orderId;
+//SCIPIO (06-12-20): Added a fallback to obtain orderId from request attributes in case it's empty in query params
+if (!orderId) {
+    orderId = request.getAttribute("orderId");
+}
+
 orderHeader = null;
 // we have a special case here where for an anonymous order the user will already be logged out, but the userLogin will be in the request so we can still do a security check here
 if (!userLogin) {

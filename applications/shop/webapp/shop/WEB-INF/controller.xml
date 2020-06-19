@@ -1705,6 +1705,7 @@ code package.
         <response name="sales_order" type="request" value="onePageCheckBlacklist"/>
         <response name="work_order" type="request" value="onePageCheckBlacklist"/>
         <response name="error" type="view" value="OnePageCheckout"/>
+        <response name="errorJson" type="request" value="json"/>
     </request-map>
 
     <request-map uri="onePageCheckBlacklist">
@@ -1713,6 +1714,7 @@ code package.
         <response name="success" type="request" value="onePageProcessPayment"/>
         <response name="failed" type="request" value="failedBlacklist"/>
         <response name="error" type="view" value="OnePageCheckout"/>
+        <response name="errorJson" type="request" value="json"/>
     </request-map>
 
     <request-map uri="onePageProcessPayment">
@@ -1720,7 +1722,9 @@ code package.
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="onePageClearCartForOrder"/>
         <response name="fail" type="request" value="checkouterror"/>
+        <response name="failJson" type="request" value="json"/>
         <response name="error" type="view" value="OnePageCheckout"/>
+        <response name="errorJson" type="request" value="json"/>
     </request-map>
 
     <request-map uri="onePageClearCartForOrder">
@@ -1728,6 +1732,7 @@ code package.
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearEnsureCart"/> <!-- SCIPIO: Make sure still have a cart: invoke="clearCart" -->
         <response name="success" type="request" value="onePageCheckExternalPayment"/>
         <response name="error" type="view" value="OnePageCheckout"/>
+        <response name="errorJson" type="request" value="json"/>
     </request-map>
 
     <request-map uri="onePageCheckExternalPayment">
@@ -1741,6 +1746,7 @@ code package.
         <response name="billact" type="request" value="emailorder"/>
         <response name="cod" type="request" value="emailorder"/> -->
         <response name="error" type="view" value="OnePageCheckout"/>
+        <response name="errorJson" type="request" value="json"/>
     </request-map>
 
     <request-map uri="editProfile">

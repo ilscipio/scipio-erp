@@ -68,6 +68,8 @@ public class CheckOutEvents {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
+    private static final List<String> returnAsJsonForPaymentMethodTypeIds = UtilMisc.toList("EXT_STRIPE");
+
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
 
@@ -680,7 +682,7 @@ public class CheckOutEvents {
             ServiceUtil.getMessages(request, callResult, null);
             if (ServiceUtil.isError(callResult)) {
                 // messages already setup with the getMessages call, just return the error response code
-                return "error";
+                return resolveEventReturn(cart, "error");
             }
             if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
                 // set the orderId for use by chained events
@@ -780,13 +782,16 @@ public class CheckOutEvents {
         }
 
         // event return based on failureCode
-        switch (failureCode) {
-            case 0:
-                return "success";
-            case 1:
-                return "fail";
-            default:
-                return "error";
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) {
+            ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
+            switch (failureCode) {
+                case 0:
+                    return "success";
+                case 1:
+                    return resolveEventReturn(cart, "fail");
+                default:
+                    return resolveEventReturn(cart, "error");
+            }
         }
     }
 
@@ -843,10 +848,10 @@ public class CheckOutEvents {
         Map<String, Object> callResult = checkOutHelper.checkOrderBlackList();
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             request.setAttribute("_ERROR_MESSAGE_", callResult.get(ModelService.ERROR_MESSAGE));
-            result = "error";
+            result = resolveEventReturn(cart, "error");
         } else if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_FAIL)) {
             request.setAttribute("_ERROR_MESSAGE_", callResult.get(ModelService.ERROR_MESSAGE));
-            result = "failed";
+            result = resolveEventReturn(cart, "fail");
         } else {
             result = (String) callResult.get(ModelService.SUCCESS_MESSAGE);
         }
@@ -933,7 +938,11 @@ public class CheckOutEvents {
 
         // any error messages have prepared for display, return the type ('error' if failed)
         result = (String) callResult.get("type");
-        return result;
+        if (result.equals("error")) {
+            return resolveEventReturn(checkOutHelper.cart, result);
+        } else {
+            return result;
+        }
     }
 
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
@@ -1730,6 +1739,26 @@ public class CheckOutEvents {
             res = "";
         }
         return res;
+    }
+
+    /**
+     * SCIPIO (06-19-20): Resolves event return values when checkout flow is expected to return json for the values listed in returnAsJsonForPaymentMethodTypeIds,
+     * specially for errors (success are normally chained requests). This is merely a workaround for now because adding a request-map override (merge-type) within custom
+     * controller files works ONLY when it's known for sure those payment method types are present exclusively. But when others are present which don't expect json responses
+     * that solution doesn't work.
+     * @param cart
+     * @param returnResponse
+     * @return
+     */
+    public static String resolveEventReturn(ShoppingCart cart, String returnResponse) {
+        String returnResponseResolved = returnResponse;
+        for (String paymentMethodTypeId : returnAsJsonForPaymentMethodTypeIds) {
+            if (cart.isPaymentSelected(paymentMethodTypeId)) {
+                returnResponseResolved = returnResponse.concat("Json");
+                break;
+            }
+        }
+        return returnResponseResolved;
     }
 
     // SCIPIO: Alternative pattern meant for integration with setCheckoutError; not yet needed.

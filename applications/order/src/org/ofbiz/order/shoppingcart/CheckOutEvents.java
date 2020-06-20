@@ -365,16 +365,19 @@ public class CheckOutEvents {
     }
 
     public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        Map<String, Object> resp = checkOutHelper.validatePaymentMethods();
-        if (ServiceUtil.isError(resp)) {
-            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resp));
-            return "error";
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+            CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+            Map<String, Object> resp = checkOutHelper.validatePaymentMethods();
+            if (ServiceUtil.isError(resp)) {
+                request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resp));
+                return "error";
+            }
+            cartUpdate.commit(cart); // SCIPIO
+            return "success";
         }
-        return "success";
     }
 
     /**

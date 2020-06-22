@@ -75,7 +75,7 @@ public class PersistedServiceJob extends GenericServiceJob {
      * SCIPIO: minimalJob boolean indicates to avoid unnecessary lookups unnecessary for the basic Job interface (slight ofbiz kludge).
      */
     protected PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req, boolean minimalJob) {
-        super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"), null, null, req);
+        super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"), null, null, null, req); // SCIPIO: jobPool, overridden in getJobPool()
         this.delegator = dctx.getDelegator();
         this.jobValue = jobValue;
         Timestamp storedDate = jobValue.getTimestamp("runTime");
@@ -193,6 +193,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             // SCIPIO: In all likelihood we will never deprecate the old RecurrenceInfo code, and we have stock seed/demo
             // data using it, so this should not be a warning for us.
             //Debug.logWarning("Persisted Job [" + toLogId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            // Updated: require verbose for this because even , clogs logs for nothing
             Debug.logInfo("Persisted Job [" + toLogId() + "] references a RecurrenceInfo (recommend using TemporalExpression instead)", module); // SCIPIO: improved logging
             currentRecurrenceCount = recurrence.getCurrentCount();
             expr = RecurrenceInfo.toTemporalExpression(recurrence);
@@ -478,4 +479,7 @@ public class PersistedServiceJob extends GenericServiceJob {
     public GenericValue getJobValue() { // SCIPIO
         return jobValue;
     }
+
+    @Override
+    public String getJobPool() { return getJobValue().getString("poolId"); }
 }

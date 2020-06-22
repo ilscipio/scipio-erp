@@ -23,9 +23,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -66,6 +66,7 @@ public final class JobPoller implements ServiceConfigListener {
     private final boolean pollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.pollSleepWarnInterval.verbose", false);
     private final long startupPollSleepWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.startupPollSleepWarnInterval", -1);
     private final boolean startupPollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.startupPollSleepWarnInterval.verbose", false);
+    private final int debugJobStatsTopServiceCount = UtilProperties.getPropertyAsInteger("service", "jobManager.debug.stats.topServiceCount", 10);
 
     /**
      * Returns the <code>JobPoller</code> instance.
@@ -118,26 +119,10 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     /**
-     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics.
-     */
-    public Map<String, Object> getPoolState() {
-        Map<String, Object> poolState = getGeneralPoolState(); // SCIPIO: refactored
-        BlockingQueue<Runnable> queue = executor.getQueue();
-        List<Map<String, Object>> taskList = new ArrayList<>();
-        Map<String, Object> taskInfo = null;
-        for (Runnable task : queue) {
-            Job job = (Job) task;
-            taskList.add(job.toTaskInfoMap()); // SCIPIO: Refactored
-        }
-        poolState.put("taskList", taskList);
-        return poolState;
-    }
-
-    /**
-     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics, but without individual taskList (SCIPIO).
+     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics without queue iteration (SCIPIO).
      */
     public Map<String, Object> getGeneralPoolState() {
-        Map<String, Object> poolState = new HashMap<>();
+        Map<String, Object> poolState = new LinkedHashMap<>(); //new HashMap<>(); // SCIPIO: Linked makes printout clearer
         poolState.put("keepAliveTimeInSeconds", executor.getKeepAliveTime(TimeUnit.SECONDS));
         poolState.put("numberOfCoreInvokerThreads", executor.getCorePoolSize());
         poolState.put("currentNumberOfInvokerThreads", executor.getPoolSize());
@@ -149,6 +134,142 @@ public final class JobPoller implements ServiceConfigListener {
         poolState.put("remainingCapacity", executor.getQueue().remainingCapacity());
         poolState.put("queueSize", executor.getQueue().size());
         return poolState;
+    }
+
+    /**
+     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics including task list.
+     */
+    public Map<String, Object> getPoolState() {
+        return getPoolState(true, true);
+    }
+
+    /**
+     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics with optional queue task list and queue stats (SCIPIO).
+     */
+    public Map<String, Object> getPoolState(boolean includeQueueTaskStats, boolean includeTaskList) {
+        Map<String, Object> poolState = getGeneralPoolState(); // SCIPIO: Refactored
+        if (!includeQueueTaskStats) {
+            if (includeTaskList) {
+                List<Map<String, Object>> taskList = new ArrayList<>();
+                for (Runnable task : executor.getQueue()) {
+                    taskList.add(((Job) task).toTaskInfoMap()); // SCIPIO: Refactored
+                }
+                poolState.put("taskList", taskList);
+            }
+        } else {
+            List<Map<String, Object>> taskList = includeTaskList ? new ArrayList<>() : null;
+            Map<String, PoolTaskStats> poolStatsMap = new HashMap<>();
+            Map<String, ServiceTaskStats> serviceStatsMap = new HashMap<>();
+            int index = 0;
+            for (Runnable task : executor.getQueue()) {
+                Job job = (Job) task;
+                String serviceName = job.getServiceName();
+                if (serviceName != null) {
+                    ServiceTaskStats stats = serviceStatsMap.get(serviceName);
+                    if (stats == null) {
+                        stats = new ServiceTaskStats(serviceName, index);
+                        serviceStatsMap.put(serviceName, stats);
+                    } else {
+                        stats.taskCount++;
+                        stats.lastQueueIndex = index;
+                    }
+                }
+                String jobPool = job.getJobPool();
+                if (jobPool != null) {
+                    PoolTaskStats stats = poolStatsMap.get(jobPool);
+                    if (stats == null) {
+                        stats = new PoolTaskStats(jobPool, index);
+                        poolStatsMap.put(jobPool, stats);
+                    } else {
+                        stats.taskCount++;
+                        stats.lastQueueIndex = index;
+                    }
+                }
+                if (includeTaskList) {
+                    taskList.add(job.toTaskInfoMap()); // SCIPIO: Refactored
+                }
+                index++;
+            }
+            // SCIPIO: NOTE: show smaller lists first or this is unreadable in sentry
+            List<PoolTaskStats> poolStatsList = new ArrayList<>(poolStatsMap.values());
+            Collections.sort(poolStatsList, Collections.reverseOrder());
+            List<Map<String, Object>> jobPoolTaskStats = new ArrayList<>(poolStatsList.size());
+            for(PoolTaskStats stats : poolStatsList) {
+                jobPoolTaskStats.add(stats.toMap(new LinkedHashMap<>()));
+            }
+            poolState.put("jobPoolCount", poolStatsList.size());
+            poolState.put("jobPoolTaskStats", jobPoolTaskStats);
+
+            List<ServiceTaskStats> serviceStatsList = new ArrayList<>(serviceStatsMap.values());
+            Collections.sort(serviceStatsList, Collections.reverseOrder());
+            List<Map<String, Object>> serviceTaskStats = new ArrayList<>(debugJobStatsTopServiceCount);
+            int i = 0;
+            for(ServiceTaskStats stats : serviceStatsList) {
+                serviceTaskStats.add(stats.toMap(new LinkedHashMap<>()));
+                i++;
+                if (i > debugJobStatsTopServiceCount) {
+                    break;
+                }
+            }
+            poolState.put("serviceTaskCount", serviceStatsList.size());
+            poolState.put("topServiceTaskStats", serviceTaskStats);
+
+            if (includeTaskList) {
+                poolState.put("taskList", taskList);
+            }
+        }
+        return poolState;
+    }
+
+    private static class TaskStats implements Comparable<TaskStats> {
+        int taskCount = 1;
+        int firstQueueIndex;
+        int lastQueueIndex;
+        TaskStats(int firstQueueIndex) {
+            this.firstQueueIndex = firstQueueIndex;
+            this.lastQueueIndex = firstQueueIndex;
+        }
+
+        @Override
+        public int compareTo(TaskStats o) {
+            int result = Integer.compare(this.taskCount, o.taskCount);
+            return (result != 0) ? result : Integer.compare(o.firstQueueIndex, this.firstQueueIndex); // smaller index = greater priority
+        }
+
+        public Map<String, Object> toMap(Map<String, Object> map) {
+            map.put("taskCount", taskCount);
+            map.put("firstQueueIndex", firstQueueIndex);
+            map.put("lastQueueIndex", lastQueueIndex);
+            return map;
+        }
+    }
+
+    private static class PoolTaskStats extends TaskStats {
+        String poolName;
+        PoolTaskStats(String poolName, int firstQueueIndex) {
+            super(firstQueueIndex);
+            this.poolName = poolName;
+        }
+
+        public Map<String, Object> toMap(Map<String, Object> map) {
+            map.put("pool", poolName);
+            super.toMap(map);
+            return map;
+        }
+    }
+
+    private static class ServiceTaskStats extends TaskStats {
+        String serviceName;
+        ServiceTaskStats(String serviceName, int firstQueueIndex) {
+            super(firstQueueIndex);
+            this.serviceName = serviceName;
+        }
+
+        public Map<String, Object> toMap(Map<String, Object> map) {
+            map.put("service", serviceName);
+            super.toMap(map);
+            return map;
+        }
     }
 
     public ThreadPool getThreadPoolConfig() throws GenericConfigException { // SCIPIO
@@ -165,7 +286,7 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     protected String toLogPoolConfigStr(boolean verbose) { // SCIPIO: Debug logging
-        return "; config: " + getThreadPoolConfigMap() + "; state: " + (verbose ? getPoolState() : getGeneralPoolState());
+        return "; config: " + getThreadPoolConfigMap() + "; state: " + getPoolState(true, verbose);
     }
 
     @Override

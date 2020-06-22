@@ -6,12 +6,12 @@ import org.ofbiz.service.job.JobInfo;
 
 import java.util.Date;
 
-public class JmsJob implements JobInfo {
+public class JmsJobInfo implements JobInfo {
 
     private final String serviceName;
     private final long startTime;
 
-    public JmsJob(ModelService modelService, long startTime) {
+    public JmsJobInfo(ModelService modelService, long startTime) {
         this.serviceName = modelService.name;
         this.startTime = startTime;
     }
@@ -50,4 +50,7 @@ public class JmsJob implements JobInfo {
     public GenericValue getJobValue() {
         return null;
     }
+
+    @Override
+    public String getJobPool() { return null; } // TODO?
 }

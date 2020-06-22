@@ -163,7 +163,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 if (jobPool == null || isJobPoolApplicable(jobPool)) { // SCIPIO: jobPool
                     String name = Long.toString(System.currentTimeMillis());
                     String jobId = modelService.name + "." + name;
-                    job = new GenericServiceJob(dctx, jobId, name, modelService.name, context, requester);
+                    job = new GenericServiceJob(dctx, jobId, name, modelService.name, jobPool, context, requester); // SCIPIO: jobPool
                     try {
                         dispatcher.getJobManager().runJob((Job) job);
                     } catch (JobManagerException jse) {

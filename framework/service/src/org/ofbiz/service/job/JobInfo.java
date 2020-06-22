@@ -66,6 +66,12 @@ public interface JobInfo {
     GenericValue getJobValue();
 
     /**
+     * Returns the pool for the job or null if not applicable (SCIPIO).
+     * NOTE: This is a logical JobSandbox pool and does not necessarily reflect a physical or JVM thread pool.
+     */
+    String getJobPool();
+
+    /**
      * Returns a log representation (like toString), usually the job ID, name and service, without brackets/parenthesis (SCIPIO).
      * NOTE: By convention in logs and exceptions this is wrapped in brackets [] by caller.
      */
@@ -122,6 +128,8 @@ public interface JobInfo {
         public boolean isPersisted() { return false; }
         @Override
         public GenericValue getJobValue() { return null; }
+        @Override
+        public String getJobPool() { return null; }
     }
 
     /**

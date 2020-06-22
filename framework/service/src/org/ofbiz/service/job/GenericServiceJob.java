@@ -43,13 +43,15 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     protected final transient GenericRequester requester;
     protected final transient DispatchContext dctx;
     private final String service;
+    private final String jobPool; // SCIPIO
     private final Map<String, Object> context;
 
-    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, Map<String, Object> context, GenericRequester req) {
+    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, String jobPool, Map<String, Object> context, GenericRequester req) {
         super(jobId, jobName);
         Assert.notNull("dctx", dctx);
         this.dctx = dctx;
         this.service = service;
+        this.jobPool = jobPool;
         this.context = context;
         this.requester = req;
     }
@@ -178,5 +180,8 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     public GenericValue getJobValue() { // SCIPIO
         return null;
     }
+
+    @Override
+    public String getJobPool() { return jobPool; }
 
 }

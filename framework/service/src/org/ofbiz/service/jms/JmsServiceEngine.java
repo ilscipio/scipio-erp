@@ -349,7 +349,7 @@ public class JmsServiceEngine extends AbstractEngine {
         long startTime = System.currentTimeMillis();
         Map<String, Object> result = run(modelService, context);
         requester.receiveResult(result);
-        return new JmsJob(modelService, startTime); // SCIPIO
+        return new JmsJobInfo(modelService, startTime); // SCIPIO
     }
 
     /**
@@ -358,7 +358,7 @@ public class JmsServiceEngine extends AbstractEngine {
     public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
         long startTime = System.currentTimeMillis();
         run(modelService, context);
-        return new JmsJob(modelService, startTime); // SCIPIO
+        return new JmsJobInfo(modelService, startTime); // SCIPIO
     }
 
 }

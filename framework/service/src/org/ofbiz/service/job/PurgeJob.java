@@ -105,4 +105,7 @@ public class PurgeJob extends AbstractJob implements Serializable {
     public GenericValue getJobValue() { // SCIPIO
         return jobValue;
     }
+
+    @Override
+    public String getJobPool() { return getJobValue().getString("poolId"); }
 }

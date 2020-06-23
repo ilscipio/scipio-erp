@@ -80,8 +80,10 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             }
         } catch (JMSException je) {
             Debug.logError(je, "Problems reading message.", module);
+            return null; // SCIPIO: added missing return
         } catch (Exception e) {
             Debug.logError(e, "Problems deserializing the service context.", module);
+            return null; // SCIPIO: added missing return
         }
 
         try {
@@ -92,6 +94,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Unable to get ModelService for service : " + serviceName, module);
+            return null; // SCIPIO: added missing return
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Running service: " + serviceName, module);

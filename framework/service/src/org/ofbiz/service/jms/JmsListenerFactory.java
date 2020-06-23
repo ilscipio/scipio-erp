@@ -43,8 +43,8 @@ public class JmsListenerFactory implements Runnable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final String TOPIC_LISTENER_CLASS = "org.ofbiz.service.jms.JmsTopicListener";
-    public static final String QUEUE_LISTENER_CLASS = "org.ofbiz.service.jms.JmsQueueListener";
+    public static final String TOPIC_LISTENER_CLASS = JmsTopicListener.class.getName(); // SCIPIO: fixed reference
+    public static final String QUEUE_LISTENER_CLASS = JmsQueueListener.class.getName(); // SCIPIO: fixed reference
 
     protected static Map<String, GenericMessageListener> listeners = new ConcurrentHashMap<String, GenericMessageListener>();
     protected static Map<String, Server> servers = new ConcurrentHashMap<String, Server>();

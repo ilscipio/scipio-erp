@@ -30,7 +30,6 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.service.jms.JmsListenerFactory;
-import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 
@@ -59,13 +58,22 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     }
 
     /**
-     * SCIPIO: Modified to accept an eventId
-     *
-     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
+     * SCIPIO: Modified for eventId (NOTE: use AsyncOptions overload below instead).
      */
     @Override
     public JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws GenericServiceException {
+        return schedule(jobName, serviceName, context, new PersistAsyncOptions(poolName, null, startTime, frequency, interval, count, endTime, maxRetry, eventId));
+    }
+
+    /**
+     * SCIPIO: Modified for service options.
+     */
+    @Override
+    public JobInfo schedule(String jobName, String serviceName, Map<String, ? extends Object> context, PersistAsyncOptions serviceOptions) throws GenericServiceException {
         JobInfo job; // SCIPIO
+        if (serviceOptions == null) {
+            serviceOptions = PersistAsyncOptions.DEFAULT;
+        }
         Transaction suspendedTransaction = null;
         try {
             boolean beganTransaction = false;
@@ -73,19 +81,10 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             try {
                 beganTransaction = TransactionUtil.begin();
                 try {
-                    job = getJobManager().schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, eventId);
-
+                    job = getJobManager().schedule(jobName, serviceName, context, serviceOptions);
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Current time : " + (new Date()).getTime(), module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Runtime      : " + startTime, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Frequency    : " + frequency, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Interval     : " + interval, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Count        : " + count, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : EndTime      : " + endTime, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : MaxRetry     : " + maxRetry, module);
-                        Debug.logVerbose("[LocalDispatcher.schedule] : Event ID     : " + eventId, module);
+                        Debug.logVerbose("[LocalDispatcher.schedule]: Current time: " + (new Date()).getTime() + ", service options: " + serviceOptions, module);
                     }
-
                 } catch (JobManagerException jme) {
                     throw new GenericServiceException(jme.getMessage(), jme);
                 }

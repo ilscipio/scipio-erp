@@ -54,7 +54,6 @@ import org.ofbiz.service.engine.GenericEngine;
 import org.ofbiz.service.engine.GenericEngineFactory;
 import org.ofbiz.service.group.ServiceGroupReader;
 import org.ofbiz.service.jms.JmsListenerFactory;
-import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 import org.ofbiz.service.semaphore.ServiceSemaphore;
@@ -64,6 +63,7 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 /**
  * The global service dispatcher. This is the "engine" part of the
  * Service Engine.
+ * SCIPIO: Modified for new overloads.
  */
 public class ServiceDispatcher {
 
@@ -664,7 +664,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        return runAsync(localName, service, params, requester, persist, null);
+        return runAsync(localName, service, params, requester, ServiceOptions.asyncDefault(persist));
     }
 
     /**
@@ -673,14 +673,14 @@ public class ServiceDispatcher {
      * @param service Service model object.
      * @param params Map of name, value pairs composing the parameters.
      * @param requester Object implementing GenericRequester interface which will receive the result.
-     * @param persist True for store/run; False for run.
-     * @param jobPool Optional specific job pool (SCIPIO)
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
      * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         JobInfo job; // SCIPIO
         if (Debug.timingOn()) {
             UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
@@ -778,9 +778,9 @@ public class ServiceDispatcher {
                 // run the service
                 if (!isError && !isFailure) {
                     if (requester != null) {
-                        job = engine.runAsync(localName, service, context, requester, persist, jobPool); // SCIPIO: jobPool
+                        job = engine.runAsync(localName, service, context, requester, serviceOptions); // SCIPIO: serviceOptions
                     } else {
-                        job = engine.runAsync(localName, service, context, persist, jobPool); // SCIPIO: jobPool
+                        job = engine.runAsync(localName, service, context, serviceOptions); // SCIPIO: serviceOptions
                     }
                     engine.sendCallbacks(service, context, GenericEngine.ASYNC_MODE);
                 } else {
@@ -843,14 +843,15 @@ public class ServiceDispatcher {
      * @param localName Name of the context to use.
      * @param service Service model object.
      * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
      * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        return this.runAsync(localName, service, context, null, persist, null);
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return this.runAsync(localName, service, context, null, serviceOptions);
     }
 
     /**
@@ -859,14 +860,13 @@ public class ServiceDispatcher {
      * @param service Service model object.
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
-     * @param jobPool Optional specific job pool (SCIPIO)
      * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
-        return this.runAsync(localName, service, context, null, persist, jobPool);
+    public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return this.runAsync(localName, service, context, null, ServiceOptions.asyncDefault(persist));
     }
 
     /**
@@ -1123,7 +1123,9 @@ public class ServiceDispatcher {
             // current time + 1 sec delay + extended delay
             long runtime = System.currentTimeMillis() + 1000 + runtimeDelay;
             try {
-                jm.schedule(sendToPool, serviceName, runtimeDataId, runtime);
+                // SCIPIO
+                //jm.schedule(sendToPool, serviceName, runtimeDataId, runtime);
+                jm.schedule(null, serviceName, runtimeDataId, ServiceOptions.asyncPersist().jobPool(sendToPool).startTime(runtime));
             } catch (JobManagerException e) {
                 Debug.logError(e, "Unable to schedule service [" + serviceName + "]", module);
             }

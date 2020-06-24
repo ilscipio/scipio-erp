@@ -18,9 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.service.job;
 
-import org.ofbiz.base.util.LogUtil;
+import org.ofbiz.service.JobInfo;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +29,9 @@ import java.util.Map;
  * transitions to the queued state. While the job is executing it is in the running state.
  * When the job execution ends, it transitions to the finished or failed state - depending
  * on the outcome of the task that was performed.</p>
- * <p>SCIPIO: Several methods have been moved to the {@link JobInfo} interface for reuse with {@link org.ofbiz.service.LocalDispatcher} methods.</p>
+ * <p>SCIPIO: Several methods have been moved to the {@link org.ofbiz.service.JobInfo} interface for reuse with {@link org.ofbiz.service.LocalDispatcher} methods.</p>
  */
-public interface Job extends JobInfo, Runnable {
+public interface Job extends org.ofbiz.service.JobInfo, Runnable {
 
     enum State {CREATED, QUEUED, RUNNING, FINISHED, FAILED};
 
@@ -71,8 +70,10 @@ public interface Job extends JobInfo, Runnable {
         map.put("id", getJobId());
         map.put("name", getJobName());
         map.put("serviceName", getServiceName()); // SCIPIO: Generalized
+        map.put("type", getJobType()); // SCIPIO
         map.put("time", getStartTime());
         map.put("runtime", getRuntime());
+        map.put("priority", getPriority()); // SCIPIO
         return map;
     }
 
@@ -89,7 +90,7 @@ public interface Job extends JobInfo, Runnable {
      * NOTE: By convention in logs and exceptions this is wrapped in brackets [] by caller.
      */
     static String toLogId(Map<String, Object> job, String type) {
-        return JobInfo.toLogId(job, type);
+        return org.ofbiz.service.JobInfo.toLogId(job, type);
     }
 
     /**
@@ -97,7 +98,7 @@ public interface Job extends JobInfo, Runnable {
      * NOTE: By convention in logs and exceptions this is wrapped in brackets [] by caller.
      */
     static String toLogId(Map<String, Object> job) {
-        return JobInfo.toLogId(job);
+        return org.ofbiz.service.JobInfo.toLogId(job);
     }
 
     /**

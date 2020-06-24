@@ -1,15 +1,18 @@
-package org.ofbiz.service.job;
+package org.ofbiz.service;
 
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.job.Job;
+import org.ofbiz.service.job.JobPriority;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Basic job information, used to describe newly-started jobs.
  * Simplification of {@link Job} interface for returning from {@link org.ofbiz.service.LocalDispatcher} and general usage (SCIPIO).
  * SCIPIO: {@link Job} now implements this interface into which several methods have now been moved.
+ * This is now in service package to avoid client code errors and overhead over package, because job package is generally used
+ * for the job engine implementation and most code does not already include it, so this is kinder.
  */
 public interface JobInfo {
     JobInfo NONE = new NullJobInfo();
@@ -45,6 +48,11 @@ public interface JobInfo {
     Date getStartTime();
 
     /**
+     * Returns the priority of this job, higher the number the higher the priority.
+     */
+    long getPriority();
+
+    /**
      * Returns the service this job invokes or null if not applicable (SCIPIO).
      */
     String getServiceName();
@@ -58,7 +66,7 @@ public interface JobInfo {
     /**
      * Returns true only if the job is persisted as GenericValue entity (SCIPIO).
      */
-    boolean isPersisted();
+    boolean isPersist();
 
     /**
      * Returns the JobSandbox value associated with the job or null if not applicable or not persisted (SCIPIO).
@@ -121,11 +129,13 @@ public interface JobInfo {
         @Override
         public Date getStartTime() { return null; }
         @Override
+        public long getPriority() { return JobPriority.LOW; }
+        @Override
         public String getServiceName() { return null; }
         @Override
         public String getJobType() { return null; }
         @Override
-        public boolean isPersisted() { return false; }
+        public boolean isPersist() { return false; }
         @Override
         public GenericValue getJobValue() { return null; }
         @Override

@@ -24,7 +24,9 @@ import java.util.Map;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.AsyncOptions;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.MemoryAsyncOptions;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -43,15 +45,21 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     protected final transient GenericRequester requester;
     protected final transient DispatchContext dctx;
     private final String service;
+    private final long priority; // SCIPIO
     private final String jobPool; // SCIPIO
     private final Map<String, Object> context;
 
-    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, String jobPool, Map<String, Object> context, GenericRequester req) {
+    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, AsyncOptions serviceOptions, Map<String, Object> context, GenericRequester req) {
         super(jobId, jobName);
+        if (serviceOptions == null) {
+            serviceOptions = MemoryAsyncOptions.DEFAULT;
+        }
         Assert.notNull("dctx", dctx);
         this.dctx = dctx;
         this.service = service;
-        this.jobPool = jobPool;
+        // SCIPIO: NOTE: serviceOptions could be a PersistAsyncOptions instance in this class design so if need MemoryAsyncOptions check AsyncOptions.isPersisted/instance
+        this.priority = serviceOptions.priority() != null ? serviceOptions.priority() : JobPriority.NORMAL;
+        this.jobPool = serviceOptions.jobPool();
         this.context = context;
         this.requester = req;
     }
@@ -167,12 +175,17 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     }
 
     @Override
+    public long getPriority() { // SCIPIO
+        return priority;
+    }
+
+    @Override
     public String getJobType() { // SCIPIO
         return "generic";
     }
 
     @Override
-    public boolean isPersisted() { // SCIPIO
+    public boolean isPersist() { // SCIPIO
         return false;
     }
 

@@ -323,6 +323,9 @@ under the License.
         <xs:attribute name="ignore-failure" type="xs:boolean" default="true"/>
         <xs:attribute name="ignore-error" type="xs:boolean" default="true"/>
         <xs:attribute name="persist" type="xs:boolean" default="false"/>
+        <xs:attribute name="priority" type="xs:nonNegativeInteger">
+            <xs:annotation><xs:documentation>The job priority, 0-100 (low-high), defaults to 50 (normal) (org.ofbiz.service.job.JobPriority#NORMAL) (SCIPIO)</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute name="job-pool" type="xs:string">
             <xs:annotation><xs:documentation>If set and service is persist="false" (default), only runs the eca if the named
                 pool is named as run-from-pool="[name]" in serviceengine.xml; if persist="true", creates the job using the named pool. (SCIPIO)</xs:documentation></xs:annotation>

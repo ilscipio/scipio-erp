@@ -46,12 +46,15 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.AsyncOptions;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.PersistAsyncOptions;
+import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceRule;
-import org.ofbiz.service.job.JobInfo;
+import org.ofbiz.service.JobInfo;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.RequestHandler;
 
@@ -102,6 +105,8 @@ public class CoreEvents {
      *  SERVICE_FREQUENCY - The type of recurrence (SECONDLY,MINUTELY,DAILY,etc)
      *  SERVICE_INTERVAL  - The interval of the frequency (every 5 minutes, etc)
      *
+     * <p>SCIPIO: Modified for new scheduling options ({@link LocalDispatcher}, {@link PersistAsyncOptions}).</p>
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @return Response code string
@@ -125,6 +130,8 @@ public class CoreEvents {
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
         String serviceCnt = (String) params.remove("SERVICE_COUNT");
         String retryCnt = (String) params.remove("SERVICE_MAXRETRY");
+        // SCIPIO: priority
+        String priorityStr = (String) params.remove("SERVICE_PRIORITY");
         // SCIPIO: Event ID
         String eventId = (String) params.remove("SERVICE_EVENTID");
 
@@ -146,6 +153,7 @@ public class CoreEvents {
         int count = 1;
         int interval = 1;
         int frequency = RecurrenceRule.DAILY;
+        Long priority = null; // SCIPIO
 
         StringBuilder errorBuf = new StringBuilder();
 
@@ -308,6 +316,16 @@ public class CoreEvents {
             maxRetry = modelService.maxRetry;
         }
 
+        // SCIPIO: priority
+        if (UtilValidate.isNotEmpty(priorityStr)) {
+            try {
+                priority = Long.parseLong(priorityStr);
+            } catch (NumberFormatException nfe) {
+                String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.invalid_priority_value", locale);
+                errorBuf.append(errMsg);
+            }
+        }
+
         // SCIPIO: Event ID
         // TODO: more verification
         if (eventId != null && eventId.isEmpty()) {
@@ -324,20 +342,24 @@ public class CoreEvents {
         Map<String, Object> syncServiceResult = null;
         // schedule service
         try {
-            if (null!=request.getParameter("_RUN_SYNC_") && "Y".equals(request.getParameter("_RUN_SYNC_"))) {
+            if (null != request.getParameter("_RUN_SYNC_") && "Y".equals(request.getParameter("_RUN_SYNC_"))) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
-            } else if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
+            } else if (null != request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
                 // SCIPIO: 2018-02-16: new ability to run async services without need to go through Job Manager (starts quicker)
                 // NOTE: Default for persist is False, because Job Manager is more intuitive in those cases
                 // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N"
                 // because in legacy code it would imply to use job scheduler.
-                job = dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
+                AsyncOptions serviceOptions = ServiceOptions.async(request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
+                // SCIPIO: TODO: missing AsyncOptions parameters here - CoreEvents defaults above may not be appropriate (they come from job scheduling)...
+                job = dispatcher.runAsync(serviceName, serviceContext, serviceOptions);
                 String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo",
                         UtilMisc.toMap("serviceName", serviceName), locale);
                 syncServiceResult = ServiceUtil.returnSuccess(asyncMsg);
             } else {
                 // SCIPIO: now pass eventId
-                job = dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+                job = dispatcher.schedule(jobName, serviceName, serviceContext,
+                        ServiceOptions.asyncPersist().jobPool(poolName).priority(priority).schedule(startTime, frequency,
+                                interval, count, endTime, maxRetry, eventId));
             }
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.service_dispatcher_exception", locale);
@@ -345,7 +367,7 @@ public class CoreEvents {
             return "error";
         }
 
-        if (job != null && job.isScheduled() && job.isPersisted()) { // SCIPIO: Set scheduled job ID
+        if (job != null && job.isScheduled() && job.isPersist()) { // SCIPIO: Set scheduled job ID
             request.setAttribute("jobId", job.getJobId());
             request.setAttribute("jobId_op", "equals");
             request.setAttribute("noConditionFind", "Y");

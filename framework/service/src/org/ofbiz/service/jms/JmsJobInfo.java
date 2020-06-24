@@ -2,7 +2,8 @@ package org.ofbiz.service.jms;
 
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.job.JobInfo;
+import org.ofbiz.service.JobInfo;
+import org.ofbiz.service.job.JobPriority;
 
 import java.util.Date;
 
@@ -32,6 +33,11 @@ public class JmsJobInfo implements JobInfo {
     }
 
     @Override
+    public long getPriority() {
+        return JobPriority.NORMAL;
+    }
+
+    @Override
     public String getServiceName() {
         return serviceName;
     }
@@ -42,7 +48,7 @@ public class JmsJobInfo implements JobInfo {
     }
 
     @Override
-    public boolean isPersisted() {
+    public boolean isPersist() {
         return false;
     }
 

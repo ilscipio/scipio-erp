@@ -83,6 +83,14 @@ public class PurgeJob extends AbstractJob implements Serializable {
         }
     }
 
+    /*
+     * Returns JobPriority.LOW.
+     */
+    @Override
+    public long getPriority() {
+        return JobPriority.LOW;
+    }
+
     @Override
     public String getServiceName() { // SCIPIO
         if (jobValue == null || jobValue.get("serviceName") == null) {
@@ -97,7 +105,7 @@ public class PurgeJob extends AbstractJob implements Serializable {
     }
 
     @Override
-    public boolean isPersisted() { // SCIPIO
+    public boolean isPersist() { // SCIPIO
         return true;
     }
 

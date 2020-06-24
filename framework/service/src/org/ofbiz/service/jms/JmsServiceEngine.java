@@ -63,7 +63,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.JmsService;
 import org.ofbiz.service.config.model.Server;
 import org.ofbiz.service.engine.AbstractEngine;
-import org.ofbiz.service.job.JobInfo;
+import org.ofbiz.service.JobInfo;
 import org.w3c.dom.Element;
 
 /**

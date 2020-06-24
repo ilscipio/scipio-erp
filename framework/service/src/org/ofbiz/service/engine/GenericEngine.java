@@ -20,18 +20,23 @@ package org.ofbiz.service.engine;
 
 import java.util.Map;
 
+import org.ofbiz.service.AsyncOptions;
+import org.ofbiz.service.MemoryAsyncOptions;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.job.JobInfo;
+import org.ofbiz.service.JobInfo;
+import org.ofbiz.service.PersistAsyncOptions;
+import org.ofbiz.service.ServiceOptions;
 
 /**
- * Generic Engine Interface
+ * Generic Engine Interface.
+ * SCIPIO: Modified for new overloads.
  */
 public interface GenericEngine {
 
-    public static final int ASYNC_MODE = 22;
-    public static final int SYNC_MODE = 21;
+    int ASYNC_MODE = 22;
+    int SYNC_MODE = 21;
 
     /**
      * Run the service synchronously and return the result.
@@ -53,6 +58,40 @@ public interface GenericEngine {
      * @throws GenericServiceException
      */
     public void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException;
+
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * <p>SCIPIO: NOTE: Implementation must override to implement job options.</p>
+     *
+     * @param localName Name of the LocalDispatcher.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws GenericServiceException
+     */
+    default JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, AsyncOptions serviceOptions)
+            throws GenericServiceException {
+        return runAsync(localName, modelService, context, requester, serviceOptions.persist());
+    }
+
+    /**
+     * Run the service asynchronously and IGNORE the result.
+     * <p>SCIPIO: NOTE: Implementation must override to implement job options.</p>
+     *
+     * @param localName Name of the LocalDispatcher.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws GenericServiceException
+     */
+    default JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, AsyncOptions serviceOptions) throws GenericServiceException {
+        return runAsync(localName, modelService, context, serviceOptions.persist());
+    }
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -79,38 +118,6 @@ public interface GenericEngine {
      * @throws GenericServiceException
      */
     JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException;
-
-    /**
-     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
-     *
-     * @param localName Name of the LocalDispatcher.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param requester Object implementing GenericRequester interface which will receive the result.
-     * @param persist True for store/run; False for run.
-     * @param jobPool Optional specific job pool (SCIPIO)
-     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
-     * @throws GenericServiceException
-     */
-    default JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist, String jobPool)
-            throws GenericServiceException {
-        return runAsync(localName, modelService, context, requester, persist);
-    }
-
-    /**
-     * Run the service asynchronously and IGNORE the result.
-     *
-     * @param localName Name of the LocalDispatcher.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run.
-     * @param jobPool Optional specific job pool (SCIPIO)
-     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
-     * @throws GenericServiceException
-     */
-    default JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist, String jobPool) throws GenericServiceException {
-        return runAsync(localName, modelService, context, persist);
-    }
 
     /**
      * Send the service callbacks

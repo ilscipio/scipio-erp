@@ -24,7 +24,7 @@ import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
-import org.ofbiz.service.job.JobInfo;
+import org.ofbiz.service.JobInfo;
 
 /**
  * InterfaceEngine.java

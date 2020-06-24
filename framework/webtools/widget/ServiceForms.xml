@@ -39,6 +39,7 @@ code package.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="SERVICE_PRIORITY" title="${uiLabelMap.CommonPriority}"><text default-value="50"/></field><!-- SCIPIO -->
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
@@ -117,6 +118,7 @@ code package.
         <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="finishDateTime" title="${uiLabelMap.CommonEndDateTime}" sort-field="true"><display/></field>
         <field name="eventId" title="${uiLabelMap['StatusType.description.EVENT_STATUS']}" sort-field="true"><display/></field>
+        <field name="priority" title="${uiLabelMap.CommonPriority}" sort-field="true"><display/></field><!-- SCIPIO -->
         <field name="cancelAction" title=" " use-when="startDateTime==null&amp;&amp;finishDateTime==null&amp;&amp;cancelDateTime==null" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
             <hyperlink also-hidden="false" description="${uiLabelMap.WebtoolsCancelJob}" target="cancelJob">
                 <parameter param-name="jobId"/>

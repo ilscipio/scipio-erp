@@ -51,13 +51,13 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.entity.util.FlexibleEntityFilter;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.JobInfo;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.PersistAsyncOptions;
 import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
-import org.ofbiz.service.calendar.TemporalExpression;
-import org.ofbiz.service.calendar.TemporalExpressionWorker;
-import org.ofbiz.service.config.ServiceConfigUtil;
 
 import com.ibm.icu.util.Calendar;
 import org.ofbiz.service.config.model.ThreadPool;
@@ -84,6 +84,7 @@ public final class JobManager {
     private static final long debugPollLogInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.logInterval", -1);
     private static final boolean debugPollLogIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.logInterval.verbose", false);
     private static volatile long debugPollLogLastTimestamp = 0;
+    private static final List<String> jobPollMainCondOrderBy = UtilMisc.unmodifiableArrayList("priority DESC NULLS LAST", "runTime"); // SCIPIO: refactored
 
     private static void assertIsRunning() {
         if (isShutDown) {
@@ -314,7 +315,10 @@ public final class JobManager {
                 return poll;
             }
 
-            try (EntityListIterator jobsIterator = EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").maxRows(limit).queryIterator()) { // SCIPIO: maxRows
+            try (EntityListIterator jobsIterator = EntityQuery.use(delegator)
+                    .from("JobSandbox").where(mainCondition)
+                    .orderBy(jobPollMainCondOrderBy)
+                    .maxRows(limit).queryIterator()) { // SCIPIO: maxRows
                 // SCIPIO: factored out into method
                 jobsResult.add(ownAndCollectJobs(dctx, delegator, limit, jobsIterator, poll, null));
             }
@@ -454,7 +458,7 @@ public final class JobManager {
      */
     public EntityListIterator queryStartupJobsAlways(EntityCondition commonCondition) throws GenericEntityException {
         EntityCondition mainCondition = EntityCondition.makeCondition(commonCondition, EntityCondition.makeCondition("eventId", "SCH_EVENT_STARTUP"));
-        return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy("runTime").queryIterator();
+        return EntityQuery.use(delegator).from("JobSandbox").where(mainCondition).orderBy(jobPollMainCondOrderBy).queryIterator();
     }
 
     /**
@@ -622,6 +626,112 @@ public final class JobManager {
 
     /**
      * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * SCIPIO: Modified for job options.
+     *
+     * @param jobName The name of the job
+     * @param serviceName The name of the service to invoke
+     * @param context The context for the service
+     * @param serviceOptions The service options, {@link PersistAsyncOptions} (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncPersistDefault()}, otherwise {@link ServiceOptions#asyncPersist()}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     */
+    public JobInfo schedule(String jobName, String serviceName, Map<String, ? extends Object> context, PersistAsyncOptions serviceOptions) throws JobManagerException {
+        // persist the context
+        String dataId = null;
+        try {
+            GenericValue runtimeData = delegator.makeValue("RuntimeData");
+            // SCIPIO: 2019-03-08: Do not throw exceptions needlessly; instead, simply skip any non-serializable values.
+            //runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+            List<String> errorMessageList = new ArrayList<>();
+            runtimeData.set("runtimeInfo", XmlSerializer.serializeOrNull(context, errorMessageList));
+            runtimeData = delegator.createSetNextSeqId(runtimeData);
+            dataId = runtimeData.getString("runtimeDataId");
+            if (errorMessageList.size() > 0) {
+                Debug.logError("Persisted job [" + Job.toLogId(null, jobName, serviceName, "persisted") + "] error: " + errorMessageList.size()
+                        + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
+            }
+        } catch (GenericEntityException e) { //  | SerializeException | IOException e
+            throw new JobManagerException(e.getMessage(), e);
+        }
+        // schedule the job
+        return schedule(jobName, serviceName, dataId, serviceOptions);
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     * <p>
+     * SCIPIO: Modified to accept an event ID.
+     *
+     * @param jobName The name of the job
+     * @param serviceName The name of the service to invoke
+     * @param dataId The persisted context (RuntimeData.runtimeDataId)
+     * @param serviceOptions The service options, {@link PersistAsyncOptions} (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncPersistDefault()}, otherwise {@link ServiceOptions#asyncPersist()}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws IllegalStateException if the Job Manager is shut down.
+     */
+    public JobInfo schedule(String jobName, String serviceName, String dataId, PersistAsyncOptions serviceOptions) throws JobManagerException {
+        assertIsRunning();
+        if (serviceOptions == null) {
+            serviceOptions = PersistAsyncOptions.DEFAULT;
+        }
+        String poolName = serviceOptions.jobPool();
+        long priority = (serviceOptions.priority() != null) ? serviceOptions.priority() : JobPriority.NORMAL;
+        long startTime = (serviceOptions.startTime() != null) ? serviceOptions.startTime() : System.currentTimeMillis(); // SCIPIO: new: if missing, assume now (simplifies API)
+        int frequency = (serviceOptions.frequency() != null) ? serviceOptions.frequency() : -1;
+        // SCIPIO: NOTE: some places use interval=1 as default, but frequency must be > -1 to matter so they have to be set together anyway
+        int interval = (serviceOptions.interval() != null) ? serviceOptions.interval() : 0;
+        int count = (serviceOptions.count() != null) ? serviceOptions.count() : 1;
+        //long endTime = serviceOptions.getEndTime() != null ? serviceOptions.getEndTime() : 0; // SCIPIO: FIXME?: unused
+        int maxRetry = (serviceOptions.maxRetry() != null) ? serviceOptions.maxRetry() : -1;
+        String eventId = serviceOptions.eventId();
+        // create the recurrence
+        String infoId = null;
+        if (frequency > -1 && count != 0) {
+            try {
+                RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
+                infoId = info.primaryKey();
+            } catch (RecurrenceInfoException e) {
+                throw new JobManagerException(e.getMessage(), e);
+            }
+        }
+        // set the persisted fields
+        if (UtilValidate.isEmpty(jobName)) {
+            jobName = Long.toString((new Date().getTime()));
+        }
+        // SCIPIO: now set eventId
+        Map<String, Object> jFields = UtilMisc.<String, Object> toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
+                "serviceName", serviceName, "statusId", "SERVICE_PENDING", "recurrenceInfoId", infoId, "runtimeDataId", dataId,
+                "priority", priority, "eventId", eventId);
+        // set the pool ID
+        if (UtilValidate.isNotEmpty(poolName)) {
+            jFields.put("poolId", poolName);
+        } else {
+            try {
+                jFields.put("poolId", getThreadPoolConfig().getSendToPool());
+            } catch (GenericConfigException e) {
+                throw new JobManagerException(e.getMessage(), e);
+            }
+        }
+        // set the loader name
+        jFields.put("loaderName", delegator.getDelegatorName());
+        // set the max retry
+        jFields.put("maxRetry", (long) maxRetry);
+        jFields.put("currentRetryCount", 0L);
+        // create the value and store
+        GenericValue jobV;
+        try {
+            jobV = delegator.makeValue("JobSandbox", jFields);
+            delegator.createSetNextSeqId(jobV);
+        } catch (GenericEntityException e) {
+            throw new JobManagerException(e.getMessage(), e);
+        }
+        return PersistedServiceJob.makeResultJob(getDispatcher().getDispatchContext(), jobV, serviceOptions); // SCIPIO
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
      *
      * @param serviceName
      *            The name of the service to invoke
@@ -636,6 +746,7 @@ public final class JobManager {
      *@param count
      *            The number of times to repeat
      */
+    @Deprecated
     public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count) throws JobManagerException {
         schedule(serviceName, context, startTime, frequency, interval, count, 0);
     }
@@ -658,6 +769,7 @@ public final class JobManager {
      *@param endTime
      *            The time in milliseconds the service should expire
      */
+    @Deprecated
     public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
         schedule(null, serviceName, context, startTime, frequency, interval, count, endTime);
     }
@@ -678,6 +790,7 @@ public final class JobManager {
      *@param endTime
      *            The time in milliseconds the service should expire
      */
+    @Deprecated
     public void schedule(String serviceName, Map<String, ? extends Object> context, long startTime, int frequency, int interval, long endTime) throws JobManagerException {
         schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
     }
@@ -702,6 +815,7 @@ public final class JobManager {
      *@param endTime
      *            The time in milliseconds the service should expire
      */
+    @Deprecated
     public void schedule(String poolName, String serviceName, Map<String, ? extends Object> context, long startTime, int frequency,
             int interval, int count, long endTime) throws JobManagerException {
         schedule(null, null, serviceName, context, startTime, frequency, interval, count, endTime, -1);
@@ -719,6 +833,7 @@ public final class JobManager {
      *@param startTime
      *            The time in milliseconds the service should run
      */
+    @Deprecated
     public void schedule(String poolName, String serviceName, String dataId, long startTime) throws JobManagerException {
         schedule(null, poolName, serviceName, dataId, startTime, -1, 0, 1, 0, -1);
     }
@@ -752,27 +867,11 @@ public final class JobManager {
      *            The triggering event
      *@return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      */
+    @Deprecated
     public JobInfo schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
-            int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
-        // persist the context
-        String dataId = null;
-        try {
-            GenericValue runtimeData = delegator.makeValue("RuntimeData");
-            // SCIPIO: 2019-03-08: Do not throw exceptions needlessly; instead, simply skip any non-serializable values.
-            //runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
-            List<String> errorMessageList = new ArrayList<>();
-            runtimeData.set("runtimeInfo", XmlSerializer.serializeOrNull(context, errorMessageList));
-            runtimeData = delegator.createSetNextSeqId(runtimeData);
-            dataId = runtimeData.getString("runtimeDataId");
-            if (errorMessageList.size() > 0) {
-                Debug.logError("Persisted job [" + Job.toLogId(null, jobName, serviceName, "persisted") + "] error: " + errorMessageList.size()
-                + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
-            }
-        } catch (GenericEntityException e) { //  | SerializeException | IOException e
-            throw new JobManagerException(e.getMessage(), e);
-        }
-        // schedule the job
-        return schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, eventId);
+                            int frequency, int interval, int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
+        return schedule(jobName, serviceName, context, ServiceOptions.asyncPersist().jobPool(poolName)
+                .schedule(startTime, frequency, interval, count, endTime, maxRetry, eventId));
     }
 
     /**
@@ -801,86 +900,17 @@ public final class JobManager {
      *@param maxRetry
      *            The max number of retries on failure (-1 for no max)
      */
+    @Deprecated
     public void schedule(String jobName, String poolName, String serviceName, Map<String, ? extends Object> context, long startTime,
             int frequency, int interval, int count, long endTime, int maxRetry) throws JobManagerException {
-        schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+        schedule(jobName, poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry, null);
     }
 
-    /**
-     * Schedule a job to start at a specific time with specific recurrence info
-     * <p>
-     * SCIPIO: Modified to accept an event ID.
-     *
-     * @param jobName
-     *            The name of the job
-     *@param poolName
-     *            The name of the pool to run the service from
-     *@param serviceName
-     *            The name of the service to invoke
-     *@param dataId
-     *            The persisted context (RuntimeData.runtimeDataId)
-     *@param startTime
-     *            The time in milliseconds the service should run
-     *@param frequency
-     *            The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
-     *@param interval
-     *            The interval of the frequency recurrence
-     *@param count
-     *            The number of times to repeat
-     *@param endTime
-     *            The time in milliseconds the service should expire
-     *@param maxRetry
-     *            The max number of retries on failure (-1 for no max)
-     *@param eventId
-     *            The triggering event
-     *@return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
-     * @throws IllegalStateException if the Job Manager is shut down.
-     */
-    public JobInfo schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
-            int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
-        assertIsRunning();
-        // create the recurrence
-        String infoId = null;
-        if (frequency > -1 && count != 0) {
-            try {
-                RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
-                infoId = info.primaryKey();
-            } catch (RecurrenceInfoException e) {
-                throw new JobManagerException(e.getMessage(), e);
-            }
-        }
-        // set the persisted fields
-        if (UtilValidate.isEmpty(jobName)) {
-            jobName = Long.toString((new Date().getTime()));
-        }
-        // SCIPIO: now set eventId
-        Map<String, Object> jFields = UtilMisc.<String, Object> toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
-                "serviceName", serviceName, "statusId", "SERVICE_PENDING", "recurrenceInfoId", infoId, "runtimeDataId", dataId,
-                "eventId", eventId);
-        // set the pool ID
-        if (UtilValidate.isNotEmpty(poolName)) {
-            jFields.put("poolId", poolName);
-        } else {
-            try {
-                jFields.put("poolId", getThreadPoolConfig().getSendToPool());
-            } catch (GenericConfigException e) {
-                throw new JobManagerException(e.getMessage(), e);
-            }
-        }
-        // set the loader name
-        jFields.put("loaderName", delegator.getDelegatorName());
-        // set the max retry
-        jFields.put("maxRetry", (long) maxRetry);
-        jFields.put("currentRetryCount", 0L);
-        // create the value and store
-        GenericValue jobV;
-        try {
-            jobV = delegator.makeValue("JobSandbox", jFields);
-            delegator.createSetNextSeqId(jobV);
-        } catch (GenericEntityException e) {
-            throw new JobManagerException(e.getMessage(), e);
-        }
-        return PersistedServiceJob.makeResultJob(getDispatcher().getDispatchContext(), jobV); // SCIPIO
+    @Deprecated
+    public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
+                         int count, long endTime, int maxRetry, String eventId) throws JobManagerException {
+        schedule(jobName, serviceName, dataId, ServiceOptions.asyncPersist().jobPool(poolName)
+                .schedule(startTime, frequency, interval, count, endTime, maxRetry, eventId));
     }
 
     /**
@@ -910,9 +940,10 @@ public final class JobManager {
      *            The max number of retries on failure (-1 for no max)
      * @throws IllegalStateException if the Job Manager is shut down.
      */
+    @Deprecated
     public void schedule(String jobName, String poolName, String serviceName, String dataId, long startTime, int frequency, int interval,
             int count, long endTime, int maxRetry) throws JobManagerException {
-        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, (String) null);
+        schedule(jobName, poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry, null);
     }
 
     /** Returns true if service.properties#jobManager.debug=true or verbose logging enabled (SCIPIO). */

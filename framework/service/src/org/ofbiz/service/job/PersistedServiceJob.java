@@ -42,6 +42,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.PersistAsyncOptions;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
@@ -73,8 +74,11 @@ public class PersistedServiceJob extends GenericServiceJob {
     /**
      * Creates a new PersistedServiceJob.
      * SCIPIO: minimalJob boolean indicates to avoid unnecessary lookups unnecessary for the basic Job interface (slight ofbiz kludge).
+     * NOTE: Passing PersistAsyncOptions here is confusing because jobValue should be configured with the settings already,
+     *  but may be needed later...
      */
-    protected PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req, boolean minimalJob) {
+    protected PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req, boolean minimalJob, PersistAsyncOptions serviceOptions) {
+        // SCIPIO: TODO: REVIEW: DO NOT pass serviceOptions to super here because we're only exploiting its implementation... abstraction issues
         super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"), null, null, null, req); // SCIPIO: jobPool, overridden in getJobPool()
         this.delegator = dctx.getDelegator();
         this.jobValue = jobValue;
@@ -101,14 +105,14 @@ public class PersistedServiceJob extends GenericServiceJob {
      * @param req
      */
     public PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req) {
-        this(dctx, jobValue, req, false);
+        this(dctx, jobValue, req, false, null);
     }
 
     /**
      * Makes a lightweight result job for the improved {@link org.ofbiz.service.LocalDispatcher} interface (SCIPIO).
      */
-    public static PersistedServiceJob makeResultJob(DispatchContext dctx, GenericValue jobValue) {
-        return new PersistedServiceJob(dctx, jobValue, null, true);
+    public static PersistedServiceJob makeResultJob(DispatchContext dctx, GenericValue jobValue, PersistAsyncOptions serviceOptions) {
+        return new PersistedServiceJob(dctx, jobValue, null, true, serviceOptions);
     }
 
     @Override
@@ -255,6 +259,10 @@ public class PersistedServiceJob extends GenericServiceJob {
                 newJob.set("currentRetryCount", 0L);
             }
             nextRecurrence = next;
+            // Set priority if missing
+            if (newJob.getLong("priority") == null) {
+                newJob.set("priority", JobPriority.NORMAL);
+            }
 
             // SCIPIO: Transfer the special new eventId field
             // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is
@@ -465,13 +473,26 @@ public class PersistedServiceJob extends GenericServiceJob {
         return new Date(startTime);
     }
 
+    /*
+     * Returns the priority stored in the JobSandbox.priority field, if no value is present
+     * then it defaults to AbstractJob.getPriority()
+     */
     @Override
-    public String getJobType() { // SCIPIO
-        return "persisted";
+    public long getPriority() {
+        Long priority = jobValue.getLong("priority");
+        if (priority == null) {
+            return super.getPriority();
+        }
+        return priority;
     }
 
     @Override
-    public boolean isPersisted() { // SCIPIO
+    public String getJobType() { // SCIPIO
+        return "persist";
+    }
+
+    @Override
+    public boolean isPersist() { // SCIPIO
         return true;
     }
 

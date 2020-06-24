@@ -136,6 +136,10 @@
         <value xml:lang="zh">SERVICE_TIME格式无效</value>
         <value xml:lang="zh-TW">SERVICE_TIME格式無效</value>
     </property>
+    <property key="coreEvents.invalid_priority_value">
+        <value xml:lang="de">Ungültiger Prioritätswert</value>
+        <value xml:lang="en">Invalid priority value</value>
+    </property>
     <property key="coreEvents.must_specify_service">
         <value xml:lang="de">Sie müssen einen Servicenamen 'SERVICE_NAME' angeben (zusätzliche Parameter sind: SERVICE_TIME, SERVICE_FREQUENCY, SERVICE_INTERVAL, SERVICE_COUNT)</value>
         <value xml:lang="en">You must specify a 'SERVICE_NAME' (other parameters include: SERVICE_TIME, SERVICE_FREQUENCY, SERVICE_INTERVAL, SERVICE_COUNT)</value>

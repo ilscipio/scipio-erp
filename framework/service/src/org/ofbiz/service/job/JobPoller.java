@@ -21,13 +21,14 @@ package org.ofbiz.service.job;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -79,12 +80,33 @@ public final class JobPoller implements ServiceConfigListener {
         try {
             ThreadPool threadPool = getThreadPoolConfig();
             return new ThreadPoolExecutor(threadPool.getMinThreads(), threadPool.getMaxThreads(), threadPool.getTtl(),
-                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(threadPool.getJobs()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+                    TimeUnit.MILLISECONDS, new PriorityBlockingQueue<>(threadPool.getJobs(), createPriorityComparator()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         } catch (GenericConfigException e) {
             Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> values: ", module);
             return new ThreadPoolExecutor(ThreadPool.MIN_THREADS, ThreadPool.MAX_THREADS, ThreadPool.THREAD_TTL,
-                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.QUEUE_SIZE), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+                    TimeUnit.MILLISECONDS, new PriorityBlockingQueue<>(ThreadPool.QUEUE_SIZE, createPriorityComparator()), new JobInvokerThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
         }
+    }
+
+    private static Comparator<Runnable> createPriorityComparator() {
+        return new Comparator<Runnable>() {
+
+            /**
+             * Sorts jobs by priority then by start time
+             */
+            @Override
+            public int compare(Runnable o1, Runnable o2) {
+                Job j1 = (Job) o1;
+                Job j2 = (Job) o2;
+                // Descending priority (higher number returns -1)
+                int priorityCompare = Long.compare(j2.getPriority(), j1.getPriority());
+                if (priorityCompare != 0) {
+                    return priorityCompare;
+                }
+                // Ascending start time (earlier time returns -1)
+                return Long.compare(j1.getStartTime().getTime(), j2.getStartTime().getTime());
+            }
+        };
     }
 
     private int pollWaitTime() { // SCIPIO: Simplified
@@ -95,6 +117,16 @@ public final class JobPoller implements ServiceConfigListener {
             return ThreadPool.POLL_WAIT;
         }
     }
+
+    int queueSize() { // SCIPIO: Now instance method and simplified
+        try {
+            return getThreadPoolConfig().getJobs();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, "Exception thrown while getting <thread-pool> model, using default <thread-pool> values: ", module);
+            return ThreadPool.QUEUE_SIZE;
+        }
+    }
+
 
     /**
      * Register a {@link JobManager} with the job poller.
@@ -357,6 +389,7 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     private class JobInvokerThreadFactory implements ThreadFactory {
+        @Override
         public Thread newThread(Runnable runnable) {
             return new Thread(runnable, "Scipio-JobQueue-" + created.getAndIncrement());
         }
@@ -387,7 +420,9 @@ public final class JobPoller implements ServiceConfigListener {
                     }
                 }
                 while (!executor.isShutdown()) {
-                    int remainingCapacity = executor.getQueue().remainingCapacity();
+                    // SCIPIO: NOTE: The following line was changed for priority patch
+                    //int remainingCapacity = executor.getQueue().remainingCapacity();
+                    int remainingCapacity = queueSize() - executor.getQueue().size();
                     if (JobManager.isDebug() && noCapacityWarnInterval > 0) { // SCIPIO
                         if (remainingCapacity > 0 || lastCapacityFoundTime <= 0) {
                             lastCapacityFoundTime = System.currentTimeMillis();

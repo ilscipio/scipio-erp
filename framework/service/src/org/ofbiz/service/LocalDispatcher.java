@@ -23,7 +23,6 @@ import java.util.Map;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.jms.JmsListenerFactory;
-import org.ofbiz.service.job.JobInfo;
 import org.ofbiz.service.job.JobManager;
 
 /**
@@ -77,8 +76,7 @@ public interface LocalDispatcher {
     Map<String, Object> runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
-     * SCIPIO: Run the service synchronously, with optional separate transaction.
-     * Added 2019-01-30.
+     * Run the service synchronously, with optional separate transaction (SCIPIO).
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
@@ -92,8 +90,7 @@ public interface LocalDispatcher {
     }
 
     /**
-     * SCIPIO: Run the service synchronously in a separate transaction.
-     * Added 2019-01-30.
+     * Run the service synchronously in a separate transaction (SCIPIO).
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @return Map of name, value pairs composing the result.
@@ -127,6 +124,34 @@ public interface LocalDispatcher {
      */
     void runSyncIgnore(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
     void runSyncIgnore(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
+     * Run the service asynchronously and IGNORE the result (SCIPIO).
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result (SCIPIO).
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, GenericRequester requester, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    JobInfo runAsync(String serviceName, GenericRequester requester, AsyncOptions serviceOptions, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -186,19 +211,6 @@ public interface LocalDispatcher {
     JobInfo runAsync(String serviceName, boolean persist, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
-     * Run the service asynchronously and IGNORE the result.
-     * @param serviceName Name of the service to run.
-     * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run.
-     * @param jobPool Optional specific job pool (SCIPIO)
-     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
-     * @throws ServiceAuthException
-     * @throws ServiceValidationException
-     * @throws GenericServiceException
-     */
-    JobInfo runAsync(String serviceName, Map<String, ? extends Object> context, boolean persist, String jobPool) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-
-    /**
      * Run the service asynchronously and IGNORE the result. This method WILL persist the job.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
@@ -208,6 +220,20 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     JobInfo runAsync(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
+     * Run the service asynchronously (SCIPIO).
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param serviceOptions The service options, either {@link PersistAsyncOptions} for persisted job or {@link MemoryAsyncOptions} for non-persisted async service (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncDefault(boolean)}, otherwise {@link ServiceOptions#async(boolean)}.
+     * @return A new GenericRequester object.
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    GenericResultWaiter runAsyncWait(String serviceName, Map<String, ? extends Object> context, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    GenericResultWaiter runAsyncWait(String serviceName, AsyncOptions serviceOptions, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service asynchronously.
@@ -239,6 +265,20 @@ public interface LocalDispatcher {
      * @param cb The callback implementation.
      */
     void registerCallback(String serviceName, GenericServiceCallback cb);
+
+    /**
+     * Schedule a service to run asynchronously at specified event (SCIPIO).
+     * @param jobName Name of the job
+     * @param serviceName Name of the service to invoke.
+     * @param context The name/value pairs composing the context.
+     * @param serviceOptions The service options, {@link PersistAsyncOptions} (SCIPIO);
+     *                       for read-only defaults use {@link ServiceOptions#asyncPersistDefault()}, otherwise {@link ServiceOptions#asyncPersist()}.
+     * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    JobInfo schedule(String jobName, String serviceName, Map<String, ? extends Object> context, PersistAsyncOptions serviceOptions) throws GenericServiceException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -280,7 +320,7 @@ public interface LocalDispatcher {
     JobInfo schedule(String jobName, String poolName, String serviceName, long startTime, int frequency, int interval, int count, long endTime, int maxRetry, Object... context) throws GenericServiceException;
 
     /**
-     * SCIPIO: Schedule a service to run asynchronously at specified event
+     * Schedule a service to run asynchronously at specified event.
      * @param jobName Name of the job
      * @param poolName Name of the service pool to send to.
      * @param serviceName Name of the service to invoke.
@@ -291,7 +331,7 @@ public interface LocalDispatcher {
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
      * @param maxRetry The number of times we should retry on failure
-     * @param eventId The ID of the triggering event
+     * @param eventId The event ID (SCIPIO)
      * @return The new job information or UnscheduledJobInfo if not scheduled (SCIPIO)
      * @throws ServiceAuthException
      * @throws ServiceValidationException
@@ -374,9 +414,8 @@ public interface LocalDispatcher {
     void addCommitService(String serviceName, boolean persist, Object... context) throws GenericServiceException;
 
     /**
-     * SCIPIO: Returns a {@link ServiceSyncRegistrations} object that can be queried to get info about
-     * the services currently registered through {@link #addCommitService} and {@link #addRollbackService}.
-     * Added 2017-12-20.
+     * Returns a {@link ServiceSyncRegistrations} object that can be queried to get info about
+     * the services currently registered through {@link #addCommitService} and {@link #addRollbackService} (SCIPIO).
      * @throws GenericServiceException
      */
     ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException;
@@ -424,8 +463,8 @@ public interface LocalDispatcher {
     void deregister();
 
     /**
-     * Gets the ModelService instance that corresponds to given the name
-     * SCIPIO: New method: This is the same as <code>getDispatchContext().getModelService(...)</code>. Added 2019-02-05.
+     * Gets the ModelService instance that corresponds to given the name (SCIPIO).
+     * This is the same as <code>getDispatchContext().getModelService(...)</code>. Added 2019-02-05.
      * @param serviceName Name of the service
      * @return GenericServiceModel that corresponds to the serviceName
      */
@@ -434,9 +473,9 @@ public interface LocalDispatcher {
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName (SCIPIO).
      * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * SCIPIO: New method: This is the same as <code>getDispatchContext().makeValidContext(...)</code>. Added 2019-01-31.
+     * This is the same as <code>getDispatchContext().makeValidContext(...)</code>. Added 2019-01-31.
      * @param serviceName The name of the service to obtain parameters for
      * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
      * @param context The initial set of values to pull from
@@ -448,9 +487,9 @@ public interface LocalDispatcher {
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName (SCIPIO).
      * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * SCIPIO: New method: This is the same as <code>DispatchContext.makeValidContext(...)</code>. Added 2019-01-31.
+     * New method: This is the same as <code>DispatchContext.makeValidContext(...)</code>. Added 2019-01-31.
      * @param model The ModelService object of the service to obtain parameters for
      * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
      * @param context The initial set of values to pull from

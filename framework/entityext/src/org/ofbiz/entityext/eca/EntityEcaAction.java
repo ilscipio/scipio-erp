@@ -20,7 +20,6 @@ package org.ofbiz.entityext.eca;
 
 import java.util.Map;
 
-import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -32,8 +31,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.config.ServiceConfigUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -51,6 +50,7 @@ public final class EntityEcaAction implements java.io.Serializable {
     private final boolean abortOnError;
     private final boolean rollbackOnError;
     private final boolean persist;
+    protected final Long priority; // SCIPIO
     private final String jobPool; // SCIPIO
     private transient Boolean quiet = null; // SCIPIO: if true, don't log when this gets triggered
 
@@ -65,6 +65,16 @@ public final class EntityEcaAction implements java.io.Serializable {
         this.persist = "true".equals(action.getAttribute("persist"));
         this.runAsUser = action.getAttribute("run-as-user");
         this.valueAttr = action.getAttribute("value-attr");
+        String priorityStr = action.getAttribute("priority");
+        Long priority = null;
+        if (!priorityStr.isEmpty()) {
+            try {
+                priority = Long.parseLong(priorityStr);
+            } catch (NumberFormatException e) {
+                Debug.logError("Invalid job priority on entity ECA service [" + this.serviceName + "]; using default", module);
+            }
+        }
+        this.priority = priority;
         String jobPool = action.getAttribute("job-pool");
         this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
     }
@@ -122,7 +132,7 @@ public final class EntityEcaAction implements java.io.Serializable {
                     newValue.setNonPKFields(actionResult);
                 }
             } else if ("async".equals(this.serviceMode)) {
-                dispatcher.runAsync(serviceName, actionContext, persist, jobPool); // SCIPIO: jobPool
+                dispatcher.runAsync(serviceName, actionContext, ServiceOptions.async(persist).jobPool(jobPool).priority(priority)); // SCIPIO: jobPool
             }
         } catch (GenericServiceException e) {
             // check abortOnError and rollbackOnError

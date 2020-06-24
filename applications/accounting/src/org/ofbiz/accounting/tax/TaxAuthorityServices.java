@@ -713,10 +713,14 @@ public class TaxAuthorityServices {
                 if (UtilValidate.isNotEmpty(exemptAmount)) {
                     taxAmount = taxAmount.subtract(exemptAmount);
                 }
-                if (summedRates.containsKey(taxAuthorityRateSeqId)) {
-                    summedRates.put(taxAuthorityRateSeqId, summedRates.get(taxAuthorityRateSeqId).add(taxAmount.multiply(itemAdjustment.getBigDecimal("sourcePercentage"))));
-                } else {
-                    summedRates.put(taxAuthorityRateSeqId, taxAmount.multiply(itemAdjustment.getBigDecimal("sourcePercentage")));
+                // ToDo: Check that this does not skip the shipping taxes.
+                if(UtilValidate.isNotEmpty(itemAdjustment.getBigDecimal("sourcePercentage"))){
+                    BigDecimal sourcePercentage = itemAdjustment.getBigDecimal("sourcePercentage");
+                    if (summedRates.containsKey(taxAuthorityRateSeqId)) {
+                        summedRates.put(taxAuthorityRateSeqId, summedRates.get(taxAuthorityRateSeqId).add(taxAmount.multiply(sourcePercentage)));
+                    } else {
+                        summedRates.put(taxAuthorityRateSeqId, taxAmount.multiply(sourcePercentage));
+                    }
                 }
             }
         }

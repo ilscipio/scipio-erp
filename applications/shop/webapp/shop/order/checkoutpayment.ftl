@@ -218,5 +218,4 @@ jQuery(document).ready(function(){
 </@section>
 
 <#-- SCIPIO: Not this label, as there may be intermediate payment screens: uiLabelMap.OrderContinueToFinalOrderReview -->
-<@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" text=uiLabelMap.CommonContinue />
-
+<@checkoutActionsMenu directLinks=false formName="checkoutInfoForm" text=uiLabelMap.CommonContinue checkoutpage="payment"/>

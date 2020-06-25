@@ -3,7 +3,7 @@ SCIPIO: Local order template common defs
 -->
 <#include "component://shop/webapp/shop/common/common.ftl">
 
-<#macro checkoutActionsMenu text="" formName="" directLinks=true>
+<#macro checkoutActionsMenu text="" formName="" directLinks=true checkoutpage="">
     <#if !formName?has_content>
       <#if directLinks>
         <#local formName = parameters.formNameValue!"">
@@ -34,11 +34,14 @@ SCIPIO: Local order template common defs
           </#if>
           <#local class = "+${styles.action_run_session!} ${styles.action_continue!}">
           <#if directLinks>
-            <#local href = "javascript:document['${escapeVal(formName, 'js')}'].submit();">
+            <#local onClick = "javascript:document['${escapeVal(formName, 'js')}'].submit();">
           <#else>
-            <#local href = "javascript:submitForm(document['${escapeVal(formName, 'js')}'], 'DN', '');">
+            <#local onClick = "javascript:submitForm(document['${escapeVal(formName, 'js')}'], 'DN', '');">
           </#if>
-          <@menuitem type="link" href=href class=class text=text />
+          <#if checkoutpage?has_content>
+            <#local id = checkoutpage + "CheckoutStep">
+          </#if>
+          <@menuitem type="link" onClick=onClick class=class text=text contentId=id!/>
         </@menu>
       </#if>
       </@cell>
@@ -270,6 +273,22 @@ SCIPIO: Local order template common defs
                 <#assign options = {
                   "locale": Static["org.ofbiz.base.util.UtilHttp"].getLocale(request).getLanguage()
                 }>
+                <#assign style = {
+                  "base": {
+                    "color": '#32325d',
+                      "lineHeight": '25px',
+                      "fontFamily": '"Helvetica Neue", Helvetica, sans-serif',
+                      "fontSmoothing": 'antialiased',
+                      "fontSize": '20px',
+                      "::placeholder": {
+                        "color": '#aab7c4'
+                      }
+                  },
+                  "invalid": {
+                    "color": '#fa755a',
+                    "iconColor": '#fa755a'
+                  }
+                }>
                 <#assign hooks = {
                   "stripe.preinit" : wrapRawScript("function() { console.debug('stripe.preinit hook'); return true; }"),
                   "stripe.postinit" : wrapRawScript("function() { console.debug('stripe.postinit hook'); return true; }"),
@@ -280,8 +299,9 @@ SCIPIO: Local order template common defs
                   "order.postprocess" : wrapRawScript("function() { console.debug('order.postprocess hook'); return true; }")
                 }/>
 
-                <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! orderFormId="orderSubmitForm" processOrderButtonId="processButton"
-                  checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks debug=true/>
+                <#-- NOTE: This is meant for normal checkout, not OnePageCheckout; remove multiStepCheckout={"capture":true} in order to switch to OnePageCheckout -->
+                <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! style=style! checkoutFormId="checkoutInfoForm" checkoutButtonId="paymentCheckoutStep"
+                  checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks multiStepCheckout={"capture":true} debug=true/>
               </@payMethInfoPanel>
             </@section>
           </#if>

@@ -273,6 +273,22 @@
                 <#assign options = {
                   "locale": Static["org.ofbiz.base.util.UtilHttp"].getLocale(request).getLanguage()
                 }>
+                <#assign style = {
+                  "base": {
+                    "color": '#32325d',
+                    "lineHeight": '25px',
+                    "fontFamily": '"Helvetica Neue", Helvetica, sans-serif',
+                    "fontSmoothing": 'antialiased',
+                    "fontSize": '20px',
+                    "::placeholder": {
+                      "color": '#aab7c4'
+                    }
+                  },
+                  "invalid": {
+                    "color": '#fa755a',
+                    "iconColor": '#fa755a'
+                  }
+                }>
                 <#assign hooks = {
                   "stripe.preinit" : wrapRawScript("function() { console.debug('stripe.preinit hook'); return true; }"),
                   "stripe.postinit" : wrapRawScript("function() { console.debug('stripe.postinit hook'); return true; }"),
@@ -283,8 +299,9 @@
                   "order.postprocess" : wrapRawScript("function() { console.debug('order.postprocess hook'); return true; }")
                 }/>
 
-                <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! orderFormId="orderSubmitForm" processOrderButtonId="processButton"
-                  checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks debug=true/>
+                <#-- NOTE: This is meant for normal checkout, not OnePageCheckout; remove multiStepCheckout={"capture":true} in order to switch to OnePageCheckout -->
+                <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! style=style! checkoutFormId="orderSubmitForm" checkoutButtonId="processButton"
+                  checkOutPaymentSel=("input[name=checkOutPaymentId]") hooks=hooks debug=true />
               </@payMethInfoPanel>
             </@section>
           </#if>

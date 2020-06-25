@@ -29,15 +29,24 @@ code package.
 <#if cart?? && (0 < cart.size())>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
+
+  <#if paymentMethodType.paymentMethodTypeId == "EXT_STRIPE">
+    <#assign pk = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getPublishableKey(request)!>
+    <#assign stripeIntegrationMode = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getIntegrationMode(request)!>
+    <#assign stripePaymentIntent = sessionAttributes[Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].STRIPE_PAYMENT_INTENT]!>
+    <@renderStripe mode=stripeIntegrationMode pk=pk! options=options! style=style! paymentIntentMap=stripePaymentIntent! checkoutFormId="orderreview" checkoutButtonId="processButton"
+       hooks=hooks! multiStepCheckout={"finalize":true} debug=true/>
+  </#if>
+
   <@checkoutActionsMenu directLinks=true>
-    <form type="post" action="<@pageUrl>processorder</@pageUrl>" name="${parameters.formNameValue}">
+    <form type="post" action="<@pageUrl>processorder</@pageUrl>" name="${parameters.formNameValue}" id="${parameters.formNameValue}">
       <#if (parameters.checkoutpage)?has_content><#-- SCIPIO: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
         <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
       </#if>
       <#if (requestAttributes.issuerId)?has_content>
         <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
       </#if>
-      <@field type="submit" submitType="input-button" inline=true name="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
+      <@field type="submit" submitType="input-button" inline=true name="processButton" id="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
     </form>
   </@checkoutActionsMenu>
 <#else>

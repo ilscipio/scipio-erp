@@ -218,6 +218,12 @@ code package.
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
         <key-map field-name="contentId" rel-field-name="contentIdStart"/>
       </relation>
+      <!-- Scipio: Experimental index
+      <index name="CONTENT_JLC">
+        <index-field name="contentId"/>
+        <index-field name="dataResourceId"/>
+        <index-field name="localeString"/>
+      </index>-->
     </entity>
     <view-entity entity-name="ContentAndRole" package-name="org.ofbiz.content.content" title="Content And Role View">
         <member-entity entity-alias="CNT" entity-name="Content"/>
@@ -312,6 +318,13 @@ code package.
             <index-field name="contentAssocTypeId"/>
             <index-field name="thruDate"/>
         </index>
+      <!-- Scipio: Experimental index
+      <index name="CONTENTASSC_JPCC">
+        <index-field name="fromDate"/>
+        <index-field name="contentId"/>
+        <index-field name="contentIdTo"/>
+        <index-field name="contentAssocTypeId"/>
+      </index>-->
     </entity>
     <view-entity entity-name="ContentAssocDataResourceViewFrom"
                 package-name="org.ofbiz.content.content"

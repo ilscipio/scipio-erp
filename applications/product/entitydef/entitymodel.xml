@@ -260,6 +260,13 @@ code package.
             <index-field name="productCategoryId"/>
             <index-field name="prodCatContentTypeId"/>
         </index>
+        <!-- Scipio: Experimental index
+        <index name="PRDCAT_CNT_JINFO">
+            <index-field name="fromDate"/>
+            <index-field name="productCategoryId"/>
+            <index-field name="contentId"/>
+            <index-field name="prodCatContentTypeId"/>
+        </index>-->
     </entity>
     <view-entity entity-name="ProductCategoryContentAndInfo"
                 package-name="org.ofbiz.product.category"
@@ -339,14 +346,17 @@ code package.
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="TOCO" entity-name="Content"/>
       <member-entity entity-alias="EL" entity-name="ElectronicText"/>
-      <alias-all entity-alias="PCC">
-        <exclude field="contentId"/>
-      </alias-all>
-      <alias-all entity-alias="CA" prefix="ca"/>
-      <alias-all entity-alias="TOCO"/>
-      <alias-all entity-alias="EL"/>
-      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
-      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+        <alias entity-alias="PCC" name="productCategoryId" />
+        <alias entity-alias="PCC" name="prodCatContentTypeId" />
+        <alias entity-alias="PCC" name="fromDate" field="fromDate"/>
+        <alias entity-alias="PCC" name="thruDate" field="thruDate"/>
+        <alias entity-alias="CA" name="contentAssocTypeId" />
+        <alias entity-alias="CA" name="contentId"/>
+        <alias entity-alias="CA" name="contentIdTo" />
+        <alias entity-alias="CA" name="caFromDate" field="fromDate" />
+        <alias entity-alias="CA" name="caThruDate" field="thruDate" />
+        <alias entity-alias="TOCO" name="localeString" />
+        <alias entity-alias="EL" name="textData" />
       <view-link entity-alias="PCC" rel-entity-alias="CA">
         <key-map field-name="contentId"/>
       </view-link>
@@ -3284,23 +3294,32 @@ code package.
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="TOCO" entity-name="Content"/>
       <member-entity entity-alias="EL" entity-name="ElectronicText"/>
-      <alias-all entity-alias="PC">
-        <exclude field="contentId"/>
-      </alias-all>
-      <alias-all entity-alias="CA" prefix="ca"/>
-      <alias-all entity-alias="TOCO"/>
-      <alias-all entity-alias="EL"/>
-      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
-      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
-      <view-link entity-alias="PC" rel-entity-alias="CA">
-        <key-map field-name="contentId"/>
-      </view-link>
-      <view-link entity-alias="CA" rel-entity-alias="TOCO">
-        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
-      </view-link>
-      <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
-        <key-map field-name="dataResourceId"/>
-      </view-link>
+        <member-entity entity-alias="PC" entity-name="ProductContent"/>
+        <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+        <member-entity entity-alias="TOCO" entity-name="Content"/>
+        <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+        <alias entity-alias="PC" name="productId" />
+        <alias entity-alias="PC" name="contentId" />
+        <alias entity-alias="PC" name="productContentTypeId" />
+        <alias entity-alias="PC" name="fromDate" />
+        <alias entity-alias="CA" name="contentAssocTypeId" />
+        <alias entity-alias="CA" name="contentId"/>
+        <alias entity-alias="CA" name="contentIdTo" />
+        <alias entity-alias="CA" name="caFromDate" field="fromDate" />
+        <alias entity-alias="CA" name="caThruDate" field="thruDate" />
+        <alias entity-alias="TOCO" name="localeString" />
+        <alias entity-alias="EL" name="textData" />
+        <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+        <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+        <view-link entity-alias="PC" rel-entity-alias="CA">
+            <key-map field-name="contentId"/>
+        </view-link>
+        <view-link entity-alias="CA" rel-entity-alias="TOCO">
+            <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+        </view-link>
+        <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
+            <key-map field-name="dataResourceId"/>
+        </view-link>
     </view-entity>
     <entity entity-name="ProductContentType"
             package-name="org.ofbiz.product.product"

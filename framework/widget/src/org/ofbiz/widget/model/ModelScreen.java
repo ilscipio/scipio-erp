@@ -264,7 +264,6 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             // If transaction timeout is present, use it to start the transaction
             // If transaction timeout is set to zero, no transaction is started
             if (useTransaction) {
-                // SCIPIO: NOTE: Value zero (0) is the same as useTransaction==false
                 if (transactionTimeout == null || transactionTimeout < 0) {
                     beganTransaction = TransactionUtil.begin(defaultTransactionTimeout); // SCIPIO: defaultTransactionTimeout (0)
                 } else if (transactionTimeout > 0) {

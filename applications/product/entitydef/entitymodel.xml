@@ -3302,6 +3302,7 @@ code package.
         <alias entity-alias="PC" name="contentId" />
         <alias entity-alias="PC" name="productContentTypeId" />
         <alias entity-alias="PC" name="fromDate" />
+        <alias entity-alias="PC" name="thruDate" />
         <alias entity-alias="CA" name="contentAssocTypeId" />
         <alias entity-alias="CA" name="contentId"/>
         <alias entity-alias="CA" name="contentIdTo" />

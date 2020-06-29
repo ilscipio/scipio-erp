@@ -32,6 +32,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -55,6 +56,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(UtilMisc.toSet("screen")); // SCIPIO: new, for future use
+    private static final int defaultTransactionTimeout = UtilProperties.getPropertyAsInteger("widget", "screen.default.transactionTimeout", 0);
 
     public static final String TRANSACTION_TIMEOUT_ATTR = "TRANSACTION_TIMEOUT"; // SCIPIO: NOTE: This is a default name and may be configured by the screen
     public static final String TRANSACTION_TIMEOUT_PARAM = TRANSACTION_TIMEOUT_ATTR; // SCIPIO: NOTE: This is a default name and may be configured by the screen
@@ -264,7 +266,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             if (useTransaction) {
                 // SCIPIO: NOTE: Value zero (0) is the same as useTransaction==false
                 if (transactionTimeout == null || transactionTimeout < 0) {
-                    beganTransaction = TransactionUtil.begin();
+                    beganTransaction = TransactionUtil.begin(defaultTransactionTimeout); // SCIPIO: defaultTransactionTimeout (0)
                 } else if (transactionTimeout > 0) {
                     beganTransaction = TransactionUtil.begin(transactionTimeout);
                 }

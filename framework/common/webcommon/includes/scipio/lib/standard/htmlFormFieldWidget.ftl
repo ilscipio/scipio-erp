@@ -741,7 +741,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_lookup_widget_defaultArgs = {
   "name":"", "formName":"", "fieldFormName":"", "class":"", "style":"", "alert":"", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
-  "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
+  "ajaxEnabled":false, "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true",
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
   "inlineLabel":false, "inlinePostfix":false, "tooltip":"", "required":false, "attribs":{}, "passArgs":{}
 }>

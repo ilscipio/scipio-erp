@@ -300,7 +300,11 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         // FIXME: this is a race condition, the item could expire
         // between the time it is replaced, and it is cancelled
         V oldValue = line.getValue();
-        ExecutionPool.removePulse(line);
+        // SCIPIO: TODO: REVIEW: possible contention due to this line,
+        // but removing is likely to cause premature key removals from
+        // priority pulses so items will disappear from cache before
+        // expiry time and this must be solved a different way...
+        //ExecutionPool.removePulse(line);
         line.cancel();
         return oldValue;
     }

@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.ofbiz.base.lang.SourceMonitored;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 
 @SourceMonitored
 public final class ExecutionPool {
@@ -44,6 +45,7 @@ public final class ExecutionPool {
     public static final ExecutorService GLOBAL_BATCH = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ExecutionPoolThreadFactory(null, "Scipio-batch"));
     public static final ForkJoinPool GLOBAL_FORK_JOIN = new ForkJoinPool();
     private static final ExecutorService pulseExecutionPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new ExecutionPoolThreadFactory(null, "Scipio-ExecutionPoolPulseWorker"));
+    private static final Boolean logQueueSize= UtilProperties.getPropertyAsBoolean("cache", "cache.delayqeue.log.enable", false);
 
     protected static class ExecutionPoolThreadFactory implements ThreadFactory {
         private final ThreadGroup group;
@@ -89,6 +91,9 @@ public final class ExecutionPool {
     }
 
     public static void addPulse(Pulse pulse) {
+        if(logQueueSize && delayQueue.size() == 10000){
+            Debug.logError("DelayQueue size hit 10.000 entries. Slow down possible.",module);
+        }
         delayQueue.put(pulse);
     }
 

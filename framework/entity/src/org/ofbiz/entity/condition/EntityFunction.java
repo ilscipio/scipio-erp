@@ -59,6 +59,7 @@ public abstract class EntityFunction<T extends Comparable<?>> extends EntityCond
     public static EntityFunction<String> UPPER_FIELD(String fieldName) { return new UPPER(EntityFieldValue.makeFieldValue(fieldName)); }
     public static EntityFunction<String> LOWER(EntityConditionValue nested) { return new LOWER(nested); }
     public static EntityFunction<String> LOWER(Object value) { return new LOWER(value); }
+    public static EntityFunction<String> LOWER_FIELD(String fieldName) { return new LOWER(EntityFieldValue.makeFieldValue(fieldName)); }
 
     /**
      * Length() entity function.

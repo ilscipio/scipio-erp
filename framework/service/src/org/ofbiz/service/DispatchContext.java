@@ -216,6 +216,47 @@ public class DispatchContext implements Serializable {
         return retVal;
     }
 
+    /**
+     * Gets the ModelService instance that corresponds to given the name, throwing IllegalArgumentException if not found (SCIPIO).
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    public ModelService getModelServiceAlways(String serviceName) throws IllegalArgumentException {
+        try {
+            return getModelService(serviceName);
+        } catch (GenericServiceException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name, returning null and no logging if not found (SCIPIO).
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    public ModelService getModelServiceOrNull(String serviceName) {
+        try {
+            return getModelService(serviceName);
+        } catch (GenericServiceException e) {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Returns true if the given service exists by name.
+     * <p>
+     * May be used to test addon service presence.
+     * <p>
+     * Never throws an exception.
+     */
+    public boolean isService(String serviceName) {
+        try {
+            return (getModelService(serviceName) != null);
+        } catch (Exception e) {
+            return false; // ignore all exceptions in this case
+        }
+    }
+
     public Set<String> getAllServiceNames() {
         Set<String> serviceNames = new TreeSet<>();
 
@@ -274,21 +315,5 @@ public class DispatchContext implements Serializable {
             }
         }
         return serviceMap;
-    }
-
-    /**
-     * SCIPIO: Returns true if the given service exists by name.
-     * <p>
-     * May be used to test addon service presence.
-     * <p>
-     * Never throws an exception.
-     */
-    public boolean isService(String serviceName) {
-        try {
-            return getModelService(serviceName) != null;
-        } catch (Exception e) {
-            ; // ignore all exceptions in this case
-            return false;
-        }
     }
 }

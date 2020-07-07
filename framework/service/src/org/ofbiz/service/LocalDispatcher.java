@@ -468,8 +468,39 @@ public interface LocalDispatcher {
      * @param serviceName Name of the service
      * @return GenericServiceModel that corresponds to the serviceName
      */
-    public default ModelService getModelService(String serviceName) throws GenericServiceException {
+    default ModelService getModelService(String serviceName) throws GenericServiceException {
         return getDispatchContext().getModelService(serviceName);
+    }
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name, throwing IllegalArgumentException if not found (SCIPIO).
+     * This is the same as <code>getDispatchContext().getModelServiceAlways(...)</code>.
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    default ModelService getModelServiceAlways(String serviceName) throws IllegalArgumentException {
+        return getDispatchContext().getModelServiceAlways(serviceName);
+    }
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name, returning IllegalArgumentException with no logging if not found (SCIPIO).
+     * This is the same as <code>getDispatchContext().getModelServiceOrNull(...)</code>.
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    default ModelService getModelServiceOrNull(String serviceName) {
+        return getDispatchContext().getModelServiceOrNull(serviceName);
+    }
+
+    /**
+     * Returns true if the given service exists by name (SCIPIO).
+     * <p>
+     * May be used to test addon service presence.
+     * <p>
+     * Never throws an exception.
+     */
+    default boolean isService(String serviceName) {
+        return getDispatchContext().isService(serviceName);
     }
 
     /**
@@ -482,7 +513,7 @@ public interface LocalDispatcher {
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    public default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
+    default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
         return getDispatchContext().makeValidContext(serviceName, mode, context);
     }
 
@@ -496,7 +527,7 @@ public interface LocalDispatcher {
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    public default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
+    default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
         // SCIPIO: NOTE: For unknown reasons, this method is static on DispatchContext, but this is not suitable
         // for LocalDispatcher and even counterproductive.
         return DispatchContext.makeValidContext(model, mode, context);
